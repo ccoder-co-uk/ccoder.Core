@@ -1,0 +1,122 @@
+﻿[
+  {
+    "outputFileName": "wwwroot/css/site.min.css",
+    "inputFiles": [
+      "wwwroot/css/site.css",
+      "wwwroot/css/kendo.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/lib/core.js",
+    "inputFiles": [
+      "wwwroot/lib/Core/api.js",
+      "wwwroot/lib/Core/util.js",
+      "wwwroot/lib/Core/form.js",
+      "wwwroot/lib/Core/model.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/lib/editor.js",
+    "inputFiles": [
+      "wwwroot/lib/core/editor.js",
+      "wwwroot/lib/core/contentEditor.js",
+      "wwwroot/lib/core/pageToolbar.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/lib/monaco.js",
+    "inputFiles": [
+      "wwwroot/lib/Monaco/MonacoEditor.js",
+      "wwwroot/lib/Monaco/JavaScriptMonacoEditor.js",
+      "wwwroot/lib/Monaco/HTMLMonacoEditor.js",
+      "wwwroot/lib/Monaco/CSharpMonacoEditor.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/lib/widget.js",
+    "inputFiles": [
+      "wwwroot/lib/widgets/widget.js",
+      "wwwroot/lib/widgets/dialog.js",
+      "wwwroot/lib/widgets/chart.js",
+      "wwwroot/lib/widgets/pieChart.js",
+      "wwwroot/lib/widgets/confirmDialog.js",
+      "wwwroot/lib/widgets/consoleDialog.js",
+      "wwwroot/lib/widgets/exportDialog.js",
+      "wwwroot/lib/widgets/detail.js",
+      "wwwroot/lib/widgets/editorDialog.js",
+      "wwwroot/lib/widgets/grid.js",
+      "wwwroot/lib/widgets/contextMenuWidget.js",
+      "wwwroot/lib/widgets/fileVersionGridWidget.js",
+      "wwwroot/lib/widgets/fileDropContainerWidget.js",
+      "wwwroot/lib/widgets/picker.js",
+      "wwwroot/lib/widgets/readOnlyDetailView.js",
+      "wwwroot/lib/widgets/tree.js",
+      "wwwroot/lib/widgets/odataTree.js",
+      "wwwroot/lib/widgets/workspace.js",
+      "wwwroot/lib/widgets/writableDetailView.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/lib/workflow.js",
+    "inputFiles": [
+      "wwwroot/lib/workflow/close.js",
+      "wwwroot/lib/workflow/handle.js",
+      "wwwroot/lib/workflow/link.js",
+      "wwwroot/lib/workflow/action.js",
+      "wwwroot/lib/workflow/activity.js",
+      "wwwroot/lib/workflow/connector.js",
+      "wwwroot/lib/workflow/flow.js",
+      "wwwroot/lib/workflow/workflowdesigner.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/lib/framework.js",
+    "inputFiles": [
+      "wwwroot/lib/Core/drawing.js",
+      "wwwroot/lib/widget.js",
+      "wwwroot/lib/core.js",
+      "wwwroot/lib/workflow.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/lib/background.min.js",
+    "inputFiles": [
+      "wwwroot/lib/background.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  }
+]

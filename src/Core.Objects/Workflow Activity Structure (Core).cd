@@ -1,0 +1,326 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Core.Objects.Workflow.Activities.AddAll&lt;T&gt;">
+    <Position X="7.75" Y="11.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Workflow\Activities\Api\AddAll.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.ApiActivity">
+    <Position X="16" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAAAAAAAAgAAAAAAAAAAAgAAAAAAAgAAA=</HashCode>
+      <FileName>Workflow\Activities\Api\ApiActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.ApiActivity&lt;T&gt;">
+    <Position X="16" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Workflow\Activities\Api\ApiActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.ApiDelete&lt;T&gt;">
+    <Position X="16.75" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Workflow\Activities\Api\ApiDelete.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.ApiGet&lt;T&gt;">
+    <Position X="19" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Workflow\Activities\Api\ApiGet.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.ApiGetCollection&lt;T&gt;">
+    <Position X="21.25" Y="11.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Workflow\Activities\Api\ApiGetCollection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.ApiPost&lt;T, TResult&gt;">
+    <Position X="24" Y="11.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAQAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Workflow\Activities\Api\ApiPost.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.ApiPut&lt;T, TResult&gt;">
+    <Position X="11" Y="11.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Workflow\Activities\Api\ApiPut.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.UpdateAll&lt;T&gt;">
+    <Position X="13.5" Y="11.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Workflow\Activities\Api\UpdateAll.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.CsvFileActivity">
+    <Position X="15.25" Y="15" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAQAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Workflow\Activities\DMS\CsvFileActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.CsvFolderContentActivity">
+    <Position X="20.25" Y="15" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAgAAAAQAgAAAAAAAAAAAAAAAAAAAAAgAAIA=</HashCode>
+      <FileName>Workflow\Activities\DMS\CsvFolderContentActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.DMSActivity">
+    <Position X="28.75" Y="11.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIAIAAAAgAAAACABAAAAAAAAEAAgAAAA=</HashCode>
+      <FileName>Workflow\Activities\DMS\DMSActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.DMSCreateBinaryFilesActivity">
+    <Position X="27.5" Y="15" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>Workflow\Activities\DMS\DMSCreateBinaryFilesActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.DMSCreateTextFilesActivity">
+    <Position X="33.25" Y="15" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>Workflow\Activities\DMS\DMSCreateTextFilesActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.DMSDeleteActivity">
+    <Position X="7.75" Y="15" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAUAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Workflow\Activities\DMS\DMSDeleteActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.JsonFileActivity">
+    <Position X="13" Y="15" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Workflow\Activities\DMS\JsonFileActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.JsonFolderContentActivity">
+    <Position X="17.5" Y="15" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAQAgAAAAAAAAAAAAAAAAAAAAAgAAIA=</HashCode>
+      <FileName>Workflow\Activities\DMS\JsonFolderContentActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.MoveActivity">
+    <Position X="23" Y="15" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAABAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Workflow\Activities\DMS\MoveActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.MoveAllActivity">
+    <Position X="25.25" Y="15" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>Workflow\Activities\DMS\MoveActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.TextFileContentActivity">
+    <Position X="30.5" Y="15" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Workflow\Activities\DMS\TextFileContentActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.XmlFileActivity">
+    <Position X="36.25" Y="15" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Workflow\Activities\DMS\XmlFileActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.XmlFolderContentActivity">
+    <Position X="10.25" Y="15" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAQAgAAAAAAAAAAAAAAAAAAAAAgAAIA=</HashCode>
+      <FileName>Workflow\Activities\DMS\XmlFolderContentActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.EventTrigger&lt;T&gt;">
+    <Position X="18.25" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAgAAA=</HashCode>
+      <FileName>Workflow\Activities\Flow Control\EventTrigger.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.ExecuteFlow">
+    <Position X="26.5" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAAAQAAAAAAAQAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Workflow\Activities\Flow Control\ExecuteFlow.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.FormSubmissionActivity&lt;T&gt;">
+    <Position X="20.5" Y="6.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAAAAAAAAgAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Workflow\Activities\Flow Control\FormSubmissionActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.Start">
+    <Position X="23.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAgAAA=</HashCode>
+      <FileName>Workflow\Activities\Flow Control\Start.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.PageBuilder">
+    <Position X="2.5" Y="13" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACIAAAoAEQAAAAAAAAAAAAAAAAIAAAAAAAAgAA=</HashCode>
+      <FileName>Workflow\Activities\Templating\PageBuilder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.SendEmailActivity">
+    <Position X="5.25" Y="13" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAQQAIAAAAAAAAAIAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Workflow\Activities\Templating\SendEmailActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.TemplatingActivity&lt;T&gt;">
+    <Position X="3.75" Y="9" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAgAAAAAAAAAgAQQAAQAAABAAAFAAAAQAAAA=</HashCode>
+      <FileName>Workflow\Activities\Templating\TemplatingActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.ConvertActivity&lt;TSource, TResult&gt;">
+    <Position X="37" Y="9" Width="3.5" />
+    <NestedTypes>
+      <Class Name="Core.Objects.Workflow.Activities.ConvertActivity&lt;TSource, TResult&gt;.ScriptArgs&lt;T&gt;" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Workflow\Activities\Transformation\ConvertActivity.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAACAAgAAAAA=</HashCode>
+      <FileName>Workflow\Activities\Transformation\ConvertActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.CsvXslActivity&lt;TResult&gt;">
+    <Position X="41.25" Y="9" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAABAQAAAAAAAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>Workflow\Activities\Transformation\CsvXslActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.DynamicDataFlattenActivity">
+    <Position X="45.25" Y="9" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Workflow\Activities\Transformation\DynamicDataFlattenActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.JsonXslActivity&lt;TResult&gt;">
+    <Position X="49.25" Y="9" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAQAAAAAAAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>Workflow\Activities\Transformation\JsonXslActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.TransformationActivity&lt;TSource, TResult&gt;">
+    <Position X="43.5" Y="6.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Workflow\Activities\Transformation\TransformationActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.XmlXslActivity&lt;TResult&gt;">
+    <Position X="52.5" Y="9" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAQAAAAAAAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>Workflow\Activities\Transformation\XmlXslActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.XslActivity">
+    <Position X="34" Y="9" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>Workflow\Activities\Transformation\XslActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.Activity">
+    <Position X="34.75" Y="1.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AgAEAAAAAgAAAgQAQAAggAAAAAgAAAAAAAAABAAAEAA=</HashCode>
+      <FileName>Workflow\Activities\Activity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.CoreActivity">
+    <Position X="27.75" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAQAAAA=</HashCode>
+      <FileName>Workflow\Activities\CoreActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.LogActivity">
+    <Position X="59" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>Workflow\Activities\LogActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.ErrorActivity">
+    <Position X="62.5" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Workflow\Activities\LogActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.WarningActivity">
+    <Position X="55.75" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Workflow\Activities\LogActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.InfoActivity">
+    <Position X="58" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Workflow\Activities\LogActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.DebugActivity">
+    <Position X="60.25" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Workflow\Activities\LogActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.Objects.Workflow.Activities.Api.AuthenticateActivity">
+    <Position X="31.5" Y="9" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAQAAAAAAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Workflow\Activities\Api\AuthenticateActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="Core.Objects.Workflow.Activities.ActivityState" Collapsed="true">
+    <Position X="119" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAAIAAAAAAAAAAAAAAAAIABAAAAABAAA=</HashCode>
+      <FileName>Workflow\Activities\ActivityState.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

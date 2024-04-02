@@ -1,0 +1,21 @@
+﻿@model Exception
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Error</title>
+    <meta name="description" content="Error rendering a page">
+    <meta name="keywords" content="Error, Exception, Page">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+</head>
+<body>
+    <h1>Problem Rendering Page</h1>
+    <h2>@Html.Raw(Model.Message)</h2>
+    <textarea>@Html.Raw(Model.StackTrace)</textarea>
+
+    <style>
+        textarea { width: 1000px; height: 500px; overflow: auto; }
+    </style>
+</body>
+</html>

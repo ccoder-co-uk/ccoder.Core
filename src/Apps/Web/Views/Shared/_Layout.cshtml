@@ -1,0 +1,22 @@
+﻿@model Core.Objects.Dtos.RenderResult
+<!DOCTYPE html>
+<html data-app-id="@(Model.AppId)" data-page-id="@(Model.PageId)" lang="@(Model.Culture?.Split('-')?.FirstOrDefault() ?? "en")" data-Layout="@(Model.Layout)" data-theme="@(Model.Theme)">
+    <head>
+        <title>@Model.Title</title>
+        <meta name="description" content="@Model.Description">
+        <meta name="keywords" content="@Model.Keywords">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="theme-color" content="#193855">
+        <script type="text/javascript">session = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Session));</script>
+        @Html.Raw(Model.HeaderHtml)
+    </head>
+    <body class="@Model.Layout">
+        @RenderBody()
+        @if (ViewBag?.Edit ?? false) 
+        { 
+            <script type="text/javascript">$(function () { parent.$("body").trigger("enablePageEditing", $("body")); })</script> 
+        }
+    </body>
+</html>

@@ -1,0 +1,34 @@
+﻿using Core.Objects;
+using Core.Objects.Entities.Packaging;
+using Core.Objects.Entities.Security;
+using Core.Objects.Extensions;
+using Core.Services;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Core.Packaging.Importers
+{
+    public class RoleImporter : CoreImporter<Role>
+    {
+        protected ICoreDataContext Db { get; }
+
+        public RoleImporter(ICoreService<Role> service, ICoreDataContext db) : base(service, "Core/Role") => Db = db;
+
+        public override async Task Import(int appId, PackageItem item)
+        {
+            Role[] items = item.Data.StartsWith("{") ? new[] { item.Unpack<Role>() } : item.Unpack<Role[]>();
+
+            items.ForEach(l => l.AppId = appId);
+
+            var dbVersions = Db.GetAll<Role>(false).Where(c => c.AppId == appId).Select(r => new { r.Id, r.Name }).ToArray();
+
+            items.ForEach(l =>
+            {
+                l.AppId = appId;
+                l.Id = dbVersions.FirstOrDefault(i => i.Name == l.Name)?.Id ?? System.Guid.Empty;
+            });
+
+            _ = await Service.AddOrUpdate(items, false);
+        }
+    }
+}

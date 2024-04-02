@@ -1,0 +1,41 @@
+﻿using Core.Objects.Entities.CMS;
+using Core.Objects.Extensions;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+
+namespace Core.Objects.Entities.Security
+{
+    [Table("Roles", Schema = "Security")]
+    public class Role
+    {
+        [Key]
+        public Guid Id { get; set; }
+
+        [ForeignKey("App")]
+        public int AppId { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+
+        public string Description { get; set; }
+
+        public string Privs { get; set; }
+
+        public App App { get; set; }
+
+        public virtual ICollection<UserRole> Users { get; set; }
+
+        public virtual ICollection<PageRole> Pages { get; set; }
+
+        public virtual ICollection<FolderRole> Folders { get; set; }
+
+        public virtual ICollection<string> Privileges { get => Data.ParseJson<ICollection<string>>($"[\"{Privs.Replace(",", "\",\"")}\"]" ?? "[]"); set => Privs = value.ToJson().Replace("[", "").Replace("]", "").Replace("\"", ""); }
+
+        [DontPrivilege]
+        public bool Allows(User user, string to) => user.Roles.Any(r => r.RoleId == Id) && Privileges.Any(p => p == to.ToLower());
+    }
+}
