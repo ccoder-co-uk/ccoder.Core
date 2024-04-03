@@ -74,7 +74,8 @@ namespace Core
         {
             if (path.IsToFile)
             {
-                File file = db.GetAll<File>(false).FirstOrDefault(f => f.Folder.AppId == app.Id && f.Path.ToLower() == path.Lowered);
+                File file = db.GetAll<File>(false)
+                    .FirstOrDefault(f => f.Folder.AppId == app.Id && f.Path.ToLower() == path.Lowered);
 
                 if (file == null)
                 {
@@ -84,10 +85,11 @@ namespace Core
                 else
                 {
                     byte[] data = db.GetAll<FileContent>(false)
+                        .IgnoreQueryFilters()
                         .Where(fc => fc.FileId == file.Id)
                         .OrderByDescending(fc => fc.Version)
-                        .First(fc => version == 0 || fc.Version == version)
-                        .RawData;
+                        .Select(f => f.RawData)
+                        .First();
 
                     return new DMSResult
                     {
@@ -309,7 +311,8 @@ namespace Core
             }
 
             var destinationFileId = db.GetAll<File>(false)
-                .Where(f => f.Folder.AppId == app.Id && f.Path == newPath.Lowered).Select(c => c.Id)
+                .Where(f => f.Folder.AppId == app.Id && f.Path == newPath.Lowered)
+                .Select(c => c.Id)
                 .FirstOrDefault();
 
             if (destinationFileId != Guid.Empty)
@@ -321,18 +324,25 @@ namespace Core
                     .Select(fc => fc.Version)
                     .First();
 
-                var newContents = sourceFile.Contents.Select(c =>
-                {
-                    var newFileContent = new FileContent().UpdateFrom(c);
-                    newFileContent.Id = Guid.Empty;
-                    newFileContent.Version += latestContentVersion;
-                    newFileContent.FileId = destinationFileId;
-                    newFileContent.RawData = c.RawData;
-                    newFileContent.Size = c.Size;
-                    return newFileContent;
-                });
+                var destinationFile = db.GetAll<File>(true)
+                    .Include(f => f.Folder)
+                    .FirstOrDefault(f => f.Folder.AppId == app.Id && f.Path == newPath.Lowered);
 
-                await db.AddAllAsync(newContents);
+                destinationFile.Contents = sourceFile.Contents
+                    .Select(c =>
+                    {
+                        var newFileContent = new FileContent().UpdateFrom(c);
+                        newFileContent.Id = Guid.Empty;
+                        newFileContent.Version += latestContentVersion;
+                        newFileContent.FileId = destinationFileId;
+                        newFileContent.RawData = c.RawData;
+                        newFileContent.Size = c.Size;
+                        newFileContent.File = destinationFile;
+                        return newFileContent;
+                    })
+                    .ToList();
+
+                await db.AddAllAsync(destinationFile.Contents);
                 await Drop(oldPath);
             }
             else

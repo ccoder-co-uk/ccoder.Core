@@ -1,17 +1,19 @@
 ﻿using Core.Objects.Extensions;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
-namespace Core.Objects.Workflow.Activities.Api
+namespace Core.Objects.Workflow.Activities.Api;
+
+public class AuthenticateActivity : ApiActivity
 {
-    public class AuthenticateActivity : ApiActivity
-    {
-        public string Username { get; set; }
-        public string Password { get; set; }
+    [JsonIgnore]
+    public string Username { get; set; }
 
-        public override async Task Execute()
-        {
-            using System.Net.Http.HttpClient api = GetHttpClient();
-            AuthToken = (await api.Authenticate(Username, Password))?.Id;
-        }
+    [JsonIgnore]
+    public string Password { get; set; }
+
+    public override async Task Execute()
+    {
+        using var api = GetHttpClient();
+        AuthToken = (await api.Authenticate(Username, Password))?.Id;
     }
 }

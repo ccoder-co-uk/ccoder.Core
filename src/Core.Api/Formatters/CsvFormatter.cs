@@ -21,17 +21,14 @@ namespace Core.Api.Formatters
 
         public override async Task WriteResponseBodyAsync(OutputFormatterWriteContext context, Encoding selectedEncoding)
         {
-            (string delimiter, string quotes, string culture) = ExtractValues(context, selectedEncoding);
-            await context.HttpContext.Response.WriteAsync(FormatterODataHelper.HandleOData(context.Object).ToCsv(GetResources(context), delimiter, quotes, culture));
+            (string delimiter, string quotes, string culture) = ExtractValues(context);
+            await context.HttpContext.Response.WriteAsync(FormatterODataHelper.HandleOData(context.Object).ToCsv(GetResources(context, culture), delimiter, quotes, culture));
         }
 
-        static (string delimiter, string quotes, string culture) ExtractValues(OutputFormatterWriteContext context, Encoding selectedEncoding)
+        static (string delimiter, string quotes, string culture) ExtractValues(OutputFormatterWriteContext context)
         {
             if (context == null)
                 throw new ArgumentNullException(nameof(context));
-
-            if (selectedEncoding == null)
-                throw new ArgumentNullException(nameof(selectedEncoding));
 
             return (
                 context.HttpContext.Request.Query.ContainsKey("delimiter") ? context.HttpContext.GetQueryParameter("delimiter") : ", ",
@@ -40,14 +37,14 @@ namespace Core.Api.Formatters
             );
         }
 
-        static IEnumerable<Resource> GetResources(OutputFormatterWriteContext context)
+        static IEnumerable<Resource> GetResources(OutputFormatterWriteContext context, string culture)
         {
             ICoreDataContext db = (ICoreDataContext)context.HttpContext.RequestServices.GetService(typeof(ICoreDataContext));
             ICommonObjectCache commonObjectCache = (ICommonObjectCache)context.HttpContext.RequestServices.GetService(typeof(ICommonObjectCache));
             List<Resource> resources = new();
             if (context.HttpContext.Request.Query.ContainsKey("appId"))
             {
-                resources.AddRange(db.GetAll<Resource>(false).Where(r => r.AppId == int.Parse(context.HttpContext.GetQueryParameter("appId")) && r.Key == "Default"));
+                resources.AddRange(db.GetAll<Resource>(false).Where(r => r.AppId == int.Parse(context.HttpContext.GetQueryParameter("appId")) && r.Key == "Default" && r.Culture == culture));
             }
 
             resources.AddRange(new Resource[]

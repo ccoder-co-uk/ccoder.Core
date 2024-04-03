@@ -1,11 +1,7 @@
 ﻿using Core.Objects.Entities.Security;
 using Core.Objects.Extensions;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.IO;
-using System.Linq;
 using System.Xml.Linq;
 
 namespace Core.Objects.Entities.DMS

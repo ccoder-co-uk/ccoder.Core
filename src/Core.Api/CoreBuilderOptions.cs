@@ -17,8 +17,9 @@ namespace Core.Api
         public CoreBuilderOptions UseMSSQLProvider(string connectionString)
         {
             //services.AddDbContext<CoreDataContext>();
-            services.AddTransient<ICoreDataContext, CoreDataContext>();
-            services.AddDbContextFactory<CoreDataContext>(lifetime: ServiceLifetime.Transient);
+            services.AddScoped<ICoreDataContext, CoreDataContext>();
+
+            services.AddDbContextFactory<CoreDataContext>(lifetime: ServiceLifetime.Scoped);
 
             return this;
         }

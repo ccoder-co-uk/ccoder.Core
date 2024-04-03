@@ -29,9 +29,9 @@ namespace Core.Api
         {
             var config = new CoreBuilderOptions(services);
 
-            services.AddTransient<ICoreService<Role>, RoleService>();
-            services.AddTransient<ICoreService<UserRole>, UserRoleService>();
-            services.AddTransient<ICoreService<User>, UserService>();
+            services.AddScoped<ICoreService<Role>, RoleService>();
+            services.AddScoped<ICoreService<UserRole>, UserRoleService>();
+            services.AddScoped<ICoreService<User>, UserService>();
 
             setupAction(config);
         }
@@ -39,66 +39,66 @@ namespace Core.Api
         internal static void AddCoreServices(this IServiceCollection services)
         {
             // CMS services
-            services.AddTransient<IAppService, AppService>();
-            services.AddTransient<ICoreService<AppCulture>, AppCultureService>();
-            services.AddTransient<ICommonObjectService, CommonObjectService>();
-            services.AddTransient<IComponentService, ComponentService>();
-            services.AddTransient<ICoreService<Content>, ContentService>();
-            services.AddTransient<ICoreService<Culture>, CultureService>();
-            services.AddTransient<ICoreService<Layout>, LayoutService>();
-            services.AddTransient<ICoreService<PackageItem>, PackageItemService>();
-            services.AddTransient<IPackageService, PackageService>();
-            services.AddTransient<IPageService, PageService>();
-            services.AddTransient<ICoreService<PageInfo>, PageInfoService>();
-            services.AddTransient<IResourceService, ResourceService>();
-            services.AddTransient<IScheduledTaskService, ScheduledTaskService>();
-            services.AddTransient<IScriptService, ScriptService>();
-            services.AddTransient<ICoreService<Submission>, SubmissionService>();
-            services.AddTransient<ITemplateService, TemplateService>();
+            services.AddScoped<IAppService, AppService>();
+            services.AddScoped<ICoreService<AppCulture>, AppCultureService>();
+            services.AddScoped<ICommonObjectService, CommonObjectService>();
+            services.AddScoped<IComponentService, ComponentService>();
+            services.AddScoped<ICoreService<Content>, ContentService>();
+            services.AddScoped<ICoreService<Culture>, CultureService>();
+            services.AddScoped<ICoreService<Layout>, LayoutService>();
+            services.AddScoped<ICoreService<PackageItem>, PackageItemService>();
+            services.AddScoped<IPackageService, PackageService>();
+            services.AddScoped<IPageService, PageService>();
+            services.AddScoped<ICoreService<PageInfo>, PageInfoService>();
+            services.AddScoped<IResourceService, ResourceService>();
+            services.AddScoped<IScheduledTaskService, ScheduledTaskService>();
+            services.AddScoped<IScriptService, ScriptService>();
+            services.AddScoped<ICoreService<Submission>, SubmissionService>();
+            services.AddScoped<ITemplateService, TemplateService>();
 
             // Mail services
-            services.AddTransient<IQueuedEmailService, QueuedEmailService>();
-            services.AddTransient<ICoreService<SentEmail>, SentEmailService>();
+            services.AddScoped<IQueuedEmailService, QueuedEmailService>();
+            services.AddScoped<ICoreService<SentEmail>, SentEmailService>();
 
             // Security services
-            services.AddTransient<ICMSUserRegistrationOrchestrationService, CMSUserRegistrationOrchestrationService>();
-            services.AddTransient<IUserRoleService, UserRoleService>();
-            services.AddTransient<ICoreService<PageRole>, PageRoleService>();
-            services.AddTransient<ICoreService<Privilege>, PrivilegeService>();
+            services.AddScoped<ICMSUserRegistrationOrchestrationService, CMSUserRegistrationOrchestrationService>();
+            services.AddScoped<IUserRoleService, UserRoleService>();
+            services.AddScoped<ICoreService<PageRole>, PageRoleService>();
+            services.AddScoped<ICoreService<Privilege>, PrivilegeService>();
 
             //planning services
-            services.AddTransient<ICoreService<CalendarEvent>, CalendarEventService>();
-            services.AddTransient<ICoreService<Calendar>, CalendarService>();
-            services.AddTransient<ICoreService<BackgroundJob>, BackgroundJobService>();
+            services.AddScoped<ICoreService<CalendarEvent>, CalendarEventService>();
+            services.AddScoped<ICoreService<Calendar>, CalendarService>();
+            services.AddScoped<ICoreService<BackgroundJob>, BackgroundJobService>();
 
             // workflow services
-            services.AddTransient<ICoreService<BusinessProcess>, BusinessProcessService>();
-            services.AddTransient<IFlowDefinitionService, FlowDefinitionService>();
-            services.AddTransient<ICoreService<FlowInstanceData>, FlowInstanceDataService>();
-            services.AddTransient<ICoreService<WorkflowEvent>, WorkflowEventService>();
+            services.AddScoped<ICoreService<BusinessProcess>, BusinessProcessService>();
+            services.AddScoped<IFlowDefinitionService, FlowDefinitionService>();
+            services.AddScoped<ICoreService<FlowInstanceData>, FlowInstanceDataService>();
+            services.AddScoped<ICoreService<WorkflowEvent>, WorkflowEventService>();
             
             // DMS Services.
-            services.AddTransient<ICoreService<FileContent>, FileContentService>();
-            services.AddTransient<ICoreService<FolderRole>, FolderRoleService>();
+            services.AddScoped<ICoreService<FileContent>, FileContentService>();
+            services.AddScoped<ICoreService<FolderRole>, FolderRoleService>();
         }
 
         internal static void AddCorePackaging(this IServiceCollection services)
         {
             // installers
-            services.AddTransient<IPackageInstaller, CorePackageInstaller>();
+            services.AddScoped<IPackageInstaller, CorePackageInstaller>();
 
             // importers 
-            services.AddTransient<IPackageItemImporter, BusinessProcessImporter>();
-            services.AddTransient<IPackageItemImporter, ComponentImporter>();
-            services.AddTransient<IPackageItemImporter, FlowDefinitionImporter>();
-            services.AddTransient<IPackageItemImporter, FolderRoleImporter>();
-            services.AddTransient<IPackageItemImporter, LayoutImporter>();
-            services.AddTransient<IPackageItemImporter, PageImporter>();
-            services.AddTransient<IPackageItemImporter, PageRoleImporter>();
-            services.AddTransient<IPackageItemImporter, ResourceImporter>();
-            services.AddTransient<IPackageItemImporter, RoleImporter>();
-            services.AddTransient<IPackageItemImporter, ScriptImporter>();
-            services.AddTransient<IPackageItemImporter, TemplateImporter>();
+            services.AddScoped<IPackageItemImporter, BusinessProcessImporter>();
+            services.AddScoped<IPackageItemImporter, ComponentImporter>();
+            services.AddScoped<IPackageItemImporter, FlowDefinitionImporter>();
+            services.AddScoped<IPackageItemImporter, FolderRoleImporter>();
+            services.AddScoped<IPackageItemImporter, LayoutImporter>();
+            services.AddScoped<IPackageItemImporter, PageImporter>();
+            services.AddScoped<IPackageItemImporter, PageRoleImporter>();
+            services.AddScoped<IPackageItemImporter, ResourceImporter>();
+            services.AddScoped<IPackageItemImporter, RoleImporter>();
+            services.AddScoped<IPackageItemImporter, ScriptImporter>();
+            services.AddScoped<IPackageItemImporter, TemplateImporter>();
         }
 
         internal static void AddCaches(
@@ -112,7 +112,7 @@ namespace Core.Api
                     MetadataHelper.MetaForEverything().Union(additionalMetadata), 
                     ctx.GetRequiredService<ICommonObjectCache>()));
 
-            services.AddTransient<IResourceProvider, CoreResourceProvider>();
+            services.AddScoped<IResourceProvider, CoreResourceProvider>();
         }
 
         internal static void AddCoreApi(this IServiceCollection services)
@@ -137,8 +137,8 @@ namespace Core.Api
 
             services.AddHttpClient();
             services.AddHttpContextAccessor();
-            services.AddTransient(ctx => ctx.GetService<IHttpContextAccessor>()?.HttpContext);
-            services.AddTransient(ctx => ctx.GetService<HttpContext>()?.Request);
+            services.AddScoped(ctx => ctx.GetService<IHttpContextAccessor>()?.HttpContext);
+            services.AddScoped(ctx => ctx.GetService<HttpContext>()?.Request);
 
             services.AddSession();
             services.AddHsts(options =>

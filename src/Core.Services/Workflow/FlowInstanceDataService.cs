@@ -2,16 +2,13 @@
 using Core.Objects.Entities.Workflow;
 using Core.Objects.Extensions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Security;
 
 namespace Core.Services.Workflow;
 
-public class FlowInstanceDataService(
-    ICoreDataContext db,
-    Config config,
-    ILogger<FlowInstanceDataService> log) : CoreService<FlowInstanceData>(db)
+public class FlowInstanceDataService(ICoreDataContext db, Config config) 
+    : CoreService<FlowInstanceData>(db)
 {
     public override async Task<FlowInstanceData> UpdateAsync(FlowInstanceData entity)
     {
@@ -28,30 +25,21 @@ public class FlowInstanceDataService(
             : throw new SecurityException("Access Denied!");
 
         if (executeNextInQueue)
-            await ExecuteNextQueuedInstance(result.FlowDefinitionId);
+            ExecuteNextQueuedInstance(result.FlowDefinitionId);
 
         return result;
     }
 
-    async Task ExecuteNextQueuedInstance(Guid flowDefinitionId)
+    void ExecuteNextQueuedInstance(Guid flowDefinitionId)
     {
-        try
+        var scheduler = config.Services["Scheduler"];
+
+        using HttpClient api = new(new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate })
         {
-            var scheduler = config.Services["Scheduler"];
+            BaseAddress = new Uri(scheduler)
+        };
 
-            using HttpClient api = new(new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate })
-            {
-                BaseAddress = new Uri(scheduler)
-            };
-
-            api.Timeout = TimeSpan.FromMinutes(11);
-
-            var response = await api.PostAsync("Workflow/ExecuteNextFlowInstanceInQueue?flowId=" + flowDefinitionId, null);
-            _ = response.EnsureSuccessStatusCode();
-        }
-        catch (Exception ex)
-        {
-            log.LogWarning($"Failed to execute next flow instance for flow `{flowDefinitionId}`:\n{ex.Message}");
-        }
+        api.PostAsync("Workflow/ExecuteNextFlowInstanceInQueue?flowId=" + flowDefinitionId, null)
+            .Forget();
     }
 }

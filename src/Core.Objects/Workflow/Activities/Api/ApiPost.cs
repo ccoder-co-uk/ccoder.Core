@@ -1,72 +1,68 @@
 ﻿using Core.Objects.Dtos.Workflow;
 using Core.Objects.Extensions;
-using System;
-using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace Core.Objects.Workflow.Activities.Api
+namespace Core.Objects.Workflow.Activities.Api;
+
+public class ApiPost<T, TResult> : ApiActivity<TResult>
 {
-    public class ApiPost<T, TResult> : ApiActivity<TResult>
+    [ApiIgnore]
+    [IgnoreWhenFlowComplete]
+    public T Data { get; set; }
+
+    public bool AutoWrapForOdata { get; set; } = true;
+
+    public bool WaitForResults { get; set; } = true;
+
+    public override async Task Execute()
     {
-        [ApiIgnore]
-        [IgnoreWhenFlowComplete]
-        public T Data { get; set; }
+        using HttpClient api = GetHttpClient();
+        Log(WorkflowLogLevel.Info, $"HTTP POST {BaseUrl}{Query}");
 
-        public bool AutoWrapForOdata { get; set; } = true;
+        object payload = AutoWrapForOdata && typeof(T).GetInterface("IEnumerable") != null 
+            ? new { value = Data } 
+            : Data;
 
-        public bool WaitForResults { get; set; } = true;
-
-        public override async Task Execute()
+        if (WaitForResults)
         {
-            using HttpClient api = GetHttpClient();
-            Log(WorkflowLogLevel.Info, $"HTTP POST {BaseUrl}{Query}");
+            // wait for the results to come back
+            string body = (Data is string d) 
+                ? d 
+                : payload.ToJsonForOdata();
 
-            object payload = AutoWrapForOdata && typeof(T).GetInterface("IEnumerable") != null 
-                ? new { value = Data } 
-                : Data;
+            HttpResponseMessage response = await api.PostAsync(Query, new StringContent(body, Encoding.UTF8, "application/json"));
 
-            if (WaitForResults)
+            if(!response.IsSuccessStatusCode)
             {
-                // wait for the results to come back
-                string body = (Data is string d) 
-                    ? d 
-                    : payload.ToJsonForOdata();
+                Log(WorkflowLogLevel.Error, $"HTTP POST {BaseUrl}{Query} failed with status code {(int)response.StatusCode}\n");
+                string content = await response.Content.ReadAsStringAsync();
+                Log(WorkflowLogLevel.Error, content);
+                return;
+            }
 
-                HttpResponseMessage response = await api.PostAsync(Query, new StringContent(body, Encoding.UTF8, "application/json"));
-
-                if(!response.IsSuccessStatusCode)
+            if (typeof(TResult) == typeof(string))
+                Result = (TResult)(object)await response.Content.ReadAsStringAsync();
+            else
+            {
+                try
                 {
-                    Log(WorkflowLogLevel.Error, $"HTTP POST {BaseUrl}{Query} failed with status code {(int)response.StatusCode}\n");
-                    string content = await response.Content.ReadAsStringAsync();
-                    Log(WorkflowLogLevel.Error, content);
-                    return;
+                    Result = await response.Content.ReadAsAsync<TResult>();
                 }
-
-                if (typeof(TResult) == typeof(string))
-                    Result = (TResult)(object)await response.Content.ReadAsStringAsync();
-                else
+                catch(Exception ex)
                 {
-                    try
-                    {
-                        Result = await response.Content.ReadAsAsync<TResult>();
-                    }
-                    catch(Exception ex)
-                    {
-                        Log(WorkflowLogLevel.Error, $"Exception {ex.Message}");
-                        Log(WorkflowLogLevel.Error, await response.Content.ReadAsStringAsync());
-                    }
+                    Log(WorkflowLogLevel.Error, $"Exception {ex.Message}");
+                    Log(WorkflowLogLevel.Error, await response.Content.ReadAsStringAsync());
                 }
             }
-            else // fire and forget
+        }
+        else // fire and forget
+        {
+            Task.Run(async () =>
             {
-                Task.Run(async () =>
-                {
-                    using HttpClient api = GetHttpClient();
-                    api.Timeout = TimeSpan.FromMinutes(10);
-                    _ = await api.PostAsync(Query, new StringContent(payload.ToJsonForOdata(), Encoding.UTF8, "application/json"));
-                }).Forget();
-            }
+                using HttpClient api = GetHttpClient();
+                api.Timeout = TimeSpan.FromMinutes(10);
+                _ = await api.PostAsync(Query, new StringContent(payload.ToJsonForOdata(), Encoding.UTF8, "application/json"));
+            }).Forget();
         }
     }
 }

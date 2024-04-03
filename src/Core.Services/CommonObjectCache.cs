@@ -1,10 +1,12 @@
-﻿using Core.Objects;
+﻿using Core.Data;
+using Core.Objects;
 using Core.Objects.Entities;
 using Core.Objects.Entities.CMS;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Core
@@ -44,12 +46,8 @@ namespace Core
                     using ICoreDataContext core = serviceProvider.CreateScope().ServiceProvider.GetService(typeof(ICoreDataContext)) as ICoreDataContext;
                     core.DisableFilters();
 
-                    log.LogInformation("Processing common object cache");
-                    CommonObject[] commonObjects = LoadPaged(core);
-                    CommonObject[] distinctTypeSets = commonObjects
-                        .GroupBy(c => new { c.Name, c.Culture, c.Key, c.Type })
-                        .Select(group => group.ToArray().OrderByDescending(i => i.Version).First())
-                        .ToArray();
+                    log.LogInformation($"{DateTimeOffset.Now} - Processing common object cache");
+                    CommonObject[] distinctTypeSets = LoadPaged(core);
 
                     CommonObject[] componentObjects = distinctTypeSets.Where(c => c.Type == "Core/Component").ToArray();
                     CommonObject[] resourceObjects = distinctTypeSets.Where(c => c.Type == "Core/Resource").ToArray();
@@ -57,10 +55,18 @@ namespace Core
 
                     LatestSet = componentObjects.Union(resourceObjects).Union(scriptObjects).ToArray();
 
-                    tempSet.AddRange(resourceObjects.Select(n => Objects.Data.ParseJson<Resource>(LatestSet.First(c => c.Type == "Core/Resource" && c.Name == n.Name && c.Culture == n.Culture && c.Key == n.Key).Json)));
-                    tempSet.AddRange(componentObjects.Select(n => Objects.Data.ParseJson<Component>(LatestSet.First(c => c.Type == "Core/Component" && c.Name == n.Name && c.Culture == n.Culture && c.Key == n.Key).Json)));
-                    tempSet.AddRange(scriptObjects.Select(n => Objects.Data.ParseJson<Script>(LatestSet.First(c => c.Type == "Core/Script" && c.Name == n.Name && c.Culture == n.Culture && c.Key == n.Key).Json)));
-                    log.LogInformation("Processed common object cache");
+                    tempSet.AddRange(resourceObjects
+                        .AsParallel()
+                        .WithDegreeOfParallelism(8)
+                        .Select(n => Objects.Data.ParseJson<Resource>(n.Json)));
+                    tempSet.AddRange(componentObjects
+                        .AsParallel()
+                        .WithDegreeOfParallelism(8)
+                        .Select(n => Objects.Data.ParseJson<Component>(n.Json)));
+                    tempSet.AddRange(scriptObjects
+                        .AsParallel().WithDegreeOfParallelism(8)
+                        .Select(n => Objects.Data.ParseJson<Script>(n.Json)));
+                    log.LogInformation($"{DateTimeOffset.Now} - Processed common object cache");
 
                     core.EnableFilters();
                     core.Dispose();
@@ -91,20 +97,36 @@ namespace Core
             }
         }
 
+        private static Func<CoreDataContext, int, int, IEnumerable<CommonObject>> compiledCommonCacheQuery =
+            Microsoft.EntityFrameworkCore.EF.CompileQuery<CoreDataContext, int, int, IEnumerable<CommonObject>>
+                ((CoreDataContext context, int skip, int take) => context.GetAll<CommonObject>(false)
+                .GroupBy(c => new { c.Name, c.Culture, c.Key, c.Type })
+                .Select(c => c.OrderByDescending(v => v.Version).First())
+                .Skip(skip)
+                .Take(take));
+
         private static CommonObject[] LoadPaged(ICoreDataContext core)
         {
+            Debug.WriteLine($"{System.DateTimeOffset.Now} - Loading cache");
+
             int pageSize = 500;
             int i = 0;
-            var page = core.GetAll<CommonObject>(false).Skip(i).Take(pageSize).ToArray();
+
+            var context = core as CoreDataContext;
+
+            IEnumerable<CommonObject> page = compiledCommonCacheQuery(context, i, pageSize);
 
             var result = new List<CommonObject>();
 
             while (page.Any())
             {
                 result.AddRange(page);
-                page = core.GetAll<CommonObject>(false).Skip(i).Take(pageSize).ToArray();
+                page = compiledCommonCacheQuery(context, i, pageSize);
+
                 i += pageSize;
             }
+
+            Debug.WriteLine($"{System.DateTimeOffset.Now} - Loaded cache");
 
             return result.ToArray();
         }

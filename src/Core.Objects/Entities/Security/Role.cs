@@ -33,7 +33,7 @@ namespace Core.Objects.Entities.Security
 
         public virtual ICollection<FolderRole> Folders { get; set; }
 
-        public virtual ICollection<string> Privileges { get => Data.ParseJson<ICollection<string>>($"[\"{Privs.Replace(",", "\",\"")}\"]" ?? "[]"); set => Privs = value.ToJson().Replace("[", "").Replace("]", "").Replace("\"", ""); }
+        public virtual ICollection<string> Privileges { get => Privs.Split(","); set => Privs = string.Join(',', value); }
 
         [DontPrivilege]
         public bool Allows(User user, string to) => user.Roles.Any(r => r.RoleId == Id) && Privileges.Any(p => p == to.ToLower());

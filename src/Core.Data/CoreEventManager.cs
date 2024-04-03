@@ -2,28 +2,48 @@
 using Core.Objects.Entities.CMS;
 using Core.Objects.Entities.DMS;
 using Core.Objects.Entities.Security;
+using Core.Objects.Entities.Workflow;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using File = Core.Objects.Entities.DMS.File;
 using Path = Core.Objects.Path;
 
 namespace Core
 {
-    public class CoreEventManager : EventManager
+    public class CoreEventManager : EventManager, ICoreEventManager
     {
+        private bool loadedEvents = false;
 
-        public CoreEventManager(ILogger log, ICoreDataContext core, Config config, ICoreAuthInfo auth) 
+        public CoreEventManager(ILogger log, ICoreDataContext core, Config config, ICoreAuthInfo auth)
             : base(log, core, config, auth, "Core") { }
 
         public override async Task RaiseEvent<T>(T forObject, string name)
         {
+            if (!loadedEvents)
+            {
+                Core.DisableFilters();
+
+                Subscriptions = Core.GetAll<WorkflowEvent>(false)
+                    .Include(sub => sub.Flow)
+                    .Include(sub => sub.ExecuteAsUser)
+                        .ThenInclude(u => u.Roles)
+                            .ThenInclude(r => r.Role)
+                    .Where(e => e.Type.StartsWith("Core"))
+                    .ToArray();
+
+                Core.EnableFilters();
+
+                loadedEvents = true;
+            }
+
             var ignoreTypes = new[] { typeof(PageInfo), typeof(PageRole), typeof(FolderRole) };
 
             if (ignoreTypes.Contains(forObject.GetType()))
                 return;
 
             // Compute the context in to which the event occurred
-            int? appId = (int?)Core.GetType(
-                ).GetMethod("GetAppId")
+            int? appId = (int?)Core.GetType()
+                .GetMethod("GetAppId")
                 .MakeGenericMethod(forObject.GetType())
                 .Invoke(Core, new[] { forObject });
 

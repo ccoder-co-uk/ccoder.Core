@@ -11,7 +11,7 @@ namespace Core.Objects
 {
     public static class ContentHelper
     {
-        const string tag = @"\[TYPE\[[A-Za-z\d_/-]*\]\]";
+        const string tag = @"\[TYPE\[[A-Za-z\d_/-]*\][A-Za-z\d_/-]*\=*\""*-*[A-Za-z\d_/-]*\""*\]";
 
         public static IMetadataCache MetaCache { get; set; }
         public static ICommonObjectCache ObjectCache { get; set; }
@@ -27,13 +27,13 @@ namespace Core.Objects
         {
             p.Culture ??= string.Empty;
 
-            string culture = p.Culture.IsNullOrEmpty() 
-                ? p.App.DefaultCultureId 
+            string culture = p.Culture.IsNullOrEmpty()
+                ? p.App.DefaultCultureId
                 : p.Culture;
 
-            string port = config.Settings.ContainsKey("sslPort") 
-                ? $":{config.Settings["sslPort"]}"
-                : ":443";
+            string port = config.Settings.TryGetValue("sslPort", out string value) 
+                ? $":{value}"
+                : string.Empty;
 
             List<Replacement> result =
             [
@@ -78,7 +78,7 @@ namespace Core.Objects
             }
 
             if (p is PageRenderParams prp)
-            { 
+            {
                 result.AddRange(
                 [
                     new Replacement("[page[title]]", prp.Page.Title(prp.Culture)),
@@ -163,14 +163,14 @@ namespace Core.Objects
 
             result.RegexReplace(tag.Replace("TYPE", "nav"), (m) =>
             {
-                int.TryParse(m.TagName(), out int pageId);
+                _ = int.TryParse(m.TagName(), out int pageId);
                 var page = prp.App.Pages.FirstOrDefault(p => p.Id == pageId);
                 return BuildMenuFor(page, false);
             });
 
             result.RegexReplace(tag.Replace("TYPE", "navExpanded"), (m) =>
             {
-                int.TryParse(m.TagName(), out int pageId);
+                _ = int.TryParse(m.TagName(), out int pageId);
                 var page = prp.App.Pages.FirstOrDefault(p => p.Id == pageId);
                 return BuildMenuFor(page, true);
             });
@@ -191,27 +191,40 @@ namespace Core.Objects
                 throw new Exception("No Replacement info given during render operation ?!?");
         }
 
-        private static void Component(string key, RenderParams p, IEnumerable<Replacement> replacements, StringBuilder result)
+        static (string, string, string[]) SplitMatch(System.Text.RegularExpressions.Match match)
+        {
+            var tagParts = match.ToString().Split("[", StringSplitOptions.None);
+            var tagParts2 = tagParts.Last().Split("]", StringSplitOptions.None);
+
+            return (tagParts[1].ToLower(), tagParts2[0].ToLower(), tagParts2[1].Split("|", StringSplitOptions.RemoveEmptyEntries));
+        }
+
+        static void Component(string key, RenderParams p, IEnumerable<Replacement> replacements, StringBuilder result)
         {
             if (p is PageRenderParams prp && prp.Edit)
                 return;
 
             result.RegexReplace(tag.Replace("TYPE", "component"), (m) =>
             {
-                Component componentInCache = ObjectCache.Get<Component>($"component|{m.TagName().ToLower()}");
-                Component appComponent = p.App?.Components?.FirstOrDefault(c => c.Name.ToLower() == m.TagName());
-                return ProcessContentString(key, p,
-                    Component(appComponent ?? componentInCache, p,
-                        m.TagName(), replacements), replacements);
+                (string type, string name, string[] options) tag = SplitMatch(m);
+
+                return ProcessContentString(key,
+                    p,
+                    Component(
+                        p.App?.Components?.FirstOrDefault(c => c.Name.Equals(tag.name, StringComparison.CurrentCultureIgnoreCase)) ?? ObjectCache.Get<Component>($"component|{tag.name}"),
+                        p,
+                        tag,
+                        replacements),
+                    replacements);
             });
         }
 
         private static void Content(string key, StringBuilder source, PageRenderParams prp, IEnumerable<Replacement> replacements)
         {
-            source.RegexReplace(tag.Replace("TYPE", "content"), (m)
-                =>
+            source.RegexReplace(tag.Replace("TYPE", "content"), (m) =>
             {
-                string content = Content(prp.Page.ResourceKey, prp.Page.ContentForCulture(m.TagName(), prp.Culture), prp, m.TagName(), replacements);
+                (string type, string name, string[] options) tag = SplitMatch(m);
+                string content = Content(prp.Page.ResourceKey, prp.Page.ContentForCulture(tag.name, prp.Culture), prp, tag, replacements);
 
                 if (prp.Edit)
                     return content;
@@ -234,12 +247,18 @@ namespace Core.Objects
         {
             source.RegexReplace("\\[script\\[[A-Za-z\\d_/. \\-]*\\]\\]", (m) =>
             {
-                string name = m.Value.Replace("[script[", "").Replace("]]", "").ToLower();
+                string name = m.Value
+                    .Replace("[script[", "")
+                    .Replace("]]", "")
+                    .ToLower();
+
                 Script script = ObjectCache.Get<Script>($"script|{name.ToLower()}");
 
                 if (script != null)
                 {
-                    Script appScript = p?.App?.Scripts?.FirstOrDefault(s => s.Name.ToLower() == name);
+                    Script appScript = p?.App?.Scripts?
+                        .FirstOrDefault(s => s.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+
                     return ProcessContentString(key, p, appScript?.Content ?? script.Content, replacements);
                 }
 
@@ -260,8 +279,13 @@ namespace Core.Objects
         {
             source.RegexReplace("\\[dms\\[[A-Za-z\\d_/. \\-]*\\]\\]", (m) =>
             {
-                string path = m.Value.Replace("[dms[", "").Replace("]]", "").ToLower();
-                File file = p.Db.GetAll<File>(false).FirstOrDefault(f => f.Folder.AppId == p.App.Id && f.Path.ToLower() == path);
+                string path = m.Value
+                    .Replace("[dms[", "")
+                    .Replace("]]", "")
+                    .ToLower();
+
+                File file = p.Db.GetAll<File>(false)
+                    .FirstOrDefault(f => f.Folder.AppId == p.App.Id && f.Path == path);
 
                 if (file != null)
                 {
@@ -270,7 +294,9 @@ namespace Core.Objects
                         .OrderByDescending(f => f.Version)
                         .First();
 
-                    return content.RawData.Any() ? ProcessContentString(key, p, Encoding.UTF8.GetString(content.RawData), replacements) : string.Empty;
+                    return content.RawData.Length != 0 
+                        ? ProcessContentString(key, p, Encoding.UTF8.GetString(content.RawData), replacements) 
+                        : string.Empty;
                 }
 
                 return string.Empty;
@@ -285,15 +311,21 @@ namespace Core.Objects
         /// <param name="name"></param>
         /// <param name="replacements"></param>
         /// <returns></returns>
-        static string Content(string key, Content content, PageRenderParams p, string name, IEnumerable<Replacement> replacements)
+        static string Content(string key, Content content, PageRenderParams p, (string type, string name, string[] options) tag, IEnumerable<Replacement> replacements)
         {
-            var contentEditable = p.Edit ? "contenteditable" : string.Empty;
+            var contentEditable = p.Edit
+                ? "contenteditable"
+                : string.Empty;
+
+            var optionalClass = string.Join(" ", tag.options
+                .Where(o => o.StartsWith("class="))
+                .Select(c => c.Replace("class=", "")));
 
             return content != null
-                ? $@"<section name='{content.Name}' class='content' data-id='{content.Id}' {contentEditable}>
+                ? $@"<section name='{content.Name}' class='content {optionalClass}' data-id='{content.Id}' {contentEditable} {string.Join(" ", tag.options.Where(o => !o.StartsWith("class=")))}>
                         {(p.Edit ? content.Html : ProcessContentString(key, p, content.Html, replacements))}
                     </section>"
-                : $"[[Missing Content:{name}]]";
+                : $"[[Missing Content:{tag.name}]]";
         }
 
 
@@ -306,15 +338,25 @@ namespace Core.Objects
         /// <param name="name"></param>
         /// <param name="replacements"></param>
         /// <returns></returns>
-        static string Component(Component component, RenderParams p, string name, IEnumerable<Replacement> replacements)
+        static string Component(Component component, RenderParams p, (string type, string name, string[] options) tag, IEnumerable<Replacement> replacements)
         {
             if (p is PageRenderParams prp && prp.Edit)
-                return $"[component[{name}]]";
+                return $"[component[{tag.name}]{tag.options}]";
 
             if (component == null)
-                return $"[[Missing Component:{name}]]";
+                return $"[[Missing Component:{tag.name}]]";
 
-            string result = $"<section name='{component.Name}' class='component' data-id='{component.Id}' data-resource-key='{component.ResourceKey}'>{ProcessContentString(component.ResourceKey, p, component.Content, replacements)}<script type='text/javascript' defer async>{ProcessContentString(component.ResourceKey, p, component.Script, replacements)}</script></section>";
+            var optionalClass = string.Join(" ", tag.options
+                .Where(o => o.StartsWith("class="))
+                .Select(c => c.Replace("class=", "")));
+
+            var result = component != null
+                ? $@"<section name='{component.Name}' class='component {optionalClass}' data-id='{component.Id}' data-resource-key='{component.ResourceKey}' {string.Join(" ", tag.options.Where(o => !o.StartsWith("class=")))}>
+                        {ProcessContentString(component.ResourceKey, p, component.Content, replacements)}
+                        <script type='text/javascript' defer async>{ProcessContentString(component.ResourceKey, p, component.Script, replacements)}</script>
+                    </section>"
+                : $"[[Missing Component:{tag.name}]]";
+
             return ProcessContentString(component.ResourceKey, p, result, replacements);
         }
 
@@ -330,19 +372,18 @@ namespace Core.Objects
             if (p is PageRenderParams prp && prp.Edit)
                 return;
 
-            List<Resource> known = new List<Resource>();
-
-            List<string> namesInKey = new();
+            List<Resource> known = [];
+            List<string> namesInKey = [];
 
             // scrape the names in to the list above
             source.RegexMatch(tag.Replace("TYPE", "resource_displayname"), (m) => namesInKey.Add(m.TagName()));
             source.RegexMatch(tag.Replace("TYPE", "resource_shortdisplayname"), (m) => namesInKey.Add(m.TagName()));
             source.RegexMatch(tag.Replace("TYPE", "resource_description"), (m) => namesInKey.Add(m.TagName()));
 
-            if (!namesInKey.Any())
+            if (namesInKey.Count == 0)
                 return;
 
-            known.AddRange(p.App.Resources?.SectionForCulture(key, p.Culture ?? string.Empty).ToList() ?? new List<Resource>());
+            known.AddRange(p.App.Resources?.SectionForCulture(key, p.Culture ?? string.Empty).ToList() ?? []);
 
             string lowerKey = key.ToLowerInvariant();
             string lowerCulture = p.Culture.ToLowerInvariant();
@@ -350,14 +391,38 @@ namespace Core.Objects
             foreach (var resourceName in namesInKey)
             {
                 Resource matchedResource = FindResourceInCache(lowerKey, resourceName.ToLowerInvariant(), lowerCulture);
+
                 if (matchedResource != null)
                     known.Add(matchedResource);
             }
 
             // do the replacement work
-            source.RegexReplace(tag.Replace("TYPE", "resource_displayname"), (m) => ProcessContentString(key, p, known.FirstOrDefault(r => r.Name.ToLower() == m.TagName().ToLower())?.DisplayName ?? m.TagName().ToLower(), replacements));
-            source.RegexReplace(tag.Replace("TYPE", "resource_shortdisplayname"), (m) => ProcessContentString(key, p, known.FirstOrDefault(r => r.Name.ToLower() == m.TagName().ToLower())?.ShortDisplayName ?? m.TagName().ToLower(), replacements));
-            source.RegexReplace(tag.Replace("TYPE", "resource_description"), (m) => ProcessContentString(key, p, known.FirstOrDefault(r => r.Name.ToLower() == m.TagName().ToLower())?.Description ?? m.TagName().ToLower(), replacements));
+            source.RegexReplace(tag.Replace("TYPE", "resource_displayname"), 
+                (m) => ProcessContentString(
+                    key, 
+                    p, 
+                    known.FirstOrDefault(r => 
+                        r.Name.Equals(m.TagName(), 
+                        StringComparison.CurrentCultureIgnoreCase))?.DisplayName ?? m.TagName().ToLower(), 
+                    replacements));
+
+            source.RegexReplace(tag.Replace("TYPE", "resource_shortdisplayname"), 
+                (m) => ProcessContentString(
+                    key, 
+                    p, 
+                    known.FirstOrDefault(r => 
+                        r.Name.Equals(m.TagName(), 
+                        StringComparison.CurrentCultureIgnoreCase))?.ShortDisplayName ?? m.TagName().ToLower(), 
+                    replacements));
+
+            source.RegexReplace(tag.Replace("TYPE", "resource_description"), 
+                (m) => ProcessContentString(
+                    key, 
+                    p, 
+                    known.FirstOrDefault(r => 
+                        r.Name.Equals(m.TagName(), 
+                        StringComparison.CurrentCultureIgnoreCase))?.Description ?? m.TagName().ToLower(), 
+                    replacements));
 
         }
 
@@ -367,10 +432,11 @@ namespace Core.Objects
             if (existsForCurrentCulture != null)
                 return existsForCurrentCulture;
 
-            if (culture.Contains("-"))
+            if (culture.Contains('-'))
             {
                 string primitiveCulture = culture.Split("-")[0];
                 var existsForPrimitiveCulture = ObjectCache.Get<Resource>($"resource|{key}-{name}-{primitiveCulture}");
+
                 if (existsForPrimitiveCulture != null)
                     return existsForPrimitiveCulture;
             }
@@ -396,7 +462,11 @@ namespace Core.Objects
                 return BuildJObjectThemeReplacements(model, prefix);
 
             if (model is string)
-                return new[] { new Replacement($"[theme[{prefix}]]", model.ToString()) };
+                return 
+                [
+                    new Replacement($"[theme[{prefix}]]", 
+                    model.ToString())
+                ];
 
             if (model is not IEnumerable)
                 return BuildIEnumerableThemeReplacements(model, prefix);
@@ -404,10 +474,10 @@ namespace Core.Objects
             return BuildObjectThemeReplacements(model, prefix);
         }
 
-        private static IEnumerable<Replacement> BuildObjectThemeReplacements<T>(T model, string prefix)
+        private static List<Replacement> BuildObjectThemeReplacements<T>(T model, string prefix)
         {
             string bindingExpression = prefix ?? string.Empty;
-            List<Replacement> result = new();
+            List<Replacement> result = [];
             int i = 0;
 
             foreach (object item in ((IEnumerable)model))
@@ -417,7 +487,10 @@ namespace Core.Objects
                 i++;
             }
 
-            string lengthBinding = bindingExpression.Length == 0 ? "Length" : bindingExpression + ".Length";
+            string lengthBinding = bindingExpression.Length == 0 
+                ? "Length" 
+                : bindingExpression + ".Length";
+
             result.Add(new Replacement($"[theme[{lengthBinding}]]", i.ToString()));
 
             return result;
@@ -430,47 +503,64 @@ namespace Core.Objects
                 .SelectMany(p =>
                 {
                     object v = p.GetValue(model);
-                    string bindingExpression = prefix.Length > 0 ? prefix + "." + p.Name : p.Name;
+
+                    string bindingExpression = prefix.Length > 0 
+                        ? prefix + "." + p.Name 
+                        : p.Name;
+
                     if (p.PropertyType.IsValueType || p.PropertyType == typeof(string))
-                        return new[] { new Replacement($"[theme[{prefix}]]", model?.ToString() ?? string.Empty), new Replacement($"[theme[{bindingExpression}]]", v?.ToString() ?? string.Empty) };
+                        return 
+                        [
+                            new Replacement($"[theme[{prefix}]]", model?.ToString() ?? string.Empty), 
+                            new Replacement($"[theme[{bindingExpression}]]", v?.ToString() ?? string.Empty)
+                        ];
                     else if (v != null)
                         return BuildThemeReplacements(v, $"{bindingExpression}");
                     else
-                        return Array.Empty<Replacement>();
+                        return [];
                 })
-                   .Where(i => i.Old != null && i.New != null)
-                   .ToList();
+                .Where(i => i.Old != null && i.New != null);
         }
 
-        static IEnumerable<Replacement> BuildJObjectThemeReplacements<T>(T model, string prefix)
+        private static IEnumerable<Replacement> BuildJObjectThemeReplacements<T>(T model, string prefix)
         {
             IEnumerable<KeyValuePair<string, JToken>> values = ((IEnumerable<KeyValuePair<string, JToken>>)model);
             return values.SelectMany(t =>
             {
-                string bindingExpression = prefix.Length > 0 ? prefix + "." + t.Key : t.Key;
+                string bindingExpression = prefix.Length > 0 
+                    ? prefix + "." + t.Key 
+                    : t.Key;
+
                 if (t.Value.GetType() == typeof(JValue))
-                    return new[] { new Replacement($"[theme[{bindingExpression}]]", t.Value?.ToString() ?? string.Empty) };
+                    return [new Replacement($"[theme[{bindingExpression}]]", t.Value?.ToString() ?? string.Empty)];
                 else if (t.Value != null)
                     return BuildThemeReplacements(t.Value, $"{bindingExpression}");
 
-                return Array.Empty<Replacement>();
-            })
-            .ToList();
+                return [];
+            });
         }
 
-        static IEnumerable<Replacement> BuildDynamicThemeReplacements<T>(T model, string prefix)
+        private static IEnumerable<Replacement> BuildDynamicThemeReplacements<T>(T model, string prefix)
         {
             IDictionary<string, object> dynamicModel = (IDictionary<string, object>)model;
+
             return dynamicModel.Keys.SelectMany(key =>
             {
-                string bindingExpression = prefix.Length > 0 ? prefix + "." + key : key;
-                List<Replacement> results = new() { new Replacement($"[theme[{bindingExpression}]]", dynamicModel[key]?.ToString() ?? string.Empty) };
+                string bindingExpression = prefix.Length > 0 
+                    ? prefix + "." + key 
+                    : key;
+
+                List<Replacement> results = 
+                [
+                    new Replacement($"[theme[{bindingExpression}]]", 
+                    dynamicModel[key]?.ToString() ?? string.Empty)
+                ];
+
                 if (dynamicModel[key] != null && !dynamicModel[key].GetType().IsValueType)
                     results.AddRange(BuildThemeReplacements(dynamicModel[key], bindingExpression));
 
                 return results;
-            })
-            .ToList();
+            });
         }
     }
 }

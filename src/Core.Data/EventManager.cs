@@ -8,7 +8,7 @@ namespace Core;
 
 public abstract class EventManager
 {
-    protected IEnumerable<WorkflowEvent> Subscriptions { get; }
+    protected IEnumerable<WorkflowEvent> Subscriptions { get; set; }
 
     protected string DataContext { get; }
 
@@ -30,7 +30,7 @@ public abstract class EventManager
         Config = config;
         RaisedEvents = new Dictionary<string, ICollection<object>>();
 
-        if (core != null && config != null && auth != null)
+        if (core != null && config != null && auth != null && dataContext != "Core")
         {
             core.DisableFilters();
 
@@ -73,7 +73,7 @@ public abstract class EventManager
     public virtual async Task RaiseEvents(object[] forObjects, string name) => 
         await Task.WhenAll(forObjects.Select(o => RaiseEvent(o, name)));
 
-    async Task QueueHandlingFlowInstanceSafely(WorkflowEvent eventSub, object source)
+    async Task QueueHandlingFlowInstanceSafely<T>(WorkflowEvent eventSub, T source)
     {
         try
         {
@@ -81,7 +81,7 @@ public abstract class EventManager
         }
         catch (Exception ex) 
         {
-            Log.LogWarning($"Exception thrown whilst raising event:\n{ex.Message}\n{ex.StackTrace}");
+            Log.LogWarning($"Exception thrown whilst raising event for object of type {typeof(T).Name}:\n{ex.Message}\n{ex.StackTrace}");
             Log.LogWarning($"Failed to queue new instance handle for subscription:\n\tSubscriptionId: {eventSub.Id}\n\tFlowId: {eventSub.FlowId}\n\tSource:\n {source.ToJson(1)}");
         }
     }

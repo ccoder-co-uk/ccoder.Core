@@ -4,54 +4,50 @@ using Core.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 
-namespace Core.Api.Controllers
+namespace Core.Api.Controllers;
+
+public class PackageController(IPackageService service, ICoreAuthInfo auth, ILogger<PackageController> log) 
+    : CoreEntityODataController<Package, Guid>(service, auth, log)
 {
-    public class PackageController : CoreEntityODataController<Package, Guid>
+    readonly ILogger log = log;
+
+    protected new IPackageService Service => 
+        base.Service as IPackageService;
+
+    [HttpPost]
+    public async Task<IActionResult> Import(int appId, string packageUrl)
     {
-        readonly ILogger log;
+        StringValues remoteAuth = Request.Headers["remote-auth"];
+        await Service.Import(appId, packageUrl, remoteAuth);
+        return Ok();
+    }
 
-        protected new IPackageService Service => 
-            base.Service as IPackageService;
-
-        public PackageController(IPackageService service, ICoreAuthInfo auth, ILogger<PackageController> log) 
-            : base(service, auth, log) =>
-                this.log = log;
-
-        [HttpPost]
-        public async Task<IActionResult> Import(int appId, string packageUrl)
+    [HttpPost]
+    public async Task<IActionResult> ImportThis(int appId)
+    {
+        try
         {
-            StringValues remoteAuth = Request.Headers["remote-auth"];
-            await Service.Import(appId, packageUrl, remoteAuth);
-            return Ok();
-        }
+            using StreamReader reader = new(Request.Body);
+            string data = await reader.ReadToEndAsync();
 
-        [HttpPost]
-        public async Task<IActionResult> ImportThis(int appId)
-        {
-            try
+            if (data.StartsWith('{'))
             {
-                using StreamReader reader = new(Request.Body);
-                string data = await reader.ReadToEndAsync();
-                if (data.StartsWith("{"))
-                {
-                    Package package = Objects.Data.ParseJson<Package>(data);
+                Package package = Objects.Data.ParseJson<Package>(data);
+                await Service.Import(appId, package);
+            }
+            else
+            {
+                Package[] packages = Objects.Data.ParseJson<Package[]>(data);
+
+                foreach (Package package in packages)
                     await Service.Import(appId, package);
-                }
-                else
-                {
-                    Package[] packages = Objects.Data.ParseJson<Package[]>(data);
-                    foreach (Package package in packages)
-                    {
-                        await Service.Import(appId, package);
-                    }
-                }
             }
-            catch (Exception ex)
-            {
-                log.LogWarning("A Packkage import failed due to an exception:\n", ex);
-                return BadRequest(ex);
-            }
-            return Ok();
         }
+        catch (Exception ex)
+        {
+            log.LogWarning("A Packkage import failed due to an exception:\n", ex);
+            return BadRequest(ex);
+        }
+        return Ok();
     }
 }

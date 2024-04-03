@@ -1,6 +1,5 @@
 ﻿using Core.Objects.Dtos.Workflow;
 using Core.Objects.Extensions;
-using System.Threading.Tasks;
 
 namespace Core.Objects.Workflow.Activities.Api
 {
@@ -12,12 +11,11 @@ namespace Core.Objects.Workflow.Activities.Api
 
         public override async Task Execute()
         {
-            System.Net.Http.HttpClient api = GetHttpClient();
+            using var api = GetHttpClient();
+
             Log(WorkflowLogLevel.Info, $"HTTP DELETE {api.BaseAddress}{Query.Replace("[Key]", Data.GetId().ToString())}");
-            using (api)
-            {
-                _ = await api.DeleteAsync(Query);
-            }
+
+            await api.DeleteAsync(Query);
         }
     }
 }
