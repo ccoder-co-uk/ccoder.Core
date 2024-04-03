@@ -30,9 +30,9 @@ jobs:
       with:
         fetch-depth: 0 # Get all history to allow automatic versioning using MinVer
     
-    - name: Get current date
-      id: date
-      run: echo "::set-output name=date::$(date +'%Y.%m.%d')"
+    - name: Create version number
+      id: version
+      run: echo "::set-output name=version::$(date +'%Y.%m.%d.%h%m')"
 
     # Install the .NET SDK indicated in the global.json file
     - name: Setup .NET
@@ -40,11 +40,11 @@ jobs:
 
     # Create the NuGet package in the folder from the environment variable NuGetDirectory
     - run: |
-        dotnet pack src/Core.Api --configuration Release --output ${{ env.NuGetDirectory }}/Core /p:Version="${{ steps.date.outputs.date }}.${{ github.run_id }}-${{ github.run_attempt }}"
-        dotnet pack src/Core.Connectivity --configuration Release --output ${{ env.NuGetDirectory }}/Core /p:Version="${{ steps.date.outputs.date }}.${{ github.run_id }}-${{ github.run_attempt }}"
-        dotnet pack src/Core.Data --configuration Release --output ${{ env.NuGetDirectory }}/Core /p:Version="${{ steps.date.outputs.date }}.${{ github.run_id }}-${{ github.run_attempt }}"
-        dotnet pack src/Core.Objects --configuration Release --output ${{ env.NuGetDirectory }}/Core /p:Version="${{ steps.date.outputs.date }}.${{ github.run_id }}-${{ github.run_attempt }}"
-        dotnet pack src/Core.Services --configuration Release --output ${{ env.NuGetDirectory }}/Core /p:Version="${{ steps.date.outputs.date }}.${{ github.run_id }}-${{ github.run_attempt }}"
+        dotnet pack src/Core.Api --configuration Release --output ${{ env.NuGetDirectory }}/Core /p:Version="${{ steps.version.outputs.version }}"
+        dotnet pack src/Core.Connectivity --configuration Release --output ${{ env.NuGetDirectory }}/Core /p:Version="${{ steps.version.outputs.version }}"
+        dotnet pack src/Core.Data --configuration Release --output ${{ env.NuGetDirectory }}/Core /p:Version="${{ steps.version.outputs.version }}"
+        dotnet pack src/Core.Objects --configuration Release --output ${{ env.NuGetDirectory }}/Core /p:Version="${{ steps.version.outputs.version }}"
+        dotnet pack src/Core.Services --configuration Release --output ${{ env.NuGetDirectory }}/Core /p:Version="${{ steps.version.outputs.version }}"
 
     # Publish the NuGet package as an artifact, so they can be used in the following jobs
     - uses: actions/upload-artifact@v3
