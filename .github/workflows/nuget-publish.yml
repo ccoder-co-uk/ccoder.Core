@@ -36,7 +36,7 @@ jobs:
       
     - name: Add NuGet Source
       run: |
-        dotnet nuget add source ${{ secrets.CLX_NUGET_URL }} -n clx -u ${{ secrets.CLX_REGISTRY_USER }} -p ${{ secrets.CLX_REGISTRY_TOKEN }}
+        dotnet nuget add source ${{ secrets.CLX_NUGET_URL }} -n clx -u ${{ secrets.CLX_REGISTRY_USER }} -p ${{ secrets.CLX_REGISTRY_TOKEN }} --store-password-in-clear-text
 
     # Install the .NET SDK indicated in the global.json file
     - name: Setup .NET
