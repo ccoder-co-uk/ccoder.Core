@@ -32,7 +32,7 @@ jobs:
     
     - name: Create version number
       id: version
-      run: echo "::set-output name=version::$(date +'%Y.%m.%d.%h%m')"
+      run: echo "::set-output name=version::$(date +'%Y.%m.%d.%H%M')"
 
     # Install the .NET SDK indicated in the global.json file
     - name: Setup .NET
