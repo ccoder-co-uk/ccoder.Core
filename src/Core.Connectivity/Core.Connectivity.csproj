@@ -1,10 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
   </PropertyGroup>
+
+	<PropertyGroup>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<PackageTags>cCoder;Core;cCoder.Core;cCoder.Core.Connectivity</PackageTags>
+
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<PrivateRepositoryUrl>https://github.com/ccoder-co-uk/ccoder.Core.git</PrivateRepositoryUrl>
+		<ProjectUrl>https://github.com/ccoder-co-uk/ccoder.Core.git</ProjectUrl>
+		<Description>cCoder.Core.Connectivity</Description>
+
+		<Authors>cCoder</Authors>
+		<PackageId>cCoder.Core.Connectivity</PackageId>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="docs\README.md" Pack="true" PackagePath="\"/>
+	</ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="SSH.NET" Version="2020.0.2" />
@@ -14,5 +30,4 @@
     <PackageReference Include="DSharpPlus" Version="4.2.0" />
     <ProjectReference Include="..\Core.Objects\Core.Objects.csproj" />
   </ItemGroup>
-
 </Project>
