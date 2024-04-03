@@ -5,6 +5,23 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<PackageTags>cCoder;Core;cCoder.Core;cCoder.Core.Services</PackageTags>
+
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<PrivateRepositoryUrl>https://github.com/ccoder-co-uk/ccoder.Core.git</PrivateRepositoryUrl>
+		<ProjectUrl>https://github.com/ccoder-co-uk/ccoder.Core.git</ProjectUrl>
+		<Description>cCoder.Core.Services</Description>
+
+		<Authors>cCoder</Authors>
+		<PackageId>cCoder.Core.Services</PackageId>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="docs\README.md" Pack="true" PackagePath="\"/>
+	</ItemGroup>
+
 	<ItemGroup>
 		<PackageReference Include="System.Linq.Dynamic.Core" Version="1.3.10" />
 	</ItemGroup>
