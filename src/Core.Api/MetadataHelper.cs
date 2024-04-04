@@ -105,7 +105,7 @@ namespace cCoder.Core.Api
         {
             Dictionary<string, IEdmModel> map = new()
             {
-                { "cCoder.Core", new CoreModelBuilder().Build().EDMModel }
+                { "Core", new CoreModelBuilder().Build().EDMModel }
                 //{ "Security", new SecurityModelBuilder().Build().EDMModel },
             };
 

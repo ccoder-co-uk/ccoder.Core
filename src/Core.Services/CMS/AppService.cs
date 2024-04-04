@@ -264,7 +264,7 @@ namespace cCoder.Core.Services.CMS
                 {
                     new PackageItem()
                     {
-                        Type = "cCoder.Core/PageRole",
+                        Type = "Core/PageRole",
                         Data = pageRoles.ToJson(serializerSettings)
                     }
                 }
@@ -279,7 +279,7 @@ namespace cCoder.Core.Services.CMS
                 {
                     new PackageItem()
                     {
-                        Type = "cCoder.Core/FlowDefinition",
+                        Type = "Core/FlowDefinition",
                         Data = Db.GetAll<FlowDefinition>()
                             .Include(f => f.Process)
                             .Where(f => f.AppId == appId)
@@ -298,7 +298,7 @@ namespace cCoder.Core.Services.CMS
                 {
                     new PackageItem()
                     {
-                        Type = "cCoder.Core/CalendarEvent",
+                        Type = "Core/CalendarEvent",
                         Data = Db.GetAll<CalendarEvent>()
                             .Include(f => f.Calendar)
                             .Where(f => f.Calendar.AppId == appId)
@@ -317,7 +317,7 @@ namespace cCoder.Core.Services.CMS
                 {
                     new PackageItem()
                     {
-                        Type = "cCoder.Core/BusinessProcess",
+                        Type = "Core/BusinessProcess",
                         Data = Db.GetAll<BusinessProcess>()
                             .Where(p => p.AppId == appId)
                             .Select(p => new { p.Name, p.ReportingComponentName, p.Description, p.Category, p.LastUpdated })
@@ -335,7 +335,7 @@ namespace cCoder.Core.Services.CMS
                 {
                     new PackageItem()
                     {
-                        Type = "cCoder.Core/Calendar",
+                        Type = "Core/Calendar",
                         Data = Db.GetAll<Calendar>()
                             .Where(p => p.AppId == appId)
                             .Select(p => new { p.Name, p.Description})
@@ -353,7 +353,7 @@ namespace cCoder.Core.Services.CMS
                 {
                     new PackageItem()
                     {
-                        Type = "cCoder.Core/Page",
+                        Type = "Core/Page",
                         Data = Db.GetAll<Page>()
                             .Include(p => p.Contents)
                             .Include(p => p.PageInfo)
@@ -392,7 +392,7 @@ namespace cCoder.Core.Services.CMS
                 Items = new[]
                 {
                     new PackageItem() {
-                        Type = "cCoder.Core/Resource",
+                        Type = "Core/Resource",
                         Data = Db.GetAll<Resource>()
                             .Where(r => r.AppId == appId)
                             .Select(r => new { r.Culture, r.Key, r.Name, r.DisplayName, r.ShortDisplayName, r.Description, r.LastUpdated })
@@ -410,7 +410,7 @@ namespace cCoder.Core.Services.CMS
                 {
                     new PackageItem()
                     {
-                        Type = "cCoder.Core/Script",
+                        Type = "Core/Script",
                         Data = Db.GetAll<Script>()
                             .Where(r => r.AppId == appId)
                             .Select(c => new { c.Name, c.Content, c.LastUpdated })
@@ -428,7 +428,7 @@ namespace cCoder.Core.Services.CMS
                 {
                     new PackageItem()
                     {
-                        Type = "cCoder.Core/Component",
+                        Type = "Core/Component",
                         Data = Db.GetAll<Component>()
                             .Where(r => r.AppId == appId)
                             .Select(c => new { c.Name, c.Key, c.ResourceKey, c.Script, c.Content, c.LastUpdated })
@@ -446,7 +446,7 @@ namespace cCoder.Core.Services.CMS
                                 {
                         new PackageItem()
                         {
-                            Type = "cCoder.Core/Template",
+                            Type = "Core/Template",
                             Data = Db.GetAll<Template>()
                                 .Where(r => r.AppId == appId)
                                 .Select(t => new { t.Name, t.ResourceKey, t.RawString, t.LastUpdated })
@@ -464,7 +464,7 @@ namespace cCoder.Core.Services.CMS
                 {
                     new PackageItem()
                     {
-                        Type = "cCoder.Core/Layout",
+                        Type = "Core/Layout",
                         Data = Db.GetAll<Layout>()
                             .Where(r => r.AppId == appId)
                             .Select(l => new { l.Name, l.HeaderHtml, l.Html, l.Script, l.LastUpdated })
@@ -482,7 +482,7 @@ namespace cCoder.Core.Services.CMS
                 {
                     new PackageItem()
                     {
-                        Type = "cCoder.Core/FolderRole",
+                        Type = "Core/FolderRole",
                         Data = folderData.SelectMany(f => f.Roles, (folder, role) => new { folder.Path, role.Role.Name })
                             .ToArray()
                             .ToJson(serializerSettings)
@@ -499,7 +499,7 @@ namespace cCoder.Core.Services.CMS
                 {
                     new PackageItem()
                     {
-                        Type = "cCoder.Core/Role",
+                        Type = "Core/Role",
                         Data = roleData.Select(r => new { r.Name, r.Privs }).ToJson(serializerSettings)
                     }
                 }

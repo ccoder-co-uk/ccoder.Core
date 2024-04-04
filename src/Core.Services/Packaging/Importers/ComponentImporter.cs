@@ -9,7 +9,7 @@ namespace cCoder.Core.Packaging.Importers
 {
     public class ComponentImporter : CoreImporter<Component>
     {
-        public ComponentImporter(IComponentService service) : base(service, "cCoder.Core/Component") { }
+        public ComponentImporter(IComponentService service) : base(service, "Core/Component") { }
 
         public override async Task Import(int appId, PackageItem item)
         {

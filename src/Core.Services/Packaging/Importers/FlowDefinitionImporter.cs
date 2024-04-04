@@ -18,7 +18,7 @@ namespace cCoder.Core.Packaging.Importers
             IFlowDefinitionService service, 
             ICoreService<BusinessProcess> processService, 
             ILogger<FlowDefinitionImporter> log) 
-                : base(service, "cCoder.Core/FlowDefinition")
+                : base(service, "Core/FlowDefinition")
         {
             this.processService = processService;
             this.log = log;

@@ -38,7 +38,7 @@ namespace Web.Controllers.Api
             var result = new
             {
                 value = new[] {
-                    new ApiInfo { Kind = "Context", Name = "cCoder.Core", Url = "cCoder.Core" },
+                    new ApiInfo { Kind = "Context", Name = "Core", Url = "Core" },
                     new ApiInfo { Kind = "Context", Name = "Members", Url = "Members" },
                     new ApiInfo { Kind = "Context", Name = "B2B", Url = "B2B" }
                 }

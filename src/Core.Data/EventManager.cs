@@ -30,7 +30,7 @@ public abstract class EventManager
         Config = config;
         RaisedEvents = new Dictionary<string, ICollection<object>>();
 
-        if (core != null && config != null && auth != null && dataContext != "cCoder.Core")
+        if (core != null && config != null && auth != null && dataContext != "Core")
         {
             core.DisableFilters();
 
@@ -51,7 +51,7 @@ public abstract class EventManager
     public virtual async Task RaiseEvent<T>(T forObject, string name)
         where T : class
     {
-        Log.LogDebug($"cCoder.Core Event: {name}");
+        Log.LogDebug($"Core Event: {name}");
 
         string eventType = $"{DataContext}/{typeof(T).Name}";
 

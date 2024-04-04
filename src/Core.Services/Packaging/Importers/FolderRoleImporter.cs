@@ -14,7 +14,7 @@ namespace cCoder.Core.Packaging.Importers
     {
         protected ICoreDataContext Db { get; }
 
-        public FolderRoleImporter(ICoreService<FolderRole> service, ICoreDataContext db) : base(service, "cCoder.Core/FolderRole") { Db = db; Order = 2; }
+        public FolderRoleImporter(ICoreService<FolderRole> service, ICoreDataContext db) : base(service, "Core/FolderRole") { Db = db; Order = 2; }
 
         public class FolderRoleInfo
         {

@@ -12,7 +12,7 @@ namespace cCoder.Core.Packaging.Importers
     {
         protected ICoreDataContext Db { get; }
 
-        public RoleImporter(ICoreService<Role> service, ICoreDataContext db) : base(service, "cCoder.Core/Role") => Db = db;
+        public RoleImporter(ICoreService<Role> service, ICoreDataContext db) : base(service, "Core/Role") => Db = db;
 
         public override async Task Import(int appId, PackageItem item)
         {

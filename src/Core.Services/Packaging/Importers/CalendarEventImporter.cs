@@ -12,7 +12,7 @@ namespace cCoder.Core.Packaging.Importers
     public class CalendarEventImporter : CoreImporter<CalendarEvent>
     {
         private readonly ICoreService<Calendar> calendarService;
-        public CalendarEventImporter(ICoreService<CalendarEvent> service, ICoreService<Calendar> calendarService) : base(service, "cCoder.Core/CalendarEvent") { this.calendarService = calendarService; }
+        public CalendarEventImporter(ICoreService<CalendarEvent> service, ICoreService<Calendar> calendarService) : base(service, "Core/CalendarEvent") { this.calendarService = calendarService; }
 
         public override async Task Import(int appId, PackageItem item)
         {

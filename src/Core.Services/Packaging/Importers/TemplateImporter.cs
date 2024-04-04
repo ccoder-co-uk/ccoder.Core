@@ -9,7 +9,7 @@ namespace cCoder.Core.Packaging.Importers
 {
     public class TemplateImporter : CoreImporter<Template>
     {
-        public TemplateImporter(ITemplateService service) : base(service, "cCoder.Core/Template") { }
+        public TemplateImporter(ITemplateService service) : base(service, "Core/Template") { }
 
         public override async Task Import(int appId, PackageItem item)
         {

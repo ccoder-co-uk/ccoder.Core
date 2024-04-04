@@ -104,7 +104,7 @@ namespace Web.Controllers
             try
             {
                 cCoder.Core.Objects.Entities.CMS.App app = AppService.GetAll().FirstOrDefault(a => a.Domain == Host);
-                string errorPageQuery = $"cCoder.Core/Page/Render()?appId={app.Id}&path=Error&theme={GetSessionValue("theme")}&culture={GetSessionValue("culture")}";
+                string errorPageQuery = $"Core/Page/Render()?appId={app.Id}&path=Error&theme={GetSessionValue("theme")}&culture={GetSessionValue("culture")}";
                 
                 if (app.Id > 0) 
                     log.LogInformation($"GET {errorPageQuery}"); 

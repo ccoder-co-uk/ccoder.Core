@@ -14,7 +14,7 @@ namespace cCoder.Core.Packaging.Importers
     {
         protected ICoreDataContext Db { get; }
 
-        public PageRoleImporter(ICoreService<PageRole> service, ICoreDataContext db) : base(service, "cCoder.Core/PageRole") { Db = db; Order = 2; }
+        public PageRoleImporter(ICoreService<PageRole> service, ICoreDataContext db) : base(service, "Core/PageRole") { Db = db; Order = 2; }
 
         public class PageRoleInfo
         {

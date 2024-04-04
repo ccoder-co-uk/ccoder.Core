@@ -9,7 +9,7 @@ namespace cCoder.Core.Packaging.Importers
 {
     public class BusinessProcessImporter : CoreImporter<BusinessProcess>
     {
-        public BusinessProcessImporter(ICoreService<BusinessProcess> service) : base(service, "cCoder.Core/BusinessProcess") { }
+        public BusinessProcessImporter(ICoreService<BusinessProcess> service) : base(service, "Core/BusinessProcess") { }
 
         public override async Task Import(int appId, PackageItem item)
         {

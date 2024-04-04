@@ -31,7 +31,7 @@ namespace cCoder.Core.Api
 
             coreFeaturebuilderAction(coreFeatureBuilder);
 
-            log?.LogInformation("cCoder.Core is Ready!");
+            log?.LogInformation("Core is Ready!");
 
             return app;
         }

@@ -20,8 +20,8 @@ namespace cCoder.Core.Api.OData
 
         public override ODataModel Build() => new()
         {
-            Context = "cCoder.Core",
-            Description = "cCoder.Core Endpoints for the platform.",
+            Context = "Core",
+            Description = "Core Endpoints for the platform.",
             EDMModel = BuildModel()
         };
 

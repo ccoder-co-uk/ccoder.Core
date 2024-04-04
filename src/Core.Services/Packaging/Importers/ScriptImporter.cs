@@ -9,7 +9,7 @@ namespace cCoder.Core.Packaging.Importers
 {
     public class ScriptImporter : CoreImporter<Script>
     {
-        public ScriptImporter(IScriptService service) : base(service, "cCoder.Core/Script") { }
+        public ScriptImporter(IScriptService service) : base(service, "Core/Script") { }
 
         public override async Task Import(int appId, PackageItem item)
         {

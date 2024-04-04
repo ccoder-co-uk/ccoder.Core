@@ -9,7 +9,7 @@ namespace cCoder.Core.Packaging.Importers
 {
     public class ResourceImporter : CoreImporter<Resource>
     {
-        public ResourceImporter(IResourceService service) : base(service, "cCoder.Core/Resource") { }
+        public ResourceImporter(IResourceService service) : base(service, "Core/Resource") { }
 
         public override async Task Import(int appId, PackageItem item)
         {

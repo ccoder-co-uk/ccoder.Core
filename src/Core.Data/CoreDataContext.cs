@@ -79,7 +79,7 @@ namespace cCoder.Core.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseSqlServer(Config.ConnectionStrings["cCoder.Core"]);
+            optionsBuilder.UseSqlServer(Config.ConnectionStrings["Core"]);
 
             if(Config.LogSQL)
                 optionsBuilder.LogTo((message) =>

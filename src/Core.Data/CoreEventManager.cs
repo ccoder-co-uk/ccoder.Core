@@ -15,7 +15,7 @@ namespace cCoder.Core
         private bool loadedEvents = false;
 
         public CoreEventManager(ILogger log, ICoreDataContext core, Config config, ICoreAuthInfo auth)
-            : base(log, core, config, auth, "cCoder.Core") { }
+            : base(log, core, config, auth, "Core") { }
 
         public override async Task RaiseEvent<T>(T forObject, string name)
         {
@@ -28,7 +28,7 @@ namespace cCoder.Core
                     .Include(sub => sub.ExecuteAsUser)
                         .ThenInclude(u => u.Roles)
                             .ThenInclude(r => r.Role)
-                    .Where(e => e.Type.StartsWith("cCoder.Core"))
+                    .Where(e => e.Type.StartsWith("Core"))
                     .ToArray();
 
                 Core.EnableFilters();

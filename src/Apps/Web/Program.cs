@@ -44,7 +44,7 @@ namespace Web
                 builder.Services.AddCore(coreConfig =>
                 {
                     coreConfig
-                        .UseMSSQLProvider(configRoot.GetConnectionString("cCoder.Core"))
+                        .UseMSSQLProvider(configRoot.GetConnectionString("Core"))
                         .UseContentManagement()
                         .UseDocumentManagement()
                         .AuthorizeUsersWith(ctx => SSOUserId);

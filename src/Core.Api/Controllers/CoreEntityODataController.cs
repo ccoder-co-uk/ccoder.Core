@@ -27,7 +27,7 @@ namespace cCoder.Core.Api.Controllers
             bool isExtendedMetaRequest = Request.Query["extend"] == "true";
 
             return isExtendedMetaRequest
-                ? Ok(GetExtendedMetadataForType("cCoder.Core", typeof(T), new CoreModelBuilder().Build().EDMModel))
+                ? Ok(GetExtendedMetadataForType("Core", typeof(T), new CoreModelBuilder().Build().EDMModel))
                 : base.GetMetadata();
         }
     }

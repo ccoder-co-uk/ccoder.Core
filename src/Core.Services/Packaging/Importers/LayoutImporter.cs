@@ -9,7 +9,7 @@ namespace cCoder.Core.Packaging.Importers
 {
     public class LayoutImporter : CoreImporter<Layout>
     {
-        public LayoutImporter(ICoreService<Layout> service) : base(service, "cCoder.Core/Layout") { }
+        public LayoutImporter(ICoreService<Layout> service) : base(service, "Core/Layout") { }
 
         public override async Task Import(int appId, PackageItem item)
         {

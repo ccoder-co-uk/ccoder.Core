@@ -85,7 +85,7 @@ namespace cCoder.Core.Services.CMS
             if (entity.Type.ToLowerInvariant() == "core/component")
             {
                 Cache.Set($"component|{entity.Name.ToLower()}", Objects.Data.ParseJson<Component>(entity.Json));
-                var latestSetObject = Cache.LatestSet.First(r => r.Name.ToLowerInvariant() == entity.Name.ToLowerInvariant() && r.Type == "cCoder.Core/Component");
+                var latestSetObject = Cache.LatestSet.First(r => r.Name.ToLowerInvariant() == entity.Name.ToLowerInvariant() && r.Type == "Core/Component");
                 latestSetObject.UpdateFrom(entity);
             }
             else if (entity.Type.ToLowerInvariant() == "core/resource")
@@ -94,12 +94,12 @@ namespace cCoder.Core.Services.CMS
                 var latestSetObject = Cache.LatestSet.First(r => r.Name.ToLowerInvariant() == entity.Name.ToLowerInvariant()
                     && r.Key.ToLowerInvariant() == entity.Key.ToLowerInvariant() && r.Name == entity.Name.ToLowerInvariant()
                     && r.Culture.ToLowerInvariant() == entity.Culture.ToLowerInvariant()
-                    && r.Type == "cCoder.Core/Resource");
+                    && r.Type == "Core/Resource");
                 latestSetObject.UpdateFrom(entity);
             }
             else if (entity.Type.ToLowerInvariant() == "core/script")
             {
-                var latestSetObject = Cache.LatestSet.First(r => r.Name.ToLowerInvariant() == entity.Name.ToLowerInvariant() && r.Type == "cCoder.Core/Script");
+                var latestSetObject = Cache.LatestSet.First(r => r.Name.ToLowerInvariant() == entity.Name.ToLowerInvariant() && r.Type == "Core/Script");
                 latestSetObject.UpdateFrom(entity);
                 Cache.Set($"script|{entity.Name.ToLower()}", Objects.Data.ParseJson<Script>(entity.Json));
             }

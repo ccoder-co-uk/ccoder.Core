@@ -11,7 +11,7 @@ namespace cCoder.Core.Packaging.Importers
     {
         protected ICoreDataContext Db { get; }
 
-        public PageImporter(IPageService service, ICoreDataContext db) : base(service, "cCoder.Core/Page") => Db = db;
+        public PageImporter(IPageService service, ICoreDataContext db) : base(service, "Core/Page") => Db = db;
 
         public override async Task Import(int appId, PackageItem item)
         {
