@@ -49,9 +49,9 @@ namespace cCoder.Core
                     log.LogInformation($"{DateTimeOffset.Now} - Processing common object cache");
                     CommonObject[] distinctTypeSets = LoadPaged(core);
 
-                    CommonObject[] componentObjects = distinctTypeSets.Where(c => c.Type == "cCoder.Core/Component").ToArray();
-                    CommonObject[] resourceObjects = distinctTypeSets.Where(c => c.Type == "cCoder.Core/Resource").ToArray();
-                    CommonObject[] scriptObjects = distinctTypeSets.Where(c => c.Type == "cCoder.Core/Script").ToArray();
+                    CommonObject[] componentObjects = distinctTypeSets.Where(c => c.Type == "Core/Component").ToArray();
+                    CommonObject[] resourceObjects = distinctTypeSets.Where(c => c.Type == "Core/Resource").ToArray();
+                    CommonObject[] scriptObjects = distinctTypeSets.Where(c => c.Type == "Core/Script").ToArray();
 
                     LatestSet = componentObjects.Union(resourceObjects).Union(scriptObjects).ToArray();
 
