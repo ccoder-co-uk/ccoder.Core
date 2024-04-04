@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace Core.Objects.Entities
+namespace cCoder.Core.Objects.Entities
 {
     public class BaseEntity
     {

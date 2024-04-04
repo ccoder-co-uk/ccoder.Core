@@ -1,9 +1,9 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.DMS;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.DMS;
 using System;
 using System.Threading.Tasks;
 
-namespace Core.Services.DMS
+namespace cCoder.Core.Services.DMS
 {
     public class FileContentService : CoreService<FileContent>, ICoreService<FileContent>
     {

@@ -1,7 +1,7 @@
-﻿using Core.Data;
-using Core.Objects;
-using Core.Objects.Entities;
-using Core.Objects.Entities.CMS;
+﻿using cCoder.Core.Data;
+using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities;
+using cCoder.Core.Objects.Entities.CMS;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace Core
+namespace cCoder.Core
 {
     public class CommonObjectCache : Cache<object>, ICommonObjectCache
     {
@@ -49,9 +49,9 @@ namespace Core
                     log.LogInformation($"{DateTimeOffset.Now} - Processing common object cache");
                     CommonObject[] distinctTypeSets = LoadPaged(core);
 
-                    CommonObject[] componentObjects = distinctTypeSets.Where(c => c.Type == "Core/Component").ToArray();
-                    CommonObject[] resourceObjects = distinctTypeSets.Where(c => c.Type == "Core/Resource").ToArray();
-                    CommonObject[] scriptObjects = distinctTypeSets.Where(c => c.Type == "Core/Script").ToArray();
+                    CommonObject[] componentObjects = distinctTypeSets.Where(c => c.Type == "cCoder.Core/Component").ToArray();
+                    CommonObject[] resourceObjects = distinctTypeSets.Where(c => c.Type == "cCoder.Core/Resource").ToArray();
+                    CommonObject[] scriptObjects = distinctTypeSets.Where(c => c.Type == "cCoder.Core/Script").ToArray();
 
                     LatestSet = componentObjects.Union(resourceObjects).Union(scriptObjects).ToArray();
 

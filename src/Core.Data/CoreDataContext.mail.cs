@@ -1,7 +1,7 @@
-﻿using Core.Objects.Entities.Mail;
+﻿using cCoder.Core.Objects.Entities.Mail;
 using Microsoft.EntityFrameworkCore;
 
-namespace Core.Data
+namespace cCoder.Core.Data
 {
     public partial class CoreDataContext
     {

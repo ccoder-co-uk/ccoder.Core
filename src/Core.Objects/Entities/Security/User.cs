@@ -1,10 +1,10 @@
-﻿using Core.Objects.Entities.CMS;
+﻿using cCoder.Core.Objects.Entities.CMS;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
-namespace Core.Objects.Entities.Security
+namespace cCoder.Core.Objects.Entities.Security
 {
     [Table("Users", Schema = "Security")]
     public class User

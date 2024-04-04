@@ -1,9 +1,9 @@
-﻿using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects.Extensions;
 using Microsoft.AspNetCore.OData.Query.Wrapper;
 using System.Collections;
 using System.Linq.Dynamic.Core;
 
-namespace Core.Api.Formatters
+namespace cCoder.Core.Api.Formatters
 {
     public static class FormatterODataHelper
     {

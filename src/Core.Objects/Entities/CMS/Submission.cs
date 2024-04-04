@@ -3,7 +3,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Core.Objects.Entities.CMS
+namespace cCoder.Core.Objects.Entities.CMS
 {
     [Table("Submissions", Schema = "CMS")]
     public class Submission

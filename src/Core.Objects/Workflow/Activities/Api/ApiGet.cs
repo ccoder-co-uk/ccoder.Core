@@ -1,7 +1,7 @@
-﻿using Core.Objects.Dtos.Workflow;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects.Dtos.Workflow;
+using cCoder.Core.Objects.Extensions;
 
-namespace Core.Objects.Workflow.Activities.Api;
+namespace cCoder.Core.Objects.Workflow.Activities.Api;
 
 public class ApiGet<T> : ApiActivity<T>
 {

@@ -1,9 +1,9 @@
-﻿using Core.Objects.Workflow.Activities;
+﻿using cCoder.Core.Objects.Workflow.Activities;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace Core.Objects.Dtos.Workflow
+namespace cCoder.Core.Objects.Dtos.Workflow
 {
     public class Flow
     {

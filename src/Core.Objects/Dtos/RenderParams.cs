@@ -1,7 +1,7 @@
-﻿using Core.Objects.Entities.CMS;
-using Core.Objects.Entities.Security;
+﻿using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Objects.Entities.Security;
 
-namespace Core.Objects.Dtos
+namespace cCoder.Core.Objects.Dtos
 {
     public abstract class RenderParams
     {

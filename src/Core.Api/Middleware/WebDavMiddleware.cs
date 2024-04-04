@@ -1,16 +1,16 @@
-﻿using Core;
-using Core.Objects;
-using Core.Objects.Entities.CMS;
-using Core.Objects.Entities.DMS;
-using Core.Objects.Extensions;
+﻿using cCoder.Core;
+using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Objects.Entities.DMS;
+using cCoder.Core.Objects.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.Security;
 using System.Text;
 using System.Xml.Linq;
-using File = Core.Objects.Entities.DMS.File;
+using File = cCoder.Core.Objects.Entities.DMS.File;
 using MemoryStream = System.IO.MemoryStream;
-using Path = Core.Objects.Path;
+using Path = cCoder.Core.Objects.Path;
 using Stream = System.IO.Stream;
 
 namespace Web.Api.Middleware;
@@ -27,8 +27,8 @@ public class WebDavMiddleware
 
     public async Task InvokeAsync(HttpContext context, ICoreDataContext ctx, Config config)
     {
-        int appId = int.Parse(context.Request.Path.Value.TrimStart("Core/App(".ToCharArray()).Split(')')[0]);
-        Path path = new(WebUtility.UrlDecode(context.Request.Path.Value.Replace($"Core/App({appId})/DAV", "")).TrimStart('/').TrimEnd("/".ToCharArray()));
+        int appId = int.Parse(context.Request.Path.Value.TrimStart("cCoder.Core/App(".ToCharArray()).Split(')')[0]);
+        Path path = new(WebUtility.UrlDecode(context.Request.Path.Value.Replace($"cCoder.Core/App({appId})/DAV", "")).TrimStart('/').TrimEnd("/".ToCharArray()));
         HttpRequest request = context.Request;
         byte[] buffer = new byte[Convert.ToInt32(request.ContentLength)];
         _ = await request.Body.ReadAsync(buffer);
@@ -120,13 +120,13 @@ public class WebDavMiddleware
                     break;
 
                 case "MOVE":
-                    Path moveDest = new(WebUtility.UrlDecode(context.Request.Headers["Destination"]).Split($"Core/App({appId})/DAV")[1]);
+                    Path moveDest = new(WebUtility.UrlDecode(context.Request.Headers["Destination"]).Split($"cCoder.Core/App({appId})/DAV")[1]);
                     await dms.Move(path, moveDest);
                     await Respond(context, null, headers);
                     break;
 
                 case "COPY":
-                    string copyDest = GetHeaderValue(context, "Destination").Replace($"Core/App({appId})/DMS/", "");
+                    string copyDest = GetHeaderValue(context, "Destination").Replace($"cCoder.Core/App({appId})/DMS/", "");
                     await dms.Move(path, new Path(copyDest));
                     await Respond(context, null, headers);
                     break;

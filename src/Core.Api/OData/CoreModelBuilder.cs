@@ -1,18 +1,18 @@
-﻿using Core.Objects.Dtos;
-using Core.Objects.Dtos.Metadata;
-using Core.Objects.Entities;
-using Core.Objects.Entities.CMS;
-using Core.Objects.Entities.DMS;
-using Core.Objects.Entities.Logging;
-using Core.Objects.Entities.Mail;
-using Core.Objects.Entities.Packaging;
-using Core.Objects.Entities.Planning;
-using Core.Objects.Entities.Security;
-using Core.Objects.Entities.Workflow;
+﻿using cCoder.Core.Objects.Dtos;
+using cCoder.Core.Objects.Dtos.Metadata;
+using cCoder.Core.Objects.Entities;
+using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Objects.Entities.DMS;
+using cCoder.Core.Objects.Entities.Logging;
+using cCoder.Core.Objects.Entities.Mail;
+using cCoder.Core.Objects.Entities.Packaging;
+using cCoder.Core.Objects.Entities.Planning;
+using cCoder.Core.Objects.Entities.Security;
+using cCoder.Core.Objects.Entities.Workflow;
 using Microsoft.OData.Edm;
-using File = Core.Objects.Entities.DMS.File;
+using File = cCoder.Core.Objects.Entities.DMS.File;
 
-namespace Core.Api.OData
+namespace cCoder.Core.Api.OData
 {
     public class CoreModelBuilder : ODataModelBuilder
     {
@@ -20,8 +20,8 @@ namespace Core.Api.OData
 
         public override ODataModel Build() => new()
         {
-            Context = "Core",
-            Description = "Core Endpoints for the platform.",
+            Context = "cCoder.Core",
+            Description = "cCoder.Core Endpoints for the platform.",
             EDMModel = BuildModel()
         };
 

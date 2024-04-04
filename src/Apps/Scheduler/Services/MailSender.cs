@@ -1,6 +1,6 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.Mail;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.Mail;
+using cCoder.Core.Objects.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;

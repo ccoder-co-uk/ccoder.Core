@@ -1,9 +1,9 @@
-﻿using Core.Objects.Dtos;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects.Dtos;
+using cCoder.Core.Objects.Extensions;
 using System.Collections.Concurrent;
 using System.Timers;
 
-namespace Core.Objects
+namespace cCoder.Core.Objects
 {
     public class Cache<T> : ICache<T>
     {

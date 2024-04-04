@@ -1,8 +1,8 @@
-﻿using Core.Objects.Dtos.Workflow;
-using Core.Objects.Entities.CMS;
-using Core.Objects.Entities.Security;
-using Core.Objects.Extensions;
-using Core.Objects.Workflow.Activities;
+﻿using cCoder.Core.Objects.Dtos.Workflow;
+using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Objects.Entities.Security;
+using cCoder.Core.Objects.Extensions;
+using cCoder.Core.Objects.Workflow.Activities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -15,7 +15,7 @@ using System.Net.Http;
 using System.Security;
 using System.Threading.Tasks;
 
-namespace Core.Objects.Entities.Workflow
+namespace cCoder.Core.Objects.Entities.Workflow
 {
     [Table("WorkFlows", Schema = "Workflow")]
     [Parent("Process")]

@@ -1,10 +1,10 @@
-﻿using Core.Api.OData;
-using Core.Objects;
-using Core.Objects.Entities.Security;
-using Core.Services;
+﻿using cCoder.Core.Api.OData;
+using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.Security;
+using cCoder.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Core.Api.Controllers
+namespace cCoder.Core.Api.Controllers
 {
     /// <summary>
     /// Base type for all entity controllers within the Core API context
@@ -27,7 +27,7 @@ namespace Core.Api.Controllers
             bool isExtendedMetaRequest = Request.Query["extend"] == "true";
 
             return isExtendedMetaRequest
-                ? Ok(GetExtendedMetadataForType("Core", typeof(T), new CoreModelBuilder().Build().EDMModel))
+                ? Ok(GetExtendedMetadataForType("cCoder.Core", typeof(T), new CoreModelBuilder().Build().EDMModel))
                 : base.GetMetadata();
         }
     }

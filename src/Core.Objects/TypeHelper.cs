@@ -1,10 +1,10 @@
-﻿using Core.Objects;
+﻿using cCoder.Core.Objects;
 using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace Core
+namespace cCoder.Core
 {
     public static partial class TypeHelper
     {

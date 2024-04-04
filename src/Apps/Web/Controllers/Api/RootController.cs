@@ -1,8 +1,8 @@
-﻿using Core.Api.OData.Responses;
-using Core.Objects;
-using Core.Objects.Entities;
-using Core.Objects.Entities.Security;
-using Core.Services;
+﻿using cCoder.Core.Api.OData.Responses;
+using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities;
+using cCoder.Core.Objects.Entities.Security;
+using cCoder.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Security;
@@ -38,7 +38,7 @@ namespace Web.Controllers.Api
             var result = new
             {
                 value = new[] {
-                    new ApiInfo { Kind = "Context", Name = "Core", Url = "Core" },
+                    new ApiInfo { Kind = "Context", Name = "cCoder.Core", Url = "cCoder.Core" },
                     new ApiInfo { Kind = "Context", Name = "Members", Url = "Members" },
                     new ApiInfo { Kind = "Context", Name = "B2B", Url = "B2B" }
                 }

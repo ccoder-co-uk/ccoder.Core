@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Core.Objects.Dtos
+namespace cCoder.Core.Objects.Dtos
 {
     public class Replacement
     {

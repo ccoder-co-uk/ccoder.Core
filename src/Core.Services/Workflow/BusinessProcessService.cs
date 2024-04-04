@@ -1,7 +1,7 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.Workflow;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.Workflow;
 
-namespace Core.Services.Workflow
+namespace cCoder.Core.Services.Workflow
 {
     public class BusinessProcessService : CoreService<BusinessProcess>
     {

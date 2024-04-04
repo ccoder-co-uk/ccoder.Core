@@ -1,20 +1,20 @@
-﻿using Core.Objects;
-using Core.Objects.Dtos;
-using Core.Objects.Entities;
-using Core.Objects.Entities.CMS;
-using Core.Objects.Entities.DMS;
-using Core.Objects.Entities.Mail;
-using Core.Objects.Entities.Packaging;
-using Core.Objects.Entities.Planning;
-using Core.Objects.Entities.Security;
-using Core.Objects.Entities.Workflow;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Dtos;
+using cCoder.Core.Objects.Entities;
+using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Objects.Entities.DMS;
+using cCoder.Core.Objects.Entities.Mail;
+using cCoder.Core.Objects.Entities.Packaging;
+using cCoder.Core.Objects.Entities.Planning;
+using cCoder.Core.Objects.Entities.Security;
+using cCoder.Core.Objects.Entities.Workflow;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Core.Services
+namespace cCoder.Core.Services
 {
     public interface IOrchestrationService<T>
     {

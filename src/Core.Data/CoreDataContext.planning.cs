@@ -1,7 +1,7 @@
-﻿using Core.Objects.Entities.Planning;
+﻿using cCoder.Core.Objects.Entities.Planning;
 using Microsoft.EntityFrameworkCore;
 
-namespace Core.Data
+namespace cCoder.Core.Data
 {
     public partial class CoreDataContext
     {

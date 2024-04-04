@@ -1,5 +1,5 @@
 ﻿
-namespace Core
+namespace cCoder.Core
 {
     public interface ICoreEventManager
     {

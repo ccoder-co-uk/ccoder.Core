@@ -1,4 +1,4 @@
-﻿using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects.Extensions;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Reflection;
 
-namespace Core.Data
+namespace cCoder.Core.Data
 {
     internal class ObjectDataReader<T> : IDataReader
     {

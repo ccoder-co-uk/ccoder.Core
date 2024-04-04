@@ -1,4 +1,4 @@
-﻿namespace Core.Services
+﻿namespace cCoder.Core.Services
 {
     /*    public class SecuredJoinService<TSecuredJoinEntity, THasRoles> : CoreService<TSecuredJoinEntity> 
             where TSecuredJoinEntity : class

@@ -1,12 +1,12 @@
-﻿using Core.Objects;
-using Core.Objects.Dtos;
-using Core.Objects.Extensions;
-using Core.Services;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Dtos;
+using cCoder.Core.Objects.Extensions;
+using cCoder.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using System.Reflection;
 
-namespace Core.Api.Controllers
+namespace cCoder.Core.Api.Controllers
 {
     public abstract class JoinEntityOdataController<T, TUser, TKeyLeft, TKeyRight> : CoreODataController, IDisposable
         where T : class, new()

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Core.Objects.Extensions
+namespace cCoder.Core.Objects.Extensions
 {
     public static class TypeExtensions
     {

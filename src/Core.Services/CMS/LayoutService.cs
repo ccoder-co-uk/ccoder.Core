@@ -1,7 +1,7 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.CMS;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.CMS;
 
-namespace Core.Services
+namespace cCoder.Core.Services
 {
     public class LayoutService : CoreService<Layout>
     {

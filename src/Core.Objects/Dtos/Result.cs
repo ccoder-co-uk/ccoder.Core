@@ -1,7 +1,7 @@
-﻿using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects.Extensions;
 using System.ComponentModel.DataAnnotations;
 
-namespace Core.Objects.Dtos
+namespace cCoder.Core.Objects.Dtos
 {
     public class Result
     {

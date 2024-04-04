@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Core.Objects.Dtos
+namespace cCoder.Core.Objects.Dtos
 {
     /// <summary>
     /// Batch request

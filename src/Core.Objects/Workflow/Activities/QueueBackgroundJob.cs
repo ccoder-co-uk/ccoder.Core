@@ -1,8 +1,8 @@
-﻿using Core.Objects.Entities.Planning;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects.Entities.Planning;
+using cCoder.Core.Objects.Extensions;
 using System.Threading.Tasks;
 
-namespace Core.Objects.Workflow.Activities
+namespace cCoder.Core.Objects.Workflow.Activities
 {
     public class QueueBackgroundJob : CoreActivity
     {

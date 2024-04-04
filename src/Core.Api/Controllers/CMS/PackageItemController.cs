@@ -1,8 +1,8 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.Packaging;
-using Core.Services;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.Packaging;
+using cCoder.Core.Services;
 
-namespace Core.Api.Controllers
+namespace cCoder.Core.Api.Controllers
 {
     public class PackageItemController : CoreEntityODataController<PackageItem, Guid>
     {

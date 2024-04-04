@@ -3,7 +3,7 @@ using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using System.Text;
 
-namespace Core.Api.Formatters
+namespace cCoder.Core.Api.Formatters
 {
     public class XmlFormatter : TextOutputFormatter
     {

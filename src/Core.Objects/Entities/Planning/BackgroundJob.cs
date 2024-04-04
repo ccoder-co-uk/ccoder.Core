@@ -1,9 +1,9 @@
-﻿using Core.Objects.Entities.CMS;
+﻿using cCoder.Core.Objects.Entities.CMS;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Core.Objects.Entities.Planning
+namespace cCoder.Core.Objects.Entities.Planning
 {
     [Table("BackgroundJobs", Schema = "Planning")]
     public class BackgroundJob

@@ -1,10 +1,10 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.Security;
-using Core.Services;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.Security;
+using cCoder.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 
-namespace Core.Api.Controllers
+namespace cCoder.Core.Api.Controllers
 {
     public class UserController : CoreEntityODataController<User, string>
     {

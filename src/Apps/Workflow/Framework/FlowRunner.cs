@@ -1,6 +1,6 @@
-﻿using Core.Objects.Dtos.Workflow;
-using Core.Objects.Entities.Workflow;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects.Dtos.Workflow;
+using cCoder.Core.Objects.Entities.Workflow;
+using cCoder.Core.Objects.Extensions;
 using Microsoft.AspNetCore.SignalR.Client;
 using Newtonsoft.Json;
 

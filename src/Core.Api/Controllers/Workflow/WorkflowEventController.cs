@@ -1,8 +1,8 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.Workflow;
-using Core.Services;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.Workflow;
+using cCoder.Core.Services;
 
-namespace Core.Api.Controllers
+namespace cCoder.Core.Api.Controllers
 {
     public class WorkflowEventController : CoreEntityODataController<WorkflowEvent, Guid>
     {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Core.Connectivity.Workflow.Sftp
+namespace cCoder.Core.Connectivity.Workflow.Sftp
 {
     public class SftpFetchActivity : SftpActivity
     {

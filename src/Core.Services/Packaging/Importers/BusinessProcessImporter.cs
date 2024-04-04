@@ -1,15 +1,15 @@
-﻿using Core.Objects.Entities.Packaging;
-using Core.Objects.Entities.Workflow;
-using Core.Objects.Extensions;
-using Core.Services;
+﻿using cCoder.Core.Objects.Entities.Packaging;
+using cCoder.Core.Objects.Entities.Workflow;
+using cCoder.Core.Objects.Extensions;
+using cCoder.Core.Services;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Core.Packaging.Importers
+namespace cCoder.Core.Packaging.Importers
 {
     public class BusinessProcessImporter : CoreImporter<BusinessProcess>
     {
-        public BusinessProcessImporter(ICoreService<BusinessProcess> service) : base(service, "Core/BusinessProcess") { }
+        public BusinessProcessImporter(ICoreService<BusinessProcess> service) : base(service, "cCoder.Core/BusinessProcess") { }
 
         public override async Task Import(int appId, PackageItem item)
         {

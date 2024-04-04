@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Core.Objects.Entities.Security
+namespace cCoder.Core.Objects.Entities.Security
 {
     [Table("UserRoles", Schema = "Security")]
     public class UserRole

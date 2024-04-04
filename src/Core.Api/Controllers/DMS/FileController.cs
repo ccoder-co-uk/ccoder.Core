@@ -1,8 +1,8 @@
-﻿using Core.Objects;
-using Core.Services;
-using File = Core.Objects.Entities.DMS.File;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Services;
+using File = cCoder.Core.Objects.Entities.DMS.File;
 
-namespace Core.Api.Controllers
+namespace cCoder.Core.Api.Controllers
 {
     public class FileController : CoreEntityODataController<File, Guid>
     {

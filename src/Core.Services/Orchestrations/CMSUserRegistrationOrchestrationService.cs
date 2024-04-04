@@ -1,14 +1,14 @@
-﻿using Core.Objects;
-using Core.Objects.Dtos;
-using Core.Objects.Entities.CMS;
-using Core.Objects.Entities.Security;
-using Core.Services.Orchestrations.Interfaces;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Dtos;
+using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Objects.Entities.Security;
+using cCoder.Core.Services.Orchestrations.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace Core.Services.Orchestrations
+namespace cCoder.Core.Services.Orchestrations
 {
     public class CMSUserRegistrationOrchestrationService : ICMSUserRegistrationOrchestrationService
     {

@@ -1,11 +1,11 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.Packaging;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.Packaging;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security;
 using System.Threading.Tasks;
 
-namespace Core.Packaging
+namespace cCoder.Core.Packaging
 {
     public abstract class PackageInstaller : IPackageInstaller
     {

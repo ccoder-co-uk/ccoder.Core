@@ -1,4 +1,4 @@
-﻿namespace Core.Objects.Dtos.Metadata
+﻿namespace cCoder.Core.Objects.Dtos.Metadata
 {
     public class MetadataByTypeName
     {

@@ -1,6 +1,6 @@
-﻿using Core.Objects.Entities.CMS;
-using Core.Objects.Entities.Security;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Objects.Entities.Security;
+using cCoder.Core.Objects.Extensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace Core.Objects.Entities.DMS
+namespace cCoder.Core.Objects.Entities.DMS
 {
     [Table("Folders", Schema = "DMS")]
     public class Folder

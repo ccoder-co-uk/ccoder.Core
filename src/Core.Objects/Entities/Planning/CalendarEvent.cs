@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Core.Objects.Entities.Planning
+namespace cCoder.Core.Objects.Entities.Planning
 {
     [Table("Events", Schema = "Planning")]
     [Parent("Calendar")]

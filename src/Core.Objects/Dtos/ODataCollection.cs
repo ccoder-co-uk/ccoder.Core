@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace Core.Objects.Dtos
+namespace cCoder.Core.Objects.Dtos
 {
     public class ODataCollection<TCollectionType>
     {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Core.Api.OData.Responses
+namespace cCoder.Core.Api.OData.Responses
 {
     public class RawResult : IActionResult
     {

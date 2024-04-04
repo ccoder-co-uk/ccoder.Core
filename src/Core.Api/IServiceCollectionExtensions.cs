@@ -1,27 +1,27 @@
-﻿using Core.Api.Formatters;
-using Core.Api.OData;
-using Core.Objects;
-using Core.Objects.Dtos.Metadata;
-using Core.Objects.Entities.CMS;
-using Core.Objects.Entities.DMS;
-using Core.Objects.Entities.Mail;
-using Core.Objects.Entities.Packaging;
-using Core.Objects.Entities.Planning;
-using Core.Objects.Entities.Security;
-using Core.Objects.Entities.Workflow;
-using Core.Packaging;
-using Core.Packaging.Importers;
-using Core.Services;
-using Core.Services.CMS;
-using Core.Services.DMS;
-using Core.Services.Orchestrations;
-using Core.Services.Orchestrations.Interfaces;
-using Core.Services.Security;
-using Core.Services.Workflow;
+﻿using cCoder.Core.Api.Formatters;
+using cCoder.Core.Api.OData;
+using cCoder.Core.Objects;
+using cCoder.Core.Objects.Dtos.Metadata;
+using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Objects.Entities.DMS;
+using cCoder.Core.Objects.Entities.Mail;
+using cCoder.Core.Objects.Entities.Packaging;
+using cCoder.Core.Objects.Entities.Planning;
+using cCoder.Core.Objects.Entities.Security;
+using cCoder.Core.Objects.Entities.Workflow;
+using cCoder.Core.Packaging;
+using cCoder.Core.Packaging.Importers;
+using cCoder.Core.Services;
+using cCoder.Core.Services.CMS;
+using cCoder.Core.Services.DMS;
+using cCoder.Core.Services.Orchestrations;
+using cCoder.Core.Services.Orchestrations.Interfaces;
+using cCoder.Core.Services.Security;
+using cCoder.Core.Services.Workflow;
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 
-namespace Core.Api
+namespace cCoder.Core.Api
 {
     public static partial class IServiceCollectionExtensions
     {
@@ -126,7 +126,7 @@ namespace Core.Api
                     opt.RouteOptions.EnableQualifiedOperationCall = false;
                     opt.EnableAttributeRouting = true;
                     _ = opt.Expand().Count().Filter().Select().OrderBy().SetMaxTop(1000);
-                    opt.AddRouteComponents($"/Api/Core", new CoreModelBuilder().Build().EDMModel);
+                    opt.AddRouteComponents($"/Api/cCoder.Core", new CoreModelBuilder().Build().EDMModel);
                 });
         }
 

@@ -1,7 +1,7 @@
-﻿using Core.Objects.Entities.Security;
+﻿using cCoder.Core.Objects.Entities.Security;
 using System.Threading.Tasks;
 
-namespace Core.Services.Orchestrations.Interfaces
+namespace cCoder.Core.Services.Orchestrations.Interfaces
 {
     public interface ICMSUserRegistrationOrchestrationService
     {

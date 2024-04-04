@@ -1,8 +1,8 @@
-﻿using Core.Objects;
-using Core.Objects.Dtos.Workflow;
-using Core.Objects.Entities.Workflow;
-using Core.Objects.Extensions;
-using Core.Objects.Workflow.Activities;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Dtos.Workflow;
+using cCoder.Core.Objects.Entities.Workflow;
+using cCoder.Core.Objects.Extensions;
+using cCoder.Core.Objects.Workflow.Activities;
 using Newtonsoft.Json;
 using System.Reflection;
 using System.Text;
@@ -45,7 +45,7 @@ namespace Workflow.Framework
             Start = instanceData.Start;
             FlowDefinition = instanceData.FlowDefinition.ToJson();
 
-            var dtoContext = JsonConvert.DeserializeObject<Core.Objects.Dtos.Workflow.WorkflowContext>(Encoding.UTF8.GetString(instanceData.ContextJson), ObjectExtensions.GetJSONSettings());
+            var dtoContext = JsonConvert.DeserializeObject<cCoder.Core.Objects.Dtos.Workflow.WorkflowContext>(Encoding.UTF8.GetString(instanceData.ContextJson), ObjectExtensions.GetJSONSettings());
             Flow = dtoContext.Flow;
 
             Stitch().Wait();

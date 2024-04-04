@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Net.Http;
 
-namespace Core.Objects.Dtos.Testing
+namespace cCoder.Core.Objects.Dtos.Testing
 {
     public class TestPlan
     {

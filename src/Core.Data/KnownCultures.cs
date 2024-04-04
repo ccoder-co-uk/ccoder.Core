@@ -1,6 +1,6 @@
-﻿using Core.Objects.Entities.CMS;
+﻿using cCoder.Core.Objects.Entities.CMS;
 
-namespace Core.Data
+namespace cCoder.Core.Data
 {
     public static class Cultures
     {

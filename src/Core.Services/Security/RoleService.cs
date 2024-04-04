@@ -1,7 +1,7 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.Security;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.Security;
 
-namespace Core.Services.Security
+namespace cCoder.Core.Services.Security
 {
     public class RoleService : CoreService<Role>, ICoreService<Role>
     {

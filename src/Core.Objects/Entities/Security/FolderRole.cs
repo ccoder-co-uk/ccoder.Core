@@ -1,8 +1,8 @@
-﻿using Core.Objects.Entities.DMS;
+﻿using cCoder.Core.Objects.Entities.DMS;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Core.Objects.Entities.Security
+namespace cCoder.Core.Objects.Entities.Security
 {
     [Table("FolderRoles", Schema = "Security")]
     public class FolderRole

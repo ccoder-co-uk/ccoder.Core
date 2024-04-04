@@ -1,8 +1,8 @@
-﻿using Core.Objects.Dtos.Workflow;
+﻿using cCoder.Core.Objects.Dtos.Workflow;
 using System;
 using System.Threading.Tasks;
 
-namespace Core.Objects.Workflow.Activities
+namespace cCoder.Core.Objects.Workflow.Activities
 {
     public abstract class LogActivity : Activity
     {

@@ -1,7 +1,7 @@
-﻿using Core.Objects.Entities.Security;
+﻿using cCoder.Core.Objects.Entities.Security;
 using System.Threading.Tasks;
 
-namespace Core.Services.Security
+namespace cCoder.Core.Services.Security
 {
     public interface IUserService
     {

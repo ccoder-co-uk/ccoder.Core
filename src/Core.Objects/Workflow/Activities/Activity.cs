@@ -1,10 +1,10 @@
-﻿using Core.Objects.Dtos.Workflow;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects.Dtos.Workflow;
+using cCoder.Core.Objects.Extensions;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Core.Objects.Workflow.Activities
+namespace cCoder.Core.Objects.Workflow.Activities
 {
     /// <summary>
     /// Base type for all workflow activities

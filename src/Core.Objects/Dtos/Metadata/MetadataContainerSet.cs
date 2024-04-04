@@ -1,9 +1,9 @@
-﻿using Core.Objects.Entities.CMS;
+﻿using cCoder.Core.Objects.Entities.CMS;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace Core.Objects.Dtos.Metadata
+namespace cCoder.Core.Objects.Dtos.Metadata
 {
     public class MetadataContainerSet
     {

@@ -1,8 +1,8 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.CMS;
-using Core.Objects.Entities.DMS;
-using Core.Objects.Entities.Security;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Objects.Entities.DMS;
+using cCoder.Core.Objects.Entities.Security;
+using cCoder.Core.Objects.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -13,9 +13,9 @@ using System.Linq;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
-using File = Core.Objects.Entities.DMS.File;
+using File = cCoder.Core.Objects.Entities.DMS.File;
 
-namespace Core
+namespace cCoder.Core
 {
     public class DMS
     {

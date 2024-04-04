@@ -1,7 +1,7 @@
-﻿using Core.Objects.Entities.Security;
-using Core.Services;
+﻿using cCoder.Core.Objects.Entities.Security;
+using cCoder.Core.Services;
 
-namespace Core.Packaging.Importers
+namespace cCoder.Core.Packaging.Importers
 {
     public abstract class CoreImporter<T> : Importer<T, User> where T : class
     {

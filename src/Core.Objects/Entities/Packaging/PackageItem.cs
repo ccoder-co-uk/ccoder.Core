@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Core.Objects.Entities.Packaging
+namespace cCoder.Core.Objects.Entities.Packaging
 {
     [Table("PackageItems", Schema = "Packaging")]
     public class PackageItem

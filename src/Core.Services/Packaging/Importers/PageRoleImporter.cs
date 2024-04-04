@@ -1,20 +1,20 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.CMS;
-using Core.Objects.Entities.Packaging;
-using Core.Objects.Entities.Security;
-using Core.Objects.Extensions;
-using Core.Services;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Objects.Entities.Packaging;
+using cCoder.Core.Objects.Entities.Security;
+using cCoder.Core.Objects.Extensions;
+using cCoder.Core.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Core.Packaging.Importers
+namespace cCoder.Core.Packaging.Importers
 {
     public class PageRoleImporter : CoreImporter<PageRole>
     {
         protected ICoreDataContext Db { get; }
 
-        public PageRoleImporter(ICoreService<PageRole> service, ICoreDataContext db) : base(service, "Core/PageRole") { Db = db; Order = 2; }
+        public PageRoleImporter(ICoreService<PageRole> service, ICoreDataContext db) : base(service, "cCoder.Core/PageRole") { Db = db; Order = 2; }
 
         public class PageRoleInfo
         {

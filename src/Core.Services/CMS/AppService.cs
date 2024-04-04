@@ -1,18 +1,18 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.CMS;
-using Core.Objects.Entities.DMS;
-using Core.Objects.Entities.Packaging;
-using Core.Objects.Entities.Planning;
-using Core.Objects.Entities.Security;
-using Core.Objects.Entities.Workflow;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Objects.Entities.DMS;
+using cCoder.Core.Objects.Entities.Packaging;
+using cCoder.Core.Objects.Entities.Planning;
+using cCoder.Core.Objects.Entities.Security;
+using cCoder.Core.Objects.Entities.Workflow;
+using cCoder.Core.Objects.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.IO.Compression;
 using System.Security;
-using static Core.Packaging.Importers.PageRoleImporter;
+using static cCoder.Core.Packaging.Importers.PageRoleImporter;
 
-namespace Core.Services.CMS
+namespace cCoder.Core.Services.CMS
 {
     public class AppService : CoreService<App>, IAppService
     {
@@ -264,7 +264,7 @@ namespace Core.Services.CMS
                 {
                     new PackageItem()
                     {
-                        Type = "Core/PageRole",
+                        Type = "cCoder.Core/PageRole",
                         Data = pageRoles.ToJson(serializerSettings)
                     }
                 }
@@ -279,7 +279,7 @@ namespace Core.Services.CMS
                 {
                     new PackageItem()
                     {
-                        Type = "Core/FlowDefinition",
+                        Type = "cCoder.Core/FlowDefinition",
                         Data = Db.GetAll<FlowDefinition>()
                             .Include(f => f.Process)
                             .Where(f => f.AppId == appId)
@@ -298,7 +298,7 @@ namespace Core.Services.CMS
                 {
                     new PackageItem()
                     {
-                        Type = "Core/CalendarEvent",
+                        Type = "cCoder.Core/CalendarEvent",
                         Data = Db.GetAll<CalendarEvent>()
                             .Include(f => f.Calendar)
                             .Where(f => f.Calendar.AppId == appId)
@@ -317,7 +317,7 @@ namespace Core.Services.CMS
                 {
                     new PackageItem()
                     {
-                        Type = "Core/BusinessProcess",
+                        Type = "cCoder.Core/BusinessProcess",
                         Data = Db.GetAll<BusinessProcess>()
                             .Where(p => p.AppId == appId)
                             .Select(p => new { p.Name, p.ReportingComponentName, p.Description, p.Category, p.LastUpdated })
@@ -335,7 +335,7 @@ namespace Core.Services.CMS
                 {
                     new PackageItem()
                     {
-                        Type = "Core/Calendar",
+                        Type = "cCoder.Core/Calendar",
                         Data = Db.GetAll<Calendar>()
                             .Where(p => p.AppId == appId)
                             .Select(p => new { p.Name, p.Description})
@@ -353,7 +353,7 @@ namespace Core.Services.CMS
                 {
                     new PackageItem()
                     {
-                        Type = "Core/Page",
+                        Type = "cCoder.Core/Page",
                         Data = Db.GetAll<Page>()
                             .Include(p => p.Contents)
                             .Include(p => p.PageInfo)
@@ -392,7 +392,7 @@ namespace Core.Services.CMS
                 Items = new[]
                 {
                     new PackageItem() {
-                        Type = "Core/Resource",
+                        Type = "cCoder.Core/Resource",
                         Data = Db.GetAll<Resource>()
                             .Where(r => r.AppId == appId)
                             .Select(r => new { r.Culture, r.Key, r.Name, r.DisplayName, r.ShortDisplayName, r.Description, r.LastUpdated })
@@ -410,7 +410,7 @@ namespace Core.Services.CMS
                 {
                     new PackageItem()
                     {
-                        Type = "Core/Script",
+                        Type = "cCoder.Core/Script",
                         Data = Db.GetAll<Script>()
                             .Where(r => r.AppId == appId)
                             .Select(c => new { c.Name, c.Content, c.LastUpdated })
@@ -428,7 +428,7 @@ namespace Core.Services.CMS
                 {
                     new PackageItem()
                     {
-                        Type = "Core/Component",
+                        Type = "cCoder.Core/Component",
                         Data = Db.GetAll<Component>()
                             .Where(r => r.AppId == appId)
                             .Select(c => new { c.Name, c.Key, c.ResourceKey, c.Script, c.Content, c.LastUpdated })
@@ -446,7 +446,7 @@ namespace Core.Services.CMS
                                 {
                         new PackageItem()
                         {
-                            Type = "Core/Template",
+                            Type = "cCoder.Core/Template",
                             Data = Db.GetAll<Template>()
                                 .Where(r => r.AppId == appId)
                                 .Select(t => new { t.Name, t.ResourceKey, t.RawString, t.LastUpdated })
@@ -464,7 +464,7 @@ namespace Core.Services.CMS
                 {
                     new PackageItem()
                     {
-                        Type = "Core/Layout",
+                        Type = "cCoder.Core/Layout",
                         Data = Db.GetAll<Layout>()
                             .Where(r => r.AppId == appId)
                             .Select(l => new { l.Name, l.HeaderHtml, l.Html, l.Script, l.LastUpdated })
@@ -482,7 +482,7 @@ namespace Core.Services.CMS
                 {
                     new PackageItem()
                     {
-                        Type = "Core/FolderRole",
+                        Type = "cCoder.Core/FolderRole",
                         Data = folderData.SelectMany(f => f.Roles, (folder, role) => new { folder.Path, role.Role.Name })
                             .ToArray()
                             .ToJson(serializerSettings)
@@ -499,7 +499,7 @@ namespace Core.Services.CMS
                 {
                     new PackageItem()
                     {
-                        Type = "Core/Role",
+                        Type = "cCoder.Core/Role",
                         Data = roleData.Select(r => new { r.Name, r.Privs }).ToJson(serializerSettings)
                     }
                 }

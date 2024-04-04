@@ -1,6 +1,6 @@
-using Core;
-using Core.Objects;
-using Core.Objects.Entities.CMS;
+using cCoder.Core;
+using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.CMS;
 using System.Security;
 
 namespace Web.Api.Middleware;
@@ -74,11 +74,11 @@ public class DMSMiddleware
 
                 if (downloadPaths.Length > 0)
                 {
-                    var paths = downloadPaths.Select(v => new Core.Objects.Path(v)).ToArray();
+                    var paths = downloadPaths.Select(v => new cCoder.Core.Objects.Path(v)).ToArray();
                     result = dms.GetFilesZipped(paths);
                 }
                 else
-                    result = dms.Get(new Core.Objects.Path(path), version, search);
+                    result = dms.Get(new cCoder.Core.Objects.Path(path), version, search);
 
                 if (result != null)
                     await Respond(context, result.Data, download ? "application/octet-stream" : result.MimeType);
@@ -96,7 +96,7 @@ public class DMSMiddleware
                 break;
             case "DELETE":
                 await dms.Drop(
-                    new Core.Objects.Path(path), 
+                    new cCoder.Core.Objects.Path(path), 
                     query.TryGetValue("version", out Microsoft.Extensions.Primitives.StringValues value) 
                         ? int.Parse(value[0]) 
                         : 0);
@@ -115,13 +115,13 @@ public class DMSMiddleware
         if (query.ContainsKey("moveTo"))
         {
             if (query.TryGetValue("moveTo", out Microsoft.Extensions.Primitives.StringValues newPath))
-                await dms.Move(new Core.Objects.Path(path.Split("?")[0]), new Core.Objects.Path(newPath.ToArray()[0]));
+                await dms.Move(new cCoder.Core.Objects.Path(path.Split("?")[0]), new cCoder.Core.Objects.Path(newPath.ToArray()[0]));
 
             await Respond(context, null, "application/json");
         }
         else
         {
-            var destinationPath = new Core.Objects.Path(path);
+            var destinationPath = new cCoder.Core.Objects.Path(path);
 
             if (query.ContainsKey("unpack"))
             {

@@ -1,6 +1,6 @@
-﻿using Core.Objects;
-using Core.Objects.Dtos;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Dtos;
+using cCoder.Core.Objects.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 using System.Security;
 using System.Threading.Tasks;
 
-namespace Core.Services
+namespace cCoder.Core.Services
 {
     public abstract class Service<T, TUser> : Service<TUser>, IService<T, TUser> where T : class
     {

@@ -1,4 +1,4 @@
-﻿namespace Core.Objects.Workflow.Activities.Transformation
+﻿namespace cCoder.Core.Objects.Workflow.Activities.Transformation
 {
     public abstract class TransformationActivity<TSource, TResult> : Activity
     {

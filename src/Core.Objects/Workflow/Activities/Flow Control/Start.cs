@@ -1,10 +1,10 @@
-﻿using Core.Objects.Entities.CMS;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Objects.Extensions;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Core.Objects.Workflow.Activities
+namespace cCoder.Core.Objects.Workflow.Activities
 {
     public sealed class Start : CoreActivity
     {

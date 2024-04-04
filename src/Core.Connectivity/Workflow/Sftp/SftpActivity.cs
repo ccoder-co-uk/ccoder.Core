@@ -1,10 +1,10 @@
-﻿using Core.Objects.Workflow.Activities;
+﻿using cCoder.Core.Objects.Workflow.Activities;
 using Renci.SshNet;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Core.Connectivity.Workflow.Sftp
+namespace cCoder.Core.Connectivity.Workflow.Sftp
 {
     // Abstract types should not have constructors
     // I know, but I don't care, this stuff is type heirarchy specific

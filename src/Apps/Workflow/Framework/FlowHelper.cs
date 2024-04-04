@@ -1,6 +1,6 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.Workflow;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.Workflow;
+using cCoder.Core.Objects.Extensions;
 using Newtonsoft.Json;
 using System.Net;
 using System.Text;

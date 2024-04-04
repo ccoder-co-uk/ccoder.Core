@@ -1,12 +1,12 @@
-﻿using Core.Api.OData;
-using Core.Objects;
-using Core.Objects.Dtos.Metadata;
-using Core.Objects.Dtos.Workflow;
-using Core.Objects.Workflow.Activities;
+﻿using cCoder.Core.Api.OData;
+using cCoder.Core.Objects;
+using cCoder.Core.Objects.Dtos.Metadata;
+using cCoder.Core.Objects.Dtos.Workflow;
+using cCoder.Core.Objects.Workflow.Activities;
 using Microsoft.OData.Edm;
 using System.Reflection;
 
-namespace Core.Api
+namespace cCoder.Core.Api
 {
     public static class MetadataHelper
     {
@@ -49,8 +49,8 @@ namespace Core.Api
                     .Union(
                         TypeHelper.GetWebStackAssemblies()
                             .SelectMany(a => a.GetTypes()
-                                .Where(t => t.Namespace == "Core.Objects"))
-                                .Select(t => new MetadataContainer(t) { Category = "DTO (Core)" })
+                                .Where(t => t.Namespace == "cCoder.Core.Objects"))
+                                .Select(t => new MetadataContainer(t) { Category = "DTO (cCoder.Core)" })
                     )
                     .OrderBy(t => t.Name)
                     .ToArray()
@@ -105,7 +105,7 @@ namespace Core.Api
         {
             Dictionary<string, IEdmModel> map = new()
             {
-                { "Core", new CoreModelBuilder().Build().EDMModel }
+                { "cCoder.Core", new CoreModelBuilder().Build().EDMModel }
                 //{ "Security", new SecurityModelBuilder().Build().EDMModel },
             };
 

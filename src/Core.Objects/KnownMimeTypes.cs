@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Core.Objects
+namespace cCoder.Core.Objects
 {
     public struct Mapping
     {

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Core.Objects.Workflow.Activities.Transformation
+namespace cCoder.Core.Objects.Workflow.Activities.Transformation
 {
     public class DynamicDataFlattenActivity : TransformationActivity<IEnumerable<object>, dynamic[]>
     {

@@ -1,11 +1,11 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.Mail;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.Mail;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Security;
 using System.Threading.Tasks;
 
-namespace Core.Services.CMS
+namespace cCoder.Core.Services.CMS
 {
     public class QueuedEmailService : CoreService<QueuedEmail>, IQueuedEmailService
     {

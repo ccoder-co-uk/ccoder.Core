@@ -1,8 +1,8 @@
-﻿using Core.Objects;
-using Core.Objects.Dtos.Workflow;
-using Core.Objects.Entities.Security;
-using Core.Objects.Extensions;
-using Core.Objects.Workflow.Activities;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Dtos.Workflow;
+using cCoder.Core.Objects.Entities.Security;
+using cCoder.Core.Objects.Extensions;
+using cCoder.Core.Objects.Workflow.Activities;
 using Newtonsoft.Json;
 using System.Net;
 
@@ -13,7 +13,7 @@ namespace Workflow.Framework
     /// The execution context is passed between tasks as they execute.
     /// It also acts as a utility class for storing process related data across tasks in a single execution
     /// </summary>
-    public sealed class WorkflowContext : Core.Objects.Dtos.Workflow.WorkflowContext, IWorkflowContext
+    public sealed class WorkflowContext : cCoder.Core.Objects.Dtos.Workflow.WorkflowContext, IWorkflowContext
     {
         [JsonIgnore]
         public IScriptRunner Script => Instance?.Script ?? new ScriptRunner((l, m) => Task.Run(() => { Log(l, m); }));

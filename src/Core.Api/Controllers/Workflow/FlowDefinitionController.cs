@@ -1,8 +1,8 @@
-﻿using Core.Objects;
-using Core.Objects.Dtos.Metadata;
-using Core.Objects.Entities.Workflow;
-using Core.Objects.Workflow.Activities;
-using Core.Services;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Dtos.Metadata;
+using cCoder.Core.Objects.Entities.Workflow;
+using cCoder.Core.Objects.Workflow.Activities;
+using cCoder.Core.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
@@ -11,7 +11,7 @@ using System.Reflection;
 using System.Security;
 using System.Text;
 
-namespace Core.Api.Controllers
+namespace cCoder.Core.Api.Controllers
 {
     public class FlowDefinitionController : CoreEntityODataController<FlowDefinition, Guid>
     {

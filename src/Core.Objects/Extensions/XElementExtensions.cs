@@ -1,6 +1,6 @@
 ﻿using System.Xml.Linq;
 
-namespace Core.Objects.Extensions
+namespace cCoder.Core.Objects.Extensions
 {
     public static class XElementExtensions
     {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using System.Security;
 
-namespace Core.Api
+namespace cCoder.Core.Api
 {
     public static class IAppBuilderExtensions
     {

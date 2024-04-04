@@ -1,10 +1,10 @@
-﻿using Core.Objects.Entities.Security;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects.Entities.Security;
+using cCoder.Core.Objects.Extensions;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Xml.Linq;
 
-namespace Core.Objects.Entities.DMS
+namespace cCoder.Core.Objects.Entities.DMS
 {
     [Table("Files", Schema = "DMS")]
     [Parent("Folder")]

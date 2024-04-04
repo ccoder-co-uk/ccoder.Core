@@ -1,5 +1,5 @@
-using Core.Api;
-using Core.Objects;
+using cCoder.Core.Api;
+using cCoder.Core.Objects;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.OData;
@@ -44,7 +44,7 @@ namespace Web
                 builder.Services.AddCore(coreConfig =>
                 {
                     coreConfig
-                        .UseMSSQLProvider(configRoot.GetConnectionString("Core"))
+                        .UseMSSQLProvider(configRoot.GetConnectionString("cCoder.Core"))
                         .UseContentManagement()
                         .UseDocumentManagement()
                         .AuthorizeUsersWith(ctx => SSOUserId);

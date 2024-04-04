@@ -1,15 +1,15 @@
-﻿using Core.Objects.Entities.CMS;
-using Core.Objects.Entities.Packaging;
-using Core.Objects.Extensions;
-using Core.Services;
+﻿using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Objects.Entities.Packaging;
+using cCoder.Core.Objects.Extensions;
+using cCoder.Core.Services;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Core.Packaging.Importers
+namespace cCoder.Core.Packaging.Importers
 {
     public class LayoutImporter : CoreImporter<Layout>
     {
-        public LayoutImporter(ICoreService<Layout> service) : base(service, "Core/Layout") { }
+        public LayoutImporter(ICoreService<Layout> service) : base(service, "cCoder.Core/Layout") { }
 
         public override async Task Import(int appId, PackageItem item)
         {

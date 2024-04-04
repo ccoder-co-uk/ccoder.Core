@@ -1,8 +1,8 @@
-﻿using Core.Objects;
-using Core.Objects.Entities;
-using Core.Objects.Entities.CMS;
-using Core.Objects.Entities.Security;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities;
+using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Objects.Entities.Security;
+using cCoder.Core.Objects.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -12,7 +12,7 @@ using System.Linq.Dynamic.Core;
 using System.Security;
 using System.Threading.Tasks;
 
-namespace Core.Data
+namespace cCoder.Core.Data
 {
     public partial class CoreDataContext
     {

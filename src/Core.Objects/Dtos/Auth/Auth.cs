@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Core.Objects.Dtos.Auth
+namespace cCoder.Core.Objects.Dtos.Auth
 {
     public class Auth
     {

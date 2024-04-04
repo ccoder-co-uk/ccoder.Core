@@ -1,7 +1,7 @@
-using Core.Objects;
-using Core.Objects.Entities.Mail;
+using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.Mail;
 
-namespace Core.Services.CMS
+namespace cCoder.Core.Services.CMS
 {
     public class SentEmailService : CoreService<SentEmail>, ICoreService<SentEmail>
     {

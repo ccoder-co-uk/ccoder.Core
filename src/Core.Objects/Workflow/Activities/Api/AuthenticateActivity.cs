@@ -1,7 +1,7 @@
-﻿using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects.Extensions;
 using System.Text.Json.Serialization;
 
-namespace Core.Objects.Workflow.Activities.Api;
+namespace cCoder.Core.Objects.Workflow.Activities.Api;
 
 public class AuthenticateActivity : ApiActivity
 {

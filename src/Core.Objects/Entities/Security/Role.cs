@@ -1,5 +1,5 @@
-﻿using Core.Objects.Entities.CMS;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Objects.Extensions;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
-namespace Core.Objects.Entities.Security
+namespace cCoder.Core.Objects.Entities.Security
 {
     [Table("Roles", Schema = "Security")]
     public class Role

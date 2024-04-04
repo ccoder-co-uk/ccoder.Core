@@ -1,10 +1,10 @@
-﻿using Core.Objects;
+﻿using cCoder.Core.Objects;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Core.Data
+namespace cCoder.Core.Data
 {
     public static class DbContextExtensions
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Core.Objects.Dtos.Metadata
+namespace cCoder.Core.Objects.Dtos.Metadata
 {
     public class OperationContainer
     {

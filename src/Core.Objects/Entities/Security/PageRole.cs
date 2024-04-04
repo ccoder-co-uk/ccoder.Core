@@ -1,8 +1,8 @@
-﻿using Core.Objects.Entities.CMS;
+﻿using cCoder.Core.Objects.Entities.CMS;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Core.Objects.Entities.Security
+namespace cCoder.Core.Objects.Entities.Security
 {
     [Table("PageRoles", Schema = "Security")]
     public class PageRole

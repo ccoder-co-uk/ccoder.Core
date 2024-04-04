@@ -1,6 +1,6 @@
-﻿using Core.Objects.Dtos;
-using Core.Objects.Entities.CMS;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects.Dtos;
+using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Objects.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.ComponentModel.DataAnnotations;
@@ -11,7 +11,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace Core.Objects.Extensions
+namespace cCoder.Core.Objects.Extensions
 {
     /// <summary>
     /// Object extensions

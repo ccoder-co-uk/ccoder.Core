@@ -1,13 +1,13 @@
-﻿using Core.Objects;
-using Core.Objects.Dtos;
-using Core.Objects.Entities.Workflow;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Dtos;
+using cCoder.Core.Objects.Entities.Workflow;
+using cCoder.Core.Objects.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Security;
 
-namespace Core.Services.Workflow;
+namespace cCoder.Core.Services.Workflow;
 
 public class FlowDefinitionService(Config config, ICoreDataContext db, ILogger<FlowDefinitionService> log) 
     : CoreService<FlowDefinition>(db), IFlowDefinitionService

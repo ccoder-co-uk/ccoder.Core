@@ -1,9 +1,9 @@
-﻿using Core.Objects.Entities.Security;
+﻿using cCoder.Core.Objects.Entities.Security;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Core.Objects.Entities.Workflow
+namespace cCoder.Core.Objects.Entities.Workflow
 {
     [Table("WorkflowEvents", Schema = "Workflow")]
     [Parent("Flow")]

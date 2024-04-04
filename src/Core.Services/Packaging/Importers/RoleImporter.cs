@@ -1,18 +1,18 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.Packaging;
-using Core.Objects.Entities.Security;
-using Core.Objects.Extensions;
-using Core.Services;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.Packaging;
+using cCoder.Core.Objects.Entities.Security;
+using cCoder.Core.Objects.Extensions;
+using cCoder.Core.Services;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Core.Packaging.Importers
+namespace cCoder.Core.Packaging.Importers
 {
     public class RoleImporter : CoreImporter<Role>
     {
         protected ICoreDataContext Db { get; }
 
-        public RoleImporter(ICoreService<Role> service, ICoreDataContext db) : base(service, "Core/Role") => Db = db;
+        public RoleImporter(ICoreService<Role> service, ICoreDataContext db) : base(service, "cCoder.Core/Role") => Db = db;
 
         public override async Task Import(int appId, PackageItem item)
         {

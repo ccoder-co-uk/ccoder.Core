@@ -1,10 +1,10 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.Workflow;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.Workflow;
+using cCoder.Core.Objects.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Core;
+namespace cCoder.Core;
 
 public abstract class EventManager
 {
@@ -30,7 +30,7 @@ public abstract class EventManager
         Config = config;
         RaisedEvents = new Dictionary<string, ICollection<object>>();
 
-        if (core != null && config != null && auth != null && dataContext != "Core")
+        if (core != null && config != null && auth != null && dataContext != "cCoder.Core")
         {
             core.DisableFilters();
 
@@ -51,7 +51,7 @@ public abstract class EventManager
     public virtual async Task RaiseEvent<T>(T forObject, string name)
         where T : class
     {
-        Log.LogDebug($"Core Event: {name}");
+        Log.LogDebug($"cCoder.Core Event: {name}");
 
         string eventType = $"{DataContext}/{typeof(T).Name}";
 

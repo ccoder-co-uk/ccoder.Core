@@ -1,7 +1,7 @@
-﻿using Core.Objects.Entities.CMS;
-using Core.Objects.Entities.Security;
-using Core.Objects.Entities.Workflow;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Objects.Entities.Security;
+using cCoder.Core.Objects.Entities.Workflow;
+using cCoder.Core.Objects.Extensions;
 using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Core.Objects.Entities.Planning
+namespace cCoder.Core.Objects.Entities.Planning
 {
     [Table("ScheduledTasks", Schema = "Planning")]
     public class ScheduledTask

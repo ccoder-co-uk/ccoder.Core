@@ -1,17 +1,17 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.CMS;
-using Core.Objects.Entities.Packaging;
-using Core.Objects.Extensions;
-using Core.Services;
-using Path = Core.Objects.Path;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Objects.Entities.Packaging;
+using cCoder.Core.Objects.Extensions;
+using cCoder.Core.Services;
+using Path = cCoder.Core.Objects.Path;
 
-namespace Core.Packaging.Importers
+namespace cCoder.Core.Packaging.Importers
 {
     public class PageImporter : CoreImporter<Page>
     {
         protected ICoreDataContext Db { get; }
 
-        public PageImporter(IPageService service, ICoreDataContext db) : base(service, "Core/Page") => Db = db;
+        public PageImporter(IPageService service, ICoreDataContext db) : base(service, "cCoder.Core/Page") => Db = db;
 
         public override async Task Import(int appId, PackageItem item)
         {

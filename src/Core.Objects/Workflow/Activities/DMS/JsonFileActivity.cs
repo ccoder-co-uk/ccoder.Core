@@ -1,7 +1,7 @@
-﻿using Core.Objects.Dtos.Workflow;
+﻿using cCoder.Core.Objects.Dtos.Workflow;
 using System.Threading.Tasks;
 
-namespace Core.Objects.Workflow.Activities.DMS
+namespace cCoder.Core.Objects.Workflow.Activities.DMS
 {
     public class JsonFileActivity : DMSActivity
     {

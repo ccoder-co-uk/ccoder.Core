@@ -1,8 +1,8 @@
-﻿using Core.Objects.Entities.DMS;
-using Core.Objects.Entities.Mail;
-using Core.Objects.Entities.Planning;
-using Core.Objects.Entities.Security;
-using Core.Objects.Entities.Workflow;
+﻿using cCoder.Core.Objects.Entities.DMS;
+using cCoder.Core.Objects.Entities.Mail;
+using cCoder.Core.Objects.Entities.Planning;
+using cCoder.Core.Objects.Entities.Security;
+using cCoder.Core.Objects.Entities.Workflow;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,7 +10,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Dynamic;
 using System.Linq;
 
-namespace Core.Objects.Entities.CMS
+namespace cCoder.Core.Objects.Entities.CMS
 {
     [Table("Apps", Schema = "CMS")]
     public class App

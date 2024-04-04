@@ -1,14 +1,14 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.Packaging;
-using Core.Objects.Entities.Security;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.Packaging;
+using cCoder.Core.Objects.Entities.Security;
+using cCoder.Core.Objects.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 
-namespace Core.Data
+namespace cCoder.Core.Data
 {
     public partial class CoreDataContext : EFDataContext<User, Role>, ICoreDataContext
     {
@@ -79,7 +79,7 @@ namespace Core.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseSqlServer(Config.ConnectionStrings["Core"]);
+            optionsBuilder.UseSqlServer(Config.ConnectionStrings["cCoder.Core"]);
 
             if(Config.LogSQL)
                 optionsBuilder.LogTo((message) =>

@@ -1,11 +1,11 @@
-﻿using Core.Objects;
+﻿using cCoder.Core.Objects;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Security;
 using System.Threading.Tasks;
 
-namespace Core.Services.DMS
+namespace cCoder.Core.Services.DMS
 {
     public class FileService : CoreService<Objects.Entities.DMS.File>, IFileService
     {

@@ -1,7 +1,7 @@
-﻿using Core.Objects;
-using Core.Objects.Dtos;
-using Core.Objects.Extensions;
-using Core.Services;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Dtos;
+using cCoder.Core.Objects.Extensions;
+using cCoder.Core.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Deltas;
@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Results;
 using System.Linq.Dynamic.Core;
 
-namespace Core.Api.Controllers
+namespace cCoder.Core.Api.Controllers
 {
     /// <summary>
     /// Base Entity Controller

@@ -1,11 +1,11 @@
-﻿using Core.Objects.Entities.CMS;
-using Core.Objects.Entities.Security;
+﻿using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Objects.Entities.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Core.Objects
+namespace cCoder.Core.Objects
 {
     public interface ICmsDataContext : IDataContext<User>
     {

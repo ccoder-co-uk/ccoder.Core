@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 
-namespace Core.Migrations
+namespace cCoder.Core.Migrations
 {
     public partial class AddFlowInstances : Migration
     {

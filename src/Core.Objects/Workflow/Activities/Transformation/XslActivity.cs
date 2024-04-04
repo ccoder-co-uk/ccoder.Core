@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Xsl;
 
-namespace Core.Objects.Workflow.Activities.Transformation
+namespace cCoder.Core.Objects.Workflow.Activities.Transformation
 {
     public class XslActivity : TransformationActivity<string, string>
     {

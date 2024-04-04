@@ -2,7 +2,7 @@
 using System.Text.RegularExpressions;
 using Web.Api.Middleware;
 
-namespace Core.Api;
+namespace cCoder.Core.Api;
 
 public partial class CoreAppFeatureBuilder(WebApplication app, ILogger log = null)
 {

@@ -1,15 +1,15 @@
-using Core.Objects.Entities.CMS;
-using Core.Objects.Entities.Packaging;
-using Core.Objects.Extensions;
-using Core.Services;
+using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Objects.Entities.Packaging;
+using cCoder.Core.Objects.Extensions;
+using cCoder.Core.Services;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Core.Packaging.Importers
+namespace cCoder.Core.Packaging.Importers
 {
     public class ScriptImporter : CoreImporter<Script>
     {
-        public ScriptImporter(IScriptService service) : base(service, "Core/Script") { }
+        public ScriptImporter(IScriptService service) : base(service, "cCoder.Core/Script") { }
 
         public override async Task Import(int appId, PackageItem item)
         {

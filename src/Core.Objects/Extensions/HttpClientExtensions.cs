@@ -1,5 +1,5 @@
-﻿using Core.Objects.Dtos;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects.Dtos;
+using cCoder.Core.Objects.Extensions;
 using Microsoft.Extensions.Logging;
 using Security.Objects.Entities;
 using System;
@@ -13,7 +13,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Objects.Extensions
+namespace cCoder.Core.Objects.Extensions
 {
     public static class HttpClientExtensions
     {

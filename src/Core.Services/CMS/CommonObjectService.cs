@@ -1,15 +1,15 @@
-using Core.Objects;
-using Core.Objects.Dtos;
-using Core.Objects.Entities;
-using Core.Objects.Entities.CMS;
-using Core.Objects.Extensions;
+using cCoder.Core.Objects;
+using cCoder.Core.Objects.Dtos;
+using cCoder.Core.Objects.Entities;
+using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Objects.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security;
 using System.Threading.Tasks;
 
-namespace Core.Services.CMS
+namespace cCoder.Core.Services.CMS
 {
     public class CommonObjectService : CoreService<CommonObject>, ICommonObjectService
     {
@@ -85,7 +85,7 @@ namespace Core.Services.CMS
             if (entity.Type.ToLowerInvariant() == "core/component")
             {
                 Cache.Set($"component|{entity.Name.ToLower()}", Objects.Data.ParseJson<Component>(entity.Json));
-                var latestSetObject = Cache.LatestSet.First(r => r.Name.ToLowerInvariant() == entity.Name.ToLowerInvariant() && r.Type == "Core/Component");
+                var latestSetObject = Cache.LatestSet.First(r => r.Name.ToLowerInvariant() == entity.Name.ToLowerInvariant() && r.Type == "cCoder.Core/Component");
                 latestSetObject.UpdateFrom(entity);
             }
             else if (entity.Type.ToLowerInvariant() == "core/resource")
@@ -94,12 +94,12 @@ namespace Core.Services.CMS
                 var latestSetObject = Cache.LatestSet.First(r => r.Name.ToLowerInvariant() == entity.Name.ToLowerInvariant()
                     && r.Key.ToLowerInvariant() == entity.Key.ToLowerInvariant() && r.Name == entity.Name.ToLowerInvariant()
                     && r.Culture.ToLowerInvariant() == entity.Culture.ToLowerInvariant()
-                    && r.Type == "Core/Resource");
+                    && r.Type == "cCoder.Core/Resource");
                 latestSetObject.UpdateFrom(entity);
             }
             else if (entity.Type.ToLowerInvariant() == "core/script")
             {
-                var latestSetObject = Cache.LatestSet.First(r => r.Name.ToLowerInvariant() == entity.Name.ToLowerInvariant() && r.Type == "Core/Script");
+                var latestSetObject = Cache.LatestSet.First(r => r.Name.ToLowerInvariant() == entity.Name.ToLowerInvariant() && r.Type == "cCoder.Core/Script");
                 latestSetObject.UpdateFrom(entity);
                 Cache.Set($"script|{entity.Name.ToLower()}", Objects.Data.ParseJson<Script>(entity.Json));
             }

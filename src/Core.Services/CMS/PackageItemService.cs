@@ -1,7 +1,7 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.Packaging;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.Packaging;
 
-namespace Core.Services.CMS
+namespace cCoder.Core.Services.CMS
 {
     public class PackageItemService : CoreService<PackageItem>
     {

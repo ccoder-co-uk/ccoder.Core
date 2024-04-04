@@ -1,18 +1,18 @@
-﻿using Core.Objects.Entities.Packaging;
-using Core.Objects.Entities.Planning;
-using Core.Objects.Extensions;
-using Core.Services;
+﻿using cCoder.Core.Objects.Entities.Packaging;
+using cCoder.Core.Objects.Entities.Planning;
+using cCoder.Core.Objects.Extensions;
+using cCoder.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Core.Packaging.Importers
+namespace cCoder.Core.Packaging.Importers
 {
     public class CalendarEventImporter : CoreImporter<CalendarEvent>
     {
         private readonly ICoreService<Calendar> calendarService;
-        public CalendarEventImporter(ICoreService<CalendarEvent> service, ICoreService<Calendar> calendarService) : base(service, "Core/CalendarEvent") { this.calendarService = calendarService; }
+        public CalendarEventImporter(ICoreService<CalendarEvent> service, ICoreService<Calendar> calendarService) : base(service, "cCoder.Core/CalendarEvent") { this.calendarService = calendarService; }
 
         public override async Task Import(int appId, PackageItem item)
         {

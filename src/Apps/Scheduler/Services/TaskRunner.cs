@@ -1,5 +1,5 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.Planning;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.Planning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;

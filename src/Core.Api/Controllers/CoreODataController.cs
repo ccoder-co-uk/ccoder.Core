@@ -1,11 +1,11 @@
-﻿using Core.Objects;
-using Core.Objects.Dtos.Metadata;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Dtos.Metadata;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.OData.Edm;
 
-namespace Core.Api.Controllers
+namespace cCoder.Core.Api.Controllers
 {
     /// <summary>
     /// Base controller for all odata controllers that expose the metadata for the type of data of interest

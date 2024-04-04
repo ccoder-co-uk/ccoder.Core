@@ -1,8 +1,8 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.CMS;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.CMS;
 using Microsoft.AspNetCore.SignalR;
 
-namespace Core.Api.Hubs
+namespace cCoder.Core.Api.Hubs
 {
     public class LogHub : CoreHub
     {

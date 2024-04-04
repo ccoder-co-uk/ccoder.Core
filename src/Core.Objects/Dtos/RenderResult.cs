@@ -1,4 +1,4 @@
-﻿namespace Core.Objects.Dtos
+﻿namespace cCoder.Core.Objects.Dtos
 {
     /// <summary>
     ///  Represents a pre-processed page in a  more complete front end format.

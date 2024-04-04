@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Core.Objects.Entities.DMS
+namespace cCoder.Core.Objects.Entities.DMS
 {
     [Table("FileContents", Schema = "DMS")]
     [ApiIgnore]

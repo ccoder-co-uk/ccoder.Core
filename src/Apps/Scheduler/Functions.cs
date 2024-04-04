@@ -1,6 +1,6 @@
-using Core.Objects;
-using Core.Objects.Entities.CMS;
-using Core.Objects.Extensions;
+using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Objects.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;

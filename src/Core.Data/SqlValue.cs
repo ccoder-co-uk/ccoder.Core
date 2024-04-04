@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Core.Data
+namespace cCoder.Core.Data
 {
     public class GuidValue { public Guid Value { get; set; } }
     public class IntValue { public int Value { get; set; } }

@@ -1,8 +1,8 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.CMS;
-using Core.Services;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Services;
 
-namespace Core.Api.Controllers
+namespace cCoder.Core.Api.Controllers
 {
     public class LayoutController : CoreEntityODataController<Layout, int>
     {

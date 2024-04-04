@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Core.Objects.Workflow.Activities.DMS
+namespace cCoder.Core.Objects.Workflow.Activities.DMS
 {
     public class DMSDeleteActivity : DMSActivity
     {

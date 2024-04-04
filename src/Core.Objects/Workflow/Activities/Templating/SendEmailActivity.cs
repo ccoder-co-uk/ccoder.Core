@@ -1,8 +1,8 @@
-﻿using Core.Objects.Dtos.Workflow;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects.Dtos.Workflow;
+using cCoder.Core.Objects.Extensions;
 using System.Threading.Tasks;
 
-namespace Core.Objects.Workflow.Activities.Templating
+namespace cCoder.Core.Objects.Workflow.Activities.Templating
 {
     public class SendEmailActivity : TemplatingActivity<dynamic>
     {

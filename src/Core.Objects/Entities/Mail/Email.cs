@@ -1,9 +1,9 @@
-﻿using Core.Objects.Entities.CMS;
-using Core.Objects.Entities.Security;
+﻿using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Objects.Entities.Security;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Core.Objects.Entities.Mail
+namespace cCoder.Core.Objects.Entities.Mail
 {
     public class Email
     {

@@ -1,8 +1,8 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.Mail;
-using Core.Services;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.Mail;
+using cCoder.Core.Services;
 
-namespace Core.Api.Controllers
+namespace cCoder.Core.Api.Controllers
 {
     public class QueuedEmailController : CoreEntityODataController<QueuedEmail, int>
     {

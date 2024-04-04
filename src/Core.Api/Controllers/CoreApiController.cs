@@ -1,12 +1,12 @@
-﻿using Core.Api.OData.Responses;
-using Core.Objects.Dtos.Metadata;
+﻿using cCoder.Core.Api.OData.Responses;
+using cCoder.Core.Objects.Dtos.Metadata;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace Core.Api.Controllers
+namespace cCoder.Core.Api.Controllers
 {
     public abstract class CoreApiController : Controller
     {

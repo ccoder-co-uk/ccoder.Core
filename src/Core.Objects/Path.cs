@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace Core.Objects
+namespace cCoder.Core.Objects
 {
     public class Path
     {

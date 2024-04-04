@@ -1,7 +1,7 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.Logging;
-using Core.Objects.Entities.Workflow;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.Logging;
+using cCoder.Core.Objects.Entities.Workflow;
+using cCoder.Core.Objects.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Logging;
@@ -11,7 +11,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Core.Data
+namespace cCoder.Core.Data
 {
     // Abstract types should not have constructors
     // required in order to specify the minium requirements for the inherited types in the tree.

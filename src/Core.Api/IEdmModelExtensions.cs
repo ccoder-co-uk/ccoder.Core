@@ -1,9 +1,9 @@
-﻿using Core.Objects;
-using Core.Objects.Dtos.Metadata;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Dtos.Metadata;
+using cCoder.Core.Objects.Extensions;
 using Microsoft.OData.Edm;
 
-namespace Core.Api
+namespace cCoder.Core.Api
 {
     public static class IEdmModelExtensions
     {

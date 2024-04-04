@@ -1,16 +1,16 @@
-﻿using Core.Objects;
-using Core.Objects.Dtos;
-using Core.Objects.Entities.CMS;
-using Core.Objects.Entities.DMS;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Dtos;
+using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Objects.Entities.DMS;
+using cCoder.Core.Objects.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Security;
 
-using File = Core.Objects.Entities.DMS.File;
-using Path = Core.Objects.Path;
+using File = cCoder.Core.Objects.Entities.DMS.File;
+using Path = cCoder.Core.Objects.Path;
 
-namespace Core.Services.DMS
+namespace cCoder.Core.Services.DMS
 {
 
     public class FolderService : CoreService<Folder>, IFolderService
@@ -51,7 +51,7 @@ namespace Core.Services.DMS
                 throw new SecurityException("Access Denied!");
 
             File[] sourceFiles = sourceFolder.Files.ToArray();
-            var dmsHandleDest = new Core.DMS(Db.Get<App>(destAppId), Db, log);
+            var dmsHandleDest = new cCoder.Core.DMS(Db.Get<App>(destAppId), Db, log);
 
             List<Result<Guid?>> results = new();
 
@@ -93,7 +93,7 @@ namespace Core.Services.DMS
                 return existingFolder;
             else
             {
-                await new Core.DMS(Db.Get<App>(newFolder.AppId), Db, log)
+                await new cCoder.Core.DMS(Db.Get<App>(newFolder.AppId), Db, log)
                     .Save(new Path(newFolder.Path));
 
                 return GetAll().FirstOrDefault(f => f.AppId == newFolder.AppId && f.Path.ToLower() == newFolder.Path.ToLower());

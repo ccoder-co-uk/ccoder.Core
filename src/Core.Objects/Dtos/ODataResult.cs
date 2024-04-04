@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Core.Objects.Dtos
+namespace cCoder.Core.Objects.Dtos
 {
     public class ODataResult<T>
     {

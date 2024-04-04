@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Reflection;
 
-namespace Core.Objects.Extensions
+namespace cCoder.Core.Objects.Extensions
 {
     public class CompositePropertyInfo : PropertyInfo
     {

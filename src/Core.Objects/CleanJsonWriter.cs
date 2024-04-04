@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 
-namespace Core.Objects
+namespace cCoder.Core.Objects
 {
     internal class CleanJsonWriter : JsonTextWriter
     {

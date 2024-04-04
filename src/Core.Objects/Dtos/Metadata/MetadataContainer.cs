@@ -1,6 +1,6 @@
-﻿using Core.Objects.Entities.CMS;
-using Core.Objects.Extensions;
-using Core.Objects.Workflow.Activities;
+﻿using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Objects.Extensions;
+using cCoder.Core.Objects.Workflow.Activities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 
-namespace Core.Objects.Dtos.Metadata
+namespace cCoder.Core.Objects.Dtos.Metadata
 {
 
     public class MetadataContainer

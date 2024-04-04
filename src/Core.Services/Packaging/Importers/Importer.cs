@@ -1,9 +1,9 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.Packaging;
-using Core.Services;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.Packaging;
+using cCoder.Core.Services;
 using System.Threading.Tasks;
 
-namespace Core.Packaging.Importers
+namespace cCoder.Core.Packaging.Importers
 {
     public abstract class Importer<T, TUser> : IPackageItemImporter where T : class
     {

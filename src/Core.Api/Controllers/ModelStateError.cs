@@ -1,4 +1,4 @@
-﻿namespace Core.Api.Controllers
+﻿namespace cCoder.Core.Api.Controllers
 {
     public class ModelStateError
     {

@@ -1,11 +1,11 @@
-﻿using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Dynamic;
 using System.Text;
 using System.Xml.Linq;
 
-namespace Core.Objects;
+namespace cCoder.Core.Objects;
 
 public static class Data
 {

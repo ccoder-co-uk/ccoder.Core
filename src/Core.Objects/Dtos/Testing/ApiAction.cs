@@ -2,7 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Core.Objects.Dtos.Testing
+namespace cCoder.Core.Objects.Dtos.Testing
 {
     public abstract class ApiAction : TestAction
     {

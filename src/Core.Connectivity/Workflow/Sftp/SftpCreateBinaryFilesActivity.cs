@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 
-namespace Core.Connectivity.Workflow.Sftp
+namespace cCoder.Core.Connectivity.Workflow.Sftp
 {
     public class SftpCreateBinaryFilesActivity : SftpActivity
     {

@@ -1,8 +1,8 @@
-﻿using Core.Objects.Entities.CMS;
+﻿using cCoder.Core.Objects.Entities.CMS;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Core.Objects.Entities.Mail
+namespace cCoder.Core.Objects.Entities.Mail
 {
     [Table("MailServers", Schema = "Mail")]
     public class MailServer

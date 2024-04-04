@@ -1,8 +1,8 @@
-﻿using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace Core.Api
+namespace cCoder.Core.Api
 {
     public class BadRequestResult : BadRequestObjectResult
     {

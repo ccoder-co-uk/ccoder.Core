@@ -1,6 +1,6 @@
-﻿using Core.Objects.Dtos;
-using Core.Objects.Entities.Security;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects.Dtos;
+using cCoder.Core.Objects.Entities.Security;
+using cCoder.Core.Objects.Extensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,7 +10,7 @@ using System.Linq;
 using System.Security;
 using System.Threading.Tasks;
 
-namespace Core.Objects.Entities.CMS
+namespace cCoder.Core.Objects.Entities.CMS
 {
     [Table("Pages", Schema = "CMS")]
     public class Page : IAmRoleSecured<PageRole>

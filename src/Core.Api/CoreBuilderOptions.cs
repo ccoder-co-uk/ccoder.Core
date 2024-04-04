@@ -1,11 +1,11 @@
-﻿using Core.Data;
-using Core.Objects;
-using Core.Objects.Dtos.Metadata;
-using Core.Objects.Entities.Security;
-using Core.Services;
-using Core.Services.DMS;
+﻿using cCoder.Core.Data;
+using cCoder.Core.Objects;
+using cCoder.Core.Objects.Dtos.Metadata;
+using cCoder.Core.Objects.Entities.Security;
+using cCoder.Core.Services;
+using cCoder.Core.Services.DMS;
 
-namespace Core.Api
+namespace cCoder.Core.Api
 {
     public class CoreBuilderOptions
     {

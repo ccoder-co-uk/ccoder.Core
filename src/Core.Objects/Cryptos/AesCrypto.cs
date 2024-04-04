@@ -2,7 +2,7 @@
 using System;
 using System.Text;
 
-namespace Core.Objects.Cryptos
+namespace cCoder.Core.Objects.Cryptos
 {
     public class AesCrypto<T> : ICrypto<T>
     {

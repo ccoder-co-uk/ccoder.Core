@@ -1,14 +1,14 @@
-﻿using Core.Objects.Dtos.Metadata;
-using Core.Objects.Dtos.Workflow;
-using Core.Objects.Entities;
-using Core.Objects.Entities.CMS;
-using Core.Objects.Entities.Packaging;
-using Core.Objects.Entities.Security;
+﻿using cCoder.Core.Objects.Dtos.Metadata;
+using cCoder.Core.Objects.Dtos.Workflow;
+using cCoder.Core.Objects.Entities;
+using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Objects.Entities.Packaging;
+using cCoder.Core.Objects.Entities.Security;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Core.Objects
+namespace cCoder.Core.Objects
 {
     public delegate Task LogEvent(WorkflowLogLevel level, string message);
 

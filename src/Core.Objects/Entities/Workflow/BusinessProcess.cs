@@ -1,11 +1,11 @@
-﻿using Core.Objects.Entities.CMS;
+﻿using cCoder.Core.Objects.Entities.CMS;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Core.Objects.Entities.Workflow
+namespace cCoder.Core.Objects.Entities.Workflow
 {
     [Table("BusinessProcesses", Schema = "Workflow")]
     public class BusinessProcess : BaseEntity

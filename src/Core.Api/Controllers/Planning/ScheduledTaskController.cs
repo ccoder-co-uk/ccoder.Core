@@ -1,9 +1,9 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.Planning;
-using Core.Services;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.Planning;
+using cCoder.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Core.Api.Controllers
+namespace cCoder.Core.Api.Controllers
 {
     public class ScheduledTaskController : CoreEntityODataController<ScheduledTask, int>
     {

@@ -1,10 +1,10 @@
-﻿using Core.Objects.Dtos.Workflow;
+﻿using cCoder.Core.Objects.Dtos.Workflow;
 using DSharpPlus.Entities;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace Core.Connectivity.Workflow.Discord
+namespace cCoder.Core.Connectivity.Workflow.Discord
 {
     public class DiscordSendAttachmentToChannelActivity : DiscordActivity
     {

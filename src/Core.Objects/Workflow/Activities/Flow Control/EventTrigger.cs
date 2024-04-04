@@ -1,4 +1,4 @@
-﻿namespace Core.Objects.Workflow.Activities
+﻿namespace cCoder.Core.Objects.Workflow.Activities
 {
     /// <summary>
     /// Root node for any flow, you MUST begin with this node and a given flow can ONLY contain one of these.

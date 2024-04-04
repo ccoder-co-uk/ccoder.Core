@@ -1,5 +1,5 @@
-using Core.Objects.Dtos.Workflow;
-using Core.Objects.Extensions;
+using cCoder.Core.Objects.Dtos.Workflow;
+using cCoder.Core.Objects.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
@@ -35,7 +35,7 @@ namespace Workflow
             {
                 string code = await new StreamReader(req.Body).ReadToEndAsync();
                 ScriptRunner runner = new((WorkflowLogLevel level, string message) => Task.CompletedTask);
-                object result = await runner.Run<object>(code, Core.Objects.Workflow.Activities.Activity.ScriptImports);
+                object result = await runner.Run<object>(code, cCoder.Core.Objects.Workflow.Activities.Activity.ScriptImports);
                 return result;
             }
             catch (Exception ex)

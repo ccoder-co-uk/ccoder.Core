@@ -1,8 +1,8 @@
-﻿using Core.Objects.Entities.CMS;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Objects.Extensions;
 using System.Collections.Generic;
 
-namespace Core.Objects.Dtos.Metadata
+namespace cCoder.Core.Objects.Dtos.Metadata
 {
     public class PropertyContainer
     {

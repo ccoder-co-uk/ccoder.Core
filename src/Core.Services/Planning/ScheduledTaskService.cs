@@ -1,13 +1,13 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.Planning;
-using Core.Objects.Entities.Security;
-using Core.Objects.Entities.Workflow;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.Planning;
+using cCoder.Core.Objects.Entities.Security;
+using cCoder.Core.Objects.Entities.Workflow;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Security;
 using System.Threading.Tasks;
 
-namespace Core.Services.CMS
+namespace cCoder.Core.Services.CMS
 {
     public class ScheduledTaskService : CoreService<ScheduledTask>, IScheduledTaskService
     {

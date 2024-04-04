@@ -1,12 +1,12 @@
-﻿using Core.Data;
-using Core.Objects;
-using Core.Objects.Dtos.Metadata;
-using Core.Objects.Entities.CMS;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Data;
+using cCoder.Core.Objects;
+using cCoder.Core.Objects.Dtos.Metadata;
+using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Objects.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Core
+namespace cCoder.Core
 {
     public class MetadataCache : Cache<MetadataContainerSet>, IMetadataCache
     {

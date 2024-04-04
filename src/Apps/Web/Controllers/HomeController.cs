@@ -1,4 +1,4 @@
-﻿using Core.Services;
+﻿using cCoder.Core.Services;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -54,7 +54,7 @@ namespace Web.Controllers
                 if (path?.ToLower() == "robots.txt")
                     return Content("User-agent: * Allow: *", "text/plain");
 
-                Core.Objects.Entities.CMS.App app = AppService.GetAll().First(a => a.Domain == Host);
+                cCoder.Core.Objects.Entities.CMS.App app = AppService.GetAll().First(a => a.Domain == Host);
 
                 if (theme != null)
                     SetSessionValue("theme", theme);
@@ -65,7 +65,7 @@ namespace Web.Controllers
                 if (app.Id == 0)
                     throw new InvalidOperationException("Domain Not found!");
 
-                Core.Objects.Dtos.RenderResult page = PageService.Render(app.Id, path, theme ?? GetSessionValue("theme").ToString(), culture ?? GetSessionValue("culture").ToString(), edit);
+                cCoder.Core.Objects.Dtos.RenderResult page = PageService.Render(app.Id, path, theme ?? GetSessionValue("theme").ToString(), culture ?? GetSessionValue("culture").ToString(), edit);
 
                 ViewBag.Session = DynamicSessionObject;
                 ViewBag.Session.app = new { app.Id, app.Domain, app.DefaultCultureId, app.DefaultTheme, app.Config, app.Cultures };
@@ -83,7 +83,7 @@ namespace Web.Controllers
         {
             try
             {
-                Core.Objects.Entities.CMS.App app = AppService.GetAll().First(a => a.Domain == Host);
+                cCoder.Core.Objects.Entities.CMS.App app = AppService.GetAll().First(a => a.Domain == Host);
 
                 if (GetSessionValue("theme") == null)
                     SetSessionValue("theme", app.DefaultTheme ?? "Default");
@@ -103,13 +103,13 @@ namespace Web.Controllers
             // attempt to recover the apps own custom error page, or provide the system default defined below
             try
             {
-                Core.Objects.Entities.CMS.App app = AppService.GetAll().FirstOrDefault(a => a.Domain == Host);
-                string errorPageQuery = $"Core/Page/Render()?appId={app.Id}&path=Error&theme={GetSessionValue("theme")}&culture={GetSessionValue("culture")}";
+                cCoder.Core.Objects.Entities.CMS.App app = AppService.GetAll().FirstOrDefault(a => a.Domain == Host);
+                string errorPageQuery = $"cCoder.Core/Page/Render()?appId={app.Id}&path=Error&theme={GetSessionValue("theme")}&culture={GetSessionValue("culture")}";
                 
                 if (app.Id > 0) 
                     log.LogInformation($"GET {errorPageQuery}"); 
 
-                Core.Objects.Dtos.RenderResult page = app.Id > 0
+                cCoder.Core.Objects.Dtos.RenderResult page = app.Id > 0
                     ? PageService.Render(app.Id, "Error", GetSessionValue("theme").ToString(), GetSessionValue("culture").ToString())
                     : throw new Exception("Unknown Domain");
 

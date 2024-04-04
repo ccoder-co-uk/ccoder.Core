@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Core.Objects.Dtos.Workflow
+namespace cCoder.Core.Objects.Dtos.Workflow
 {
     /// <summary>
     /// Construct one of these to execute a task structure.

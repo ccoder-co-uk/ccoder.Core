@@ -1,6 +1,6 @@
 ﻿using Microsoft.OData.Edm;
 
-namespace Core.Api.OData
+namespace cCoder.Core.Api.OData
 {
     /// <summary>
     /// Container for OData Model information constructed by ODataModelBuilder implementations 

@@ -1,13 +1,13 @@
-﻿using Core.Objects.Dtos;
-using Core.Objects.Entities.CMS;
-using Core.Objects.Entities.DMS;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects.Dtos;
+using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Objects.Entities.DMS;
+using cCoder.Core.Objects.Extensions;
 using Newtonsoft.Json.Linq;
 using System.Collections;
 using System.Text;
-using File = Core.Objects.Entities.DMS.File;
+using File = cCoder.Core.Objects.Entities.DMS.File;
 
-namespace Core.Objects
+namespace cCoder.Core.Objects
 {
     public static class ContentHelper
     {

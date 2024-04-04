@@ -1,9 +1,9 @@
-﻿using Core.Objects.Workflow.Activities;
+﻿using cCoder.Core.Objects.Workflow.Activities;
 using DSharpPlus;
 using System;
 using System.Threading.Tasks;
 
-namespace Core.Connectivity.Workflow.Discord
+namespace cCoder.Core.Connectivity.Workflow.Discord
 {
     public class DiscordActivity : Activity
     {

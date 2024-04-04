@@ -1,11 +1,11 @@
-﻿using Core.Objects.Entities.DMS;
-using Core.Objects.Entities.Security;
+﻿using cCoder.Core.Objects.Entities.DMS;
+using cCoder.Core.Objects.Entities.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-using File = Core.Objects.Entities.DMS.File;
+using File = cCoder.Core.Objects.Entities.DMS.File;
 
-namespace Core.Data
+namespace cCoder.Core.Data
 {
     public partial class CoreDataContext
     {

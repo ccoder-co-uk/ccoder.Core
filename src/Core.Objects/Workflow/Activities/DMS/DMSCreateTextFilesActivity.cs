@@ -1,11 +1,11 @@
-﻿using Core.Objects.Dtos.Workflow;
+﻿using cCoder.Core.Objects.Dtos.Workflow;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Core.Objects.Workflow.Activities.DMS
+namespace cCoder.Core.Objects.Workflow.Activities.DMS
 {
     public class DMSCreateTextFilesActivity : DMSActivity
     {

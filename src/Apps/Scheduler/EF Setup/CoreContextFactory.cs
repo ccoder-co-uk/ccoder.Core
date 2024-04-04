@@ -1,5 +1,5 @@
-﻿using Core.Data;
-using Core.Objects;
+﻿using cCoder.Core.Data;
+using cCoder.Core.Objects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;

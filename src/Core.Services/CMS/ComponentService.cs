@@ -1,10 +1,10 @@
-﻿using Core.Objects;
-using Core.Objects.Dtos;
-using Core.Objects.Entities.CMS;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Dtos;
+using cCoder.Core.Objects.Entities.CMS;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
-namespace Core.Services.CMS
+namespace cCoder.Core.Services.CMS
 {
     public class ComponentService : CoreService<Component>, IComponentService
     {

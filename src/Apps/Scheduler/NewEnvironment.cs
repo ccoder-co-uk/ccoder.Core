@@ -1,11 +1,11 @@
-﻿using Core.Objects;
-using Core.Objects.Cryptos;
-using Core.Objects.Dtos;
-using Core.Objects.Entities;
-using Core.Objects.Entities.CMS;
-using Core.Objects.Entities.Packaging;
-using Core.Objects.Entities.Security;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Cryptos;
+using cCoder.Core.Objects.Dtos;
+using cCoder.Core.Objects.Entities;
+using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Objects.Entities.Packaging;
+using cCoder.Core.Objects.Entities.Security;
+using cCoder.Core.Objects.Extensions;
 using log4net;
 using Newtonsoft.Json;
 using Security.Objects.Entities;
@@ -74,17 +74,17 @@ namespace Scheduler
         static async Task ImportFromSource(HttpClient from, HttpClient to, App app, string sourceDomain)
         {
             // Fetch Common Cache
-            ODataCollection<CommonObject> cachedComponents = await from.GetAsync<ODataCollection<CommonObject>>($"Core/CommonObject/Latest()?type=Core/Component");
-            ODataCollection<CommonObject> cachedResources = await from.GetAsync<ODataCollection<CommonObject>>($"Core/CommonObject/Latest()?type=Core/Resource");
-            ODataCollection<CommonObject> cachedScripts = await from.GetAsync<ODataCollection<CommonObject>>($"Core/CommonObject/Latest()?type=Core/Script");
+            ODataCollection<CommonObject> cachedComponents = await from.GetAsync<ODataCollection<CommonObject>>($"cCoder.Core/CommonObject/Latest()?type=cCoder.Core/Component");
+            ODataCollection<CommonObject> cachedResources = await from.GetAsync<ODataCollection<CommonObject>>($"cCoder.Core/CommonObject/Latest()?type=cCoder.Core/Resource");
+            ODataCollection<CommonObject> cachedScripts = await from.GetAsync<ODataCollection<CommonObject>>($"cCoder.Core/CommonObject/Latest()?type=cCoder.Core/Script");
             ODataCollection<CommonObject> fullCache = new() { Value = cachedComponents.Value.Union(cachedResources.Value).Union(cachedScripts.Value).ToList() };
 
             // Fetch DMS 
             HttpResponseMessage folder = await from.GetAsync($"DMS/Content");
 
             // Fetch source packages 
-            App sourceApp = (await from.GetAsync<ODataCollection<App>>($"Core/App?$filter=Domain eq '{sourceDomain}'")).Value.First();
-            ODataCollection<Package> packages = (await from.GetAsync<ODataCollection<Package>>("Core/App(" + sourceApp.Id + ")/Export()?$expand=Items"));
+            App sourceApp = (await from.GetAsync<ODataCollection<App>>($"cCoder.Core/App?$filter=Domain eq '{sourceDomain}'")).Value.First();
+            ODataCollection<Package> packages = (await from.GetAsync<ODataCollection<Package>>("cCoder.Core/App(" + sourceApp.Id + ")/Export()?$expand=Items"));
 
             // and import it all
             await Import(to, app, packages, fullCache, folder.Content.ReadAsStream());
@@ -111,10 +111,10 @@ namespace Scheduler
 
             // import all the packages
             foreach (Package p in packages.Value)
-                _ = await to.PostAsJsonAsync($"Core/Package/ImportThis?appId={app.Id}", p);
+                _ = await to.PostAsJsonAsync($"cCoder.Core/Package/ImportThis?appId={app.Id}", p);
 
             // import the common cache
-            _ = await to.PostAsJsonAsync($"Core/CommonObject/Import", commonCache);
+            _ = await to.PostAsJsonAsync($"cCoder.Core/CommonObject/Import", commonCache);
         }
 
         User CreatePortalAdminUser(string user, string pass)

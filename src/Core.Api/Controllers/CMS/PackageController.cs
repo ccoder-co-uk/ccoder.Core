@@ -1,10 +1,10 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.Packaging;
-using Core.Services;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.Packaging;
+using cCoder.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 
-namespace Core.Api.Controllers;
+namespace cCoder.Core.Api.Controllers;
 
 public class PackageController(IPackageService service, ICoreAuthInfo auth, ILogger<PackageController> log) 
     : CoreEntityODataController<Package, Guid>(service, auth, log)

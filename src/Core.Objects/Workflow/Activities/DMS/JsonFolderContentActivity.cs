@@ -1,10 +1,10 @@
-﻿using Core.Objects.Dtos.Workflow;
-using Core.Objects.Entities.DMS;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects.Dtos.Workflow;
+using cCoder.Core.Objects.Entities.DMS;
+using cCoder.Core.Objects.Extensions;
 using Newtonsoft.Json;
 using System.Text;
 
-namespace Core.Objects.Workflow.Activities.DMS;
+namespace cCoder.Core.Objects.Workflow.Activities.DMS;
 
 public class JsonFolderContentActivity : DMSActivity
 {

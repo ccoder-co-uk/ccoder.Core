@@ -1,5 +1,5 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.Security;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.Security;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Security;
 using System.Threading.Tasks;
 
-namespace Core.Services.Security
+namespace cCoder.Core.Services.Security
 {
     public class UserRoleService : CoreService<UserRole>, IUserRoleService
     {

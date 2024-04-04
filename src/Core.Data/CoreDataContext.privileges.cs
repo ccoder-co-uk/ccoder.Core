@@ -1,6 +1,6 @@
-﻿using Core.Objects.Entities.Security;
+﻿using cCoder.Core.Objects.Entities.Security;
 
-namespace Core.Data
+namespace cCoder.Core.Data
 {
     public partial class CoreDataContext
     {

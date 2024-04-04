@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Core.Objects
+namespace cCoder.Core.Objects
 {
     // Security Attributes
     [AttributeUsage(AttributeTargets.Class)]

@@ -1,7 +1,7 @@
-﻿using Core.Objects.Workflow.Activities.Api;
+﻿using cCoder.Core.Objects.Workflow.Activities.Api;
 using System.Threading.Tasks;
 
-namespace Core.Objects.Workflow.Activities
+namespace cCoder.Core.Objects.Workflow.Activities
 {
     public abstract class CoreActivity : ApiActivity
     {

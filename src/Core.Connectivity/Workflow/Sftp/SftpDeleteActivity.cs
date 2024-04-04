@@ -2,7 +2,7 @@
 using Renci.SshNet.Sftp;
 using System.Threading.Tasks;
 
-namespace Core.Connectivity.Workflow.Sftp
+namespace cCoder.Core.Connectivity.Workflow.Sftp
 {
     public class SftpDeleteActivity : SftpActivity
     {

@@ -1,10 +1,10 @@
-﻿using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 
-namespace Core.Api.OData.Responses
+namespace cCoder.Core.Api.OData.Responses
 {
     public class ValidationFailureResult : IActionResult
     {

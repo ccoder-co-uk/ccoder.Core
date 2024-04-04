@@ -3,7 +3,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Core.Objects.Entities.Workflow
+namespace cCoder.Core.Objects.Entities.Workflow
 {
     [Table("FlowInstances", Schema = "Workflow")]
     [Parent("FlowDefinition")]

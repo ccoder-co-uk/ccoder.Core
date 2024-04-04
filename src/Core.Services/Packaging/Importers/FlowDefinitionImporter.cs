@@ -1,13 +1,13 @@
-﻿using Core.Objects.Entities.Packaging;
-using Core.Objects.Entities.Workflow;
-using Core.Objects.Extensions;
-using Core.Services;
+﻿using cCoder.Core.Objects.Entities.Packaging;
+using cCoder.Core.Objects.Entities.Workflow;
+using cCoder.Core.Objects.Extensions;
+using cCoder.Core.Services;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Core.Packaging.Importers
+namespace cCoder.Core.Packaging.Importers
 {
     public class FlowDefinitionImporter : CoreImporter<FlowDefinition>
     {
@@ -18,7 +18,7 @@ namespace Core.Packaging.Importers
             IFlowDefinitionService service, 
             ICoreService<BusinessProcess> processService, 
             ILogger<FlowDefinitionImporter> log) 
-                : base(service, "Core/FlowDefinition")
+                : base(service, "cCoder.Core/FlowDefinition")
         {
             this.processService = processService;
             this.log = log;

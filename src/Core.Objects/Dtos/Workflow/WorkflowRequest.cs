@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Core.Objects.Dtos.Workflow
+namespace cCoder.Core.Objects.Dtos.Workflow
 {
     public class WorkflowRequest
     {

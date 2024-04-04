@@ -1,8 +1,8 @@
-﻿using Core.Objects.Entities.CMS;
+﻿using cCoder.Core.Objects.Entities.CMS;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Core.Objects.Extensions
+namespace cCoder.Core.Objects.Extensions
 {
     public static class IEnumerableResourceExtensions
     {

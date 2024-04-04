@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Core.Objects.Workflow.Activities.Transformation
+namespace cCoder.Core.Objects.Workflow.Activities.Transformation
 {
     public class ConvertActivity<TSource, TResult> : TransformationActivity<IEnumerable<TSource>, TResult[]>
     {

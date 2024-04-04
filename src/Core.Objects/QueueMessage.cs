@@ -1,4 +1,4 @@
-﻿namespace Core.Objects
+﻿namespace cCoder.Core.Objects
 {
     public class QueueMessage
     {

@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Core.Objects.Entities.Mail
+namespace cCoder.Core.Objects.Entities.Mail
 {
     /// <summary>
     /// A successfully sent email

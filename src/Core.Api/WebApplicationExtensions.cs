@@ -1,15 +1,15 @@
-﻿using Core.Api.Hubs;
-using Core.Objects;
+﻿using cCoder.Core.Api.Hubs;
+using cCoder.Core.Objects;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Net.Http.Headers;
 
-namespace Core.Api
+namespace cCoder.Core.Api
 {
     public static class WebApplicationExtensions
     {
         public static WebApplication UseCore(this WebApplication app, Action<CoreAppFeatureBuilder> coreFeaturebuilderAction, ILogger log = null)
         {
-            log?.LogInformation("Setting up Core ...");
+            log?.LogInformation("Setting up cCoder.Core ...");
 
             var coreFeatureBuilder = new CoreAppFeatureBuilder(app, log);
 
@@ -31,7 +31,7 @@ namespace Core.Api
 
             coreFeaturebuilderAction(coreFeatureBuilder);
 
-            log?.LogInformation("Core is Ready!");
+            log?.LogInformation("cCoder.Core is Ready!");
 
             return app;
         }

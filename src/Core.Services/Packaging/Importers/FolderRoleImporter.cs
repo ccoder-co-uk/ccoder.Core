@@ -1,20 +1,20 @@
-using Core.Objects;
-using Core.Objects.Entities.DMS;
-using Core.Objects.Entities.Packaging;
-using Core.Objects.Entities.Security;
-using Core.Objects.Extensions;
-using Core.Services;
+using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.DMS;
+using cCoder.Core.Objects.Entities.Packaging;
+using cCoder.Core.Objects.Entities.Security;
+using cCoder.Core.Objects.Extensions;
+using cCoder.Core.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Core.Packaging.Importers
+namespace cCoder.Core.Packaging.Importers
 {
     public class FolderRoleImporter : CoreImporter<FolderRole>
     {
         protected ICoreDataContext Db { get; }
 
-        public FolderRoleImporter(ICoreService<FolderRole> service, ICoreDataContext db) : base(service, "Core/FolderRole") { Db = db; Order = 2; }
+        public FolderRoleImporter(ICoreService<FolderRole> service, ICoreDataContext db) : base(service, "cCoder.Core/FolderRole") { Db = db; Order = 2; }
 
         public class FolderRoleInfo
         {

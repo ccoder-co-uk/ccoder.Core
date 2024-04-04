@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 
-namespace Core
+namespace cCoder.Core
 {
     public static partial class TypeHelper
     {

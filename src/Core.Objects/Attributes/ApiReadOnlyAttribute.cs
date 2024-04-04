@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Core.Objects
+namespace cCoder.Core.Objects
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public sealed class ApiReadOnlyAttribute : Attribute

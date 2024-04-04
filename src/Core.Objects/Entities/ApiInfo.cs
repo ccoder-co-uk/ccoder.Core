@@ -1,4 +1,4 @@
-﻿namespace Core.Objects.Entities
+﻿namespace cCoder.Core.Objects.Entities
 {
     public class ApiInfo
     {

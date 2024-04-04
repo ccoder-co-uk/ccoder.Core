@@ -1,12 +1,12 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.CMS;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Objects.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Core.Services.CMS
+namespace cCoder.Core.Services.CMS
 {
     public class ResourceService : CoreService<Resource>, IResourceService
     {

@@ -1,5 +1,5 @@
-﻿using Core.Objects.Dtos;
-using Core.Objects.Entities.Mail;
+﻿using cCoder.Core.Objects.Dtos;
+using cCoder.Core.Objects.Entities.Mail;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
-namespace Core.Objects.Entities.CMS
+namespace cCoder.Core.Objects.Entities.CMS
 {
     [Table("Templates", Schema = "CMS")]
     public class Template : BaseEntity

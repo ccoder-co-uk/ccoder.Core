@@ -1,11 +1,11 @@
-﻿using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects.Extensions;
 using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
-namespace Core.Objects.Workflow.Activities.DMS
+namespace cCoder.Core.Objects.Workflow.Activities.DMS
 {
     public class FolderImportActivity : DMSActivity
     { 

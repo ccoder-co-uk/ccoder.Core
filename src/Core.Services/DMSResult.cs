@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Core
+namespace cCoder.Core
 {
     public class DMSResult
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Core.Objects.Workflow.Activities.DMS
+namespace cCoder.Core.Objects.Workflow.Activities.DMS
 {
     public class MoveActivity : DMSActivity
     {

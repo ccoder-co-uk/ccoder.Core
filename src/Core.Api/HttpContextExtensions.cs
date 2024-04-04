@@ -1,4 +1,4 @@
-namespace Core.Api
+namespace cCoder.Core.Api
 {
     public static class HttpContextExtensions
     {

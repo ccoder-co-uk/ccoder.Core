@@ -1,10 +1,10 @@
-﻿using Core.Objects.Entities.Workflow;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects.Entities.Workflow;
+using cCoder.Core.Objects.Extensions;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Core.Objects.Workflow.Activities
+namespace cCoder.Core.Objects.Workflow.Activities
 {
     public class ExecuteFlow : CoreActivity
     {

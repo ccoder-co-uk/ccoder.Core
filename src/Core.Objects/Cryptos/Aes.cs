@@ -11,7 +11,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Core.Objects.Cryptos
+namespace cCoder.Core.Objects.Cryptos
 {
     /// <summary>
     /// Use when signing data to encrypt the signature in a verifyable manner

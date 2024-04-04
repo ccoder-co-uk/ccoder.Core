@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Core.Migrations
+namespace cCoder.Core.Migrations
 {
     public partial class AddMailServers : Migration
     {

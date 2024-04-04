@@ -1,8 +1,8 @@
-﻿using Core.Objects.Entities.CMS;
+﻿using cCoder.Core.Objects.Entities.CMS;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 
-namespace Core.Objects.Workflow.Activities.Templating
+namespace cCoder.Core.Objects.Workflow.Activities.Templating
 {
     public class PageBuilder : TemplatingActivity<dynamic>
     {

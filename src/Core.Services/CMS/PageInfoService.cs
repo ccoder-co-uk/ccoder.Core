@@ -1,10 +1,10 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.CMS;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.CMS;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Core.Services.CMS
+namespace cCoder.Core.Services.CMS
 {
     public class PageInfoService : CoreService<PageInfo>, ICoreService<PageInfo>
     {

@@ -1,11 +1,11 @@
-﻿using Core.Objects;
-using Core.Objects.Dtos;
-using Core.Objects.Dtos.Metadata;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Dtos;
+using cCoder.Core.Objects.Dtos.Metadata;
+using cCoder.Core.Objects.Extensions;
 using Microsoft.OData.ModelBuilder;
 using System.Linq.Expressions;
 
-namespace Core.Api.OData
+namespace cCoder.Core.Api.OData
 {
     /// <summary>
     /// Base model builder class for all OData model builders

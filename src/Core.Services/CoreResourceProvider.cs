@@ -1,11 +1,11 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.CMS;
-using Core.Services;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Services;
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Core
+namespace cCoder.Core
 {
     /// <summary>
     /// For use with applications and services that have direct access to the core db

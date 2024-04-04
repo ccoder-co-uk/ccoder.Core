@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Core.Objects.Entities.Packaging
+namespace cCoder.Core.Objects.Entities.Packaging
 {
     [Table("Packages", Schema = "Packaging")]
     public class Package

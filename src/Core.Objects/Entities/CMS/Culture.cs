@@ -1,9 +1,9 @@
-﻿using Core.Objects.Entities.Security;
+﻿using cCoder.Core.Objects.Entities.Security;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Core.Objects.Entities.CMS
+namespace cCoder.Core.Objects.Entities.CMS
 {
     [Table("Cultures", Schema = "CMS")]
     public class Culture

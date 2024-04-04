@@ -1,9 +1,9 @@
-﻿using Core.Objects.Entities.DMS;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects.Entities.DMS;
+using cCoder.Core.Objects.Extensions;
 using System.IO.Compression;
-using File = Core.Objects.Entities.DMS.File;
+using File = cCoder.Core.Objects.Entities.DMS.File;
 
-namespace Core.Objects.Extensions
+namespace cCoder.Core.Objects.Extensions
 {
     public static class ZipArchiveExtensions
     {

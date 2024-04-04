@@ -1,8 +1,8 @@
-﻿using Core.Objects;
-using Core.Objects.Dtos;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Dtos;
 using System;
 
-namespace Core.Services
+namespace cCoder.Core.Services
 {
     /// <summary>
     /// Base class for all business services 

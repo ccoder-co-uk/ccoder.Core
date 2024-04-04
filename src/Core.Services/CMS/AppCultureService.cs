@@ -1,10 +1,10 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.CMS;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.CMS;
 using System.Linq;
 using System.Security;
 using System.Threading.Tasks;
 
-namespace Core.Services.CMS
+namespace cCoder.Core.Services.CMS
 {
     public class AppCultureService : CoreService<AppCulture>, ICoreService<AppCulture>
     {

@@ -1,4 +1,4 @@
-﻿namespace Core.Api.Hubs
+﻿namespace cCoder.Core.Api.Hubs
 {
     public class WorkflowHub : CoreHub
     {

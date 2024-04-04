@@ -1,21 +1,21 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.CMS;
-using Core.Objects.Entities.DMS;
-using Core.Objects.Entities.Security;
-using Core.Objects.Entities.Workflow;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Objects.Entities.DMS;
+using cCoder.Core.Objects.Entities.Security;
+using cCoder.Core.Objects.Entities.Workflow;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using File = Core.Objects.Entities.DMS.File;
-using Path = Core.Objects.Path;
+using File = cCoder.Core.Objects.Entities.DMS.File;
+using Path = cCoder.Core.Objects.Path;
 
-namespace Core
+namespace cCoder.Core
 {
     public class CoreEventManager : EventManager, ICoreEventManager
     {
         private bool loadedEvents = false;
 
         public CoreEventManager(ILogger log, ICoreDataContext core, Config config, ICoreAuthInfo auth)
-            : base(log, core, config, auth, "Core") { }
+            : base(log, core, config, auth, "cCoder.Core") { }
 
         public override async Task RaiseEvent<T>(T forObject, string name)
         {
@@ -28,7 +28,7 @@ namespace Core
                     .Include(sub => sub.ExecuteAsUser)
                         .ThenInclude(u => u.Roles)
                             .ThenInclude(r => r.Role)
-                    .Where(e => e.Type.StartsWith("Core"))
+                    .Where(e => e.Type.StartsWith("cCoder.Core"))
                     .ToArray();
 
                 Core.EnableFilters();

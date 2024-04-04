@@ -1,11 +1,11 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.Security;
-using Core.Objects.Entities.Workflow;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.Security;
+using cCoder.Core.Objects.Entities.Workflow;
 using System.Linq;
 using System.Security;
 using System.Threading.Tasks;
 
-namespace Core.Services.Workflow
+namespace cCoder.Core.Services.Workflow
 {
     public class WorkflowEventService : CoreService<WorkflowEvent>
     {

@@ -1,12 +1,12 @@
-using Core.Objects;
-using Core.Objects.Entities.CMS;
-using Core.Objects.Extensions;
+using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Objects.Extensions;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Net.Http.Headers;
 using System.Linq.Dynamic.Core;
 using System.Text;
 
-namespace Core.Api.Formatters
+namespace cCoder.Core.Api.Formatters
 {
     public class CsvFormatter : TextOutputFormatter
     {

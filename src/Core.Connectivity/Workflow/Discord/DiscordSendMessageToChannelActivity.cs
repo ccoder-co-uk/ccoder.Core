@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Core.Connectivity.Workflow.Discord
+namespace cCoder.Core.Connectivity.Workflow.Discord
 {
     public class DiscordSendMessageToChannelActivity : DiscordActivity
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Core.Objects
+namespace cCoder.Core.Objects
 {
     public class Config
     {

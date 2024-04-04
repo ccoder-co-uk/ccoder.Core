@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace Core.Objects
+namespace cCoder.Core.Objects
 {
     public static class CSVParser<T> where T : new()
     {

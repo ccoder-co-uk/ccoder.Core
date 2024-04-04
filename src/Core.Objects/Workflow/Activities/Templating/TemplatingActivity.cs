@@ -1,15 +1,15 @@
-﻿using Core.Objects.Dtos;
-using Core.Objects.Entities.CMS;
-using Core.Objects.Entities.Mail;
-using Core.Objects.Entities.Security;
-using Core.Objects.Extensions;
-using Core.Objects.Workflow.Activities.Api;
+﻿using cCoder.Core.Objects.Dtos;
+using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Objects.Entities.Mail;
+using cCoder.Core.Objects.Entities.Security;
+using cCoder.Core.Objects.Extensions;
+using cCoder.Core.Objects.Workflow.Activities.Api;
 using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Core.Objects.Workflow.Activities.Templating
+namespace cCoder.Core.Objects.Workflow.Activities.Templating
 {
     public abstract class TemplatingActivity<T> : ApiActivity
     {

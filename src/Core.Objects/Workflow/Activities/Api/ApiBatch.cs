@@ -1,8 +1,8 @@
-﻿using Core.Objects.Dtos.Workflow;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects.Dtos.Workflow;
+using cCoder.Core.Objects.Extensions;
 using System.Text;
 
-namespace Core.Objects.Workflow.Activities.Api;
+namespace cCoder.Core.Objects.Workflow.Activities.Api;
 
 public class ApiPostBatch : ApiActivity<BatchedResponse[]>
 {

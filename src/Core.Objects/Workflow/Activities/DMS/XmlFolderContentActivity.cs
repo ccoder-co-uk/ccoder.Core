@@ -1,10 +1,10 @@
-﻿using Core.Objects.Dtos.Workflow;
+﻿using cCoder.Core.Objects.Dtos.Workflow;
 using Newtonsoft.Json;
 using System.IO.Compression;
 using System.Text;
-using File = Core.Objects.Entities.DMS.File;
+using File = cCoder.Core.Objects.Entities.DMS.File;
 
-namespace Core.Objects.Workflow.Activities.DMS;
+namespace cCoder.Core.Objects.Workflow.Activities.DMS;
 
 public class XmlFolderContentActivity : DMSActivity
 {

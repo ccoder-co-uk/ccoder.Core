@@ -1,10 +1,10 @@
-﻿using Core.Objects.Dtos.Workflow;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects.Dtos.Workflow;
+using cCoder.Core.Objects.Extensions;
 using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http.Headers;
 
-namespace Core.Objects.Workflow.Activities.Api;
+namespace cCoder.Core.Objects.Workflow.Activities.Api;
 
 public abstract class ApiActivity : Activity
 {

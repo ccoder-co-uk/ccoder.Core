@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Core.Migrations
+namespace cCoder.Core.Migrations
 {
     /// <inheritdoc />
     public partial class AddFromAddressToMailServers : Migration

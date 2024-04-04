@@ -1,14 +1,14 @@
-﻿using Core.Objects;
-using Core.Objects.Dtos;
-using Core.Objects.Entities.CMS;
-using Core.Objects.Entities.Security;
-using Core.Objects.Extensions;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Dtos;
+using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Objects.Entities.Security;
+using cCoder.Core.Objects.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.Security;
-using Path = Core.Objects.Path;
+using Path = cCoder.Core.Objects.Path;
 
-namespace Core.Services
+namespace cCoder.Core.Services
 {
     public class PageService : CoreService<Page>, IPageService
     {

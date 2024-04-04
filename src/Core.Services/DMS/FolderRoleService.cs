@@ -1,13 +1,13 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.DMS;
-using Core.Objects.Entities.Security;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.DMS;
+using cCoder.Core.Objects.Entities.Security;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security;
 using System.Threading.Tasks;
 
-namespace Core.Services.DMS
+namespace cCoder.Core.Services.DMS
 {
     public class FolderRoleService : CoreService<FolderRole>, ICoreService<FolderRole>
     {

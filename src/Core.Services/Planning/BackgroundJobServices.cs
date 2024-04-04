@@ -1,8 +1,8 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.Planning;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.Planning;
 using System.Threading.Tasks;
 
-namespace Core.Services
+namespace cCoder.Core.Services
 {
     public class BackgroundJobService : CoreService<BackgroundJob>
     {

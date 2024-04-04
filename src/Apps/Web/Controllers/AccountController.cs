@@ -1,5 +1,5 @@
-﻿using Core.Objects.Entities.Security;
-using Core.Services.Orchestrations.Interfaces;
+﻿using cCoder.Core.Objects.Entities.Security;
+using cCoder.Core.Services.Orchestrations.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Security.Objects.DTOs;
 

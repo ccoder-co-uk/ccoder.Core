@@ -1,4 +1,4 @@
-﻿namespace Core.Objects.Workflow.Activities
+﻿namespace cCoder.Core.Objects.Workflow.Activities
 {
     public enum ActivityState
     {

@@ -1,10 +1,10 @@
-﻿using Core.Objects;
-using Core.Objects.Entities.Planning;
+﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.Planning;
 using System.Linq;
 using System.Security;
 using System.Threading.Tasks;
 
-namespace Core.Services
+namespace cCoder.Core.Services
 {
     public class CalendarService : CoreService<Calendar>
     {
