@@ -32,7 +32,7 @@ namespace Core.Services.CMS
             if (page.ParentId != null)
             {
                 var parentPagePath = Db.GetAll<Page>(false)
-                    .Where(p => p.ParentId == page.Id)
+                    .Where(p => p.Id == page.ParentId)
                     .Select(p => p.Path)
                     .FirstOrDefault();
 
