@@ -27,7 +27,8 @@ namespace Core.Services.CMS
             var page = Db.GetAll<Page>(false)
                 .FirstOrDefault(p => p.Id == pageInfo.PageId);
 
-            page.Path = pageInfo.Title.Replace(" ", "");
+            if(page.Path == string.Empty)
+                page.Path = pageInfo.Title.Replace(" ", "");
 
             if (page.ParentId != null)
             {
