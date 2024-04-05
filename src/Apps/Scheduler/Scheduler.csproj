@@ -29,9 +29,9 @@
   </ItemGroup>  
   
   <ItemGroup>
-    <ProjectReference Include="..\..\Core.Data\Core.Data.csproj" />
-    <ProjectReference Include="..\..\Core.Objects\Core.Objects.csproj" />
-    <ProjectReference Include="..\..\Core.Services\Core.Services.csproj" />
+    <ProjectReference Include="..\..\cCoder.Core.Data\cCoder.Core.Data.csproj" />
+    <ProjectReference Include="..\..\cCoder.Core.Objects\cCoder.Core.Objects.csproj" />
+    <ProjectReference Include="..\..\cCoder.Core.Services\cCoder.Core.Services.csproj" />
   </ItemGroup>
   
 </Project>

@@ -30,9 +30,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Core.Connectivity\Core.Connectivity.csproj" />
-    <ProjectReference Include="..\Core.Objects\Core.Objects.csproj" />
-    <ProjectReference Include="..\Core.Services\Core.Services.csproj" />
+    <ProjectReference Include="..\cCoder.Core.Connectivity\cCoder.Core.Connectivity.csproj" />
+    <ProjectReference Include="..\cCoder.Core.Objects\cCoder.Core.Objects.csproj" />
+    <ProjectReference Include="..\cCoder.Core.Services\cCoder.Core.Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>
