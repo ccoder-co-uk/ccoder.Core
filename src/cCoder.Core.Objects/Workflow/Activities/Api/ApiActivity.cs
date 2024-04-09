@@ -43,7 +43,7 @@ public abstract class ApiActivity : Activity
 public abstract class ApiActivity<T> : ApiActivity
 {
     [JsonIgnore]
-    protected internal int BatchSize => 1000;
+    public int BatchSize { get; set; } = 500;
 
     public string Query { get; set; }
 
