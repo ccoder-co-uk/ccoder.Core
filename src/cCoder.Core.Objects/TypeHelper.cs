@@ -10,7 +10,7 @@ namespace cCoder.Core
     {
         static Assembly[] stackAssemblies = null;
 
-        public static string[] StackPrefixes = new[] { "Core", "B2B", "Security" };
+        public static string[] StackPrefixes = new[] { "cCoder.Core", "B2B", "Security" };
 
         /// <summary>
         /// Gets the array of core stack assemblies to use for type searching.
