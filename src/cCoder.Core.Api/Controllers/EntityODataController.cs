@@ -22,7 +22,7 @@ namespace cCoder.Core.Api.Controllers
     {
         protected IService<T, TUser> Service { get; private set; }
 
-        public EntityODataController(IService<T, TUser> service, ICoreAuthInfo auth, ILogger log) : base(auth, log) => 
+        public EntityODataController(IService<T, TUser> service, ICoreAuthInfo auth, ILogger log) : base(auth, log) =>
             Service = service;
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace cCoder.Core.Api.Controllers
         /// </summary>
         /// <returns>type def (metadata)</returns>
         [HttpGet]
-        public virtual IActionResult GetMetadata() => 
+        public virtual IActionResult GetMetadata() =>
             Ok(GetMetadataForType(typeof(T), true, true));
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace cCoder.Core.Api.Controllers
             MaxAnyAllExpressionDepth = 5,
             MaxExpansionDepth = 5
         )]
-        public virtual IActionResult Get(ODataQueryOptions<T> queryOptions) => 
+        public virtual IActionResult Get(ODataQueryOptions<T> queryOptions) =>
             Ok(Service.GetAll(false));
 
         /// <summary>
@@ -87,46 +87,10 @@ namespace cCoder.Core.Api.Controllers
             MaxAnyAllExpressionDepth = 5,
             MaxExpansionDepth = 5
         )]
-        public virtual async Task<IActionResult> Post([FromBody] T entity) => 
-            ModelState.IsValid 
-                ? Ok(await Service.AddAsync(entity)) 
+        public virtual async Task<IActionResult> Post([FromBody] T entity) =>
+            ModelState.IsValid
+                ? Ok(await Service.AddAsync(entity))
                 : BadRequest(ModelState);
-
-        [HttpPost]
-        [EnableQuery(
-            AllowedArithmeticOperators = AllowedArithmeticOperators.All,
-            AllowedFunctions = AllowedFunctions.AllFunctions,
-            AllowedLogicalOperators = AllowedLogicalOperators.All,
-            AllowedQueryOptions = AllowedQueryOptions.All,
-            MaxAnyAllExpressionDepth = 5,
-            MaxExpansionDepth = 5
-        )]
-        public virtual async Task<IActionResult> AddAll([FromBody] ODataCollection<T> items)
-            => ModelState.IsValid ? Ok(await Service.AddAllAsync(items.Value)) : BadRequest(ModelState);
-
-        [HttpPost]
-        [EnableQuery(
-            AllowedArithmeticOperators = AllowedArithmeticOperators.All,
-            AllowedFunctions = AllowedFunctions.AllFunctions,
-            AllowedLogicalOperators = AllowedLogicalOperators.All,
-            AllowedQueryOptions = AllowedQueryOptions.All,
-            MaxAnyAllExpressionDepth = 5,
-            MaxExpansionDepth = 5
-        )]
-        public virtual async Task<IActionResult> UpdateAll([FromBody] ODataCollection<T> items)
-            => ModelState.IsValid ? Ok((await Service.UpdateAllAsync(items.Value)).AsQueryable<Result<T>>()) : BadRequest(ModelState);
-
-        [HttpPost]
-        [EnableQuery(
-            AllowedArithmeticOperators = AllowedArithmeticOperators.All,
-            AllowedFunctions = AllowedFunctions.AllFunctions,
-            AllowedLogicalOperators = AllowedLogicalOperators.All,
-            AllowedQueryOptions = AllowedQueryOptions.All,
-            MaxAnyAllExpressionDepth = 5,
-            MaxExpansionDepth = 5
-        )]
-        public virtual async Task<IActionResult> AddOrUpdateAll([FromBody] ODataCollection<T> items)
-            => ModelState.IsValid ? Ok(await Service.AddOrUpdate(items.Value)) : BadRequest(ModelState);
 
         /// <summary>
         /// Base update method for entity changes
@@ -166,33 +130,6 @@ namespace cCoder.Core.Api.Controllers
         {
             await Service.DeleteAsync(key);
             return Ok();
-        }
-
-
-        [HttpPost]
-        public virtual async Task<IActionResult> DeleteAll([FromBody] ODataCollection<TKey> items)
-        {
-            if (ModelState.IsValid)
-            {
-                List<Result<TKey>> workload = new();
-                foreach (TKey id in items.Value)
-                {
-                    try
-                    {
-                        await Service.DeleteAsync(id);
-                        workload.Add(new Result<TKey> { Item = id, Success = true, Message = "Done!" });
-                    }
-                    catch (Exception ex)
-                    {
-                        workload.Add(new Result<TKey> { Item = id, Success = false, Message = ex.Message });
-                    }
-                }
-                return Ok(workload);
-            }
-            else
-            {
-                return BadRequest(ModelState);
-            }
         }
 
         public void Dispose()

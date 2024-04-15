@@ -84,6 +84,7 @@ namespace cCoder.Core.Api.OData
             _ = AddSet<CalendarEvent, int>();
             _ = AddSet<ScheduledTask, int>();
             _ = AddSet<BackgroundJob, int>();
+            _ = AddSet<MailServer, int>();
             _ = AddSet<QueuedEmail, int>();
             _ = AddSet<SentEmail, int>();
 
