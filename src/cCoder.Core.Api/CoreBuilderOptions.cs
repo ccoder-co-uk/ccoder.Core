@@ -29,10 +29,10 @@ namespace cCoder.Core.Api
         {
             services.AddCoreServices();
             services.AddCorePackaging();
-            services.AddCaches(additionalMetadata ?? Array.Empty<MetadataContainerSet>());
+            services.AddCaches(additionalMetadata ?? []);
 
-            if(!servicesOnly)
-                services.AddCoreApi();
+            if (!servicesOnly)
+                services.AddAspNet();
 
             return this;
         }
