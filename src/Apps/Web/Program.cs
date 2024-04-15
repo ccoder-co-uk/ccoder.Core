@@ -79,7 +79,7 @@ namespace Web
                             .HandleCorsWithDefaults()
                             .HandleExceptionsWith(HandleUnHandledException);
                     }, log)
-                    .UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Corporate LinX V7 API definition"))
+                    .UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "cCoder API definition"))
                     .UseSwagger()
                     .UseODataRouteDebug();
 
