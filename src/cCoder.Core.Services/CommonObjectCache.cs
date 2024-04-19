@@ -4,10 +4,7 @@ using cCoder.Core.Objects.Entities;
 using cCoder.Core.Objects.Entities.CMS;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 
 namespace cCoder.Core
 {
@@ -121,9 +118,9 @@ namespace cCoder.Core
             while (page.Any())
             {
                 result.AddRange(page);
-                page = compiledCommonCacheQuery(context, i, pageSize);
 
                 i += pageSize;
+                page = compiledCommonCacheQuery(context, i, pageSize);
             }
 
             Debug.WriteLine($"{System.DateTimeOffset.Now} - Loaded cache");
