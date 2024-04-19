@@ -16,27 +16,22 @@ public class FlowInstanceDataService(ICoreDataContext db, Config config)
             .Include(fd => fd.FlowDefinition)
             .FirstOrDefault(f => f.Id == entity.Id);
 
-        bool executeNextInQueue = dbVersion.State == "Executing" && entity.State != "Executing";
-
         dbVersion.UpdateFrom(entity);
 
         var result = User.Can(dbVersion.FlowDefinition.AppId, "flowinstancedata_update")
             ? await Db.UpdateAsync(dbVersion)
             : throw new SecurityException("Access Denied!");
 
-        if (executeNextInQueue)
-            ExecuteNextQueuedInstance(result.FlowDefinitionId);
+        ExecuteNextQueuedInstance(result.FlowDefinitionId);
 
         return result;
     }
 
     void ExecuteNextQueuedInstance(Guid flowDefinitionId)
     {
-        var scheduler = config.Services["Scheduler"];
-
         using HttpClient api = new(new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate })
         {
-            BaseAddress = new Uri(scheduler)
+            BaseAddress = new Uri(config.Services["Scheduler"])
         };
 
         api.PostAsync("Workflow/ExecuteNextFlowInstanceInQueue?flowId=" + flowDefinitionId, null)

@@ -18,17 +18,11 @@ public class FlowDefinitionService(Config config, ICoreDataContext db, ILogger<F
             .Include(f => f.App)
             .FirstOrDefault(f => f.Id == id);
 
-        bool shouldRunNow = !Db.GetAll<FlowInstanceData>()
-            .Any(d => d.FlowDefinitionId == id && (d.State == "Queued" || d.State == "Executing"));
-
         var result = flow != null
             ? await flow.QueueNewInstance(Db, Db.User, args)
             : throw new SecurityException("Access Denied!");
 
-
-        // We are not awaiting this deliberately, ignore the warning.
-        if (shouldRunNow)
-            Task.Run(() => ExecuteNextQueuedInstance(id)).Forget();
+        ExecuteNextQueuedInstance(id);
 
         return result;
     }
@@ -60,18 +54,14 @@ public class FlowDefinitionService(Config config, ICoreDataContext db, ILogger<F
         return base.UpdateAllAsync(items);
     }
 
-    async Task ExecuteNextQueuedInstance(Guid flowDefinitionId)
+    void ExecuteNextQueuedInstance(Guid flowDefinitionId)
     {
-        var scheduler = config.Services["Scheduler"];
-
         using HttpClient api = new(new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate })
         {
-            BaseAddress = new Uri(scheduler)
+            BaseAddress = new Uri(config.Services["Scheduler"])
         };
 
-        api.Timeout = TimeSpan.FromMinutes(11);
-
-        var response = await api.PostAsync("ExecuteNextFlowInstanceInQueue?flowId=" + flowDefinitionId, null);
-        _ = response.EnsureSuccessStatusCode();
+        api.PostAsync("Workflow/ExecuteNextFlowInstanceInQueue?flowId=" + flowDefinitionId, null)
+            .Forget();
     }
 }
