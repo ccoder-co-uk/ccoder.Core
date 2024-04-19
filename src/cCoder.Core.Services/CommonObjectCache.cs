@@ -4,10 +4,7 @@ using cCoder.Core.Objects.Entities;
 using cCoder.Core.Objects.Entities.CMS;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 
 namespace cCoder.Core
 {
@@ -110,21 +107,19 @@ namespace cCoder.Core
             Debug.WriteLine($"{System.DateTimeOffset.Now} - Loading cache");
 
             int pageSize = 500;
-            int i = 0;
+            int skip = 0;
 
             var context = core as CoreDataContext;
-
-            IEnumerable<CommonObject> page = compiledCommonCacheQuery(context, i, pageSize);
-
+            IEnumerable<CommonObject> page;
             var result = new List<CommonObject>();
 
-            while (page.Any())
+            do
             {
+                page = compiledCommonCacheQuery(context, skip, pageSize);
                 result.AddRange(page);
-                page = compiledCommonCacheQuery(context, i, pageSize);
-
-                i += pageSize;
+                skip += pageSize;
             }
+            while (page.Any());
 
             Debug.WriteLine($"{System.DateTimeOffset.Now} - Loaded cache");
 
