@@ -1,7 +1,4 @@
-﻿using System;
+﻿namespace cCoder.Core.Objects.Dtos.Workflow;
 
-namespace cCoder.Core.Objects.Dtos.Workflow
-{
-    [AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
-    public class IgnoreWhenFlowCompleteAttribute : Attribute { }
-}
+[AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
+public class IgnoreWhenFlowCompleteAttribute : Attribute { }

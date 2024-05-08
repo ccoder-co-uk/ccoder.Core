@@ -1,10 +1,7 @@
-﻿using System;
+﻿namespace cCoder.Core.Objects.Dtos;
 
-namespace cCoder.Core.Objects.Dtos
+public class Signature
 {
-    public class Signature
-    {
-        public string Caller { get; set; }
-        public DateTimeOffset ValidUntil { get; set; }
-    }
+    public string Caller { get; set; }
+    public DateTimeOffset ValidUntil { get; set; }
 }

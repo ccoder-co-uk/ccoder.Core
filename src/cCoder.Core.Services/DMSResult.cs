@@ -1,10 +1,7 @@
-﻿using System.IO;
+﻿namespace cCoder.Core.Services;
 
-namespace cCoder.Core
+public class DMSResult
 {
-    public class DMSResult
-    {
-        public string MimeType { get; set; }
-        public Stream Data { get; set; }
-    }
+    public string MimeType { get; set; }
+    public Stream Data { get; set; }
 }

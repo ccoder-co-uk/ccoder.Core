@@ -1,11 +1,10 @@
-﻿namespace cCoder.Core.Objects.Dtos.Workflow
+﻿namespace cCoder.Core.Objects.Dtos.Workflow;
+
+public enum WorkflowLogLevel
 {
-    public enum WorkflowLogLevel
-    {
-        Info,
-        Warning,
-        Error,
-        Fatal,
-        Debug
-    }
+    Info,
+    Warning,
+    Error,
+    Fatal,
+    Debug
 }

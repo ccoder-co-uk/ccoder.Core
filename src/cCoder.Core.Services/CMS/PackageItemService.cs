@@ -1,10 +1,9 @@
 ﻿using cCoder.Core.Objects;
 using cCoder.Core.Objects.Entities.Packaging;
 
-namespace cCoder.Core.Services.CMS
+namespace cCoder.Core.Services.CMS;
+
+public class PackageItemService : CoreService<PackageItem>
 {
-    public class PackageItemService : CoreService<PackageItem>
-    {
-        public PackageItemService(ICoreDataContext db) : base(db) { }
-    }
+    public PackageItemService(ICoreDataContext db) : base(db) { }
 }

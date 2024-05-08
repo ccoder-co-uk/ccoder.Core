@@ -1,49 +1,46 @@
 ﻿using cCoder.Core.Objects;
 using cCoder.Core.Objects.Entities.CMS;
-using cCoder.Core.Services;
-using System;
-using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace cCoder.Core
+namespace cCoder.Core.Services;
+
+/// <summary>
+/// For use with applications and services that have direct access to the core db
+/// </summary>
+public class CoreResourceProvider : IResourceProvider
 {
-    /// <summary>
-    /// For use with applications and services that have direct access to the core db
-    /// </summary>
-    public class CoreResourceProvider : IResourceProvider
+    private readonly IResourceService service;
+
+    public CoreResourceProvider(IResourceService resourceService)
     {
-        private readonly IResourceService service;
+        service = resourceService;
+    }
 
-        public CoreResourceProvider(IResourceService resourceService) => service = resourceService;
+    public Resource GetResource(string key, string culture)
+    {
+        string name = key.Split('.').Last();
+        string formattedName = Regex.Replace(name.Replace("Id", ""), @"(?<!_)([A-Z])", " $1");
 
-        public Resource GetResource(string key, string culture)
+        return new Resource
         {
-            string name = key.Split('.').Last();
-            string formattedName = Regex.Replace(name.Replace("Id", ""), @"(?<!_)([A-Z])", " $1");
+            Culture = string.Empty,
+            Name = name,
+            Key = key,
+            DisplayName = formattedName,
+            ShortDisplayName = formattedName,
+            Description = formattedName
+        };
+    }
 
-            return new Resource
-            {
-                Culture = string.Empty,
-                Name = name,
-                Key = key,
-                DisplayName = formattedName,
-                ShortDisplayName = formattedName,
-                Description = formattedName
-            };
-        }
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                service.Dispose();
-            }
-        }
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+            service.Dispose();
     }
 }

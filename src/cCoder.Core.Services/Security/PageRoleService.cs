@@ -2,59 +2,55 @@
 using cCoder.Core.Objects.Entities.CMS;
 using cCoder.Core.Objects.Entities.Security;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security;
-using System.Threading.Tasks;
 
-namespace cCoder.Core.Services.Security
+namespace cCoder.Core.Services.Security;
+
+public class PageRoleService : CoreService<PageRole>, ICoreService<PageRole>
 {
-    public class PageRoleService : CoreService<PageRole>, ICoreService<PageRole>
+    public PageRoleService(ICoreDataContext db) : base(db) { }
+
+    public override Task<PageRole> AddAsync(PageRole entity)
     {
-        public PageRoleService(ICoreDataContext db) : base(db) { }
+        // make sure we pull back the users for given role
+        (Role role, Page page) = GetRoleAndPage(entity);
 
-        public override Task<PageRole> AddAsync(PageRole entity)
+        // If both Role and User exist but aren't joined
+        if (role != null && page != null && page.UserCan(User, "pagerole_create"))
         {
-            // make sure we pull back the users for given role
-            (Role role, Page page) = GetRoleAndPage(entity);
-
-            // If both Role and User exist but aren't joined
-            if (role != null && page != null && page.UserCan(User, "pagerole_create"))
-            {
-                return !page.Roles.Any(r => r.RoleId == role.Id)
-                    ? Db.AddAsync(entity)
-                    : Task.FromResult(entity);
-            }
-
-            throw new SecurityException("Access Denied!");
+            return !page.Roles.Any(r => r.RoleId == role.Id)
+                ? Db.AddAsync(entity)
+                : Task.FromResult(entity);
         }
 
-        (Role role, Page page) GetRoleAndPage(PageRole entity)
-            => (
-                Db.GetAll<Role>(false)
-                    .FirstOrDefault(r => r.Id == entity.RoleId),
-                Db.GetAll<Page>(false)
-                    .Include(f => f.Roles)
-                        .ThenInclude(fr => fr.Role)
-                    .FirstOrDefault(u => u.Id == entity.PageId)
-            );
+        throw new SecurityException("Access Denied!");
+    }
 
-        public override Task DeleteAsync(object id)
-        {
-            PageRole link = (PageRole)id;
-
-            Page page = Db.GetAll<Page>(true)
+    private (Role role, Page page) GetRoleAndPage(PageRole entity)
+        => (
+            Db.GetAll<Role>(false)
+                .FirstOrDefault(r => r.Id == entity.RoleId),
+            Db.GetAll<Page>(false)
                 .Include(f => f.Roles)
                     .ThenInclude(fr => fr.Role)
-                .FirstOrDefault(u => u.Id == link.PageId);
+                .FirstOrDefault(u => u.Id == entity.PageId)
+        );
 
-            PageRole dbVersion = Db.GetAll<PageRole>()
-                .Include(ur => ur.Role)
-                .FirstOrDefault(ur => ur.RoleId == link.RoleId && ur.PageId == link.PageId);
+    public override Task DeleteAsync(object id)
+    {
+        PageRole link = (PageRole)id;
 
-            return dbVersion != null && page.UserCan(User, "pagerole_delete")
-                ? base.DeleteAllAsync(new List<PageRole> { dbVersion })
-                : throw new SecurityException("Access Denied!");
-        }
+        Page page = Db.GetAll<Page>(true)
+            .Include(f => f.Roles)
+                .ThenInclude(fr => fr.Role)
+            .FirstOrDefault(u => u.Id == link.PageId);
+
+        PageRole dbVersion = Db.GetAll<PageRole>()
+            .Include(ur => ur.Role)
+            .FirstOrDefault(ur => ur.RoleId == link.RoleId && ur.PageId == link.PageId);
+
+        return dbVersion != null && page.UserCan(User, "pagerole_delete")
+            ? base.DeleteAllAsync(new List<PageRole> { dbVersion })
+            : throw new SecurityException("Access Denied!");
     }
 }

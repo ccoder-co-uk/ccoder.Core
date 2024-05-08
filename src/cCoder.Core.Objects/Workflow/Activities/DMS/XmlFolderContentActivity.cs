@@ -40,14 +40,14 @@ public class XmlFolderContentActivity : DMSActivity
 
     protected async Task<IEnumerable<(string, string)>> GetFilesWithContents(HttpClient api)
     {
-        var path = Path.Trim().TrimEnd("/".ToCharArray());
+        string path = Path.Trim().TrimEnd("/".ToCharArray());
 
-        using var result = await api.GetStreamAsync($"DMS/{path}");
+        using Stream result = await api.GetStreamAsync($"DMS/{path}");
         using ZipArchive folderArchive = new(result);
 
         List<(string, string)> results = [];
 
-        foreach (var entry in folderArchive.Entries)
+        foreach (ZipArchiveEntry entry in folderArchive.Entries)
             if (entry.Name.EndsWith(".xml"))
             {
                 using Stream entryStream = entry.Open();
@@ -58,5 +58,5 @@ public class XmlFolderContentActivity : DMSActivity
         return results;
     }
 
-    string Now() => DateTimeOffset.UtcNow.ToString("HH:mm:ss");
+    private string Now() => DateTimeOffset.UtcNow.ToString("HH:mm:ss");
 }

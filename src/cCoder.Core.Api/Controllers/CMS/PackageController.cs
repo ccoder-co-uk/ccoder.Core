@@ -4,14 +4,14 @@ using cCoder.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 
-namespace cCoder.Core.Api.Controllers;
+namespace cCoder.Core.Api.Controllers.CMS;
 
-public class PackageController(IPackageService service, ICoreAuthInfo auth, ILogger<PackageController> log) 
+public class PackageController(IPackageService service, ICoreAuthInfo auth, ILogger<PackageController> log)
     : CoreEntityODataController<Package, Guid>(service, auth, log)
 {
-    readonly ILogger log = log;
+    private readonly ILogger log = log;
 
-    protected new IPackageService Service => 
+    protected new IPackageService Service =>
         base.Service as IPackageService;
 
     [HttpPost]

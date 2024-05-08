@@ -2,11 +2,10 @@
 using cCoder.Core.Objects.Entities.Planning;
 using cCoder.Core.Services;
 
-namespace cCoder.Core.Api.Controllers
+namespace cCoder.Core.Api.Controllers.Planning;
+
+public class CalendarEventController : CoreEntityODataController<CalendarEvent, int>
 {
-    public class CalendarEventController : CoreEntityODataController<CalendarEvent, int>
-    {
-        public CalendarEventController(ICoreService<CalendarEvent> service, ICoreAuthInfo auth, ILogger<CalendarEventController> log) 
-            : base(service, auth, log) { }
-    }
+    public CalendarEventController(ICoreService<CalendarEvent> service, ICoreAuthInfo auth, ILogger<CalendarEventController> log)
+        : base(service, auth, log) { }
 }

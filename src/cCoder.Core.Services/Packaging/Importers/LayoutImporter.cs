@@ -1,32 +1,28 @@
 ﻿using cCoder.Core.Objects.Entities.CMS;
 using cCoder.Core.Objects.Entities.Packaging;
 using cCoder.Core.Objects.Extensions;
-using cCoder.Core.Services;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace cCoder.Core.Packaging.Importers
+namespace cCoder.Core.Services.Packaging.Importers;
+
+public class LayoutImporter : CoreImporter<Layout>
 {
-    public class LayoutImporter : CoreImporter<Layout>
+    public LayoutImporter(ICoreService<Layout> service) : base(service, "Core/Layout") { }
+
+    public override async Task Import(int appId, PackageItem item)
     {
-        public LayoutImporter(ICoreService<Layout> service) : base(service, "Core/Layout") { }
+        Layout[] items = item.Data.StartsWith("{") ? new[] { item.Unpack<Layout>() } : item.Unpack<Layout[]>();
+        string[] names = items.Select(l => l.Name.ToLower()).ToArray();
+        var dbVersions = Service.GetAll(false)
+            .Where(c => c.AppId == appId && names.Contains(c.Name.ToLower()))
+            .Select(l => new { l.Id, l.Name })
+            .ToArray();
 
-        public override async Task Import(int appId, PackageItem item)
+        items.ForEach(i =>
         {
-            Layout[] items = item.Data.StartsWith("{") ? new[] { item.Unpack<Layout>() } : item.Unpack<Layout[]>();
-            string[] names = items.Select(l => l.Name.ToLower()).ToArray();
-            var dbVersions = Service.GetAll(false)
-                .Where(c => c.AppId == appId && names.Contains(c.Name.ToLower()))
-                .Select(l => new { l.Id, l.Name })
-                .ToArray();
+            i.AppId = appId;
+            i.Id = dbVersions.FirstOrDefault(j => j.Name.ToLower() == i.Name.ToLower())?.Id ?? 0;
+        });
 
-            items.ForEach(i =>
-            {
-                i.AppId = appId;
-                i.Id = dbVersions.FirstOrDefault(j => j.Name.ToLower() == i.Name.ToLower())?.Id ?? 0;
-            });
-
-            _ = await Service.AddOrUpdate(items);
-        }
+        _ = await Service.AddOrUpdate(items);
     }
 }

@@ -7,7 +7,7 @@ public class ApiGetCollection<T> : ApiActivity<IEnumerable<T>>
 {
     public override async Task Execute()
     {
-        using var api = GetHttpClient();
+        using HttpClient api = GetHttpClient();
         Log(WorkflowLogLevel.Info, $"HTTP GET {api.BaseAddress}{Query}");
         Result = await api.GetODataCollection<T>(Query);
     }

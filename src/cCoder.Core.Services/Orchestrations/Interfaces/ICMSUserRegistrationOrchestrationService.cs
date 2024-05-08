@@ -1,10 +1,8 @@
 ﻿using cCoder.Core.Objects.Entities.Security;
-using System.Threading.Tasks;
 
-namespace cCoder.Core.Services.Orchestrations.Interfaces
+namespace cCoder.Core.Services.Orchestrations.Interfaces;
+
+public interface ICMSUserRegistrationOrchestrationService
 {
-    public interface ICMSUserRegistrationOrchestrationService
-    {
-        ValueTask<User> RegisterUserAsync(User user, int appId, string confirmationToken);
-    }
+    ValueTask<User> RegisterUserAsync(User user, int appId, string confirmationToken);
 }

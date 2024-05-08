@@ -1,35 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿namespace cCoder.Core.Objects.Workflow.Activities.DMS;
 
-namespace cCoder.Core.Objects.Workflow.Activities.DMS
+public class DMSDeleteActivity : DMSActivity
 {
-    public class DMSDeleteActivity : DMSActivity
+    public IEnumerable<string> Paths { get; set; }
+
+    public override async Task Execute()
     {
-        public IEnumerable<string> Paths { get; set; }
-
-        public override async Task Execute()
+        try
         {
-            try
+            if (Paths == null && !string.IsNullOrEmpty(Path))
             {
-                if (Paths == null && !string.IsNullOrEmpty(Path))
-                {
-                    Paths = new string[] { Path };
-                }
-
-                using System.Net.Http.HttpClient api = GetHttpClient();
-                using IEnumerator<string> n = Paths.GetEnumerator();
-                while (n.MoveNext())
-                {
-                    _ = await api.DeleteAsync($"DMS/{n.Current}");
-                }
-
-                Log(Dtos.Workflow.WorkflowLogLevel.Info, $"DMS deletions complete");
+                Paths = new string[] { Path };
             }
-            catch (Exception ex)
+
+            using System.Net.Http.HttpClient api = GetHttpClient();
+            using IEnumerator<string> n = Paths.GetEnumerator();
+            while (n.MoveNext())
             {
-                Log(Dtos.Workflow.WorkflowLogLevel.Error, $"Failed to create DMS file because of exception:\n{ex.Message}");
+                _ = await api.DeleteAsync($"DMS/{n.Current}");
             }
+
+            Log(Dtos.Workflow.WorkflowLogLevel.Info, $"DMS deletions complete");
+        }
+        catch (Exception ex)
+        {
+            Log(Dtos.Workflow.WorkflowLogLevel.Error, $"Failed to create DMS file because of exception:\n{ex.Message}");
         }
     }
 }
