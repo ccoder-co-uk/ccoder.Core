@@ -1,16 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace cCoder.Core.Objects.Dtos
-{
-    public class Login
-    {
-        [Required]
-        [Display(Name = "User")]
-        public string UserName { get; set; }
+namespace cCoder.Core.Objects.Dtos;
 
-        [Required]
-        [DataType(DataType.Password)]
-        [Display(Name = "Password")]
-        public string Password { get; set; }
-    }
+public class Login
+{
+    [Required]
+    [Display(Name = "User")]
+    public string UserName { get; set; }
+
+    [Required]
+    [DataType(DataType.Password)]
+    [Display(Name = "Password")]
+    public string Password { get; set; }
 }

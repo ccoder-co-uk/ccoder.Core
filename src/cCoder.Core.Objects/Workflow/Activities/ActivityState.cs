@@ -1,11 +1,10 @@
-﻿namespace cCoder.Core.Objects.Workflow.Activities
+﻿namespace cCoder.Core.Objects.Workflow.Activities;
+
+public enum ActivityState
 {
-    public enum ActivityState
-    {
-        NotRun,
-        Running,
-        Complete,
-        Failed,
-        Skipped
-    }
+    NotRun,
+    Running,
+    Complete,
+    Failed,
+    Skipped
 }

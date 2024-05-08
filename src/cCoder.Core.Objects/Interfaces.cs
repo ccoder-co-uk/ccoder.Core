@@ -4,105 +4,100 @@ using cCoder.Core.Objects.Entities;
 using cCoder.Core.Objects.Entities.CMS;
 using cCoder.Core.Objects.Entities.Packaging;
 using cCoder.Core.Objects.Entities.Security;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
-namespace cCoder.Core.Objects
+namespace cCoder.Core.Objects;
+
+public delegate Task LogEvent(WorkflowLogLevel level, string message);
+
+
+public interface IEventBusProvider : IDisposable
 {
-    public delegate Task LogEvent(WorkflowLogLevel level, string message);
+    event Func<QueueMessage, Task> ProcessMessageAsync;
+    event Func<Exception, Task> ProcessErrorAsync;
+    Task StartProcessingAsync();
+}
 
+public interface IMetadataCache : ICache<MetadataContainerSet>
+{
+    void Rebuild();
 
-    public interface IEventBusProvider : IDisposable
-    {
-        event Func<QueueMessage, Task> ProcessMessageAsync;
-        event Func<Exception, Task> ProcessErrorAsync;
-        Task StartProcessingAsync();
-    }
+    string GetAll(string culture = "");
+    string Get(string key, string culture);
+    void Set(string key, string value, string culture);
+    string ToJson(string culture);
+}
 
-    public interface IMetadataCache : ICache<MetadataContainerSet>
-    {
-        void Rebuild();
+public interface ICommonObjectCache : ICache<object>
+{
+    void Refresh();
+    T[] GetAll<T>();
+    T Get<T>(string key);
+    IEnumerable<CommonObject> LatestSet { get; set; }
+}
 
-        string GetAll(string culture = "");
-        string Get(string key, string culture);
-        void Set(string key, string value, string culture);
-        string ToJson(string culture);
-    }
+public interface IPackageInstaller
+{
+    string Type { get; set; }
+    Task Import(int appId, Package package);
+}
 
-    public interface ICommonObjectCache : ICache<object>
-    {
-        void Refresh();
-        T[] GetAll<T>();
-        T Get<T>(string key);
-        IEnumerable<CommonObject> LatestSet { get; set; }
-    }
+public interface IPackageItemImporter
+{
+    string Type { get; }
 
-    public interface IPackageInstaller
-    {
-        string Type { get; set; }
-        Task Import(int appId, Package package);
-    }
+    int Order { get; }
 
-    public interface IPackageItemImporter
-    {
-        string Type { get; }
+    Task Import(int appId, PackageItem item);
+}
 
-        int Order { get; }
+public interface IAmRoleSecured<TRole>
+{
+    ICollection<TRole> Roles { get; set; }
 
-        Task Import(int appId, PackageItem item);
-    }
+    bool UserCan(User user, string priv);
+}
 
-    public interface IAmRoleSecured<TRole>
-    {
-        ICollection<TRole> Roles { get; set; }
+public interface ICoreAuthInfo
+{
+    string SSOUserId { get; }
+}
 
-        bool UserCan(User user, string priv);
-    }
+public interface IResourceProvider : IDisposable
+{
+    Resource GetResource(string key, string culture);
+}
 
-    public interface ICoreAuthInfo
-    {
-        string SSOUserId { get; }
-    }
+public interface ICache<T> : IDisposable
+{
+    int ExpiryTimeInMinutes { get; set; }
+    T Get(string key);
+    void Set(string key, T item);
+    IDictionary<string, T> ToDictionary();
+}
 
-    public interface IResourceProvider : IDisposable
-    {
-        Resource GetResource(string key, string culture);
-    }
+public interface ICrypto<T>
+{
+    string Encrypt(T source, string key);
+    string Encrypt(T source);
 
-    public interface ICache<T> : IDisposable
-    {
-        int ExpiryTimeInMinutes { get; set; }
-        T Get(string key);
-        void Set(string key, T item);
-        IDictionary<string, T> ToDictionary();
-    }
+    T Decrypt(string source, string key);
+    T Decrypt(string source);
+}
 
-    public interface ICrypto<T>
-    {
-        string Encrypt(T source, string key);
-        string Encrypt(T source);
+public interface IWorkflowContext
+{
+    IScriptRunner Script { get; }
 
-        T Decrypt(string source, string key);
-        T Decrypt(string source);
-    }
+    IDictionary<string, object> Variables { get; }
 
-    public interface IWorkflowContext
-    {
-        IScriptRunner Script { get; }
+    public Flow Flow { get; }
 
-        IDictionary<string, object> Variables { get; }
+    void Log(WorkflowLogLevel level, string message);
+}
 
-        public Flow Flow { get; }
-
-        void Log(WorkflowLogLevel level, string message);
-    }
-
-    public interface IScriptRunner
-    {
-        Task Run(string code, string[] imports, object args, Action<WorkflowLogLevel, string> log);
-        Task<T> Run<T>(string code, string[] imports, object args = null, Action<WorkflowLogLevel, string> log = null);
-        Task<T> BuildScript<T>(string code, string[] imports, Action<WorkflowLogLevel, string> log);
-    }
-
+public interface IScriptRunner
+{
+    Task Run(string code, string[] imports, object args, Action<WorkflowLogLevel, string> log);
+    Task<T> Run<T>(string code, string[] imports, object args = null, Action<WorkflowLogLevel, string> log = null);
+    Task<T> BuildScript<T>(string code, string[] imports, Action<WorkflowLogLevel, string> log);
 }

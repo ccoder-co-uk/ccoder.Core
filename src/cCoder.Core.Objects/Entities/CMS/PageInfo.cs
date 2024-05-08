@@ -1,30 +1,30 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using cCoder.Core.Objects.Attributes;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace cCoder.Core.Objects.Entities.CMS
+namespace cCoder.Core.Objects.Entities.CMS;
+
+[Table("PageInfo", Schema = "CMS")]
+[ApiIgnore]
+public class PageInfo
 {
-    [Table("PageInfo", Schema = "CMS")]
-    [ApiIgnore]
-    public class PageInfo
-    {
-        [Key]
-        public int Id { get; set; }
+    [Key]
+    public int Id { get; set; }
 
-        [ForeignKey("Page")]
-        public int PageId { get; set; }
+    [ForeignKey("Page")]
+    public int PageId { get; set; }
 
-        [ForeignKey("Culture")]
-        [Required(AllowEmptyStrings = true)]
-        public string CultureId { get; set; }
+    [ForeignKey("Culture")]
+    [Required(AllowEmptyStrings = true)]
+    public string CultureId { get; set; }
 
-        [Required]
-        public string Title { get; set; }
+    [Required]
+    public string Title { get; set; }
 
-        public string Description { get; set; }
+    public string Description { get; set; }
 
-        public string Keywords { get; set; }
+    public string Keywords { get; set; }
 
-        public virtual Page Page { get; set; }
-        public virtual Culture Culture { get; set; }
-    }
+    public virtual Page Page { get; set; }
+    public virtual Culture Culture { get; set; }
 }

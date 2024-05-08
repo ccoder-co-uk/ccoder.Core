@@ -1,4 +1,5 @@
-﻿using cCoder.Core.Objects.Dtos.Workflow;
+﻿using cCoder.Core.Objects.Attributes;
+using cCoder.Core.Objects.Dtos.Workflow;
 using cCoder.Core.Objects.Extensions;
 using System.Text;
 
@@ -28,19 +29,19 @@ public class ApiPostBatch : ApiActivity<BatchedResponse[]>
 
         try
         {
-            var responseBatch = await response.Content.ReadAsAsync<ResponseBatch>();
+            ResponseBatch responseBatch = await response.Content.ReadAsAsync<ResponseBatch>();
             Result = responseBatch.Responses;
 
             Log(WorkflowLogLevel.Info, $"Received {responseBatch.Responses.Length} batched responses");
             Log(WorkflowLogLevel.Info, $"Received {responseBatch.Responses.Where(r => r.Status.StartsWith("2")).Count()} successes");
 
-            var failures = responseBatch.Responses.Where(r => !r.Status.StartsWith("2")).ToArray();
+            BatchedResponse[] failures = responseBatch.Responses.Where(r => !r.Status.StartsWith("2")).ToArray();
 
             if (failures.Any())
             {
                 Log(WorkflowLogLevel.Warning, $"Received {failures.Length} failures");
 
-                foreach (var failure in failures)
+                foreach (BatchedResponse failure in failures)
                     Log(WorkflowLogLevel.Error, failure.Body.ToJsonForOdata());
             }
         }

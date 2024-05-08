@@ -8,13 +8,15 @@ using cCoder.Core.Objects.Entities.Packaging;
 using cCoder.Core.Objects.Entities.Planning;
 using cCoder.Core.Objects.Entities.Security;
 using cCoder.Core.Objects.Entities.Workflow;
-using cCoder.Core.Packaging;
-using cCoder.Core.Packaging.Importers;
 using cCoder.Core.Services;
 using cCoder.Core.Services.CMS;
 using cCoder.Core.Services.DMS;
+using cCoder.Core.Services.Mail;
 using cCoder.Core.Services.Orchestrations;
 using cCoder.Core.Services.Orchestrations.Interfaces;
+using cCoder.Core.Services.Packaging;
+using cCoder.Core.Services.Packaging.Importers;
+using cCoder.Core.Services.Planning;
 using cCoder.Core.Services.Security;
 using cCoder.Core.Services.Workflow;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
@@ -25,7 +27,7 @@ public static partial class IServiceCollectionExtensions
 {
     public static void AddCore(this IServiceCollection services, Action<CoreBuilderOptions> setupAction)
     {
-        var config = new CoreBuilderOptions(services);
+        CoreBuilderOptions config = new(services);
 
         services.AddScoped<ICoreService<Role>, RoleService>();
         services.AddScoped<ICoreService<UserRole>, UserRoleService>();

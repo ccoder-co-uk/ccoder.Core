@@ -2,11 +2,10 @@
 using cCoder.Core.Objects.Entities.Workflow;
 using cCoder.Core.Services;
 
-namespace cCoder.Core.Api.Controllers
+namespace cCoder.Core.Api.Controllers.Workflow;
+
+public class WorkflowEventController : CoreEntityODataController<WorkflowEvent, Guid>
 {
-    public class WorkflowEventController : CoreEntityODataController<WorkflowEvent, Guid>
-    {
-        public WorkflowEventController(ICoreService<WorkflowEvent> service, ICoreAuthInfo auth, ILogger<WorkflowEventController> log) 
-            : base(service, auth, log) { }
-    }
+    public WorkflowEventController(ICoreService<WorkflowEvent> service, ICoreAuthInfo auth, ILogger<WorkflowEventController> log)
+        : base(service, auth, log) { }
 }

@@ -1,8 +1,8 @@
-﻿using cCoder.Core;
-using cCoder.Core.Objects;
+﻿using cCoder.Core.Objects;
 using cCoder.Core.Objects.Entities.CMS;
 using cCoder.Core.Objects.Entities.DMS;
 using cCoder.Core.Objects.Extensions;
+using cCoder.Core.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.Security;
@@ -13,11 +13,11 @@ using MemoryStream = System.IO.MemoryStream;
 using Path = cCoder.Core.Objects.Path;
 using Stream = System.IO.Stream;
 
-namespace Web.Api.Middleware;
+namespace cCoder.Core.Api.Middleware;
 
 public class WebDavMiddleware
 {
-    readonly ILogger log;
+    private readonly ILogger log;
 
     public WebDavMiddleware(RequestDelegate next, ILogger<WebDavMiddleware> log)
     {
@@ -38,10 +38,10 @@ public class WebDavMiddleware
         XNamespace ns = "DAV:";
         App app = ctx.Get<App>(appId);
 
-        Dictionary<string, Microsoft.Extensions.Primitives.StringValues> query = 
+        Dictionary<string, Microsoft.Extensions.Primitives.StringValues> query =
             Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(context.Request.QueryString.Value);
 
-        DMS dms = new(app, ctx, log);
+        DMSInstance dms = new(app, ctx, log);
 
         string sslPort = config.Settings["sslPort"] ?? "443";
         string urlBase = $"https://{app.Domain}:{sslPort}/Api/";
@@ -78,8 +78,8 @@ public class WebDavMiddleware
                     break;
 
                 case "GET":
-                    int getVer = query.TryGetValue("version", out Microsoft.Extensions.Primitives.StringValues value) 
-                        ? int.Parse(value[0]) 
+                    int getVer = query.TryGetValue("version", out Microsoft.Extensions.Primitives.StringValues value)
+                        ? int.Parse(value[0])
                         : 0;
 
                     DMSResult result = dms.Get(path, getVer);
@@ -98,7 +98,7 @@ public class WebDavMiddleware
                     break;
 
                 case "PROPPATCH":
-                    string responseXmlElement = new XElement(ns + "multistatus", 
+                    string responseXmlElement = new XElement(ns + "multistatus",
                         [
                             new XAttribute(XNamespace.Xmlns + "D", "DAV:"), new XAttribute(XNamespace.Xmlns + "Z", "urn:schemas-microsoft-com:")
                         ]).ToXml();
@@ -132,8 +132,8 @@ public class WebDavMiddleware
                     break;
 
                 case "DELETE":
-                    await dms.Drop(path, query.TryGetValue("version", out Microsoft.Extensions.Primitives.StringValues versionValue) 
-                        ? int.Parse(versionValue[0]) 
+                    await dms.Drop(path, query.TryGetValue("version", out Microsoft.Extensions.Primitives.StringValues versionValue)
+                        ? int.Parse(versionValue[0])
                         : 0);
 
                     await Respond(context, null, headers);
@@ -165,10 +165,10 @@ public class WebDavMiddleware
         }
     }
 
-    string PropFind(HttpContext context, ICoreDataContext ctx, int appId, Path path, string requestText, XNamespace ns, string urlBase)
+    private string PropFind(HttpContext context, ICoreDataContext ctx, int appId, Path path, string requestText, XNamespace ns, string urlBase)
     {
-        XDocument requestBody = requestText.Length > 0 && context.Request.Headers.ContentType == "application/xml" 
-            ? XDocument.Parse(requestText) 
+        XDocument requestBody = requestText.Length > 0 && context.Request.Headers.ContentType == "application/xml"
+            ? XDocument.Parse(requestText)
             : new XDocument();
 
         IEnumerable<string> requestedProperties = requestBody.Descendants(ns + "prop").DescendantNodes().Select(k => ((XElement)k).Name.LocalName);
@@ -178,7 +178,7 @@ public class WebDavMiddleware
             : PropFindFile(ctx, appId, path, ns, urlBase, requestedProperties);
     }
 
-    string PropFindFile(ICoreDataContext ctx, int appId, Path path, XNamespace ns, string urlBase, IEnumerable<string> requestedProperties)
+    private string PropFindFile(ICoreDataContext ctx, int appId, Path path, XNamespace ns, string urlBase, IEnumerable<string> requestedProperties)
     {
         try
         {
@@ -203,7 +203,7 @@ public class WebDavMiddleware
 
     private static string PropFindFolder(HttpContext context, ICoreDataContext ctx, int appId, Path path, XNamespace ns, string urlBase, IEnumerable<string> requestedProperties)
     {
-        Folder folder = path.FullPath != "" 
+        Folder folder = path.FullPath != ""
             ? ctx.GetAll<Folder>(false)
                 .Include(f => f.SubFolders)
                 .Include(f => f.Files)
@@ -222,8 +222,8 @@ public class WebDavMiddleware
 
         if (int.Parse(context.Request.Headers["Depth"]) > 0)
         {
-            folders = [.. ctx.GetAll<Folder>(false).Where(f => f.AppId == appId && (path.FullPath != "" 
-                ? f.Parent.Path.Equals(path.FullPath, StringComparison.CurrentCultureIgnoreCase) 
+            folders = [.. ctx.GetAll<Folder>(false).Where(f => f.AppId == appId && (path.FullPath != ""
+                ? f.Parent.Path.Equals(path.FullPath, StringComparison.CurrentCultureIgnoreCase)
                 : f.ParentId == null))
                     .Include(k => k.Files)
                     .Include(k => k.SubFolders)
@@ -235,9 +235,7 @@ public class WebDavMiddleware
         }
 
         if (folder != null)
-        {
             folders.Insert(0, folder);
-        }
 
         IEnumerable<XElement> response = folders
             .Select(k => k.ToWebDavResponse(urlBase, ns, requestedProperties))
@@ -250,7 +248,7 @@ public class WebDavMiddleware
         return responsePropXml;
     }
 
-    static string GetHeaderValue(HttpContext context, string key) => context.Request.Headers[key][0];
+    private static string GetHeaderValue(HttpContext context, string key) => context.Request.Headers[key][0];
 
 
     protected async Task Respond(HttpContext context, string content, IEnumerable<KeyValuePair<string, string>> headers)

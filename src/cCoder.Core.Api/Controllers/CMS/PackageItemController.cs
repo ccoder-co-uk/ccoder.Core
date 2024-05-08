@@ -2,11 +2,10 @@
 using cCoder.Core.Objects.Entities.Packaging;
 using cCoder.Core.Services;
 
-namespace cCoder.Core.Api.Controllers
+namespace cCoder.Core.Api.Controllers.CMS;
+
+public class PackageItemController : CoreEntityODataController<PackageItem, Guid>
 {
-    public class PackageItemController : CoreEntityODataController<PackageItem, Guid>
-    {
-        public PackageItemController(ICoreService<PackageItem> service, ICoreAuthInfo auth, ILogger<PackageItemController> log) 
-            : base(service, auth, log) { }
-    }
+    public PackageItemController(ICoreService<PackageItem> service, ICoreAuthInfo auth, ILogger<PackageItemController> log)
+        : base(service, auth, log) { }
 }

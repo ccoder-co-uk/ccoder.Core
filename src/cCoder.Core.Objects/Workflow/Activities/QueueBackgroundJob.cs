@@ -1,26 +1,24 @@
 ﻿using cCoder.Core.Objects.Entities.Planning;
 using cCoder.Core.Objects.Extensions;
-using System.Threading.Tasks;
 
-namespace cCoder.Core.Objects.Workflow.Activities
+namespace cCoder.Core.Objects.Workflow.Activities;
+
+public class QueueBackgroundJob : CoreActivity
 {
-    public class QueueBackgroundJob : CoreActivity
+    public object JobData { get; set; }
+    public string OperationName { get; set; }
+
+    public override async Task Execute()
     {
-        public object JobData { get; set; }
-        public string OperationName { get; set; }
+        using HttpClient api = GetHttpClient();
 
-        public override async Task Execute()
+        BackgroundJob job = new()
         {
-            using var api = GetHttpClient();
+            AppId = AppId,
+            JobJson = JobData.ToJson(),
+            OperationName = OperationName
+        };
 
-            var job = new BackgroundJob
-            {
-                AppId = AppId,
-                JobJson = JobData.ToJson(),
-                OperationName = OperationName
-            };
-
-            _ = await api.AddAsync("Core/BackgroundJob", job);
-        }
+        _ = await api.AddAsync("Core/BackgroundJob", job);
     }
 }

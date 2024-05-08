@@ -1,7 +1,4 @@
-﻿using System;
+﻿namespace cCoder.Core.Objects.Attributes;
 
-namespace cCoder.Core.Objects
-{
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false)]
-    public sealed class DontPrivilegeAttribute : Attribute { }
-}
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false)]
+public sealed class DontPrivilegeAttribute : Attribute { }

@@ -1,15 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
+﻿using System.Reflection;
 
-namespace cCoder.Core
+namespace cCoder.Core;
+
+public static partial class TypeHelper
 {
-    public static partial class TypeHelper
+    private class AssemblyComparer : IEqualityComparer<Assembly>
     {
-        class AssemblyComparer : IEqualityComparer<Assembly>
-        {
-            public bool Equals(Assembly x, Assembly y) => x.FullName == y.FullName;
+        public bool Equals(Assembly x, Assembly y) => x.FullName == y.FullName;
 
-            public int GetHashCode(Assembly obj) => base.GetHashCode();
-        }
+        public int GetHashCode(Assembly obj) => base.GetHashCode();
     }
 }

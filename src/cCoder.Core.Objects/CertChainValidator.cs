@@ -13,7 +13,7 @@ public static class CertChainValidator
         return (sslPolicyErrors & SslPolicyErrors.RemoteCertificateChainErrors) != 0 && AnalyseChain(certificate, chain);
     }
 
-    static bool AnalyseChain(X509Certificate certificate, X509Chain chain)
+    private static bool AnalyseChain(X509Certificate certificate, X509Chain chain)
     {
         if (chain != null && chain.ChainStatus != null)
         {

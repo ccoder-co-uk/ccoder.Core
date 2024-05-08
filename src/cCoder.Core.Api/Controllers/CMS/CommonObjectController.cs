@@ -5,32 +5,31 @@ using cCoder.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 
-namespace cCoder.Core.Api.Controllers
+namespace cCoder.Core.Api.Controllers.CMS;
+
+public class CommonObjectController : CoreEntityODataController<CommonObject, int>
 {
-    public class CommonObjectController : CoreEntityODataController<CommonObject, int>
-    {
-        protected new ICommonObjectService Service => 
-            base.Service as ICommonObjectService;
+    protected new ICommonObjectService Service =>
+        base.Service as ICommonObjectService;
 
-        public CommonObjectController(ICommonObjectService service, ICoreAuthInfo auth, ILogger<CommonObjectController> log) 
-            : base(service, auth, log) { }
+    public CommonObjectController(ICommonObjectService service, ICoreAuthInfo auth, ILogger<CommonObjectController> log)
+        : base(service, auth, log) { }
 
-        [HttpGet]
-        [EnableQuery(
-            AllowedArithmeticOperators = AllowedArithmeticOperators.All,
-            AllowedFunctions = AllowedFunctions.All,
-            AllowedLogicalOperators = AllowedLogicalOperators.All,
-            AllowedQueryOptions = AllowedQueryOptions.All,
-            MaxAnyAllExpressionDepth = 6,
-            MaxExpansionDepth = 6
-        )]
-        public IActionResult Latest(string type) => Ok(Service.Latest(type));
+    [HttpGet]
+    [EnableQuery(
+        AllowedArithmeticOperators = AllowedArithmeticOperators.All,
+        AllowedFunctions = AllowedFunctions.All,
+        AllowedLogicalOperators = AllowedLogicalOperators.All,
+        AllowedQueryOptions = AllowedQueryOptions.All,
+        MaxAnyAllExpressionDepth = 6,
+        MaxExpansionDepth = 6
+    )]
+    public IActionResult Latest(string type) => Ok(Service.Latest(type));
 
-        [HttpPost]
-        public async Task<IActionResult> Import([FromBody] ODataCollection<CommonObject> items) => 
-            ModelState.IsValid 
-                ? Ok(await Service.Import(items.Value)) 
-                : BadRequest(ModelState);
+    [HttpPost]
+    public async Task<IActionResult> Import([FromBody] ODataCollection<CommonObject> items) =>
+        ModelState.IsValid
+            ? Ok(await Service.Import(items.Value))
+            : BadRequest(ModelState);
 
-    }
 }

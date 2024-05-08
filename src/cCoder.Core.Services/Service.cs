@@ -1,40 +1,38 @@
 ﻿using cCoder.Core.Objects;
 using cCoder.Core.Objects.Dtos;
-using System;
 
-namespace cCoder.Core.Services
+namespace cCoder.Core.Services;
+
+/// <summary>
+/// Base class for all business services 
+/// </summary>
+public abstract class Service<TUser> : IService
 {
-    /// <summary>
-    /// Base class for all business services 
-    /// </summary>
-    public abstract class Service<TUser> : IService
+    public ICrypto<Signature> Crypto { get; set; }
+
+    protected IDataContext<TUser> Db { get; private set; }
+
+    public ICoreAuthInfo AuthInfo => Db.AuthInfo;
+
+    protected Service(IDataContext<TUser> db)
     {
-        public ICrypto<Signature> Crypto { get; set; }
+        Db = db;
+    }
 
-        protected IDataContext<TUser> Db { get; private set; }
+    public void SetAuth(ICoreAuthInfo auth) => Db.SetAuth(auth);
 
-        public ICoreAuthInfo AuthInfo => Db.AuthInfo;
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
 
-        protected Service(IDataContext<TUser> db)
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing && Db != null)
         {
-            Db = db;
-        }
-
-        public void SetAuth(ICoreAuthInfo auth) => Db.SetAuth(auth);
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing && Db != null)
-            {
-                Db.Dispose();
-                Db = null;
-            }
+            Db.Dispose();
+            Db = null;
         }
     }
 }

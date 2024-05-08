@@ -1,28 +1,25 @@
 ﻿using cCoder.Core.Objects;
 using cCoder.Core.Objects.Entities.Planning;
-using System.Linq;
 using System.Security;
-using System.Threading.Tasks;
 
-namespace cCoder.Core.Services
+namespace cCoder.Core.Services.Planning;
+
+public class CalendarService : CoreService<Calendar>
 {
-    public class CalendarService : CoreService<Calendar>
+    public CalendarService(ICoreDataContext db) : base(db) { }
+
+    public override async Task DeleteAsync(object id)
     {
-        public CalendarService(ICoreDataContext db) : base(db) { }
+        Calendar calendar = Get(id);
 
-        public override async Task DeleteAsync(object id)
-        {
-            var calendar = Get(id);
+        if (!User.Can(calendar.AppId, "calendar_delete"))
+            throw new SecurityException("Access Denied!");
 
-            if (!User.Can(calendar.AppId, "calendar_delete"))
-                throw new SecurityException("Access Denied!");
+        CalendarEvent[] events = Db.GetAll<CalendarEvent>(false)
+            .Where(ce => ce.CalendarId == calendar.Id)
+            .ToArray();
 
-            var events = Db.GetAll<CalendarEvent>(false)
-                .Where(ce => ce.CalendarId == calendar.Id)
-                .ToArray();
-
-            await Db.DeleteAllAsync(events);
-            await Db.DeleteAsync(calendar);
-        }
+        await Db.DeleteAllAsync(events);
+        await Db.DeleteAsync(calendar);
     }
 }

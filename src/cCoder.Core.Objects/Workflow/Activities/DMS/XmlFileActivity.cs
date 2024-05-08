@@ -1,17 +1,15 @@
 ﻿using cCoder.Core.Objects.Dtos.Workflow;
-using System.Threading.Tasks;
 
-namespace cCoder.Core.Objects.Workflow.Activities.DMS
+namespace cCoder.Core.Objects.Workflow.Activities.DMS;
+
+public class XmlFileActivity : DMSActivity
 {
-    public class XmlFileActivity : DMSActivity
-    {
-        [IgnoreWhenFlowComplete]
-        public dynamic Result { get; set; }
+    [IgnoreWhenFlowComplete]
+    public dynamic Result { get; set; }
 
-        public override async Task Execute()
-        {
-            using System.Net.Http.HttpClient api = GetHttpClient();
-            Result = Data.ParseXml<dynamic>(await GetFileContents(api));
-        }
+    public override async Task Execute()
+    {
+        using System.Net.Http.HttpClient api = GetHttpClient();
+        Result = Data.ParseXml<dynamic>(await GetFileContents(api));
     }
 }

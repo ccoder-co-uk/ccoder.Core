@@ -1,7 +1,6 @@
-﻿namespace cCoder.Core.Objects.Dtos
+﻿namespace cCoder.Core.Objects.Dtos;
+
+public class DetailedResult<T, TDetails> : Result<T>
 {
-    public class DetailedResult<T, TDetails> : Result<T>
-    {
-        public TDetails Details { get; set; }
-    }
+    public TDetails Details { get; set; }
 }

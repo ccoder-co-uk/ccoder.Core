@@ -1,8 +1,6 @@
-﻿
-namespace cCoder.Core
+﻿namespace cCoder.Core.Data;
+
+public interface ICoreEventManager
 {
-    public interface ICoreEventManager
-    {
-        Task RaiseEvent<T>(T forObject, string name) where T : class;
-    }
+    Task RaiseEvent<T>(T forObject, string name) where T : class;
 }

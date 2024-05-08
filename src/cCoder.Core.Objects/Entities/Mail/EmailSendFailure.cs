@@ -1,24 +1,23 @@
-﻿using System;
+﻿using cCoder.Core.Objects.Attributes;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace cCoder.Core.Objects.Entities.Mail
+namespace cCoder.Core.Objects.Entities.Mail;
+
+[Table("EmailSendFailures", Schema = "Mail")]
+[Parent("Email")]
+public class EmailSendFailure
 {
-    [Table("EmailSendFailures", Schema = "Mail")]
-    [Parent("Email")]
-    public class EmailSendFailure
-    {
-        [Key]
-        public int Id { get; set; }
+    [Key]
+    public int Id { get; set; }
 
-        [ForeignKey("Email")]
-        public int EmailId { get; set; }
+    [ForeignKey("Email")]
+    public int EmailId { get; set; }
 
-        public DateTimeOffset AttemptedOn { get; set; }
+    public DateTimeOffset AttemptedOn { get; set; }
 
-        [Required]
-        public string FailureReason { get; set; }
+    [Required]
+    public string FailureReason { get; set; }
 
-        public virtual QueuedEmail Email { get; set; }
-    }
+    public virtual QueuedEmail Email { get; set; }
 }
