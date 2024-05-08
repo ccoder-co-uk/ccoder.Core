@@ -3,34 +3,33 @@ using cCoder.Core.Objects.Entities.Security;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace cCoder.Core.Objects.Entities.Mail
+namespace cCoder.Core.Objects.Entities.Mail;
+
+public class Email
 {
-    public class Email
-    {
-        [Key]
-        public int Id { get; set; }
+    [Key]
+    public int Id { get; set; }
 
-        [ForeignKey("App")]
-        public int AppId { get; set; }
+    [ForeignKey("App")]
+    public int AppId { get; set; }
 
-        [ForeignKey("SentBy")]
-        public string SentByUserId { get; set; }
+    [ForeignKey("SentBy")]
+    public string SentByUserId { get; set; }
 
-        [Required]
-        public string Subject { get; set; }
+    [Required]
+    public string Subject { get; set; }
 
-        [Required]
-        public string Content { get; set; }
+    [Required]
+    public string Content { get; set; }
 
-        [Required]
-        public string To { get; set; }
+    [Required]
+    public string To { get; set; }
 
-        public string CC { get; set; }
+    public string CC { get; set; }
 
-        public bool IsBodyHtml { get; set; } = true;
+    public bool IsBodyHtml { get; set; } = true;
 
-        public virtual App App { get; set; }
+    public virtual App App { get; set; }
 
-        public virtual User SentBy { get; set; }
-    }
+    public virtual User SentBy { get; set; }
 }

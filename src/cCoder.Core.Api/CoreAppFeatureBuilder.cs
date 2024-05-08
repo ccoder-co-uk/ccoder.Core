@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Cors.Infrastructure;
+﻿using cCoder.Core.Api.Middleware;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using System.Text.RegularExpressions;
-using Web.Api.Middleware;
 
 namespace cCoder.Core.Api;
 
@@ -76,7 +76,7 @@ public partial class CoreAppFeatureBuilder(WebApplication app, ILogger log = nul
         return this;
     }
 
-    static Task RemovePlatformHeaders(HttpContext context)
+    private static Task RemovePlatformHeaders(HttpContext context)
     {
         if (context.Request.Query["edit"] != "true")
             context.Response.Headers.Append("X-Frame-Options", "DENY");

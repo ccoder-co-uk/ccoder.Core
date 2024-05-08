@@ -1,10 +1,8 @@
 ﻿using cCoder.Core.Objects.Entities.Security;
-using cCoder.Core.Services;
 
-namespace cCoder.Core.Packaging.Importers
+namespace cCoder.Core.Services.Packaging.Importers;
+
+public abstract class CoreImporter<T> : Importer<T, User> where T : class
 {
-    public abstract class CoreImporter<T> : Importer<T, User> where T : class
-    {
-        protected CoreImporter(ICoreService<T> service, string type) : base(service, type) { }
-    }
+    protected CoreImporter(ICoreService<T> service, string type) : base(service, type) { }
 }

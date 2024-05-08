@@ -1,4 +1,5 @@
-﻿using cCoder.Core.Objects.Dtos.Workflow;
+﻿using cCoder.Core.Objects.Attributes;
+using cCoder.Core.Objects.Dtos.Workflow;
 using cCoder.Core.Objects.Extensions;
 using Newtonsoft.Json;
 using System.Net;
@@ -23,7 +24,7 @@ public abstract class ApiActivity : Activity
     {
         HttpClient httpClient = new HttpClient(new HttpClientHandler
         {
-            AutomaticDecompression = (DecompressionMethods.GZip | DecompressionMethods.Deflate),
+            AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
             ServerCertificateCustomValidationCallback = CertChainValidator.ValidateCertChain
         }).WithBaseUri(BaseUrl);
 

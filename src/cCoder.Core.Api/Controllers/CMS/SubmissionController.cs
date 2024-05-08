@@ -2,11 +2,10 @@
 using cCoder.Core.Objects.Entities.CMS;
 using cCoder.Core.Services;
 
-namespace cCoder.Core.Api.Controllers
+namespace cCoder.Core.Api.Controllers.CMS;
+
+public class SubmissionController : CoreEntityODataController<Submission, Guid>
 {
-    public class SubmissionController : CoreEntityODataController<Submission, Guid>
-    {
-        public SubmissionController(ICoreService<Submission> service, ICoreAuthInfo auth, ILogger<SubmissionController> log) 
-            : base(service, auth, log) { }
-    }
+    public SubmissionController(ICoreService<Submission> service, ICoreAuthInfo auth, ILogger<SubmissionController> log)
+        : base(service, auth, log) { }
 }

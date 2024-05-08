@@ -1,9 +1,8 @@
 ﻿using cCoder.Core.Objects;
 
-namespace Web
+namespace Web;
+
+public class CoreAuthInfo : ICoreAuthInfo
 {
-    public class CoreAuthInfo : ICoreAuthInfo
-    {
-        public string SSOUserId { get; set; }
-    }
+    public string SSOUserId { get; set; }
 }

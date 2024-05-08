@@ -1,12 +1,12 @@
-﻿using System;
+﻿namespace cCoder.Core.Objects.Attributes;
 
-namespace cCoder.Core.Objects
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
+public sealed class PortalAdminRequiredToAttribute : Attribute
 {
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-    public sealed class PortalAdminRequiredToAttribute : Attribute
-    {
-        public string PrivKey { get; set; }
+    public string PrivKey { get; set; }
 
-        public PortalAdminRequiredToAttribute(string privKey) => PrivKey = privKey;
+    public PortalAdminRequiredToAttribute(string privKey)
+    {
+        PrivKey = privKey;
     }
 }

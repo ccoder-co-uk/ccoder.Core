@@ -4,26 +4,25 @@ using cCoder.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 
-namespace cCoder.Core.Api.Controllers
+namespace cCoder.Core.Api.Controllers.Security;
+
+public class UserController : CoreEntityODataController<User, string>
 {
-    public class UserController : CoreEntityODataController<User, string>
-    {
-        public new ICoreService<User> Service => 
-            base.Service as ICoreService<User>;
+    public new ICoreService<User> Service =>
+        base.Service as ICoreService<User>;
 
-        public UserController(ICoreService<User> service, ICoreAuthInfo auth, ILogger<UserController> log) 
-            : base(service, auth, log) { }
+    public UserController(ICoreService<User> service, ICoreAuthInfo auth, ILogger<UserController> log)
+        : base(service, auth, log) { }
 
-        [HttpGet]
-        [EnableQuery(
-            AllowedArithmeticOperators = AllowedArithmeticOperators.All,
-            AllowedFunctions = AllowedFunctions.All,
-            AllowedLogicalOperators = AllowedLogicalOperators.All,
-            AllowedQueryOptions = AllowedQueryOptions.All,
-            MaxAnyAllExpressionDepth = 6,
-            MaxExpansionDepth = 6
-        )]
-        public IActionResult Me() => 
-            Ok(Service.User);
-    }
+    [HttpGet]
+    [EnableQuery(
+        AllowedArithmeticOperators = AllowedArithmeticOperators.All,
+        AllowedFunctions = AllowedFunctions.All,
+        AllowedLogicalOperators = AllowedLogicalOperators.All,
+        AllowedQueryOptions = AllowedQueryOptions.All,
+        MaxAnyAllExpressionDepth = 6,
+        MaxExpansionDepth = 6
+    )]
+    public IActionResult Me() =>
+        Ok(Service.User);
 }

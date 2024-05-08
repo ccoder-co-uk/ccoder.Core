@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace cCoder.Core.Migrations
+namespace cCoder.Core.Migrations;
+
+public partial class AddPermissionsComputeFunctions : Migration
 {
-    public partial class AddPermissionsComputeFunctions : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.Sql(@"
+        migrationBuilder.Sql(@"
 CREATE FUNCTION [DMS].[GetFolderPrivList] 
 (	
 	@UserId nvarchar(450),
@@ -45,7 +45,7 @@ BEGIN
 END
             ");
 
-            migrationBuilder.Sql(@"
+        migrationBuilder.Sql(@"
 CREATE FUNCTION [CMS].[GetPagePrivList] 
 (	@UserId nvarchar(450),
 	@PageId int
@@ -82,12 +82,11 @@ BEGIN
 	RETURN
 END
             ");
-        }
+    }
 
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.Sql(@"IF OBJECT_ID (N'CMS.GetPagePrivList', N'TF') IS NOT NULL DROP FUNCTION [CMS].[GetPagePrivList]");
-            migrationBuilder.Sql(@"IF OBJECT_ID (N'DMS.GetFolderPrivList', N'TF') IS NOT NULL DROP FUNCTION [DMS].[GetFolderPrivList]");
-        }
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.Sql(@"IF OBJECT_ID (N'CMS.GetPagePrivList', N'TF') IS NOT NULL DROP FUNCTION [CMS].[GetPagePrivList]");
+        migrationBuilder.Sql(@"IF OBJECT_ID (N'DMS.GetFolderPrivList', N'TF') IS NOT NULL DROP FUNCTION [DMS].[GetFolderPrivList]");
     }
 }
