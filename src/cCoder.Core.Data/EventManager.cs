@@ -4,7 +4,7 @@ using cCoder.Core.Objects.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace cCoder.Core;
+namespace cCoder.Core.Data;
 
 public abstract class EventManager
 {
@@ -65,21 +65,21 @@ public abstract class EventManager
 
             IEnumerable<Task> workload = subs
                 .Select(s => QueueHandlingFlowInstanceSafely(s, forObject));
-            
+
             await Task.WhenAll(workload);
         }
     }
 
-    public virtual async Task RaiseEvents(object[] forObjects, string name) => 
+    public virtual async Task RaiseEvents(object[] forObjects, string name) =>
         await Task.WhenAll(forObjects.Select(o => RaiseEvent(o, name)));
 
-    async Task QueueHandlingFlowInstanceSafely<T>(WorkflowEvent eventSub, T source)
+    private async Task QueueHandlingFlowInstanceSafely<T>(WorkflowEvent eventSub, T source)
     {
         try
         {
             await eventSub.Flow.QueueNewInstance(Core, eventSub.ExecuteAsUser, source.ToJson(1));
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
             Log.LogWarning($"Exception thrown whilst raising event for object of type {typeof(T).Name}:\n{ex.Message}\n{ex.StackTrace}");
             Log.LogWarning($"Failed to queue new instance handle for subscription:\n\tSubscriptionId: {eventSub.Id}\n\tFlowId: {eventSub.FlowId}\n\tSource:\n {source.ToJson(1)}");

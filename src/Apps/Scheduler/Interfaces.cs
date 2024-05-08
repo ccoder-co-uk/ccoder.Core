@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Scheduler
+namespace Scheduler;
+
+public interface IScheduledOperationRunner : IDisposable
 {
-    public interface IScheduledOperationRunner : IDisposable
-    {
-        Task Run();
-    }
+    Task Run();
 }

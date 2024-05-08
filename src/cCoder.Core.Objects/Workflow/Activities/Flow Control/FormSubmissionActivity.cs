@@ -1,18 +1,15 @@
-﻿using System.Threading.Tasks;
+﻿namespace cCoder.Core.Objects.Workflow.Activities;
 
-namespace cCoder.Core.Objects.Workflow.Activities
+public class FormSubmissionActivity<T> : Activity
 {
-    public class FormSubmissionActivity<T> : Activity
-    {
-        public string AuthToken { get; set; }
-        public T Data { get; set; }
+    public string AuthToken { get; set; }
+    public T Data { get; set; }
 
-        public override async Task ExecuteInternal(IWorkflowContext context)
+    public override async Task ExecuteInternal(IWorkflowContext context)
+    {
+        if (Data != null)
         {
-            if (Data != null)
-            {
-                await base.ExecuteInternal(context);
-            }
+            await base.ExecuteInternal(context);
         }
     }
 }

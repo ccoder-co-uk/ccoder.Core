@@ -5,21 +5,21 @@ using Microsoft.Extensions.Logging;
 
 using File = cCoder.Core.Objects.Entities.DMS.File;
 
-namespace cCoder.Core.Data
+namespace cCoder.Core.Data;
+
+public partial class CoreDataContext
 {
-    public partial class CoreDataContext
+    // Document Management
+    public virtual DbSet<Folder> Folders { get; set; }
+    public virtual DbSet<File> Files { get; set; }
+    public virtual DbSet<FileContent> FileContents { get; set; }
+
+    // Join entities
+    public virtual DbSet<FolderRole> FolderRoles { get; set; }
+
+    public async Task DeleteFolder(Guid folderId)
     {
-        // Document Management
-        public virtual DbSet<Folder> Folders { get; set; }
-        public virtual DbSet<File> Files { get; set; }
-        public virtual DbSet<FileContent> FileContents { get; set; }
-
-        // Join entities
-        public virtual DbSet<FolderRole> FolderRoles { get; set; }
-
-        public async Task DeleteFolder(Guid folderId)
-        {
-            string script = @"
+        string script = @"
 DECLARE @tree TABLE
 (
 	Id uniqueidentifier, 
@@ -55,18 +55,17 @@ BEGIN
 END
             ";
 
-            log.LogDebug($"Dropping folder {folderId}");
-            Database.SetCommandTimeout((int)TimeSpan.FromMinutes(1).TotalSeconds);
-            _ = await Database.ExecuteSqlRawAsync(script, folderId);
-            Database.SetCommandTimeout((int)TimeSpan.FromMinutes(5).TotalSeconds);
-            log.LogDebug($"Folder {folderId} Drop complete!");
-        }
+        log.LogDebug($"Dropping folder {folderId}");
+        Database.SetCommandTimeout((int)TimeSpan.FromMinutes(1).TotalSeconds);
+        _ = await Database.ExecuteSqlRawAsync(script, folderId);
+        Database.SetCommandTimeout((int)TimeSpan.FromMinutes(5).TotalSeconds);
+        log.LogDebug($"Folder {folderId} Drop complete!");
+    }
 
-        public void DeleteFile(Guid fileId)
-        {
-            log.LogDebug($"Dropping file {fileId}");
-            _ = Database.ExecuteSqlRaw($"DELETE FROM [DMS].[FileContents] WHERE FileId = @p0; DELETE FROM [DMS].[Files] WHERE Id = @p0;", new object[] { fileId });
-            log.LogDebug($"File {fileId} drop complete");
-        }
+    public void DeleteFile(Guid fileId)
+    {
+        log.LogDebug($"Dropping file {fileId}");
+        _ = Database.ExecuteSqlRaw($"DELETE FROM [DMS].[FileContents] WHERE FileId = @p0; DELETE FROM [DMS].[Files] WHERE Id = @p0;", new object[] { fileId });
+        log.LogDebug($"File {fileId} drop complete");
     }
 }

@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace cCoder.Core.Migrations
+namespace cCoder.Core.Migrations;
+
+public partial class AddRequiredAttributes : Migration
 {
-    public partial class AddRequiredAttributes : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.Sql(@"
+        migrationBuilder.Sql(@"
                                     UPDATE WorkFlow.Workflows SET CreatedOn=SYSUTCDATETIME() WHERE CreatedBy IS NULL;
                                     UPDATE WorkFlow.BusinessProcesses SET CreatedOn=SYSUTCDATETIME() WHERE CreatedBy IS NULL;
                                     UPDATE CMS.Templates SET CreatedOn=SYSUTCDATETIME() WHERE CreatedBy IS NULL;
@@ -37,274 +37,273 @@ namespace cCoder.Core.Migrations
                                     UPDATE CMS.Resources SET LastUpdatedBy=CreatedBy WHERE LastUpdatedBy IS NULL;
                                     UPDATE CMS.Pages SET LastUpdatedBy=CreatedBy WHERE LastUpdatedBy IS NULL");
 
-            migrationBuilder.AlterColumn<string>(
-                name: "CreatedBy",
-                schema: "Workflow",
-                table: "WorkFlows",
-                maxLength: 100,
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(max)",
-                oldNullable: true);
+        migrationBuilder.AlterColumn<string>(
+            name: "CreatedBy",
+            schema: "Workflow",
+            table: "WorkFlows",
+            maxLength: 100,
+            nullable: false,
+            oldClrType: typeof(string),
+            oldType: "nvarchar(max)",
+            oldNullable: true);
 
-            migrationBuilder.AlterColumn<string>(
-                name: "CreatedBy",
-                schema: "Workflow",
-                table: "BusinessProcesses",
-                maxLength: 100,
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(max)",
-                oldNullable: true);
-            migrationBuilder.AlterColumn<string>(
-                name: "CreatedBy",
-                schema: "CMS",
-                table: "Templates",
-                maxLength: 100,
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(max)",
-                oldNullable: true);
-            migrationBuilder.AlterColumn<string>(
-                name: "CreatedBy",
-                schema: "CMS",
-                table: "Resources",
-                maxLength: 100,
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(max)",
-                oldNullable: true);
-            migrationBuilder.AlterColumn<string>(
-                name: "CreatedBy",
-                schema: "CMS",
-                table: "Pages",
-                maxLength: 100,
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(max)",
-                oldNullable: true);
+        migrationBuilder.AlterColumn<string>(
+            name: "CreatedBy",
+            schema: "Workflow",
+            table: "BusinessProcesses",
+            maxLength: 100,
+            nullable: false,
+            oldClrType: typeof(string),
+            oldType: "nvarchar(max)",
+            oldNullable: true);
+        migrationBuilder.AlterColumn<string>(
+            name: "CreatedBy",
+            schema: "CMS",
+            table: "Templates",
+            maxLength: 100,
+            nullable: false,
+            oldClrType: typeof(string),
+            oldType: "nvarchar(max)",
+            oldNullable: true);
+        migrationBuilder.AlterColumn<string>(
+            name: "CreatedBy",
+            schema: "CMS",
+            table: "Resources",
+            maxLength: 100,
+            nullable: false,
+            oldClrType: typeof(string),
+            oldType: "nvarchar(max)",
+            oldNullable: true);
+        migrationBuilder.AlterColumn<string>(
+            name: "CreatedBy",
+            schema: "CMS",
+            table: "Pages",
+            maxLength: 100,
+            nullable: false,
+            oldClrType: typeof(string),
+            oldType: "nvarchar(max)",
+            oldNullable: true);
 
-            migrationBuilder.AlterColumn<string>(
-                name: "CreatedBy",
-                schema: "CMS",
-                table: "Layouts",
-                maxLength: 100,
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(max)",
-                oldNullable: true);
+        migrationBuilder.AlterColumn<string>(
+            name: "CreatedBy",
+            schema: "CMS",
+            table: "Layouts",
+            maxLength: 100,
+            nullable: false,
+            oldClrType: typeof(string),
+            oldType: "nvarchar(max)",
+            oldNullable: true);
 
-            migrationBuilder.AlterColumn<string>(
-                name: "CreatedBy",
-                schema: "CMS",
-                table: "Components",
-                maxLength: 100,
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(max)",
-                oldNullable: true);
-
-
-            migrationBuilder.AlterColumn<string>(
-                name: "LastUpdatedBy",
-                schema: "Workflow",
-                table: "WorkFlows",
-                maxLength: 100,
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(max)",
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "LastUpdatedBy",
-                schema: "Workflow",
-                table: "BusinessProcesses",
-                maxLength: 100,
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(max)",
-                oldNullable: true);
+        migrationBuilder.AlterColumn<string>(
+            name: "CreatedBy",
+            schema: "CMS",
+            table: "Components",
+            maxLength: 100,
+            nullable: false,
+            oldClrType: typeof(string),
+            oldType: "nvarchar(max)",
+            oldNullable: true);
 
 
-            migrationBuilder.AlterColumn<string>(
-                name: "LastUpdatedBy",
-                schema: "CMS",
-                table: "Templates",
-                maxLength: 100,
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(max)",
-                oldNullable: true);
+        migrationBuilder.AlterColumn<string>(
+            name: "LastUpdatedBy",
+            schema: "Workflow",
+            table: "WorkFlows",
+            maxLength: 100,
+            nullable: false,
+            oldClrType: typeof(string),
+            oldType: "nvarchar(max)",
+            oldNullable: true);
 
-            migrationBuilder.AlterColumn<string>(
-                name: "LastUpdatedBy",
-                schema: "CMS",
-                table: "Resources",
-                maxLength: 100,
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(max)",
-                oldNullable: true);
+        migrationBuilder.AlterColumn<string>(
+            name: "LastUpdatedBy",
+            schema: "Workflow",
+            table: "BusinessProcesses",
+            maxLength: 100,
+            nullable: false,
+            oldClrType: typeof(string),
+            oldType: "nvarchar(max)",
+            oldNullable: true);
 
-            migrationBuilder.AlterColumn<string>(
-                name: "LastUpdatedBy",
-                schema: "CMS",
-                table: "Pages",
-                maxLength: 100,
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(max)",
-                oldNullable: true);
 
-            migrationBuilder.AlterColumn<string>(
-                name: "LastUpdatedBy",
-                schema: "CMS",
-                table: "Layouts",
-                maxLength: 100,
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(max)",
-                oldNullable: true);
+        migrationBuilder.AlterColumn<string>(
+            name: "LastUpdatedBy",
+            schema: "CMS",
+            table: "Templates",
+            maxLength: 100,
+            nullable: false,
+            oldClrType: typeof(string),
+            oldType: "nvarchar(max)",
+            oldNullable: true);
 
-            migrationBuilder.AlterColumn<string>(
-                name: "LastUpdatedBy",
-                schema: "CMS",
-                table: "Components",
-                maxLength: 100,
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(max)",
-                oldNullable: true);
+        migrationBuilder.AlterColumn<string>(
+            name: "LastUpdatedBy",
+            schema: "CMS",
+            table: "Resources",
+            maxLength: 100,
+            nullable: false,
+            oldClrType: typeof(string),
+            oldType: "nvarchar(max)",
+            oldNullable: true);
 
-        }
+        migrationBuilder.AlterColumn<string>(
+            name: "LastUpdatedBy",
+            schema: "CMS",
+            table: "Pages",
+            maxLength: 100,
+            nullable: false,
+            oldClrType: typeof(string),
+            oldType: "nvarchar(max)",
+            oldNullable: true);
 
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.AlterColumn<string>(
-                name: "LastUpdatedBy",
-                schema: "Workflow",
-                table: "WorkFlows",
-                type: "nvarchar(max)",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldMaxLength: 100);
+        migrationBuilder.AlterColumn<string>(
+            name: "LastUpdatedBy",
+            schema: "CMS",
+            table: "Layouts",
+            maxLength: 100,
+            nullable: false,
+            oldClrType: typeof(string),
+            oldType: "nvarchar(max)",
+            oldNullable: true);
 
-            migrationBuilder.AlterColumn<string>(
-                name: "CreatedBy",
-                schema: "Workflow",
-                table: "WorkFlows",
-                type: "nvarchar(max)",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldMaxLength: 100);
+        migrationBuilder.AlterColumn<string>(
+            name: "LastUpdatedBy",
+            schema: "CMS",
+            table: "Components",
+            maxLength: 100,
+            nullable: false,
+            oldClrType: typeof(string),
+            oldType: "nvarchar(max)",
+            oldNullable: true);
 
-            migrationBuilder.AlterColumn<string>(
-                name: "LastUpdatedBy",
-                schema: "Workflow",
-                table: "BusinessProcesses",
-                type: "nvarchar(max)",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldMaxLength: 100);
+    }
 
-            migrationBuilder.AlterColumn<string>(
-                name: "CreatedBy",
-                schema: "Workflow",
-                table: "BusinessProcesses",
-                type: "nvarchar(max)",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldMaxLength: 100);
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.AlterColumn<string>(
+            name: "LastUpdatedBy",
+            schema: "Workflow",
+            table: "WorkFlows",
+            type: "nvarchar(max)",
+            nullable: true,
+            oldClrType: typeof(string),
+            oldMaxLength: 100);
 
-            migrationBuilder.AlterColumn<string>(
-                name: "LastUpdatedBy",
-                schema: "CMS",
-                table: "Templates",
-                type: "nvarchar(max)",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldMaxLength: 100);
+        migrationBuilder.AlterColumn<string>(
+            name: "CreatedBy",
+            schema: "Workflow",
+            table: "WorkFlows",
+            type: "nvarchar(max)",
+            nullable: true,
+            oldClrType: typeof(string),
+            oldMaxLength: 100);
 
-            migrationBuilder.AlterColumn<string>(
-                name: "CreatedBy",
-                schema: "CMS",
-                table: "Templates",
-                type: "nvarchar(max)",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldMaxLength: 100);
+        migrationBuilder.AlterColumn<string>(
+            name: "LastUpdatedBy",
+            schema: "Workflow",
+            table: "BusinessProcesses",
+            type: "nvarchar(max)",
+            nullable: true,
+            oldClrType: typeof(string),
+            oldMaxLength: 100);
 
-            migrationBuilder.AlterColumn<string>(
-                name: "LastUpdatedBy",
-                schema: "CMS",
-                table: "Resources",
-                type: "nvarchar(max)",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldMaxLength: 100);
+        migrationBuilder.AlterColumn<string>(
+            name: "CreatedBy",
+            schema: "Workflow",
+            table: "BusinessProcesses",
+            type: "nvarchar(max)",
+            nullable: true,
+            oldClrType: typeof(string),
+            oldMaxLength: 100);
 
-            migrationBuilder.AlterColumn<string>(
-                name: "CreatedBy",
-                schema: "CMS",
-                table: "Resources",
-                type: "nvarchar(max)",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldMaxLength: 100);
+        migrationBuilder.AlterColumn<string>(
+            name: "LastUpdatedBy",
+            schema: "CMS",
+            table: "Templates",
+            type: "nvarchar(max)",
+            nullable: true,
+            oldClrType: typeof(string),
+            oldMaxLength: 100);
 
-            migrationBuilder.AlterColumn<string>(
-                name: "LastUpdatedBy",
-                schema: "CMS",
-                table: "Pages",
-                type: "nvarchar(max)",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldMaxLength: 100);
+        migrationBuilder.AlterColumn<string>(
+            name: "CreatedBy",
+            schema: "CMS",
+            table: "Templates",
+            type: "nvarchar(max)",
+            nullable: true,
+            oldClrType: typeof(string),
+            oldMaxLength: 100);
 
-            migrationBuilder.AlterColumn<string>(
-                name: "CreatedBy",
-                schema: "CMS",
-                table: "Pages",
-                type: "nvarchar(max)",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldMaxLength: 100);
+        migrationBuilder.AlterColumn<string>(
+            name: "LastUpdatedBy",
+            schema: "CMS",
+            table: "Resources",
+            type: "nvarchar(max)",
+            nullable: true,
+            oldClrType: typeof(string),
+            oldMaxLength: 100);
 
-            migrationBuilder.AlterColumn<string>(
-                name: "LastUpdatedBy",
-                schema: "CMS",
-                table: "Layouts",
-                type: "nvarchar(max)",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldMaxLength: 100);
+        migrationBuilder.AlterColumn<string>(
+            name: "CreatedBy",
+            schema: "CMS",
+            table: "Resources",
+            type: "nvarchar(max)",
+            nullable: true,
+            oldClrType: typeof(string),
+            oldMaxLength: 100);
 
-            migrationBuilder.AlterColumn<string>(
-                name: "CreatedBy",
-                schema: "CMS",
-                table: "Layouts",
-                type: "nvarchar(max)",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldMaxLength: 100);
+        migrationBuilder.AlterColumn<string>(
+            name: "LastUpdatedBy",
+            schema: "CMS",
+            table: "Pages",
+            type: "nvarchar(max)",
+            nullable: true,
+            oldClrType: typeof(string),
+            oldMaxLength: 100);
 
-            migrationBuilder.AlterColumn<string>(
-                name: "LastUpdatedBy",
-                schema: "CMS",
-                table: "Components",
-                type: "nvarchar(max)",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldMaxLength: 100);
+        migrationBuilder.AlterColumn<string>(
+            name: "CreatedBy",
+            schema: "CMS",
+            table: "Pages",
+            type: "nvarchar(max)",
+            nullable: true,
+            oldClrType: typeof(string),
+            oldMaxLength: 100);
 
-            migrationBuilder.AlterColumn<string>(
-                name: "CreatedBy",
-                schema: "CMS",
-                table: "Components",
-                type: "nvarchar(max)",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldMaxLength: 100);
-        }
+        migrationBuilder.AlterColumn<string>(
+            name: "LastUpdatedBy",
+            schema: "CMS",
+            table: "Layouts",
+            type: "nvarchar(max)",
+            nullable: true,
+            oldClrType: typeof(string),
+            oldMaxLength: 100);
+
+        migrationBuilder.AlterColumn<string>(
+            name: "CreatedBy",
+            schema: "CMS",
+            table: "Layouts",
+            type: "nvarchar(max)",
+            nullable: true,
+            oldClrType: typeof(string),
+            oldMaxLength: 100);
+
+        migrationBuilder.AlterColumn<string>(
+            name: "LastUpdatedBy",
+            schema: "CMS",
+            table: "Components",
+            type: "nvarchar(max)",
+            nullable: true,
+            oldClrType: typeof(string),
+            oldMaxLength: 100);
+
+        migrationBuilder.AlterColumn<string>(
+            name: "CreatedBy",
+            schema: "CMS",
+            table: "Components",
+            type: "nvarchar(max)",
+            nullable: true,
+            oldClrType: typeof(string),
+            oldMaxLength: 100);
     }
 }

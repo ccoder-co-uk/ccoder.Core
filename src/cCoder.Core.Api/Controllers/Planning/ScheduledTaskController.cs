@@ -3,21 +3,20 @@ using cCoder.Core.Objects.Entities.Planning;
 using cCoder.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace cCoder.Core.Api.Controllers
+namespace cCoder.Core.Api.Controllers.Planning;
+
+public class ScheduledTaskController : CoreEntityODataController<ScheduledTask, int>
 {
-    public class ScheduledTaskController : CoreEntityODataController<ScheduledTask, int>
+    protected new IScheduledTaskService Service =>
+        base.Service as IScheduledTaskService;
+
+    public ScheduledTaskController(IScheduledTaskService service, ICoreAuthInfo auth, ILogger<ScheduledTaskController> log)
+        : base(service, auth, log) { }
+
+    [HttpPost]
+    public async Task<IActionResult> Execute([FromRoute] int key, bool incrementNextExecution = true)
     {
-        protected new IScheduledTaskService Service => 
-            base.Service as IScheduledTaskService;
-
-        public ScheduledTaskController(IScheduledTaskService service, ICoreAuthInfo auth, ILogger<ScheduledTaskController> log) 
-            : base(service, auth, log) { }
-
-        [HttpPost]
-        public async Task<IActionResult> Execute([FromRoute] int key, bool incrementNextExecution = true)
-        {
-            await Service.Execute(key, incrementNextExecution);
-            return Ok();
-        }
+        await Service.Execute(key, incrementNextExecution);
+        return Ok();
     }
 }

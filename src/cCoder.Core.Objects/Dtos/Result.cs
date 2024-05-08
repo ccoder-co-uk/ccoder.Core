@@ -1,44 +1,43 @@
 ﻿using cCoder.Core.Objects.Extensions;
 using System.ComponentModel.DataAnnotations;
 
-namespace cCoder.Core.Objects.Dtos
+namespace cCoder.Core.Objects.Dtos;
+
+public class Result
 {
-    public class Result
-    {
-        [Key]
-        public virtual string Id { get; set; }
-        public bool Success { get; set; }
-        public string Message { get; set; }
-    }
+    [Key]
+    public virtual string Id { get; set; }
+    public bool Success { get; set; }
+    public string Message { get; set; }
+}
 
-    public class Result<T> : Result
-    {
-        string id = null;
+public class Result<T> : Result
+{
+    private string id = null;
 
-        [Key]
-        public override string Id
+    [Key]
+    public override string Id
+    {
+        get
         {
-            get
+            if (id == null)
             {
-                if (id == null)
+                try
                 {
-                    try
-                    {
-                        return Item?.GetId()?.ToString();
-                    }
-                    catch { return null; }
+                    return Item?.GetId()?.ToString();
                 }
-                else
-                {
-                    return id;
-                }
+                catch { return null; }
             }
-            set { id = value; }
+            else
+            {
+                return id;
+            }
         }
-
-        public T Item { get; set; }
-
-        public Result<TNew> ToNew<TNew>(TNew item)
-            => new() { Success = Success, Message = Message, Item = item };
+        set => id = value;
     }
+
+    public T Item { get; set; }
+
+    public Result<TNew> ToNew<TNew>(TNew item)
+        => new() { Success = Success, Message = Message, Item = item };
 }

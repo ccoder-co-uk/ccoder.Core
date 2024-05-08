@@ -1,7 +1,4 @@
-﻿using System;
+﻿namespace cCoder.Core.Objects.Attributes;
 
-namespace cCoder.Core.Objects
-{
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Property, AllowMultiple = true)]
-    public sealed class ApiIgnoreAttribute : Attribute { }
-}
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Property, AllowMultiple = true)]
+public sealed class ApiIgnoreAttribute : Attribute { }

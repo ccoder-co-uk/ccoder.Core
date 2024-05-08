@@ -1,13 +1,10 @@
-﻿using System;
+﻿namespace cCoder.Core.Objects.Attributes;
 
-namespace cCoder.Core.Objects
+// Security Attributes
+[AttributeUsage(AttributeTargets.Class)]
+public sealed class ParentAttribute : Attribute
 {
-    // Security Attributes
-    [AttributeUsage(AttributeTargets.Class)]
-    public sealed class ParentAttribute : Attribute
-    {
-        public string PropertyName { get; set; }
+    public string PropertyName { get; set; }
 
-        public ParentAttribute(string prop) { PropertyName = prop; }
-    }
+    public ParentAttribute(string prop) { PropertyName = prop; }
 }

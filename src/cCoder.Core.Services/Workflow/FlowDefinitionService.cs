@@ -14,11 +14,11 @@ public class FlowDefinitionService(Config config, ICoreDataContext db, ILogger<F
 {
     public async Task<Guid> Queue(Guid id, string args)
     {
-        var flow = Db.GetAll<FlowDefinition>(false)
+        FlowDefinition flow = Db.GetAll<FlowDefinition>(false)
             .Include(f => f.App)
             .FirstOrDefault(f => f.Id == id);
 
-        var result = flow != null
+        Guid result = flow != null
             ? await flow.QueueNewInstance(Db, Db.User, args)
             : throw new SecurityException("Access Denied!");
 
@@ -29,7 +29,7 @@ public class FlowDefinitionService(Config config, ICoreDataContext db, ILogger<F
 
     public override async Task DeleteAsync(object id)
     {
-        var flow = Db.GetAll<FlowDefinition>(true)
+        FlowDefinition flow = Db.GetAll<FlowDefinition>(true)
             .Include(fd => fd.Instances)
             .FirstOrDefault(fd => fd.Id == (Guid)id);
 
@@ -54,7 +54,7 @@ public class FlowDefinitionService(Config config, ICoreDataContext db, ILogger<F
         return base.UpdateAllAsync(items);
     }
 
-    void ExecuteNextQueuedInstance(Guid flowDefinitionId)
+    private void ExecuteNextQueuedInstance(Guid flowDefinitionId)
     {
         using HttpClient api = new(new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate })
         {

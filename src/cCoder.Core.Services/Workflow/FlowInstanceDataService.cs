@@ -18,7 +18,7 @@ public class FlowInstanceDataService(ICoreDataContext db, Config config)
 
         dbVersion.UpdateFrom(entity);
 
-        var result = User.Can(dbVersion.FlowDefinition.AppId, "flowinstancedata_update")
+        FlowInstanceData result = User.Can(dbVersion.FlowDefinition.AppId, "flowinstancedata_update")
             ? await Db.UpdateAsync(dbVersion)
             : throw new SecurityException("Access Denied!");
 
@@ -27,7 +27,7 @@ public class FlowInstanceDataService(ICoreDataContext db, Config config)
         return result;
     }
 
-    void ExecuteNextQueuedInstance(Guid flowDefinitionId)
+    private void ExecuteNextQueuedInstance(Guid flowDefinitionId)
     {
         using HttpClient api = new(new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate })
         {
