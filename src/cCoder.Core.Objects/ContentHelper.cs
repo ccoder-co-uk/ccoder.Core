@@ -221,16 +221,17 @@ public static class ContentHelper
         });
     }
 
-    private static void Content(string key, StringBuilder source, PageRenderParams prp, IEnumerable<Replacement> replacements) => source.RegexReplace(tag.Replace("TYPE", "content"), (m) =>
-                                                                                                                                           {
-                                                                                                                                               (string type, string name, string[] options) tag = SplitMatch(m);
-                                                                                                                                               string content = Content(prp.Page.ResourceKey, prp.Page.ContentForCulture(tag.name, prp.Culture), prp, tag, replacements);
+    private static void Content(string key, StringBuilder source, PageRenderParams prp, IEnumerable<Replacement> replacements) 
+        => source.RegexReplace(tag.Replace("TYPE", "content"), (m) =>
+            {
+                (string type, string name, string[] options) tag = SplitMatch(m);
+                string content = Content(prp.Page.ResourceKey, prp.Page.ContentForCulture(tag.name, prp.Culture), prp, tag, replacements);
 
-                                                                                                                                               if (prp.Edit)
-                                                                                                                                                   return content;
-                                                                                                                                               else
-                                                                                                                                                   return ProcessContentString(key, prp, content, replacements);
-                                                                                                                                           });
+                if (prp.Edit)
+                    return content;
+                else
+                    return ProcessContentString(key, prp, content, replacements);
+            });
 
 
     /// <summary>
@@ -242,25 +243,26 @@ public static class ContentHelper
     /// <param name="name"></param>
     /// <param name="replacements"></param>
     /// <returns></returns>
-    private static void Script(string key, StringBuilder source, RenderParams p, IEnumerable<Replacement> replacements) => source.RegexReplace("\\[script\\[[A-Za-z\\d_/. \\-]*\\]\\]", (m) =>
-                                                                                                                                    {
-                                                                                                                                        string name = m.Value
-                                                                                                                                            .Replace("[script[", "")
-                                                                                                                                            .Replace("]]", "")
-                                                                                                                                            .ToLower();
+    private static void Script(string key, StringBuilder source, RenderParams p, IEnumerable<Replacement> replacements) 
+        => source.RegexReplace("\\[script\\[[A-Za-z\\d_/. \\-]*\\]\\]", (m) =>
+            {
+                string name = m.Value
+                    .Replace("[script[", "")
+                    .Replace("]]", "")
+                    .ToLower();
 
-                                                                                                                                        Script script = ObjectCache.Get<Script>($"script|{name.ToLower()}");
+                Script script = ObjectCache.Get<Script>($"script|{name.ToLower()}");
 
-                                                                                                                                        if (script != null)
-                                                                                                                                        {
-                                                                                                                                            Script appScript = p?.App?.Scripts?
-                                                                                                                                                .FirstOrDefault(s => s.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+                if (script != null)
+                {
+                    Script appScript = p?.App?.Scripts?
+                        .FirstOrDefault(s => s.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
 
-                                                                                                                                            return ProcessContentString(key, p, appScript?.Content ?? script.Content, replacements);
-                                                                                                                                        }
+                    return ProcessContentString(key, p, appScript?.Content ?? script.Content, replacements);
+                }
 
-                                                                                                                                        return string.Empty;
-                                                                                                                                    });
+                return string.Empty;
+            });
 
     /// <summary>
     /// Replaces references to DMS file paths with their file content
@@ -271,30 +273,31 @@ public static class ContentHelper
     /// <param name="name"></param>
     /// <param name="replacements"></param>
     /// <returns></returns>
-    private static void DMS(string key, StringBuilder source, ComponentRenderParams p, IEnumerable<Replacement> replacements) => source.RegexReplace("\\[dms\\[[A-Za-z\\d_/. \\-]*\\]\\]", (m) =>
-                                                                                                                                          {
-                                                                                                                                              string path = m.Value
-                                                                                                                                                  .Replace("[dms[", "")
-                                                                                                                                                  .Replace("]]", "")
-                                                                                                                                                  .ToLower();
+    private static void DMS(string key, StringBuilder source, ComponentRenderParams p, IEnumerable<Replacement> replacements) 
+        => source.RegexReplace("\\[dms\\[[A-Za-z\\d_/. \\-]*\\]\\]", (m) =>
+            {
+                string path = m.Value
+                    .Replace("[dms[", "")
+                    .Replace("]]", "")
+                    .ToLower();
 
-                                                                                                                                              File file = p.Db.GetAll<File>(false)
-                                                                                                                                                  .FirstOrDefault(f => f.Folder.AppId == p.App.Id && f.Path == path);
+                File file = p.Db.GetAll<File>(false)
+                    .FirstOrDefault(f => f.Folder.AppId == p.App.Id && f.Path == path);
 
-                                                                                                                                              if (file != null)
-                                                                                                                                              {
-                                                                                                                                                  FileContent content = p.Db.GetAll<FileContent>(false)
-                                                                                                                                                      .Where(f => f.FileId == file.Id)
-                                                                                                                                                      .OrderByDescending(f => f.Version)
-                                                                                                                                                      .First();
+                if (file != null)
+                {
+                    FileContent content = p.Db.GetAll<FileContent>(false)
+                        .Where(f => f.FileId == file.Id)
+                        .OrderByDescending(f => f.Version)
+                        .First();
 
-                                                                                                                                                  return content.RawData.Length != 0
-                                                                                                                                                      ? ProcessContentString(key, p, Encoding.UTF8.GetString(content.RawData), replacements)
-                                                                                                                                                      : string.Empty;
-                                                                                                                                              }
+                    return content.RawData.Length != 0
+                        ? ProcessContentString(key, p, Encoding.UTF8.GetString(content.RawData), replacements)
+                        : string.Empty;
+                }
 
-                                                                                                                                              return string.Empty;
-                                                                                                                                          });
+                return string.Empty;
+            });
 
     /// <summary>
     /// Replaces references to content blocks for a page in a content string
