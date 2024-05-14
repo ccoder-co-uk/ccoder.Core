@@ -7,13 +7,14 @@ using Microsoft.AspNetCore.OData.Query;
 
 namespace cCoder.Core.Api.Controllers.CMS;
 
-public class CommonObjectController : CoreEntityODataController<CommonObject, int>
+public class CommonObjectController(
+    ICommonObjectService service, 
+    ICoreAuthInfo auth, 
+    ILogger<CommonObjectController> log) 
+        : CoreEntityODataController<CommonObject, int>(service, auth, log)
 {
     protected new ICommonObjectService Service =>
         base.Service as ICommonObjectService;
-
-    public CommonObjectController(ICommonObjectService service, ICoreAuthInfo auth, ILogger<CommonObjectController> log)
-        : base(service, auth, log) { }
 
     [HttpGet]
     [EnableQuery(
@@ -24,7 +25,8 @@ public class CommonObjectController : CoreEntityODataController<CommonObject, in
         MaxAnyAllExpressionDepth = 6,
         MaxExpansionDepth = 6
     )]
-    public IActionResult Latest(string type) => Ok(Service.Latest(type));
+    public IActionResult Latest(string type) => 
+        Ok(Service.Latest(type));
 
     [HttpPost]
     public async Task<IActionResult> Import([FromBody] ODataCollection<CommonObject> items) =>

@@ -59,6 +59,7 @@ public static partial class IServiceCollectionExtensions
         // Mail services
         services.AddScoped<IQueuedEmailService, QueuedEmailService>();
         services.AddScoped<ICoreService<SentEmail>, SentEmailService>();
+        services.AddScoped<ICoreService<MailServer>, MailServerService>();
 
         // Security services
         services.AddScoped<ICMSUserRegistrationOrchestrationService, CMSUserRegistrationOrchestrationService>();
