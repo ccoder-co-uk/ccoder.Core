@@ -1,0 +1,142 @@
+﻿<section name="LogStream" class="statContainer" class="col-md-12">
+	<h2>Log Stream</h2>
+	<div class="toolbar">
+		<div><label>Auto Scroll</label><input name="autoScroll" type="checkbox" checked /></div>
+		<div>
+			<label>Log Levels</label>
+			<div class="dropdown">
+				<div class="dropdown-select">Select <span>v</span></div>
+				<div class="dropdown-content">
+					<div class="option"><label for="debugLevel">DEBUG</label><input id="debugLevel" type="checkbox" name="levels" value="debug" checked /></div>
+					<div class="option"><label for="infoLevel">INFO</label><input id="infoLevel" type="checkbox" name="levels" value="info" checked /></div>
+					<div class="option"><label for="warnLevel">WARN</label><input id="warnLevel" type="checkbox" name="levels" value="warn" checked /></div>
+					<div class="option"><label for="errorLevel">ERROR</label><input id="errorLevel" type="checkbox" name="levels" value="error" checked /></div>
+					<div class="option"><label for="fatalLevel">FATAL</label><input id="fatalLevel" type="checkbox" name="levels" value="fatal" checked /></div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<div class='execConsole' name='execConsole'>
+		<div class="console" name='logConsole'></div>
+	</div>
+
+	<style scoped>
+		.toolbar	   { width: 100%; background: #EFEFEF; padding: 4px; }
+		.toolbar > div { display: inline-block; margin-right: 20px; }
+		.toolbar label { margin: 5px; }
+
+		.dropdown						{ position: relative; display: inline-block; border: 1px solid #ccc; }
+		.dropdown-select				{ padding: 3px 5px; background-color: white; cursor: pointer; min-width: 140px; }
+		.dropdown-select > span			{ float: right; border-left: solid 1px #ccc; padding: 6px 10px; padding-top: 0; background: #EFEFEF; margin: -4px -6px; pointer-events: none; border: 1px solid #CCC; }
+		.dropdown-content				{ display: none; position: absolute; background-color: #EFEFEF; min-width: 140px; box-shadow: 0 4px 8px #AAA; z-index: 1; }
+		.dropdown-content .option:hover { background-color: #CCC; }
+		.dropdown-content label			{ padding: 5px; cursor: pointer; width: 65%; }
+		.dropdown-content input[type="checkbox"] { margin: 0 10px; }
+
+		.execConsole > .console						{ padding: 5px; height: 400px; overflow: auto; border: 1px solid #ccc; background-color: #fff; }
+		.execConsole > .console > .message			{ line-height: 14px; }
+		.execConsole > .console > .message > *		{ vertical-align: top; line-height: 14px; margin: 0; padding: 1px; }
+		.execConsole > .console > .message > .message { display: inline-block; border: none; max-width: 90%; word-wrap: break-word; text-wrap: pretty; }
+		.execConsole > .console > .message .level	{ display: inline-block; margin-right: 10px; min-width: 60px; }
+		.execConsole > .console > .message .time	{ display: inline-block; margin-right: 10px; } 
+		.execConsole > .console > .message.success	{ color: green; }
+		.execConsole > .console > .message.info		{ color: green; }
+		.execConsole > .console > .message.debug	{ color: blue; }
+		.execConsole > .console > .message.warn		{ color: #D8A700; }
+		.execConsole > .console > .message.error	{ color: red; }
+		.execConsole > .console > .message.fatal	{ color: red; }
+	</style>
+
+	<script>
+		var html = {
+			encode: function (value) { return $('<div />').text(value).html(); }
+		};
+
+		function showDropDownItems(e) {
+			var dropdown = document.querySelector('.dropdown');
+			var target = e.target;
+
+			if (target.classList.contains('dropdown-select')) {
+				// Toggle the display of the dropdown content
+				var content = dropdown.querySelector('.dropdown-content');
+				content.style.display = content.style.display === 'block' ? 'none' : 'block';
+
+			}
+			else if (!dropdown.contains(target)) {
+				// Close the dropdown if clicking outside
+				var content = dropdown.querySelector('.dropdown-content');
+				content.style.display = 'none';
+			}
+		}
+
+		function getSelectedLogLevels() {
+			var selectedOptions = [];
+			var selectedLevels = $('.dropdown-content input[type="checkbox"]:checked');
+
+			selectedLevels.each(function () {
+				// Convert 'this' (a DOM element) to a jQuery object to use the .val() method
+				selectedOptions.push($(this).val());
+			});
+
+
+			return selectedOptions;
+		}
+
+		LogStream = {
+			init: async function () {
+				await LogStream.connectToLogHub($("section[name=LogStream]"));
+				document.addEventListener('click', showDropDownItems);
+
+			},
+
+			connectToLogHub: async function (container) {
+				var host = window.location.hostname.split(':')[0];
+				await LogStream.connectToHub(container, (connection) => {
+					connection.invoke("join", host);
+					connection.invoke("ConsoleSend", "info", "Client Connected to Log Stream ", host);
+				});
+			},
+
+			connectToHub: async function (container, callback) {
+				var connection = new signalR.HubConnectionBuilder().withUrl("/Hubs/Logs").build();
+				connection.on("ConsoleReceive", (level, message) => LogStream.receiveMessage(container, level, message));
+				await connection.start();
+				callback(connection);
+			},
+
+			receiveMessage: function (container, level, message) {
+				var d = new Date();
+				var time = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+				var entry = { Level: level.toLowerCase(), Timestamp: new Date(), Message: message };
+
+				if (entry.Level == "information") { entry.Level = "info"; }
+				if (entry.Level == "warning") { entry.Level = "warn"; }
+
+				//console.log(entry);
+				var selectedLogLevels = getSelectedLogLevels();
+
+				if (selectedLogLevels.indexOf(entry.Level) > -1) {
+					var htmlConsole = $(".execConsole > .console", container);
+					htmlConsole.append(LogStream.buildMessage(entry));
+
+					if ($("input[name=autoScroll]").is(":checked")) {
+						htmlConsole.scrollTop(htmlConsole.prop("scrollHeight"));
+					}
+				}
+			},
+
+			buildMessage: function (logEntry) {
+				var time = new Date(logEntry.Timestamp);
+				return "<div class='message " + logEntry.Level.toLowerCase() + "'>" +
+					"<div class='level'>" + logEntry.Level.toUpperCase() + "</div>" +
+					"<div class='time'>" + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds() + "</div>" +
+					"<pre class='message'>" + html.encode(logEntry.Message) + "</pre>" +
+					"</div>";
+			}
+		}
+
+		$(LogStream.init);
+
+	</script>
+</section>

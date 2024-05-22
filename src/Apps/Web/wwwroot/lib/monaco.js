@@ -4,8 +4,6 @@ class MonacoEditor {
         this.language = args.language;//default to javascript language.
         this.code = args.code || "";
         this.fullscreen = false;
-        $(this.container).css("width", "100%");
-        $(this.container).css("height", "100%");
         //Load from CDN.
         require.config({
             paths: {
@@ -48,9 +46,19 @@ class MonacoEditor {
             this.editor = this.monaco.editor.create(this.container, {
                 value: this.code,
                 language: this.language,
+                model: this.model,
                 automaticLayout: true,
-                model: this.model
+                tabIndex: 4,
+                fontFamily: 'monospace',
+                minimap: {
+                    enabled: true
+                }
             });
+
+            if (session.app.Config.Themes[session.theme].IsDark) {
+                monaco.editor.setTheme("vs-dark");
+            }
+            
             this.editor.addAction({
                 id: "fullscreen",
                 label: "Make Editor Fullscreen",
@@ -233,13 +241,13 @@ class HTMLMonacoEditor extends MonacoEditor {
         super(container, args);
         this.language = "html";
     }
-    
+
     init(callback) {
         super.init(() => {
             this.editor.addAction({
                 id: "w3validate",
                 label: "w3c validation",
-                precondition:null,
+                precondition: null,
                 keybindingContext: null,
                 run: (ed) => {
                     $.ajax({
@@ -248,20 +256,20 @@ class HTMLMonacoEditor extends MonacoEditor {
                         data: this.getValue(),
                         contentType: "text/html"
                     }).done((data) => {
-                       if(typeof data !== "object") {
-                           data = JSON.parse(data);
-                       }
-                       var markers = [];
-                       if (data.messages.length > 0) {
-                           for (var i = 0; i < data.messages.length; i = i + 1) {
-                               var message = data.messages[i];
-                               markers.push({
-                                   startLineNumber: message.lastLine - 1,
-                                   endLineNumber: message.lastLine - 1,
-                                   message: message.message,
-                                   startColumn: message.firstColumn,
-                                   endColumn: message.lastColumn,
-                                   severity: this.monaco.MarkerSeverity.Warning,
+                        if (typeof data !== "object") {
+                            data = JSON.parse(data);
+                        }
+                        var markers = [];
+                        if (data.messages.length > 0) {
+                            for (var i = 0; i < data.messages.length; i = i + 1) {
+                                var message = data.messages[i];
+                                markers.push({
+                                    startLineNumber: message.lastLine - 1,
+                                    endLineNumber: message.lastLine - 1,
+                                    message: message.message,
+                                    startColumn: message.firstColumn,
+                                    endColumn: message.lastColumn,
+                                    severity: this.monaco.MarkerSeverity.Warning,
                                 });
                             }
                         }
@@ -270,7 +278,7 @@ class HTMLMonacoEditor extends MonacoEditor {
                     return null;
                 }
             });
-           if(callback) { callback(); }
+            if (callback) { callback(); }
         });
     }
 }

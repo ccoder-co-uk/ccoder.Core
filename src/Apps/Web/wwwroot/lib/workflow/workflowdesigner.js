@@ -1,5 +1,9 @@
 ﻿class WorkflowDesigner {
     constructor(container, flow) {
+
+        //TODO: handle this not being available for some reason
+        window.flowTheme = session.app.Config.Themes[session.theme];
+
         this.stepTypes = window.knownTypes.filter(ctx => ctx.Name === "Workflow")[0].Types;
         this.workspace = $(".workspace", container);
         this.canvas = $("canvas", this.workspace);
@@ -171,9 +175,9 @@
             $('li', category).css('padding', '8px');
             $('ul', category).css('padding', '0 0 0 8px');
 
-            $('.header', category).on('click', function() {
-                var h = sublist.css('height');
-                sublist.css({ 'max-height': h === '0px' ? '500px' : 0 });
+            $('.header', category).on('click', function () {
+                var h = sublist.css('max-height');
+                sublist.css({ 'max-height': h !== '500px' ? '500px' : 0 });
             });
 
             return category;

@@ -5,7 +5,7 @@ class Close extends Collidable {
         this.parent = parent;
         this.flow = this.parent.flow;
         this.text = 'x';
-        this.col = '#E2721D';
+        this.col = window.flowTheme.colours.secondary;
         this.sel = '#f00';
         this.updatePosition();
     }
@@ -42,7 +42,7 @@ class Handle extends Collidable {
     }
 
     draw(ctx) {
-        draw.enableShadows(ctx, this.x, this.y, this.w, this.h, "#111", 1);
+        draw.enableShadows(ctx, this.x, this.y, this.w, this.h, "#CCC", 1);
         draw.rect(ctx, this.x, this.y, this.w, this.h, this.col);
         draw.disableShadows(ctx);
 
@@ -168,7 +168,7 @@ class Activity extends Collidable {
             this.flow = flow;
             this.meta = meta;
             this.model = model;
-            this.handle = new Handle(this, '#193855', '#fff');
+            this.handle = new Handle(this, window.flowTheme.colours.primary, '#fff');
             meta.Properties.map(p => this.model[p.Name] = this.model[p.Name] || null);
             this.objects = [];
             this.objects.push(this.handle);
@@ -180,7 +180,7 @@ class Activity extends Collidable {
 
             this.out = new Connector(this, 'output');
             this.objects.push(this.out);
-            this.objects.push(new Action(this, 'Edit', 50, 65, 35, 25, '#E2721D', this.edit));
+            this.objects.push(new Action(this, 'Edit', 50, 65, 35, 25, window.flowTheme.colours.primary, this.edit));
             return this;
         }
     }
@@ -188,8 +188,8 @@ class Activity extends Collidable {
     addInstanceData(state, log) {
         this.InstanceState = state;
         this.InstanceLog = log;
-        this.objects.push(new Action(this, 'State', 80, 65, 35, 25, '#529ee5', this.showExecutionState));
-        this.objects.push(new Action(this, 'Log', 110, 65, 35, 25, '#529ee5', this.showExecutionLog));
+        this.objects.push(new Action(this, 'State', 80, 65, 35, 25, window.flowTheme.colours.secondary, this.showExecutionState));
+        this.objects.push(new Action(this, 'Log', 110, 65, 35, 25, window.flowTheme.colours.secondary, this.showExecutionLog));
     }
 
     removeInstanceData() {
@@ -223,7 +223,7 @@ class Activity extends Collidable {
                     if (this.InstanceLog.filter(l => l.Level === "Warning").length === 0) {
                         draw.rect(ctx, this.x, this.y + handleHeight, this.w, this.h - handleHeight + 1, "#ded");
                     } else {
-                        draw.rect(ctx, this.x, this.y + handleHeight, this.w, this.h - handleHeight + 1, "#FFF4D9");
+                        draw.rect(ctx, this.x, this.y + handleHeight, this.w, this.h - handleHeight + 1, window.flowTheme.colours.primary);
                     }
                     break;
                 case 3:
@@ -234,7 +234,7 @@ class Activity extends Collidable {
 
         draw.enableShadows(ctx, this.x, this.y, this.w, this.h, "#111");
         ctx.font = "30px WebComponentsIcons";
-        ctx.fillStyle = '#E2721D';
+        ctx.fillStyle = window.flowTheme.colours.primary;
         ctx.fillText(this.getIcon(this.meta.category), this.x + 20, this.y + 73);
 
         draw.disableShadows(ctx);
@@ -332,8 +332,8 @@ class Connector extends Collidable {
         super('', 0, 0, 0, 0, nodeSize);
         this.parent = parent;
         this.type = type;
-        this.col = '#37e83a';
-        this.sel = '#00ff04';
+        this.col = window.flowTheme.colours.primary;
+        this.sel = window.flowTheme.colours.secondary;
         this.updatePosition();
     }
 
@@ -371,8 +371,8 @@ class Connector extends Collidable {
     }
 
     draw(ctx) {
-        draw.circle(ctx, this.x, this.y, this.r, this.col, this.sel);
-        if (this.active) { draw.line(ctx, this.x, this.y, mouseposition.x, mouseposition.y, '#37e83a'); }
+        draw.circle(ctx, this.x, this.y, this.r, this.sel, this.sel);
+        if (this.active) { draw.line(ctx, this.x, this.y, mouseposition.x, mouseposition.y, window.flowTheme.colours.secondary); }
     }
 }
 const activityWidth = 200;
@@ -385,7 +385,7 @@ class Flow {
             flow.DefinitionJson = JSON.stringify({
                 RequiredRoles: null,
                 Activities: [{
-                    "$type": "Core.Objects.Workflow.Activities.Start, Core.Objects",
+                    "$type": "cCoder.Core.Objects.Workflow.Activities.Start, cCoder.Core.Objects",
                     "AuthToken": null,
                     "Data": null,
                     "Ref": "Start",
@@ -541,6 +541,11 @@ class Flow {
 
     save() {
         var flow = this.value();
+
+        flow.DefinitionJson = JSON.parse(flow.DefinitionJson);
+        flow.DefinitionJson.Name = "";
+        flow.DefinitionJson = JSON.stringify(flow.DefinitionJson);
+
         api.update('Core/FlowDefinition(' + flow.Id + ')', flow)
             .then(() => notification.success('Flow Saved Succesfully'))
             .catch(error);
@@ -608,6 +613,10 @@ class Flow {
 }
 class WorkflowDesigner {
     constructor(container, flow) {
+
+        //TODO: handle this not being available for some reason
+        window.flowTheme = session.app.Config.Themes[session.theme];
+
         this.stepTypes = window.knownTypes.filter(ctx => ctx.Name === "Workflow")[0].Types;
         this.workspace = $(".workspace", container);
         this.canvas = $("canvas", this.workspace);
@@ -779,9 +788,9 @@ class WorkflowDesigner {
             $('li', category).css('padding', '8px');
             $('ul', category).css('padding', '0 0 0 8px');
 
-            $('.header', category).on('click', function() {
-                var h = sublist.css('height');
-                sublist.css({ 'max-height': h === '0px' ? '500px' : 0 });
+            $('.header', category).on('click', function () {
+                var h = sublist.css('max-height');
+                sublist.css({ 'max-height': h !== '500px' ? '500px' : 0 });
             });
 
             return category;
