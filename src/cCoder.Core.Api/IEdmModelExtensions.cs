@@ -113,7 +113,7 @@ public static class IEdmModelExtensions
                     ReturnType = type,
                     Parameters = new Dictionary<string, string>
                     {
-                        { "odata:key", Type.GetType(type.ServerType).GetIdProperty().GetType().FullName },
+                        { "odata:key", Type.GetType(type.ServerType).GetIdProperty()?.GetType().FullName },
                         { "body:entity", type.ServerType }
                     }
                 },
@@ -125,7 +125,7 @@ public static class IEdmModelExtensions
                     ReturnType = type,
                     Parameters = new Dictionary<string, string>
                     {
-                        { "odata:key", Type.GetType(type.ServerType).GetIdProperty().GetType().FullName }
+                        { "odata:key", Type.GetType(type.ServerType).GetIdProperty()?.GetType().FullName }
                     }
                 },
                 new() { Name = "Get All", Url = $"{type.Category}/{type.Name}", Queryable = true, HttpVerb = "GET", ReturnType = type },

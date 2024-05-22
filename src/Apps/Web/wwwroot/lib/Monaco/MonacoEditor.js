@@ -4,8 +4,6 @@ class MonacoEditor {
         this.language = args.language;//default to javascript language.
         this.code = args.code || "";
         this.fullscreen = false;
-        $(this.container).css("width", "100%");
-        $(this.container).css("height", "100%");
         //Load from CDN.
         require.config({
             paths: {
@@ -48,9 +46,19 @@ class MonacoEditor {
             this.editor = this.monaco.editor.create(this.container, {
                 value: this.code,
                 language: this.language,
+                model: this.model,
                 automaticLayout: true,
-                model: this.model
+                tabIndex: 4,
+                fontFamily: 'monospace',
+                minimap: {
+                    enabled: true
+                }
             });
+
+            if (session.app.Config.Themes[session.theme].IsDark) {
+                monaco.editor.setTheme("vs-dark");
+            }
+            
             this.editor.addAction({
                 id: "fullscreen",
                 label: "Make Editor Fullscreen",

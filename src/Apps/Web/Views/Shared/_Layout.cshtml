@@ -15,7 +15,8 @@
     <body class="@Model.Layout">
         @RenderBody()
         @if (ViewBag?.Edit ?? false) 
-        { 
+        {
+            <script src="/lib/editor.js"></script>
             <script type="text/javascript">$(function () { parent.$("body").trigger("enablePageEditing", $("body")); })</script> 
         }
     </body>

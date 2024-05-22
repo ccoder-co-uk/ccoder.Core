@@ -3,7 +3,7 @@ class PieChart extends Widget {
         super(element);
         this.data = data;
         this.chartName = $(element).attr("name");
-        $(element).append("<div name='" + this.gridName + "PieChart' style='width:100%; height:100%; display: block;'></div>");
+        $(element).append("<div name='" + this.gridName + "PieChart'></div>");
         this.chartElement = $("[name=" + this.gridName + "PieChart]", $(element));
     }
     

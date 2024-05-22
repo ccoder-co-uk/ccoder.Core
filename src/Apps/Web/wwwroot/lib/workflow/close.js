@@ -5,7 +5,7 @@
         this.parent = parent;
         this.flow = this.parent.flow;
         this.text = 'x';
-        this.col = '#E2721D';
+        this.col = window.flowTheme.colours.secondary;
         this.sel = '#f00';
         this.updatePosition();
     }

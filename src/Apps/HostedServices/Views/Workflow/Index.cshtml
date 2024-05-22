@@ -1,0 +1,54 @@
+﻿<section class="statContainer" class="col-md-12">
+    <h2>Problem Flow Instances</h2>
+    <table id="flowStats">
+        <thead>
+            <tr>
+                <th>Portal</th>
+                <th>Process</th>
+                <th>Flow</th>
+                <th>Execution Start</th>
+                <th>Execution End</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+    <script type="text/javascript">
+        var flowStats = {
+            getStats: async function (table) {
+                var request = await fetch("Workflow/GetStats");
+                flowStats.loadStatsIntoTable(table, await request.json());
+            },
+
+            loadStatsIntoTable: function (table, instances) {
+                var tbody = $("tbody", table);
+                $(tbody).empty();
+
+                for (var i in instances) {
+                    flowStats.addRow(tbody, instances[i])
+                }
+            },
+
+            addRow: function (tableBody, instance) {
+                var query = `processId=${instance.processId}&flowId=${instance.flowId}&instanceId=${instance.instanceId}`;
+
+                tableBody.append(
+                    `<tr>
+                            <td>${instance.appName}</td>
+                            <td>${instance.processName}</td>
+                            <td><a href="https://${instance.portal}/Admin/BusinessProcesses?${query}">${instance.flowName}</a></td>
+                            <td>${new Date(instance.start).toISOString().replace("T", " ").split(".")[0]}</td>
+                            <td>${new Date(instance.end).toISOString().replace("T", " ").split(".")[0]}</td>
+                        </tr>`);
+            }
+        }
+
+        $(() => {
+            var f = async () => await flowStats.getStats(document.getElementById("flowStats"))
+            f();
+            setInterval(f, 30000);
+        });
+    </script>
+</section>
+

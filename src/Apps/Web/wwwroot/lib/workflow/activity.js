@@ -10,7 +10,7 @@
             this.flow = flow;
             this.meta = meta;
             this.model = model;
-            this.handle = new Handle(this, '#193855', '#fff');
+            this.handle = new Handle(this, window.flowTheme.colours.primary, '#fff');
             meta.Properties.map(p => this.model[p.Name] = this.model[p.Name] || null);
             this.objects = [];
             this.objects.push(this.handle);
@@ -22,7 +22,7 @@
 
             this.out = new Connector(this, 'output');
             this.objects.push(this.out);
-            this.objects.push(new Action(this, 'Edit', 50, 65, 35, 25, '#E2721D', this.edit));
+            this.objects.push(new Action(this, 'Edit', 50, 65, 35, 25, window.flowTheme.colours.primary, this.edit));
             return this;
         }
     }
@@ -30,8 +30,8 @@
     addInstanceData(state, log) {
         this.InstanceState = state;
         this.InstanceLog = log;
-        this.objects.push(new Action(this, 'State', 80, 65, 35, 25, '#529ee5', this.showExecutionState));
-        this.objects.push(new Action(this, 'Log', 110, 65, 35, 25, '#529ee5', this.showExecutionLog));
+        this.objects.push(new Action(this, 'State', 80, 65, 35, 25, window.flowTheme.colours.secondary, this.showExecutionState));
+        this.objects.push(new Action(this, 'Log', 110, 65, 35, 25, window.flowTheme.colours.secondary, this.showExecutionLog));
     }
 
     removeInstanceData() {
@@ -65,7 +65,7 @@
                     if (this.InstanceLog.filter(l => l.Level === "Warning").length === 0) {
                         draw.rect(ctx, this.x, this.y + handleHeight, this.w, this.h - handleHeight + 1, "#ded");
                     } else {
-                        draw.rect(ctx, this.x, this.y + handleHeight, this.w, this.h - handleHeight + 1, "#FFF4D9");
+                        draw.rect(ctx, this.x, this.y + handleHeight, this.w, this.h - handleHeight + 1, window.flowTheme.colours.primary);
                     }
                     break;
                 case 3:
@@ -76,7 +76,7 @@
 
         draw.enableShadows(ctx, this.x, this.y, this.w, this.h, "#111");
         ctx.font = "30px WebComponentsIcons";
-        ctx.fillStyle = '#E2721D';
+        ctx.fillStyle = window.flowTheme.colours.primary;
         ctx.fillText(this.getIcon(this.meta.category), this.x + 20, this.y + 73);
 
         draw.disableShadows(ctx);

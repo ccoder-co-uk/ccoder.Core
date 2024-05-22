@@ -4,7 +4,7 @@
 
         // default configuation for all grid widgets.
         this.gridName = $(element).attr("name");
-        $(element).append("<div name='" + this.gridName + "Grid' style = 'flex:1;'></div>");
+        $(element).append("<div name='" + this.gridName + "Grid'></div>");
         this.gridElement = $("[name=" + this.gridName + "Grid]", $(element));
         this.kendoDataSource = dataSource;
         this.toolbar = [];
@@ -288,20 +288,21 @@
     resize() { this.kendoObject.resize(); }
 
     commandColumn() {
-        var result = "";
+        var result = "<div class='btn-group btn-group-sm'>";
         this.commands.forEach(function (command) {
             if (command.template) {
                 result += command.template;
             } else {
                 if (command.href) {
                     result += "<a name='" + command.name + "' href='" + command.href + "'><span class='k-icon " + command.icon + "'></span>" + command.text + "</a>";
-                }
-                else {
-                    result += "<a name='" + command.name + "'><span class='k-icon " + command.icon + "'></span>" + command.text + "</a>";
+                } else {
+                    result += `<button class="btn btn-primary" name="` + command.name + `">
+                            <span class='k-icon ` + command.icon + `'></span> ` + command.text + `
+                        </button>`
                 }
             }
-
         });
+        result += '</div>';
 
         return result;
     }
@@ -311,7 +312,7 @@
         var widget = $(this.element).data("widget");
         widget.commands.forEach(function (command) {
             if (command.click) {
-                $("a[name=" + command.name + "]", widget.gridElement).on("click", function (e) {
+                $("button[name=" + command.name + "]", widget.gridElement).on("click", function (e) {
                     e.preventDefault();
                     var item = grid.dataItem($(e.currentTarget).closest("tr"));
                     command.click(e, item, grid, widget);

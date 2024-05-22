@@ -25,7 +25,7 @@
 
                 $(this.container)[0].style.setProperty("display", "none", "important");
 
-                this.fileUploaderTag = $("<input class='fileUploaderTag' type='file' multiple name='fileUpload' style = 'flex: 1'/>").insertAfter(this.container);
+                this.fileUploaderTag = $("<input class='fileUploaderTag' type='file' multiple name='fileUpload'/>").insertAfter(this.container);
                 this.fileUploaderTag.on("drop", (e) => {
                     this.events.drop(e);
                     this.remove();
