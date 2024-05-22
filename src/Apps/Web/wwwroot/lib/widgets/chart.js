@@ -2,7 +2,7 @@
 {
     constructor(element, args) {
         super(element, args);
-        this.chartElement = $(element).append("<div style = 'display:flex; flex-direction:column; flex:1;'></div>").children().first();
+        this.chartElement = $(element).append("<div></div>").children().first();
         this.text = args.text;
         this.showLegend = args.showLegend;
         this.series = args.series || [];

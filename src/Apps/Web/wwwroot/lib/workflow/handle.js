@@ -14,7 +14,7 @@
     }
 
     draw(ctx) {
-        draw.enableShadows(ctx, this.x, this.y, this.w, this.h, "#111", 1);
+        draw.enableShadows(ctx, this.x, this.y, this.w, this.h, "#CCC", 1);
         draw.rect(ctx, this.x, this.y, this.w, this.h, this.col);
         draw.disableShadows(ctx);
 

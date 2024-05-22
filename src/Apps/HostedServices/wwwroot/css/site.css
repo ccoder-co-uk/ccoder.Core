@@ -1,0 +1,52 @@
+﻿header {
+    border: solid 1px #CCC;
+    box-shadow: 4px 4px 4px #EFEFEF;
+    margin: 20px auto;
+}
+
+header > h1 {
+    line-height: 80px;
+}
+
+header > h1 > img {
+    height: 80px;
+}
+
+.statContainer > h2 {
+    margin: 0;
+    padding: 5px 10px;
+    background: #2E4B75;
+    color: white;
+    font-size: 130%;
+}
+
+table {
+    width: 100%;
+    border: solid 1px #EFEFEF;
+    border-collapse: collapse;
+    margin: 0;
+}
+
+th {
+    text-align: left;
+    border: solid 1px #EFEFEF;
+    background: #EE8A00;
+    color: white;
+    border-collapse: collapse;
+    padding: 5px 10px;
+}
+
+td {
+    text-align: left;
+    border: solid 1px #EFEFEF;
+    border-collapse: collapse;
+    padding: 5px 10px;
+}
+
+.statContainer {
+    min-height: 265px;
+    margin-bottom: 20px;
+    padding: 0;
+    border: solid 1px #ccc;
+    box-shadow: 4px 4px 4px #EFEFEF;
+}

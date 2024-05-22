@@ -8,7 +8,7 @@
         };
         this.dragAndDrop = true;
         this.treeName = $(element).attr("name");
-        this.treeElement = $(element).append("<div name='" + this.treeName + "Tree' style='width:100%; height:100%; display: block;'></div>");
+        this.treeElement = $(element).append("<div name='" + this.treeName + "Tree'></div>");
     }
 
     dataItem(element) {

@@ -1,62 +1,60 @@
-﻿using cCoder.Core.Objects.Entities.Security;
-using cCoder.Core.Services.Orchestrations.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-using Security.Objects.DTOs;
+﻿using Microsoft.AspNetCore.Mvc;
+using cCoder.Security.Objects.DTOs;
+using Web.Services.Interfaces;
 
-namespace Web.Controllers;
+namespace Security.Api.Controllers;
 
 [Route("Api/Account")]
 public class AccountController : Controller
 {
-    private readonly ICMSUserRegistrationOrchestrationService userRegistrationOrchestrationService;
+    private readonly IUserRegistrationOrchestrationService userRegistrationOrchestrationService;
+    private readonly IUserPasswordOrchestrationService userPasswordOrchestrationService;
 
-    public AccountController(ICMSUserRegistrationOrchestrationService userRegistrationOrchestrationService)
+    public AccountController(
+        IUserRegistrationOrchestrationService userRegistrationOrchestrationService,
+        IUserPasswordOrchestrationService userPasswordOrchestrationService)
     {
         this.userRegistrationOrchestrationService = userRegistrationOrchestrationService;
+        this.userPasswordOrchestrationService = userPasswordOrchestrationService;
     }
 
     [HttpPost("Login")]
-    public IActionResult Login([FromBody] Auth auth)
-    {
-        Program.SSOUserId = auth.User;
-        return Ok();
-    }
+    public async ValueTask<IActionResult> Login([FromBody] Auth auth) => 
+        ModelState.IsValid
+            ? Ok(await userRegistrationOrchestrationService.LoginAsync(auth.User, auth.Pass))
+            : BadRequest(ModelState);
 
     [HttpPost("Logout")]
-    public IActionResult Logout()
+    public async ValueTask<IActionResult> Logout()
     {
-        Program.SSOUserId = "Guest";
+        await userRegistrationOrchestrationService.LogoutAsync();
         return Ok();
     }
 
     [HttpPost("ForgotPassword")]
-    public IActionResult ChangePassword(string email, int appId) =>
-         Ok();
-
-    [HttpPost("Register")]
-    public async ValueTask<IActionResult> Register([FromBody] RegisterUser registerForm)
+    public async ValueTask<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
     {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
-        User coreUser = new()
-        {
-            DefaultCultureId = registerForm.Culture,
-            Id = registerForm.Email.Split("@")[0],
-            Email = registerForm.Email,
-            DisplayName = registerForm.DisplayName,
-            IsActive = true
-        };
-
-        User newUser = await userRegistrationOrchestrationService.RegisterUserAsync(
-            coreUser,
-            registerForm.AppId,
-            Guid.NewGuid().ToString());
-
-        return Ok(newUser);
+        await this.userPasswordOrchestrationService.ForgotPasswordAsync(request.Email, request.AppId);
+        return Ok();
     }
 
+    [HttpPost("ConfirmForgotPassword")]
+    public async ValueTask<IActionResult> ConfirmForgotPassword([FromBody] ConfirmForgotPasswordRequest request)
+    {
+        await this.userPasswordOrchestrationService.ConfirmForgotPasswordAsync(request.Token, request.UserId, request.NewPassword, request.ConfirmPassword);
+        return Ok();
+    }
+
+    [HttpPost("Register")]
+    public async ValueTask<IActionResult> Register([FromBody] RegisterUser registerForm) =>
+        ModelState.IsValid
+            ? Ok(await userRegistrationOrchestrationService.RegisterAsync(registerForm))
+            : BadRequest(ModelState);
+
     [HttpPost("ConfirmRegistration")]
-    public IActionResult ConfirmRegistration(string confirmationToken) =>
-        Ok();
+    public async ValueTask<IActionResult> ConfirmRegistration(string confirmationToken)
+    {
+        await userRegistrationOrchestrationService.ConfirmRegistrationAsync(confirmationToken);
+        return Ok();
+    }
 }
