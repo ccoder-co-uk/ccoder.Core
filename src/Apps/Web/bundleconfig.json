@@ -2,9 +2,13 @@
   {
     "outputFileName": "wwwroot/css/site.min.css",
     "inputFiles": [
-      "wwwroot/css/site.css",
-      "wwwroot/css/kendo.css"
-    ]
+      "wwwroot/css/site.css"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
   },
   {
     "outputFileName": "wwwroot/lib/core.js",
@@ -23,9 +27,9 @@
   {
     "outputFileName": "wwwroot/lib/editor.js",
     "inputFiles": [
-      "wwwroot/lib/core/editor.js",
-      "wwwroot/lib/core/contentEditor.js",
-      "wwwroot/lib/core/pageToolbar.js"
+      "wwwroot/lib/Core/editor.js",
+      "wwwroot/lib/Core/contentEditor.js",
+      "wwwroot/lib/Core/pageToolbar.js"
     ],
     "minify": {
       "enabled": true,
@@ -116,6 +120,62 @@
     "minify": {
       "enabled": true,
       "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/dependencies/dependencies.min.js",
+    "inputFiles": [
+      "wwwroot/dependencies/jquery/jquery-3.7.0.min.js",
+      "wwwroot/dependencies/jquery/jquery-ui.min.js",
+      "wwwroot/dependencies/jquery/jquery-validate.js",
+      "wwwroot/dependencies/bootstrap/bootstrap.bundle.min.js",
+      "wwwroot/dependencies/kendo/kendo.all.v2023.1.314.min.js",
+      "wwwroot/dependencies/other/monaco.min.js",
+      "wwwroot/dependencies/other/signalr.min.js"
+    ],
+    "minify": {
+      "enabled": false,
+      "renameLocals": false
+    },
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/dependencies/dependencies.min.css",
+    "inputFiles": [
+      "wwwroot/dependencies/bootstrap/bootstrap.min.css",
+      "wwwroot/dependencies/kendo/kendo.v2023.1.314.css",
+      "wwwroot/dependencies/kendo/kendo-font-icons.css"
+    ],
+    "minify": {
+      "enabled": false,
+      "renameLocals": false
+    },
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/everything.min.js",
+    "inputFiles": [
+      "wwwroot/dependencies/dependencies.min.js",
+      "wwwroot/lib/framework.min.js"
+    ],
+    "minify": {
+      "enabled": false,
+      "renameLocals": false
+    },
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/everything.min.css",
+    "inputFiles": [
+      "wwwroot/dependencies/dependencies.min.css",
+      "wwwroot/dependencies/kendo/kendo.v2023.1.314.css",
+      "wwwroot/dependencies/kendo/kendo-font-icons.css",
+      "wwwroot/css/site.min.css"
+    ],
+    "minify": {
+      "enabled": false,
+      "renameLocals": false
     },
     "sourceMap": false
   }

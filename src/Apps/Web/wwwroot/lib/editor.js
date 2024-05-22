@@ -146,39 +146,42 @@ class PageToolbar {
     async init() {
         await this.getPage();
 
-        this.toolbarElement = $("body").prepend(`
-            <div class="pageToolbar k-toolbar k-widget">
-                <div class="tools-left">
-                    <button name="selectPage"><span class="k-icon k-i-file" style="margin-right: 10px;"></span>Select Page</button>
-                    <button name="newChildPage"><span class="k-icon k-i-plus"></span>New Child Page</button>
-                    <button name="newRootPage"><span class="k-icon k-i-plus"></span>New Root Page</button>
-                    <button name="deletePage"><span class="k-icon k-i-delete"></span>Delete Page</button>
-                    <button name="pageProperties"><span class="k-icon k-i-page-properties"></span>Page Properties</button>
-                </div>
-                <div class="tools-right">
-                    <div class="k-toolbar-item">
-                        <label>Last Updated: </label>
-                        <label name="lastUpdatedTime"></label>
-                    </div>
-                    <div class="k-toolbar-item">
-                        <label>Culture: </label>
-                        <input name="cultureDropdown" />
-                    </div>
-                    <div class="k-toolbar-item">
-                        <button name="pageSave"><span class="k-icon k-i-save"></span>Save</button>
+        $("body").prepend(`
+            <div class="pageToolbar k-window k-window-titleless">
+                <div class="editorToolbarWindow k-editor-window k-window-content">
+                    <span class="k-editortoolbar-dragHandle"><span class="k-icon k-i-handle-drag"></span></span>
+                    <div class="k-editor-toolbar k-toolbar k-toolbar-md">
+                        <span data-role="buttongroup" class="k-widget k-button-group k-toolbar-button-group" role="group">
+                            <label>Culture</label>
+                            <input name="cultureDropdown" />
+                        </span>
+                        <span data-role="buttongroup" class="k-widget k-button-group k-toolbar-button-group" role="group">
+                            <button name="pageSave" class="k-button k-button-md k-rounded-md k-button-solid k-button-solid-base k-icon-button k-toggle-button k-toolbar-tool"><span class="k-icon k-i-save"></span>Save</button>
+                        </span>
                     </div>
                 </div>
             </div>
+            <style>
+                .pageToolbar { 
+                    position: static; 
+                    width: 300px; 
+                    padding: 10px; 
+                    top: 20px; 
+                    left: 30px; 
+                    z-index: 10000;
+                    padding: 0;
+                }
+                .pageToolbar > * { display: inline-block; }
+                .pageToolbar > label { margin: 0 5px; }
+                .pageToolbar > button[name=pageSave] { margin-left: 10px; width: 100px; }
+            </style>
         `);
+
+        this.toolbarElement = $(".pageToolbar");
+        this.toolbarElement.draggable();
 
         $("[name=pageSave]", this.toolbarElement).click((e) => this.save(e));
         await this.setupCultureDropdown();
-        $("[name=lastUpdatedTime]", this.toolbarElement).html(kendo.toString(new Date(this.page.LastUpdated), "yyyy-MM-dd hh:mm"));
-        $("[name=selectPage]", this.toolbarElement).click((e) => this.selectPage(e));
-        $("[name=newChildPage]", this.toolbarElement).click((e) => this.newPage(e, this.page.Id));
-        $("[name=newRootPage]", this.toolbarElement).click((e) => this.newPage(e, null));
-        $("[name=deletePage]", this.toolbarElement).click((e) => this.deletePage(e));
-        $("[name=pageProperties]", this.toolbarElement).click((e) => this.pageProperties(e));
     }
 
     async getPage() {
@@ -200,66 +203,6 @@ class PageToolbar {
             }).catch((err) => error(err));
     }
 
-    async deletePage(e) {
-        e.preventDefault();
-        await api.destroy("Core/Page(" + this.page.Id + ")").then(async () => {
-            if (this.page.ParentId != null) {
-                var parentPage = await api.get("Core/Page(" + this.page.ParentId + ")");
-                window.location.href = api.apiRoot.replaceAll("/Api/", "/") + parentPage.Path + "?edit=true";
-            } else {
-                window.location.href = api.apiRoot.replaceAll("/Api/", "/?edit=true");
-            }
-        }).catch((err) => error(err));
-    }
-
-    async newPage(e, parentId) {
-        e.preventDefault();
-
-        var newPageDialog = new EditorDialog({
-            title: "New Page",
-            fields: [
-                { field: "Name", title: "Name" }
-            ],
-            data: {
-                Name: "",
-                ParentId: parentId,
-                AppId: this.page.AppId,
-                ShowOnMenus: false,
-                Path: null,
-                Layout: "Default",
-                Order: 0,
-                Contents: [],
-                PageInfo: []
-            },
-            confirm: "Create"
-        });
-
-        newPageDialog.events.confirm = async function () {
-            var newPage = newPageDialog.data.toJSON();
-            newPage.Contents.push({ CultureId: "", Name: "body", Html: "" });
-            newPage.PageInfo.push({ CultureId: "", Title: newPage.Name });
-            await api.post("Core/Page", newPage).then((returnedPage) => {
-                notification.success("Child page created");
-                window.location.href = api.apiRoot.replaceAll("/Api/", "/") + returnedPage.Path + "?edit=true"
-                newPageDialog.events.close();
-            }).catch((err) => error(err));
-        };
-
-        newPageDialog.init();
-    }
-
-    async selectPage(e) {
-        e.preventDefault();
-
-        var selectPageDialog = new Dialog({ width: 400, height: 600, title: "Select Page" });
-        selectPageDialog.init(async () => {
-            var cmsComponent = await loadComponent(selectPageDialog.element, "CMS");
-            await cmsComponent.init(session.app, $(".component[name=CMS]", selectPageDialog.element), (selectPageAction) => {
-                window.location.href = window.location.href.replaceAll(this.page.Path, selectPageAction.Path);
-            });
-        })
-    }
-
     async setupCultureDropdown() {
         var cultures = (await api.get("Core/Culture?$filter=Apps/any(a: a/AppId eq " + session.app.Id + ") or Id eq ''")).value;
 
@@ -271,22 +214,12 @@ class PageToolbar {
             dataSource: cultures,
             dataTextField: "Name",
             dataValueField: "Id",
+            width: 150,
             valueTemplate: "#=(InPage) ? '<span class=\"k-icon k-i-check\"></span>' : '<span class=\"k-icon k-i-x\"></span>'# #=Name#",
             template: "#=(InPage) ? '<span class=\"k-icon k-i-check\"></span>' : '<span class=\"k-icon k-i-x\"></span>'# #=Name#",
             change: function (_) {
                 setQueryParameter("culture", this.value());
             }
         }).data("kendoDropDownList").value(session.culture);
-    }
-
-    async pageProperties(e) {
-        e.preventDefault();
-        var pagePropertiesDialog = new Dialog({ title: "Page Properties: " + this.page.Path, width: 900, height: 250 });
-        pagePropertiesDialog.init(async () => {
-            var pageProperties = await loadComponent(pagePropertiesDialog.element, "PageProperties")
-            pageProperties.init(session.app, $(".component[name=PageProperties]", $(pagePropertiesDialog.element)), this.page, (saveEvent) => {
-                this.save(saveEvent);
-            });
-        });
     }
 }

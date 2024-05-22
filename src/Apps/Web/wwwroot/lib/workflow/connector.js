@@ -3,8 +3,8 @@
         super('', 0, 0, 0, 0, nodeSize);
         this.parent = parent;
         this.type = type;
-        this.col = '#37e83a';
-        this.sel = '#00ff04';
+        this.col = window.flowTheme.colours.primary;
+        this.sel = window.flowTheme.colours.secondary;
         this.updatePosition();
     }
 
@@ -42,7 +42,7 @@
     }
 
     draw(ctx) {
-        draw.circle(ctx, this.x, this.y, this.r, this.col, this.sel);
-        if (this.active) { draw.line(ctx, this.x, this.y, mouseposition.x, mouseposition.y, '#37e83a'); }
+        draw.circle(ctx, this.x, this.y, this.r, this.sel, this.sel);
+        if (this.active) { draw.line(ctx, this.x, this.y, mouseposition.x, mouseposition.y, window.flowTheme.colours.secondary); }
     }
 }

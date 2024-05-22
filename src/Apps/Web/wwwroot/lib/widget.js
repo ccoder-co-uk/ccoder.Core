@@ -113,7 +113,7 @@ class Chart extends Widget
 {
     constructor(element, args) {
         super(element, args);
-        this.chartElement = $(element).append("<div style = 'display:flex; flex-direction:column; flex:1;'></div>").children().first();
+        this.chartElement = $(element).append("<div></div>").children().first();
         this.text = args.text;
         this.showLegend = args.showLegend;
         this.series = args.series || [];
@@ -162,7 +162,7 @@ class PieChart extends Widget {
         super(element);
         this.data = data;
         this.chartName = $(element).attr("name");
-        $(element).append("<div name='" + this.gridName + "PieChart' style='width:100%; height:100%; display: block;'></div>");
+        $(element).append("<div name='" + this.gridName + "PieChart'></div>");
         this.chartElement = $("[name=" + this.gridName + "PieChart]", $(element));
     }
     
@@ -456,7 +456,7 @@ class GridWidget extends Widget {
 
         // default configuation for all grid widgets.
         this.gridName = $(element).attr("name");
-        $(element).append("<div name='" + this.gridName + "Grid' style = 'flex:1;'></div>");
+        $(element).append("<div name='" + this.gridName + "Grid'></div>");
         this.gridElement = $("[name=" + this.gridName + "Grid]", $(element));
         this.kendoDataSource = dataSource;
         this.toolbar = [];
@@ -740,20 +740,21 @@ class GridWidget extends Widget {
     resize() { this.kendoObject.resize(); }
 
     commandColumn() {
-        var result = "";
+        var result = "<div class='btn-group btn-group-sm'>";
         this.commands.forEach(function (command) {
             if (command.template) {
                 result += command.template;
             } else {
                 if (command.href) {
                     result += "<a name='" + command.name + "' href='" + command.href + "'><span class='k-icon " + command.icon + "'></span>" + command.text + "</a>";
-                }
-                else {
-                    result += "<a name='" + command.name + "'><span class='k-icon " + command.icon + "'></span>" + command.text + "</a>";
+                } else {
+                    result += `<button class="btn btn-primary" name="` + command.name + `">
+                            <span class='k-icon ` + command.icon + `'></span> ` + command.text + `
+                        </button>`
                 }
             }
-
         });
+        result += '</div>';
 
         return result;
     }
@@ -763,7 +764,7 @@ class GridWidget extends Widget {
         var widget = $(this.element).data("widget");
         widget.commands.forEach(function (command) {
             if (command.click) {
-                $("a[name=" + command.name + "]", widget.gridElement).on("click", function (e) {
+                $("button[name=" + command.name + "]", widget.gridElement).on("click", function (e) {
                     e.preventDefault();
                     var item = grid.dataItem($(e.currentTarget).closest("tr"));
                     command.click(e, item, grid, widget);
@@ -842,8 +843,8 @@ class ContextMenuWidget extends Widget {
     }
 
     setPosition(pageX, pageY) {
-        if (pageY + this.commands.length * 25 > window.innerHeight) {
-            var difference = pageY + (this.commands.length * 25) - window.innerHeight;
+        if (pageY + this.commands.length * 35 > window.innerHeight) {
+            var difference = pageY + (this.commands.length * 35) - window.innerHeight + 35; // Footer is 35px high.
             pageY -= difference;
         }
 
@@ -974,7 +975,7 @@ class FileDropContainerWidget extends Widget {
 
                 $(this.container)[0].style.setProperty("display", "none", "important");
 
-                this.fileUploaderTag = $("<input class='fileUploaderTag' type='file' multiple name='fileUpload' style = 'flex: 1'/>").insertAfter(this.container);
+                this.fileUploaderTag = $("<input class='fileUploaderTag' type='file' multiple name='fileUpload'/>").insertAfter(this.container);
                 this.fileUploaderTag.on("drop", (e) => {
                     this.events.drop(e);
                     this.remove();
@@ -1136,7 +1137,7 @@ class Tree extends Widget {
         };
         this.dragAndDrop = true;
         this.treeName = $(element).attr("name");
-        this.treeElement = $(element).append("<div name='" + this.treeName + "Tree' style='width:100%; height:100%; display: block;'></div>");
+        this.treeElement = $(element).append("<div name='" + this.treeName + "Tree'></div>");
     }
 
     dataItem(element) {

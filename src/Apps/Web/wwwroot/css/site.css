@@ -1,143 +1,85 @@
-﻿html { background: white; height: 100vh; width: 100vw; overflow: hidden; }
-* {
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    font-kerning: auto;
-    z-index: 0;
+﻿* {
+    background: transparent;
+}
+
+/* Bootstrap fixes. */
+.dropdown-menu[data-bs-popper] {
+    top: unset !important;
+    left: unset !important;
+}
+
+.k-grid-content > table {
+    width: 100%;
+}
+
+.container-xxl {
+    max-width: 1920px;
     padding: 0;
+}
+
+/* Platform configuration */
+.k-window-content .component {
+    border: none;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
     margin: 0;
 }
-body                                            { display: flex; flex-direction: column; height: 100vh; max-height: 100vh; }
-a                                               { color: #214A71; text-decoration: none; }
-hr                                              { margin: 5px -5px; padding: 0; }
 
-/* Headings */
-h1                                              { display: inline-block; font-size: 300%; font-weight: bold; vertical-align: top; }
-h1 > a                                          { text-decoration: none; font-size: 100%; font-weight: bold; vertical-align: top; top: 0; }
-h1 > a > img                                    { padding: 5px; height: 70px; display: inline-block; }
-h2                                              { font-size: 150%; font-weight: bold; padding: 10px 15px; margin-right: -5px; }
-h2 *                                            { font-weight: bold; }
-h3                                              { font-size: 140%; padding: 10px 15px; font-weight: bold; }
-h3 > span.k-sprite                              { margin-bottom: -1px; margin-right: 10px; }
-h3 > span                                       { display: inline-block; font: inherit; }
-h4                                              { padding: 10px; }
-ul                                              { list-style: none; }
-p                                               { margin: 10px 0; }
+.tab-pane.active .component {
+    margin: 0;
+    box-shadow: none;
+    border: none;
+    max-height: 100%
+}
 
-/* Forms related tags */
-fieldset                                        { border: none; }
-pre                                             { padding: 5px 0; padding-top: 0; }
-input                                           { padding: 5px; }
-input[type=text],
-input[type=email],
-input[type=password]                            { min-width: 200px; max-width: 95%; line-height: 110%; }
-select                                          { margin-bottom: 2px; padding: 5px; }
-textarea                                        { font-size: 100%; outline: 0 none; margin: 3px 0; padding: 5px; height: 80px; width: 300px; }
-button, .button                                 { height: 27px; padding: 0 10px; }
-button > span.k-icon                            { margin-top: -2px; margin-left: -2px; margin-right: 5px;  }
+.tab-pane .component {
+    margin: 0;
+}
 
-/* layout */
-body > header                                   { flex-direction: column; display:flex; z-index: 1000; }
-body > header > .details                        { vertical-align: top; display: inline-block; margin-bottom: -15px; float: right; padding: 5px; right: 0; }
-body > header > .details > ul > li              { padding: 6px; text-align: right; }
+.content, .tab-pane, .k-grid, .tab-control, .d-flex {
+    height: 100%;
+}
 
-nav                                             { flex: 1; align-self: flex-end; font-weight: bold; }
-nav > ul.menu                                   { flex:1; display: flex; flex-direction: row; justify-content:center; }
-nav .menu li                                    { padding: 10px 20px; margin-left: 1px; }
-nav .menu .sep                                  { padding: 10px 0; }
-nav .menu li .submenu                           { min-width: 200px; display: none; position: absolute; margin-left: -20px; margin-top: 10px; }
-nav .menu li:hover .submenu                     { display: block; }
-nav .menu li:hover .submenu li  	            { min-width: 200px; display: block; }
-nav .menu li:hover .submenu:hover               { display: block; }
+.tab-control > nav {
+    margin-top: 5px;
+}
 
-body > footer                                   {flex-basis: 20px;}
-body > footer > *                               { padding: 0 20px; }
-body > footer > a,
-body > footer > div,
-body > footer > p                               { display: inline-block; }
+.k-checkbox {
+    width: 15px;
+    height: 15px;
+}
 
-/* content block styles */
-.content                                        { background: transparent; flex:1; display: flex; flex-direction: column; }
-.content.k-splitter                             { height: 100%; }
+.k-toolbar {
+    padding-block: 8px;
+    padding-inline: 8px;
+    gap: 8px;
+}
 
-/* general fixes / hacks */
-.clearfix:before,
-.clearfix:after                                 { content: "\0020"; display: block; height: 0; overflow: hidden; clear: both; }
-.clearfix                                       { zoom: 1; }
+button > span.k-icon {
+    margin-right: 2px;
+    margin-bottom: 3px;
+}
 
-/* kendo consistency hacks */
-span.k-icon                                     { margin-top: -2px; margin-right: 5px; }
-input[data-role=datepicker],
-input[data-role=numerictextbox]                 { min-width: 0; }
-input[data-role=datepicker]:focus,
-input[data-role=numerictextbox]:focus           { border: none; }
+/* Dependency tweaks */
+.input-group > .input-group-text {
+    width: 200px;
+}
 
-.k-grid.k-widget.k-display-block		        { padding: 0; margin: 0; }
-.k-grid-toolbar .k-button                       { vertical-align: top; margin-right: 10px; padding: 2px 8px; }
-.k-grid-toolbar .k-button > span.k-icon         { margin-left: -2px; margin-right: 5px; margin-top: -2px; }
+.file-upload-preview {
+    max-height: 150px;
+    width: 300px !important;
+}
 
-.k-window .k-window-content                     { padding: 0; }
-.k-window .k-window-content > button            { margin-left: 10px; margin-bottom: 10px; margin-top: 6px; }
-.k-window .k-window-content.component           { margin: 0; border: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
-.k-window > .component h3                       { display: none; }
-.k-window > .k-window-titlebar.k-header         { margin-right: 5px; border: none; }
-.k-window > .k-window-titlebar.k-header > .k-window-title       { font-size: 100%; background-position: 0 -16px; height: 17px; }
-[data-role=tabstrip] [role=tab].k-state-active,
-[data-role=tabstrip] [role=tab].k-state-active > span           { border-bottom: none; }
-[data-role=tabstrip] .component > h4                            { margin: -5px; margin-bottom: 10px; }
-.k-window					                                    { overflow: hidden; }
+.file-upload-preview > img {
+    max-height: 148px;
+    max-width: 298px;
+    margin: 1px;
+}
 
-/* Notifications */
-.notification                                   { padding: 3px 10px; min-width: 200px; max-width: 400px; max-height: 200px; word-wrap: normal; word-break: keep-all; }
-.notification > .k-icon                         { margin-right: 10px; }
-.notification > *                               { display: inline-block; }
-
-.k-widget.k-notification                        { border: none; background: white; box-shadow: none; }
-.k-widget.k-notification > .notification        { margin-bottom: 10px; border-radius: 5px; }
-
-/* validation helpers */
-label.error                                     { font-weight: normal; width: 100%; display: block; }
-
-/* forms */
-.fieldList                                      { flex-direction: column; flex-wrap: wrap; padding: 7px; display: flex; flex:1; max-width: 600px; }
-.fieldList > li                                 { padding: 5px; flex-direction: row; flex-wrap: wrap; flex:1; display:flex; justify-content: space-between; }
-.fieldList > li > label                         { vertical-align: top; font-weight: bold; }
-.fieldList > li > .value                        { flex-direction: column }
-.fieldList > li > .value > .k-invalid           { border: dashed 1px red; }
-.fieldList .k-widget.k-tooltip-validation       { border: 0; box-shadow: none; text-align: left; display: block; }
-
-/* tables */
- th[role=columnheader]                           { font-weight: bold !important; }
-.submenu li                                     { display: block; }
-
-/* Context Menus */
-.contextMenu                                    { position: fixed; display: none; top: 0; left: 0; }
-.contextMenu > .component                       { margin: 0;}
-.contextMenu > .component > ul > li             { padding: 10px; }
-.contextMenu > .component > ul > li:hover       { background: #CCC; }
-.contextMenu > .component > ul > li > .k-icon   { margin-right: 5px; margin-top: -3px; }
-
-.contextMenu                                    { position: fixed; display: none; top: 0; left: 0; }
-.contextMenu > ul > li                          { padding: 10px; }
-.contextMenu > ul > li:hover                    { background: #CCC; }
-.contextMenu > ul > li > .k-icon                { margin-right: 5px; margin-top: -3px; }
-
-/* Content Management Editing */
-.content[contenteditable]                       { outline: dashed 1px red; margin: 10px; padding: 10px; min-height: 20px; max-width: calc(100% - 20px); }
-.content[contenteditable]:hover                 { outline: dashed 1px red; box-shadow: 4px 4px 4px; }
-.content[contenteditable]:focus, 
-.content[contenteditable]:active                { outline: solid 1px red; box-shadow: 4px 4px 4px; }
-.editorToolbar                                  { border: none; background-color: transparent; max-width: 330px; }
-.pageToolbar                                    { width: 100%; background-color: #f6f6f6; border-bottom: solid 1px #ccc; box-shadow: 4px 4px 4px; }
-.pageToolbar > div                              { display: inline-block; height: 30px; }
-.pageToolbar > .tools-left                      {  }
-.pageToolbar > .tools-right                     { position: absolute; right: 0; }
-.pageToolbar > .tools-right > *                 { display: inline-block; vertical-align: top; line-height: 30px; }
-
-
-/* Flex related styles */
-.flex-row { display: flex; flex-direction: row; }
-.flex-column { display: flex; flex-direction: column; }
-.flex-grow { flex: 1; }
-.flex-row-reverse { display: flex; flex-direction: row-reverse; }
+/* field Lists */
+.fieldList 				{ padding: 7px; flex: 1; max-width: 600px; display: initial;  }
+.fieldList 				{ list-style-type: none; }
+.fieldList > li 		{ padding: 2px; list-style-type: none; }
+.fieldList > li > div.value 	{ width: 50%; display: inline-block; }
+.fieldList > li > label { font-weight: bold; width: 50%; }
