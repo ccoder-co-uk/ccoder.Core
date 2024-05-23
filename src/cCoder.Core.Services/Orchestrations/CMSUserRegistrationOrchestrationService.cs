@@ -4,6 +4,7 @@ using cCoder.Core.Objects.Entities.CMS;
 using cCoder.Core.Objects.Entities.Security;
 using cCoder.Core.Services.Orchestrations.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Web;
 
 namespace cCoder.Core.Services.Orchestrations;
@@ -15,52 +16,65 @@ public class CMSUserRegistrationOrchestrationService : ICMSUserRegistrationOrche
     private readonly IUserRoleService userRoleService;
     private readonly IQueuedEmailService queuedEmailService;
     private readonly Config config;
+    private readonly ILogger<CMSUserRegistrationOrchestrationService> log;
 
     public CMSUserRegistrationOrchestrationService(
         IAppService appService,
         ICoreService<User> coreUserService,
         IUserRoleService userRoleService,
         IQueuedEmailService queuedEmailService,
-        Config config)
+        Config config,
+        ILogger<CMSUserRegistrationOrchestrationService> log)
     {
         this.appService = appService;
         this.coreUserService = coreUserService;
         this.userRoleService = userRoleService;
         this.queuedEmailService = queuedEmailService;
         this.config = config;
+        this.log = log;
     }
 
     public async ValueTask<User> RegisterUserAsync(User user, int appId, string confirmationToken)
     {
-        App app = appService.GetAll(false)
-            .IgnoreQueryFilters()
-            .Include(a => a.Roles)
-                .ThenInclude(r => r.Users)
-            .Include(a => a.Cultures)
-            .Include(a => a.MailServers)
-            .Include(a => a.Templates)
-            .Include(a => a.Resources)
-            .AsSplitQuery()
-            .FirstOrDefault(a => a.Id == appId);
+        try
+        {
+            App app = appService.GetAll(false)
+                .IgnoreQueryFilters()
+                .Include(a => a.Roles)
+                    .ThenInclude(r => r.Users)
+                .Include(a => a.Cultures)
+                .Include(a => a.MailServers)
+                .Include(a => a.Templates)
+                .Include(a => a.Resources)
+                .AsSplitQuery()
+                .FirstOrDefault(a => a.Id == appId);
 
-        Role usersRole = app.Roles
-            .FirstOrDefault(r => r.Name == "Users");
+            Role usersRole = app.Roles
+                .FirstOrDefault(r => r.Name == "Users");
 
-        User addedUser = await coreUserService.AddAsync(user);
+            User addedUser = await coreUserService.AddAsync(user);
 
-        bool userIsNotAlreadyInUsersRole = !usersRole.Users
-            .Select(ur => ur.UserId)
-            .Contains(user.Id);
+            bool userIsNotAlreadyInUsersRole = !usersRole.Users
+                .Select(ur => ur.UserId)
+                .Contains(user.Id);
 
-        if (usersRole != null && userIsNotAlreadyInUsersRole)
-            await userRoleService.SaveAsync(new UserRole 
-            { 
-                RoleId = usersRole.Id, 
-                UserId = user.Id 
-            });
+            if (usersRole != null && userIsNotAlreadyInUsersRole)
+                await userRoleService.SaveAsync(new UserRole
+                {
+                    RoleId = usersRole.Id,
+                    UserId = user.Id
+                });
 
-        await SendConfirmRegistrationEmail(confirmationToken, app, user);
-        return addedUser;
+            await SendConfirmRegistrationEmail(confirmationToken, app, user);
+            return addedUser;
+        }
+        catch
+        (Exception ex)
+        {
+            log.LogError($"Failed to create user. {ex.Message}");
+            log.LogError(ex.StackTrace);
+            throw;
+        }
     }
 
     private async ValueTask SendConfirmRegistrationEmail(string confirmationToken, App app, User user)
