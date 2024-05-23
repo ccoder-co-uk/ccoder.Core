@@ -50,11 +50,7 @@ public static class ContentHelper
             new Replacement("[app[name]]", p.App?.Name),
             new Replacement("[app[domain]]", p.App?.Domain),
             new Replacement("[app[root]]", $"https://{p.App?.Domain}{port}/"),
-            new Replacement("[app[id]]", p.App?.Id.ToString()),
-
-            new Replacement("[[editlink]]", p.User.Can(p.App?.Id ?? 0, "page_update")
-                ? "<p style='cursor:pointer' onclick=\"setQueryParameter('edit', true)\">Edit</p>"
-                : "")
+            new Replacement("[app[id]]", p.App?.Id.ToString())
         ];
 
         if (config != null)
@@ -87,7 +83,10 @@ public static class ContentHelper
                 new Replacement("[page[id]]", prp.Page?.Id.ToString()),
                 new Replacement("[page[parentid]]", prp.Page?.ParentId.ToString()),
                 new Replacement("[page[path]]", prp.Page?.Path),
-                new Replacement("[page[url]]", $"https://{p.App?.Domain}/{prp.Page?.Path}")
+                new Replacement("[page[url]]", $"https://{p.App?.Domain}/{prp.Page?.Path}"),
+                new Replacement("[[editlink]]", p.User.Can(p.App?.Id ?? 0, "page_update")
+                    ? "<p style='cursor:pointer' onclick=\"setQueryParameter('edit', true)\">Edit</p>"
+                    : "")
             ]);
         }
 
