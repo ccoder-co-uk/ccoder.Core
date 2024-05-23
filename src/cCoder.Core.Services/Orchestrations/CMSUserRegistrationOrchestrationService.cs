@@ -2,6 +2,7 @@
 using cCoder.Core.Objects.Dtos;
 using cCoder.Core.Objects.Entities.CMS;
 using cCoder.Core.Objects.Entities.Security;
+using cCoder.Core.Objects.Extensions;
 using cCoder.Core.Services.Orchestrations.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -94,7 +95,7 @@ public class CMSUserRegistrationOrchestrationService : ICMSUserRegistrationOrche
         {
             Token = confirmationToken,
             EncodedToken = HttpUtility.UrlEncode(confirmationToken),
-            CoreUser = user
+            CoreUser = new User().UpdateFrom(user)
         };
 
         TemplateRenderParams renderParams = new(app, user, user.DefaultCultureId);
