@@ -95,12 +95,13 @@ public class CMSUserRegistrationOrchestrationService(
                     UserId = user.Id
                 });
 
-            await SendInvitationEmail(invitationToken, app, addedUser);
+            log.LogInformation($"user: {user.ToJson()}");
+
+            await SendInvitationEmail(invitationToken, app, user);
 
             return addedUser;
         }
-        catch
-        (Exception ex)
+        catch (Exception ex)
         {
             log.LogError($"Failed to create user. {ex.Message}");
             log.LogError(ex.StackTrace);
