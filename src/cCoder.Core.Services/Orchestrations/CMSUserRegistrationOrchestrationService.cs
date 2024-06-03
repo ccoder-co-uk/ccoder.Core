@@ -1,6 +1,7 @@
 ﻿using cCoder.Core.Objects;
 using cCoder.Core.Objects.Dtos;
 using cCoder.Core.Objects.Entities.CMS;
+using cCoder.Core.Objects.Entities.Mail;
 using cCoder.Core.Objects.Entities.Security;
 using cCoder.Core.Objects.Extensions;
 using cCoder.Core.Services.Orchestrations.Interfaces;
@@ -35,7 +36,7 @@ public class CMSUserRegistrationOrchestrationService : ICMSUserRegistrationOrche
         this.log = log;
     }
 
-    public async ValueTask<User> RegisterUserAsync(User user, int appId, string confirmationToken)
+    public async ValueTask<User> RegisterUserAsync(User user, int appId, string confirmationToken, bool sendConfirmationEmail = true)
     {
         try
         {
@@ -66,7 +67,9 @@ public class CMSUserRegistrationOrchestrationService : ICMSUserRegistrationOrche
                     UserId = user.Id
                 });
 
-            await SendConfirmRegistrationEmail(confirmationToken, app, user);
+            if(sendConfirmationEmail)
+                await SendConfirmRegistrationEmail(confirmationToken, app, user);
+    
             return addedUser;
         }
         catch
@@ -78,6 +81,43 @@ public class CMSUserRegistrationOrchestrationService : ICMSUserRegistrationOrche
         }
     }
 
+    public async ValueTask SendInvitationEmail(string invitationToken, App app, User user)
+    {
+        Template template = app.Templates
+            .FirstOrDefault(t => t.Name == "Invitation");
+
+        if (template == null || !app.MailServers.Any())
+            return;
+
+        MailServer mailServer = app.MailServers
+            .FirstOrDefault(s => s.Name == "Default")
+                ??
+            app.MailServers.FirstOrDefault();
+
+        var renderModel = new
+        {
+            Token = invitationToken,
+            EncodedToken = HttpUtility.UrlEncode(invitationToken),
+            CoreUser = new User().UpdateFrom(user)
+        };
+
+        TemplateRenderParams renderParams = new(app, user, user.DefaultCultureId);
+
+        QueuedEmail confirmInvitationEmail = template
+            .BuildEmailTo(
+                user.Email,
+                app.Name + ": Confirm Invitation",
+                renderParams, renderModel,
+                mailServer,
+                config);
+
+        confirmInvitationEmail.SentByUserId = user.Id;
+
+        await queuedEmailService.AddAsync(
+            confirmInvitationEmail,
+            checkPrivs: false);
+    }
+
     private async ValueTask SendConfirmRegistrationEmail(string confirmationToken, App app, User user)
     {
         Template template = app.Templates
@@ -86,7 +126,7 @@ public class CMSUserRegistrationOrchestrationService : ICMSUserRegistrationOrche
         if (template == null || !app.MailServers.Any())
             return;
 
-        Objects.Entities.Mail.MailServer mailServer = app.MailServers
+        MailServer mailServer = app.MailServers
             .FirstOrDefault(s => s.Name == "Default")
                 ??
             app.MailServers.FirstOrDefault();
@@ -100,7 +140,7 @@ public class CMSUserRegistrationOrchestrationService : ICMSUserRegistrationOrche
 
         TemplateRenderParams renderParams = new(app, user, user.DefaultCultureId);
 
-        Objects.Entities.Mail.QueuedEmail confirmRegistrationEmail = template
+        QueuedEmail confirmRegistrationEmail = template
             .BuildEmailTo(
                 user.Email, 
                 app.Name + ": Confirm Registration", 
