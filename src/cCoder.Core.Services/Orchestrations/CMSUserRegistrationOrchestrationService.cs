@@ -95,7 +95,7 @@ public class CMSUserRegistrationOrchestrationService(
                     UserId = user.Id
                 });
 
-            await SendInvitationEmail(invitationToken, app, user);
+            await SendInvitationEmail(invitationToken, app, addedUser);
 
             return addedUser;
         }
