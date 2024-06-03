@@ -124,7 +124,14 @@ public class CMSUserRegistrationOrchestrationService(
         {
             Token = invitationToken,
             EncodedToken = HttpUtility.UrlEncode(invitationToken),
-            CoreUser = new User().UpdateFrom(user, true)
+            CoreUser = new
+            {
+                Id = user.Id,
+                Email = user.Email,
+                DisplayName = user.DisplayName,
+                DefaultCultureId = user.DefaultCultureId,
+                IsActive = user.IsActive,
+            }
         };
 
         log.LogInformation($"renderModel: {renderModel.ToJson()}");
