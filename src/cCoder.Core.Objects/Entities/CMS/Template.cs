@@ -1,5 +1,7 @@
 ﻿using cCoder.Core.Objects.Dtos;
 using cCoder.Core.Objects.Entities.Mail;
+using cCoder.Core.Objects.Extensions;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using System.Collections;
 using System.ComponentModel.DataAnnotations;
@@ -22,14 +24,14 @@ public class Template : BaseEntity
 
     public virtual App App { get; set; }
 
-    public QueuedEmail BuildEmailTo<T>(string receiver, string subject, RenderParams r, T model, MailServer serverInfo, Config config = null)
+    public QueuedEmail BuildEmailTo<T>(string receiver, string subject, RenderParams r, T model, MailServer serverInfo, Config config = null, ILogger log = null)
     {
         QueuedEmail result = new()
         {
             MailServerName = serverInfo.Name,
             To = receiver,
             Subject = subject,
-            Content = Render(model, r, config),
+            Content = Render(model, r, config, log),
             IsBodyHtml = true,
             AppId = AppId
         };
@@ -41,10 +43,14 @@ public class Template : BaseEntity
         return result;
     }
 
-    public string Render<T>(T model, RenderParams r, Config config = null)
+    public string Render<T>(T model, RenderParams r, Config config = null, ILogger log = null)
     {
         List<Replacement> replacements = ContentHelper.DefaultReplacements(r, config).ToList();
         replacements.AddRange(BuildModelReplacements(model));
+
+        if(log is not null)
+            log.LogInformation($"replacements: {replacements.ToArray().ToJson()}");
+
         string result = ContentHelper.ProcessContentString(ResourceKey, r, RawString, replacements);
         return result;
     }

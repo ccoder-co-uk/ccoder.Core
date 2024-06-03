@@ -95,8 +95,6 @@ public class CMSUserRegistrationOrchestrationService(
                     UserId = user.Id
                 });
 
-            log.LogInformation($"user: {user.ToJson()}");
-
             await SendInvitationEmail(invitationToken, app, user);
 
             return addedUser;
@@ -126,8 +124,10 @@ public class CMSUserRegistrationOrchestrationService(
         {
             Token = invitationToken,
             EncodedToken = HttpUtility.UrlEncode(invitationToken),
-            CoreUser = user
+            CoreUser = new User().UpdateFrom(user, true)
         };
+
+        log.LogInformation($"renderModel: {renderModel.ToJson()}");
 
         TemplateRenderParams renderParams = new(app, user, user.DefaultCultureId);
 
@@ -137,7 +137,8 @@ public class CMSUserRegistrationOrchestrationService(
                 app.Name + ": Confirm Invitation",
                 renderParams, renderModel,
                 mailServer,
-                config);
+                config,
+                log);
 
         confirmInvitationEmail.SentByUserId = user.Id;
 
