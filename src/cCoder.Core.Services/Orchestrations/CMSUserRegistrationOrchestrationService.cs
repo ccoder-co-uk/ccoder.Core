@@ -11,31 +11,14 @@ using System.Web;
 
 namespace cCoder.Core.Services.Orchestrations;
 
-public class CMSUserRegistrationOrchestrationService : ICMSUserRegistrationOrchestrationService
+public class CMSUserRegistrationOrchestrationService(
+    IAppService appService,
+    ICoreService<User> coreUserService,
+    IUserRoleService userRoleService,
+    IQueuedEmailService queuedEmailService,
+    Config config,
+    ILogger<CMSUserRegistrationOrchestrationService> log) : ICMSUserRegistrationOrchestrationService
 {
-    private readonly IAppService appService;
-    private readonly ICoreService<User> coreUserService;
-    private readonly IUserRoleService userRoleService;
-    private readonly IQueuedEmailService queuedEmailService;
-    private readonly Config config;
-    private readonly ILogger<CMSUserRegistrationOrchestrationService> log;
-
-    public CMSUserRegistrationOrchestrationService(
-        IAppService appService,
-        ICoreService<User> coreUserService,
-        IUserRoleService userRoleService,
-        IQueuedEmailService queuedEmailService,
-        Config config,
-        ILogger<CMSUserRegistrationOrchestrationService> log)
-    {
-        this.appService = appService;
-        this.coreUserService = coreUserService;
-        this.userRoleService = userRoleService;
-        this.queuedEmailService = queuedEmailService;
-        this.config = config;
-        this.log = log;
-    }
-
     public async ValueTask<User> RegisterUserAsync(User user, int appId, string confirmationToken, bool sendConfirmationEmail = true)
     {
         try
@@ -68,7 +51,7 @@ public class CMSUserRegistrationOrchestrationService : ICMSUserRegistrationOrche
                 });
 
             if(sendConfirmationEmail)
-                await SendConfirmRegistrationEmail(confirmationToken, app, user);
+                await SendConfirmRegistrationEmail(confirmationToken, app, addedUser);
     
             return addedUser;
         }
