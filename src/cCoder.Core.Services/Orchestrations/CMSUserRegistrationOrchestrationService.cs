@@ -81,6 +81,50 @@ public class CMSUserRegistrationOrchestrationService : ICMSUserRegistrationOrche
         }
     }
 
+    public async ValueTask<User> InviteUserAsync(User user, int appId, string invitationToken)
+    {
+        try
+        {
+            App app = appService.GetAll(false)
+                .IgnoreQueryFilters()
+                .Include(a => a.Roles)
+                    .ThenInclude(r => r.Users)
+                .Include(a => a.Cultures)
+                .Include(a => a.MailServers)
+                .Include(a => a.Templates)
+                .Include(a => a.Resources)
+                .AsSplitQuery()
+                .FirstOrDefault(a => a.Id == appId);
+
+            Role usersRole = app.Roles
+                .FirstOrDefault(r => r.Name == "Users");
+
+            User addedUser = await coreUserService.AddAsync(user);
+
+            bool userIsNotAlreadyInUsersRole = !usersRole.Users
+                .Select(ur => ur.UserId)
+                .Contains(user.Id);
+
+            if (usersRole != null && userIsNotAlreadyInUsersRole)
+                await userRoleService.SaveAsync(new UserRole
+                {
+                    RoleId = usersRole.Id,
+                    UserId = user.Id
+                });
+
+            await SendInvitationEmail(invitationToken, app, user);
+
+            return addedUser;
+        }
+        catch
+        (Exception ex)
+        {
+            log.LogError($"Failed to create user. {ex.Message}");
+            log.LogError(ex.StackTrace);
+            throw;
+        }
+    }
+
     public async ValueTask SendInvitationEmail(string invitationToken, App app, User user)
     {
         Template template = app.Templates
