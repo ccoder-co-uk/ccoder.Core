@@ -6,5 +6,8 @@ namespace cCoder.Core.Services.Orchestrations.Interfaces;
 public interface ICMSUserRegistrationOrchestrationService
 {
     ValueTask<User> RegisterUserAsync(User user, int appId, string confirmationToken, bool sendConfirmationEmail = true);
+
+    ValueTask<User> InviteUserAsync(User user, int appId, string invitationToken);
+
     ValueTask SendInvitationEmail(string invitationToken, App app, User user);
 }
