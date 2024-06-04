@@ -10,4 +10,6 @@ public interface ICMSUserRegistrationOrchestrationService
     ValueTask<User> InviteUserAsync(User user, int appId, string invitationToken);
 
     ValueTask SendInvitationEmail(string invitationToken, App app, User user);
+
+    ValueTask ResendUserInviteEmailAsync(string userId, int appId, string invitationToken);
 }

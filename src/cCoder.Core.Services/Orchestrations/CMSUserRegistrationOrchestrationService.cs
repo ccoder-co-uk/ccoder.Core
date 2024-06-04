@@ -154,6 +154,33 @@ public class CMSUserRegistrationOrchestrationService(
             checkPrivs: false);
     }
 
+    public async ValueTask ResendUserInviteEmailAsync(string userId, int appId, string invitationToken)
+    {
+        User user = coreUserService
+            .GetAll()
+            .Where(u => u.Id == userId)
+            .FirstOrDefault();
+
+        App app = appService.GetAll(false)
+            .IgnoreQueryFilters()
+            .Include(a => a.Roles)
+                .ThenInclude(r => r.Users)
+            .Include(a => a.Cultures)
+            .Include(a => a.MailServers)
+            .Include(a => a.Templates)
+            .Include(a => a.Resources)
+            .AsSplitQuery()
+            .FirstOrDefault(a => a.Id == appId);
+
+        if (user == null)
+            throw new ValidationException("User not found");
+
+        if (app == null)
+            throw new ValidationException("App not found");
+
+        await SendInvitationEmail(invitationToken, app, user);
+    }
+
     private async ValueTask SendConfirmRegistrationEmail(string confirmationToken, App app, User user)
     {
         Template template = app.Templates
