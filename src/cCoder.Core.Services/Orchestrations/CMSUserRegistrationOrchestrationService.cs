@@ -135,8 +135,6 @@ public class CMSUserRegistrationOrchestrationService(
             }
         };
 
-        log.LogInformation($"renderModel: {renderModel.ToJson()}");
-
         TemplateRenderParams renderParams = new(app, user, user.DefaultCultureId);
 
         QueuedEmail confirmInvitationEmail = template
