@@ -159,7 +159,7 @@ public static class ContentHelper
         string BuildMenuFor(Page page, bool expand)
         {
             string subs = BuildMenuItemsFor(page, expand);
-            return $"<div class='navbar navbar-collapse'><ul class='navbar-nav'>{subs}</ul></div>";
+            return $"<div class='collapse navbar-collapse'><ul class='navbar-nav'>{subs}</ul></div>";
         }
 
         result.RegexReplace(tag.Replace("TYPE", "nav"), (m) =>
