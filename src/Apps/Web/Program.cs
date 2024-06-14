@@ -110,6 +110,8 @@ public class Program
             app = builder.Build();
             log = app.Services.GetService<ILogger<Program>>();
 
+            app.UseHttpsRedirection();
+
             app.UseSwagger()
                 .UseSwaggerUI(c => c.SwaggerEndpoint(
                     "/swagger/v1/swagger.json",
