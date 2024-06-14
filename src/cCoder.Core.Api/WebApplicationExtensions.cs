@@ -27,7 +27,6 @@ public static class WebApplicationExtensions
 
         app.UseStaticFiles(options);
         app.UseRouting();
-        app.UseHttpsRedirection();
 
         coreFeaturebuilderAction(coreFeatureBuilder);
 
