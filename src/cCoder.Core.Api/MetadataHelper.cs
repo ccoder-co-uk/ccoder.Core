@@ -1,5 +1,4 @@
 ﻿using cCoder.Core.Api.OData;
-using cCoder.Core.Objects.Attributes;
 using cCoder.Core.Objects.Dtos.Metadata;
 using cCoder.Core.Objects.Dtos.Workflow;
 using cCoder.Core.Objects.Workflow.Activities;
@@ -18,7 +17,7 @@ public static class MetadataHelper
         {
             cache = SystemTypes()
                 .Union(EntityTypes(map))
-                .Union(new[] { WorkflowTypes() })
+                .Union([WorkflowTypes()])
                 .Union(DTOs())
                 .OrderBy(s => s.Name)
                 .AsQueryable();
@@ -27,39 +26,27 @@ public static class MetadataHelper
         return cache;
     }
 
-    private static IEnumerable<MetadataContainerSet> DTOs() => new[]
+    private static IEnumerable<MetadataContainerSet> DTOs() =>
+    [
+        new MetadataContainerSet
         {
-            new MetadataContainerSet
-            {
-                Name = "DTOs",
-                Types = new[] {
-                    new MetadataContainer(typeof(Flow)) { Category = "DTO (Workflow)" },
-                    new MetadataContainer(typeof(Link)) { Category = "DTO (Workflow)" },
-                    new MetadataContainer(typeof(WorkflowLogEntry)) { Category = "DTO (Workflow)" },
-                    new MetadataContainer(typeof(WorkflowLogLevel)) { Category = "DTO (Workflow)" }
-                }
-                .Union(
-                    TypeHelper.GetWebStackAssemblies()
-                        .SelectMany(a => a.GetTypes()
-                            .Where(t => t.Namespace == "B2B.Objects.Dtos"))
-                            .Select(t => new MetadataContainer(t) { Category = "DTO (B2B)" })
-                )
-                .Union(
-                    TypeHelper.GetWebStackAssemblies()
-                        .SelectMany(a => a.GetTypes()
-                            .Where(t => t.Namespace == "cCoder.Core.Objects"))
-                            .Select(t => new MetadataContainer(t) { Category = "DTO (cCoder.Core)" })
-                )
-                .OrderBy(t => t.Name)
-                .ToArray()
+            Name = "DTOs",
+            Types = new[] {
+                new MetadataContainer(typeof(Flow)) { Category = "DTO (Workflow)" },
+                new MetadataContainer(typeof(Link)) { Category = "DTO (Workflow)" },
+                new MetadataContainer(typeof(WorkflowLogEntry)) { Category = "DTO (Workflow)" },
+                new MetadataContainer(typeof(WorkflowLogLevel)) { Category = "DTO (Workflow)" }
             }
-        };
+            .OrderBy(t => t.Name)
+            .ToArray()
+        }
+    ];
 
     private static MetadataContainerSet WorkflowTypes() => new()
     {
         Name = "Workflow",
         Types = TypeHelper.GetWebStackAssemblies()
-            .SelectMany(a => a.GetTypes()
+            .SelectMany(a => a.GetExportedTypes()
             .Where(t => t.IsSubclassOf(typeof(Activity)) && t != typeof(Activity)))
             .GroupBy(t => t.BaseType.Name.Split('`')[0])
             .SelectMany(g => g.Where(t => !t.IsAbstract)
@@ -102,26 +89,14 @@ public static class MetadataHelper
     {
         map.Add("Core", new CoreModelBuilder().Build().EDMModel);
 
-        return TypeHelper.GetContextTypes()
-            .Select(ctxType =>
+        return map.Select(modelItem =>
+        {
+            return new MetadataContainerSet
             {
-                string name = ctxType.Name.Replace("DataContext", "");
-                IEdmModel model = map.ContainsKey(name) ? map[name] : null;
-
-                return new MetadataContainerSet
-                {
-                    Name = name,
-                    UriBase = name,
-                    Types = TypeHelper.GetEntityTypesFor(ctxType).Select(entType =>
-                    {
-                        bool hasEndpoint = entType.GetCustomAttribute<ApiIgnoreAttribute>() == null;
-                        return model != null
-                            ? model.GetExtendedMetadataForType(name, entType, hasEndpoint)
-                            : new ExtendedMetadataContainer(entType, true, hasEndpoint) { Category = name };
-                    })
-                    .OrderBy(t => t.Name)
-                    .ToArray()
-                };
-            });
+                Name = modelItem.Key,
+                UriBase = modelItem.Key,
+                Types = [.. modelItem.Value.GetMetadata(modelItem.Key).OrderBy(t => t.Name)]
+            };
+        });
     }
 }

@@ -7,6 +7,42 @@ namespace cCoder.Core.Api;
 
 public static class IEdmModelExtensions
 {
+    public static IEnumerable<ExtendedMetadataContainer> GetMetadata(this IEdmModel model, string contextName)
+    {
+        foreach (var entitySet in model.EntityContainer.EntitySets())
+        {
+            var edmType = entitySet.EntityType();
+            var clrType = GetClrType(edmType);
+
+            if (clrType is not null)
+                yield return GetExtendedMetadataForType(model, contextName, clrType);
+        }
+    }
+
+    private static Type GetClrType(IEdmEntityType edmType)
+    {
+        string typeName = edmType.FullTypeName();
+
+        // Attempt to get the type using Type.GetType
+        Type type = Type.GetType(typeName);
+
+        // If the type is not found, it might be in a different assembly
+        if (type == null)
+        {
+            // Iterate through all loaded assemblies to find the type
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                type = assembly.GetType(typeName);
+                if (type != null)
+                {
+                    break;
+                }
+            }
+        }
+
+        return type;
+    }
+
     public static ExtendedMetadataContainer GetExtendedMetadataForType(this IEdmModel model, string context, Type type, bool hasEndpoint = true)
     {
         ExtendedMetadataContainer result = new(type, true, hasEndpoint) { Category = context };
@@ -57,12 +93,44 @@ public static class IEdmModelExtensions
     }
 
     private static IEnumerable<OperationContainer> GetBaseCRUDOperations(MetadataContainer type)
-        => type.IsJoinEntity ? GetBaseCRUDOperationsForJoinEntity(type) : GetBaseCRUDOperationsForEntity(type);
+        => type.IsJoinEntity 
+            ? GetBaseCRUDOperationsForJoinEntity(type) 
+            : GetBaseCRUDOperationsForEntity(type);
 
-    private static IEnumerable<OperationContainer> GetBaseCRUDOperationsForJoinEntity(MetadataContainer type)
-        => new List<OperationContainer>
-        {
-            new() {
+    private static IEnumerable<OperationContainer> GetBaseCRUDOperationsForJoinEntity(MetadataContainer type) =>
+    [
+        new() {
+            Name = "Add",
+            Url = $"{type.Category}/{type.Name}",
+            Queryable = true,
+            HttpVerb = "POST",
+            ReturnType = type,
+            Parameters = new Dictionary<string, string>
+            {
+                { "body:entity", type.ServerType }
+            }
+        },
+        new() {
+            Name = "Get",
+            Url = $"{type.Category}/{type.Name}({{Left=leftKey,Right=rightKey}})",
+            Queryable = true,
+            HttpVerb = "GET",
+            ReturnType = type,
+            Parameters = new Dictionary<string, string>
+            {
+                { "odata:key", Type.GetType(type.ServerType).GetIdProperty().GetType().FullName }
+            }
+        },
+        new() { Name = "Get All", Url = $"{type.Category}/{type.Name}", Queryable = true, HttpVerb = "GET", ReturnType = type },
+        new() { Name = "Delete", Url = $"{type.Category}/{type.Name}({{Left=leftKey,Right=rightKey}})", HttpVerb = "DELETE" },
+    ];
+
+    private static IEnumerable<OperationContainer> GetBaseCRUDOperationsForEntity(MetadataContainer type)
+    {
+        return
+        [
+            new() 
+            {
                 Name = "Add",
                 Url = $"{type.Category}/{type.Name}",
                 Queryable = true,
@@ -73,65 +141,45 @@ public static class IEdmModelExtensions
                     { "body:entity", type.ServerType }
                 }
             },
-            new() {
+            new() 
+            {
+                Name = "Update",
+                Url = $"{type.Category}/{type.Name}({{key}})",
+                Queryable = true,
+                HttpVerb = "PUT",
+                ReturnType = type,
+                Parameters = new Dictionary<string, string>
+                {
+                    { "odata:key", Type.GetType(type.ServerType).GetIdProperty()?.GetType().FullName },
+                    { "body:entity", type.ServerType }
+                }
+            },
+            new() 
+            {
                 Name = "Get",
-                Url = $"{type.Category}/{type.Name}({{Left=leftKey,Right=rightKey}})",
+                Url = $"{type.Category}/{type.Name}({{key}})",
                 Queryable = true,
                 HttpVerb = "GET",
                 ReturnType = type,
                 Parameters = new Dictionary<string, string>
                 {
-                    { "odata:key", Type.GetType(type.ServerType).GetIdProperty().GetType().FullName }
+                    { "odata:key", Type.GetType(type.ServerType).GetIdProperty()?.GetType().FullName }
                 }
             },
-            new() { Name = "Get All", Url = $"{type.Category}/{type.Name}", Queryable = true, HttpVerb = "GET", ReturnType = type },
-            new() { Name = "Delete", Url = $"{type.Category}/{type.Name}({{Left=leftKey,Right=rightKey}})", HttpVerb = "DELETE" },
-        };
-
-    private static IEnumerable<OperationContainer> GetBaseCRUDOperationsForEntity(MetadataContainer type)
-    {
-        try
-        {
-            return new List<OperationContainer>
-            {
-                new() {
-                    Name = "Add",
-                    Url = $"{type.Category}/{type.Name}",
-                    Queryable = true,
-                    HttpVerb = "POST",
-                    ReturnType = type,
-                    Parameters = new Dictionary<string, string>
-                    {
-                        { "body:entity", type.ServerType }
-                    }
-                },
-                new() {
-                    Name = "Update",
-                    Url = $"{type.Category}/{type.Name}({{key}})",
-                    Queryable = true,
-                    HttpVerb = "PUT",
-                    ReturnType = type,
-                    Parameters = new Dictionary<string, string>
-                    {
-                        { "odata:key", Type.GetType(type.ServerType).GetIdProperty()?.GetType().FullName },
-                        { "body:entity", type.ServerType }
-                    }
-                },
-                new() {
-                    Name = "Get",
-                    Url = $"{type.Category}/{type.Name}({{key}})",
-                    Queryable = true,
-                    HttpVerb = "GET",
-                    ReturnType = type,
-                    Parameters = new Dictionary<string, string>
-                    {
-                        { "odata:key", Type.GetType(type.ServerType).GetIdProperty()?.GetType().FullName }
-                    }
-                },
-                new() { Name = "Get All", Url = $"{type.Category}/{type.Name}", Queryable = true, HttpVerb = "GET", ReturnType = type },
-                new() { Name = "Delete", Url = $"{type.Category}/{type.Name}({{key}})", HttpVerb = "DELETE" },
-            };
-        }
-        catch (NullReferenceException) { return Array.Empty<OperationContainer>(); }
+            new() 
+            { 
+                Name = "Get All", 
+                Url = $"{type.Category}/{type.Name}", 
+                Queryable = true, 
+                HttpVerb = "GET", 
+                ReturnType = type 
+            },
+            new() 
+            { 
+                Name = "Delete", 
+                Url = $"{type.Category}/{type.Name}({{key}})", 
+                HttpVerb = "DELETE" 
+            },
+        ];
     }
 }
