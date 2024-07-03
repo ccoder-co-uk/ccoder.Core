@@ -86,7 +86,12 @@ public partial class CoreDataContext
     private Privilege[] ComputePrivileges()
     {
         // get managed types 
-        Type[] types = TypeHelper.GetEntityTypesFor(GetType());
+        Type[] types = GetType()
+            .GetProperties()
+            .Where(p => p.PropertyType.IsGenericType && p.PropertyType.GetInterface("IQueryable") != null)
+            .Select(p => p.PropertyType.GenericTypeArguments[0])
+            .ToArray();
+
         string suffix;
 
         Privilege[] privs = types.SelectMany(t =>
