@@ -20,6 +20,7 @@ using cCoder.Core.Services.Planning;
 using cCoder.Core.Services.Security;
 using cCoder.Core.Services.Workflow;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.OData.Edm;
 
 namespace cCoder.Core.Api;
 
@@ -103,14 +104,14 @@ public static partial class IServiceCollectionExtensions
     }
 
     internal static void AddCaches(
-        this IServiceCollection services, 
-        IEnumerable<MetadataContainerSet> additionalMetadata)
+        this IServiceCollection services,
+        IDictionary<string, IEdmModel> map)
     {
         services.AddSingleton<ICommonObjectCache, CommonObjectCache>();
 
         services.AddSingleton<IMetadataCache>(ctx => 
             new MetadataCache(
-                MetadataHelper.MetaForEverything().Union(additionalMetadata), 
+                MetadataHelper.MetaForEverything(map), 
                 ctx.GetRequiredService<ICommonObjectCache>()));
 
         services.AddScoped<IResourceProvider, CoreResourceProvider>();

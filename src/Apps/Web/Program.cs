@@ -1,10 +1,7 @@
-using cCoder.Core;
 using cCoder.Core.Api;
 using cCoder.Core.Api.Formatters;
 using cCoder.Core.Api.OData;
 using cCoder.Core.Objects;
-using cCoder.Core.Objects.Attributes;
-using cCoder.Core.Objects.Dtos.Metadata;
 using cCoder.Core.Objects.Entities.CMS;
 using cCoder.Security.Api;
 using cCoder.Security.Api.EDM;
@@ -23,7 +20,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OpenApi.Models;
-using System.Reflection;
 using System.Security;
 using System.Web;
 using Web.Logging;
@@ -50,6 +46,11 @@ public class Program
 
         try
         {
+            var metadata = new Dictionary<string, IEdmModel>()
+            {
+                { "Security", new SecurityModelBuilder().Build().EDMModel }
+            };
+
             Config config = new();
             builder.Configuration.Bind(config);
             builder.Services.AddSingleton(config);
@@ -91,7 +92,7 @@ public class Program
             {
                 coreConfig
                     .UseMSSQLProvider(builder.Configuration.GetConnectionString("Core"))
-                    .UseContentManagement(BuildNonCoreMetadata(), true)
+                    .UseContentManagement(metadata, true)
                     .UseDocumentManagement()
                     .AuthorizeUsersWith(ctx => ctx.GetService<IEventAuthInfo>().SSOUserId);
             });
@@ -202,38 +203,6 @@ public class Program
                 innerEx = innerEx.InnerException;
             }
         }
-    }
-
-    private static IEnumerable<MetadataContainerSet> BuildNonCoreMetadata()
-    {
-        Dictionary<Type, (IEdmModel Model, Type Type)> map = new()
-        {
-            { typeof(SecurityDbContext), (new SecurityModelBuilder().Build().EDMModel, typeof(SecurityModelBuilder)) }
-        };
-
-        return map.Select(modelDetails =>
-        {
-            string name = modelDetails.Value.Type.Name.Replace("ModelBuilder", "");
-            IEdmModel model = modelDetails.Value.Model;
-
-            return new MetadataContainerSet
-            {
-                Name = name,
-                UriBase = name,
-                Types = TypeHelper
-                    .GetEntityTypesFor(modelDetails.Key)
-                    .Select(entType =>
-                    {
-                        bool hasEndpoint = entType.GetCustomAttribute<ApiIgnoreAttribute>() == null;
-
-                        return model != null
-                            ? model.GetExtendedMetadataForType(name, entType, hasEndpoint)
-                            : new ExtendedMetadataContainer(entType, true, hasEndpoint) { Category = name };
-                    })
-                    .OrderBy(t => t.Name)
-                    .ToArray()
-            };
-        });
     }
 
     private static async Task LogRequest(HttpContext context, ILogger log)
