@@ -32,7 +32,7 @@ public class DMSMiddleware
             log.LogError($"Request details - Path: {path}, Query: {context.Request.QueryString.Value}");
             log.LogError(ex.Message);
 
-            context.Response.Headers.Append("Access-Control-Allow-Origin", "*");
+            context.Response.Headers.Append("Access-Control-Allow-Origin", context.Request.Host.Host);
             context.Response.Headers.Append("Access-Control-Allow-Headers", "access-control-allow-origin,authorization,content-type,x-requested-with");
             context.Response.Headers.Append("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
             context.Response.Headers.Append("Cache-Control", "max-age=2592000");

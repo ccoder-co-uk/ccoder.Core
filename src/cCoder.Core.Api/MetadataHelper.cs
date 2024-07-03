@@ -12,12 +12,12 @@ public static class MetadataHelper
 {
     private static IQueryable<MetadataContainerSet> cache = null;
 
-    public static IQueryable<MetadataContainerSet> MetaForEverything()
+    public static IQueryable<MetadataContainerSet> MetaForEverything(IDictionary<string, IEdmModel> map)
     {
         if (cache == null)
         {
             cache = SystemTypes()
-                .Union(EntityTypes())
+                .Union(EntityTypes(map))
                 .Union(new[] { WorkflowTypes() })
                 .Union(DTOs())
                 .OrderBy(s => s.Name)
@@ -98,13 +98,9 @@ public static class MetadataHelper
             }
         };
 
-    private static IEnumerable<MetadataContainerSet> EntityTypes()
+    private static IEnumerable<MetadataContainerSet> EntityTypes(IDictionary<string, IEdmModel> map)
     {
-        Dictionary<string, IEdmModel> map = new()
-        {
-            { "Core", new CoreModelBuilder().Build().EDMModel }
-            //{ "Security", new SecurityModelBuilder().Build().EDMModel },
-        };
+        map.Add("Core", new CoreModelBuilder().Build().EDMModel);
 
         return TypeHelper.GetContextTypes()
             .Select(ctxType =>
