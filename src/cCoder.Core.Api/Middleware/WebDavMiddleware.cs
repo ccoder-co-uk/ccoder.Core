@@ -66,7 +66,7 @@ public class WebDavMiddleware
             {
                 case "OPTIONS":
                     headers.AddRange([
-                        new KeyValuePair<string, string>("Access-Control-Allow-Origin", "*"),
+                        new KeyValuePair<string, string>("Access-Control-Allow-Origin", context.Request.Host.Host),
                         new KeyValuePair<string, string>("Allow", "OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, COPY, MOVE, MKCOL, PROPFIND, PROPPATCH, LOCK, UNLOCK, ORDERPATCH"),
                         new KeyValuePair<string, string>("Public", "OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, COPY, MOVE, MKCOL, PROPFIND, PROPPATCH, LOCK, UNLOCK, ORDERPATCH"),
                         new KeyValuePair<string, string>("Date", DateTimeOffset.Now.ToString("s") + "Z"),

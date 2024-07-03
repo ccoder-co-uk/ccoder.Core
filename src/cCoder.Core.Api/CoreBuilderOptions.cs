@@ -1,9 +1,9 @@
 ﻿using cCoder.Core.Data;
 using cCoder.Core.Objects;
-using cCoder.Core.Objects.Dtos.Metadata;
 using cCoder.Core.Objects.Entities.Security;
 using cCoder.Core.Services;
 using cCoder.Core.Services.DMS;
+using Microsoft.OData.Edm;
 
 namespace cCoder.Core.Api;
 
@@ -26,12 +26,11 @@ public class CoreBuilderOptions
         return this;
     }
 
-    public CoreBuilderOptions UseContentManagement(
-        IEnumerable<MetadataContainerSet> additionalMetadata = null, bool servicesOnly = false)
+    public CoreBuilderOptions UseContentManagement(IDictionary<string, IEdmModel> map = null, bool servicesOnly = false)
     {
         services.AddCoreServices();
         services.AddCorePackaging();
-        services.AddCaches(additionalMetadata ?? []);
+        services.AddCaches(map ?? new Dictionary<string, IEdmModel>());
 
         if (!servicesOnly)
             services.AddAspNet();
