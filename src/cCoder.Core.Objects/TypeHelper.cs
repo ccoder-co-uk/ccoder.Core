@@ -1,13 +1,10 @@
-﻿using cCoder.Core.Objects;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace cCoder.Core;
 
 public static partial class TypeHelper
 {
     private static Assembly[] stackAssemblies = null;
-
-    public static string[] StackPrefixes = new[] { "cCoder.Core", "B2B", "Security" };
 
     /// <summary>
     /// Gets the array of core stack assemblies to use for type searching.
@@ -37,25 +34,9 @@ public static partial class TypeHelper
 
             stackAssemblies = AppDomain.CurrentDomain
                 .GetAssemblies()
-                .Where(a => StackPrefixes.Any(p => a.FullName.StartsWith(p)))
                 .ToArray();
         }
 
         return stackAssemblies;
     }
-
-    /// <summary>
-    /// Gets the array of data contexts that can be used for Api functionality.
-    /// </summary>
-    /// <returns></returns>
-    public static Type[] GetContextTypes() => GetWebStackAssemblies()
-        .SelectMany(a => a.GetTypes())
-        .Where(t => t != typeof(IDataContext) && typeof(IDataContext).IsAssignableFrom(t) && t.IsClass && !t.IsAbstract)
-        .Distinct()
-        .ToArray();
-
-    public static Type[] GetEntityTypesFor(Type contextType) => contextType.GetProperties()
-        .Where(p => p.PropertyType.IsGenericType && p.PropertyType.GetInterface("IQueryable") != null)
-        .Select(p => p.PropertyType.GenericTypeArguments[0])
-        .ToArray();
 }
