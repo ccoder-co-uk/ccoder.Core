@@ -24,6 +24,7 @@ public class PageInfoService : CoreService<PageInfo>, ICoreService<PageInfo>
 
         Page page = await Db.GetAll<Page>(true)
             .Include(p => p.PageInfo)
+            .Include(p => p.Parent)
             .FirstOrDefaultAsync(p => p.Id == pageInfo.PageId);
 
         page.RecomputePaths();
@@ -40,6 +41,7 @@ public class PageInfoService : CoreService<PageInfo>, ICoreService<PageInfo>
         Page[] childPages = await Db.GetAll<Page>(true)
             .Where(p => p.ParentId == parentPage.Id)
             .Include(p => p.PageInfo)
+            .Include(p => p.Parent)
             .ToArrayAsync();
 
         foreach (Page childPage in childPages)
