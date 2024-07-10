@@ -86,7 +86,7 @@ public class Page : IAmRoleSecured<PageRole>
         if (App.IsAppAdmin(user) || UserCan(user, "page_update"))
         {
             // grab the "first or null" block of content thats already in the db
-            Content existingVersion = Contents.FirstOrDefault(c => c.Name == content.Name);
+           Content existingVersion = Contents.FirstOrDefault(c => c.Name == content.Name);
 
             // if there is one, update it from the one passed in
             if (existingVersion != null)
