@@ -39,14 +39,14 @@ public class PageInfoService : CoreService<PageInfo>, ICoreService<PageInfo>
         }
         catch (Exception ex)
         {
-            Log.LogDebug(ex.Message);
-            Log.LogDebug(ex.StackTrace);
+            Log.LogError(ex, ex.Message);
 
             if (ex.InnerException != null)
             {
-                Log.LogDebug(ex.InnerException.Message);
-                Log.LogDebug(ex.InnerException.StackTrace);
+                Log.LogError(ex.InnerException, ex.Message);
             }
+
+            throw;
         }
 
 
