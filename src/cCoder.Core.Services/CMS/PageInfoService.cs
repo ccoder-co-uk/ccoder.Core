@@ -1,12 +1,18 @@
 ﻿using cCoder.Core.Objects;
 using cCoder.Core.Objects.Entities.CMS;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace cCoder.Core.Services.CMS;
 
 public class PageInfoService : CoreService<PageInfo>, ICoreService<PageInfo>
 {
-    public PageInfoService(ICoreDataContext db) : base(db) { }
+    public PageInfoService(ICoreDataContext db, ILogger<PageInfoService> log) : base(db)
+    {
+        Log = log;
+    }
+
+    public ILogger<PageInfoService> Log { get; }
 
     public override async Task<PageInfo> UpdateAsync(PageInfo entity)
     {
@@ -27,7 +33,22 @@ public class PageInfoService : CoreService<PageInfo>, ICoreService<PageInfo>
             .Include(p => p.Parent)
             .FirstOrDefaultAsync(p => p.Id == pageInfo.PageId);
 
-        page.RecomputePaths();
+        try
+        {
+            page.RecomputePaths();
+        }
+        catch (Exception ex)
+        {
+            Log.LogDebug(ex.Message);
+            Log.LogDebug(ex.StackTrace);
+
+            if (ex.InnerException != null)
+            {
+                Log.LogDebug(ex.InnerException.Message);
+                Log.LogDebug(ex.InnerException.StackTrace);
+            }
+        }
+
 
         page.LastUpdated = DateTimeOffset.Now;
         page.LastUpdatedBy = User.Id;
