@@ -150,8 +150,9 @@ public class Page : IAmRoleSecured<PageRole>
         ICollection<Replacement> r = ContentHelper.DefaultReplacements(p, config);
         RenderResult result = new() { Theme = theme, Culture = culture };
 
-        _ = result.UpdateFrom(this, true);
-        _ = result.UpdateFrom(meta, false);
+        MergePage(result, this);
+        MergeMeta(result, meta);
+
 
         if (((IDictionary<string, object>)App.Config).ContainsKey("Themes"))
         {
@@ -279,5 +280,19 @@ public class Page : IAmRoleSecured<PageRole>
         return user.IsAdminOfApp(AppId) || (Roles?.Where(pr => userRoles.Contains(pr.RoleId))
             .SelectMany(pr => pr.Role?.Privileges ?? Array.Empty<string>())
             .Contains(priv) ?? false);
+    }
+
+    private void MergePage(RenderResult result, Page page)
+    {
+        result.Layout ??= page.Layout;
+        result.Path ??= page.Path;
+    }
+
+    private void MergeMeta(RenderResult result, PageInfo info)
+    {
+        result.Culture ??= info.CultureId;
+        result.Description ??= info.Description;
+        result.Keywords ??= info.Keywords;
+        result.Title ??= info.Title;
     }
 }
