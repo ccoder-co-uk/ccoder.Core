@@ -286,9 +286,9 @@ public class Page : IAmRoleSecured<PageRole>
     {
         result.Layout ??= page.Layout;
         result.Path ??= page.Path;
-        result.PageId ??= page.Id;
-        result.AppId ??= page.AppId;
-        result.ParentId ??= page.ParentId;
+        result.PageId = page.Id;
+        result.AppId = page.AppId;
+        result.ParentId = page.ParentId;
     }
 
     private void MergeMeta(RenderResult result, PageInfo info)
