@@ -52,7 +52,6 @@ public class App
     public virtual ICollection<MailServer> MailServers { get; set; }
     public virtual ICollection<QueuedEmail> MailQueue { get; set; }
     public virtual ICollection<SentEmail> SentMail { get; set; }
-    public virtual ICollection<BackgroundJob> BackgroundJobs { get; set; }
 
     [DontPrivilege]
     public bool IsAppAdmin(User user) => user.Roles?.Any(r => r.Role.AppId == Id && r.Role.Allows(user, "App_Admin")) ?? false;
