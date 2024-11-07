@@ -11,14 +11,14 @@
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="8.0.10" />
     <PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="8.0.10" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.8.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.8.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.8.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.9.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.9.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.9.0" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="cCoder.Eventing.EventLibrary" Version="2024.6.22.1202" />
-    <PackageReference Include="cCoder.Security.Data.EF" Version="2024.7.3.1101" />
+    <PackageReference Include="cCoder.Security.Data.EF" Version="2024.8.21.942" />
     <PackageReference Include="cCoder.Security.Data.EF.MSSQL" Version="2024.8.21.942" />
     <PackageReference Include="cCoder.Security.Api" Version="2024.8.21.942" />
     <PackageReference Include="cCoder.Security.Objects" Version="2024.8.21.942" />
