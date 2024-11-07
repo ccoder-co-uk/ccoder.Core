@@ -48,13 +48,11 @@ internal sealed class WorkflowInstanceManagement(
             {
                 InstanceId = i.Id,
                 FlowId = i.FlowDefinition.Id,
-                ProcessId = i.FlowDefinition.ProcessId,
                 Portal = i.FlowDefinition.App.Domain,
                 i.Start,
                 i.End,
-                AppName = i.FlowDefinition.Process.App.Name,
-                FlowName = i.FlowDefinition.Name,
-                ProcessName = i.FlowDefinition.Process.Name
+                AppName = i.FlowDefinition.App.Name,
+                FlowName = i.FlowDefinition.Name
             })
             .OrderByDescending(i => i.Start)
             .ToArray();
