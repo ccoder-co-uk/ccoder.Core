@@ -74,7 +74,6 @@ public class CoreModelBuilder : ODataModelBuilder
         _ = AddSet<LogDataItem, int>();
 
         // workflow stuff
-        _ = AddSet<BusinessProcess, Guid>();
         _ = AddSet<WorkflowEvent, Guid>();
         _ = AddSet<FlowDefinition, Guid>();
         _ = AddSet<FlowInstanceData, Guid>();
@@ -83,7 +82,6 @@ public class CoreModelBuilder : ODataModelBuilder
         _ = AddSet<Calendar, int>();
         _ = AddSet<CalendarEvent, int>();
         _ = AddSet<ScheduledTask, int>();
-        _ = AddSet<BackgroundJob, int>();
         _ = AddSet<MailServer, int>();
         _ = AddSet<QueuedEmail, int>();
         _ = AddSet<SentEmail, int>();

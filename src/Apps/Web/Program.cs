@@ -216,7 +216,8 @@ public class Program
 
             SecurityDbContext sso = new(
                 new SSOAuthInfo { SSOUserId = "Guest" },
-                context.RequestServices.GetService<ISecurityModelBuildProvider>());
+                context.RequestServices.GetService<ISecurityModelBuildProvider>(),
+                context.RequestServices.GetService<ILogger<SecurityDbContext>>());
 
             ICoreDataContext core = context.RequestServices.GetService<ICoreDataContext>();
 
