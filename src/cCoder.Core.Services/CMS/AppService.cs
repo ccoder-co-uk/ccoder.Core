@@ -40,16 +40,14 @@ public class AppService : CoreService<App>, IAppService
 
             await SetupRolesForApp(newApp);
 
-            result = Db.GetAll<App>(false)
+            result = await Db.GetAll<App>(false)
                 .Include(a => a.Roles)
-                .First(a => a.Id == result.Id);
+                .FirstAsync(a => a.Id == result.Id);
 
             return result;
         }
         else
-        {
             throw new SecurityException("Access Denied!");
-        }
     }
 
     private async Task SetupCulturesForApp(App newApp, App result)
@@ -68,49 +66,52 @@ public class AppService : CoreService<App>, IAppService
 
     private async Task SetupRolesForApp(App result)
     {
-        User guest = Db.GetAll<User>(false)
-            .FirstOrDefault(u => u.Id == "Guest") ?? new User { Id = "Guest", DisplayName = "Guest", DefaultCultureId = string.Empty, IsActive = true, Email = "guest@corporatelinx.com" };
+        User guest = await Db.GetAll<User>(false)
+            .FirstOrDefaultAsync(u => u.Id == "Guest") 
+                ?? 
+               new User { Id = "Guest", DisplayName = "Guest", DefaultCultureId = string.Empty, IsActive = true, Email = "guest@corporatelinx.com" };
 
-        Role[] roles = (await Db.AddAllAsync(new[]
-        {
-                new Role
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Administrators",
-                    App = result,
-                    Privileges = Db.GetAllPrivileges()
-                        .Where(p => !p.PortalAdminsOnly)
-                        .Select(p => p.Id)
-                        .ToArray()
-                },
-                new Role
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Users",
-                    App = result,
-                    Privileges = new[] { "culture_read,folderrole_read,pagerole_read,userrole_read,appculture_read,page_read,folder_read,file_read,app_read" }
-                },
-                new Role
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Guests",
-                    App = result,
-                    Privileges = new[] { "folderrole_read,pagerole_read,userrole_read,appculture_read,page_read,folder_read,file_read,app_read" }
-                }
-            })).ToArray();
+        Role[] roles = (await Db.AddAllAsync(
+        [
+            new Role
+            {
+                Id = Guid.NewGuid(),
+                Name = "Administrators",
+                App = result,
+                Privileges = Db.GetAllPrivileges()
+                    .Where(p => !p.PortalAdminsOnly)
+                    .Select(p => p.Id)
+                    .ToArray()
+            },
+            new Role
+            {
+                Id = Guid.NewGuid(),
+                Name = "Users",
+                App = result,
+                Privileges = ["culture_read,folderrole_read,pagerole_read,userrole_read,appculture_read,page_read,folder_read,file_read,app_read"]
+            },
+            new Role
+            {
+                Id = Guid.NewGuid(),
+                Name = "Guests",
+                App = result,
+                Privileges = ["folderrole_read,pagerole_read,userrole_read,appculture_read,page_read,folder_read,file_read,app_read"]
+            }
+        ])).ToArray();
 
-        await Db.AddAllAsync(new[] {
+        await Db.AddAllAsync(
+            [
                 new UserRole { RoleId = roles[0].Id, UserId = User.Id },
                 new UserRole { RoleId = roles[1].Id, UserId = User.Id },
                 new UserRole { RoleId = roles[2].Id, UserId = guest.Id }
-            });
+            ]);
     }
 
     public override async Task<App> UpdateAsync(App app)
     {
-        App dbVersion = Db.GetAll<App>(true)
+        App dbVersion = await Db.GetAll<App>(true)
             .Include(a => a.Cultures)
-            .FirstOrDefault(a => app.Id == a.Id);
+            .FirstOrDefaultAsync(a => app.Id == a.Id);
 
         if (User.IsAdminOfApp(dbVersion.Id))
         {
@@ -197,7 +198,8 @@ public class AppService : CoreService<App>, IAppService
             throw new SecurityException("Access Denied!");
 
         if (packages == null || packages.Length == 0)
-            packages = new string[] {
+            packages = 
+            [
                 "Roles",
                 "Layouts",
                 "Templates",
@@ -211,7 +213,7 @@ public class AppService : CoreService<App>, IAppService
                 "FolderRoles",
                 "Calendars",
                 "CalendarEvents"
-            };
+            ];
 
         Role[] roleData = Db.GetAll<Role>()
             .Where(r => r.AppId == appId)
@@ -242,7 +244,6 @@ public class AppService : CoreService<App>, IAppService
             "Scripts" => ExportScripts(appId, serializerSettings),
             "Resources" => ExportResources(appId, serializerSettings),
             "Pages" => ExportPages(appId, roleData, pageRoles, serializerSettings),
-            "BusinessProcesses" => ExportBusinessProcesses(appId, serializerSettings),
             "Workflows" => ExportWorkflows(appId, serializerSettings),
             "PageRoles" => ExportPageRoles(pageRoles, serializerSettings),
             "Calendars" => ExportCalendars(appId, serializerSettings),
@@ -258,36 +259,36 @@ public class AppService : CoreService<App>, IAppService
 
     private static Package ExportPageRoles(List<PageRoleInfo> pageRoles, JsonSerializerSettings serializerSettings) => new("PageRoles")
     {
-        Items = new[]
-            {
+        Items =
+            [
                 new PackageItem()
                 {
                     Type = "Core/PageRole",
                     Data = pageRoles.ToJson(serializerSettings)
                 }
-            }
+            ]
     };
 
     private Package ExportWorkflows(int appId, JsonSerializerSettings serializerSettings) => new("Workflows")
     {
-        Items = new[]
-            {
+        Items =
+            [
                 new PackageItem()
                 {
                     Type = "Core/FlowDefinition",
                     Data = Db.GetAll<FlowDefinition>()
-                        .Include(f => f.Process)
+                        .Include(f => f.App)
                         .Where(f => f.AppId == appId)
-                        .Select(f => new { ProcessName = f.Process.Name, f.Name, f.ReportingComponentName, f.InstanceReportingComponentName, f.Description, f.DefinitionJson, f.ConfigJson, f.LastUpdated })
+                        .Select(f => new { ProcessName = f.App.Name, f.Name, f.ReportingComponentName, f.InstanceReportingComponentName, f.Description, f.DefinitionJson, f.ConfigJson, f.LastUpdated })
                         .ToJson(serializerSettings)
                 }
-            }
+            ]
     };
 
     private Package ExportCalendarEvents(int appId, JsonSerializerSettings serializerSettings) => new("CalendarEvents")
     {
-        Items = new[]
-            {
+        Items =
+            [
                 new PackageItem()
                 {
                     Type = "Core/CalendarEvent",
@@ -297,28 +298,13 @@ public class AppService : CoreService<App>, IAppService
                         .Select(f => new { CalendarName = f.Calendar.Name, f.Name, f.Start, f.Description, f.DurationInTicks})
                         .ToJson(serializerSettings)
                 }
-            }
-    };
-
-    private Package ExportBusinessProcesses(int appId, JsonSerializerSettings serializerSettings) => new("BusinessProcesses")
-    {
-        Items = new[]
-            {
-                new PackageItem()
-                {
-                    Type = "Core/BusinessProcess",
-                    Data = Db.GetAll<BusinessProcess>()
-                        .Where(p => p.AppId == appId)
-                        .Select(p => new { p.Name, p.ReportingComponentName, p.Description, p.Category, p.LastUpdated })
-                        .ToJson(serializerSettings)
-                }
-            }
+            ]
     };
 
     private Package ExportCalendars(int appId, JsonSerializerSettings serializerSettings) => new("Calendars")
     {
-        Items = new[]
-            {
+        Items =
+            [
                 new PackageItem()
                 {
                     Type = "Core/Calendar",
@@ -327,13 +313,13 @@ public class AppService : CoreService<App>, IAppService
                         .Select(p => new { p.Name, p.Description})
                         .ToJson(serializerSettings)
                 }
-            }
+            ]
     };
 
     private Package ExportPages(int appId, Role[] roleData, List<PageRoleInfo> pageRoles, JsonSerializerSettings serializerSettings) => new("Pages")
     {
-        Items = new[]
-            {
+        Items =
+            [
                 new PackageItem()
                 {
                     Type = "Core/Page",
@@ -364,13 +350,13 @@ public class AppService : CoreService<App>, IAppService
                         })
                         .ToJson(serializerSettings)
                 }
-            }
+            ]
     };
 
     private Package ExportResources(int appId, JsonSerializerSettings serializerSettings) => new("Resources")
     {
-        Items = new[]
-            {
+        Items =
+            [
                 new PackageItem() {
                     Type = "Core/Resource",
                     Data = Db.GetAll<Resource>()
@@ -378,13 +364,13 @@ public class AppService : CoreService<App>, IAppService
                         .Select(r => new { r.Culture, r.Key, r.Name, r.DisplayName, r.ShortDisplayName, r.Description, r.LastUpdated })
                         .ToJson(serializerSettings)
                 }
-            }
+            ]
     };
 
     private Package ExportScripts(int appId, JsonSerializerSettings serializerSettings) => new("Scripts")
     {
-        Items = new[]
-            {
+        Items =
+            [
                 new PackageItem()
                 {
                     Type = "Core/Script",
@@ -393,13 +379,13 @@ public class AppService : CoreService<App>, IAppService
                         .Select(c => new { c.Name, c.Content, c.LastUpdated })
                         .ToJson(serializerSettings)
                 }
-            }
+            ]
     };
 
     private Package ExportComponents(int appId, JsonSerializerSettings serializerSettings) => new("Components")
     {
-        Items = new[]
-            {
+        Items =
+            [
                 new PackageItem()
                 {
                     Type = "Core/Component",
@@ -408,28 +394,28 @@ public class AppService : CoreService<App>, IAppService
                         .Select(c => new { c.Name, c.Key, c.ResourceKey, c.Script, c.Content, c.LastUpdated })
                         .ToJson(serializerSettings)
                 }
-            }
+            ]
     };
 
     private Package ExportTemplates(int appId, JsonSerializerSettings serializerSettings) => new("Templates")
     {
-        Items = new[]
-                            {
-                    new PackageItem()
-                    {
-                        Type = "Core/Template",
-                        Data = Db.GetAll<Template>()
-                            .Where(r => r.AppId == appId)
-                            .Select(t => new { t.Name, t.ResourceKey, t.RawString, t.LastUpdated })
-                            .ToJson(serializerSettings)
-                    }
+        Items =
+            [
+                new PackageItem()
+                {
+                    Type = "Core/Template",
+                    Data = Db.GetAll<Template>()
+                        .Where(r => r.AppId == appId)
+                        .Select(t => new { t.Name, t.ResourceKey, t.RawString, t.LastUpdated })
+                        .ToJson(serializerSettings)
                 }
+            ]
     };
 
     private Package ExportLayouts(int appId, JsonSerializerSettings serializerSettings) => new("Layouts")
     {
-        Items = new[]
-            {
+        Items =
+            [
                 new PackageItem()
                 {
                     Type = "Core/Layout",
@@ -438,13 +424,13 @@ public class AppService : CoreService<App>, IAppService
                         .Select(l => new { l.Name, l.HeaderHtml, l.Html, l.Script, l.LastUpdated })
                         .ToJson(serializerSettings)
                 }
-            }
+            ]
     };
 
     private static Package ExportFolderRoles(Folder[] folderData, JsonSerializerSettings serializerSettings) => new("FolderRoles")
     {
-        Items = new[]
-            {
+        Items =
+            [
                 new PackageItem()
                 {
                     Type = "Core/FolderRole",
@@ -452,19 +438,19 @@ public class AppService : CoreService<App>, IAppService
                         .ToArray()
                         .ToJson(serializerSettings)
                 }
-            }
+            ]
     };
 
     private static Package ExportRoles(Role[] roleData, JsonSerializerSettings serializerSettings) => new("Roles")
     {
-        Items = new[]
-            {
+        Items =
+            [
                 new PackageItem()
                 {
                     Type = "Core/Role",
                     Data = roleData.Select(r => new { r.Name, r.Privs }).ToJson(serializerSettings)
                 }
-            }
+            ]
     };
 
     /// <summary>

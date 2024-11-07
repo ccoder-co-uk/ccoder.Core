@@ -24,9 +24,6 @@ public class FlowDefinition : BaseEntity
     [ForeignKey("App")]
     public int AppId { get; set; }
 
-    [ForeignKey("Process")]
-    public Guid? ProcessId { get; set; }
-
     public string DefinitionJson { get; set; }
 
     public string ConfigJson { get; set; }
@@ -42,7 +39,6 @@ public class FlowDefinition : BaseEntity
     public dynamic GetConfig() => ConfigJson != null ? Data.ParseJson<ExpandoObject>(ConfigJson) : null;
 
     public virtual App App { get; set; }
-    public virtual BusinessProcess Process { get; set; }
 
     public virtual ICollection<FlowInstanceData> Instances { get; set; }
 
