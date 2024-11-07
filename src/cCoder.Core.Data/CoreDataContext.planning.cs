@@ -9,5 +9,4 @@ public partial class CoreDataContext
     public virtual DbSet<Calendar> Calendars { get; set; }
     public virtual DbSet<CalendarEvent> Events { get; set; }
     public virtual DbSet<ScheduledTask> ScheduledTasks { get; set; }
-    public virtual DbSet<BackgroundJob> BackgroundJobs { get; set; }
 }

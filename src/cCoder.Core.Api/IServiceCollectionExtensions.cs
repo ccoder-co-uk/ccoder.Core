@@ -1,6 +1,5 @@
 ﻿using cCoder.Core.Api.Formatters;
 using cCoder.Core.Objects;
-using cCoder.Core.Objects.Dtos.Metadata;
 using cCoder.Core.Objects.Entities.CMS;
 using cCoder.Core.Objects.Entities.DMS;
 using cCoder.Core.Objects.Entities.Mail;
@@ -71,10 +70,8 @@ public static partial class IServiceCollectionExtensions
         //planning services
         services.AddScoped<ICoreService<CalendarEvent>, CalendarEventService>();
         services.AddScoped<ICoreService<Calendar>, CalendarService>();
-        services.AddScoped<ICoreService<BackgroundJob>, BackgroundJobService>();
 
         // workflow services
-        services.AddScoped<ICoreService<BusinessProcess>, BusinessProcessService>();
         services.AddScoped<IFlowDefinitionService, FlowDefinitionService>();
         services.AddScoped<ICoreService<FlowInstanceData>, FlowInstanceDataService>();
         services.AddScoped<ICoreService<WorkflowEvent>, WorkflowEventService>();
@@ -90,7 +87,6 @@ public static partial class IServiceCollectionExtensions
         services.AddScoped<IPackageInstaller, CorePackageInstaller>();
 
         // importers 
-        services.AddScoped<IPackageItemImporter, BusinessProcessImporter>();
         services.AddScoped<IPackageItemImporter, ComponentImporter>();
         services.AddScoped<IPackageItemImporter, FlowDefinitionImporter>();
         services.AddScoped<IPackageItemImporter, FolderRoleImporter>();
