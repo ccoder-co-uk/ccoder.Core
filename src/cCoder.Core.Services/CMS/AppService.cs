@@ -205,7 +205,6 @@ public class AppService : CoreService<App>, IAppService
                 "Templates",
                 "Resources",
                 "Pages",
-                "BusinessProcesses",
                 "Workflows",
                 "Components",
                 "Scripts",
