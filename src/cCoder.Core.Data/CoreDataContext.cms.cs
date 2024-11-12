@@ -77,12 +77,6 @@ public partial class CoreDataContext
 
         Database.SetCommandTimeout((int)TimeSpan.FromMinutes(5).TotalSeconds);
         _ = Database.ExecuteSqlRaw(@"
--- security related rows 
-DELETE FROM [Security].FolderRoles WHERE RoleId IN (SELECT Id FROM [Security].Roles WHERE AppId = @p0)
-DELETE FROM [Security].PageRoles WHERE RoleId IN (SELECT Id FROM [Security].Roles WHERE AppId = @p0)
-DELETE FROM [Security].UserRoles WHERE RoleId IN (SELECT Id FROM [Security].Roles WHERE AppId = @p0)
-DELETE FROM [Security].Roles WHERE AppId = @p0
-
 ---- DMS related rows
 DELETE FROM DMS.[FileContents] WHERE Id in ( SELECT fc.Id FROM DMS.[FileContents] fc JOIN DMS.Files f ON fc.FileId = f.Id JOIN DMS.Folders fol ON fol.Id = f.FolderId WHERE fol.AppId = @p0 )
 DELETE FROM DMS.Files WHERE Id in ( SELECT f.Id FROM DMS.Files f JOIN DMS.Folders fol ON fol.Id = f.FolderId WHERE fol.AppId = @p0 )
@@ -117,6 +111,12 @@ DELETE FROM Mail.EmailSendFailures
 DELETE FROM Mail.QueuedEmails WHERE AppId = @p0
 DELETE FROM Mail.SentEmails WHERE AppId = @p0
 DELETE FROM CMS.Submissions WHERE AppId = @p0
+
+-- security related rows 
+DELETE FROM [Security].FolderRoles WHERE RoleId IN (SELECT Id FROM [Security].Roles WHERE AppId = @p0)
+DELETE FROM [Security].PageRoles WHERE RoleId IN (SELECT Id FROM [Security].Roles WHERE AppId = @p0)
+DELETE FROM [Security].UserRoles WHERE RoleId IN (SELECT Id FROM [Security].Roles WHERE AppId = @p0)
+DELETE FROM [Security].Roles WHERE AppId = @p0
 
 ---- and finally the app
 DELETE FROM CMS.Apps WHERE Id = @p0
