@@ -104,7 +104,6 @@ DELETE FROM Planning.ScheduledTasks WHERE AppId = @p0
 DELETE FROM Workflow.WorkflowEvents WHERE FlowId IN (SELECT Id FROM Workflow.WorkFlows WHERE AppId = @p0)
 DELETE FROM Workflow.FlowInstances WHERE FlowDefinitionId in (SELECT Id FROM Workflow.WorkFlows WHERE AppId = @p0)
 DELETE FROM Workflow.WorkFlows WHERE AppId = @p0
-DELETE FROM Workflow.BusinessProcesses WHERE AppId = @p0
 
 ---- Drop other items
 DELETE FROM Mail.EmailSendFailures
