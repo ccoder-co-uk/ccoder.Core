@@ -4,6 +4,8 @@ using cCoder.Core.Objects.Entities.DMS;
 using cCoder.Core.Objects.Extensions;
 using Newtonsoft.Json.Linq;
 using System.Collections;
+using System.Collections.Specialized;
+using System.Net;
 using System.Text;
 using File = cCoder.Core.Objects.Entities.DMS.File;
 
@@ -130,9 +132,9 @@ public static class ContentHelper
         Component(key, p, replacements, result);
         Meta(result, p.Culture);
         Resource(key, result, p, replacements);
+        Execute(key, result, p, replacements);
 
         replacements.ForEach(r => result.Replace(r.Old, r.New));
-
         string returnString = result.ToString();
 
         return returnString;
@@ -262,6 +264,33 @@ public static class ContentHelper
 
                 return string.Empty;
             });
+
+    private static void Execute(string key, StringBuilder source, RenderParams p, IEnumerable<Replacement> replacements)
+        => source.RegexReplace(@"\[execute\[([A-Za-z0-9.]+)\]\](.*?)\[/execute\]", (m) =>
+        {
+            string modelRef = m.Groups[1].Value;
+            string code = m.Groups[2].Value;
+
+            using HttpClient api = new(new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate })
+            {
+                BaseAddress = new Uri(replacements.First(r => r.Old == "[api[workflow]]").New),
+                Timeout = TimeSpan.FromMinutes(10)
+            };
+
+            var executionDetails = new
+            {
+                Script = code,
+                Model = replacements.First(r => r.Old == $"[model[{modelRef}]]").New
+            }.ToJson();
+
+            var executionTask = api.PostAsync("ExecuteScript?useDetails=true", new StringContent(executionDetails, Encoding.UTF8, "text/plain"))
+                .ContinueWith(t => t.Result.Content.ReadAsStringAsync())
+                .Unwrap();
+
+            executionTask.Wait();
+
+            return ProcessContentString(key, p, executionTask.Result, replacements);
+        });
 
     /// <summary>
     /// Replaces references to DMS file paths with their file content
