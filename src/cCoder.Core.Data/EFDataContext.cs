@@ -49,20 +49,20 @@ public abstract class EFDataContext<TUser, TRole> : DbContext, IDataContext<TUse
     {
         try
         {
-            log.LogInformation("Migrating " + GetType().Name.Replace("DataContext", ""));
+            log.LogDebug("Migrating Core");
             IEnumerable<string> migrations = Database.GetPendingMigrations();
 
-            log.LogInformation(migrations.Any()
+            log.LogDebug(migrations.Any()
                 ? $"Pending migration about to be applied:\n\t {string.Join("\n\t", Database.GetPendingMigrations())}"
                 : "No pending migrations");
 
             Database.Migrate();
-            log.LogInformation("Migration complete");
+            log.LogDebug("Migration complete");
         }
         catch (Exception ex)
         {
-            log.LogInformation($"Migration of the {GetType().Name.Replace("DataContext", "")} database failed");
-            log.LogError($"{ex.Message}\n{ex.StackTrace}");
+            log.LogError("Migration of Core database failed");
+            log.LogError("{Message}\n{StackTrace}", ex.Message, ex.StackTrace);
             throw;
         }
     }
@@ -135,7 +135,7 @@ public abstract class EFDataContext<TUser, TRole> : DbContext, IDataContext<TUse
         }
         catch (DbUpdateConcurrencyException ex)
         {
-            log.LogWarning($"Concurrency exception raised while saving changes to the data base:\n");
+            log.LogError($"Concurrency exception raised while saving changes to the data base:\n");
 
             foreach (EntityEntry e in ex.Entries)
                 log.LogWarning(e.Entity.ToJson(1));
