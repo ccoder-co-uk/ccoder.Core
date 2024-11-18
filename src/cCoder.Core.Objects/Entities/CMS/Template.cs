@@ -48,8 +48,8 @@ public class Template : BaseEntity
         List<Replacement> replacements = ContentHelper.DefaultReplacements(r, config).ToList();
         replacements.AddRange(BuildModelReplacements(model));
 
-        if(log is not null)
-            log.LogInformation($"replacements: {replacements.ToArray().ToJson()}");
+        if (log is not null)
+            log.LogDebug($"replacements: {replacements.ToArray().ToJson()}");
 
         string result = ContentHelper.ProcessContentString(ResourceKey, r, RawString, replacements);
         return result;
@@ -62,7 +62,7 @@ public class Template : BaseEntity
         else if (model is JObject)
             return BuildModelREplacementsForJObject(model, prefix);
         else if (model is string)
-            return new[] { new Replacement($"[theme[{prefix}]]", model.ToString()) };
+            return [ new Replacement($"[theme[{prefix}]]", model.ToString()) ];
         else if (model is not IEnumerable)
             return BuildModelReplacementsForCollection(model, prefix);
         else
@@ -72,7 +72,7 @@ public class Template : BaseEntity
     private IEnumerable<Replacement> BuildModelReplacementsForObject<T>(T model, string prefix)
     {
         string bindingExpression = prefix ?? string.Empty;
-        List<Replacement> result = new();
+        List<Replacement> result = [];
         int i = 0;
 
         foreach (object item in (IEnumerable)model)
@@ -97,15 +97,15 @@ public class Template : BaseEntity
                 string bindingExpression = prefix.Length > 0 ? prefix + "." + p.Name : p.Name;
 
                 if (p.PropertyType.IsValueType || p.PropertyType == typeof(string))
-                    return new[]
-                    {
+                    return
+                    [
                         new Replacement($"[model[{prefix}]]", model?.ToString() ?? string.Empty),
                         new Replacement($"[model[{bindingExpression}]]", v?.ToString() ?? string.Empty)
-                    };
+                    ];
                 else if (v != null)
                     return BuildModelReplacements(v, $"{bindingExpression}");
 
-                return Array.Empty<Replacement>();
+                return [];
             })
             .Where(i => i.Old != null && i.New != null)
             .ToList();
@@ -118,11 +118,11 @@ public class Template : BaseEntity
             string bindingExpression = prefix.Length > 0 ? prefix + "." + t.Key : t.Key;
 
             if (t.Value.GetType() == typeof(JValue))
-                return new[] { new Replacement($"[model[{bindingExpression}]]", t.Value?.ToString() ?? string.Empty) };
+                return [ new Replacement($"[model[{bindingExpression}]]", t.Value?.ToString() ?? string.Empty) ];
             else if (t.Value != null)
                 return BuildModelReplacements(t.Value, $"{bindingExpression}");
 
-            return Array.Empty<Replacement>();
+            return [];
         })
         .ToList();
     }
