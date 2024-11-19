@@ -17,7 +17,6 @@ using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Batch;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OpenApi.Models;
 using System.Security;
@@ -33,6 +32,7 @@ public class Program
     private static WebApplication app;
     private static IEventHub externalEventHub;
     private static ILogger log;
+    private static string ssoConnection = "";
 
     public static void Main(string[] args)
     {
@@ -43,6 +43,8 @@ public class Program
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             .AddJsonFile("appsettings.testing.json", optional: true, reloadOnChange: true);
+
+        ssoConnection = builder.Configuration.GetConnectionString("SSO");
 
         try
         {
@@ -61,8 +63,6 @@ public class Program
 
             builder.Services.AddSecurityApi((services, securityConfig) =>
             {
-                securityConfig.AddEntityFramework(services);
-
                 securityConfig.AddMSSQLModelProvider(
                     services,
                     builder.Configuration.GetConnectionString("SSO"));
@@ -214,10 +214,8 @@ public class Program
             // this can't come from the service provider due to 1 per request configuration
             // operations like logins cause threading problems.
 
-            SecurityDbContext sso = new(
-                new SSOAuthInfo { SSOUserId = "Guest" },
-                context.RequestServices.GetService<ISecurityModelBuildProvider>(),
-                context.RequestServices.GetService<ILogger<SecurityDbContext>>());
+            SecurityDbContext sso = new MSSQLSecurityDbContextFactory(ssoConnection)
+                    .CreateDbContext();
 
             ICoreDataContext core = context.RequestServices.GetService<ICoreDataContext>();
 
