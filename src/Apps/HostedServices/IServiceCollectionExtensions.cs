@@ -59,7 +59,6 @@ public static class IServiceCollectionExtensions
         services.AddSecurityServices((services, securityConfig) =>
         {
             securityConfig.RootPath = "Api/Security";
-            securityConfig.AddEntityFramework(services);
 
             securityConfig.AddMSSQLModelProvider(
                 services,
