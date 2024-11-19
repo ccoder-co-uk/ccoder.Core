@@ -113,7 +113,7 @@ public interface IWriteableService<T> where T : class
 
 public interface ITemplateService : ICoreService<Template>
 {
-    public Task<string> Render(int appId, string name, string culture, dynamic model);
+    public string Render(int appId, string name, string culture, dynamic model);
 }
 
 /// <summary>

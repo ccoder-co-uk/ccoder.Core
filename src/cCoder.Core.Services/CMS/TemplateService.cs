@@ -8,7 +8,7 @@ public class TemplateService : CoreService<Template>, ITemplateService
 {
     public TemplateService(ICoreDataContext db) : base(db) { }
 
-    public Task<string> Render(int appId, string name, string culture, dynamic model)
+    public string Render(int appId, string name, string culture, dynamic model)
     {
         App app = Db.GetAll<App>(false).FirstOrDefault(a => a.Id == appId);
         app.Templates = Db.GetAll<Template>(false).Where(t => t.AppId == app.Id).ToArray();
