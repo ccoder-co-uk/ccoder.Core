@@ -14,7 +14,7 @@ public class TemplateController : CoreEntityODataController<Template, int>
     public TemplateController(ITemplateService service, ICoreAuthInfo auth, ILogger<TemplateController> log)
         : base(service, auth, log) { }
 
-    [HttpGet]
+    [HttpPost]
     [AllowAnonymous]
     public IActionResult Render(int appId, string name, string culture, [FromBody] dynamic model) =>
         Ok(Service.Render(appId, name, culture, model));

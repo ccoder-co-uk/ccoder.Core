@@ -115,7 +115,7 @@ public class CoreModelBuilder : ODataModelBuilder
         _ = Builder.EntityType<Component>().Collection.Function("Render").Returns<string>();
 
         // Templating
-        _ = Builder.EntityType<Template>().Collection.Function("Render").Returns<string>();
+        _ = Builder.EntityType<Template>().Collection.Action("Render").Returns<string>();
 
         // Workflow
         _ = Builder.EntityType<FlowDefinition>().Collection.Function("KnownActivityTypes").Returns<MetadataContainerSet>();
