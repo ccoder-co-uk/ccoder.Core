@@ -14,18 +14,23 @@ public static class StringExtensions
         return builder.ToString();
     }
 
+    static RegexOptions options = RegexOptions.Singleline | RegexOptions.IgnoreCase;
+
     public static void RegexReplace(this StringBuilder source, string matchExpression, Func<Match, string> action)
     {
-        MatchCollection matches = Regex.Matches(source.ToString(), matchExpression, RegexOptions.CultureInvariant & RegexOptions.IgnoreCase);
-        foreach (Match m in matches)
-        {
-            _ = source.Replace(m.Value, action(m));
-        }
+        Regex regex = new Regex(matchExpression, options);
+
+        // Perform regex replacement by iterating matches
+        string result = regex.Replace(source.ToString(), match => action(match));
+
+        // Update the StringBuilder content
+        source.Clear();
+        source.Append(result);
     }
 
     public static void RegexMatch(this StringBuilder source, string matchExpression, Action<Match> action)
-    {
-        MatchCollection matches = Regex.Matches(source.ToString(), matchExpression, RegexOptions.CultureInvariant & RegexOptions.IgnoreCase);
+    { 
+        MatchCollection matches = Regex.Matches(source.ToString(), matchExpression, options);
         foreach (Match m in matches)
         {
             action(m);

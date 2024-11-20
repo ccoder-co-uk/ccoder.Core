@@ -3,6 +3,8 @@ using cCoder.Core.Objects.Entities.CMS;
 using cCoder.Core.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace cCoder.Core.Api.Controllers.CMS;
 
@@ -16,6 +18,16 @@ public class TemplateController : CoreEntityODataController<Template, int>
 
     [HttpPost]
     [AllowAnonymous]
-    public IActionResult Render(int appId, string name, string culture, [FromBody] dynamic model) =>
-        Ok(Service.Render(appId, name, culture, model));
+    public async Task<IActionResult> Render(int appId, string name, string culture)
+    {
+        using var reader = new StreamReader(Request.Body);
+
+        dynamic m = JsonConvert
+            .DeserializeObject(await reader.ReadToEndAsync());
+
+        return Content(
+            Service.Render(appId, name, culture, m),
+            "text/plain", 
+            Encoding.UTF8);
+    }
 }

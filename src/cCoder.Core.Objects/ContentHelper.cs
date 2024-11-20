@@ -266,10 +266,9 @@ public static class ContentHelper
             });
 
     private static void Execute(string key, StringBuilder source, RenderParams p, IEnumerable<Replacement> replacements)
-        => source.RegexReplace(@"\[execute\[([A-Za-z0-9.]+)\]\](.*?)\[/execute\]", (m) =>
+        => source.RegexReplace(@"\[execute\](.*?)\[/execute\]", (m) =>
         {
-            string modelRef = m.Groups[1].Value;
-            string code = m.Groups[2].Value;
+            string code = m.Groups[1].Value;
 
             using HttpClient api = new(new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate })
             {
@@ -280,7 +279,7 @@ public static class ContentHelper
             var executionDetails = new
             {
                 Script = code,
-                Model = replacements.First(r => r.Old == $"[model[{modelRef}]]").New
+                Model = Data.ParseJson(replacements.First(r => r.Old == $"[model]").New)
             }.ToJson();
 
             var executionTask = api.PostAsync("ExecuteScript?useDetails=true", new StringContent(executionDetails, Encoding.UTF8, "text/plain"))
