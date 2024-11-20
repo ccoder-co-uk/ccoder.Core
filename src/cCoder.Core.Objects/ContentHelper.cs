@@ -280,7 +280,7 @@ public static class ContentHelper
             {
                 Script = code,
                 Model = Data.ParseJson(replacements.First(r => r.Old == $"[model]").New)
-            }.ToJson();
+            }.ToJsonForOdata();
 
             var executionTask = api.PostAsync("ExecuteScript?useDetails=true", new StringContent(executionDetails, Encoding.UTF8, "text/plain"))
                 .ContinueWith(t => t.Result.Content.ReadAsStringAsync())
