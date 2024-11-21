@@ -9,6 +9,7 @@ using cCoder.Core.Objects.Entities.Packaging;
 using cCoder.Core.Objects.Entities.Planning;
 using cCoder.Core.Objects.Entities.Security;
 using cCoder.Core.Objects.Entities.Workflow;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.OData.Edm;
 using File = cCoder.Core.Objects.Entities.DMS.File;
 
@@ -116,6 +117,7 @@ public class CoreModelBuilder : ODataModelBuilder
 
         // Templating
         _ = Builder.EntityType<Template>().Collection.Action("Render").Returns<string>();
+        _ = Builder.EntityType<Template>().Collection.Action("HtmlToPdf").Returns<FileContentResult>();
 
         // Workflow
         _ = Builder.EntityType<FlowDefinition>().Collection.Function("KnownActivityTypes").Returns<MetadataContainerSet>();
