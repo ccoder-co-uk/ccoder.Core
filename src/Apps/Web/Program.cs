@@ -38,12 +38,6 @@ public class Program
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-        builder.Configuration
-            .AddEnvironmentVariables()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .AddJsonFile("appsettings.testing.json", optional: true, reloadOnChange: true);
-
         ssoConnection = builder.Configuration.GetConnectionString("SSO");
 
         try
