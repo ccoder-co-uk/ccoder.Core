@@ -3,6 +3,7 @@ using cCoder.Core.Objects.Dtos;
 using cCoder.Core.Objects.Entities.CMS;
 using cCoder.Core.Objects.Entities.DMS;
 using cCoder.Core.Objects.Extensions;
+using cCoder.Core.Services.Events;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Security;
@@ -13,15 +14,8 @@ using Path = cCoder.Core.Objects.Path;
 namespace cCoder.Core.Services.DMS;
 
 
-public class FolderService : CoreService<Folder>, IFolderService
+public class FolderService(ICoreDataContext db, ILogger<FolderService> log, IEventService eventService) : CoreService<Folder>(db), IFolderService
 {
-    private readonly ILogger<FolderService> log;
-
-    public FolderService(ICoreDataContext db, ILogger<FolderService> log) : base(db)
-    {
-        this.log = log;
-    }
-
     public async Task<List<Result<Guid?>>> Copy(string source, string destination, int sourceAppId, int destAppId)
     {
         Folder sourceFolder = Db.GetAll<Folder>().Where(r => r.AppId == sourceAppId)
@@ -53,7 +47,7 @@ public class FolderService : CoreService<Folder>, IFolderService
             throw new SecurityException("Access Denied!");
 
         File[] sourceFiles = sourceFolder.Files.ToArray();
-        DMSInstance dmsHandleDest = new(Db.Get<App>(destAppId), Db, log);
+        DMSInstance dmsHandleDest = new(Db.Get<App>(destAppId), Db, eventService, log);
 
         List<Result<Guid?>> results = new();
 
@@ -95,7 +89,7 @@ public class FolderService : CoreService<Folder>, IFolderService
             return existingFolder;
         else
         {
-            await new DMSInstance(Db.Get<App>(newFolder.AppId), Db, log)
+            await new DMSInstance(Db.Get<App>(newFolder.AppId), db, eventService, log)
                 .Save(new Path(newFolder.Path));
 
             return GetAll().FirstOrDefault(f => f.AppId == newFolder.AppId && f.Path.ToLower() == newFolder.Path.ToLower());
@@ -111,7 +105,10 @@ public class FolderService : CoreService<Folder>, IFolderService
            .FirstOrDefault(f => f.Id == (Guid)id);
 
         if (dbVersion != null && (dbVersion.App.IsAppAdmin(User) || dbVersion.UserCan(User, "folder_delete")))
-            await Db.DeleteFolder((Guid)id);
+            await eventService.RaiseEventAsync<FolderDeletedEvent, Folder>(new FolderDeletedEvent
+            {
+                Subject = dbVersion
+            });
         else
             throw new SecurityException("Access Denied!");
     }

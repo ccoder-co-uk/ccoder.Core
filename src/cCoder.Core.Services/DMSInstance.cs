@@ -3,6 +3,9 @@ using cCoder.Core.Objects.Entities.CMS;
 using cCoder.Core.Objects.Entities.DMS;
 using cCoder.Core.Objects.Entities.Security;
 using cCoder.Core.Objects.Extensions;
+using cCoder.Core.Services.Events;
+using cCoder.Core.Services.Events.DMS_Moves;
+using cCoder.Core.Services.Events.DMS_Moves.Value_Objects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.IO.Compression;
@@ -12,19 +15,8 @@ using File = cCoder.Core.Objects.Entities.DMS.File;
 
 namespace cCoder.Core.Services;
 
-public class DMSInstance
+public class DMSInstance(App app, ICoreDataContext db, IEventService eventService, ILogger log)
 {
-    private readonly ILogger log;
-    private readonly App app;
-    private readonly ICoreDataContext db;
-
-    public DMSInstance(App app, ICoreDataContext db, ILogger log)
-    {
-        this.app = app;
-        this.db = db;
-        this.log = log;
-    }
-
     public DMSResult GetFilesZipped(IEnumerable<Objects.Path> paths)
     {
         using MemoryStream result = new();
@@ -290,69 +282,64 @@ public class DMSInstance
     {
         ConfirmUserCanMoveFile(oldPath, newPath, newParent, oldParent, userIsAdmin);
 
-        File sourceFile = db.GetAll<File>(true)
+        File movedFile = db.GetAll<File>(true)
             .Include(f => f.Contents)
             .Include(f => f.Folder)
             .ThenInclude(f => f.Roles)
             .ThenInclude(fr => fr.Role)
             .FirstOrDefault(f => f.Folder.AppId == app.Id && f.Path == oldPath.Lowered);
 
-        if (sourceFile == null)
+        if (movedFile == null)
         {
             log.LogWarning($"User can't see a file @ path {oldPath.Lowered} in DMS for app {app.Id}");
             throw new SecurityException("Access Denied!");
         }
 
-        Guid destinationFileId = db.GetAll<File>(false)
+        File existingFile = db.GetAll<File>(false)
             .Where(f => f.Folder.AppId == app.Id && f.Path == newPath.Lowered)
-            .Select(c => c.Id)
             .FirstOrDefault();
 
-        if (destinationFileId != Guid.Empty)
+        if (existingFile != default)
         {
-            //DMS/Test.txt?moveTo=Test2.txt and Test2 already exists
-            int latestContentVersion = db.GetAll<FileContent>(false)
-                .Where(fc => fc.FileId == destinationFileId)
-                .OrderByDescending(fc => fc.Version)
-                .Select(fc => fc.Version)
-                .First();
-
-            File destinationFile = db.GetAll<File>(true)
-                .Include(f => f.Folder)
-                .FirstOrDefault(f => f.Folder.AppId == app.Id && f.Path == newPath.Lowered);
-
-            destinationFile.Contents = sourceFile.Contents
-                .Select(c =>
-                {
-                    FileContent newFileContent = new FileContent().UpdateFrom(c);
-                    newFileContent.Id = Guid.Empty;
-                    newFileContent.Version += latestContentVersion;
-                    newFileContent.FileId = destinationFileId;
-                    newFileContent.RawData = c.RawData;
-                    newFileContent.Size = c.Size;
-                    newFileContent.File = destinationFile;
-                    return newFileContent;
-                })
-                .ToList();
-
-            await db.AddAllAsync(destinationFile.Contents);
-            await Drop(oldPath);
+            await eventService.RaiseEventAsync<FileMovedToExistingFileEvent, FileMovedToExistingFileVO>(
+                new FileMovedToExistingFileEvent 
+                { 
+                    Subject = new FileMovedToExistingFileVO() 
+                    {
+                        ExistingFile = existingFile, 
+                        MovedFile = movedFile 
+                    }
+                });
         }
         else
-            if (!newPath.IsToFile)
-        {
             //DMS/Test.txt?moveTo=Content/
-            Folder newPathFolder = await BuildPath(newPath);
-            await MoveFile(oldPath, new Objects.Path($"{newPath}/{oldPath.Name}"), newPathFolder, oldParent, userIsAdmin);
-        }
-        else
-        {
-            //DMS/Test.txt?moveTo=Content/Test2.txt
-            sourceFile.FolderId = newParent.Id;
-            sourceFile.Name = newPath.Name;
-            sourceFile.Path = $"{newParent.Path}/{newPath.Name}".ToLower();
-            _ = await db.UpdateAsync(sourceFile);
-        }
+            if (!newPath.IsToFile)
+            {
+                Folder newPathFolder = await BuildPath(newPath);
+
+                await eventService.RaiseEventAsync<FileMovedToExistingFolderEvent, FileMovedToExistingFolderVO>(new FileMovedToExistingFolderEvent
+                {
+                    Subject = new FileMovedToExistingFolderVO()
+                    {
+                        DestinationFolder = newPathFolder,
+                        DesiredPath = new Objects.Path($"{newPathFolder.Path}/{oldPath.Name}"),
+                        File = movedFile
+                    }
+                });
+
+            }
+            else
+            {
+                await eventService.RaiseEventAsync<FileMovedToExistingFolderEvent, FileMovedToExistingFolderVO>(new FileMovedToExistingFolderEvent
+                {
+                    Subject = new FileMovedToExistingFolderVO()
+                    {
+                        DestinationFolder = newParent,
+                        File = movedFile
+                    }
+                });
+
+            }
     }
 
     private void ConfirmUserCanMoveFile(Objects.Path oldPath, Objects.Path newPath, Folder newParent, Folder oldParent, bool userIsAdmin)
@@ -416,7 +403,7 @@ public class DMSInstance
             if (version != 0) // drop the specified version of the file
                 await DropFileVersion(version, file);
             else // drop the file (all versions)
-                db.DeleteFile(file.Id);
+                await eventService.RaiseEventAsync<FileDeletedEvent, File>(new FileDeletedEvent { Subject = file });
         else
         {
             log.LogWarning($"User can't delete a file in folder {path.Lowered} in DMS for app {app.Id}");
@@ -427,11 +414,14 @@ public class DMSInstance
     private async Task DropFileVersion(int version, File file)
     {
         FileContent versionedContent = db.GetAll<FileContent>().FirstOrDefault(fc => fc.FileId == file.Id && fc.Version == version);
+        versionedContent.File = file;
+
         if (versionedContent != null)
         {
-            _ = await db.DeleteAsync(versionedContent);
-            if (!db.GetAll<FileContent>().Any(fc => fc.FileId == file.Id))
-                db.DeleteFile(file.Id);
+            await eventService.RaiseEventAsync<FileContentDeletedEvent, FileContent>(new FileContentDeletedEvent
+            { 
+                Subject = versionedContent 
+            });
         }
         else
         {
@@ -449,7 +439,7 @@ public class DMSInstance
             .FirstOrDefault(f => f.AppId == app.Id && f.Path.ToLower() == path.Lowered);
 
         if (folder != null && folder.UserCan(db.User, "folder_delete"))
-            await db.DeleteFolder(folder.Id);
+            await eventService.RaiseEventAsync<FolderDeletedEvent, Folder>(new FolderDeletedEvent { Subject = folder });
         else
         {
             log.LogWarning($"User can't delete a folder @ path {path.Lowered} in DMS for app {app.Id}");
@@ -462,9 +452,16 @@ public class DMSInstance
         if (folderPath.Length > 0)
         {
             Folder existingFolder = db.GetAll<Folder>()
+                .IgnoreQueryFilters()//We need to ignore query filters to prevent weirdness
                 .Include(f => f.Roles)
                     .ThenInclude(fr => fr.Role)
                 .FirstOrDefault(f => f.AppId == app.Id && f.Path.ToLower() == folderPath.Lowered);
+
+            bool canSee = db.GetAll<Folder>()
+                .Any(f => f.Id == existingFolder.Id);
+
+            if (!canSee)
+                throw new SecurityException("Access Denied!");
 
             if (existingFolder == null)
                 existingFolder = await CreateFolder(folderPath);
