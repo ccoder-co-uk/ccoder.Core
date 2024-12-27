@@ -37,6 +37,7 @@ jobs:
         path: src/Apps/HostedServices/bin/Debug/net9.0/*
 
   sql-docker-image:
+    needs: build
     runs-on: ubuntu-latest
     env:
       # Use docker.io for Docker Hub if empty
