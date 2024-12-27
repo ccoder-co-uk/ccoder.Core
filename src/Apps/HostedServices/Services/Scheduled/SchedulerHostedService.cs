@@ -11,6 +11,10 @@ public class SchedulerHostedService(IServiceProvider services, ILogger<Scheduler
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
+        //If we're running this as part of a pipeline run and don't wish to run scheduled tasks and only care about migrations
+        if(int.TryParse(Environment.GetEnvironmentVariable("MIGRATING"), out int result) && result == 1)
+            return Task.CompletedTask;
+
         if (!minuteTimer.Enabled)
         {
             minuteTimer.Interval = 60000;
