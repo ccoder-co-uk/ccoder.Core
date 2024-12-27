@@ -21,6 +21,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HostedServices", "Apps\Host
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cCoder.Core.E2E.IntegrationTests", "cCoder.Core.E2E.IntegrationTests\cCoder.Core.E2E.IntegrationTests.csproj", "{F8B7AF47-A2E6-44A7-BEFF-5C4C161B10B4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{99C15638-E3E5-43D2-A03E-0EBAC5F4ECAA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SQL", "SQL", "{9B3CD34A-6BBC-4AF3-9F41-5763F7A8AA48}"
+	ProjectSection(SolutionItems) = preProject
+		Docker\SQL\Dockerfile = Docker\SQL\Dockerfile
+		Docker\SQL\Init-DB.sh = Docker\SQL\Init-DB.sh
+		Docker\SQL\HostedServices-appsettings.json = Docker\SQL\HostedServices-appsettings.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -66,6 +75,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{264EC0FF-AB4E-4645-84D4-E87D12AEE93A} = {FC8EAF25-8BB6-474F-9DC8-9BD999E984AE}
 		{622E4723-6B1D-47E4-B776-E097046BD3CF} = {FC8EAF25-8BB6-474F-9DC8-9BD999E984AE}
+		{9B3CD34A-6BBC-4AF3-9F41-5763F7A8AA48} = {99C15638-E3E5-43D2-A03E-0EBAC5F4ECAA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {36517CA3-D42A-4DF2-B783-52023F07D817}
