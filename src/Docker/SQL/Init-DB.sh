@@ -27,6 +27,12 @@ echo "Spinning up Hosted Services"
 
 ls /tmp/hostedServices
 
+# Allow executing the program
+
+chmod a+x /tmp/hostedServices/HostedServices
+
+# Execute hosted services
+
 /tmp/hostedServices/HostedServices &
 
 sleep 5
