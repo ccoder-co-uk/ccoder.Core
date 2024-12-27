@@ -25,6 +25,8 @@ sleep 15
 
 echo "Spinning up Hosted Services"
 
+ls /tmp/hostedServices
+
 dotnet run /tmp/hostedServices/HostedServices.dll &
 
 sleep 5
