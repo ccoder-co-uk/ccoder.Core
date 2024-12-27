@@ -6,9 +6,9 @@ name: Docker
 # documentation.
 
 on:
+  workflow_dispatch:
   workflow_run:
-    workflows:
-      - Core-Apps-HostedServices
+    workflows: [Core-Apps-HostedServices]
     types:
       - completed
 
