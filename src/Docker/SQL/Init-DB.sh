@@ -41,7 +41,7 @@ sleep 5
 
 echo "Migrating Database"
 
-wget --method=POST --no-check-certificate https://localhost:7100/Scheduler/Migrate
+wget --method=POST --no-check-certificate http://localhost:5000/Scheduler/Migrate
 
 pkill sqlservr
 
