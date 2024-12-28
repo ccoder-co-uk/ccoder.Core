@@ -14,3 +14,5 @@ COPY Docker/HostedServices /tmp/hostedServices
 COPY Docker/SQL/HostedServices-appsettings.json /tmp/hostedServices/appsettings.json
 
 RUN ["/bin/bash", "/tmp/Init-DB.sh"]
+
+CMD ["/opt/mssql/bin/sqlservr"]
