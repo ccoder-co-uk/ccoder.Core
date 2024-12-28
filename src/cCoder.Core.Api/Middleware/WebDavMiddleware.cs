@@ -41,7 +41,9 @@ public class WebDavMiddleware
         Dictionary<string, Microsoft.Extensions.Primitives.StringValues> query =
             Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(context.Request.QueryString.Value);
 
-        DMSInstance dms = new(app, ctx, log);
+        var eventService = context.RequestServices.GetService<IEventService>();
+
+        DMSInstance dms = new(app, ctx, eventService, log);
 
         string sslPort = config.Settings["sslPort"] ?? "443";
         string urlBase = $"https://{app.Domain}:{sslPort}/Api/";

@@ -153,7 +153,7 @@ public class DMSInstance(App app, ICoreDataContext db, IEventService eventServic
     {
         if (path.IsToFile)
         {
-            File existingFile = db.GetAll<File>().FirstOrDefault(f => f.Folder.AppId == app.Id && f.Path.ToLower() == path.Lowered);
+            File existingFile = db.GetAll<File>(false).FirstOrDefault(f => f.Folder.AppId == app.Id && f.Path.ToLower() == path.Lowered);
             byte[] rawBytes = content?.ToArray() ?? Array.Empty<byte>();
             Folder folder = await BuildPath(path.ParentPath);
 
@@ -282,11 +282,10 @@ public class DMSInstance(App app, ICoreDataContext db, IEventService eventServic
     {
         ConfirmUserCanMoveFile(oldPath, newPath, newParent, oldParent, userIsAdmin);
 
-        File movedFile = db.GetAll<File>(true)
-            .Include(f => f.Contents)
+        File movedFile = db.GetAll<File>(false)
             .Include(f => f.Folder)
-            .ThenInclude(f => f.Roles)
-            .ThenInclude(fr => fr.Role)
+                .ThenInclude(f => f.Roles)
+                    .ThenInclude(fr => fr.Role)
             .FirstOrDefault(f => f.Folder.AppId == app.Id && f.Path == oldPath.Lowered);
 
         if (movedFile == null)
@@ -334,6 +333,7 @@ public class DMSInstance(App app, ICoreDataContext db, IEventService eventServic
                 {
                     Subject = new FileMovedToExistingFolderVO()
                     {
+                        DesiredPath = newPath,
                         DestinationFolder = newParent,
                         File = movedFile
                     }
@@ -457,14 +457,14 @@ public class DMSInstance(App app, ICoreDataContext db, IEventService eventServic
                     .ThenInclude(fr => fr.Role)
                 .FirstOrDefault(f => f.AppId == app.Id && f.Path.ToLower() == folderPath.Lowered);
 
+            if (existingFolder == null)
+                existingFolder = await CreateFolder(folderPath);
+
             bool canSee = db.GetAll<Folder>()
                 .Any(f => f.Id == existingFolder.Id);
 
             if (!canSee)
                 throw new SecurityException("Access Denied!");
-
-            if (existingFolder == null)
-                existingFolder = await CreateFolder(folderPath);
 
             return existingFolder;
         }

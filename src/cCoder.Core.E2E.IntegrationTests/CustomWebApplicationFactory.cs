@@ -13,7 +13,7 @@ namespace cCoder.Core.E2E.IntegrationTests
 
             string port = connectionStringBuilder.DataSource.Split(",").Last();
 
-            connectionStringBuilder.InitialCatalog = "dev-Members";
+            connectionStringBuilder.InitialCatalog = "dev-SSO";
 
             string membersConnectionString = connectionStringBuilder.ConnectionString;
 

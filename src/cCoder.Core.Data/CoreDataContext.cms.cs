@@ -35,6 +35,17 @@ public partial class CoreDataContext
         if (entity == null)
             return null;
 
+        if (entity is Objects.Entities.DMS.FileContent fc)
+        {
+            var file = Files.FirstOrDefault(f => f.Id == fc.FileId);
+
+            var folder = Folders.FirstOrDefault(f => f.Id == file.FolderId);
+
+            return folder.AppId;
+        }
+
+        //Below logic could've been swapped with an IHasParent attribute and swap IdEquals for IEntity<TKey> where TKey is the primary key type??
+
         Type type = entity.GetType();
 
         int? result = null;

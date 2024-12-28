@@ -3,7 +3,14 @@ using cCoder.Core.Objects;
 using cCoder.Core.Objects.Entities.Security;
 using cCoder.Core.Services;
 using cCoder.Core.Services.DMS;
+using cCoder.Core.Services.EventHandlers;
+using cCoder.Core.Services.Events.DMS_Moves.Value_Objects;
+using cCoder.Core.Services.Events.DMS_Moves;
+using iText.Commons.Actions;
 using Microsoft.OData.Edm;
+using cCoder.Core.Services.EventHandlers.DMS_Moves;
+using cCoder.Core.Services.Events;
+using cCoder.Core.Objects.Entities.DMS;
 
 namespace cCoder.Core.Api;
 
@@ -40,6 +47,14 @@ public class CoreBuilderOptions
 
     public CoreBuilderOptions UseDocumentManagement()
     {
+        services.AddScoped<IEventService, EventService>();
+
+        services.AddScoped<IEventHandler<FileMovedToExistingFolderEvent, FileMovedToExistingFolderVO>, FileMovedToExistingFolderEventHandler>();
+        services.AddScoped<IEventHandler<FileMovedToExistingFileEvent, FileMovedToExistingFileVO>, FileMovedToExistingFileEventHandler>();
+
+        services.AddScoped<IEventHandler<FileUpdatedEvent, Objects.Entities.DMS.File>, FileUpdatedEventHandler>();
+        services.AddScoped<IEventHandler<FileDeletedEvent, Objects.Entities.DMS.File>, FileDeletedEventHandler>();
+
         // DMS service
         services.AddTransient<IFileService, FileService>();
         services.AddTransient<IFolderService, FolderService>();

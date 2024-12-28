@@ -20,7 +20,10 @@ public class DMSMiddleware
         string path = context.Request.Path.Value[(context.Request.Path.Value.IndexOf("/dms/", StringComparison.CurrentCultureIgnoreCase) + 5)..];
         App app = ctx.GetAll<App>(false).FirstOrDefault(r => r.Domain == context.Request.Host.Host);
         Dictionary<string, Microsoft.Extensions.Primitives.StringValues> query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(context.Request.QueryString.Value);
-        DMSInstance dms = new(app, ctx, log);
+
+        var eventService = context.RequestServices.GetService<IEventService>();
+
+        DMSInstance dms = new(app, ctx, eventService, log);
 
         try
         {
