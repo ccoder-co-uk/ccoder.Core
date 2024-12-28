@@ -25,9 +25,9 @@ sleep 15
 
 echo "Creating empty databases"
 
-/opt/mssql-tools18/bin/sqlcmd -S localhost -U SA -P "test123!!" -C -Q "CREATE DATABASE dev-Core"
+/opt/mssql-tools18/bin/sqlcmd -S localhost -U SA -P "test123!!" -C -Q "CREATE DATABASE [dev-Core];"
 
-/opt/mssql-tools18/bin/sqlcmd -S localhost -U SA -P "test123!!" -C -Q "CREATE DATABASE dev-SSO"
+/opt/mssql-tools18/bin/sqlcmd -S localhost -U SA -P "test123!!" -C -Q "CREATE DATABASE [dev-SSO];"
 
 echo "Spinning up Hosted Services"
 
