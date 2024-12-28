@@ -55,6 +55,13 @@ public class CoreBuilderOptions
         services.AddScoped<IEventHandler<FileUpdatedEvent, Objects.Entities.DMS.File>, FileUpdatedEventHandler>();
         services.AddScoped<IEventHandler<FileDeletedEvent, Objects.Entities.DMS.File>, FileDeletedEventHandler>();
 
+        services.AddScoped<IEventHandler<FolderMovedToExistingFolderEvent, FolderMovedToExistingFolderVO>, FolderMovedToExistingFolderEventHandler>();
+        services.AddScoped<IEventHandler<FolderMovedToNewFolderEvent, FolderMovedToNewFolderVO>, FolderMovedToNewFolderEventHandler>();
+
+        services.AddScoped<IEventHandler<FolderCreatedEvent, Folder>, FolderCreatedEventHandler>();
+        services.AddScoped<IEventHandler<FolderUpdatedEvent, Folder>, FolderUpdatedEventHandler>();
+        services.AddScoped<IEventHandler<FolderDeletedEvent, Folder>, FolderDeletedEventHandler>();
+
         // DMS service
         services.AddTransient<IFileService, FileService>();
         services.AddTransient<IFolderService, FolderService>();

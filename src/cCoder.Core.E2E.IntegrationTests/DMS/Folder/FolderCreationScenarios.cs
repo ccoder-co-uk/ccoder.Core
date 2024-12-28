@@ -1,14 +1,13 @@
-﻿using cCoder.Core.Objects.Entities.DMS;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Text;
 
-namespace cCoder.Core.E2E.IntegrationTests.DMS.File
+namespace cCoder.Core.E2E.IntegrationTests.DMS.Folder
 {
     [Collection("Application")]
-    public class FileCreationScenarios(ApplicationFixture fixture)
+    public class FolderCreationScenarios(ApplicationFixture fixture)
     {
         [Fact]
-        public async Task CanCreateFileAndIsInDatabase()
+        public async Task CanCreateFolderAndIsInDatabase()
         {
             //given
             var payload = new StringContent("test 123!!", Encoding.UTF8, "text/plain");
@@ -22,8 +21,6 @@ namespace cCoder.Core.E2E.IntegrationTests.DMS.File
 
             Assert.True(fixture.CoreDataContext.GetAll<Objects.Entities.DMS.Folder>().IgnoreQueryFilters().Count() == 1);
             Assert.True(fixture.CoreDataContext.GetAll<Objects.Entities.DMS.Folder>().IgnoreQueryFilters().Any(u => u.Name.Contains("test")));
-            Assert.True(fixture.CoreDataContext.Files.IgnoreQueryFilters().Any(f => f.Name == "test.txt"));
-            Assert.True(fixture.CoreDataContext.FileContents.IgnoreQueryFilters().Any());
         }
     }
 }

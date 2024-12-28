@@ -359,7 +359,13 @@ public class DMSInstance(App app, ICoreDataContext db, IEventService eventServic
 
     private async Task MoveFolder(Objects.Path oldPath, Objects.Path newPath, App app)
     {
-        Folder newParent = await BuildPath(newPath);
+        Folder newParent =
+            db.GetAll<Folder>(false)
+                .FirstOrDefault(f => f.AppId == app.Id && f.Path.ToLower() == newPath.Lowered);
+
+        if (newParent == null)
+            newParent = await BuildPath(newPath);
+
         Folder oldParent = !string.IsNullOrEmpty(oldPath.ParentPath.Lowered)
             ? db.GetAll<Folder>().FirstOrDefault(f => f.AppId == app.Id && f.Path == oldPath.ParentPath.Lowered)
             : null;
@@ -377,17 +383,20 @@ public class DMSInstance(App app, ICoreDataContext db, IEventService eventServic
             throw new SecurityException("Access Denied!");
         }
 
-        Folder folder = db.GetAll<Folder>()
-            .Include(f => f.SubFolders)
-            .Include(f => f.Files)
-            .First(f => f.AppId == app.Id && f.Path == oldPath.Lowered);
+        var sourceFolder = db
+            .GetAll<Folder>(false)
+            .First(f => f.AppId == app.Id && f.Path.ToLower() == oldPath.Lowered);
 
-        folder.ParentId = newParent?.Id;
-        folder.Parent = newParent;
-        folder.Name = oldPath.Name;
-        folder.RecomputePaths();
-        await Task.WhenAll(folder.SubFolders.Select(async (sf) => await MoveFolder(new Objects.Path(sf.Path), new Objects.Path($"{folder.Path}/{sf.Name}"), app)));
-        folder.Files.ForEach((f) => f.RecomputePath());
+        var newFolder = await BuildPath(new Objects.Path(newPath.Lowered + "/" + oldPath.Name));
+
+        await eventService.RaiseEventAsync<FolderMovedToExistingFolderEvent, FolderMovedToExistingFolderVO>(new FolderMovedToExistingFolderEvent
+        {
+            Subject = new FolderMovedToExistingFolderVO()
+            {
+                DestinationFolder = newFolder,
+                SourceFolder = sourceFolder
+            }
+        });
     }
 
     private async Task DropFile(Objects.Path path, int version)
