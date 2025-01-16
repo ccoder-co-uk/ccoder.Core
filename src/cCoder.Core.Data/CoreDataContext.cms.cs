@@ -80,20 +80,17 @@ public partial class CoreDataContext
 ---- DMS related rows
 DELETE FROM DMS.[FileContents] WHERE Id in ( SELECT fc.Id FROM DMS.[FileContents] fc JOIN DMS.Files f ON fc.FileId = f.Id JOIN DMS.Folders fol ON fol.Id = f.FolderId WHERE fol.AppId = @p0 )
 DELETE FROM DMS.Files WHERE Id in ( SELECT f.Id FROM DMS.Files f JOIN DMS.Folders fol ON fol.Id = f.FolderId WHERE fol.AppId = @p0 )
-DELETE FROM DMS.Folders WHERE Id in ( SELECT Id FROM DMS.Folders WHERE AppId = @p0 )
 
 ---- CMS related rows
 DELETE FROM CMS.Components WHERE AppId = @p0
 DELETE FROM CMS.PageInfo WHERE PageId in (SELECT Id FROM CMS.Pages WHERE AppId = @p0)
 DELETE FROM CMS.Contents WHERE PageId in (SELECT Id FROM CMS.Pages WHERE AppId = @p0)
-DELETE FROM CMS.Pages WHERE AppId = @p0
 DELETE FROM CMS.Layouts WHERE AppId = @p0
 DELETE FROM CMS.Resources WHERE AppId = @p0
 DELETE FROM CMS.Templates WHERE AppId = @p0
 DELETE FROM CMS.AppCultures WHERE AppId = @p0
 
 ---- Planning Items
-DELETE FROM Planning.BackgroundJobs WHERE AppId = @p0
 DELETE FROM Mail.MailServers WHERE AppId = @p0
 DELETE FROM Mail.SentEmails WHERE AppId = @p0
 DELETE FROM Planning.Events WHERE CalendarId in (SELECT Id FROM Planning.Calendars WHERE AppId = @p0)
@@ -116,6 +113,10 @@ DELETE FROM [Security].FolderRoles WHERE RoleId IN (SELECT Id FROM [Security].Ro
 DELETE FROM [Security].PageRoles WHERE RoleId IN (SELECT Id FROM [Security].Roles WHERE AppId = @p0)
 DELETE FROM [Security].UserRoles WHERE RoleId IN (SELECT Id FROM [Security].Roles WHERE AppId = @p0)
 DELETE FROM [Security].Roles WHERE AppId = @p0
+
+-- Delete main records after related roles are removed.
+DELETE FROM CMS.Pages WHERE AppId = @p0
+DELETE FROM DMS.Folders WHERE Id in ( SELECT Id FROM DMS.Folders WHERE AppId = @p0 )
 
 ---- and finally the app
 DELETE FROM CMS.Apps WHERE Id = @p0
