@@ -197,7 +197,7 @@ public class CMSUserRegistrationOrchestrationService(
         {
             Token = confirmationToken,
             EncodedToken = HttpUtility.UrlEncode(confirmationToken),
-            CoreUser = new User().UpdateFrom(user)
+            CoreUser = user
         };
 
         TemplateRenderParams renderParams = new(app, user, user.DefaultCultureId);
