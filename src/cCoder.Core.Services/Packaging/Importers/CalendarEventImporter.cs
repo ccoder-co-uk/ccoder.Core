@@ -1,13 +1,22 @@
 ﻿using cCoder.Core.Objects.Entities.Packaging;
 using cCoder.Core.Objects.Entities.Planning;
 using cCoder.Core.Objects.Extensions;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace cCoder.Core.Services.Packaging.Importers;
 
 public class CalendarEventImporter : CoreImporter<CalendarEvent>
 {
+    private readonly ILogger<CalendarEventImporter> log;
     private readonly ICoreService<Calendar> calendarService;
-    public CalendarEventImporter(ICoreService<CalendarEvent> service, ICoreService<Calendar> calendarService) : base(service, "Core/CalendarEvent") { this.calendarService = calendarService; }
+
+    public CalendarEventImporter(ILogger<CalendarEventImporter> log, ICoreService<CalendarEvent> service, ICoreService<Calendar> calendarService) 
+        : base(service, "Core/CalendarEvent") 
+    {
+        this.log = log;
+        this.calendarService = calendarService; 
+    }
 
     public override async Task Import(int appId, PackageItem item)
     {
@@ -15,46 +24,62 @@ public class CalendarEventImporter : CoreImporter<CalendarEvent>
             new[] { item.Unpack<ImportCalendarEventInfo>() }
             : item.Unpack<ImportCalendarEventInfo[]>();
 
-        IEnumerable<Calendar> calendars = calendarService.GetAll(false)
+        Calendar[] calendars = await calendarService
+            .GetAll(false)
+            .IgnoreQueryFilters()
             .Where(f => f.AppId == appId)
+            .ToArrayAsync();
+
+        string[] calendarEventNames = calendarEventImportSet
+            .Select(l => l.Name)
             .ToArray();
 
-        string[] calendarEventNames = calendarEventImportSet.Select(l => l.Name).ToArray();
-
-        IEnumerable<dynamic> dbCalendarEvents = Service.GetAll(false)
-            .AsQueryable()
+        CalendarEvent[] dbCalendarEvents = await Service.GetAll(false)
+            .IgnoreQueryFilters()
             .Where(c => c.Calendar.AppId == appId && calendarEventNames.Contains(c.Name))
-            .Select(l => new { l.Id, l.Name, CalendarName = l.Calendar.Name })
-            .ToArray();
+            .Include(e => e.Calendar)
+            .ToArrayAsync();
 
         List<CalendarEvent> calendarEventsToAdd = new();
 
-        calendarEventImportSet.ForEach(calendarEventImportInfo =>
+        foreach(var calendarEventImportInfo in calendarEventImportSet)
         {
-            CalendarEvent calendarEvent = MapImportInfoToCalendarEvent(calendarEventImportInfo);
+            CalendarEvent calendarEvent = 
+                MapImportInfoToCalendarEvent(calendars, calendarEventImportInfo, dbCalendarEvents);
 
-            calendarEvent.CalendarId = calendars.FirstOrDefault(p => p.Name == calendarEventImportInfo.CalendarName)?.Id ?? 0;
+            if (calendarEvent.CalendarId == 0)
+                continue;
 
-            dynamic dbCalendarEvent = dbCalendarEvents.FirstOrDefault(j => calendarEventImportInfo.CalendarName == j.CalendarName && j.Name == calendarEvent.Name);
-            calendarEvent.Id = dbCalendarEvent?.Id ?? 0;
-
-            if (calendarEvent.CalendarId != 0)
+            if (calendarEvent.Id == 0)
                 calendarEventsToAdd.Add(calendarEvent);
-        });
+        }
 
-        _ = await Service.AddAllAsync(calendarEventsToAdd.Where(i => i.Id == 0));
+        log.LogDebug(
+            "{NewCalendarEventCount} new calendar events provided for import from package",
+            calendarEventImportSet.Length);
+
+        log.LogDebug(
+            "Importing {NewCalendarEventCount} new calendar events for calendars {Calendars}", 
+            calendarEventsToAdd.Count, string.Join(",", 
+            calendars.Select(c => c.Name)));
+
+        _ = await Service.AddAllAsync(calendarEventsToAdd);
     }
 
-    private CalendarEvent MapImportInfoToCalendarEvent(ImportCalendarEventInfo importCalendarEventInfo)
-        => new()
-        {
-            Name = importCalendarEventInfo.Name,
-            DurationInTicks = importCalendarEventInfo.DurationInTicks,
-            Start = importCalendarEventInfo.Start,
-            Description = importCalendarEventInfo.Description
-        };
+    private CalendarEvent MapImportInfoToCalendarEvent(
+        Calendar[] calendars, 
+        ImportCalendarEventInfo calendarEventImportInfo, 
+        CalendarEvent[] dbCalendarEvents) => new()
+    {
+        Id = Array.Find(dbCalendarEvents, j => calendarEventImportInfo.CalendarName == j.Calendar.Name && j.Name == calendarEventImportInfo.Name)?.Id ?? 0,
+        CalendarId = Array.Find(calendars, p => p.Name == calendarEventImportInfo.CalendarName)?.Id ?? 0,
+        Name = calendarEventImportInfo.Name,
+        DurationInTicks = calendarEventImportInfo.DurationInTicks,
+        Start = calendarEventImportInfo.Start,
+        Description = calendarEventImportInfo.Description
+    };
 
-    public class ImportCalendarEventInfo
+    class ImportCalendarEventInfo
     {
         public string CalendarName { get; set; }
         public string Name { get; set; }
