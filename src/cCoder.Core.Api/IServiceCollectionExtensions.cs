@@ -97,6 +97,8 @@ public static partial class IServiceCollectionExtensions
         services.AddScoped<IPackageItemImporter, RoleImporter>();
         services.AddScoped<IPackageItemImporter, ScriptImporter>();
         services.AddScoped<IPackageItemImporter, TemplateImporter>();
+        services.AddScoped<IPackageItemImporter, CalendarImporter>();
+        services.AddScoped<IPackageItemImporter, CalendarEventImporter>();
     }
 
     internal static void AddCaches(

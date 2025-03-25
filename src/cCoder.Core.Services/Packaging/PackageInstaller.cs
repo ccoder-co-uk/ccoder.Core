@@ -29,7 +29,7 @@ public abstract class PackageInstaller : IPackageInstaller
             foreach (PackageItem item in package.Items)
             {
                 IPackageItemImporter[] importers = Importers.Where(i => i.Type == item.Type).ToArray();
-                log.LogDebug("Importing {ItemType} from {PackageSource}", item.Type, package.SourceApi);
+                log.LogDebug("Importing {ItemType} items from {PackageSource}", item.Type, package.SourceApi);
 
                 foreach (IPackageItemImporter importer in importers)
                     await importer.Import(appId, item);
