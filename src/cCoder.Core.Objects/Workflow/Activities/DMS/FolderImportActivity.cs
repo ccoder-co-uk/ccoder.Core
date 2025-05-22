@@ -21,10 +21,10 @@ public class FolderImportActivity : DMSActivity
 
         if (!response.IsSuccessStatusCode)
         {
-            Log(Dtos.Workflow.WorkflowLogLevel.Error, $"Failed to download from {RemoteApiUrl}DMS/{RemotePath} due to error:\n" + 
+            Log(Dtos.Workflow.WorkflowLogLevel.Warning, $"Source {RemoteApiUrl}DMS/{RemotePath} returned nothing downloadable:\n" + 
                 $"HTTP Status: {response.StatusCode}:\n{await response.Content.ReadAsStringAsync()}");
 
-            State = ActivityState.Failed;
+            State = ActivityState.Skipped;
             return;
         }
 
