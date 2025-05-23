@@ -109,13 +109,19 @@ public abstract class Activity
             if (State == ActivityState.Running)
             {
                 State = ActivityState.Complete;
-                Log(WorkflowLogLevel.Info, "Activity Execution completed");
+                Log(WorkflowLogLevel.Info, "Activity Execution Completed");
                 await ContinueFlow(context);
+                return;
             }
-            else
+
+            if(State == ActivityState.Skipped)
             {
-                Log(WorkflowLogLevel.Error, "Activity Execution Failed");
+                Log(WorkflowLogLevel.Info, "Activity Execution Skipped");
+                await ContinueFlow(context);
+                return;
             }
+            
+            Log(WorkflowLogLevel.Error, "Activity Execution Failed");
         }
         catch (Exception ex)
         {
