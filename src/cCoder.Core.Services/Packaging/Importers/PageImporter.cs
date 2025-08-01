@@ -29,7 +29,7 @@ public class PageImporter : CoreImporter<Page>
         {
             i.AppId = appId;
             string parentPath = new Path(i.Path).ParentPath.FullPath;
-            i.ParentId = Db.GetAll<Page>().FirstOrDefault(p => p.Path.ToLower() == parentPath.ToLower() && p.AppId == appId && !string.IsNullOrEmpty(p.Path))?.Id;
+            i.ParentId = Db.GetAll<Page>().FirstOrDefault(p => p.Path.ToLower() == parentPath.ToLower() && p.AppId == appId)?.Id;
             i.Id = dbVersions.FirstOrDefault(j => j.Path.ToLower() == i.Path.ToLower())?.Id ?? 0;
         });
 
