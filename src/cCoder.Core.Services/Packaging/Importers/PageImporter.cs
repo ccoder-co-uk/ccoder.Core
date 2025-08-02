@@ -25,7 +25,7 @@ public class PageImporter : CoreImporter<Page>
             .Select(l => new { l.Id, l.Path })
             .ToArray();
 
-        items.ForEach(i =>
+        items.ForEach(async i =>
         {
             i.AppId = appId;
             string parentPath = new Path(i.Path).ParentPath.FullPath;
@@ -33,8 +33,8 @@ public class PageImporter : CoreImporter<Page>
                 ? Db.GetAll<Page>().FirstOrDefault(p => p.Path.ToLower() == parentPath.ToLower() && p.AppId == appId)?.Id
                 : null;
             i.Id = dbVersions.FirstOrDefault(j => j.Path.ToLower() == i.Path.ToLower())?.Id ?? 0;
-        });
 
-        _ = await Service.AddOrUpdate(items);
+            await Service.AddOrUpdate([i]);
+        });
     }
 }
