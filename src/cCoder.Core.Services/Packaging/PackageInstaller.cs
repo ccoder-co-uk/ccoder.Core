@@ -22,19 +22,30 @@ public abstract class PackageInstaller : IPackageInstaller
 
     public virtual async Task Import(int appId, Package package)
     {
-        if (package.Items is null)
-            return;
+        try
+        {
+            if (package.Items is null)
+                return;
 
-        if (Core.User.IsAdminOfApp(appId))
-            foreach (PackageItem item in package.Items)
-            {
-                IPackageItemImporter[] importers = Importers.Where(i => i.Type == item.Type).ToArray();
-                log.LogDebug("Importing {ItemType} items from {PackageSource}", item.Type, package.SourceApi);
+            if (Core.User.IsAdminOfApp(appId))
+                foreach (PackageItem item in package.Items)
+                {
+                    IPackageItemImporter[] importers = Importers.Where(i => i.Type == item.Type).ToArray();
+                    log.LogDebug("Importing {ItemType} items from {PackageSource}", item.Type, package.SourceApi);
 
-                foreach (IPackageItemImporter importer in importers)
-                    await importer.Import(appId, item);
-            }
-        else
-            throw new SecurityException("Access Denied!");
+                    foreach (IPackageItemImporter importer in importers)
+                        await importer.Import(appId, item);
+                }
+            else
+                throw new SecurityException("Access Denied!");
+        }
+        catch (Exception ex)
+        {
+            log.LogWarning($"Exception importing packages: {ex.Message}", ex.StackTrace);
+            if (ex.InnerException is not null)
+                log.LogWarning($"Inner exception: {ex.InnerException.Message}", ex.InnerException.StackTrace);
+
+            throw;
+        }
     }
 }
