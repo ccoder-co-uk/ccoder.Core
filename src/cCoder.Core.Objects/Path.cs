@@ -26,7 +26,7 @@ public class Path
 
     public Path(string path)
     {
-        FullPath = (path ?? string.Empty).Trim().Trim('/');
+        FullPath = (path ?? string.Empty).Trim().TrimEnd('/');
     }
 
     public override string ToString() => FullPath;
