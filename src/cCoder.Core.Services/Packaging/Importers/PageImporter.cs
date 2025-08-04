@@ -25,16 +25,18 @@ public class PageImporter : CoreImporter<Page>
             .Select(l => new { l.Id, l.Path })
             .ToArray();
 
-        items.ForEach(async i =>
+        foreach (Page page in items)
         {
-            i.AppId = appId;
-            string parentPath = new Path(i.Path).ParentPath.FullPath;
-            i.ParentId = i.Path.Contains('/')
+            page.AppId = appId;
+            string parentPath = new Path(page.Path).ParentPath.FullPath;
+
+            page.ParentId = page.Path.Contains('/')
                 ? Db.GetAll<Page>().FirstOrDefault(p => p.Path.ToLower() == parentPath.ToLower() && p.AppId == appId)?.Id
                 : null;
-            i.Id = dbVersions.FirstOrDefault(j => j.Path.ToLower() == i.Path.ToLower())?.Id ?? 0;
 
-            await Service.AddOrUpdate([i]);
-        });
+            page.Id = dbVersions.FirstOrDefault(j => j.Path.ToLower() == page.Path.ToLower())?.Id ?? 0;
+
+            await Service.AddOrUpdate([page]);
+        }
     }
 }
