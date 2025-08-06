@@ -326,12 +326,16 @@ public class AppService : CoreService<App>, IAppService
                         .Include(p => p.Contents)
                         .Include(p => p.PageInfo)
                         .Include(p => p.Roles)
+                        .Include(p => p.Parent)
                         .Where(r => r.AppId == appId)
                         .AsEnumerable()
                         .Select(p =>
                         {
                             if(p.Roles != null && p.Roles.Any())
                                 pageRoles.AddRange(p.Roles.Select(r => new PageRoleInfo { Path = p.Path, Role = roleData.First(r2 => r2.Id == r.RoleId).Name }).ToArray());
+
+                            if(string.IsNullOrEmpty(p.Parent?.Path))
+                                p.Path = $"/{p.Path}";
 
                             return new
                             {
