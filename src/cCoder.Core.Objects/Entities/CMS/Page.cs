@@ -67,7 +67,7 @@ public class Page : IAmRoleSecured<PageRole>
     [DontPrivilege]
     public void RecomputePaths()
     {
-        string newPath = ParentId != null
+        string newPath = ParentId != null && !string.IsNullOrEmpty(Parent.Path)
             ? $"{Parent.Path}/{Title(string.Empty).Replace(" ", "")}"
             : $"{Title(string.Empty).Replace(" ", "")}";
 
