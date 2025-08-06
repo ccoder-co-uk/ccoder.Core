@@ -30,9 +30,14 @@ public class PageImporter : CoreImporter<Page>
             page.AppId = appId;
             string parentPath = new Path(page.Path).ParentPath.FullPath;
 
+            Page parent = Db.GetAll<Page>().FirstOrDefault(p => p.Path.ToLower() == parentPath.ToLower() && p.AppId == appId);
+
             page.ParentId = page.Path.Contains('/')
-                ? Db.GetAll<Page>().FirstOrDefault(p => p.Path.ToLower() == parentPath.ToLower() && p.AppId == appId)?.Id
+                ? parent?.Id
                 : null;
+
+            if (parent is not null && string.IsNullOrEmpty(parent.Path))
+                page.Path = page.Path.TrimStart('/');
 
             page.Id = dbVersions.FirstOrDefault(j => j.Path.ToLower() == page.Path.ToLower())?.Id ?? 0;
 
