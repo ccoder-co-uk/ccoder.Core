@@ -30,6 +30,9 @@ public class PageImporter : CoreImporter<Page>
             page.AppId = appId;
             string parentPath = new Path(page.Path).ParentPath.FullPath;
 
+            if (parentPath.StartsWith('/') && parentPath.Split('/').Count() > 1)
+                parentPath = parentPath.TrimStart('/');
+
             Page parent = Db.GetAll<Page>().FirstOrDefault(p => p.Path.ToLower() == parentPath.ToLower() && p.AppId == appId);
 
             page.ParentId = page.Path.Contains('/')
