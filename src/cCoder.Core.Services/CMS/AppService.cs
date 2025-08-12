@@ -315,26 +315,40 @@ public class AppService : CoreService<App>, IAppService
             ]
     };
 
-    private Package ExportPages(int appId, Role[] roleData, List<PageRoleInfo> pageRoles, JsonSerializerSettings serializerSettings) => new("Pages")
+    private Package ExportPages(int appId, Role[] roleData, List<PageRoleInfo> pageRoles, JsonSerializerSettings serializerSettings)
     {
-        Items =
+        var appPages = Db.GetAll<Page>()
+            .Where(r => r.AppId == appId)
+            .Include(p => p.Contents)
+            .Include(p => p.PageInfo)
+            .Include(p => p.Roles)
+            .AsNoTracking()
+            .ToList();
+
+        var pageDict = appPages.ToDictionary(p => p.Id);
+
+        foreach (var page in appPages)
+            if (page.ParentId is not null && pageDict.TryGetValue(page.ParentId.Value, out var parent))
+                page.Parent = parent;
+
+        return new("Pages")
+        {
+            Items =
             [
                 new PackageItem()
                 {
                     Type = "Core/Page",
-                    Data = Db.GetAll<Page>()
-                        .Include(p => p.Contents)
-                        .Include(p => p.PageInfo)
-                        .Include(p => p.Roles)
-                        .Include(p => p.Parent)
-                        .Where(r => r.AppId == appId)
-                        .AsEnumerable()
+                    Data = appPages
                         .Select(p =>
                         {
                             if(p.Roles != null && p.Roles.Any())
                                 pageRoles.AddRange(p.Roles.Select(r => new PageRoleInfo { Path = p.Path, Role = roleData.First(r2 => r2.Id == r.RoleId).Name }).ToArray());
 
-                            if(string.IsNullOrEmpty(p.Parent?.Path))
+                            var rootPage = p;
+                            while(rootPage.ParentId is not null)
+                                rootPage = rootPage.Parent;
+
+                            if(p.ParentId is not null && string.IsNullOrEmpty(rootPage.Path))
                                 p.Path = $"/{p.Path}";
 
                             return new
@@ -354,7 +368,8 @@ public class AppService : CoreService<App>, IAppService
                         .ToJson(serializerSettings)
                 }
             ]
-    };
+        };
+    }
 
     private Package ExportResources(int appId, JsonSerializerSettings serializerSettings) => new("Resources")
     {
