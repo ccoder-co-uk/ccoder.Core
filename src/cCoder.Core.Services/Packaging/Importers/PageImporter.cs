@@ -39,7 +39,7 @@ public class PageImporter : CoreImporter<Page>
                 ? parent?.Id
                 : null;
 
-            if (parent is not null && string.IsNullOrEmpty(parent.Path))
+            if (page.Path.StartsWith('/'))
                 page.Path = page.Path.TrimStart('/');
 
             page.Id = dbVersions.FirstOrDefault(j => j.Path.ToLower() == page.Path.ToLower())?.Id ?? 0;
