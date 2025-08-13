@@ -28,19 +28,23 @@ public class PageImporter : CoreImporter<Page>
         foreach (Page page in items)
         {
             page.AppId = appId;
-            string parentPath = new Path(page.Path).ParentPath.FullPath;
+            Page parent;
 
-            if (parentPath.StartsWith('/') && parentPath.Split('/').Count() > 1)
-                parentPath = parentPath.TrimStart('/');
+            if(page.Path.StartsWith('/'))
+            {
+                parent = page.Path.Split('/').Count() == 2
+                    ? Db.GetAll<Page>().FirstOrDefault(p => p.Path == "" && p.AppId == appId) // Import a page that is a child of /.
+                    : Db.GetAll<Page>().FirstOrDefault(p => p.Path.ToLower() == page.Path.ToLower().TrimStart('/') && p.AppId == appId); // Import a page that is a child of a child of /.
 
-            Page parent = Db.GetAll<Page>().FirstOrDefault(p => p.Path.ToLower() == parentPath.ToLower() && p.AppId == appId);
-
-            page.ParentId = page.Path.Contains('/')
-                ? parent?.Id
-                : null;
-
-            if (page.Path.StartsWith('/'))
+                page.ParentId = parent?.Id;
                 page.Path = page.Path.TrimStart('/');
+            } else
+            {
+                string parentPath = new Path(page.Path).ParentPath.FullPath;
+                parent = Db.GetAll<Page>().FirstOrDefault(p => p.Path.ToLower() == parentPath.ToLower() && p.AppId == appId);
+
+                page.ParentId = parent?.Id;
+            }
 
             page.Id = dbVersions.FirstOrDefault(j => j.Path.ToLower() == page.Path.ToLower())?.Id ?? 0;
 
