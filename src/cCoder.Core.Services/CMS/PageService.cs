@@ -195,6 +195,7 @@ public class PageService : CoreService<Page>, IPageService
             Db.DisableFilters();
             parent = Db.GetAll<Page>(false)
                 .Include(p => p.Roles)
+                .Include(p => p.PageInfo)
                 .FirstOrDefault(p => p.Id == page.ParentId);
             Db.EnableFilters();
         }
@@ -203,7 +204,7 @@ public class PageService : CoreService<Page>, IPageService
             string parentPath = new Path(page.Path).ParentPath.FullPath;
             parent = Db.GetAll<Page>(false)
                 .Include(p => p.Roles)
-                .FirstOrDefault(p => p.Path.ToLower() == parentPath.ToLower() && p.AppId == page.AppId);
+                .FirstOrDefault(p => p.Path.ToLower() == parentPath.TrimStart('/').ToLower() && p.AppId == page.AppId);
         }
 
         if (parent != null)
@@ -214,7 +215,18 @@ public class PageService : CoreService<Page>, IPageService
                 : string.Empty;
 
         page.ParentId = parent?.Id;
+
         Page newPage = new Page().UpdateFrom(page);
+        newPage.Parent = parent;
+        newPage.PageInfo = page.PageInfo.Select(pi =>
+        {
+            pi.PageId = newPage.Id;
+            return pi;
+        }).ToList();
+
+        newPage.RecomputePaths();
+        newPage.Parent = null;
+        newPage.PageInfo = null;
 
         // create the page
         Page result = await base.AddAsync(newPage);
@@ -232,6 +244,42 @@ public class PageService : CoreService<Page>, IPageService
         await Db.SaveChangesAsync();
 
         return result;
+    }
+
+    public override async Task<IEnumerable<Result<Page>>> AddOrUpdate(IEnumerable<Page> items, bool onlyIfNewer = true)
+    {
+        int[] ids = items.Select(i => i.Id).ToArray();
+
+        Db.DisableFilters();
+        var allDbVersions = Db.GetAll<Page>().Where(p => ids.Contains(p.Id)).ToArray();
+        Db.EnableFilters();
+        var visibleVersions = Db.GetAll<Page>().Where(p => ids.Contains(p.Id)).ToArray();
+
+        List<Result<Page>> results = items.Where(i =>
+        {
+            Page fromAll = allDbVersions.FirstOrDefault(p => p.Id == i.Id);
+            Page fromVisible = visibleVersions.FirstOrDefault(p => p.Id == i.Id);
+
+            return fromAll != null && fromVisible == null;
+        })
+            .Select(i => new Result<Page> { Success = false, Item = i, Message = "Access Denied!" })
+            .ToList();
+
+        Page[] rejectedItems = results.Select(i => i.Item).ToArray();
+        Page[] existingItems = items.Where(i => !rejectedItems.Contains(i) && visibleVersions.Any(dbi => dbi.GetId().ToString() == i.GetId().ToString())).ToArray();
+        Page[] newItems = items.Where(i => !rejectedItems.Contains(i) && !existingItems.Contains(i)).ToArray();
+
+        if(onlyIfNewer)
+        {
+            existingItems = existingItems
+                .Where(i => i.LastUpdated > visibleVersions.First(p => p.Id == i.Id).LastUpdated)
+                .ToArray();
+        }
+
+        results.AddRange(await UpdateAllAsync(existingItems));
+        results.AddRange(await AddAllAsync(newItems));
+
+        return results;
     }
 
     private async Task SetPageInfoOnNewPage(Page page, Page result)
