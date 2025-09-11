@@ -1,5 +1,6 @@
 ﻿using cCoder.Core.Objects;
 using cCoder.Core.Objects.Dtos;
+using cCoder.Core.Objects.Dtos.Mail;
 using cCoder.Core.Objects.Entities;
 using cCoder.Core.Objects.Entities.CMS;
 using cCoder.Core.Objects.Entities.DMS;
@@ -130,6 +131,8 @@ public interface IUserRoleService : ICoreService<UserRole>
 public interface IQueuedEmailService : ICoreService<QueuedEmail>
 {
     Task<QueuedEmail> AddAsync(QueuedEmail entity, bool checkPrivs);
+
+    Task<QueuedEmail> AddTemplatedEmailAsync(TemplatedEmailDetails details, User coreUser);
 }
 
 public interface IPackageService : ICoreService<Package>
