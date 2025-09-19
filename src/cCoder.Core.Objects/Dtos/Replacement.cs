@@ -7,22 +7,19 @@ public class Replacement
     public string Old { get; }
     public string New => newString ?? ReplaceFunction(Old);
 
-    public Func<string, string> ReplaceFunction { get; }
+    public Func<string, string> ReplaceFunction { get; } = (s) => s;
 
     public Replacement(string old, string _new)
     {
         Old = old;
         newString = _new;
-        ReplaceFunction = null;
     }
 
     public Replacement(string old, Func<string, string> replacer)
     {
         Old = old;
-        newString = null;
-        ReplaceFunction = replacer;
 
-        if(replacer is null)
-            ReplaceFunction = (s) => s;
+        if(replacer is not null)
+            ReplaceFunction = replacer;
     }
 }
