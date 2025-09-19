@@ -95,6 +95,7 @@ public class QueuedEmailService : CoreService<QueuedEmail>, IQueuedEmailService
         App app = Db.GetAll<App>(false)
             .Include(a => a.Templates)
             .Include(s => s.MailServers)
+            .Include(a => a.Resources)
             .FirstOrDefault(a => a.Domain == sourceDomain);
 
         if (app == null)
