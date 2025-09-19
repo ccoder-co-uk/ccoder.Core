@@ -80,8 +80,7 @@ public class QueuedEmailService : CoreService<QueuedEmail>, IQueuedEmailService
                 renderParams,
                 renderModel,
                 mailServer,
-                config,
-                logger);
+                config);
 
         email.SentByUserId = renderModel.CoreUser?.Id;
 
