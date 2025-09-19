@@ -44,7 +44,7 @@ public class QueuedEmailService : CoreService<QueuedEmail>, IQueuedEmailService
 
     public async Task<QueuedEmail> AddTemplatedEmailAsync(TemplatedEmailDetails details, User coreUser)
     {
-        App app = GetAppForTemplatedEmail(details.SourceDomain, details.TemplateName);
+        App app = await GetAppForTemplatedEmailAsync(details.SourceDomain, details.TemplateName);
 
         Template template = app.Templates
             .FirstOrDefault(t => t.AppId == app.Id && t.Name == details.TemplateName);
@@ -79,13 +79,13 @@ public class QueuedEmailService : CoreService<QueuedEmail>, IQueuedEmailService
         return await AddAsync(email, checkPrivs: false);
     }
 
-    private App GetAppForTemplatedEmail(string sourceDomain, string templateName)
+    private async ValueTask<App> GetAppForTemplatedEmailAsync(string sourceDomain, string templateName)
     {
-        App app = Db.GetAll<App>(false)
+        App app = await Db.GetAll<App>(false)
             .Include(a => a.Templates)
             .Include(s => s.MailServers)
             .Include(a => a.Resources)
-            .FirstOrDefault(a => a.Domain == sourceDomain);
+            .FirstOrDefaultAsync(a => a.Domain == sourceDomain);
 
         if (app == null)
             throw new InvalidOperationException($"No app found for domain '{sourceDomain}'");
