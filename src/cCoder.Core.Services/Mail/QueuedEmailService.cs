@@ -67,18 +67,16 @@ public class QueuedEmailService : CoreService<QueuedEmail>, IQueuedEmailService
             renderModel.CoreUser.DefaultCultureId);
 
         QueuedEmail email = template.BuildEmailTo(
-                details.ToEmail,
-                $"{app.Name}: {details.Subject}",
-                renderParams,
-                renderModel,
-                mailServer,
-                config);
+            details.ToEmail,
+            $"{app.Name}: {details.Subject}",
+            renderParams,
+            renderModel,
+            mailServer,
+            config);
 
         email.SentByUserId = renderModel.CoreUser?.Id;
 
-        return await AddAsync(
-            email,
-            checkPrivs: false);
+        return await AddAsync(email, checkPrivs: false);
     }
 
     private App GetAppForTemplatedEmail(string sourceDomain, string templateName)
