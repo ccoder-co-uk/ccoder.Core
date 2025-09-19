@@ -13,7 +13,7 @@ public class QueuedEmailService : CoreService<QueuedEmail>, IQueuedEmailService
 {
     private readonly Config config;
 
-    public QueuedEmailService(ICoreDataContext db, Config config) : base(db) =>
+    public QueuedEmailService(ICoreDataContext db, Config config, ICoreAuthInfo authInfo) : base(db) =>
         this.config = config;
 
     public override Task<QueuedEmail> AddAsync(QueuedEmail entity) =>
@@ -74,7 +74,7 @@ public class QueuedEmailService : CoreService<QueuedEmail>, IQueuedEmailService
             mailServer,
             config);
 
-        email.SentByUserId = renderModel.CoreUser?.Id;
+        email.SentByUserId = AuthInfo.SSOUserId;
 
         return await AddAsync(email, checkPrivs: false);
     }
