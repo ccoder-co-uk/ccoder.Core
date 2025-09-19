@@ -10,7 +10,7 @@ public class TemplatedEmailDetails
 
     public string Culture { get; set; }
 
-    public dynamic Model { get; set; }
+    public object Model { get; set; }
 
     public string ToEmail { get; set; }
 }
