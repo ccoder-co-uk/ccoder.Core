@@ -5,7 +5,6 @@ using cCoder.Core.Objects.Entities.CMS;
 using cCoder.Core.Objects.Entities.Mail;
 using cCoder.Core.Objects.Entities.Security;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using System.Security;
 
 namespace cCoder.Core.Services.Mail;
@@ -13,20 +12,13 @@ namespace cCoder.Core.Services.Mail;
 public class QueuedEmailService : CoreService<QueuedEmail>, IQueuedEmailService
 {
     private readonly Config config;
-    private readonly ILogger<QueuedEmailService> logger;
 
-    public QueuedEmailService(
-        ICoreDataContext db,
-        Config config,
-        ILogger<QueuedEmailService> logger) : base(db)
-    {
+    public QueuedEmailService(ICoreDataContext db, Config config) : base(db) =>
         this.config = config;
-        this.logger = logger;
-    }
 
     public override Task<QueuedEmail> AddAsync(QueuedEmail entity) =>
         AddAsync(entity, false);
-
+    
     public async Task<QueuedEmail> AddAsync(QueuedEmail email, bool checkPrivs) =>
         checkPrivs
             ? await base.AddAsync(email)
@@ -80,8 +72,7 @@ public class QueuedEmailService : CoreService<QueuedEmail>, IQueuedEmailService
                 renderParams,
                 renderModel,
                 mailServer,
-                config,
-                logger);
+                config);
 
         email.SentByUserId = renderModel.CoreUser?.Id;
 
