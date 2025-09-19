@@ -5,13 +5,24 @@ using cCoder.Core.Objects.Entities.CMS;
 using cCoder.Core.Objects.Entities.Mail;
 using cCoder.Core.Objects.Entities.Security;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Security;
 
 namespace cCoder.Core.Services.Mail;
 
 public class QueuedEmailService : CoreService<QueuedEmail>, IQueuedEmailService
 {
-    public QueuedEmailService(ICoreDataContext db) : base(db) { }
+    private readonly Config config;
+    private readonly ILogger<QueuedEmailService> logger;
+
+    public QueuedEmailService(
+        ICoreDataContext db,
+        Config config,
+        ILogger<QueuedEmailService> logger) : base(db)
+    {
+        this.config = config;
+        this.logger = logger;
+    }
 
     public override Task<QueuedEmail> AddAsync(QueuedEmail entity) =>
         AddAsync(entity, false);
@@ -25,9 +36,9 @@ public class QueuedEmailService : CoreService<QueuedEmail>, IQueuedEmailService
     {
         int queuedEmailId = (int)id;
 
-        QueuedEmail queuedEmail = GetAll(true)
+        QueuedEmail queuedEmail = await GetAll(true)
             .Include(q => q.FailedSends)
-            .FirstOrDefault(r => r.Id == queuedEmailId);
+            .FirstOrDefaultAsync(r => r.Id == queuedEmailId);
 
         if (queuedEmail == null)
             throw new SecurityException("Access Denied!");
@@ -68,7 +79,9 @@ public class QueuedEmailService : CoreService<QueuedEmail>, IQueuedEmailService
                 $"{app.Name}: {details.Subject}",
                 renderParams,
                 renderModel,
-                mailServer);
+                mailServer,
+                config,
+                logger);
 
         email.SentByUserId = renderModel.CoreUser?.Id;
 
@@ -85,13 +98,13 @@ public class QueuedEmailService : CoreService<QueuedEmail>, IQueuedEmailService
             .FirstOrDefault(a => a.Domain == sourceDomain);
 
         if (app == null)
-            throw new Exception($"No app found for domain '{sourceDomain}'");
+            throw new InvalidOperationException($"No app found for domain '{sourceDomain}'");
 
         if (!app.Templates.Any(t => t.Name == templateName))
-            throw new Exception($"No template named '{templateName}' found for domain '{sourceDomain}'");
+            throw new InvalidOperationException($"No template named '{templateName}' found for domain '{sourceDomain}'");
 
         if (!app.MailServers.Any())
-            throw new Exception($"No mail server found for domain '{sourceDomain}'");
+            throw new InvalidOperationException($"No mail server found for domain '{sourceDomain}'");
 
         return app;
     }
