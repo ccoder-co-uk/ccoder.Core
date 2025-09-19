@@ -24,7 +24,7 @@ public class Template : BaseEntity
 
     public virtual App App { get; set; }
 
-    public QueuedEmail BuildEmailTo<T>(string receiver, string subject, RenderParams r, T model, MailServer serverInfo, Config config = null, ILogger log = null)
+    public QueuedEmail BuildEmailTo(string receiver, string subject, RenderParams r, object model, MailServer serverInfo, Config config = null, ILogger log = null)
     {
         QueuedEmail result = new()
         {
@@ -43,7 +43,7 @@ public class Template : BaseEntity
         return result;
     }
 
-    public string Render<T>(T model, RenderParams r, Config config = null, ILogger log = null)
+    public string Render(object model, RenderParams r, Config config = null, ILogger log = null)
     {
         List<Replacement> replacements = ContentHelper.DefaultReplacements(r, config).ToList();
         replacements.Add(new Replacement("[model]", model.ToJson()));
@@ -56,7 +56,7 @@ public class Template : BaseEntity
         return result;
     }
 
-    internal IEnumerable<Replacement> BuildModelReplacements<T>(T model, string prefix = "")
+    internal IEnumerable<Replacement> BuildModelReplacements(object model, string prefix = "")
     {
         if (model is string)
             return [new Replacement($"[theme[{prefix}]]", model.ToString())];
@@ -72,7 +72,7 @@ public class Template : BaseEntity
             return BuildModelReplacementsForObject(model, prefix);
     }
 
-    private IEnumerable<Replacement> BuildModelReplacementsForCollection<T>(T model, string prefix)
+    private IEnumerable<Replacement> BuildModelReplacementsForCollection(object model, string prefix)
     {
         string bindingExpression = prefix ?? string.Empty;
         List<Replacement> result = [];
@@ -91,7 +91,7 @@ public class Template : BaseEntity
         return result;
     }
 
-    private IEnumerable<Replacement> BuildModelReplacementsForObject<T>(T model, string prefix)
+    private IEnumerable<Replacement> BuildModelReplacementsForObject(object model, string prefix)
         => model.GetType()
             .GetProperties()
             .SelectMany(p =>
@@ -113,7 +113,7 @@ public class Template : BaseEntity
             .Where(i => i.Old != null && i.New != null)
             .ToList();
 
-    private IEnumerable<Replacement> BuildModelReplacementsForJObject<T>(T model, string prefix)
+    private IEnumerable<Replacement> BuildModelReplacementsForJObject(object model, string prefix)
     {
         IEnumerable<KeyValuePair<string, JToken>> values = (IEnumerable<KeyValuePair<string, JToken>>)model;
         return values.SelectMany(t =>
@@ -130,7 +130,7 @@ public class Template : BaseEntity
         .ToList();
     }
 
-    private IEnumerable<Replacement> BuildModelReplacementsForDynamicObject<T>(T model, string prefix)
+    private IEnumerable<Replacement> BuildModelReplacementsForDynamicObject(object model, string prefix)
     {
         IDictionary<string, object> dynamicModel = (IDictionary<string, object>)model;
         return dynamicModel.Keys.SelectMany(key =>

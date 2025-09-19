@@ -25,7 +25,7 @@ public class TemplateService : CoreService<Template>, ITemplateService
             app.Resources = Db.GetAll<Resource>(false).Where(t => t.AppId == app.Id).ToArray();
             TemplateRenderParams renderParams = new(app, User, culture);
             Template template = app.Templates.FirstOrDefault(t => t.Name.ToLower() == name.ToLower());
-            return template.Render<dynamic>(model, renderParams, config);
+            return template.Render(model, renderParams, config);
         }
         catch (Exception ex)
         {
