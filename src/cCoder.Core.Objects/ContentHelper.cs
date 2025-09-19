@@ -33,7 +33,7 @@ public static class ContentHelper
             ? p.App.DefaultCultureId
             : p.Culture;
 
-        string port = config.Settings.TryGetValue("sslPort", out string value) 
+        string port = config?.Settings.TryGetValue("sslPort", out string value) ?? false
             ? $":{value}"
             : string.Empty;
 
