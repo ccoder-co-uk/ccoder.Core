@@ -143,8 +143,7 @@ public class CMSUserRegistrationOrchestrationService(
                 app.Name + ": Confirm Invitation",
                 renderParams, renderModel,
                 mailServer,
-                config,
-                log);
+                config);
 
         confirmInvitationEmail.SentByUserId = user.Id;
 
