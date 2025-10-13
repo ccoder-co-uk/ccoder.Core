@@ -1,4 +1,6 @@
-﻿using cCoder.Core.Objects;
+﻿using System.Net;
+using cCoder.Core.Objects;
+using cCoder.Core.Objects.Dtos.Workflow;
 using cCoder.Core.Objects.Entities.Workflow;
 using cCoder.Core.Objects.Extensions;
 using cCoder.Security.Objects.Entities;
@@ -14,14 +16,17 @@ internal sealed class WorkflowInstanceManagement(
     ILogger<WorkflowInstanceManagement> log)
         : IScheduled1MinuteOperation, IWorkflowInstanceManagement
 {
+    static HttpClientHandler handler = new HttpClientHandler() 
+    { 
+        AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate 
+    };
+
     public async Task Run()
     {
         try
         {
-            using IServiceScope scope = serviceProvider.CreateScope();
-            using ICoreDataContext core = scope.ServiceProvider.GetService<ICoreDataContext>();
-            DropOldInstances(core);
-            await ExecuteWaitingQueuedInstances(core);
+            DropOldInstances();
+            await ExecuteWaitingQueuedInstances();
         }
         catch (Exception ex)
         {
@@ -71,23 +76,36 @@ internal sealed class WorkflowInstanceManagement(
             .FirstOrDefault();
 
         if (firstInstance is not null && firstInstance.State == "Queued")
-            await ExecuteInstance(firstInstance, core);
+            await ExecuteInstance(firstInstance);
     }
 
-    private void DropOldInstances(ICoreDataContext core)
+    private void DropOldInstances()
     {
+        using IServiceScope scope = serviceProvider.CreateScope();
+        using ICoreDataContext core = scope.ServiceProvider.GetService<ICoreDataContext>();
+
         int dropCount = core.FlushWFInstances(DateTimeOffset.UtcNow.AddDays(-7));
 
         if (dropCount > 0)
             log.LogInformation($"Dropped {dropCount} Workflow instances older than 7 days.");
     }
 
-    private async ValueTask ExecuteWaitingQueuedInstances(ICoreDataContext core)
+    private async ValueTask ExecuteWaitingQueuedInstances()
     {
-        IEnumerable<IGrouping<Guid, FlowInstanceData>> instanceGroups = core
+        using IServiceScope scope = serviceProvider.CreateScope();
+        using ICoreDataContext core = scope.ServiceProvider.GetService<ICoreDataContext>();
+
+        IGrouping<Guid, FlowInstanceData>[] instanceGroups = core
             .GetAll<FlowInstanceData>().Where(f => f.State == "Queued" || f.State == "Executing")
-            .AsEnumerable()
-            .GroupBy(f => f.FlowDefinitionId);
+            .Include(i => i.FlowDefinition)
+                .ThenInclude(d => d.App)
+            .GroupBy(f => f.FlowDefinitionId)
+            .ToArray();
+
+        bool isQueued;
+        bool isApparentlyHung;
+
+        List<Task> executions = [];
 
         foreach (IGrouping<Guid, FlowInstanceData> instanceGroup in instanceGroups)
         {
@@ -96,36 +114,59 @@ internal sealed class WorkflowInstanceManagement(
                 .ToArray();
 
             FlowInstanceData nextInstance = orderedSet.First();
-            bool isQueued = nextInstance.State == "Queued";
-            bool isApparentlyHung = nextInstance.State == "Executing" && nextInstance.Start < DateTimeOffset.UtcNow.AddMinutes(-15);
+            isQueued = nextInstance.State == "Queued";
+            isApparentlyHung = nextInstance.State == "Executing" && nextInstance.Start < DateTimeOffset.UtcNow.AddMinutes(-15);
 
             if (isQueued || isApparentlyHung)
-                await ExecuteInstance(nextInstance, core);
+                executions.Add(ExecuteInstance(nextInstance));
         }
+
+        await Task.WhenAll(executions);
     }
 
-    private async ValueTask ExecuteInstance(FlowInstanceData instance, ICoreDataContext core)
+    private async Task ExecuteInstance(FlowInstanceData instance)
     {
-        try
+        using IServiceScope scope = serviceProvider.CreateScope();
+        using ICoreDataContext core = scope.ServiceProvider.GetService<ICoreDataContext>();
+
+        var dbInstance = await core
+            .GetAll<FlowInstanceData>()
+            .IgnoreQueryFilters()
+            .Where(i => i.Id == instance.Id)
+            .FirstOrDefaultAsync();
+
+        dbInstance.Start = DateTimeOffset.UtcNow;
+        dbInstance.State = "Executing";
+        await core.SaveChangesAsync();
+
+        ITokenProcessingService tokenProcessingService = serviceProvider.GetService<ITokenProcessingService>();
+        Token token = await tokenProcessingService.AddTokenForUserIdAsync(instance.Caller);
+
+        var definition = instance.FlowDefinition;
+
+        var request = new WorkflowRequest
         {
-            instance.Start = DateTimeOffset.UtcNow;
-            instance.State = "Executing";
-            await core.SaveChangesAsync();
+            Api = $"https://{instance.FlowDefinition.App.Domain}:{config.Settings["sslPort"] ?? "443"}/Api/",
+            FlowId = instance.FlowDefinition.Id,
+            AuthToken = token.Id,
+            InstanceId = instance.Id
+        };
 
-            ITokenProcessingService tokenProcessingService = serviceProvider.GetService<ITokenProcessingService>();
-            Token token = await tokenProcessingService.AddTokenForUserIdAsync(instance.Caller);
+        HttpResponseMessage result = await SendToWorkflow(request);
 
-            FlowDefinition definition = core.GetAll<FlowDefinition>()
-                .IgnoreQueryFilters()
-                .Include(f => f.App)
-                .FirstOrDefault(f => f.Id == instance.FlowDefinitionId);
+        if (!result.IsSuccessStatusCode)
+            log.LogError("Flow instance {InstanceId} execution failed.\n{ErrorDetails}", dbInstance.Id, result.Content.ReadAsStringAsync());
+    }
 
-            await definition.Execute(config, instance.Id, token.Id);
-        }
-        catch
+    private async ValueTask<HttpResponseMessage> SendToWorkflow(WorkflowRequest request)
+    {
+        using HttpClient api = new(handler)
         {
-            instance.State = "Failed";
-            await core.SaveChangesAsync();
-        }
+            BaseAddress = new Uri(config.Services["Workflow"])
+        };
+
+        return await api.PostAsync(
+            "Execute", 
+            new StringContent(request.ToJson(), System.Text.Encoding.UTF8, "application/json"));
     }
 }
