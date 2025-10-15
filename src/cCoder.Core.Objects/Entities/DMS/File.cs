@@ -36,6 +36,8 @@ public class File
 
     public DateTimeOffset CreatedOn { get; set; }
 
+    public DateTimeOffset? DeletedOn { get; set; }
+
     public Folder Folder { get; set; }
 
     public ICollection<FileContent> Contents { get; set; } = new List<FileContent>();

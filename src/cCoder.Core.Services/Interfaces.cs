@@ -189,6 +189,8 @@ public interface IResourceService : ICoreService<Resource>
 public interface IFolderService : ICoreService<Folder>
 {
     Task<List<Result<Guid?>>> Copy(string source, string destination, int sourceAppId, int destAppId);
+
+    Task HandleFolderDeleteEventAsync(Folder folder);
 }
 
 /// <summary>
@@ -197,4 +199,6 @@ public interface IFolderService : ICoreService<Folder>
 public interface IFileService : ICoreService<Objects.Entities.DMS.File>
 {
     Objects.Entities.DMS.File GetByPath(int appId, string path);
+
+    Task HandleFileDeleteEventAsync(Objects.Entities.DMS.File file);
 }
