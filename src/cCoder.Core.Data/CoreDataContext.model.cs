@@ -53,8 +53,8 @@ public partial class CoreDataContext
     {
         // DMS security
         _ = builder.Entity<FolderRole>().HasQueryFilter(fr => fr.Role != null);
-        _ = builder.Entity<Folder>().HasQueryFilter(f => AdminOf.Contains(f.AppId) || f.Roles.Any(r => CurrentUserRoleIds.Contains(r.RoleId) && r.Role.Privs.Contains("folder_read")));
-        _ = builder.Entity<File>().HasQueryFilter(f => AdminOf.Contains(f.Folder.AppId) || f.Folder.Roles.Any(r => CurrentUserRoleIds.Contains(r.RoleId) && r.Role.Privs.Contains("file_read")));
+        _ = builder.Entity<Folder>().HasQueryFilter(f => f.DeletedOn == null && (AdminOf.Contains(f.AppId) || f.Roles.Any(r => CurrentUserRoleIds.Contains(r.RoleId) && r.Role.Privs.Contains("folder_read"))));
+        _ = builder.Entity<File>().HasQueryFilter(f => f.DeletedOn == null && (AdminOf.Contains(f.Folder.AppId) || f.Folder.Roles.Any(r => CurrentUserRoleIds.Contains(r.RoleId) && r.Role.Privs.Contains("file_read"))));
         _ = builder.Entity<FileContent>().HasQueryFilter(i => i.File != null);
 
         // CMS security
