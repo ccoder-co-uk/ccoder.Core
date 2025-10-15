@@ -111,10 +111,19 @@ public class CMSUserRegistrationOrchestrationService(
     public async ValueTask SendInvitationEmail(string invitationToken, App app, User user)
     {
         Template template = app.Templates
-            .FirstOrDefault(t => t.Name == "Invitation");
+            .FirstOrDefault(t => t.Name == "AccessRequestApprovedEmail");
 
         if (template == null || !app.MailServers.Any())
+        {
+            if(template == null)
+                log.LogInformation("AccessRequestApprovedEmail email template not found.");
+
+            if(!app.MailServers.Any())
+                log.LogInformation("No mail servers set up.");
+
             return;
+        }
+            
 
         MailServer mailServer = app.MailServers
             .FirstOrDefault(s => s.Name == "Default")
