@@ -19,6 +19,8 @@ public partial class CoreDataContext
 
     public async Task DeleteFolder(Guid folderId)
     {
+        DateTimeOffset now = DateTimeOffset.UtcNow;
+
         string script = @"
 DECLARE @tree TABLE
 (
@@ -26,6 +28,7 @@ DECLARE @tree TABLE
 	[Path] nvarchar(max), 
 	Depth int
 );
+DECLARE @allFiles TABLE (Id uniqueidentifier);
  
 WITH folderTree (Id, [Path], Depth) 
 AS (
@@ -35,7 +38,7 @@ AS (
 	UNION ALL
 		SELECT f.Id, f.[Path], len(f.[Path]) - len(replace(f.[Path],'/',''))  
 			FROM DMS.Folders f
-INNER JOIN folderTree cte ON cte.Id = f.ParentId
+            INNER JOIN folderTree cte ON cte.Id = f.ParentId
 )
 
 INSERT INTO @tree
@@ -43,29 +46,36 @@ SELECT *
 	FROM folderTree
 	ORDER by Depth desc;
 
-DELETE FROM [Security].[FolderRoles] WHERE FolderId IN (SELECT Id FROM @tree)
+INSERT INTO @allFiles
+    SELECT Id FROM [DMS].Files
+        WHERE FolderId IN (
+            SELECT Id FROM @tree
+        );
 
-DELETE FROM [DMS].[FileContents] WHERE FileId IN (SELECT Id FROM [DMS].[Files] WHERE FolderId IN (SELECT Id FROM @tree))
-DELETE FROM [DMS].[Files] WHERE FolderId IN (SELECT Id FROM @tree)
+UPDATE [DMS].Files
+    SET DeletedOn = @p1
+        WHERE Id IN (SELECT Id FROM @allFiles);
 
-WHILE  EXISTS(SELECT * FROM @tree)
+WHILE EXISTS(SELECT * FROM @tree)
 BEGIN
-	DELETE FROM [DMS].[Folders] WHERE Id IN (SELECT Id FROM @tree WHERE Depth = (SELECT Max(Depth) FROM @tree))
-	DELETE FROM @tree WHERE Depth = (SELECT Max(Depth) FROM @tree)
+    DELETE FROM [Security].[FolderRoles] WHERE FolderId IN (SELECT Id FROM @tree);
+    UPDATE [DMS].Folders
+        SET DeletedOn = @p1
+            WHERE Id IN (SELECT Id FROM @tree WHERE Depth = (SELECT Max(Depth) FROM @tree));
+	DELETE FROM @tree WHERE Depth = (SELECT Max(Depth) FROM @tree);
 END
             ";
 
         log.LogDebug($"Dropping folder {folderId}");
-        Database.SetCommandTimeout((int)TimeSpan.FromMinutes(1).TotalSeconds);
-        _ = await Database.ExecuteSqlRawAsync(script, folderId);
-        Database.SetCommandTimeout((int)TimeSpan.FromMinutes(5).TotalSeconds);
+        _ = await Database.ExecuteSqlRawAsync(script, new object[] { folderId, now });
         log.LogDebug($"Folder {folderId} Drop complete!");
     }
 
     public void DeleteFile(Guid fileId)
     {
         log.LogDebug($"Dropping file {fileId}");
-        _ = Database.ExecuteSqlRaw($"DELETE FROM [DMS].[FileContents] WHERE FileId = @p0; DELETE FROM [DMS].[Files] WHERE Id = @p0;", new object[] { fileId });
+        DateTimeOffset now = DateTimeOffset.UtcNow;
+        _ = Database.ExecuteSqlRaw($"UPDATE [DMS].Files SET DeletedOn = @p1 WHERE Id = @p0;", new object[] { fileId, now });
         log.LogDebug($"File {fileId} drop complete");
     }
 }

@@ -126,6 +126,14 @@ public class FolderService : CoreService<Folder>, IFolderService
         throw new SecurityException("Access Denied!");
     }
 
+    public async Task HandleFolderDeleteEventAsync(Folder folder)
+    {
+        Folder dbFolder = await Db.GetAll<Folder>(true)
+            .FirstOrDefaultAsync(f => f.Id == folder.Id);
+
+        await Db.DeleteAsync(dbFolder);
+    }
+
     private async Task<Folder> UpdateInternal(Folder dbVersion, Folder folder)
     {
         string parentPath = new Path(folder.Path).ParentPath.FullPath;
