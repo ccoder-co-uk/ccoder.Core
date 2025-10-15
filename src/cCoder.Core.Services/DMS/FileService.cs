@@ -1,4 +1,5 @@
 ﻿using cCoder.Core.Objects;
+using cCoder.Core.Objects.Entities.DMS;
 using Microsoft.EntityFrameworkCore;
 using System.Security;
 
@@ -51,5 +52,16 @@ public class FileService : CoreService<Objects.Entities.DMS.File>, IFileService
         {
             throw new SecurityException("Access Denied!");
         }
+    }
+
+    public async Task HandleFileDeleteEventAsync(Objects.Entities.DMS.File file)
+    {
+        IEnumerable<FileContent> contents = Db.GetAll<FileContent>(true)
+            .Where(fc => fc.FileId == file.Id)
+            .ToArray();
+
+        await Db.DeleteAllAsync(contents);
+
+        await Db.DeleteAsync(file);
     }
 }
