@@ -129,6 +129,7 @@ public class FolderService : CoreService<Folder>, IFolderService
     public async Task HandleFolderDeleteEventAsync(Folder folder)
     {
         Folder dbFolder = await Db.GetAll<Folder>(true)
+            .IgnoreQueryFilters()
             .FirstOrDefaultAsync(f => f.Id == folder.Id);
 
         await Db.DeleteAsync(dbFolder);
