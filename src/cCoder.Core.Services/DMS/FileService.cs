@@ -57,6 +57,7 @@ public class FileService : CoreService<Objects.Entities.DMS.File>, IFileService
     public async Task HandleFileDeleteEventAsync(Objects.Entities.DMS.File file)
     {
         IEnumerable<FileContent> contents = Db.GetAll<FileContent>(true)
+            .IgnoreQueryFilters()
             .Where(fc => fc.FileId == file.Id)
             .ToArray();
 
