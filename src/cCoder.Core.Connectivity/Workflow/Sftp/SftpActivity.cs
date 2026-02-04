@@ -1,4 +1,5 @@
-﻿using cCoder.Core.Objects.Workflow.Activities;
+﻿using cCoder.Core.Objects.Dtos.Workflow;
+using cCoder.Core.Objects.Workflow.Activities;
 using Renci.SshNet;
 using System;
 using System.Linq;
@@ -26,19 +27,25 @@ public abstract class SftpActivity : Activity
         try
         {
             client.Connect();
-            Log(Objects.Dtos.Workflow.WorkflowLogLevel.Info, $"Connected to Server @ {Host} as User {Username}");
+            Log(WorkflowLogLevel.Info, $"Connected to Server @ {Host} as User {Username}");
             return operation(client);
         }
-        catch { State = ActivityState.Failed; }
+        catch(Exception ex)
+        {
+            Log(WorkflowLogLevel.Error, $"Error: {ex.Message}\n{ex.StackTrace}");
+
+            if(ex.InnerException is not null)
+                Log(WorkflowLogLevel.Error, $"Inner exception: {ex.InnerException.Message}\n{ex.InnerException.StackTrace}");
+
+            State = ActivityState.Failed;
+        }
         finally
         {
             if (client.IsConnected)
-            {
                 client.Disconnect();
-            }
 
             client.Dispose();
-            Log(Objects.Dtos.Workflow.WorkflowLogLevel.Info, $"Disconnected from Server @ {Host}");
+            Log(WorkflowLogLevel.Info, $"Disconnected from Server @ {Host}");
         }
 
         return default;
@@ -52,18 +59,16 @@ public abstract class SftpActivity : Activity
         try
         {
             client.Connect();
-            Log(Objects.Dtos.Workflow.WorkflowLogLevel.Info, $"Connected to Server @ {Host} as User {Username}");
+            Log(WorkflowLogLevel.Info, $"Connected to Server @ {Host} as User {Username}");
             operation(client);
         }
         finally
         {
             if (client.IsConnected)
-            {
                 client.Disconnect();
-            }
 
             client.Dispose();
-            Log(Objects.Dtos.Workflow.WorkflowLogLevel.Info, $"Disconnected from Server @ {Host}");
+            Log(WorkflowLogLevel.Info, $"Disconnected from Server @ {Host}");
 
         }
     }
@@ -77,15 +82,11 @@ public abstract class SftpActivity : Activity
             if (existingFolder == null)
             {
                 if (folderPath.ParentPath.Depth > 0)
-                {
                     BuildPath(client, folderPath.ParentPath);
-                }
 
-                Log(Objects.Dtos.Workflow.WorkflowLogLevel.Debug, "Building path: " + folderPath.FullPath);
+                Log(WorkflowLogLevel.Debug, "Building path: " + folderPath.FullPath);
                 if (!client.Exists(folderPath.FullPath))
-                {
                     client.CreateDirectory(folderPath.FullPath);
-                }
             }
         }
     }
