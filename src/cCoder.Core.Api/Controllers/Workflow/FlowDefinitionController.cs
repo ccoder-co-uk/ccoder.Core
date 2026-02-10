@@ -75,7 +75,7 @@ public class FlowDefinitionController : CoreEntityODataController<FlowDefinition
                             ? t.MakeGenericType(t.GetTypeInfo().GenericTypeParameters.Select(i => typeof(object)).ToArray())
                             : t;
 
-                        return new MetadataContainer(type);
+                        return new ExtendedMetadataContainer(type);
                     }).ToArray()
             })
             .ToArray();
@@ -93,17 +93,17 @@ public class FlowDefinitionController : CoreEntityODataController<FlowDefinition
                 Name = "System",
                 Types = new []
                 {
-                    new MetadataContainer(typeof(int)),
-                    new MetadataContainer(typeof(string)),
-                    new MetadataContainer(typeof(decimal)),
-                    new MetadataContainer(typeof(float)),
-                    new MetadataContainer(typeof(bool)),
-                    new MetadataContainer(typeof(DateTime)),
-                    new MetadataContainer(typeof(DateTimeOffset)),
-                    new MetadataContainer(typeof(TimeSpan)),
-                    new MetadataContainer(typeof(object)),
-                    new MetadataContainer(typeof(System.Dynamic.ExpandoObject)),
-                    new MetadataContainer(typeof(IEnumerable<object>))
+                    new ExtendedMetadataContainer(typeof(int)),
+                    new ExtendedMetadataContainer(typeof(string)),
+                    new ExtendedMetadataContainer(typeof(decimal)),
+                    new ExtendedMetadataContainer(typeof(float)),
+                    new ExtendedMetadataContainer(typeof(bool)),
+                    new ExtendedMetadataContainer(typeof(DateTime)),
+                    new ExtendedMetadataContainer(typeof(DateTimeOffset)),
+                    new ExtendedMetadataContainer(typeof(TimeSpan)),
+                    new ExtendedMetadataContainer(typeof(object)),
+                    new ExtendedMetadataContainer(typeof(System.Dynamic.ExpandoObject)),
+                    new ExtendedMetadataContainer(typeof(IEnumerable<object>))
                 }
             }
         };

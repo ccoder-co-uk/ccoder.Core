@@ -10,13 +10,12 @@ public class MetadataContainerSet
 
     public string UriBase { get; set; }
 
-    public MetadataContainer[] Types { get; set; }
+    public ExtendedMetadataContainer[] Types { get; set; }
 
-    public MetadataContainerSet Resource(string culture, IEnumerable<Resource> resources)
-        => new()
-        {
-            Name = Name,
-            UriBase = UriBase,
-            Types = Types.Select(t => t.Resource(Name, culture, resources)).ToArray()
-        };
+    public MetadataContainerSet Resource(string culture, IEnumerable<Resource> resources) => new()
+    {
+        Name = Name,
+        UriBase = UriBase,
+        Types = Types.Select(t => t.Resource(Name, culture, resources)).ToArray()
+    };
 }

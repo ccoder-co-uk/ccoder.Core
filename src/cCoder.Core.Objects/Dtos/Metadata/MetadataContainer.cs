@@ -58,10 +58,9 @@ public class MetadataContainer
 
     public MetadataContainer Resource(string setName, string culture, IEnumerable<Resource> resources)
     {
-        // B2B|Credit
-
         string cacheKey = $"{setName}|{ServerTypeName.Split('.').Last()}";
         Resource resource = resources.ForKeyAndCulture(cacheKey, culture);
+
         return new()
         {
             Type = Type,
