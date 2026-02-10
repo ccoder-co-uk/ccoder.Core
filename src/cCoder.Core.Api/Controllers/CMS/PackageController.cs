@@ -45,7 +45,7 @@ public class PackageController(IPackageService service, ICoreAuthInfo auth, ILog
         }
         catch (Exception ex)
         {
-            log.LogWarning("A Packkage import failed due to an exception:\n", ex);
+            log.LogWarning("A Package import failed due to an exception:\n{Exception}", ex);
             return BadRequest(ex);
         }
         return Ok();

@@ -26,7 +26,9 @@ public static class HttpClientExtensions
         if (!validationResults.Success)
             throw new ValidationException(validationResults.Message);
 
-        HttpResponseMessage response = await client.PostAsync(query, new StringContent(entity.ToJsonForOdata(), Encoding.UTF8, "application/json"));
+        HttpResponseMessage response = await client
+            .PostAsync(query, new StringContent(entity.ToJsonForOdata(), Encoding.UTF8, "application/json"));
+
         _ = response.EnsureSuccessStatusCode();
         return await response.Content.ReadAsAsync<T>();
     }
@@ -46,7 +48,9 @@ public static class HttpClientExtensions
         if (!validationResults.Success)
             throw new ValidationException(validationResults.Message);
 
-        HttpResponseMessage response = await client.PutAsync(query, new StringContent(entity.ToJsonForOdata(), Encoding.UTF8, "application/json"));
+        HttpResponseMessage response = await client
+            .PutAsync(query, new StringContent(entity.ToJsonForOdata(), Encoding.UTF8, "application/json"));
+
         _ = response.EnsureSuccessStatusCode();
         return await response.Content.ReadAsAsync<T>();
     }
@@ -54,16 +58,16 @@ public static class HttpClientExtensions
     /// <summary>
     /// Delete and Entity atthe given URL on the API
     /// </summary>
-    /// <typeparam name="TKey"></typeparam>
     /// <param name="client">HttpClient instance</param>
     /// <param name="query">Path to API call</param>
     /// <returns>Task that does the work</returns>
-    public static async Task DeleteAsync(this HttpClient client, string query) => (await client.DeleteAsync(query)).EnsureSuccessStatusCode();
+    public static async Task DeleteAsync(this HttpClient client, string query) => 
+        (await client.DeleteAsync(query)).EnsureSuccessStatusCode();
 
     /// <summary>
     /// Deletes the given set from the API
     /// </summary>
-    /// <typeparam name="TKey">Type of the keys that we are sending</typeparam>
+    /// <typeparam name="T">Type of the keys that we are sending</typeparam>
     /// <param name="client">HttpClient instance</param>
     /// <param name="query">Path to API call</param>
     /// <param name="data">Entity keys for the entities to be posted</param>
@@ -97,7 +101,6 @@ public static class HttpClientExtensions
     /// <summary>
     /// Call custom Odata actions on the API
     /// </summary>
-    /// <typeparam name="TResult">Expected result type</typeparam>
     /// <param name="client">HttpClient instance</param>
     /// <param name="query">Path to API call</param>
     /// <param name="data">Payload to send to the Action</param>
@@ -114,7 +117,6 @@ public static class HttpClientExtensions
     /// <summary>
     /// Fetches a collection of data items of type T from the API
     /// </summary>
-    /// <typeparam name="TResult">Expected result type</typeparam>
     /// <param name="client">HttpClient instance</param>
     /// <param name="query">Path to API call</param>
     /// <returns>Task that resolves our Result set as an ODataCollection&gt;T&lt;</returns>

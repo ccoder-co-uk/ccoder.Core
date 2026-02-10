@@ -97,7 +97,7 @@ public abstract class EntityODataController<T, TKey, TUser> : CoreODataControlle
     /// Base update method for entity changes
     /// </summary>
     /// <param name="key">the entity key</param>
-    /// <param name="entity"the updated entity></param>
+    /// <param name="entity the updated entity"></param>
     /// <returns></returns>
     [HttpPut]
     [EnableQuery(
