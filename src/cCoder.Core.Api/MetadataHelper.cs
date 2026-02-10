@@ -18,29 +18,12 @@ public static class MetadataHelper
             cache = SystemTypes()
                 .Union(EntityTypes(map))
                 .Union([WorkflowTypes()])
-                .Union(DTOs())
                 .OrderBy(s => s.Name)
                 .AsQueryable();
         }
 
         return cache;
     }
-
-    private static IEnumerable<MetadataContainerSet> DTOs() =>
-    [
-        new MetadataContainerSet
-        {
-            Name = "DTOs",
-            Types = new[] {
-                new MetadataContainer(typeof(Flow)) { Category = "DTO (Workflow)" },
-                new MetadataContainer(typeof(Link)) { Category = "DTO (Workflow)" },
-                new MetadataContainer(typeof(WorkflowLogEntry)) { Category = "DTO (Workflow)" },
-                new MetadataContainer(typeof(WorkflowLogLevel)) { Category = "DTO (Workflow)" }
-            }
-            .OrderBy(t => t.Name)
-            .ToArray()
-        }
-    ];
 
     private static MetadataContainerSet WorkflowTypes() => new()
     {
@@ -56,8 +39,15 @@ public static class MetadataHelper
                         ? t.MakeGenericType(t.GetTypeInfo().GenericTypeParameters.Select(i => typeof(object)).ToArray())
                         : t;
 
-                    return new MetadataContainer(type) { Category = g.Key };
+                    return new ExtendedMetadataContainer(type) { Category = g.Key };
                 }))
+            .Union(
+            [
+                new ExtendedMetadataContainer(typeof(Flow)) { Category = "Workflow" },
+                new ExtendedMetadataContainer(typeof(Link)) { Category = "Workflow" },
+                new ExtendedMetadataContainer(typeof(WorkflowLogEntry)) { Category = "Workflow" },
+                new ExtendedMetadataContainer(typeof(WorkflowLogLevel)) { Category = "Workflow" }
+            ])
             .OrderBy(t => t.Name)
             .ToArray()
     };
@@ -67,20 +57,20 @@ public static class MetadataHelper
             {
                 Name = "System",
                 Types = new [] {
-                    new MetadataContainer(typeof(int)),
-                    new MetadataContainer(typeof(string)),
-                    new MetadataContainer(typeof(decimal)),
-                    new MetadataContainer(typeof(double)),
-                    new MetadataContainer(typeof(float)),
-                    new MetadataContainer(typeof(bool)),
-                    new MetadataContainer(typeof(DateTime)),
-                    new MetadataContainer(typeof(DateTimeOffset)),
-                    new MetadataContainer(typeof(TimeSpan)),
-                    new MetadataContainer(typeof(IEnumerable<object>)),
-                    new MetadataContainer(typeof(ICollection<object>)),
-                    new MetadataContainer(typeof(IDictionary<string, object>)),
-                    new MetadataContainer(typeof(object)),
-                    new MetadataContainer(typeof(Guid))
+                    new ExtendedMetadataContainer(typeof(int)),
+                    new ExtendedMetadataContainer(typeof(string)),
+                    new ExtendedMetadataContainer(typeof(decimal)),
+                    new ExtendedMetadataContainer(typeof(double)),
+                    new ExtendedMetadataContainer(typeof(float)),
+                    new ExtendedMetadataContainer(typeof(bool)),
+                    new ExtendedMetadataContainer(typeof(DateTime)),
+                    new ExtendedMetadataContainer(typeof(DateTimeOffset)),
+                    new ExtendedMetadataContainer(typeof(TimeSpan)),
+                    new ExtendedMetadataContainer(typeof(IEnumerable<object>)),
+                    new ExtendedMetadataContainer(typeof(ICollection<object>)),
+                    new ExtendedMetadataContainer(typeof(IDictionary<string, object>)),
+                    new ExtendedMetadataContainer(typeof(object)),
+                    new ExtendedMetadataContainer(typeof(Guid))
                 }.Select(t => { t.Category = "System"; return t; }).ToArray()
             }
         };
