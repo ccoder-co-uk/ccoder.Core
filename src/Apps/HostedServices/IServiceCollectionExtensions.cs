@@ -17,7 +17,7 @@ using HostedServices.Services.Scheduled.Interfaces;
 using HostedServices.Services.Scheduled.Tasks;
 using Microsoft.AspNetCore.OData.Batch;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 
 namespace HostedServices;
 

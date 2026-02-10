@@ -14,7 +14,9 @@ public static class ZipArchiveExtensions
     /// </summary>
     /// <param name="zip"></param>
     /// <param name="folder"></param>
+    /// <param name="ctx"></param>
     /// <param name="prefix"></param>
+    /// <param name="search"></param>
     /// <returns></returns>
     public static ZipArchive AddFolder(this ZipArchive zip, Folder folder, IDataContext ctx = null, string prefix = null, string search = "")
     {
@@ -51,6 +53,7 @@ public static class ZipArchiveExtensions
     /// </summary>
     /// <param name="zip"></param>
     /// <param name="file"></param>
+    /// <param name="ctx"></param>
     /// <param name="prefix"></param>
     /// <returns></returns>
     public static ZipArchive AddFile(this ZipArchive zip, File file, IDataContext ctx = null, string prefix = null)

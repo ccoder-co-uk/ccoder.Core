@@ -191,8 +191,9 @@ public class AppService : CoreService<App>, IAppService
     /// Exports an app for use with Import 
     /// </summary>
     /// <param name="appId">the app id of the app to export</param>
+    /// <param name="packages">The list of package names to export</param>
     /// <returns>A stream which contains the app serialized in to a zip archive</returns>
-    public IEnumerable<Package> Export(int appId, string[] packages)
+    public IEnumerable<Package> Export(int appId, string[] packages = null)
     {
         if (!(User.Can(appId, "app_create") && User.Can(appId, "app_update") && User.Can(appId, "app_read") && User.Can(appId, "app_delete")))
             throw new SecurityException("Access Denied!");

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace cCoder.Core.Services.Workflow;
 
-public class FlowInstanceDataService(ICoreDataContext db, Config config) 
+public class FlowInstanceDataService(ICoreDataContext db) 
     : CoreService<FlowInstanceData>(db)
 {
     public override async Task<FlowInstanceData> UpdateAsync(FlowInstanceData entity)

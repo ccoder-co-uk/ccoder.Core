@@ -100,6 +100,7 @@ public static class ObjectExtensions
     /// </summary>
     /// <param name="objectToUpdate">The object to update.</param>
     /// <param name="objectToCopyFrom">The object to copy from.</param>
+    /// <param name="includeForeignKeys">Should Copy Foreign Keys.</param>
     public static T UpdateFrom<T>(this T objectToUpdate, object objectToCopyFrom, bool includeForeignKeys = true)
     {
         if (objectToCopyFrom == null)

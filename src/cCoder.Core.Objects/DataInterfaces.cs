@@ -57,7 +57,7 @@ public interface IDataContext : IReadOnlyDataContext, IWriteableDataContext, IDi
 /// <summary>
 /// base generic data store definition
 /// </summary>
-/// <typeparam name="T">repository type</typeparam>
+/// <typeparam name="TUser">repository type</typeparam>
 public interface IDataContext<out TUser> : IDataContext
 {
     TUser User { get; }
@@ -135,8 +135,6 @@ public interface IWriteableDataContext
     /// <summary>
     /// Saves any pending changes.
     /// </summary>
-    /// <param name="andAudit">Optional parameter determines if any applicable auditing should be done.</param>
-    /// <param name="andUpdateComputedFields">Optional parameter determines if computed fields should be updated.</param>
     Task<int> SaveChangesAsync();
 }
 
