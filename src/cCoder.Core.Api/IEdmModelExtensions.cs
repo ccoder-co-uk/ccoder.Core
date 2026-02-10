@@ -60,7 +60,7 @@ public static class IEdmModelExtensions
                     Url = $"{result.Category}/{type.Name}/{o.Name}()",
                     Queryable = o.IsFunction(),
                     HttpVerb = o.IsFunction() ? "GET" : "POST",
-                    ReturnType = BuildMetaFor(o.ReturnType?.Definition),
+                    ReturnType = BuildMetaFor(o.GetReturn().Type.Definition),
                     Parameters = o.Parameters?
                         .Where(p => p.Name != "bindingParameter")
                         .Select(p => new { k = p.Name, v = p.Type.FullName() })

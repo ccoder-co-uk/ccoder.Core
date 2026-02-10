@@ -1,12 +1,11 @@
-﻿using cCoder.Core.Objects.Dtos;
+﻿using System.Collections;
+using System.Net;
+using System.Text;
+using cCoder.Core.Objects.Dtos;
 using cCoder.Core.Objects.Entities.CMS;
 using cCoder.Core.Objects.Entities.DMS;
 using cCoder.Core.Objects.Extensions;
 using Newtonsoft.Json.Linq;
-using System.Collections;
-using System.Collections.Specialized;
-using System.Net;
-using System.Text;
 using File = cCoder.Core.Objects.Entities.DMS.File;
 
 namespace cCoder.Core.Objects;
@@ -23,7 +22,7 @@ public static class ContentHelper
     /// These are basic string.Replace(old, new) type calls, everyhting else in the tag handling is done with regex
     /// </summary>
     /// <param name="p">the params</param>
-    /// <param name="meta">the page meta</param>
+    /// <param name="config">Configuration</param>
     /// <returns>replacement collection</returns>
     public static ICollection<Replacement> DefaultReplacements(RenderParams p, Config config = null)
     {
@@ -98,6 +97,7 @@ public static class ContentHelper
     /// <summary>
     /// Processes a string of content replacing tags recursively until the content string is complete.
     /// </summary>
+    /// <param name="key"></param>
     /// <param name="p"></param>
     /// <param name="content"></param>
     /// <param name="replacements"></param>
@@ -239,9 +239,8 @@ public static class ContentHelper
     /// Replaces references to scripts with their content
     /// </summary>
     /// <param name="key"></param>
-    /// <param name="content"></param>
+    /// <param name="source"></param>
     /// <param name="p"></param>
-    /// <param name="name"></param>
     /// <param name="replacements"></param>
     /// <returns></returns>
     private static void Script(string key, StringBuilder source, RenderParams p, IEnumerable<Replacement> replacements) 
@@ -291,15 +290,6 @@ public static class ContentHelper
             return ProcessContentString(key, p, executionTask.Result, replacements);
         });
 
-    /// <summary>
-    /// Replaces references to DMS file paths with their file content
-    /// </summary>
-    /// <param name="key"></param>
-    /// <param name="content"></param>
-    /// <param name="p"></param>
-    /// <param name="name"></param>
-    /// <param name="replacements"></param>
-    /// <returns></returns>
     private static void DMS(string key, StringBuilder source, ComponentRenderParams p, IEnumerable<Replacement> replacements) 
         => source.RegexReplace("\\[dms\\[[A-Za-z\\d_/. \\-]*\\]\\]", (m) =>
             {
@@ -326,14 +316,6 @@ public static class ContentHelper
                 return string.Empty;
             });
 
-    /// <summary>
-    /// Replaces references to content blocks for a page in a content string
-    /// </summary>
-    /// <param name="content"></param>
-    /// <param name="p"></param>
-    /// <param name="name"></param>
-    /// <param name="replacements"></param>
-    /// <returns></returns>
     private static string Content(string key, Content content, PageRenderParams p, (string type, string name, string[] options) tag, IEnumerable<Replacement> replacements)
     {
         string contentEditable = p.Edit
@@ -351,16 +333,6 @@ public static class ContentHelper
             : $"[[Missing Content:{tag.name}]]";
     }
 
-
-
-    /// <summary>
-    /// Replaces reference to components in a content string
-    /// </summary>
-    /// <param name="component"></param>
-    /// <param name="p"></param>
-    /// <param name="name"></param>
-    /// <param name="replacements"></param>
-    /// <returns></returns>
     private static string Component(Component component, RenderParams p, (string type, string name, string[] options) tag, IEnumerable<Replacement> replacements)
     {
         if (p is PageRenderParams prp && prp.Edit)
@@ -383,13 +355,6 @@ public static class ContentHelper
         return ProcessContentString(component.ResourceKey, p, result, replacements);
     }
 
-    /// <summary>
-    /// Replaces references to resources in a content string
-    /// </summary>
-    /// <param name="source"></param>
-    /// <param name="p"></param>
-    /// <param name="replacements"></param>
-    /// <returns></returns>
     private static void Resource(string key, StringBuilder source, RenderParams p, IEnumerable<Replacement> replacements)
     {
         if (p is PageRenderParams prp && prp.Edit)

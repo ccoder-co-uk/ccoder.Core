@@ -13,8 +13,6 @@ public sealed class MailSender(IServiceScope scope, ILogger<MailSender> log) : I
 {
     public async Task Run()
     {
-        ServicePointManager.ServerCertificateValidationCallback = CertChainValidator.ValidateCertChain;
-
         using ICoreDataContext core = scope.ServiceProvider.GetService<ICoreDataContext>();
 
         QueuedEmail[] queue = core.GetAll<QueuedEmail>()
