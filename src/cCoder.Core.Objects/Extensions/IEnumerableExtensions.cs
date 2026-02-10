@@ -85,7 +85,7 @@ public static class IEnumerableExtensions
     /// <param name="knownTs">A collection of "known" T's from the data context given in the "db" parameter</param>
     /// <param name="db">The data context on which this merge operation is to be ultimately taking place</param>
     /// <param name="match">A record matching expression when primary keys simply won't do</param>
-    /// <param name="add">A record preparation expression to apply before adding a new T to the context</param>
+    /// <param name="beforeAdd">A record preparation expression to apply before adding a new T to the context</param>
     /// <returns></returns>
     public static async Task SyncWith<T>(this ICollection<T> source, IEnumerable<T> otherTs, IEnumerable<T> knownTs, IDataContext db, Func<T, T, bool> match = null, Action<T> beforeAdd = null) 
         where T : class

@@ -78,7 +78,7 @@ public interface IWriteableService<T> where T : class
     /// <summary>
     /// Deletes the specified entity.
     /// </summary>
-    /// <param name="entity">The entity.</param>
+    /// <param name="id">The entity.</param>
     Task DeleteAsync(object id);
 
     /// <summary>

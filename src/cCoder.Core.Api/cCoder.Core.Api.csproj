@@ -1,11 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
 	  <OutputType>Library</OutputType>
     <IsPackable>true</IsPackable>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
 
 	<PropertyGroup>
@@ -27,10 +28,10 @@
 
   <ItemGroup>
 	  
-	  <PackageReference Include="Microsoft.AspNetCore.OData" Version="9.3.2" />
-    <PackageReference Include="itext7" Version="9.2.0" />
-    <PackageReference Include="itext7.pdfhtml" Version="6.2.0" />
-    <PackageReference Include="itext7.bouncy-castle-adapter" Version="9.2.0" />
+	  <PackageReference Include="Microsoft.AspNetCore.OData" Version="9.4.1" />
+    <PackageReference Include="itext" Version="9.5.0" />
+    <PackageReference Include="itext.pdfhtml" Version="6.3.1" />
+    <PackageReference Include="itext.bouncy-castle-adapter" Version="9.5.0" />
   </ItemGroup>
 
   <ItemGroup>

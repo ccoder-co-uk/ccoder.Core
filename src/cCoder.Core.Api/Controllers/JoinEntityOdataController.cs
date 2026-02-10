@@ -25,8 +25,7 @@ public abstract class JoinEntityOdataController<T, TUser, TKeyLeft, TKeyRight> :
 
     /// <summary>
     /// Gets the entity collection.
-    /// </summary>
-    /// <param name="queryOptions">The query options.</param>        
+    /// </summary>   
     /// <returns>The entity collection.</returns>
     [HttpGet]
     [EnableQuery(
