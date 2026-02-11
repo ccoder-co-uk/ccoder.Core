@@ -2,6 +2,7 @@
 using cCoder.Core.Objects;
 using cCoder.Core.Objects.Entities;
 using cCoder.Core.Objects.Entities.CMS;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
@@ -94,14 +95,6 @@ public class CommonObjectCache : Cache<object>, ICommonObjectCache
         }
     }
 
-    private static readonly Func<CoreDataContext, int, int, IEnumerable<CommonObject>> compiledCommonCacheQuery =
-        Microsoft.EntityFrameworkCore.EF.CompileQuery<CoreDataContext, int, int, IEnumerable<CommonObject>>
-            ((context, skip, take) => context.GetAll<CommonObject>(false)
-            .GroupBy(c => new { c.Name, c.Culture, c.Key, c.Type })
-            .Select(c => c.OrderByDescending(v => v.Version).First())
-            .Skip(skip)
-            .Take(take));
-
     private static CommonObject[] LoadPaged(ICoreDataContext core)
     {
         Debug.WriteLine($"{DateTimeOffset.Now} - Loading cache");
@@ -110,16 +103,26 @@ public class CommonObjectCache : Cache<object>, ICommonObjectCache
         int skip = 0;
 
         CoreDataContext context = core as CoreDataContext;
-        IEnumerable<CommonObject> page;
+        CommonObject[] page;
         List<CommonObject> result = new();
 
         do
         {
-            page = compiledCommonCacheQuery(context, skip, pageSize);
+            page = context.Set<CommonObject>()
+                .AsNoTracking()
+                .GroupBy(c => new { c.Name, c.Culture, c.Key, c.Type })
+                .Select(c => c.OrderByDescending(v => v.Version).First())
+                .Skip(skip)
+                .Take(pageSize)
+                .ToArray();
+
+            if (page.Length == 0) 
+                break;
+
             result.AddRange(page);
             skip += pageSize;
         }
-        while (page.Any());
+        while (true);
 
         Debug.WriteLine($"{DateTimeOffset.Now} - Loaded cache");
 
