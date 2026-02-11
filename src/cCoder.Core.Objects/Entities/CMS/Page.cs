@@ -159,7 +159,11 @@ public class Page : IAmRoleSecured<PageRole>
             Template baseTemplate = App?.Templates?.OrderByDescending(l => l.Name.Length).FirstOrDefault(l => l.Name == "Theme");
             Template themeTemplate = App?.Templates?.OrderByDescending(l => l.Name.Length).FirstOrDefault(l => l.Name == "Theme-" + p.Theme);
             string baseTheme = baseTemplate?.Render((IDictionary<string, object>)App.Config?.Themes, p, config);
-            string renderedTheme = themeTemplate?.Render(((IDictionary<string, object>)App.Config?.Themes)[p.Theme], p, config);
+
+            dynamic themes = ((IDictionary<string, object>)App.Config)["Themes"];
+            var themeDictionary = themes as IDictionary<string, object>;
+            string renderedTheme = themeTemplate?.Render(themeDictionary[p.Theme], p, config);
+
             r.Add(new Replacement("[theme[template]]", renderedTheme ?? ""));
             r.Add(new Replacement("[theme[base]]", baseTheme ?? ""));
         }

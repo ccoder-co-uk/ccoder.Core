@@ -63,7 +63,9 @@ public static class ContentHelper
         if (p is ComponentRenderParams crp)
         {
             result.Add(new Replacement("[theme[name]]", crp.Theme));
-            IDictionary<string, object> themeDictionary = (IDictionary<string, object>)p.App.Config.Themes;
+
+            dynamic themes = ((IDictionary<string, object>)p.App.Config)["Themes"];
+            var themeDictionary = themes as IDictionary<string, object>;
             result.AddRange(BuildThemeReplacements(themeDictionary[crp.Theme]));
         }
 

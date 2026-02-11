@@ -102,9 +102,9 @@ namespace Web.Controllers
 
         private void SetupViewBag(bool edit, App app, RenderResult page)
         {
-            ViewBag.Session = DynamicSessionObject;
+            dynamic session = DynamicSessionObject;
 
-            ViewBag.Session.app = new
+            session.app = new
             {
                 app.Id,
                 app.TenantId,
@@ -115,8 +115,10 @@ namespace Web.Controllers
                 app.Cultures
             };
 
-            ViewBag.Session.page = page.KeyInfo();
-            ViewBag.Edit = edit;
+            session.page = page.KeyInfo();
+
+            ViewData["Session"] = DynamicSessionObject;
+            ViewData["Edit"] = edit;
         }
 
         public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
