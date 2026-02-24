@@ -16,7 +16,7 @@ public abstract class Activity
     public static readonly string[] ScriptImports =
     [
         "B2B.Objects",
-        "B2B.Objects.Dtos",
+        "B2B.Objects.DTOs",
         "B2B.Objects.Entities",
         "B2B.Objects.Entities.Masterdata",
         "B2B.Objects.Entities.Transactions",
