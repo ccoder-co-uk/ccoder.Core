@@ -21,6 +21,7 @@ public abstract class Activity
         "B2B.Objects.Entities.Masterdata",
         "B2B.Objects.Entities.Transactions",
         "B2B.Objects.Entities.Funding",
+        "B2B.Objects.Entities.Funding.Offer",
         "B2B.Objects.Entities.Payments",
         "B2B.Objects.Workflow.Activities",
         "cCoder.Core.Connectivity.Workflow.Sftp",
