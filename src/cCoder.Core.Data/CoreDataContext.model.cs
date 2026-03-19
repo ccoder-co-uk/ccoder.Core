@@ -56,6 +56,7 @@ public partial class CoreDataContext
         _ = builder.Entity<Folder>().HasQueryFilter(f => f.DeletedOn == null && (AdminOf.Contains(f.AppId) || f.Roles.Any(r => CurrentUserRoleIds.Contains(r.RoleId) && r.Role.Privs.Contains("folder_read"))));
         _ = builder.Entity<File>().HasQueryFilter(f => f.DeletedOn == null && (AdminOf.Contains(f.Folder.AppId) || f.Folder.Roles.Any(r => CurrentUserRoleIds.Contains(r.RoleId) && r.Role.Privs.Contains("file_read"))));
         _ = builder.Entity<FileContent>().HasQueryFilter(i => i.File != null);
+        _ = builder.Entity<WorkflowEvent>().HasQueryFilter(e => e.Flow != null);
 
         // CMS security
         _ = builder.Entity<Role>().HasQueryFilter(r => AdminOf.Contains(r.AppId) || CurrentUserRoleIds.Contains(r.Id));
@@ -75,6 +76,8 @@ public partial class CoreDataContext
         _ = builder.Entity<ScheduledTask>().HasQueryFilter(t => AdminOf.Contains(t.AppId));
         _ = builder.Entity<Calendar>().HasQueryFilter(c => AdminOf.Contains(c.AppId) || c.App.Roles.Any(r => CurrentUserRoleIds.Contains(r.Id) && r.Privs.Contains("calendar_read")));
         _ = builder.Entity<CalendarEvent>().HasQueryFilter(e => e.Calendar != null);
+        _ = builder.Entity<FlowDefinition>().HasQueryFilter(f => AdminOf.Contains(f.AppId) || f.App.Roles.Any(r => CurrentUserRoleIds.Contains(r.Id) && r.Privs.Contains("flowdefinition_read")));
+        _ = builder.Entity<FlowInstanceData>().HasQueryFilter(f => f.FlowDefinition != null);
     }
 
     private void Seed(ModelBuilder builder)
