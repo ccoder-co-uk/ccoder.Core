@@ -84,9 +84,23 @@ public class CoreEventManager : EventManager, ICoreEventManager
             CreatedOn = file.CreatedOn,
             DeletedOn = file.DeletedOn,
             Folder = CreateEventSafeFolder(file.Folder),
-            Contents = file.Contents
+            Contents = file.Contents.Select(CreateEventSafeFileContent).ToArray()
         };
     }
+
+    private static FileContent CreateEventSafeFileContent(FileContent content) =>
+        new FileContent
+        {
+            Id = content.Id,
+            FileId = content.FileId,
+            Description = content.Description,
+            Size = content.Size,
+            CreatedBy = content.CreatedBy,
+            CreatedOn = content.CreatedOn,
+            Version = content.Version,
+            RawData = content.RawData,
+            File = null
+        };
 
     private static Folder CreateEventSafeFolder(Folder folder)
     {
