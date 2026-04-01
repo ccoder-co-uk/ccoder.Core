@@ -53,9 +53,9 @@ public class CoreEventManager : EventManager, ICoreEventManager
             await (forObject switch
             {
                 FileContent fc => fc.File != null
-                    ? base.RaiseEvent(fc.File, $"{appContext}/DMS(File_Updated)/{new Path(fc.File.Path).ParentPath.FullPath}")
-                    : base.RaiseEvent(Core.Get<File>(fc.FileId), $"App({appId})/DMS(File_Updated)/{new Path(fc.File?.Path).ParentPath.FullPath}"),
-                File f => base.RaiseEvent(f, $"{appContext}/DMS(File_{name})/{new Path(f.Path).ParentPath.FullPath}"),
+                    ? base.RaiseEvent(CreateEventSafeFile(fc.File), $"{appContext}/DMS(File_Updated)/{new Path(fc.File.Path).ParentPath.FullPath}")
+                    : base.RaiseEvent(CreateEventSafeFile(Core.Get<File>(fc.FileId)), $"App({appId})/DMS(File_Updated)/{new Path(fc.File?.Path).ParentPath.FullPath}"),
+                File f => base.RaiseEvent(CreateEventSafeFile(f), $"{appContext}/DMS(File_{name})/{new Path(f.Path).ParentPath.FullPath}"),
                 Content pc => pc.Page != null
                     ? base.RaiseEvent(pc.Page, $"{appContext}/Page_Updated")
                     : base.RaiseEvent(Core.Get<Page>(pc.PageId), $"App({appContext})/Page_Updated"),
@@ -64,5 +64,43 @@ public class CoreEventManager : EventManager, ICoreEventManager
                     : base.RaiseEvent(Core.Get<Page>(pi.PageId), $"App({appContext})/Page_Updated"),
                 _ => base.RaiseEvent(forObject, $"{appContext}/{forObject.GetType().Name}_{name}")
             });
+    }
+
+    private static File CreateEventSafeFile(File file)
+    {
+        if (file == null)
+            return null;
+
+        return new File
+        {
+            Id = file.Id,
+            FolderId = file.FolderId,
+            Name = file.Name,
+            Description = file.Description,
+            Path = file.Path,
+            MimeType = file.MimeType,
+            CreatedBy = file.CreatedBy,
+            Size = file.Size,
+            CreatedOn = file.CreatedOn,
+            DeletedOn = file.DeletedOn,
+            Folder = CreateEventSafeFolder(file.Folder),
+            Contents = file.Contents
+        };
+    }
+
+    private static Folder CreateEventSafeFolder(Folder folder)
+    {
+        if (folder == null)
+            return null;
+
+        return new Folder
+        {
+            Id = folder.Id,
+            AppId = folder.AppId,
+            ParentId = folder.ParentId,
+            Name = folder.Name,
+            Path = folder.Path,
+            DeletedOn = folder.DeletedOn
+        };
     }
 }
