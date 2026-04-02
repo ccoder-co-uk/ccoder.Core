@@ -52,22 +52,30 @@ public sealed class FlowInstance
     {
         Start = DateTimeOffset.UtcNow;
 
+        await Log(WorkflowLogLevel.Info, $"Fetching persisted workflow instance {request.InstanceId}.");
         using HttpClient api = Api(request.Api).WithAuthToken(request.AuthToken);
         string rawInstance = await api.GetStringAsync($"Core/FlowInstanceData({request.InstanceId})?$expand=FlowDefinition($select=Id,AppId)");
+        await Log(WorkflowLogLevel.Debug, $"Fetched workflow instance payload ({System.Text.Encoding.UTF8.GetByteCount(rawInstance)} bytes).");
         FlowInstanceData instanceData = await DeserialiseInstance(rawInstance);
+        await Log(WorkflowLogLevel.Info, $"Deserialised workflow instance {instanceData.Id}.");
 
         AppId = instanceData.FlowDefinition.AppId;
         Id = instanceData.Id;
         Name = instanceData.Name;
         FlowDefinition = instanceData.FlowDefinition.ToJson();
 
+        await Log(WorkflowLogLevel.Debug, $"Deserialising workflow context ({instanceData.ContextJson?.Length ?? 0} bytes).");
         cCoder.Core.Objects.Dtos.Workflow.WorkflowContext dtoContext = await DeserialiseContext(instanceData.ContextString);
         Flow = dtoContext.Flow;
+        await Log(WorkflowLogLevel.Info, $"Workflow context deserialised with {Flow?.Activities?.Length ?? 0} activities and {Flow?.Links?.Length ?? 0} links.");
 
         await Stitch();
+        await Log(WorkflowLogLevel.Info, "Workflow graph stitched successfully.");
 
         Context = new WorkflowContext(Flow, this);
+        await Log(WorkflowLogLevel.Info, "Starting workflow context execution.");
         await Context.Execute(request.Api, request.AuthToken);
+        await Log(WorkflowLogLevel.Info, $"Workflow context execution finished with state '{Context.ExecutionState ?? "<null>"}'.");
         return Complete();
     }
 

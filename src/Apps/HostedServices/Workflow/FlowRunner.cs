@@ -14,10 +14,14 @@ public class FlowRunner
 
     public async Task Run(WorkflowRequest msg)
     {
+        string lastStage = "initialising";
+        bool completed = false;
+
         await ConnectToHub(msg);
 
         try
         {
+            lastStage = "request-received";
             await Log(WorkflowLogLevel.Info, "Request received by workflow, processing ...", msg.InstanceId);
             await Log(WorkflowLogLevel.Debug, msg.ToJson(ObjectExtensions.GetJSONSettings(), Formatting.Indented), msg.InstanceId);
 
@@ -25,15 +29,24 @@ public class FlowRunner
             FlowInstance instance = new((WorkflowLogLevel level, string message) => Log(level, message, msg.InstanceId));
 
             // execute the flow 
+            lastStage = "executing-instance";
             await ExecuteRequest(msg, instance);
+            completed = true;
         }
         catch (Exception ex)
         {
-            await Log(WorkflowLogLevel.Fatal, $"Failed to process request, abandoning execution\n{ex.Message}\n{ex.StackTrace}", msg.InstanceId);
+            await Log(
+                WorkflowLogLevel.Fatal,
+                $"Failed to process request during stage '{lastStage}', abandoning execution\n{ex.Message}\n{ex.StackTrace}",
+                msg.InstanceId);
         }
         finally
         {
-            await Log(WorkflowLogLevel.Info, "Done!", msg.InstanceId);
+            string finalMessage = completed
+                ? $"Workflow runner completed successfully. Final stage: {lastStage}"
+                : $"Workflow runner ended without a successful completion. Last stage: {lastStage}";
+
+            await Log(WorkflowLogLevel.Info, finalMessage, msg.InstanceId);
         }
     }
 
@@ -60,20 +73,32 @@ public class FlowRunner
         }
         catch (Exception ex)
         {
-            await con.DisposeAsync();
+            if (con != null)
+                await con.DisposeAsync();
+
             con = null;
             await Log(WorkflowLogLevel.Error, "Failed to connect to the hub because: " + ex.Message, msg.InstanceId);
         }
     }
 
-    private static async Task ExecuteRequest(WorkflowRequest msg, FlowInstance instance)
+    private async Task ExecuteRequest(WorkflowRequest msg, FlowInstance instance)
     {
+        await Log(WorkflowLogLevel.Info, "Beginning flow instance execution.", msg.InstanceId);
+
         FlowInstanceData result = await (Task<FlowInstanceData>)instance
             .GetType()
             .GetMethod("Execute")
             .Invoke(instance, new[] { msg });
 
+        int contextBytes = result.ContextJson?.Length ?? 0;
+        await Log(
+            WorkflowLogLevel.Info,
+            $"Flow execution finished with state '{result.State ?? "<null>"}'. Persisting result ({contextBytes} bytes).",
+            msg.InstanceId);
+
         await SaveResult(result, msg.Api, msg.AuthToken);
+
+        await Log(WorkflowLogLevel.Info, "Workflow result persisted successfully.", msg.InstanceId);
     }
 
     public async Task Log(WorkflowLogLevel level, string message, Guid instanceId)
@@ -101,16 +126,31 @@ public class FlowRunner
         Console.ForegroundColor = ConsoleColor.White;
     }
 
-    private static async Task SaveResult(FlowInstanceData result, string apiRoot, string auth)
+    private async Task SaveResult(FlowInstanceData result, string apiRoot, string auth)
     {
         using HttpClient api = Api(apiRoot);
         api.WithAuthToken(auth);
+        api.Timeout = TimeSpan.FromSeconds(30);
+
+        await Log(
+            WorkflowLogLevel.Debug,
+            $"PUT {apiRoot}Core/FlowInstanceData({result.Id}) state={result.State ?? "<null>"} contextBytes={result.ContextJson?.Length ?? 0}",
+            result.Id);
 
         HttpResponseMessage response = await api.PutAsync(
             $"Core/FlowInstanceData({result.Id})",
             new StringContent(result.ToJsonForOdata(),
             Encoding.UTF8,
             "application/json"));
+
+        if (!response.IsSuccessStatusCode)
+        {
+            string body = await response.Content.ReadAsStringAsync();
+            await Log(
+                WorkflowLogLevel.Error,
+                $"Failed to persist workflow result. HTTP {(int)response.StatusCode} {response.ReasonPhrase}\n{body}",
+                result.Id);
+        }
 
         response.EnsureSuccessStatusCode();
     }
