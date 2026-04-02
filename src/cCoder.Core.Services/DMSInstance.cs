@@ -295,7 +295,7 @@ public class DMSInstance
             .Include(f => f.Folder)
             .ThenInclude(f => f.Roles)
             .ThenInclude(fr => fr.Role)
-            .FirstOrDefault(f => f.Folder.AppId == app.Id && f.Path == oldPath.Lowered);
+            .FirstOrDefault(f => f.Folder.AppId == app.Id && f.Path.ToLower() == oldPath.Lowered);
 
         if (sourceFile == null)
         {
@@ -304,7 +304,7 @@ public class DMSInstance
         }
 
         Guid destinationFileId = db.GetAll<File>(false)
-            .Where(f => f.Folder.AppId == app.Id && f.Path == newPath.Lowered)
+            .Where(f => f.Folder.AppId == app.Id && f.Path.ToLower() == newPath.Lowered)
             .Select(c => c.Id)
             .FirstOrDefault();
 
@@ -319,7 +319,7 @@ public class DMSInstance
 
             File destinationFile = db.GetAll<File>(true)
                 .Include(f => f.Folder)
-                .FirstOrDefault(f => f.Folder.AppId == app.Id && f.Path == newPath.Lowered);
+                .FirstOrDefault(f => f.Folder.AppId == app.Id && f.Path.ToLower() == newPath.Lowered);
 
             destinationFile.Contents = sourceFile.Contents
                 .Select(c =>
@@ -374,7 +374,7 @@ public class DMSInstance
     {
         Folder newParent = await BuildPath(newPath);
         Folder oldParent = !string.IsNullOrEmpty(oldPath.ParentPath.Lowered)
-            ? db.GetAll<Folder>().FirstOrDefault(f => f.AppId == app.Id && f.Path == oldPath.ParentPath.Lowered)
+            ? db.GetAll<Folder>().FirstOrDefault(f => f.AppId == app.Id && f.Path.ToLower() == oldPath.ParentPath.Lowered)
             : null;
         bool userIsAdmin = db.User.IsAdminOfApp(app.Id) && db.User.Can(app.Id, "folder_update");
 
