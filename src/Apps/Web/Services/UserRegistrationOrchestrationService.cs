@@ -1,28 +1,30 @@
-﻿using cCoder.Core.Objects.Entities.Security;
-using cCoder.Core.Services.Orchestrations.Interfaces;
+using cCoder.AppSecurity.Models;
+using cCoder.Data.Models.CMS;
+using cCoder.Data.Models.Security;
+using cCoder.Core.Services.Orchestrations;
 using cCoder.Security.Api.Interfaces;
 using cCoder.Security.Objects.DTOs;
 using cCoder.Security.Objects.Entities;
 using Web.Services.Interfaces;
+
 
 namespace Web.Services
 {
     public class UserRegistrationOrchestrationService : IUserRegistrationOrchestrationService
     {
         private readonly IAccountManager accountManager;
-        private readonly ICMSUserRegistrationOrchestrationService coreUserService;
+        private readonly ICMSUserRegistrationOrchestrationService coreUserProcessingService;
 
         public UserRegistrationOrchestrationService(
             IAccountManager accountManager,
-            ICMSUserRegistrationOrchestrationService coreUserService)
+            ICMSUserRegistrationOrchestrationService coreUserProcessingService)
         {
             this.accountManager = accountManager;
-            this.coreUserService = coreUserService;
+            this.coreUserProcessingService = coreUserProcessingService;
         }
 
         public async ValueTask ConfirmRegistrationAsync(string token) =>
             await accountManager.ConfirmRegistrationAsync(token);
-
 
         public async ValueTask<Token> LoginAsync(string username, string password) =>
             await accountManager.LoginAsync(username, password);
@@ -47,10 +49,16 @@ namespace Web.Services
                 IsActive = true
             };
 
-
             //TODO: get token from SSO and then when it comes back 
-            await coreUserService.RegisterUserAsync(coreUser, registerForm.AppId, confirmationToken);
+            await coreUserProcessingService.RegisterUserAsync(coreUser, registerForm.AppId, confirmationToken);
             return ssoUser;
         }
     }
 }
+
+
+
+
+
+
+

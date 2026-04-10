@@ -1,4 +1,4 @@
-﻿@model cCoder.Core.Objects.Dtos.RenderResult
+@model cCoder.ContentManagement.Models.RenderResult
 <!DOCTYPE html>
 <html data-app-id="@(Model.AppId)" data-page-id="@(Model.PageId)" lang="@(Model.Culture?.Split('-')?.FirstOrDefault() ?? "en")" data-Layout="@(Model.Layout)" data-theme="@(Model.Theme)">
     <head>
@@ -21,3 +21,4 @@
         }
     </body>
 </html>
+

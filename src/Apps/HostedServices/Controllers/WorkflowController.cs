@@ -1,10 +1,11 @@
-﻿using HostedServices.Services.Scheduled.Interfaces;
+using cCoder.Workflow.Services.Orchestrations;
 using Microsoft.AspNetCore.Mvc;
+
 
 namespace HostedServices.Controllers;
 
 [Route("Workflow")]
-public sealed class WorkflowController(IWorkflowInstanceManagement workflowInstanceManagementService, ILogger<WorkflowController> log)
+public sealed class WorkflowController(IWorkflowInstanceManagementOrchestrationService workflowInstanceManagementService, ILogger<WorkflowController> log)
     : Controller
 {
     [HttpGet("")]
@@ -15,7 +16,7 @@ public sealed class WorkflowController(IWorkflowInstanceManagement workflowInsta
     {
         try
         {
-            await workflowInstanceManagementService.ExecuteWaitingQueuedInstanceById(flowId);
+            await workflowInstanceManagementService.ExecuteWaitingQueuedInstanceByIdAsync(flowId);
         }
         catch (Exception ex)
         {
@@ -31,3 +32,7 @@ public sealed class WorkflowController(IWorkflowInstanceManagement workflowInsta
     [HttpGet("GetStats")]
     public IActionResult GetStats() => Json(workflowInstanceManagementService.GetStats());
 }
+
+
+
+

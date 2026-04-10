@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.SignalR;
+
 
 namespace HostedServices.Logging;
 
@@ -14,10 +15,15 @@ public class SignalRLoggingBroker(IServiceProvider services) : ILogger
 
         if (hubContext is not null)
         {
+
             await hubContext?
                 .Clients?
                 .All?
                 .SendAsync("ConsoleReceive", logLevel.ToString(), formatter(state, exception));
+
         }
     }
 }
+
+
+

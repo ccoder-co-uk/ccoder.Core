@@ -1,4 +1,5 @@
-﻿using cCoder.Core.Objects;
+using cCoder.Data;
+
 
 namespace Web
 {
@@ -7,3 +8,6 @@ namespace Web
         public string SSOUserId { get; set; }
     }
 }
+
+
+

@@ -1,9 +1,11 @@
-﻿using cCoder.Core.Objects;
+using cCoder.Data.Models.Security;
+using cCoder.Logging.Brokers;
 using Microsoft.AspNetCore.SignalR;
+
 
 namespace HostedServices.Logging;
 
-public class LogHub(ICoreDataContext db, ILogger<LogHub> log)
+public class LogHub(IAuthorizationBroker authorizationBroker, ILogger<LogHub> log)
     : BaseHub(log)
 {
     public override async Task Join(string thread)
@@ -12,8 +14,9 @@ public class LogHub(ICoreDataContext db, ILogger<LogHub> log)
         await Groups.AddToGroupAsync(Context.ConnectionId, thread);
         await Clients.Caller.SendAsync("ConsoleReceive", "info", "Connected to instance " + thread, thread);
         await Clients.Group(thread).SendAsync("ConsoleReceive", "info", "User Joined", thread);
-        log.LogInformation($"User {db.User.Id} is listening to log stream for domain {thread}");
 
+        User user = authorizationBroker.GetCurrentUser();
+        log.LogInformation($"User {user.Id} is listening to log stream for domain {thread}");
     }
 
     public override async Task Leave(string thread)
@@ -23,12 +26,15 @@ public class LogHub(ICoreDataContext db, ILogger<LogHub> log)
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, thread);
         await Clients.Caller.SendAsync("info", "Stopped listening to messages for " + thread, thread);
         await Clients.Group(thread).SendAsync("ConsoleReceive", "info", "User Left", thread);
-        log.LogInformation($"User {db.User.Id} stopped listening to log stream for domain {thread}");
+
+        User user = authorizationBroker.GetCurrentUser();
+        log.LogInformation($"User {user.Id} stopped listening to log stream for domain {thread}");
     }
 
     public override Task OnDisconnectedAsync(Exception exception)
     {
-        log.LogInformation($"User {db.User.Id} disconnected.");
+        User user = authorizationBroker.GetCurrentUser();
+        log.LogInformation($"User {user.Id} disconnected.");
         return Task.CompletedTask;
     }
 
@@ -42,3 +48,9 @@ public class LogHub(ICoreDataContext db, ILogger<LogHub> log)
 
     public override async Task ConsoleSend(string level, string message, string thread) => await base.ConsoleSend(level, message, thread);
 }
+
+
+
+
+
+

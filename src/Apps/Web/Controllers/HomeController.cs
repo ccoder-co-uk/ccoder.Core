@@ -1,11 +1,14 @@
-﻿using cCoder.Core.Api;
-using cCoder.Core.Objects.Dtos;
-using cCoder.Core.Objects.Entities.CMS;
-using cCoder.Core.Services;
+using System.Dynamic;
+using cCoder.ContentManagement.Exposures;
+using cCoder.ContentManagement.Services.Processings;
+using cCoder.Core.Api;
+using cCoder.Data;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System.Dynamic;
+using App = cCoder.Data.Models.CMS.App;
+using RenderResult = cCoder.ContentManagement.Models.RenderResult;
+
 
 namespace Web.Controllers
 {
@@ -13,8 +16,9 @@ namespace Web.Controllers
     {
         readonly ILogger log;
 
-        IAppService AppService { get; }
-        IPageService PageService { get; }
+        ICoreAuthInfo AuthInfo { get; }
+        IAppProcessingService AppProcessingService { get; }
+        IPageRenderer PageRenderer { get; }
 
         string Host => Request.Host.Host.Replace("www.", "").ToLowerInvariant();
 
@@ -24,14 +28,14 @@ namespace Web.Controllers
             {
                 dynamic result = new ExpandoObject();
 
-                result.apiRoot = (Request.Host.Port is not 443 and not 80) 
-                    ? $"{Request.Scheme}://{Host}:{Request.Host.Port}/Api/" 
+                result.apiRoot = (Request.Host.Port is not 443 and not 80)
+                    ? $"{Request.Scheme}://{Host}:{Request.Host.Port}/Api/"
                     : $"{Request.Scheme}://{Host}/Api/";
 
                 foreach (string i in HttpContext.Session.Keys)
                 {
-                    if(i == "ssoUser")
-                        ((IDictionary<string, object>)result).Add("user", AppService.AuthInfo.SSOUserId);
+                    if (i == "ssoUser")
+                        ((IDictionary<string, object>)result).Add("user", AuthInfo.SSOUserId);
                     else
                         ((IDictionary<string, object>)result).Add(i, GetSessionValue(i));
                 }
@@ -40,10 +44,11 @@ namespace Web.Controllers
             }
         }
 
-        public HomeController(IAppService appService, IPageService pageService, ILogger<HomeController> log)
+        public HomeController(IAppProcessingService appService, IPageRenderer pageRenderer, ICoreAuthInfo authInfo, ILogger<HomeController> log)
         {
-            AppService = appService;
-            PageService = pageService;
+            AuthInfo = authInfo;
+            AppProcessingService = appService;
+            PageRenderer = pageRenderer;
             this.log = log;
         }
 
@@ -78,17 +83,23 @@ namespace Web.Controllers
                 else
                     theme = GetSessionValue("theme") ?? string.Empty;
 
-                App app = AppService
-                    .GetAll()
-                    .First(a => a.Domain == Host);
+                PageRenderResponse response = PageRenderer.Render(
+                    new PageRenderRequest
+                    {
+                        Host = Host,
+                        Path = path,
+                        Theme = theme,
+                        Culture = culture,
+                        Edit = edit,
+                        RequestUrl = Request.GetEncodedUrl()
+                    });
 
-                if (app.Id == 0)
-                    throw new InvalidOperationException("Domain Not found!");
+                SetSessionValue("theme", response.Theme);
+                SetSessionValue("culture", response.Culture);
 
-                RenderResult page = PageService
-                    .Render(app.Id, path, theme, culture, edit);
+                RenderResult page = response.Page;
 
-                SetupViewBag(edit, app, page);
+                SetupViewBag(edit, response.App, page);
 
                 ViewResult viewResult = View(page);
                 viewResult.StatusCode = page.StatusCode;
@@ -111,13 +122,12 @@ namespace Web.Controllers
                 app.Domain,
                 app.DefaultCultureId,
                 app.DefaultTheme,
-                app.Config,
-                app.Cultures
+                app.Config
             };
 
             session.page = page.KeyInfo();
 
-            ViewData["Session"] = DynamicSessionObject;
+            ViewData["Session"] = session;
             ViewData["Edit"] = edit;
         }
 
@@ -125,14 +135,22 @@ namespace Web.Controllers
         {
             try
             {
-                App app = AppService
-                    .GetAll()
-                    .First(a => a.Domain == Host);
+                App app = AppProcessingService
+                    .GetAll(ignoreFilters: true)
+                    .Where(a => a.Domain == Host)
+                    .Select(a => new App
+                    {
+                        Id = a.Id,
+                        Domain = a.Domain,
+                        DefaultCultureId = a.DefaultCultureId,
+                        DefaultTheme = a.DefaultTheme
+                    })
+                    .FirstOrDefault();
 
-                if (GetSessionValue("theme") == null)
+                if (app != null && GetSessionValue("theme") == null)
                     SetSessionValue("theme", app.DefaultTheme ?? "Default");
 
-                if (GetSessionValue("culture") == null)
+                if (app != null && GetSessionValue("culture") == null)
                     SetSessionValue("culture", app.DefaultCultureId ?? string.Empty);
             }
             catch (Exception ex)
@@ -151,26 +169,25 @@ namespace Web.Controllers
             // attempt to recover the apps own custom error page, or provide the system default defined below
             try
             {
-                App app = AppService.GetAll().FirstOrDefault(a => a.Domain == Host);
-
-                if (app == null)
-                    throw new Exception("Unknown Domain");
-
-                string errorPageQuery = $"Core/Page/Render()?appId={app.Id}&path=Error&theme={GetSessionValue("theme")}&culture={GetSessionValue("culture")}";
+                string errorPageQuery = $"Core/Page/Render()?host={Host}&path=Error&theme={GetSessionValue("theme")}&culture={GetSessionValue("culture")}";
                 log.LogInformation($"GET {errorPageQuery}");
 
-                RenderResult page = PageService.Render(app.Id, "Error", GetSessionValue("theme").ToString(), GetSessionValue("culture").ToString());
+                PageRenderResponse response = PageRenderer.RenderError(
+                    new PageRenderRequest
+                    {
+                        Host = Host,
+                        Theme = GetSessionValue("theme"),
+                        Culture = GetSessionValue("culture"),
+                        RequestUrl = Request.GetEncodedUrl(),
+                        Exception = ex
+                    });
 
-                page.BodyHtml = page.BodyHtml.Replace("[problem[message]]", ex.Message);
-                page.BodyHtml = page.BodyHtml.Replace("[problem[detail]]", ex.StackTrace);
-                page.BodyHtml = page.BodyHtml.Replace("[problem[url]]", Request.GetEncodedUrl());
-
-                return View("Index", page);
+                return View("Index", response.Page);
             }
             catch { return PartialView("Error", ex); }
         }
 
-        string GetSessionValue(string key) => 
+        string GetSessionValue(string key) =>
             HttpContext.Session.Keys.Contains(key.ToLowerInvariant())
                 ? HttpContext.Session.GetString(key)
                 : null;

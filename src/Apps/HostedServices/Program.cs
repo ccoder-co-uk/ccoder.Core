@@ -1,8 +1,9 @@
-using cCoder.Core.Objects;
+using cCoder.Core;
+using cCoder.Data;
 using HostedServices.Logging;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.OData;
+
 
 namespace HostedServices;
 
@@ -17,18 +18,8 @@ public class Program
 
         log = app.Services.GetService<ILogger<Program>>();
 
-        app.UseSwagger()
-            .UseSwaggerUI(c => c.SwaggerEndpoint(
-                "/swagger/v1/swagger.json",
-                "Corporate LinX V7 API definition"))
-            .UseODataBatching()
-            .UseODataRouteDebug();
-
-        app.UseSwagger();
-        app.UseSwaggerUI();
-        app.UseAuthorization();
-        app.MapControllers();
         app.UseRouting();
+        app.UseAuthorization();
 
         app.UseCors(delegate (CorsPolicyBuilder builder)
         {
@@ -49,6 +40,7 @@ public class Program
             await next();
         });
 
+        app.MapControllers();
         app.MapHub<LogHub>("/Hubs/Logs");
 
         app.Run();
@@ -102,3 +94,6 @@ public class Program
         return Task.CompletedTask;
     }
 }
+
+
+

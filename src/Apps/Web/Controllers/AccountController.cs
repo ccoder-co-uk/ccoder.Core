@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
 using cCoder.Security.Objects.DTOs;
+using Microsoft.AspNetCore.Mvc;
 using Web.Services.Interfaces;
+
 
 namespace Security.Api.Controllers;
 
@@ -19,7 +20,7 @@ public class AccountController : Controller
     }
 
     [HttpPost("Login")]
-    public async ValueTask<IActionResult> Login([FromBody] Auth auth) => 
+    public async ValueTask<IActionResult> Login([FromBody] Auth auth) =>
         ModelState.IsValid
             ? Ok(await userRegistrationOrchestrationService.LoginAsync(auth.User, auth.Pass))
             : BadRequest(ModelState);
@@ -58,3 +59,6 @@ public class AccountController : Controller
         return Ok();
     }
 }
+
+
+
