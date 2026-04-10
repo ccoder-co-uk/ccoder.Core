@@ -1,6 +1,7 @@
-﻿using EventLibrary;
-using EventLibrary.Objects;
+using EventLibrary;
+using EventLibrary.Models;
 using HostedServices.Brokers.Interfaces;
+
 
 namespace HostedServices.Brokers;
 
@@ -9,3 +10,6 @@ public class EventBroker(IEventHub eventHub)
 {
     public async ValueTask RaiseEventAsync<T>(string eventName, EventMessage<T> message) => await eventHub.RaiseEventAsync(eventName, message);
 }
+
+
+

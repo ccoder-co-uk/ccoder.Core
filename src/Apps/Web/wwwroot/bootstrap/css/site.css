@@ -1,0 +1,83 @@
+﻿* {
+    background: transparent;
+}
+
+/* Bootstrap fixes. */
+.dropdown-menu[data-bs-popper] {
+    top: unset !important;
+    left: unset !important;
+}
+
+.k-grid-content > table {
+    width: 100%;
+}
+
+.container-xxl {
+    max-width: 1920px;
+    padding: 0;
+}
+
+/* Platform configuration */
+.k-window-content .component {
+    border: none;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    margin: 0;
+}
+
+.tab-pane.active .component {
+    box-shadow: none;
+    border: none;
+    max-height: 100%
+}
+
+.tab-pane .component {
+    margin: 0;
+}
+
+.content, .tab-pane, .k-grid, .tab-control, .d-flex, .k-splitter {
+    height: 100%;
+}
+
+.tab-control > nav {
+    margin-top: 5px;
+}
+
+.k-checkbox {
+    width: 15px;
+    height: 15px;
+}
+
+.k-toolbar {
+    padding-block: 8px;
+    padding-inline: 8px;
+    gap: 8px;
+}
+
+button > span.k-icon {
+    margin-right: 2px;
+    margin-bottom: 3px;
+}
+
+/* Dependency tweaks */
+.input-group > .input-group-text {
+    width: 200px;
+}
+
+.file-upload-preview {
+    max-height: 150px;
+    width: 300px !important;
+}
+
+.file-upload-preview > img {
+    max-height: 148px;
+    max-width: 298px;
+    margin: 1px;
+}
+
+/* field Lists */
+.fieldList 				{ padding: 7px; flex: 1; max-width: 600px; display: initial;  }
+.fieldList > li 		{ padding: 2px; list-style-type: none; }
+.fieldList > li > div.value 	{ width: 50%; display: inline-block; }
+.fieldList > li > label { font-weight: bold; width: 50%; }

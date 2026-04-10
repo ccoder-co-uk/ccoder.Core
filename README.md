@@ -1,20 +1,41 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+# cCoder.Core
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+`cCoder.Core` is the aggregate package for the cCoder platform. It composes the domain packages published from the separate `cCoder.*` repositories and is the package used by the aggregate sample applications in this repository.
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+## What This Repo Contains
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+- `src/cCoder.Core`
+  The aggregate NuGet package.
+- `src/cCoder.Core.Tests`
+  Unit tests for the aggregate package.
+- `src/Apps/Web`
+  The aggregate web host used to validate the full package graph.
+- `src/Apps/HostedServices`
+  The aggregate hosted-services app used to validate non-web runtime wiring.
+- `src/Apps/Web.AcceptanceTests`
+  Acceptance coverage for the aggregate web host.
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+## Build And Test
+
+```powershell
+dotnet restore src\cCoder.Core\cCoder.Core.csproj --source https://api.nuget.org/v3/index.json --no-cache
+dotnet restore src\cCoder.Core.Tests\cCoder.Core.Tests.csproj --source https://api.nuget.org/v3/index.json --no-cache
+dotnet restore src\Apps\Web\Web.csproj --source https://api.nuget.org/v3/index.json --no-cache
+dotnet restore src\Apps\HostedServices\HostedServices.csproj --source https://api.nuget.org/v3/index.json --no-cache
+
+dotnet build src\cCoder.Core\cCoder.Core.csproj -v minimal --no-restore
+dotnet build src\cCoder.Core.Tests\cCoder.Core.Tests.csproj -v minimal --no-restore
+dotnet test src\cCoder.Core.Tests\cCoder.Core.Tests.csproj -v minimal --no-build
+dotnet build src\Apps\Web\Web.csproj -v minimal --no-restore
+dotnet build src\Apps\HostedServices\HostedServices.csproj -v minimal --no-restore
+```
+
+`src/Apps/Web.AcceptanceTests` remains in the repository for full integration verification, but it is not part of the package publish workflow because it requires SQL Server-backed acceptance infrastructure.
+
+## Publishing
+
+The repository uses GitHub Actions trusted publishing to push the `cCoder.Core` NuGet package from `.github/workflows/publish.yml`.
+
+## License
+
+This repository is licensed under The Standard Software License Version 1.0. See `LICENSE.txt` for details.

@@ -3,6 +3,37 @@
     "outputFileName": "wwwroot/css/site.min.css",
     "inputFiles": [
       "wwwroot/css/site.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/dependencies/dependencies.min.css",
+    "inputFiles": [
+      "wwwroot/dependencies/bootstrap/bootstrap.min.css",
+      "wwwroot/dependencies/kendo/kendo.v2024.2.514.bootstrap.css",
+      "wwwroot/bootstrap/css/kendo-font-icons.css"
+    ],
+    "minify": {
+      "enabled": false,
+      "renameLocals": false
+    },
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/everything.min.css",
+    "inputFiles": [
+      "wwwroot/dependencies/dependencies.min.css",
+      "wwwroot/bootstrap/css/site.min.css"
+    ],
+    "minify": {
+      "enabled": false,
+      "renameLocals": false
+    },
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/bootstrap/css/site.min.css",
+    "inputFiles": [
+      "wwwroot/bootstrap/css/site.css"
     ],
     "minify": {
       "enabled": true,
@@ -11,12 +42,12 @@
     "sourceMap": false
   },
   {
-    "outputFileName": "wwwroot/lib/core.js",
+    "outputFileName": "wwwroot/bootstrap/lib/core.js",
     "inputFiles": [
-      "wwwroot/lib/Core/api.js",
-      "wwwroot/lib/Core/util.js",
-      "wwwroot/lib/Core/form.js",
-      "wwwroot/lib/Core/model.js"
+      "wwwroot/bootstrap/lib/Core/api.js",
+      "wwwroot/bootstrap/lib/Core/util.js",
+      "wwwroot/bootstrap/lib/Core/form.js",
+      "wwwroot/bootstrap/lib/Core/model.js"
     ],
     "minify": {
       "enabled": true,
@@ -25,11 +56,11 @@
     "sourceMap": false
   },
   {
-    "outputFileName": "wwwroot/lib/editor.js",
+    "outputFileName": "wwwroot/bootstrap/lib/editor.js",
     "inputFiles": [
-      "wwwroot/lib/Core/editor.js",
-      "wwwroot/lib/Core/contentEditor.js",
-      "wwwroot/lib/Core/pageToolbar.js"
+      "wwwroot/bootstrap/lib/Core/editor.js",
+      "wwwroot/bootstrap/lib/Core/contentEditor.js",
+      "wwwroot/bootstrap/lib/Core/pageToolbar.js"
     ],
     "minify": {
       "enabled": true,
@@ -38,12 +69,12 @@
     "sourceMap": false
   },
   {
-    "outputFileName": "wwwroot/lib/monaco.js",
+    "outputFileName": "wwwroot/bootstrap/lib/monaco.js",
     "inputFiles": [
-      "wwwroot/lib/Monaco/MonacoEditor.js",
-      "wwwroot/lib/Monaco/JavaScriptMonacoEditor.js",
-      "wwwroot/lib/Monaco/HTMLMonacoEditor.js",
-      "wwwroot/lib/Monaco/CSharpMonacoEditor.js"
+      "wwwroot/bootstrap/lib/Monaco/MonacoEditor.js",
+      "wwwroot/bootstrap/lib/Monaco/JavaScriptMonacoEditor.js",
+      "wwwroot/bootstrap/lib/Monaco/HTMLMonacoEditor.js",
+      "wwwroot/bootstrap/lib/Monaco/CSharpMonacoEditor.js"
     ],
     "minify": {
       "enabled": true,
@@ -52,27 +83,29 @@
     "sourceMap": false
   },
   {
-    "outputFileName": "wwwroot/lib/widget.js",
+    "outputFileName": "wwwroot/bootstrap/lib/widget.js",
     "inputFiles": [
-      "wwwroot/lib/widgets/widget.js",
-      "wwwroot/lib/widgets/dialog.js",
-      "wwwroot/lib/widgets/chart.js",
-      "wwwroot/lib/widgets/pieChart.js",
-      "wwwroot/lib/widgets/confirmDialog.js",
-      "wwwroot/lib/widgets/consoleDialog.js",
-      "wwwroot/lib/widgets/exportDialog.js",
-      "wwwroot/lib/widgets/detail.js",
-      "wwwroot/lib/widgets/editorDialog.js",
-      "wwwroot/lib/widgets/grid.js",
-      "wwwroot/lib/widgets/contextMenuWidget.js",
-      "wwwroot/lib/widgets/fileVersionGridWidget.js",
-      "wwwroot/lib/widgets/fileDropContainerWidget.js",
-      "wwwroot/lib/widgets/picker.js",
-      "wwwroot/lib/widgets/readOnlyDetailView.js",
-      "wwwroot/lib/widgets/tree.js",
-      "wwwroot/lib/widgets/odataTree.js",
-      "wwwroot/lib/widgets/workspace.js",
-      "wwwroot/lib/widgets/writableDetailView.js"
+        "wwwroot/bootstrap/lib/widgets/widget.js",
+        "wwwroot/bootstrap/lib/widgets/dialog.js",
+        "wwwroot/bootstrap/lib/widgets/bootstrapDialog.js",
+        "wwwroot/bootstrap/lib/widgets/bootstrapTabs.js",
+        "wwwroot/bootstrap/lib/widgets/chart.js",
+        "wwwroot/bootstrap/lib/widgets/pieChart.js",
+        "wwwroot/bootstrap/lib/widgets/confirmDialog.js",
+        "wwwroot/bootstrap/lib/widgets/consoleDialog.js",
+        "wwwroot/bootstrap/lib/widgets/exportDialog.js",
+        "wwwroot/bootstrap/lib/widgets/detail.js",
+        "wwwroot/bootstrap/lib/widgets/editorDialog.js",
+        "wwwroot/bootstrap/lib/widgets/grid.js",
+        "wwwroot/bootstrap/lib/widgets/contextMenuWidget.js",
+        "wwwroot/bootstrap/lib/widgets/fileDropContainerWidget.js",
+        "wwwroot/bootstrap/lib/widgets/picker.js",
+        "wwwroot/bootstrap/lib/widgets/readOnlyDetailView.js",
+        "wwwroot/bootstrap/lib/widgets/tree.js",
+        "wwwroot/bootstrap/lib/widgets/dataTreeView.js",
+        "wwwroot/bootstrap/lib/widgets/odataTree.js",
+        "wwwroot/bootstrap/lib/widgets/workspace.js",
+        "wwwroot/bootstrap/lib/widgets/writableDetailView.js"
     ],
     "minify": {
       "enabled": true,
@@ -81,16 +114,16 @@
     "sourceMap": false
   },
   {
-    "outputFileName": "wwwroot/lib/workflow.js",
+    "outputFileName": "wwwroot/bootstrap/lib/workflow.js",
     "inputFiles": [
-      "wwwroot/lib/workflow/close.js",
-      "wwwroot/lib/workflow/handle.js",
-      "wwwroot/lib/workflow/link.js",
-      "wwwroot/lib/workflow/action.js",
-      "wwwroot/lib/workflow/activity.js",
-      "wwwroot/lib/workflow/connector.js",
-      "wwwroot/lib/workflow/flow.js",
-      "wwwroot/lib/workflow/workflowdesigner.js"
+      "wwwroot/bootstrap/lib/workflow/close.js",
+      "wwwroot/bootstrap/lib/workflow/handle.js",
+      "wwwroot/bootstrap/lib/workflow/link.js",
+      "wwwroot/bootstrap/lib/workflow/action.js",
+      "wwwroot/bootstrap/lib/workflow/activity.js",
+      "wwwroot/bootstrap/lib/workflow/connector.js",
+      "wwwroot/bootstrap/lib/workflow/flow.js",
+      "wwwroot/bootstrap/lib/workflow/workflowdesigner.js"
     ],
     "minify": {
       "enabled": true,
@@ -99,12 +132,12 @@
     "sourceMap": false
   },
   {
-    "outputFileName": "wwwroot/lib/framework.js",
+    "outputFileName": "wwwroot/bootstrap/lib/framework.js",
     "inputFiles": [
-      "wwwroot/lib/Core/drawing.js",
-      "wwwroot/lib/widget.js",
-      "wwwroot/lib/core.js",
-      "wwwroot/lib/workflow.js"
+      "wwwroot/bootstrap/lib/Core/drawing.js",
+      "wwwroot/bootstrap/lib/widget.js",
+      "wwwroot/bootstrap/lib/core.js",
+      "wwwroot/bootstrap/lib/workflow.js"
     ],
     "minify": {
       "enabled": true,
@@ -113,9 +146,9 @@
     "sourceMap": false
   },
   {
-    "outputFileName": "wwwroot/lib/background.min.js",
+    "outputFileName": "wwwroot/bootstrap/lib/background.min.js",
     "inputFiles": [
-      "wwwroot/lib/background.js"
+      "wwwroot/bootstrap/lib/background.js"
     ],
     "minify": {
       "enabled": true,
@@ -128,24 +161,12 @@
     "inputFiles": [
       "wwwroot/dependencies/jquery/jquery-3.7.0.min.js",
       "wwwroot/dependencies/jquery/jquery-ui.min.js",
-      "wwwroot/dependencies/jquery/jquery-validate.js",
+      "wwwroot/dependencies/jquery/jquery.validate.js",
       "wwwroot/dependencies/bootstrap/bootstrap.bundle.min.js",
-      "wwwroot/dependencies/kendo/kendo.all.v2023.1.314.min.js",
+      "wwwroot/dependencies/kendo/kendo.all.v2024.2.514.min.js",
+      "wwwroot/dependencies/kendo/kendo-ui-license.js",
       "wwwroot/dependencies/other/monaco.min.js",
       "wwwroot/dependencies/other/signalr.min.js"
-    ],
-    "minify": {
-      "enabled": false,
-      "renameLocals": false
-    },
-    "sourceMap": false
-  },
-  {
-    "outputFileName": "wwwroot/dependencies/dependencies.min.css",
-    "inputFiles": [
-      "wwwroot/dependencies/bootstrap/bootstrap.min.css",
-      "wwwroot/dependencies/kendo/kendo.v2023.1.314.css",
-      "wwwroot/dependencies/kendo/kendo-font-icons.css"
     ],
     "minify": {
       "enabled": false,
@@ -157,21 +178,7 @@
     "outputFileName": "wwwroot/everything.min.js",
     "inputFiles": [
       "wwwroot/dependencies/dependencies.min.js",
-      "wwwroot/lib/framework.min.js"
-    ],
-    "minify": {
-      "enabled": false,
-      "renameLocals": false
-    },
-    "sourceMap": false
-  },
-  {
-    "outputFileName": "wwwroot/everything.min.css",
-    "inputFiles": [
-      "wwwroot/dependencies/dependencies.min.css",
-      "wwwroot/dependencies/kendo/kendo.v2023.1.314.css",
-      "wwwroot/dependencies/kendo/kendo-font-icons.css",
-      "wwwroot/css/site.min.css"
+      "wwwroot/bootstrap/lib/framework.min.js"
     ],
     "minify": {
       "enabled": false,

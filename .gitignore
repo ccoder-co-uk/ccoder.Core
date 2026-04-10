@@ -361,3 +361,14 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/.codex
+/.tools
+/.dotnet/.dotnet
+/.dotnet-cli/.dotnet
+/.codex-dotnet
+/.codex-temp-sln
+/.dotnet-home/.dotnet
+/.nuget-packages-core/
+/.nuget-packages-webtests/
+/.nuget-packages-sln/
+/src/Apps/Web/.config/dotnet-tools.json

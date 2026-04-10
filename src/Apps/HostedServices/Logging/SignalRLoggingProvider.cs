@@ -1,4 +1,4 @@
-﻿namespace HostedServices.Logging;
+namespace HostedServices.Logging;
 
 public class SignalRLoggingProvider(IServiceProvider serviceProvider) : ILoggerProvider
 {
@@ -6,3 +6,5 @@ public class SignalRLoggingProvider(IServiceProvider serviceProvider) : ILoggerP
 
     public void Dispose() => GC.SuppressFinalize(this);
 }
+
+

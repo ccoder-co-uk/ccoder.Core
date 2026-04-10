@@ -1,4 +1,4 @@
-﻿namespace Web.Logging
+namespace Web.Logging
 {
     public class SignalRLoggingProvider : ILoggerProvider
     {
@@ -8,8 +8,15 @@
             this.serviceProvider = serviceProvider;
 
         public ILogger CreateLogger(string categoryName) =>
-            serviceProvider.GetService<SignalRLoggingBroker>();
+            new SignalRLoggingBroker(
+                serviceProvider.GetRequiredService<IHttpContextAccessor>(),
+                serviceProvider,
+                categoryName);
 
         public void Dispose() { }
     }
 }
+
+
+
+

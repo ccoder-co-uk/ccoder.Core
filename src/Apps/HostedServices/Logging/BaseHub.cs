@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.SignalR;
+
 
 namespace HostedServices.Logging;
 
@@ -68,3 +69,6 @@ public abstract class BaseHub(ILogger log) : Hub
 
     public virtual async Task SendTest(string message, string thread) => await Clients.Group(thread).SendAsync("ConsoleReceive", "test", message, thread);
 }
+
+
+

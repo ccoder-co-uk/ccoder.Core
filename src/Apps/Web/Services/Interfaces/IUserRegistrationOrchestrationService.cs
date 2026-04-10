@@ -1,5 +1,6 @@
-﻿using cCoder.Security.Objects.DTOs;
+using cCoder.Security.Objects.DTOs;
 using cCoder.Security.Objects.Entities;
+
 
 namespace Web.Services.Interfaces
 {
@@ -12,3 +13,6 @@ namespace Web.Services.Interfaces
         ValueTask<SSOUser> RegisterAsync(RegisterUser registerForm);
     }
 }
+
+
+
