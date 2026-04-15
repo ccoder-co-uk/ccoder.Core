@@ -102,7 +102,7 @@ public partial class CoreApiBuilderOptions
             securityConfig.RootPath = null;
         });
 
-        RegisterContext(rootPath, static builder => builder.ConfigureSecurityApiModel());
+        RegisterContext(rootPath, static builder => builder.ConfigureCoreSecurityApiModel());
 
         return this;
     }

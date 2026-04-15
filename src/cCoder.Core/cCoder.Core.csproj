@@ -27,24 +27,24 @@
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\cCoder.AppSecurity\src\cCoder.AppSecurity\cCoder.AppSecurity.csproj" />
-    <ProjectReference Include="..\..\..\cCoder.ContentManagement\src\cCoder.ContentManagement\cCoder.ContentManagement.csproj" />
-    <ProjectReference Include="..\..\..\cCoder.DocumentManagement\src\cCoder.DocumentManagement\cCoder.DocumentManagement.csproj" />
-    <ProjectReference Include="..\..\..\cCoder.Logging\src\cCoder.Logging\cCoder.Logging.csproj" />
     <ProjectReference Include="..\..\..\cCoder.Mail\src\cCoder.Mail\cCoder.Mail.csproj" />
-    <ProjectReference Include="..\..\..\cCoder.Workflow\src\cCoder.Workflow\cCoder.Workflow.csproj" />
-    <ProjectReference Include="..\..\..\cCoder.Workflow\src\cCoder.Workflow.Activities\cCoder.Workflow.Activities.csproj" />
-    <ProjectReference Include="..\..\..\cCoder.Scheduling\src\cCoder.Scheduling\cCoder.Scheduling.csproj" />
-    <ProjectReference Include="..\..\..\cCoder.Security\src\cCoder.Security.Api\cCoder.Security.Api.csproj" />
-    <ProjectReference Include="..\..\..\cCoder.Security\src\cCoder.Security.Data.EF.MSSQL\cCoder.Security.Data.EF.MSSQL.csproj" />
-    <ProjectReference Include="..\..\..\cCoder.Security\src\cCoder.Security.Objects\cCoder.Security.Objects.csproj" />
-    <ProjectReference Include="..\..\..\cCoder.Packaging\src\cCoder.Packaging\cCoder.Packaging.csproj" />
-    <ProjectReference Include="..\..\..\cCoder.Data\src\cCoder.Data\cCoder.Data.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="cCoder.AppSecurity" Version="2026.4.15.2019" />
+    <PackageReference Include="cCoder.ContentManagement" Version="2026.4.15.2019" />
+    <PackageReference Include="cCoder.Data" Version="2026.4.10.1156" />
+    <PackageReference Include="cCoder.DocumentManagement" Version="2026.4.15.2019" />
     <PackageReference Include="cCoder.Eventing.EventLibrary" Version="2026.4.15.1800" />
-    <PackageReference Include="Microsoft.AspNetCore.OData" Version="9.4.1" />
     <PackageReference Include="cCoder.Eventing.EventLibrary.AzureServiceBus" Version="2026.4.15.1800" />
+    <PackageReference Include="cCoder.Logging" Version="2026.4.15.2020" />
+    <PackageReference Include="cCoder.Packaging" Version="2026.4.10.1330" />
+    <PackageReference Include="cCoder.Scheduling" Version="2026.4.15.2019" />
+    <PackageReference Include="cCoder.Security.Api" Version="2026.2.10.1440" />
+    <PackageReference Include="cCoder.Security.Data.EF.MSSQL" Version="2026.2.10.1440" />
+    <PackageReference Include="cCoder.Security.Objects" Version="2026.2.10.1440" />
+    <PackageReference Include="cCoder.Workflow" Version="2026.4.15.2020" />
+    <PackageReference Include="cCoder.Workflow.Activities" Version="2026.4.15.2020" />
+    <PackageReference Include="Microsoft.AspNetCore.OData" Version="9.4.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.5" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.7.1" />

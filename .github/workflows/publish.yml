@@ -28,75 +28,12 @@ jobs:
         with:
           path: ccoder.Core
 
-      - name: Checkout AppSecurity
-        uses: actions/checkout@v4
-        with:
-          repository: ccoder-co-uk/cCoder.AppSecurity
-          ref: ${{ github.event_name == 'pull_request' && 'codex/core-composition-api' || 'main' }}
-          path: cCoder.AppSecurity
-
-      - name: Checkout ContentManagement
-        uses: actions/checkout@v4
-        with:
-          repository: ccoder-co-uk/cCoder.ContentManagement
-          ref: ${{ github.event_name == 'pull_request' && 'codex/core-composition-api' || 'main' }}
-          path: cCoder.ContentManagement
-
-      - name: Checkout DocumentManagement
-        uses: actions/checkout@v4
-        with:
-          repository: ccoder-co-uk/cCoder.DocumentManagement
-          ref: ${{ github.event_name == 'pull_request' && 'codex/core-composition-api' || 'main' }}
-          path: cCoder.DocumentManagement
-
-      - name: Checkout Logging
-        uses: actions/checkout@v4
-        with:
-          repository: ccoder-co-uk/cCoder.Logging
-          ref: ${{ github.event_name == 'pull_request' && 'codex/core-composition-api' || 'main' }}
-          path: cCoder.Logging
-
       - name: Checkout Mail
         uses: actions/checkout@v4
         with:
           repository: ccoder-co-uk/cCoder.Mail
           ref: ${{ github.event_name == 'pull_request' && 'codex/core-composition-api' || 'main' }}
           path: cCoder.Mail
-
-      - name: Checkout Scheduling
-        uses: actions/checkout@v4
-        with:
-          repository: ccoder-co-uk/cCoder.Scheduling
-          ref: ${{ github.event_name == 'pull_request' && 'codex/core-composition-api' || 'main' }}
-          path: cCoder.Scheduling
-
-      - name: Checkout Workflow
-        uses: actions/checkout@v4
-        with:
-          repository: ccoder-co-uk/cCoder.Workflow
-          ref: ${{ github.event_name == 'pull_request' && 'codex/core-composition-api' || 'main' }}
-          path: cCoder.Workflow
-
-      - name: Checkout Data
-        uses: actions/checkout@v4
-        with:
-          repository: ccoder-co-uk/cCoder.Data
-          ref: ${{ github.event_name == 'pull_request' && 'codex/eventing-package-update' || 'main' }}
-          path: cCoder.Data
-
-      - name: Checkout Packaging
-        uses: actions/checkout@v4
-        with:
-          repository: ccoder-co-uk/cCoder.Packaging
-          ref: ${{ github.event_name == 'pull_request' && 'codex/eventing-package-update' || 'main' }}
-          path: cCoder.Packaging
-
-      - name: Checkout Security
-        uses: actions/checkout@v4
-        with:
-          repository: ccoder-co-uk/ccoder.Security
-          ref: main
-          path: cCoder.Security
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
