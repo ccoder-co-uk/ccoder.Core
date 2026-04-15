@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Diagnostics;
 
 namespace cCoder.Core.Api;
 
-public static class IAppBuilderExtensions
+internal static class IAppBuilderExtensions
 {
-    public static IApplicationBuilder UseCoreFormatters(this IApplicationBuilder app) =>
+    internal static IApplicationBuilder UseCoreFormatters(this IApplicationBuilder app) =>
         app.Use(
             (context, next) =>
             {
@@ -47,7 +47,7 @@ public static class IAppBuilderExtensions
             }
         );
 
-    public static IApplicationBuilder HandleExceptions(this IApplicationBuilder app) =>
+    internal static IApplicationBuilder HandleExceptions(this IApplicationBuilder app) =>
         app.UseExceptionHandler(errorApp =>
             errorApp.Run(
                 async (context) =>

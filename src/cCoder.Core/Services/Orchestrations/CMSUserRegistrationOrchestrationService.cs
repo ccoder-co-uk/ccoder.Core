@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Web;
 using cCoder.AppSecurity.Services.Orchestrations;
 using cCoder.Core.Services.Foundations.ContentManagement;
-using CoreApp = cCoder.Core.Models.App;
+using CoreApp = cCoder.Data.Models.CMS.App;
 using ContentTemplate = cCoder.Data.Models.CMS.Template;
 using SecurityRole = cCoder.Data.Models.Security.Role;
 using SecurityUser = cCoder.Data.Models.Security.User;
