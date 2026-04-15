@@ -20,10 +20,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\cCoder.AppSecurity\src\cCoder.AppSecurity\cCoder.AppSecurity.csproj" />
-    <ProjectReference Include="..\..\..\cCoder.ContentManagement\src\cCoder.ContentManagement\cCoder.ContentManagement.csproj" />
     <ProjectReference Include="..\cCoder.Core\cCoder.Core.csproj" />
-    <ProjectReference Include="..\..\..\cCoder.Data\src\cCoder.Data\cCoder.Data.csproj" />
+    <PackageReference Include="cCoder.AppSecurity" Version="2026.4.15.2019" />
+    <PackageReference Include="cCoder.ContentManagement" Version="2026.4.15.2019" />
+    <PackageReference Include="cCoder.Data" Version="2026.4.10.1156" />
   </ItemGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
