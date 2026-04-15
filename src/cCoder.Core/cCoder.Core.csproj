@@ -27,9 +27,6 @@
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\cCoder.Mail\src\cCoder.Mail\cCoder.Mail.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="cCoder.AppSecurity" Version="2026.4.15.2019" />
     <PackageReference Include="cCoder.ContentManagement" Version="2026.4.15.2019" />
     <PackageReference Include="cCoder.Data" Version="2026.4.10.1156" />
@@ -37,6 +34,7 @@
     <PackageReference Include="cCoder.Eventing.EventLibrary" Version="2026.4.15.1800" />
     <PackageReference Include="cCoder.Eventing.EventLibrary.AzureServiceBus" Version="2026.4.15.1800" />
     <PackageReference Include="cCoder.Logging" Version="2026.4.15.2020" />
+    <PackageReference Include="cCoder.Mail" Version="2026.4.15.2051" />
     <PackageReference Include="cCoder.Packaging" Version="2026.4.10.1330" />
     <PackageReference Include="cCoder.Scheduling" Version="2026.4.15.2019" />
     <PackageReference Include="cCoder.Security.Api" Version="2026.2.10.1440" />
