@@ -1,24 +1,15 @@
+using cCoder.AppSecurity.Models;
 using cCoder.Security.Objects.DTOs;
 using Microsoft.AspNetCore.Mvc;
-using Web.Services.Interfaces;
-
 
 namespace Security.Api.Controllers;
 
 [Route("Api/Account")]
-public class AccountController : Controller
+public class AccountController(
+    cCoder.Core.Services.Orchestrations.IUserRegistrationOrchestrationService userRegistrationOrchestrationService,
+    cCoder.Core.Services.Orchestrations.IUserPasswordOrchestrationService userPasswordOrchestrationService)
+    : Controller
 {
-    private readonly IUserRegistrationOrchestrationService userRegistrationOrchestrationService;
-    private readonly IUserPasswordOrchestrationService userPasswordOrchestrationService;
-
-    public AccountController(
-        IUserRegistrationOrchestrationService userRegistrationOrchestrationService,
-        IUserPasswordOrchestrationService userPasswordOrchestrationService)
-    {
-        this.userRegistrationOrchestrationService = userRegistrationOrchestrationService;
-        this.userPasswordOrchestrationService = userPasswordOrchestrationService;
-    }
-
     [HttpPost("Login")]
     public async ValueTask<IActionResult> Login([FromBody] Auth auth) =>
         ModelState.IsValid
@@ -35,14 +26,19 @@ public class AccountController : Controller
     [HttpPost("ForgotPassword")]
     public async ValueTask<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
     {
-        await this.userPasswordOrchestrationService.ForgotPasswordAsync(request.Email, request.AppId);
+        await userPasswordOrchestrationService.ForgotPasswordAsync(request.Email, request.AppId);
         return Ok();
     }
 
     [HttpPost("ConfirmForgotPassword")]
-    public async ValueTask<IActionResult> ConfirmForgotPassword([FromBody] ConfirmForgotPasswordRequest request)
+    public async ValueTask<IActionResult> ConfirmForgotPassword(
+        [FromBody] ConfirmForgotPasswordRequest request)
     {
-        await this.userPasswordOrchestrationService.ConfirmForgotPasswordAsync(request.Token, request.UserId, request.NewPassword, request.ConfirmPassword);
+        await userPasswordOrchestrationService.ConfirmForgotPasswordAsync(
+            request.Token,
+            request.UserId,
+            request.NewPassword,
+            request.ConfirmPassword);
         return Ok();
     }
 
@@ -59,6 +55,3 @@ public class AccountController : Controller
         return Ok();
     }
 }
-
-
-

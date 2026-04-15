@@ -1,6 +1,5 @@
 using cCoder.Core.Brokers.ContentManagement;
-using cCoder.Core.Models;
-using DomainApp = cCoder.Data.Models.CMS.App;
+using cCoder.Data.Models.CMS;
 
 namespace cCoder.Core.Services.Foundations.ContentManagement;
 
@@ -8,45 +7,17 @@ internal class ContentManagementAppService(IContentManagementAppBroker contentMa
     : IContentManagementAppService
 {
     public App Get(int id, bool ignoreFilters = false) =>
-        ToLocalApp(contentManagementAppBroker.Get(id, ignoreFilters));
+        contentManagementAppBroker.Get(id, ignoreFilters);
 
     public App GetByDomain(string domain, bool ignoreFilters = false) =>
-        ToLocalApp(contentManagementAppBroker.GetByDomain(domain, ignoreFilters));
+        contentManagementAppBroker.GetByDomain(domain, ignoreFilters);
 
     public async ValueTask<App> AddAsync(App app) =>
-        ToLocalApp(await contentManagementAppBroker.AddAsync(ToExternalApp(app)));
+        await contentManagementAppBroker.AddAsync(app);
 
     public async ValueTask<App> UpdateAsync(App app) =>
-        ToLocalApp(await contentManagementAppBroker.UpdateAsync(ToExternalApp(app)));
+        await contentManagementAppBroker.UpdateAsync(app);
 
     public ValueTask DeleteAsync(int appId) => contentManagementAppBroker.DeleteAsync(appId);
-
-    private static DomainApp ToExternalApp(App app) =>
-        app == null
-            ? null
-            : new DomainApp
-            {
-                Id = app.Id,
-                DefaultCultureId = app.DefaultCultureId,
-                TenantId = app.TenantId,
-                Name = app.Name,
-                Domain = app.Domain,
-                DefaultTheme = app.DefaultTheme,
-                ConfigJson = app.ConfigJson
-            };
-
-    private static App ToLocalApp(DomainApp app) =>
-        app == null
-            ? null
-            : new App
-            {
-                Id = app.Id,
-                DefaultCultureId = app.DefaultCultureId,
-                TenantId = app.TenantId,
-                Name = app.Name,
-                Domain = app.Domain,
-                DefaultTheme = app.DefaultTheme,
-                ConfigJson = app.ConfigJson
-            };
 }
 

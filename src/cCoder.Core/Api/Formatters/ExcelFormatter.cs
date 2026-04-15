@@ -47,7 +47,7 @@ public class ExcelFormatter : TextOutputFormatter
 
         return context.HttpContext.Request.Query.ContainsKey("culture")
             ? Thread.CurrentThread.CurrentCulture.Name
-            : context.HttpContext.GetQueryParameter("culture");
+            : context.HttpContext.Request.Query["culture"].ToString();
     }
 
     public override void WriteResponseHeaders(OutputFormatterWriteContext context)
@@ -69,7 +69,7 @@ public class ExcelFormatter : TextOutputFormatter
             resources.AddRange(
                 cachedResources
                     .Where(r =>
-                        r.AppId == int.Parse(context.HttpContext.GetQueryParameter("appId"))
+                        r.AppId == int.Parse(context.HttpContext.Request.Query["appId"].ToString())
                         && r.Key == "Default"
                     )
             );
@@ -82,14 +82,14 @@ public class ExcelFormatter : TextOutputFormatter
                 {
                     Name = "dateformat",
                     DisplayName = context.HttpContext.Request.Query.ContainsKey("dateFormat")
-                        ? context.HttpContext.GetQueryParameter("dateFormat")
+                        ? context.HttpContext.Request.Query["dateFormat"].ToString()
                         : "yyyy-MM-dd",
                 },
                 new()
                 {
                     Name = "moneyformat",
                     DisplayName = context.HttpContext.Request.Query.ContainsKey("moneyFormat")
-                        ? context.HttpContext.GetQueryParameter("moneyFormat")
+                        ? context.HttpContext.Request.Query["moneyFormat"].ToString()
                         : "n",
                 },
             }

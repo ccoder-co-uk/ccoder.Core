@@ -1,228 +1,183 @@
-using System.Text.RegularExpressions;
-using cCoder.ContentManagement.Exposures.EventHandlers;
-using cCoder.Core.Api;
-using cCoder.Core.Api.Hubs;
-using cCoder.AppSecurity.Exposures.EventHandlers;
-using cCoder.DocumentManagement.Exposures.EventHandlers;
-using cCoder.DocumentManagement.Exposures.Middleware;
+using System.Security;
+using System.Web;
+using cCoder.AppSecurity;
+using cCoder.Core.Cors;
+using cCoder.Core.Services.Foundations.ContentManagement;
+using cCoder.Data;
 using cCoder.Logging.Exposures.Hubs;
-using cCoder.Mail.Exposures.EventHandlers;
-using cCoder.Scheduling.Exposures.EventHandlers;
-using cCoder.Workflow.Exposures.EventHandlers;
-using cCoder.Workflow.Exposures.Hubs;
-using Microsoft.Extensions.FileProviders;
+using cCoder.Mail;
+using cCoder.Packaging;
+using cCoder.Scheduling;
+using cCoder.Security.Data.EF;
+using cCoder.Security.Objects.Entities;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.Net.Http.Headers;
-
 
 namespace cCoder.Core;
 
-public static class WebApplicationExtensions
+public static partial class WebApplicationExtensions
 {
-    private static readonly Regex DmsRouteRegex = new(@"^\/api\/dms.*", RegexOptions.Compiled);
-    private static readonly Regex WebDavRouteRegex = new(@"^\/api\/webdav.*", RegexOptions.Compiled);
-
-    public static WebApplication UseCoreApiShell(this WebApplication app)
+    public static WebApplication StartCoreWeb(this WebApplication app)
     {
-        StaticFileOptions options = new()
-        {
-            OnPrepareResponse = ctx =>
-                ctx.Context.Response.Headers[HeaderNames.CacheControl] = "public,max-age=" + 86400,
-        };
+        ILogger log = app.Services
+            .GetService<ILoggerFactory>()?
+            .CreateLogger("cCoder.Core.Web")
+            ?? NullLogger.Instance;
 
-        if (Directory.Exists("\\.well-known"))
+        app.Services.GetRequiredService<ICoreAllowedOriginStore>()
+            .RefreshAsync()
+            .GetAwaiter()
+            .GetResult();
+
+        app.UseHttpsRedirection();
+        app.UseCoreApi(log);
+
+        return app;
+    }
+
+    public static WebApplication StartCoreHostedServices(this WebApplication app)
+    {
+        app.Services.GetRequiredService<ICoreAllowedOriginStore>()
+            .RefreshAsync()
+            .GetAwaiter()
+            .GetResult();
+
+        app.ListenToExternalEvents();
+        app.UseRouting();
+        app.UseAuthorization();
+        app.UseCoreDefaultCors();
+        app.UseStaticFiles(new StaticFileOptions
         {
-            options.FileProvider = new PhysicalFileProvider("\\.well-known");
-            options.RequestPath = new PathString("\\.well-known");
-            options.ServeUnknownFileTypes = true;
+            HttpsCompression = HttpsCompressionMode.Compress,
+        });
+        app.Use(async (context, next) =>
+        {
+            context.Response.OnStarting(() =>
+            {
+                if (context.Request.Query["edit"] != "true")
+                    context.Response.Headers.Append("X-Frame-Options", "DENY");
+
+                _ = context.Response.Headers.Remove("X-AspNet-Version");
+                _ = context.Response.Headers.Remove("X-AspNetMvc-Version");
+                _ = context.Response.Headers.Remove("X-Sourcefiles");
+                _ = context.Response.Headers.Remove("Server");
+
+                return Task.CompletedTask;
+            });
+            await next();
+        });
+        app.MapControllers();
+        app.MapHub<LogHub>("/Hubs/Logs");
+        return app;
+    }
+
+    private static WebApplication UseCoreApi(
+        this WebApplication app,
+        ILogger log = null)
+    {
+        app.UseCoreApiDocumentation();
+        app.UseCoreApiShell();
+        app.UseAppSecurityExposure(log);
+        cCoder.ContentManagement.WebApplicationExtensions.UseContentManagementExposure(
+            app,
+            LogRequest,
+            log);
+        app.UseMailExposure(log);
+        cCoder.DocumentManagement.WebApplicationExtensions.UseDocumentManagementExposure(app, log);
+        app.UsePackagingExposure(log);
+        app.UseSchedulingExposure(log);
+        cCoder.Workflow.WebApplicationExtensions.UseWorkflowExposure(app, log);
+        cCoder.Logging.WebApplicationExtensions.UseLoggingExposure(app, log);
+        app.UseCoreDefaultCors();
+        app.UseCoreExceptionHandling(HandleUnhandledException);
+        app.UseCoreEventHandlers();
+        return app;
+    }
+
+    static async Task HandleUnhandledException(HttpContext context)
+    {
+        ILogger logger = context.RequestServices
+            .GetService<ILoggerFactory>()?
+            .CreateLogger("cCoder.Core.Web")
+            ?? Microsoft.Extensions.Logging.Abstractions.NullLogger.Instance;
+
+        Exception exception = context.Features.Get<IExceptionHandlerPathFeature>()?.Error;
+
+        context.Response.StatusCode =
+            exception?.GetType() == typeof(SecurityException) ? 401 : 500;
+
+        context.Response.ContentType = "application/json";
+
+        if (exception is null)
+            return;
+
+        logger.LogError("{Message}\n{StackTrace}", exception.Message, exception.StackTrace);
+        await context.Response.WriteAsync(
+            "{ \"error\": \"" + exception.Message.Replace("\"", "\'") + "\" }");
+
+        Exception innerException = exception.InnerException;
+
+        while (innerException is not null)
+        {
+            logger.LogError("{Message}\n{StackTrace}", innerException.Message, innerException.StackTrace);
+            innerException = innerException.InnerException;
+        }
+    }
+
+    static async Task LogRequest(HttpContext context, ILogger logger)
+    {
+        HttpRequest request = context.RequestServices.GetService<HttpRequest>();
+
+        if (request is null
+            || request.Path.StartsWithSegments("/Api/Hubs", StringComparison.OrdinalIgnoreCase))
+            return;
+
+        ICoreAuthInfo authInfo = context.RequestServices.GetRequiredService<ICoreAuthInfo>();
+        IContentManagementAppService appService =
+            context.RequestServices.GetRequiredService<IContentManagementAppService>();
+        Config config = context.RequestServices.GetRequiredService<Config>();
+
+        string url = HttpUtility.UrlDecode(request.GetDisplayUrl());
+        string logEntry =
+            $"{context.Connection.RemoteIpAddress} as {authInfo.SSOUserId}: {request.Method} - {url}";
+
+        if (context.Session is not null
+            && config.ConnectionStrings?.TryGetValue("SSO", out string ssoConnectionString) == true
+            && !string.IsNullOrWhiteSpace(ssoConnectionString))
+        {
+            try
+            {
+                using SecurityDbContext sso = new MSSQLSecurityDbContextFactory(ssoConnectionString)
+                    .CreateDbContext();
+
+                string requestType =
+                    request.Path.Value?.StartsWith("/api/", StringComparison.InvariantCultureIgnoreCase) == true
+                        ? "Api_"
+                        : "Page_";
+
+                UserEvent userEvent = new()
+                {
+                    TenantId = appService.GetByDomain(request.Host.Host, ignoreFilters: true)?.TenantId,
+                    CreatedBy = authInfo.SSOUserId,
+                    EventName = $"{requestType}{request.Method}{request.Path.Value}",
+                    CreatedOn = DateTimeOffset.UtcNow,
+                    SessionId = context.Session.Id,
+                    Value = url,
+                };
+
+                await sso.AddAsync(userEvent);
+                await sso.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                logger.LogWarning(
+                    "Unable to persist request log entry to SSO. {Message}",
+                    ex.Message);
+            }
         }
 
-        app.UseStaticFiles(options);
-        app.UseRouting();
-        app.MapControllers();
-        app.MapControllerRoute(
-            name: "default",
-            pattern: @"{*path}",
-            defaults: new { controller = "Home", action = "Index" },
-            constraints: new { path = new NoApiRouteConstraint() }
-        );
-        app.MapHub<NotificationHub>("/Api/Hubs/Notification");
-        return app;
-    }
-
-    public static WebApplication UseCoreCaching(this WebApplication app)
-    {
-        app.Services.GetService<cCoder.ContentManagement.Exposures.Caching.ICommonObjectCache>()?.Refresh();
-        app.Services.GetService<cCoder.ContentManagement.Exposures.Caching.IMetadataCache>()?.Rebuild();
-        return app;
-    }
-
-    public static WebApplication UseContentManagementExposure(
-        this WebApplication app,
-        Func<HttpContext, ILogger, Task> onRequest,
-        ILogger log = null
-    )
-    {
-        log?.LogInformation("Initialising Content Management");
-        app.UseSession();
-        app.HandleExceptions();
-        app.UseCoreFormatters();
-        app.UseCoreCaching();
-        app.Use(
-            async (context, next) =>
-            {
-                await onRequest(context, log ?? NullLogger.Instance);
-                context.Response.OnStarting(() => RemovePlatformHeaders(context));
-                await next();
-            }
-        );
-        return app;
-    }
-
-    private static Task RemovePlatformHeaders(HttpContext context)
-    {
-        if (context.Request.Query["edit"] != "true")
-            context.Response.Headers.Append("X-Frame-Options", "DENY");
-
-        _ = context.Response.Headers.Remove("X-AspNet-Version");
-        _ = context.Response.Headers.Remove("X-AspNetMvc-Version");
-        _ = context.Response.Headers.Remove("X-Sourcefiles");
-        _ = context.Response.Headers.Remove("Server");
-
-        return Task.CompletedTask;
-    }
-
-    public static WebApplication UseDocumentManagementExposure(
-        this WebApplication app,
-        ILogger log = null
-    )
-    {
-        log?.LogInformation("Initialising Document Management");
-        app.MapWhen(
-            context => DmsRouteRegex.IsMatch(context.Request.Path.Value?.ToLower() ?? string.Empty),
-            branch => branch.UseMiddleware<DMSMiddleware>()
-        );
-
-        app.MapWhen(
-            context => WebDavRouteRegex.IsMatch(context.Request.Path.Value?.ToLower() ?? string.Empty),
-            branch => branch.UseMiddleware<WebDavMiddleware>()
-        );
-
-        return app;
-    }
-
-    public static WebApplication UseWorkflowExposure(this WebApplication app, ILogger log = null)
-    {
-        log?.LogInformation("Initialising Workflow");
-        app.MapHub<WorkflowHub>("/Api/Hubs/Workflow");
-        return app;
-    }
-
-    public static WebApplication UseLoggingExposure(this WebApplication app, ILogger log = null)
-    {
-        log?.LogInformation("Initialising Logging");
-        app.MapHub<LogHub>("/Api/Hubs/Logs");
-        return app;
-    }
-
-    public static WebApplication UseCoreDefaultCors(this WebApplication app)
-    {
-        app.UseCors(builder =>
-        {
-            builder.AllowAnyHeader();
-            builder.AllowAnyMethod();
-            builder.SetIsOriginAllowed(_ => true);
-            builder.AllowCredentials();
-        });
-
-        return app;
-    }
-
-    public static WebApplication UseCoreExceptionHandling(
-        this WebApplication app,
-        RequestDelegate errorHandler
-    )
-    {
-        app.UseExceptionHandler(errorApp => errorApp.Run(errorHandler));
-        return app;
-    }
-
-    public static WebApplication UseCoreEventHandlers(this WebApplication app)
-    {
-        using IServiceScope scope = app.Services.CreateScope();
-        IServiceProvider services = scope.ServiceProvider;
-
-        foreach (IContentManagementEventHandlers handlers in services.GetServices<IContentManagementEventHandlers>())
-            handlers.ListenToAllEvents();
-
-        foreach (IDocumentManagementEventHandlers handlers in services.GetServices<IDocumentManagementEventHandlers>())
-            handlers.ListenToAllEvents();
-
-        foreach (IMailEventHandlers handlers in services.GetServices<IMailEventHandlers>())
-            handlers.ListenToAllEvents();
-
-        foreach (ISchedulingEventHandlers handlers in services.GetServices<ISchedulingEventHandlers>())
-            handlers.ListenToAllEvents();
-
-        foreach (IWorkflowEventHandlers handlers in services.GetServices<IWorkflowEventHandlers>())
-            handlers.ListenToAllEvents();
-
-        foreach (IAppSecurityEventHandlers handlers in services.GetServices<IAppSecurityEventHandlers>())
-            handlers.ListenToAllEvents();
-
-        return app;
-    }
-
-    public static WebApplication UseCore(
-        this WebApplication app,
-        Action<CoreAppFeatureBuilder> coreFeatureBuilderAction,
-        ILogger log = null
-    )
-    {
-        log?.LogInformation("Setting up cCoder.Core ...");
-
-        CoreAppFeatureBuilder coreFeatureBuilder = new(app, log);
-
-        app.UseCoreApiShell();
-
-        coreFeatureBuilderAction(coreFeatureBuilder);
-        app.UseCoreEventHandlers();
-
-        log?.LogInformation("Core is Ready!");
-
-        return app;
-    }
-
-    internal static void UseCaching(this WebApplication app)
-    {
-        app.UseCoreCaching();
-    }
-
-    internal static void UseRoutes(this WebApplication app)
-    {
-        app.MapControllers();
-
-        app.MapControllerRoute(
-            name: "default",
-            pattern: @"{*path}",
-            defaults: new { controller = "Home", action = "Index" },
-            constraints: new { path = new NoApiRouteConstraint() }
-        );
-    }
-
-    internal static void UseHubs(this WebApplication app)
-    {
-        app.MapHub<NotificationHub>("/Api/Hubs/Notification");
-        app.MapHub<WorkflowHub>("/Api/Hubs/Workflow");
-        app.MapHub<LogHub>("/Api/Hubs/Logs");
-    }
-
-    internal static void UseEventHandlers(this WebApplication app)
-    {
-        app.UseCoreEventHandlers();
+        logger.LogDebug(logEntry);
     }
 }
-
-
-
-

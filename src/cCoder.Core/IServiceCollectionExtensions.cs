@@ -1,23 +1,52 @@
 
+using cCoder.Core.Logging;
+using cCoder.Core.Models;
+using EventLibrary.Models;
+
 namespace cCoder.Core;
 
-public static class IServiceCollectionExtensions
+public static partial class IServiceCollectionExtensions
 {
-    public static void AddCoreData(
+    public static void AddCoreWeb(
         this IServiceCollection services,
-        string connectionString
-    ) => cCoder.Data.IServiceCollectionExtensions.AddCoreData(
-        services,
-        connectionString);
+        Action<CoreWebOptions> configure = null)
+    {
+        CoreWebOptions options = new();
+        configure?.Invoke(options);
 
-    public static void AddCoreDataAccess(
+        IConfiguration configuration = options.Configuration ?? GetRequiredConfiguration(services);
+        ConfigureDefaultLogging(services, configuration);
+        services.AddSingleton<ILoggerProvider, CoreWebSignalRLoggingProvider>();
+
+        services.AddCoreApi(core => core
+            .WithEventProviders(options.EventProviders)
+            .UseDefaultBaseline(configuration));
+    }
+
+    public static void AddCoreHostedServices(
         this IServiceCollection services,
-        string connectionString
-    ) => cCoder.Data.IServiceCollectionExtensions.AddCoreDataAccess(services, connectionString);
+        Action<CoreHostedServicesOptions> configure = null)
+    {
+        CoreHostedServicesOptions options = new();
+        configure?.Invoke(options);
 
-    public static void AddCoreAuthInfo(
-        this IServiceCollection services
-    ) => cCoder.Data.IServiceCollectionExtensions.AddCoreAuthInfo(services);
+        IConfiguration configuration = options.Configuration ?? GetRequiredConfiguration(services);
+        ConfigureDefaultLogging(services, configuration);
+        services.AddSingleton<ILoggerProvider, CoreHostedSignalRLoggingProvider>();
+
+        services.AddCore(core => core
+            .WithEventProviders(options.EventProviders)
+            .UseDefaultBaseline(configuration));
+    }
+
+    public static void AddCoreApi(
+        this IServiceCollection services,
+        Action<CoreApiBuilderOptions> setupAction)
+    {
+        CoreApiBuilderOptions config = new(services);
+        setupAction(config);
+        config.Apply();
+    }
 
     public static void AddCore(
         this IServiceCollection services,
@@ -28,7 +57,3 @@ public static class IServiceCollectionExtensions
         setupAction(config);
     }
 }
-
-
-
-
