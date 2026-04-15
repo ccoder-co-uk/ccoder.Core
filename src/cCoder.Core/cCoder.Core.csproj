@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>disable</Nullable>
@@ -27,7 +27,6 @@
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\cCoder.Eventing\src\EventLibrary\EventLibrary.csproj" />
     <ProjectReference Include="..\..\..\cCoder.AppSecurity\src\cCoder.AppSecurity\cCoder.AppSecurity.csproj" />
     <ProjectReference Include="..\..\..\cCoder.ContentManagement\src\cCoder.ContentManagement\cCoder.ContentManagement.csproj" />
     <ProjectReference Include="..\..\..\cCoder.DocumentManagement\src\cCoder.DocumentManagement\cCoder.DocumentManagement.csproj" />
@@ -43,8 +42,9 @@
     <ProjectReference Include="..\..\..\cCoder.Data\src\cCoder.Data\cCoder.Data.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="cCoder.Eventing.EventLibrary" Version="2026.4.15.1800" />
     <PackageReference Include="Microsoft.AspNetCore.OData" Version="9.4.1" />
-    <PackageReference Include="cCoder.Eventing.EventLibrary.AzureServiceBus" Version="2026.3.13.1755" />
+    <PackageReference Include="cCoder.Eventing.EventLibrary.AzureServiceBus" Version="2026.4.15.1800" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.5" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.7.1" />
@@ -56,3 +56,4 @@
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.1.5" />
   </ItemGroup>
 </Project>
+
