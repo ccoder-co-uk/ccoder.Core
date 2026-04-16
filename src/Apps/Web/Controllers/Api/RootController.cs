@@ -18,10 +18,12 @@ namespace Web.Controllers.Api
         protected ContentManagementMetadataCache MetadataCache { get; }
         protected Config Config { get; }
         protected IAuthorizationBroker AuthorizationBroker { get; }
+        protected IReadOnlyList<ApiInfo> ApiContexts { get; }
 
         public ApiRootController(
             Config config,
             IAuthorizationBroker authorizationBroker,
+            IEnumerable<ApiInfo> apiContexts,
             ContentManagementCommonObjectCache commonObjectCache,
             ContentManagementMetadataCache metadataCache
         )
@@ -30,6 +32,10 @@ namespace Web.Controllers.Api
             MetadataCache = metadataCache;
             Config = config;
             AuthorizationBroker = authorizationBroker;
+            ApiContexts = apiContexts
+                .Where(context => string.Equals(context.Kind, "Context", StringComparison.OrdinalIgnoreCase))
+                .OrderBy(context => context.Name, StringComparer.OrdinalIgnoreCase)
+                .ToArray();
         }
 
         [HttpGet()]
@@ -37,17 +43,7 @@ namespace Web.Controllers.Api
         {
             var result = new
             {
-                value = new[] {
-                    new ApiInfo { Kind = "Context", Name = "Core", Url = "Core", SwaggerDef = "/swagger/Core/swagger.json" },
-                    new ApiInfo { Kind = "Context", Name = "AppSecurity", Url = "AppSecurity", SwaggerDef = "/swagger/AppSecurity/swagger.json" },
-                    new ApiInfo { Kind = "Context", Name = "ContentManagement", Url = "ContentManagement", SwaggerDef = "/swagger/ContentManagement/swagger.json" },
-                    new ApiInfo { Kind = "Context", Name = "DocumentManagement", Url = "DocumentManagement", SwaggerDef = "/swagger/DocumentManagement/swagger.json" },
-                    new ApiInfo { Kind = "Context", Name = "Logging", Url = "Logging", SwaggerDef = "/swagger/Logging/swagger.json" },
-                    new ApiInfo { Kind = "Context", Name = "Mail", Url = "Mail", SwaggerDef = "/swagger/Mail/swagger.json" },
-                    new ApiInfo { Kind = "Context", Name = "Scheduling", Url = "Scheduling", SwaggerDef = "/swagger/Scheduling/swagger.json" },
-                    new ApiInfo { Kind = "Context", Name = "Security", Url = "Security", SwaggerDef = "/swagger/Security/swagger.json" },
-                    new ApiInfo { Kind = "Context", Name = "Workflow", Url = "Workflow", SwaggerDef = "/swagger/Workflow/swagger.json" }
-                }
+                value = ApiContexts
             };
 
             return Ok(result);

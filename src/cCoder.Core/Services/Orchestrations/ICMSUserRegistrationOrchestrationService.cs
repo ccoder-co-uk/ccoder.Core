@@ -1,4 +1,4 @@
-using CoreApp = cCoder.Core.Models.App;
+using CoreApp = cCoder.Data.Models.CMS.App;
 using SecurityUser = cCoder.Data.Models.Security.User;
 
 

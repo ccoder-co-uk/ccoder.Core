@@ -13,6 +13,8 @@ using cCoder.Core.Services.Foundations.Mail;
 using cCoder.Core.Services.Foundations.Planning;
 using cCoder.Core.Services.Foundations.Workflow;
 using cCoder.Core.Services.Orchestrations;
+using cCoder.Core.Cors;
+using cCoder.Core.Models;
 using cCoder.Packaging;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.OData;
@@ -25,7 +27,7 @@ using Microsoft.OData.ModelBuilder;
 
 namespace cCoder.Core.Api;
 
-public static class IServiceCollectionExtensions
+internal static class IServiceCollectionExtensions
 {
     public static void AddAspNet(this IServiceCollection services)
     {
@@ -64,12 +66,9 @@ public static class IServiceCollectionExtensions
         services.AddSignalR();
     }
 
-    public static IEdmModel CreateCoreRouteModel(IServiceCollection services) =>
-    BuildCoreRouteModel(GetRouteContributors(services));
-
     public static IServiceCollection AddCoreApi(
         this IServiceCollection services,
-        IDictionary<string, IEdmModel> routeModels = null
+        IEnumerable<CoreApiRouteDefinition> routeDefinitions = null
     )
     {
         AddAspNet(services);
@@ -90,6 +89,10 @@ public static class IServiceCollectionExtensions
         services.AddTransient<IAppOrchestrationService, AppOrchestrationService>();
         services.AddTransient<ITemplatedEmailOrchestrationService, TemplatedEmailOrchestrationService>();
         services.AddTransient<ICMSUserRegistrationOrchestrationService, CMSUserRegistrationOrchestrationService>();
+        services.AddSingleton<ICoreAllowedOriginStore, CoreAllowedOriginStore>();
+        services.AddSingleton<ICoreEventHandlers, CoreAllowedOriginEventHandlers>();
+        services.AddTransient<IUserRegistrationOrchestrationService, UserRegistrationOrchestrationService>();
+        services.AddTransient<IUserPasswordOrchestrationService, UserPasswordOrchestrationService>();
         services.TryAddTransient<cCoder.Packaging.Brokers.IAppDomainProvider, AppDomainProvider>();
         services.TryAddTransient<cCoder.Packaging.Brokers.IAppSecurityPackageManagerBroker, AppSecurityPackageManagerBroker>();
         services.TryAddTransient<cCoder.Packaging.Brokers.IContentManagementPackageManagerBroker, ContentManagementPackageManagerBroker>();
@@ -106,50 +109,18 @@ public static class IServiceCollectionExtensions
             opt.EnableAttributeRouting = true;
             opt.RouteOptions.EnableKeyAsSegment = false;
 
-            opt.Expand()
-                .Count()
-                .Filter()
-                .Select()
-                .OrderBy()
-                .SetMaxTop(1000)
-                .AddRouteComponents(
-                    "Api/Core",
-                    BuildCoreRouteModel(GetRouteContributors(services)),
-                    batchHandler
-                );
-
-            foreach (KeyValuePair<string, IEdmModel> routeModel in routeModels
-                ?? new Dictionary<string, IEdmModel>())
+            foreach (CoreApiRouteDefinition routeDefinition in routeDefinitions
+                ?? [])
             {
-                if (string.Equals(routeModel.Key, "Core", StringComparison.OrdinalIgnoreCase))
-                    continue;
-
-                _ = opt.AddRouteComponents($"Api/{routeModel.Key}", routeModel.Value, batchHandler);
+                _ = opt.AddRouteComponents(
+                    routeDefinition.RoutePath,
+                    routeDefinition.RouteModel,
+                    batchHandler);
             }
         });
 
         return services;
     }
-
-    private static IEdmModel BuildCoreRouteModel(
-        IEnumerable<Action<ODataConventionModelBuilder>> routeContributors
-    )
-    {
-        ODataConventionModelBuilder builder = new();
-
-        foreach (Action<ODataConventionModelBuilder> contributor in routeContributors)
-            contributor(builder);
-
-        return builder.GetEdmModel();
-    }
-
-    private static IEnumerable<Action<ODataConventionModelBuilder>> GetRouteContributors(
-        IServiceCollection services
-    ) =>
-        services
-            .Where(descriptor => descriptor.ServiceType == typeof(Action<ODataConventionModelBuilder>))
-            .Select(descriptor => descriptor.ImplementationInstance)
-            .OfType<Action<ODataConventionModelBuilder>>();
 
     private static HttpContext CreateHttpContext(HttpContext httpContext)
     {

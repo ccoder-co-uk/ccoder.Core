@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("cCoder.Logging.Tests")]
 [assembly: InternalsVisibleTo("cCoder.Mail.Tests")]
 [assembly: InternalsVisibleTo("cCoder.Scheduling.Tests")]
+[assembly: InternalsVisibleTo("cCoder.Core.Tests")]
 [assembly: InternalsVisibleTo("cCoder.Core.Security.Tests")]
 [assembly: InternalsVisibleTo("cCoder.Core.Services.Tests")]
 [assembly: InternalsVisibleTo("cCoder.Workflow.Tests")]

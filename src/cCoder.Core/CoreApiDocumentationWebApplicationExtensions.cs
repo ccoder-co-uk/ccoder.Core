@@ -1,11 +1,26 @@
+using cCoder.Data.Models;
 using Microsoft.AspNetCore.OData;
 
 
 namespace cCoder.Core;
 
-public static class CoreApiDocumentationWebApplicationExtensions
+internal static class CoreApiDocumentationWebApplicationExtensions
 {
-    public static WebApplication UseCoreApiDocumentation(
+    internal static WebApplication UseCoreApiDocumentation(this WebApplication app)
+    {
+        string[] contexts = ["Core", .. app.Services
+            .GetServices<ApiInfo>()
+            .Where(info => string.Equals(info.Kind, "Context", StringComparison.OrdinalIgnoreCase))
+            .Select(info => info.Name)
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .Where(name => !string.Equals(name, "Core", StringComparison.OrdinalIgnoreCase))
+            .OrderBy(name => name, StringComparer.OrdinalIgnoreCase)];
+
+        return app.UseCoreApiDocumentation(contexts);
+    }
+
+    internal static WebApplication UseCoreApiDocumentation(
         this WebApplication app,
         params string[] apiContexts
     )

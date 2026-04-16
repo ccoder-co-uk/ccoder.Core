@@ -1,24 +1,33 @@
+using cCoder.Core.Models;
 using Microsoft.OpenApi;
 
 
 namespace cCoder.Core;
 
-public static class CoreApiDocumentationServiceCollectionExtensions
+internal static class CoreApiDocumentationServiceCollectionExtensions
 {
-    public static IServiceCollection AddCoreApiDocumentation(
+    internal static IServiceCollection AddCoreApiDocumentation(
         this IServiceCollection services,
         params string[] apiContexts)
     {
-        string[] contexts = GetApiContexts(apiContexts);
+        CoreApiRouteDefinition[] routes = GetRouteDefinitions(apiContexts);
+        return services.AddCoreApiDocumentation(routes);
+    }
+
+    internal static IServiceCollection AddCoreApiDocumentation(
+        this IServiceCollection services,
+        IEnumerable<CoreApiRouteDefinition> routes)
+    {
+        CoreApiRouteDefinition[] definitions = GetRouteDefinitions(routes);
 
         services.AddSwaggerGen(c =>
         {
             c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
             c.CustomSchemaIds(type => type.FullName?.Replace('+', '.') ?? type.Name);
-            AddSwaggerDocuments(c, contexts);
+            AddSwaggerDocuments(c, definitions);
             c.DocInclusionPredicate(
                 (documentName, apiDescription) =>
-                    ShouldIncludeInDocument(documentName, apiDescription.RelativePath, contexts));
+                    ShouldIncludeInDocument(documentName, apiDescription.RelativePath, definitions));
 
             c.AddSecurityDefinition("bearer", new OpenApiSecurityScheme
             {
@@ -35,21 +44,36 @@ public static class CoreApiDocumentationServiceCollectionExtensions
         return services;
     }
 
-    private static string[] GetApiContexts(IEnumerable<string> apiContexts) =>
-        ["Core", .. (apiContexts ?? [])
+    private static CoreApiRouteDefinition[] GetRouteDefinitions(IEnumerable<string> apiContexts) =>
+        GetRouteDefinitions((apiContexts ?? [])
             .Where(context => !string.IsNullOrWhiteSpace(context))
-            .Distinct(StringComparer.OrdinalIgnoreCase)];
+            .Select(context => new CoreApiRouteDefinition(
+                context,
+                $"Api/{context}",
+                null)));
+
+    private static CoreApiRouteDefinition[] GetRouteDefinitions(
+        IEnumerable<CoreApiRouteDefinition> routes)
+    {
+        CoreApiRouteDefinition coreRoute = new("Core", "Api/Core", null);
+
+        return [coreRoute, .. (routes ?? [])
+            .Where(route => route is not null && !string.IsNullOrWhiteSpace(route.Name))
+            .GroupBy(route => route.Name, StringComparer.OrdinalIgnoreCase)
+            .Select(group => group.First())
+            .Where(route => !string.Equals(route.Name, "Core", StringComparison.OrdinalIgnoreCase))];
+    }
 
     private static void AddSwaggerDocuments(
         Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenOptions options,
-        IEnumerable<string> contexts)
+        IEnumerable<CoreApiRouteDefinition> routes)
     {
-        foreach (string context in contexts)
+        foreach (CoreApiRouteDefinition route in routes)
         {
-            options.SwaggerDoc(context, new OpenApiInfo
+            options.SwaggerDoc(route.Name, new OpenApiInfo
             {
-                Title = $"{context} API definition",
-                Version = context,
+                Title = $"{route.Name} API definition",
+                Version = route.Name,
             });
         }
 
@@ -63,7 +87,7 @@ public static class CoreApiDocumentationServiceCollectionExtensions
     private static bool ShouldIncludeInDocument(
         string documentName,
         string relativePath,
-        IEnumerable<string> contexts)
+        IEnumerable<CoreApiRouteDefinition> routes)
     {
         if (string.IsNullOrWhiteSpace(relativePath))
             return false;
@@ -74,12 +98,15 @@ public static class CoreApiDocumentationServiceCollectionExtensions
         string path = NormalizePath(relativePath);
 
         if (string.Equals(documentName, "Core", StringComparison.OrdinalIgnoreCase))
-            return IsCoreRoute(path, contexts);
+            return IsCoreRoute(path, routes);
 
-        return MatchesContextRoute(path, documentName);
+        CoreApiRouteDefinition route = routes.FirstOrDefault(candidate =>
+            string.Equals(candidate.Name, documentName, StringComparison.OrdinalIgnoreCase));
+
+        return route is not null && MatchesRoutePath(path, route.RoutePath);
     }
 
-    private static bool IsCoreRoute(string path, IEnumerable<string> contexts)
+    private static bool IsCoreRoute(string path, IEnumerable<CoreApiRouteDefinition> routes)
     {
         if (MatchesContextRoute(path, "Core"))
             return true;
@@ -88,15 +115,22 @@ public static class CoreApiDocumentationServiceCollectionExtensions
             && !path.StartsWith("/Api/", StringComparison.OrdinalIgnoreCase))
             return false;
 
-        foreach (string context in contexts.Where(context =>
-                     !string.Equals(context, "Core", StringComparison.OrdinalIgnoreCase)
-                     && !string.Equals(context, "v1", StringComparison.OrdinalIgnoreCase)))
+        foreach (CoreApiRouteDefinition route in routes.Where(route =>
+                     !string.Equals(route.Name, "Core", StringComparison.OrdinalIgnoreCase)
+                     && !string.Equals(route.Name, "v1", StringComparison.OrdinalIgnoreCase)))
         {
-            if (MatchesContextRoute(path, context))
+            if (MatchesRoutePath(path, route.RoutePath))
                 return false;
         }
 
         return true;
+    }
+
+    private static bool MatchesRoutePath(string path, string routePath)
+    {
+        string prefix = NormalizePath(routePath);
+        return path.Equals(prefix, StringComparison.OrdinalIgnoreCase)
+            || path.StartsWith($"{prefix}/", StringComparison.OrdinalIgnoreCase);
     }
 
     private static bool MatchesContextRoute(string path, string context)

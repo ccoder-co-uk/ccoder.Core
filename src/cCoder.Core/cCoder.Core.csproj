@@ -27,17 +27,22 @@
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OData" Version="9.4.1" />
-    <PackageReference Include="cCoder.Eventing.EventLibrary" Version="2026.3.13.1755" />
-    <PackageReference Include="cCoder.AppSecurity" Version="2026.4.10.1329" />
-    <PackageReference Include="cCoder.ContentManagement" Version="2026.4.10.1331" />
-    <PackageReference Include="cCoder.DocumentManagement" Version="2026.4.10.1329" />
-    <PackageReference Include="cCoder.Logging" Version="2026.4.10.1329" />
-    <PackageReference Include="cCoder.Mail" Version="2026.4.10.1330" />
+    <PackageReference Include="cCoder.AppSecurity" Version="2026.4.15.2019" />
+    <PackageReference Include="cCoder.ContentManagement" Version="2026.4.15.2019" />
+    <PackageReference Include="cCoder.Data" Version="2026.4.10.1156" />
+    <PackageReference Include="cCoder.DocumentManagement" Version="2026.4.15.2019" />
+    <PackageReference Include="cCoder.Eventing.EventLibrary" Version="2026.4.15.1800" />
+    <PackageReference Include="cCoder.Eventing.EventLibrary.AzureServiceBus" Version="2026.4.15.1800" />
+    <PackageReference Include="cCoder.Logging" Version="2026.4.15.2020" />
+    <PackageReference Include="cCoder.Mail" Version="2026.4.15.2051" />
     <PackageReference Include="cCoder.Packaging" Version="2026.4.10.1330" />
-    <PackageReference Include="cCoder.Scheduling" Version="2026.4.10.1341" />
-    <PackageReference Include="cCoder.Workflow" Version="2026.4.10.1330" />
-    <PackageReference Include="cCoder.Workflow.Activities" Version="2026.4.10.1330" />
+    <PackageReference Include="cCoder.Scheduling" Version="2026.4.15.2019" />
+    <PackageReference Include="cCoder.Security.Api" Version="2026.2.10.1440" />
+    <PackageReference Include="cCoder.Security.Data.EF.MSSQL" Version="2026.2.10.1440" />
+    <PackageReference Include="cCoder.Security.Objects" Version="2026.2.10.1440" />
+    <PackageReference Include="cCoder.Workflow" Version="2026.4.15.2020" />
+    <PackageReference Include="cCoder.Workflow.Activities" Version="2026.4.15.2020" />
+    <PackageReference Include="Microsoft.AspNetCore.OData" Version="9.4.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.5" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.7.1" />
@@ -49,3 +54,4 @@
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.1.5" />
   </ItemGroup>
 </Project>
+
