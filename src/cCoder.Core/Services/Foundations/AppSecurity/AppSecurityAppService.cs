@@ -1,28 +1,13 @@
 using cCoder.Core.Brokers.AppSecurity;
-using CoreApp = cCoder.Core.Models.App;
-using DomainApp = cCoder.Data.Models.CMS.App;
+using cCoder.Data.Models.CMS;
 
 namespace cCoder.Core.Services.Foundations.AppSecurity;
 
-internal class AppSecurityAppService(IAppSecurityAppBroker appSecurityAppBroker) : IAppSecurityAppService
+internal class AppSecurityAppService(IAppSecurityAppBroker appSecurityAppBroker) 
+    : IAppSecurityAppService
 {
-    public ValueTask AddAsync(CoreApp app) => appSecurityAppBroker.AddAsync(ToLocalApp(app));
-    public ValueTask UpdateAsync(CoreApp app) => appSecurityAppBroker.UpdateAsync(ToLocalApp(app));
+    public ValueTask AddAsync(App app) => appSecurityAppBroker.AddAsync(app);
+    public ValueTask UpdateAsync(App app) => appSecurityAppBroker.UpdateAsync(app);
     public ValueTask DeleteAsync(int appId) => appSecurityAppBroker.DeleteAsync(appId);
-
-    private static DomainApp ToLocalApp(CoreApp app) =>
-        app == null
-            ? null
-            : new DomainApp
-            {
-                Id = app.Id,
-                DefaultCultureId = app.DefaultCultureId,
-                TenantId = app.TenantId,
-                Name = app.Name,
-                Domain = app.Domain,
-                DefaultTheme = app.DefaultTheme,
-                ConfigJson = app.ConfigJson,
-                Roles = app.Roles?.ToArray(),
-            };
 }
 

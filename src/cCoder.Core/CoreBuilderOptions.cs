@@ -1,21 +1,54 @@
+using cCoder.AppSecurity;
 using cCoder.ContentManagement;
+using cCoder.Core.Api;
+using cCoder.Core.Models;
+using cCoder.Data;
 using cCoder.DocumentManagement;
 using cCoder.Mail;
 using cCoder.Packaging;
 using cCoder.Scheduling;
-using cCoder.AppSecurity;
 using cCoder.Workflow;
-using cCoder.Core.Api;
+using EventLibrary.Models;
 using Microsoft.OData.Edm;
 
 
 namespace cCoder.Core;
 
-public class CoreBuilderOptions
+public partial class CoreBuilderOptions
 {
     private readonly IServiceCollection services;
+    private readonly List<EventProvider> eventProviders = [];
+    private IConfiguration configuration;
 
-    public CoreBuilderOptions(IServiceCollection services) => this.services = services;
+    public CoreBuilderOptions(IServiceCollection services) => 
+        this.services = services;
+
+    public CoreBuilderOptions UseConfiguration(IConfiguration configuration)
+    {
+        this.configuration = configuration;
+
+        Config config = new();
+        configuration.Bind(config);
+        services.AddSingleton(config);
+
+        return this;
+    }
+
+    public CoreBuilderOptions UseDefaultBaseline(IConfiguration configuration)
+    {
+        UseConfiguration(configuration);
+        services.AddCoreHostedEventing(configuration, eventProviders);
+        ConfigureSecurityAndDataServices();
+        ConfigureHostedDomainServices();
+        cCoder.Core.Api.IServiceCollectionExtensions.AddAspNet(services);
+        return this;
+    }
+
+    public CoreBuilderOptions WithEventProviders(params EventProvider[] eventProviders)
+    {
+        this.eventProviders.AddRange((eventProviders ?? []).Where(provider => provider is not null));
+        return this;
+    }
 
     public CoreBuilderOptions UseMSSQLProvider(string connectionString)
     {
@@ -30,7 +63,6 @@ public class CoreBuilderOptions
     {
         services.AddContentManagement();
         services.AddPackaging();
-        services.AddContentManagementInfrastructure(map);
         return this;
     }
 
@@ -40,9 +72,9 @@ public class CoreBuilderOptions
         return this;
     }
 
-    public CoreBuilderOptions UseApi(IDictionary<string, IEdmModel> routeModels = null)
+    internal CoreBuilderOptions UseApi(IEnumerable<CoreApiRouteDefinition> routeDefinitions = null)
     {
-        services.AddCoreApi(routeModels: routeModels);
+        services.AddCoreApi(routeDefinitions);
         return this;
     }
 

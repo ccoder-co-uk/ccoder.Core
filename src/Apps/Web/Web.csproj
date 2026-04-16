@@ -13,11 +13,6 @@
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.1.5" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="cCoder.Eventing.EventLibrary" Version="2026.3.13.1755" />
-    <PackageReference Include="cCoder.Security.Data.EF.MSSQL" Version="2026.2.10.1440" />
-    <PackageReference Include="cCoder.Security.Api" Version="2026.2.10.1440" />
-    <PackageReference Include="cCoder.Security.Objects" Version="2026.2.10.1440" />
-    <PackageReference Include="cCoder.Security.Data.EF" Version="2026.2.10.1440" />
     <PackageReference Include="Testcontainers.MsSql" Version="4.11.0" />
   </ItemGroup>
   <ItemGroup>

@@ -1,7 +1,6 @@
 using System.Dynamic;
 using cCoder.ContentManagement.Exposures;
 using cCoder.ContentManagement.Services.Processings;
-using cCoder.Core.Api;
 using cCoder.Data;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
@@ -70,7 +69,7 @@ namespace Web.Controllers
                     throw new Exception("Cannot load session information");
 
                 culture = Response.HttpContext.Request.Query.ContainsKey("culture")
-                    ? Response.HttpContext.GetQueryParameter("culture")
+                    ? Response.HttpContext.Request.Query["culture"].ToString()
                     : null;
 
                 if (culture != null)

@@ -3,10 +3,11 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using cCoder.Data.Models.Packaging;
+using cCoder.Data.Models.CMS;
 using FluentAssertions;
 using Web.AcceptanceTests.Infrastructure;
 using Xunit;
-using CoreApp = cCoder.Core.Models.App;
+using CoreApp = cCoder.Data.Models.CMS.App;
 
 
 namespace Web.AcceptanceTests.Tests.Api;

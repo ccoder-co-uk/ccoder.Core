@@ -1,45 +1,17 @@
 using cCoder.Core.Models;
 using cCoder.Core.Models.Metadata;
+using cCoder.Data.Models.CMS;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OData.Edm;
-using AppCulture = cCoder.Data.Models.CMS.AppCulture;
-using Calendar = cCoder.Data.Models.Planning.Calendar;
-using CalendarEvent = cCoder.Data.Models.Planning.CalendarEvent;
-using CommonObject = cCoder.Data.Models.CommonObject;
-using Component = cCoder.Data.Models.CMS.Component;
-using Content = cCoder.Data.Models.CMS.Content;
-using CoreApp = cCoder.Core.Models.App;
-using Culture = cCoder.Data.Models.CMS.Culture;
-using File = cCoder.Data.Models.DMS.File;
-using FileContent = cCoder.Data.Models.DMS.FileContent;
-using FlowDefinition = cCoder.Data.Models.Workflow.FlowDefinition;
-using FlowInstanceData = cCoder.Data.Models.Workflow.FlowInstanceData;
-using Folder = cCoder.Data.Models.DMS.Folder;
-using FolderRole = cCoder.Data.Models.Security.FolderRole;
-using Layout = cCoder.Data.Models.CMS.Layout;
-using LogDataItem = cCoder.Data.Models.Logging.LogDataItem;
-using LogEntry = cCoder.Data.Models.Logging.LogEntry;
-using MailServer = cCoder.Data.Models.Mail.MailServer;
-using MetaItem = cCoder.Data.Models.CMS.MetaItem;
-using Package = cCoder.Data.Models.Packaging.Package;
-using PackageItem = cCoder.Data.Models.Packaging.PackageItem;
-using Page = cCoder.Data.Models.CMS.Page;
-using PageInfo = cCoder.Data.Models.CMS.PageInfo;
-using PageRole = cCoder.Data.Models.Security.PageRole;
-using Privilege = cCoder.Data.Models.Security.Privilege;
-using QueuedEmail = cCoder.Data.Models.Mail.QueuedEmail;
-using RenderResult = cCoder.ContentManagement.Models.RenderResult;
-using Resource = cCoder.Data.Models.CMS.Resource;
-using Role = cCoder.Data.Models.Security.Role;
-using ScheduledTask = cCoder.Data.Models.Planning.ScheduledTask;
-using Script = cCoder.Data.Models.CMS.Script;
-using SentEmail = cCoder.Data.Models.Mail.SentEmail;
-using Submission = cCoder.Data.Models.CMS.Submission;
-using Template = cCoder.Data.Models.CMS.Template;
-using User = cCoder.Data.Models.Security.User;
-using UserRole = cCoder.Data.Models.Security.UserRole;
-using WorkflowEvent = cCoder.Data.Models.Workflow.WorkflowEvent;
-
+using cCoder.Data.Models.Planning;
+using cCoder.Data.Models;
+using cCoder.Data.Models.DMS;
+using cCoder.Data.Models.Workflow;
+using cCoder.Data.Models.Security;
+using cCoder.Data.Models.Logging;
+using cCoder.Data.Models.Mail;
+using cCoder.Data.Models.Packaging;
+using cCoder.ContentManagement.Models;
 
 namespace cCoder.Core.Api.OData;
 
@@ -61,13 +33,13 @@ public class CoreModelBuilder : ODataModelBuilder
         // Common stuff
         AddCommonComplextypes();
         _ = Builder.ComplexType<RenderResult>();
-        Builder.EntityType<CoreApp>().Ignore(i => i.Config);
+        Builder.EntityType<App>().Ignore(i => i.Config);
         Builder.EntityType<Submission>().Ignore(i => i.Data);
         Builder.EntityType<FlowInstanceData>().Ignore(i => i.ContextJson);
 
         // Register CRUD Supporting object sets
         // CMS stuff
-        _ = AddSet<CoreApp, int>(setName: "App");
+        _ = AddSet<App, int>(setName: "App");
         _ = AddSet<Layout, int>();
         _ = AddSet<Template, int>();
         _ = AddSet<Page, int>();
@@ -98,7 +70,7 @@ public class CoreModelBuilder : ODataModelBuilder
         // forms
 
         // DMS stuff
-        _ = AddSet<File, Guid>();
+        _ = AddSet<Data.Models.DMS.File, Guid>();
         _ = AddSet<Folder, Guid>();
         _ = AddSet<FileContent, Guid>();
 
@@ -128,11 +100,11 @@ public class CoreModelBuilder : ODataModelBuilder
         _ = Builder
             .EntityType<Folder>()
             .Collection.Action("Copy")
-            .ReturnsCollection<Result<Guid?>>();
+            .ReturnsCollection<ContentManagement.Models.Result<Guid?>>();
         // Page management
         _ = Builder.EntityType<Page>().Action("AddContent").Parameter<Content>("content");
         _ = Builder.EntityType<Page>().Function("RootFor").ReturnsFromEntitySet<Page>("Page");
-        _ = Builder.EntityType<Page>().Function("Menu").Returns<Result<string>>();
+        _ = Builder.EntityType<Page>().Function("Menu").Returns<ContentManagement.Models.Result<string>>();
         _ = Builder.EntityType<Page>().Collection.Function("Render").Returns<RenderResult>();
 
         // User and Role Functions
@@ -181,7 +153,7 @@ public class CoreModelBuilder : ODataModelBuilder
         _ = Builder
             .EntityType<CommonObject>()
             .Collection.Action("Import")
-            .ReturnsCollectionFromEntitySet<Result<CommonObject>>("ImportCommonObjectResults");
+            .ReturnsCollectionFromEntitySet<ContentManagement.Models.Result<CommonObject>>("ImportCommonObjectResults");
 
         return Builder.GetEdmModel();
     }

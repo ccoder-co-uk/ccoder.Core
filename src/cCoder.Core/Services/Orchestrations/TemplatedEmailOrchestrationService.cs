@@ -7,7 +7,7 @@ using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.Mail;
 using cCoder.Data.Models.Security;
 using cCoder.Mail.Services.Orchestrations;
-using CoreApp = cCoder.Core.Models.App;
+using CoreApp = cCoder.Data.Models.CMS.App;
 using ContentTemplate = cCoder.Data.Models.CMS.Template;
 using TemplatedEmailDetails = cCoder.Mail.Models.TemplatedEmailDetails;
 
