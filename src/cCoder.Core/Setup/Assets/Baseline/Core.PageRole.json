@@ -1,0 +1,470 @@
+[
+    {
+        "Path":  "Admin/WorkflowDesigner",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Tools/ApiTester",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Tools/ApiTester",
+        "Role":  "Users"
+    },
+    {
+        "Path":  "Tools/ApiTester",
+        "Role":  "Guests"
+    },
+    {
+        "Path":  "Admin/AppManagement",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "",
+        "Role":  "Users"
+    },
+    {
+        "Path":  "",
+        "Role":  "Guests"
+    },
+    {
+        "Path":  "Admin",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Admin/BusinessProcesses/Editor",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Tools",
+        "Role":  "Users"
+    },
+    {
+        "Path":  "Tools",
+        "Role":  "Guests"
+    },
+    {
+        "Path":  "Documentation",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Documentation",
+        "Role":  "Users"
+    },
+    {
+        "Path":  "Documentation",
+        "Role":  "Guests"
+    },
+    {
+        "Path":  "ResetPassword",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "ResetPassword",
+        "Role":  "Users"
+    },
+    {
+        "Path":  "ResetPassword",
+        "Role":  "Guests"
+    },
+    {
+        "Path":  "Admin/CoreManagement",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Tools/DataGenerator",
+        "Role":  "Users"
+    },
+    {
+        "Path":  "Tools/DataGenerator",
+        "Role":  "Guests"
+    },
+    {
+        "Path":  "Admin/BusinessProcesses",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Admin/DocumentManagement",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Admin/DocumentManagement",
+        "Role":  "Users"
+    },
+    {
+        "Path":  "Admin/CommonCache",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Login",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Login",
+        "Role":  "Users"
+    },
+    {
+        "Path":  "Documentation/StandardUserGuide",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Documentation/StandardUserGuide",
+        "Role":  "Users"
+    },
+    {
+        "Path":  "Documentation/StandardUserGuide",
+        "Role":  "Guests"
+    },
+    {
+        "Path":  "Admin/AshPortalAdmin",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation",
+        "Role":  "Users"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation",
+        "Role":  "Guests"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/DocumentManagementSystem",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/DocumentManagementSystem",
+        "Role":  "Users"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/DocumentManagementSystem",
+        "Role":  "Guests"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement",
+        "Role":  "Users"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement",
+        "Role":  "Guests"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement/Configuration",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement/Configuration",
+        "Role":  "Users"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement/Configuration",
+        "Role":  "Guests"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement/Theming",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement/Theming",
+        "Role":  "Users"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement/Theming",
+        "Role":  "Guests"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement/Cultures",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement/Cultures",
+        "Role":  "Users"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement/Cultures",
+        "Role":  "Guests"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement/Layouts",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement/Layouts",
+        "Role":  "Users"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement/Layouts",
+        "Role":  "Guests"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement/Templates",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement/Templates",
+        "Role":  "Users"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement/Templates",
+        "Role":  "Guests"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement/Components",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement/Components",
+        "Role":  "Users"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement/Components",
+        "Role":  "Guests"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement/Resources",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement/Resources",
+        "Role":  "Users"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement/Resources",
+        "Role":  "Guests"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement/Security",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement/Security",
+        "Role":  "Users"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement/Security",
+        "Role":  "Guests"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement/Scheduling",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement/Scheduling",
+        "Role":  "Users"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement/Scheduling",
+        "Role":  "Guests"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement/MailManagement",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement/MailManagement",
+        "Role":  "Users"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement/MailManagement",
+        "Role":  "Guests"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement/LogStream",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement/LogStream",
+        "Role":  "Users"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement/LogStream",
+        "Role":  "Guests"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement/Testimonials",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement/Testimonials",
+        "Role":  "Users"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/AppManagement/Testimonials",
+        "Role":  "Guests"
+    },
+    {
+        "Path":  "Admin/ContentManagement",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/ContentManagementSystem",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/ContentManagementSystem",
+        "Role":  "Users"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/ContentManagementSystem",
+        "Role":  "Guests"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/CalendarManagement",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/CalendarManagement",
+        "Role":  "Users"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/CalendarManagement",
+        "Role":  "Guests"
+    },
+    {
+        "Path":  "Documentation/SSODocumentation",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Documentation/SSODocumentation",
+        "Role":  "Users"
+    },
+    {
+        "Path":  "Documentation/SSODocumentation",
+        "Role":  "Guests"
+    },
+    {
+        "Path":  "Documentation/SSODocumentation/ForgottenYourPassword",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Documentation/SSODocumentation/ForgottenYourPassword",
+        "Role":  "Users"
+    },
+    {
+        "Path":  "Documentation/SSODocumentation/ForgottenYourPassword",
+        "Role":  "Guests"
+    },
+    {
+        "Path":  "Documentation/SSODocumentation/ManagingyourProfile",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Documentation/SSODocumentation/ManagingyourProfile",
+        "Role":  "Users"
+    },
+    {
+        "Path":  "Documentation/SSODocumentation/ManagingyourProfile",
+        "Role":  "Guests"
+    },
+    {
+        "Path":  "Documentation/SSODocumentation/LoggingIn",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Documentation/SSODocumentation/LoggingIn",
+        "Role":  "Users"
+    },
+    {
+        "Path":  "Documentation/SSODocumentation/LoggingIn",
+        "Role":  "Guests"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/BusinessProcessManagement",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/BusinessProcessManagement",
+        "Role":  "Users"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/BusinessProcessManagement",
+        "Role":  "Guests"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/BusinessProcessManagement/WorkflowDesigner",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/BusinessProcessManagement/WorkflowDesigner",
+        "Role":  "Users"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/BusinessProcessManagement/WorkflowDesigner",
+        "Role":  "Guests"
+    },
+    {
+        "Path":  "Documentation/SSODocumentation/Registration",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Documentation/SSODocumentation/Registration",
+        "Role":  "Users"
+    },
+    {
+        "Path":  "Documentation/SSODocumentation/Registration",
+        "Role":  "Guests"
+    },
+    {
+        "Path":  "Documentation/SSODocumentation/SSOAPI",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Documentation/SSODocumentation/SSOAPI",
+        "Role":  "Users"
+    },
+    {
+        "Path":  "Documentation/SSODocumentation/SSOAPI",
+        "Role":  "Guests"
+    },
+    {
+        "Path":  "Documentation/Metadata",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Documentation/Metadata",
+        "Role":  "Users"
+    },
+    {
+        "Path":  "Documentation/Metadata",
+        "Role":  "Guests"
+    },
+    {
+        "Path":  "Documentation/SSODocumentation/SSOAPI/SSOMetadata",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Documentation/SSODocumentation/SSOAPI/SSOMetadata",
+        "Role":  "Users"
+    },
+    {
+        "Path":  "Documentation/SSODocumentation/SSOAPI/SSOMetadata",
+        "Role":  "Guests"
+    },
+    {
+        "Path":  "Admin/FullLogStream",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Admin/SSOAdmin",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/DocumentManagementSystem/SendingFilestoDMS",
+        "Role":  "Administrators"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/DocumentManagementSystem/SendingFilestoDMS",
+        "Role":  "Users"
+    },
+    {
+        "Path":  "Documentation/CoreDocumentation/DocumentManagementSystem/SendingFilestoDMS",
+        "Role":  "Guests"
+    }
+]

@@ -79,7 +79,7 @@ internal static class CoreApiDocumentationServiceCollectionExtensions
 
         options.SwaggerDoc("v1", new OpenApiInfo
         {
-            Title = "Corporate LinX V7 API definition",
+            Title = "cCoder Core API definition",
             Version = "v1",
         });
     }

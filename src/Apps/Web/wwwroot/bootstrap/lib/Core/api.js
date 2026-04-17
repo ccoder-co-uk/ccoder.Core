@@ -4,6 +4,7 @@ class Api
     constructor(args) {
         args = args || {};
         this.apiRoot = args.apiRoot || session.apiRoot;
+        this.token = args.token || session.token || getQueryParameter("t");
 
         this.cache = {
             meta: [],
@@ -240,6 +241,6 @@ class Api
 }
 
 window.api = new Api({
-    baseUrl: session.apiRoot,
+    apiRoot: session.apiRoot,
     token: session.token
 });

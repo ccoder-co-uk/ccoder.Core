@@ -1,12 +1,12 @@
 var form = {
     get: async function(id) {
-        let formData = await api.get("Core/Form(" + id + ")");
+        let formData = await api.get("ContentManagement/Form(" + id + ")");
         formData.render = form.render;
         return formData;
     },
 
     new: async function(appId) {
-        let newForm = await api.get("Core/Form/NewForm()");
+        let newForm = await api.get("ContentManagement/Form/NewForm()");
         newForm.render = form.render;
         newForm.AppId = appId;
         return newForm;
@@ -14,7 +14,7 @@ var form = {
 
     render: async function(element, id, callback) {
         $(element).empty();
-        let result = await api.call("Core/Form(" + id + ")/Render()", this);
+        let result = await api.get("ContentManagement/Form(" + id + ")/Render()");
         $(element).append(result.value);
     },
 

@@ -1,0 +1,250 @@
+@model Web.Models.FirstTimeSetupViewModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>cCoder.Core setup</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --bg: #f4f1e8;
+            --panel: #fffdf8;
+            --ink: #1f2a37;
+            --accent: #1d4d6f;
+            --accent-2: #d9842b;
+            --border: #d7c8b5;
+            --danger: #a13434;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Georgia, "Times New Roman", serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at top left, rgba(217, 132, 43, 0.15), transparent 24rem),
+                radial-gradient(circle at bottom right, rgba(29, 77, 111, 0.12), transparent 28rem),
+                linear-gradient(180deg, #faf7f0, var(--bg));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+
+        .shell {
+            width: min(100%, 58rem);
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 1.5rem;
+            overflow: hidden;
+            box-shadow: 0 1.5rem 4rem rgba(31, 42, 55, 0.12);
+        }
+
+        .intro,
+        .form-panel {
+            padding: 2.5rem;
+        }
+
+        .intro {
+            background:
+                linear-gradient(160deg, rgba(29, 77, 111, 0.97), rgba(23, 55, 78, 0.92)),
+                var(--accent);
+            color: #f9f5ef;
+        }
+
+        .eyebrow {
+            display: inline-block;
+            padding: 0.35rem 0.7rem;
+            border: 1px solid rgba(249, 245, 239, 0.25);
+            border-radius: 999px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-size: 0.72rem;
+        }
+
+        h1 {
+            margin: 1.25rem 0 1rem;
+            font-size: clamp(2rem, 4vw, 3rem);
+            line-height: 1.05;
+        }
+
+        .lead {
+            font-size: 1.05rem;
+            line-height: 1.65;
+            max-width: 28rem;
+            opacity: 0.92;
+        }
+
+        .facts {
+            margin: 2rem 0 0;
+            padding: 0;
+            list-style: none;
+            display: grid;
+            gap: 0.9rem;
+        }
+
+        .facts li {
+            padding-left: 1rem;
+            border-left: 3px solid rgba(217, 132, 43, 0.9);
+        }
+
+        .form-panel h2 {
+            margin: 0 0 0.75rem;
+            font-size: 1.6rem;
+        }
+
+        .subtle {
+            color: #51606f;
+            line-height: 1.55;
+            margin-bottom: 1.5rem;
+        }
+
+        .domain {
+            margin: 0 0 1.5rem;
+            padding: 0.85rem 1rem;
+            background: #f7f2e9;
+            border: 1px solid var(--border);
+            border-radius: 0.9rem;
+            font-size: 0.95rem;
+        }
+
+        form {
+            display: grid;
+            gap: 1rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.92rem;
+            margin-bottom: 0.35rem;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.85rem 0.95rem;
+            border-radius: 0.85rem;
+            border: 1px solid #c7b8a5;
+            background: #fffdfa;
+            color: var(--ink);
+            font: inherit;
+        }
+
+        input:focus {
+            outline: 2px solid rgba(29, 77, 111, 0.18);
+            border-color: var(--accent);
+        }
+
+        .validation-summary-errors,
+        .field-validation-error {
+            color: var(--danger);
+            font-size: 0.9rem;
+        }
+
+        .validation-summary-errors ul {
+            margin: 0 0 0.25rem 1rem;
+            padding: 0;
+        }
+
+        button {
+            margin-top: 0.5rem;
+            padding: 0.95rem 1.2rem;
+            border: 0;
+            border-radius: 999px;
+            background: linear-gradient(135deg, var(--accent), #2c6c95);
+            color: white;
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #163a53, #25597b);
+        }
+
+        @@media (max-width: 900px) {
+            .shell {
+                grid-template-columns: 1fr;
+            }
+
+            .intro,
+            .form-panel {
+                padding: 2rem 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="shell">
+        <section class="intro">
+            <span class="eyebrow">First Run</span>
+            <h1>Welcome to cCoder.Core platform setup</h1>
+            <p class="lead">
+                This first-run flow creates the initial tenant, provisions the baseline application,
+                imports the packaged starter content, and registers the first administrator account.
+            </p>
+            <ul class="facts">
+                <li>The detected primary domain will be assigned to the first app automatically.</li>
+                <li>The imported baseline includes the starter pages, layouts, templates, scripts, and resources.</li>
+                <li>Once setup completes, this screen should never appear again for the environment.</li>
+            </ul>
+        </section>
+
+        <section class="form-panel">
+            <h2>Initial administrator</h2>
+            <p class="subtle">
+                Enter the minimum details required to bootstrap the platform. You can refine the tenant and app
+                configuration from the admin UI after setup completes.
+            </p>
+
+            <p class="domain"><strong>Primary domain:</strong> @Model.Domain</p>
+
+            @Html.ValidationSummary(false)
+
+            <form method="post" asp-controller="Setup" asp-action="Index">
+                @Html.AntiForgeryToken()
+
+                <div>
+                    <label asp-for="Setup.TenantName"></label>
+                    <input asp-for="Setup.TenantName" autocomplete="organization" />
+                    <span asp-validation-for="Setup.TenantName"></span>
+                </div>
+
+                <div>
+                    <label asp-for="Setup.DisplayName"></label>
+                    <input asp-for="Setup.DisplayName" autocomplete="name" />
+                    <span asp-validation-for="Setup.DisplayName"></span>
+                </div>
+
+                <div>
+                    <label asp-for="Setup.Email"></label>
+                    <input asp-for="Setup.Email" autocomplete="email" />
+                    <span asp-validation-for="Setup.Email"></span>
+                </div>
+
+                <div>
+                    <label asp-for="Setup.Password"></label>
+                    <input asp-for="Setup.Password" autocomplete="new-password" />
+                    <span asp-validation-for="Setup.Password"></span>
+                </div>
+
+                <div>
+                    <label asp-for="Setup.ConfirmPassword"></label>
+                    <input asp-for="Setup.ConfirmPassword" autocomplete="new-password" />
+                    <span asp-validation-for="Setup.ConfirmPassword"></span>
+                </div>
+
+                <button type="submit">Create the first environment</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

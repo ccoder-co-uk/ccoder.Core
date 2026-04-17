@@ -5,9 +5,8 @@ using cCoder.Mail;
 using cCoder.Mail.Exposures.HostedServices;
 using cCoder.Scheduling;
 using cCoder.Scheduling.Exposures.HostedServices;
-using cCoder.Security.Api;
+using cCoder.Security;
 using cCoder.Security.Data.EF.MSSQL;
-using cCoder.Security.Services;
 using cCoder.Workflow;
 using cCoder.Workflow.Exposures.HostedServices;
 using cCoder.Core.Cors;
@@ -22,7 +21,7 @@ public partial class CoreBuilderOptions
 
         string coreConnection = configuration.GetConnectionString("Core");
 
-        services.AddSecurityServices((securityServices, securityConfig) =>
+        services.AddSecurity((securityServices, securityConfig) =>
         {
             securityConfig.AddMSSQLModelProvider(
                 securityServices,

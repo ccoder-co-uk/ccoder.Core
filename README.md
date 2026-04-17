@@ -1,19 +1,36 @@
 # cCoder.Core
 
-`cCoder.Core` is the aggregate package for the cCoder platform. It composes the domain packages published from the separate `cCoder.*` repositories and is the package used by the aggregate sample applications in this repository.
+`cCoder.Core` is the aggregate package for the cCoder platform. It composes the published `cCoder.*` domain packages and includes sample hosts that demonstrate how to run the platform as a web application or as background hosted services.
 
-## What This Repo Contains
+## Quick Start
+
+- Web host setup: [README.Web.md](README.Web.md)
+- Hosted services setup: [README.HostedServices.md](README.HostedServices.md)
+
+If you are starting from scratch, begin with the web host. On first run it now:
+
+- applies Core and SSO EF migrations during startup
+- detects an empty environment
+- shows a first-time setup screen
+- creates the first tenant, first admin user, and first app
+- seeds the baseline application data set
+
+After setup completes you are redirected back to `/` and can sign in to start administering pages, components, resources, and other platform data.
+
+## Repo Layout
 
 - `src/cCoder.Core`
-  The aggregate NuGet package.
+  Aggregate NuGet package.
 - `src/cCoder.Core.Tests`
-  Unit tests for the aggregate package.
+  Unit tests for aggregate package orchestration and policies.
 - `src/Apps/Web`
-  The aggregate web host used to validate the full package graph.
+  Web host for the platform and first-time setup experience.
+- `src/Apps/Web.Tests`
+  Focused unit tests for web-host setup behavior.
 - `src/Apps/HostedServices`
-  The aggregate hosted-services app used to validate non-web runtime wiring.
+  Background-processing host for non-web workloads.
 - `src/Apps/Web.AcceptanceTests`
-  Acceptance coverage for the aggregate web host.
+  SQL Server-backed acceptance coverage for the web host.
 
 ## Build And Test
 
@@ -21,16 +38,18 @@
 dotnet restore src\cCoder.Core\cCoder.Core.csproj --source https://api.nuget.org/v3/index.json --no-cache
 dotnet restore src\cCoder.Core.Tests\cCoder.Core.Tests.csproj --source https://api.nuget.org/v3/index.json --no-cache
 dotnet restore src\Apps\Web\Web.csproj --source https://api.nuget.org/v3/index.json --no-cache
+dotnet restore src\Apps\Web.Tests\Web.Tests.csproj --source https://api.nuget.org/v3/index.json --no-cache
 dotnet restore src\Apps\HostedServices\HostedServices.csproj --source https://api.nuget.org/v3/index.json --no-cache
 
 dotnet build src\cCoder.Core\cCoder.Core.csproj -v minimal --no-restore
 dotnet build src\cCoder.Core.Tests\cCoder.Core.Tests.csproj -v minimal --no-restore
 dotnet test src\cCoder.Core.Tests\cCoder.Core.Tests.csproj -v minimal --no-build
 dotnet build src\Apps\Web\Web.csproj -v minimal --no-restore
+dotnet test src\Apps\Web.Tests\Web.Tests.csproj -v minimal
 dotnet build src\Apps\HostedServices\HostedServices.csproj -v minimal --no-restore
 ```
 
-`src/Apps/Web.AcceptanceTests` remains in the repository for full integration verification, but it is not part of the package publish workflow because it requires SQL Server-backed acceptance infrastructure.
+`src/Apps/Web.AcceptanceTests` remains outside the regular package publish workflow because it depends on SQL Server-backed acceptance infrastructure.
 
 ## Publishing
 

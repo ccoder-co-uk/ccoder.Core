@@ -5,14 +5,22 @@
     <Nullable>disable</Nullable>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
+  <PropertyGroup>
+    <LocalSecurityProject>..\..\..\..\cCoder.Security\src\cCoder.Security\cCoder.Security.csproj</LocalSecurityProject>
+    <LocalSecurityEfMssqlProject>..\..\..\..\cCoder.Security\src\cCoder.Security.Data.EF.MSSQL\cCoder.Security.Data.EF.MSSQL.csproj</LocalSecurityEfMssqlProject>
+    <UseLocalSecurity Condition="'$(UseLocalSecurity)' == ''">true</UseLocalSecurity>
+    <UseLocalSecurity Condition="'$(UseLocalSecurity)' == 'true' and !(Exists('$(LocalSecurityProject)') and Exists('$(LocalSecurityEfMssqlProject)'))">false</UseLocalSecurity>
+  </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="cCoder.Security.Data.EF" Version="2026.2.10.1440" />
-    <PackageReference Include="cCoder.Security.Data.EF.MSSQL" Version="2026.2.10.1440" />
+    <PackageReference Include="cCoder.Security.Objects" Version="2026.2.10.1440" IncludeAssets="runtime" PrivateAssets="all" Condition="'$(UseLocalSecurity)' == 'true'" />
+    <PackageReference Include="cCoder.Security.Services" Version="2026.2.10.1440" IncludeAssets="runtime" PrivateAssets="all" Condition="'$(UseLocalSecurity)' == 'true'" />
+    <PackageReference Include="cCoder.Security.Data.EF.MSSQL" Version="2026.4.17.1141" Condition="'$(UseLocalSecurity)' != 'true'" />
     <PackageReference Include="FluentAssertions" Version="8.9.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.5" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.5" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.4" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.6" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.4.0" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="8.0.3" />
     <PackageReference Include="xunit" Version="2.9.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -23,8 +31,12 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup Condition="'$(UseLocalSecurity)' == 'true'">
+    <ProjectReference Include="$(LocalSecurityProject)" />
+    <ProjectReference Include="$(LocalSecurityEfMssqlProject)" />
+  </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Web\Web.csproj" />
+    <ProjectReference Include="..\Web\Web.csproj" AdditionalProperties="UseLocalSecurity=$(UseLocalSecurity)" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\**\*">

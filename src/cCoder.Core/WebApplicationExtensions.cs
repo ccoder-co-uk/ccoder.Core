@@ -9,10 +9,12 @@ using cCoder.Mail;
 using cCoder.Packaging;
 using cCoder.Scheduling;
 using cCoder.Security.Data.EF;
+using cCoder.Security.Data.EF.Interfaces;
 using cCoder.Security.Objects.Entities;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace cCoder.Core;
@@ -25,6 +27,8 @@ public static partial class WebApplicationExtensions
             .GetService<ILoggerFactory>()?
             .CreateLogger("cCoder.Core.Web")
             ?? NullLogger.Instance;
+
+        app.ApplyCoreMigrations(log);
 
         app.Services.GetRequiredService<ICoreAllowedOriginStore>()
             .RefreshAsync()
@@ -39,6 +43,13 @@ public static partial class WebApplicationExtensions
 
     public static WebApplication StartCoreHostedServices(this WebApplication app)
     {
+        ILogger log = app.Services
+            .GetService<ILoggerFactory>()?
+            .CreateLogger("cCoder.Core.HostedServices")
+            ?? NullLogger.Instance;
+
+        app.ApplyCoreMigrations(log);
+
         app.Services.GetRequiredService<ICoreAllowedOriginStore>()
             .RefreshAsync()
             .GetAwaiter()
@@ -71,6 +82,37 @@ public static partial class WebApplicationExtensions
         app.MapControllers();
         app.MapHub<LogHub>("/Hubs/Logs");
         return app;
+    }
+
+    private static void ApplyCoreMigrations(this WebApplication app, ILogger log)
+    {
+        using IServiceScope scope = app.Services.CreateScope();
+
+        try
+        {
+            scope.ServiceProvider.GetRequiredService<ICoreContextFactory>()
+                .CreateCoreContext()
+                .Database
+                .Migrate();
+        }
+        catch (Exception ex)
+        {
+            log.LogError(ex, "Unable to apply Core database migrations during startup.");
+            throw;
+        }
+
+        try
+        {
+            scope.ServiceProvider.GetService<ISecurityDbContextFactory>()
+                ?.CreateDbContext(true)
+                .Database
+                .Migrate();
+        }
+        catch (Exception ex)
+        {
+            log.LogError(ex, "Unable to apply SSO database migrations during startup.");
+            throw;
+        }
     }
 
     private static WebApplication UseCoreApi(

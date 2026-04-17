@@ -12,7 +12,7 @@ using cCoder.Mail;
 using cCoder.Mail.Models;
 using cCoder.Scheduling;
 using cCoder.Scheduling.Models;
-using cCoder.Security.Api;
+using cCoder.Security;
 using cCoder.Security.Data.EF.MSSQL;
 using cCoder.Security.Objects;
 using cCoder.Core.Api;

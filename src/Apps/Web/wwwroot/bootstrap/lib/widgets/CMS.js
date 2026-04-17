@@ -30,7 +30,7 @@
 		}
 
 		// update the server
-		await api.update("Core/Page(" + dragNode.data.Id + ")", dragNode.data);
+		await api.update("ContentManagement/Page(" + dragNode.data.Id + ")", dragNode.data);
 	}
 
 	rightClick(e) {
@@ -81,26 +81,22 @@
 		let nodeData = tree.dataItem(e.node);
 		let page = nodeData.data;
 
-		if (!page) { page = { Id: "null" }; }
-
 		let items = nodeData.children.data();
 		for (let i = 0, max = items.length; i < max; i++) {
 			let item = tree.findByUid(items[i].uid);
 			tree.remove(item);
 		}
 
-		let pages = await api.get("Core/Page?$filter=AppId eq " + app.Id + " and ParentId eq " + page.Id + "&$expand=PageInfo,Roles&$orderby=Order");
-		let newNodes = pages.value.map(function (p) {
-			let pageName = "Unknown";
-			if (p.PageInfo && p.PageInfo.length > 0) {
-				pageName = p.PageInfo[0].Title;
-			}
+		let pages = await this.loadChildPages(page);
+		let allPages = this.allPages || [];
+		let newNodes = this.sortPages(pages).map(function (p) {
+			let pageName = p.Name || "Unknown";
 			return {
 				text: pageName,
 				type: "Page",
 				spriteCssClass: "page",
 				expanded: false,
-				hasChildren: true,
+				hasChildren: CMS.prototype.hasChildren(p, allPages),
 				data: p,
 				draggable: true,
 				droppable: ["Page"]
@@ -111,5 +107,43 @@
 		for (let node in newNodes) {
 			nodeData.items.push(node);
 		}
+	}
+
+	async loadChildPages(page) {
+		let result = await api.get("ContentManagement/Page");
+		this.allPages = result.value || [];
+		return this.getDirectChildren(page, this.allPages);
+	}
+
+	sortPages(pages) {
+		return (pages || []).slice().sort((left, right) => (left.Order || 0) - (right.Order || 0));
+	}
+
+	getDirectChildren(page, pages) {
+		let parentPath = page && page.Path ? page.Path : null;
+		return (pages || []).filter((candidate) => {
+			let path = candidate.Path || "";
+			if (path === "") {
+				return false;
+			}
+
+			return this.parentPathOf(path) === parentPath;
+		});
+	}
+
+	hasChildren(page, pages) {
+		let pagePath = page && page.Path ? page.Path : null;
+		return (pages || []).some((candidate) => this.parentPathOf(candidate.Path || "") === pagePath);
+	}
+
+	parentPathOf(path) {
+		if (!path) {
+			return null;
+		}
+
+		let separatorIndex = path.lastIndexOf("/");
+		return separatorIndex === -1
+			? null
+			: path.substring(0, separatorIndex);
 	}
 }

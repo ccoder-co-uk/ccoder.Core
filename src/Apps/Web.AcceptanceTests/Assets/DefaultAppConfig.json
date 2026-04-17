@@ -1,13 +1,6 @@
 {
   "Deployment": {
-    "Targets": [
-      {
-        "Api": "https://second.localhost:7099/Api/",
-        "Domain": "second.localhost",
-        "Name": "Destination Copy",
-        "EnvironmentName": "Staging"
-      }
-    ],
+    "Targets": [],
     "DMS": [
       "Content"
     ]
@@ -19,35 +12,35 @@
   },
   "CRM": {
     "ClientFolder": "crm/clients/",
-    "SourceAppId": 21,
-    "NextEnvironment": "Staging",
-    "EnvironmentUrlSuffix": "localhost"
+    "SourceAppId": 0,
+    "NextEnvironment": "",
+    "EnvironmentUrlSuffix": ""
   },
   "Themes": {
     "Default": {
       "paintLoginMid": false,
       "margins": "12px",
       "paintLoginBottom": false,
-      "shadows": "6px 6px 12px #2F4A74",
+      "shadows": "6px 6px 12px rgba(14, 74, 122, 0.18)",
       "colours": {
-        "primary": "#2F4A74",
-        "secondary": "#ED8900",
+        "primary": "#0E4A7A",
+        "secondary": "#1C9FB5",
         "background": "white",
-        "text": "#222",
+        "text": "#1F2933",
         "text2": "#FFFFFF",
-        "links": "#214A71",
-        "error": "red",
+        "links": "#0E7490",
+        "error": "#C62828",
         "charts": [
-          "#2F4A74",
-          "#ED8900",
-          "#2F4A74",
-          "#ED8900",
-          "#2F4A74"
+          "#0E4A7A",
+          "#1C9FB5",
+          "#F59E0B",
+          "#4B5563",
+          "#10B981"
         ]
       },
       "font": {
         "size": "14px",
-        "family": "Quicksand, sans-serif"
+        "family": "Segoe UI, sans-serif"
       },
       "border": {
         "style": "solid 1px #ccc",

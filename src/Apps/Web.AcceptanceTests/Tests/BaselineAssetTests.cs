@@ -1,4 +1,5 @@
-using System.Text.Json;
+using cCoder.Data.Models;
+using cCoder.Data.Models.CMS;
 using FluentAssertions;
 using Web.AcceptanceTests.Infrastructure;
 using Xunit;
@@ -8,30 +9,43 @@ namespace Web.AcceptanceTests.Tests;
 
 public sealed class BaselineAssetTests
 {
-    [Theory]
-    [InlineData("Core.Resource.latest.json")]
-    [InlineData("Core.Component.latest.json")]
-    [InlineData("Core.Script.latest.json")]
-    public void Common_cache_assets_are_present_and_non_empty(string fileName)
+    [Fact]
+    public void Common_cache_seed_data_can_be_derived_from_the_split_baseline()
     {
-        using var json = AcceptanceAssetLoader.LoadJson(fileName);
+        CommonObject[] commonObjects = AcceptanceSeedData.LoadCommonObjects();
 
-        json.RootElement.ValueKind.Should().BeOneOf(JsonValueKind.Array, JsonValueKind.Object);
-        json.RootElement.GetRawText().Length.Should().BeGreaterThan(2);
+        commonObjects.Should().NotBeEmpty();
+        commonObjects.Should().OnlyContain(found =>
+            found.Type == "Core/Resource"
+            || found.Type == "Core/Component"
+            || found.Type == "Core/Script");
     }
 
     [Fact]
-    public void App_export_asset_is_present_and_contains_items()
+    public void Baseline_manifest_can_be_loaded_and_contains_items()
     {
-        using var json = AcceptanceAssetLoader.LoadJson("App.1.Export.json");
+        var packages = AcceptanceSeedData.LoadExportPackages();
 
-        json.RootElement.ValueKind.Should().Be(JsonValueKind.Object);
-        json.RootElement.TryGetProperty("value", out var value).Should().BeTrue();
-        value.ValueKind.Should().Be(JsonValueKind.Array);
-        value.GetArrayLength().Should().BeGreaterThan(0);
-        value[0].TryGetProperty("Items", out var items).Should().BeTrue();
-        items.ValueKind.Should().Be(JsonValueKind.Array);
-        items.GetArrayLength().Should().BeGreaterThan(0);
+        packages.Should().NotBeEmpty();
+        packages.Should().OnlyContain(package => package.Items != null && package.Items.Count > 0);
+        packages.Select(package => package.Name).Should().Contain(["Roles", "Layouts", "Pages", "Components"]);
+    }
+
+    [Fact]
+    public void Baseline_components_keep_the_expected_login_and_navigation_scripts()
+    {
+        Component[] components = AcceptanceSeedData.LoadPackageItems<Component>("Components", "Core/Component");
+
+        Component login = components.Single(component => component.Name == "Login");
+        login.Script.Should().Contain("$(\"[name=pass]\").val(),");
+        login.Script.Should().Contain("session.token = api.token;");
+        login.Script.Should().Contain("setUrlQueryParameter(newLocation, \"t\", api.token)");
+
+        Component topNav = components.Single(component => component.Name == "TopNav");
+        topNav.Script.Should().Contain("ContentManagement/Page?$filter=AppId eq ");
+        topNav.Script.Should().Contain("ParentId eq null");
+        topNav.Script.Should().Contain("$expand=PageInfo,Pages(");
+        topNav.Script.Should().NotContain("__allPages");
     }
 }
 

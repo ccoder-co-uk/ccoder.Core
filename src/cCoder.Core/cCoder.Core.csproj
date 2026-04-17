@@ -22,14 +22,54 @@
     <Authors>cCoder</Authors>
     <PackageId>cCoder.Core</PackageId>
   </PropertyGroup>
+  <PropertyGroup>
+    <LocalAppSecurityProject>..\..\..\cCoder.AppSecurity\src\cCoder.AppSecurity\cCoder.AppSecurity.csproj</LocalAppSecurityProject>
+    <LocalContentManagementProject>..\..\..\cCoder.ContentManagement\src\cCoder.ContentManagement\cCoder.ContentManagement.csproj</LocalContentManagementProject>
+    <LocalDataProject>..\..\..\cCoder.Data\src\cCoder.Data\cCoder.Data.csproj</LocalDataProject>
+    <LocalSecurityProject>..\..\..\cCoder.Security\src\cCoder.Security\cCoder.Security.csproj</LocalSecurityProject>
+    <LocalSecurityEfMssqlProject>..\..\..\cCoder.Security\src\cCoder.Security.Data.EF.MSSQL\cCoder.Security.Data.EF.MSSQL.csproj</LocalSecurityEfMssqlProject>
+    <LocalWorkflowProject>..\..\..\cCoder.Workflow\src\cCoder.Workflow\cCoder.Workflow.csproj</LocalWorkflowProject>
+    <LocalWorkflowActivitiesProject>..\..\..\cCoder.Workflow\src\cCoder.Workflow.Activities\cCoder.Workflow.Activities.csproj</LocalWorkflowActivitiesProject>
+    <UseLocalAppSecurity Condition="'$(UseLocalAppSecurity)' == ''">false</UseLocalAppSecurity>
+    <UseLocalData Condition="'$(UseLocalData)' == ''">false</UseLocalData>
+    <UseLocalContentManagement Condition="'$(UseLocalContentManagement)' == ''">false</UseLocalContentManagement>
+    <UseLocalSecurity Condition="'$(UseLocalSecurity)' == ''">false</UseLocalSecurity>
+    <UseLocalWorkflow Condition="'$(UseLocalWorkflow)' == ''">false</UseLocalWorkflow>
+    <UseLocalAppSecurity Condition="'$(UseLocalAppSecurity)' == 'true' and !Exists('$(LocalAppSecurityProject)')">false</UseLocalAppSecurity>
+    <UseLocalData Condition="'$(UseLocalData)' == 'true' and !Exists('$(LocalDataProject)')">false</UseLocalData>
+    <UseLocalContentManagement Condition="'$(UseLocalContentManagement)' == 'true' and !Exists('$(LocalContentManagementProject)')">false</UseLocalContentManagement>
+    <UseLocalSecurity Condition="'$(UseLocalSecurity)' == 'true' and !(Exists('$(LocalSecurityProject)') and Exists('$(LocalSecurityEfMssqlProject)'))">false</UseLocalSecurity>
+    <UseLocalWorkflow Condition="'$(UseLocalWorkflow)' == 'true' and !(Exists('$(LocalWorkflowProject)') and Exists('$(LocalWorkflowActivitiesProject)'))">false</UseLocalWorkflow>
+    <UseLocalData Condition="'$(UseLocalSecurity)' == 'true' and Exists('$(LocalDataProject)')">true</UseLocalData>
+  </PropertyGroup>
   <ItemGroup>
     <None Include="..\..\LICENSE.txt" Pack="true" PackagePath="\" />
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="cCoder.AppSecurity" Version="2026.4.15.2019" />
-    <PackageReference Include="cCoder.ContentManagement" Version="2026.4.15.2019" />
-    <PackageReference Include="cCoder.Data" Version="2026.4.10.1156" />
+    <EmbeddedResource Include="Setup\Assets\**\*" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(UseLocalAppSecurity)' == 'true'">
+    <ProjectReference Include="$(LocalAppSecurityProject)" AdditionalProperties="UseLocalData=$(UseLocalData);UseLocalSecurity=$(UseLocalSecurity)" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(UseLocalData)' == 'true'">
+    <ProjectReference Include="$(LocalDataProject)" AdditionalProperties="UseLocalSecurityData=$(UseLocalSecurity)" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(UseLocalContentManagement)' == 'true'">
+    <ProjectReference Include="$(LocalContentManagementProject)" AdditionalProperties="UseLocalData=$(UseLocalData)" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(UseLocalSecurity)' == 'true'">
+    <ProjectReference Include="$(LocalSecurityProject)" />
+    <ProjectReference Include="$(LocalSecurityEfMssqlProject)" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(UseLocalWorkflow)' == 'true'">
+    <ProjectReference Include="$(LocalWorkflowProject)" AdditionalProperties="UseLocalData=$(UseLocalData);UseLocalSecurity=$(UseLocalSecurity)" />
+    <ProjectReference Include="$(LocalWorkflowActivitiesProject)" AdditionalProperties="UseLocalData=$(UseLocalData);UseLocalSecurity=$(UseLocalSecurity)" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="cCoder.AppSecurity" Version="2026.4.15.2019" Condition="'$(UseLocalAppSecurity)' != 'true'" />
+    <PackageReference Include="cCoder.ContentManagement" Version="2026.4.16.1747" Condition="'$(UseLocalContentManagement)' != 'true'" />
+    <PackageReference Include="cCoder.Data" Version="2026.4.10.1156" Condition="'$(UseLocalData)' != 'true'" />
     <PackageReference Include="cCoder.DocumentManagement" Version="2026.4.15.2019" />
     <PackageReference Include="cCoder.Eventing.EventLibrary" Version="2026.4.15.1800" />
     <PackageReference Include="cCoder.Eventing.EventLibrary.AzureServiceBus" Version="2026.4.15.1800" />
@@ -37,21 +77,22 @@
     <PackageReference Include="cCoder.Mail" Version="2026.4.15.2051" />
     <PackageReference Include="cCoder.Packaging" Version="2026.4.10.1330" />
     <PackageReference Include="cCoder.Scheduling" Version="2026.4.15.2019" />
-    <PackageReference Include="cCoder.Security.Api" Version="2026.2.10.1440" />
-    <PackageReference Include="cCoder.Security.Data.EF.MSSQL" Version="2026.2.10.1440" />
-    <PackageReference Include="cCoder.Security.Objects" Version="2026.2.10.1440" />
-    <PackageReference Include="cCoder.Workflow" Version="2026.4.15.2020" />
-    <PackageReference Include="cCoder.Workflow.Activities" Version="2026.4.15.2020" />
+    <PackageReference Include="cCoder.Security" Version="2026.4.17.1141" Condition="'$(UseLocalSecurity)' != 'true'" />
+    <PackageReference Include="cCoder.Security.Data.EF.MSSQL" Version="2026.4.17.1141" Condition="'$(UseLocalSecurity)' != 'true'" />
+    <PackageReference Include="cCoder.Security.Objects" Version="2026.2.10.1440" IncludeAssets="runtime" PrivateAssets="all" Condition="'$(UseLocalSecurity)' == 'true'" />
+    <PackageReference Include="cCoder.Security.Services" Version="2026.2.10.1440" IncludeAssets="runtime" PrivateAssets="all" Condition="'$(UseLocalSecurity)' == 'true'" />
+    <PackageReference Include="cCoder.Workflow" Version="2026.4.15.2020" Condition="'$(UseLocalWorkflow)' != 'true'" />
+    <PackageReference Include="cCoder.Workflow.Activities" Version="2026.4.15.2020" Condition="'$(UseLocalWorkflow)' != 'true'" />
     <PackageReference Include="Microsoft.AspNetCore.OData" Version="9.4.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.6" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.7.1" />
-    <PackageReference Include="itext" Version="9.5.0" />
-    <PackageReference Include="itext.pdfhtml" Version="6.3.1" />
-    <PackageReference Include="itext.bouncy-castle-adapter" Version="9.5.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="10.1.5" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.1.5" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.1.5" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.7.2" />
+    <PackageReference Include="itext" Version="9.6.0" />
+    <PackageReference Include="itext.pdfhtml" Version="6.3.2" />
+    <PackageReference Include="itext.bouncy-castle-adapter" Version="9.6.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="10.1.7" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.1.7" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.1.7" />
   </ItemGroup>
 </Project>
 

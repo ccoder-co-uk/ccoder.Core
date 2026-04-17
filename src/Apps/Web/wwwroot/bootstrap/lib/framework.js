@@ -1913,6 +1913,7 @@ class Api
     constructor(args) {
         args = args || {};
         this.apiRoot = args.apiRoot || session.apiRoot;
+        this.token = args.token || session.token || getQueryParameter("t");
 
         this.cache = {
             meta: [],
@@ -2149,9 +2150,10 @@ class Api
 }
 
 window.api = new Api({
-    baseUrl: session.apiRoot,
+    apiRoot: session.apiRoot,
     token: session.token
 });
+
 const html = {
     encode: function (value) { return $('<div />').text(value).html(); },
     decode: function (value) { return $('<div/>').html(value).text(); }
@@ -2277,10 +2279,53 @@ function removeQueryParameter(key, sourceURL) {
     return rtn;
 };
 
+function setUrlQueryParameter(url, name, value) {
+    if (!url || !name || value === null || value === undefined || value === "") {
+        return url;
+    }
+
+    const parts = url.split("#");
+    const hash = parts.length > 1 ? "#" + parts.slice(1).join("#") : "";
+    const base = removeQueryParameter(name, parts[0]).replace(/\?$/, "");
+    const separator = base.indexOf("?") === -1 ? "?" : "&";
+
+    return base + separator + name + "=" + encodeURIComponent(value) + hash;
+}
+
+function applyRequestContextToUrl(url) {
+    if (!url || !session || !session.token) {
+        return url;
+    }
+
+    if (url.startsWith("#") || url.startsWith("javascript:") || url.startsWith("mailto:") || url.startsWith("tel:")) {
+        return url;
+    }
+
+    if (url.startsWith("http://") || url.startsWith("https://")) {
+        const target = new URL(url, window.location.origin);
+        if (target.origin !== window.location.origin) {
+            return url;
+        }
+    }
+
+    return setUrlQueryParameter(url, "t", session.token);
+}
+
+function applyRequestContextToLinks(container) {
+    if (!session || !session.token) {
+        return;
+    }
+
+    $("a[href]", container || document).each(function () {
+        const href = $(this).attr("href");
+        $(this).attr("href", applyRequestContextToUrl(href));
+    });
+}
+
 
     async function loadComponent(container, componentName, callback) {
         let result = await api
-            .get("Core/Component/Render()?AppId=" + session.app.Id + "&Name=" + componentName + "&culture=" + session.culture + "&theme=" + session.theme);
+            .get("ContentManagement/Component/Render()?AppId=" + session.app.Id + "&Name=" + componentName + "&culture=" + session.culture + "&theme=" + session.theme);
 
         try {
             $(container).append(result.value);
@@ -2394,6 +2439,13 @@ $(async function() {
         kendo.culture(session.culture);
     }
 
+    applyRequestContextToLinks(document);
+
+    $(document).on("click", "a[href]", function() {
+        const href = $(this).attr("href");
+        $(this).attr("href", applyRequestContextToUrl(href));
+    });
+
     //setup notifcations 
     $(document.body).append("<div id='notif'></div>");
     notification.popup = $("#notif").kendoNotification({
@@ -2434,15 +2486,16 @@ function getMonthlyDateRange(start, end, format) {
 
     return months;
 }
+
 var form = {
     get: async function(id) {
-        let formData = await api.get("Core/Form(" + id + ")");
+        let formData = await api.get("ContentManagement/Form(" + id + ")");
         formData.render = form.render;
         return formData;
     },
 
     new: async function(appId) {
-        let newForm = await api.get("Core/Form/NewForm()");
+        let newForm = await api.get("ContentManagement/Form/NewForm()");
         newForm.render = form.render;
         newForm.AppId = appId;
         return newForm;
@@ -2450,7 +2503,7 @@ var form = {
 
     render: async function(element, id, callback) {
         $(element).empty();
-        let result = await api.call("Core/Form(" + id + ")/Render()", this);
+        let result = await api.get("ContentManagement/Form(" + id + ")/Render()");
         $(element).append(result.value);
     },
 
@@ -3774,7 +3827,7 @@ class Flow {
         flow.DefinitionJson.Name = "";
         flow.DefinitionJson = JSON.stringify(flow.DefinitionJson);
 
-        api.update('Core/FlowDefinition(' + flow.Id + ')', flow)
+        api.update('Workflow/FlowDefinition(' + flow.Id + ')', flow)
             .then(() => notification.success('Flow Saved Succesfully'))
             .catch(error);
     }
@@ -3824,7 +3877,7 @@ class Flow {
 
     async loadInstance(id) {
         var that = this;
-        var instance = await api.get("Core/FlowInstanceData(" + id + ")");
+        var instance = await api.get("Workflow/FlowInstanceData(" + id + ")");
         var ctx = JSON.parse(instance.ContextString);
         that.Activities.map(function (a) {
             a.addInstanceData(
@@ -3839,6 +3892,7 @@ class Flow {
         this.Links.map(l => l.draw(ctx));
     }
 }
+
 class WorkflowDesigner {
     constructor(container, flow) {
 

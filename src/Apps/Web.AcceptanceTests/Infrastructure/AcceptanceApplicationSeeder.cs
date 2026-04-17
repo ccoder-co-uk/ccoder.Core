@@ -57,7 +57,7 @@ internal sealed class AcceptanceApplicationSeeder(IServiceProvider services)
                     DefaultTheme = "Default",
                     DefaultCultureId = string.Empty,
                     TenantId = "acceptance",
-                    ConfigJson = AcceptanceAssetLoader.LoadText("DefaultAppConfig.json"),
+                    ConfigJson = AcceptanceSeedData.LoadDefaultAppConfig(),
                 }
             );
 

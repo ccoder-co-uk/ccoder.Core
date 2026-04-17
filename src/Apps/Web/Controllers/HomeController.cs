@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using App = cCoder.Data.Models.CMS.App;
 using RenderResult = cCoder.ContentManagement.Models.RenderResult;
+using Web.Models;
+using Web.Services.Setup;
 
 
 namespace Web.Controllers
@@ -18,6 +20,7 @@ namespace Web.Controllers
         ICoreAuthInfo AuthInfo { get; }
         IAppProcessingService AppProcessingService { get; }
         IPageRenderer PageRenderer { get; }
+        IFirstTimeSetupStateService SetupStateService { get; }
 
         string Host => Request.Host.Host.Replace("www.", "").ToLowerInvariant();
 
@@ -26,36 +29,71 @@ namespace Web.Controllers
             get
             {
                 dynamic result = new ExpandoObject();
+                IDictionary<string, object> values = (IDictionary<string, object>)result;
 
                 result.apiRoot = (Request.Host.Port is not 443 and not 80)
                     ? $"{Request.Scheme}://{Host}:{Request.Host.Port}/Api/"
                     : $"{Request.Scheme}://{Host}/Api/";
 
+                if (!string.IsNullOrWhiteSpace(AuthInfo.SSOUserId)
+                    && !string.Equals(AuthInfo.SSOUserId, "Guest", StringComparison.OrdinalIgnoreCase))
+                {
+                    values["user"] = AuthInfo.SSOUserId;
+                }
+
+                string token = Request.Query["t"].ToString();
+                if (!string.IsNullOrWhiteSpace(token))
+                    values["token"] = token;
+
+                if (!CanUseSession())
+                    return result;
+
                 foreach (string i in HttpContext.Session.Keys)
                 {
                     if (i == "ssoUser")
-                        ((IDictionary<string, object>)result).Add("user", AuthInfo.SSOUserId);
+                        values["user"] = AuthInfo.SSOUserId;
                     else
-                        ((IDictionary<string, object>)result).Add(i, GetSessionValue(i));
+                        values[i] = GetSessionValue(i);
                 }
 
                 return result;
             }
         }
 
-        public HomeController(IAppProcessingService appService, IPageRenderer pageRenderer, ICoreAuthInfo authInfo, ILogger<HomeController> log)
+        public HomeController(
+            IAppProcessingService appService,
+            IPageRenderer pageRenderer,
+            ICoreAuthInfo authInfo,
+            IFirstTimeSetupStateService setupStateService,
+            ILogger<HomeController> log)
         {
             AuthInfo = authInfo;
             AppProcessingService = appService;
             PageRenderer = pageRenderer;
+            SetupStateService = setupStateService;
             this.log = log;
         }
 
         [HttpGet]
-        public IActionResult Index(string path = null, string theme = null, string culture = null, bool edit = false)
+        public async Task<IActionResult> Index(
+            string path = null,
+            string theme = null,
+            string culture = null,
+            bool edit = false,
+            CancellationToken cancellationToken = default)
         {
             try
             {
+                if (!await SetupStateService.IsInitializedAsync(cancellationToken))
+                {
+                    return View(
+                        "~/Views/Setup/Index.cshtml",
+                        new FirstTimeSetupViewModel
+                        {
+                            Domain = SetupRequestHostNormalizer.Normalize(Request.Host.Host),
+                        });
+                }
+
                 if (path?.ToLower().EndsWith(".php") ?? false)
                 {
                     Response.HttpContext.Abort();
@@ -65,8 +103,7 @@ namespace Web.Controllers
                 if (path?.ToLower() == "robots.txt")
                     return Content("User-agent: * Allow: *", "text/plain");
 
-                if (!HttpContext.Session.IsAvailable)
-                    throw new Exception("Cannot load session information");
+                path ??= string.Empty;
 
                 culture = Response.HttpContext.Request.Query.ContainsKey("culture")
                     ? Response.HttpContext.Request.Query["culture"].ToString()
@@ -96,12 +133,10 @@ namespace Web.Controllers
                 SetSessionValue("theme", response.Theme);
                 SetSessionValue("culture", response.Culture);
 
-                RenderResult page = response.Page;
+                SetupViewBag(edit, response.App, response.Page);
 
-                SetupViewBag(edit, response.App, page);
-
-                ViewResult viewResult = View(page);
-                viewResult.StatusCode = page.StatusCode;
+                ViewResult viewResult = View(response.Page);
+                viewResult.StatusCode = response.Page.StatusCode;
                 return viewResult;
             }
             catch (Exception ex)
@@ -187,16 +222,31 @@ namespace Web.Controllers
         }
 
         string GetSessionValue(string key) =>
-            HttpContext.Session.Keys.Contains(key.ToLowerInvariant())
+            CanUseSession() && HttpContext.Session.Keys.Contains(key.ToLowerInvariant())
                 ? HttpContext.Session.GetString(key)
                 : null;
 
         void SetSessionValue(string key, string value)
         {
+            if (!CanUseSession())
+                return;
+
             if (value != null)
                 HttpContext.Session.SetString(key.ToLowerInvariant(), value);
             else if (HttpContext.Session.Keys.Contains(key.ToLowerInvariant()))
                 HttpContext.Session.Remove(key.ToLowerInvariant());
+        }
+
+        bool CanUseSession()
+        {
+            try
+            {
+                return HttpContext.Session?.IsAvailable == true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
