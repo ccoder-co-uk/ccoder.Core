@@ -1,0 +1,7 @@
+{
+    "ProcessName":  "cCoder - Admin",
+    "Name":  "Starter Workflow",
+    "Description":  "Starter workflow",
+    "DefinitionJson":  "{\"Name\":\"\",\"RequiredRoles\":\"\",\"Links\":[{\"Source\":\"Start\",\"Destination\":\"7c87b5ea-8b9d-4887-9911-76df43d48f97\",\"Expression\":\"\"}],\"Activities\":[{\"$type\":\"cCoder.Core.Objects.Workflow.Activities.Start, cCoder.Core.Objects, Version=2024.6.14.2247, Culture=neutral, PublicKeyToken=null\",\"AuthToken\":null,\"Data\":null,\"Ref\":\"Start\",\"State\":null,\"AppId\":null,\"AuthType\":null,\"BaseUrl\":null,\"Previous\":null,\"Next\":null,\"ScriptRunner\":null},{\"$type\":\"cCoder.Core.Objects.Workflow.Activities.InfoActivity, cCoder.Core.Objects, Version=2024.6.14.2247, Culture=neutral, PublicKeyToken=null\",\"Ref\":\"7c87b5ea-8b9d-4887-9911-76df43d48f97\",\"Message\":\"I did a thing!\",\"State\":null,\"Previous\":null,\"Next\":null,\"ScriptRunner\":null}]}",
+    "LastUpdated":  "2024-07-02T15:12:12.196358+00:00"
+}

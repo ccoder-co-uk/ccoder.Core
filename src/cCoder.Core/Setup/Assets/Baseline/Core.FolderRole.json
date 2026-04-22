@@ -1,0 +1,362 @@
+[
+    {
+        "Path":  "icons",
+        "Name":  "Administrators"
+    },
+    {
+        "Path":  "icons",
+        "Name":  "Users"
+    },
+    {
+        "Path":  "icons",
+        "Name":  "Guests"
+    },
+    {
+        "Path":  "content",
+        "Name":  "Administrators"
+    },
+    {
+        "Path":  "content",
+        "Name":  "Users"
+    },
+    {
+        "Path":  "content",
+        "Name":  "Guests"
+    },
+    {
+        "Path":  "content/flags",
+        "Name":  "Administrators"
+    },
+    {
+        "Path":  "content/flags",
+        "Name":  "Users"
+    },
+    {
+        "Path":  "content/flags",
+        "Name":  "Guests"
+    },
+    {
+        "Path":  "data",
+        "Name":  "Administrators"
+    },
+    {
+        "Path":  "data",
+        "Name":  "Users"
+    },
+    {
+        "Path":  "data",
+        "Name":  "Guests"
+    },
+    {
+        "Path":  "content/documentation",
+        "Name":  "Administrators"
+    },
+    {
+        "Path":  "content/documentation",
+        "Name":  "Users"
+    },
+    {
+        "Path":  "content/documentation",
+        "Name":  "Guests"
+    },
+    {
+        "Path":  "content/documentation/standarduserguide",
+        "Name":  "Administrators"
+    },
+    {
+        "Path":  "content/documentation/standarduserguide",
+        "Name":  "Users"
+    },
+    {
+        "Path":  "content/documentation/standarduserguide",
+        "Name":  "Guests"
+    },
+    {
+        "Path":  "content/documentation/csvtransactionprocessing",
+        "Name":  "Administrators"
+    },
+    {
+        "Path":  "content/documentation/csvtransactionprocessing",
+        "Name":  "Users"
+    },
+    {
+        "Path":  "content/documentation/csvtransactionprocessing",
+        "Name":  "Guests"
+    },
+    {
+        "Path":  "content/documentation/statemanagement",
+        "Name":  "Administrators"
+    },
+    {
+        "Path":  "content/documentation/statemanagement",
+        "Name":  "Users"
+    },
+    {
+        "Path":  "content/documentation/statemanagement",
+        "Name":  "Guests"
+    },
+    {
+        "Path":  "data/transactions",
+        "Name":  "Administrators"
+    },
+    {
+        "Path":  "data/transactions",
+        "Name":  "Users"
+    },
+    {
+        "Path":  "data/transactions",
+        "Name":  "Guests"
+    },
+    {
+        "Path":  "data/transactions/received",
+        "Name":  "Administrators"
+    },
+    {
+        "Path":  "data/transactions/received",
+        "Name":  "Users"
+    },
+    {
+        "Path":  "data/transactions/received",
+        "Name":  "Guests"
+    },
+    {
+        "Path":  "content/documentation/core documentation",
+        "Name":  "Administrators"
+    },
+    {
+        "Path":  "content/documentation/core documentation",
+        "Name":  "Users"
+    },
+    {
+        "Path":  "content/documentation/core documentation",
+        "Name":  "Guests"
+    },
+    {
+        "Path":  "content/documentation/core documentation/dms",
+        "Name":  "Administrators"
+    },
+    {
+        "Path":  "content/documentation/core documentation/dms",
+        "Name":  "Users"
+    },
+    {
+        "Path":  "content/documentation/core documentation/dms",
+        "Name":  "Guests"
+    },
+    {
+        "Path":  "content/documentation/core documentation/app management",
+        "Name":  "Administrators"
+    },
+    {
+        "Path":  "content/documentation/core documentation/app management",
+        "Name":  "Users"
+    },
+    {
+        "Path":  "content/documentation/core documentation/app management",
+        "Name":  "Guests"
+    },
+    {
+        "Path":  "content/documentation/core documentation/app management/cultures",
+        "Name":  "Administrators"
+    },
+    {
+        "Path":  "content/documentation/core documentation/app management/cultures",
+        "Name":  "Users"
+    },
+    {
+        "Path":  "content/documentation/core documentation/app management/cultures",
+        "Name":  "Guests"
+    },
+    {
+        "Path":  "content/documentation/core documentation/app management/components",
+        "Name":  "Administrators"
+    },
+    {
+        "Path":  "content/documentation/core documentation/app management/components",
+        "Name":  "Users"
+    },
+    {
+        "Path":  "content/documentation/core documentation/app management/components",
+        "Name":  "Guests"
+    },
+    {
+        "Path":  "content/documentation/core documentation/app management/configuration",
+        "Name":  "Administrators"
+    },
+    {
+        "Path":  "content/documentation/core documentation/app management/configuration",
+        "Name":  "Users"
+    },
+    {
+        "Path":  "content/documentation/core documentation/app management/configuration",
+        "Name":  "Guests"
+    },
+    {
+        "Path":  "content/documentation/core documentation/app management/layouts",
+        "Name":  "Administrators"
+    },
+    {
+        "Path":  "content/documentation/core documentation/app management/layouts",
+        "Name":  "Users"
+    },
+    {
+        "Path":  "content/documentation/core documentation/app management/layouts",
+        "Name":  "Guests"
+    },
+    {
+        "Path":  "content/documentation/core documentation/app management/templates",
+        "Name":  "Administrators"
+    },
+    {
+        "Path":  "content/documentation/core documentation/app management/templates",
+        "Name":  "Users"
+    },
+    {
+        "Path":  "content/documentation/core documentation/app management/templates",
+        "Name":  "Guests"
+    },
+    {
+        "Path":  "content/documentation/core documentation/app management/theming",
+        "Name":  "Administrators"
+    },
+    {
+        "Path":  "content/documentation/core documentation/app management/theming",
+        "Name":  "Users"
+    },
+    {
+        "Path":  "content/documentation/core documentation/app management/theming",
+        "Name":  "Guests"
+    },
+    {
+        "Path":  "content/documentation/core documentation/app management/mail management",
+        "Name":  "Administrators"
+    },
+    {
+        "Path":  "content/documentation/core documentation/app management/mail management",
+        "Name":  "Users"
+    },
+    {
+        "Path":  "content/documentation/core documentation/app management/mail management",
+        "Name":  "Guests"
+    },
+    {
+        "Path":  "content/documentation/core documentation/app management/scheduling",
+        "Name":  "Administrators"
+    },
+    {
+        "Path":  "content/documentation/core documentation/app management/scheduling",
+        "Name":  "Users"
+    },
+    {
+        "Path":  "content/documentation/core documentation/app management/scheduling",
+        "Name":  "Guests"
+    },
+    {
+        "Path":  "content/documentation/core documentation/app management/log stream",
+        "Name":  "Administrators"
+    },
+    {
+        "Path":  "content/documentation/core documentation/app management/log stream",
+        "Name":  "Users"
+    },
+    {
+        "Path":  "content/documentation/core documentation/app management/log stream",
+        "Name":  "Guests"
+    },
+    {
+        "Path":  "content/documentation/core documentation/app management/security",
+        "Name":  "Administrators"
+    },
+    {
+        "Path":  "content/documentation/core documentation/app management/security",
+        "Name":  "Users"
+    },
+    {
+        "Path":  "content/documentation/core documentation/app management/security",
+        "Name":  "Guests"
+    },
+    {
+        "Path":  "content/documentation/core documentation/app management/resources",
+        "Name":  "Administrators"
+    },
+    {
+        "Path":  "content/documentation/core documentation/app management/resources",
+        "Name":  "Users"
+    },
+    {
+        "Path":  "content/documentation/core documentation/app management/resources",
+        "Name":  "Guests"
+    },
+    {
+        "Path":  "content/documentation/core documentation/cms",
+        "Name":  "Administrators"
+    },
+    {
+        "Path":  "content/documentation/core documentation/cms",
+        "Name":  "Users"
+    },
+    {
+        "Path":  "content/documentation/core documentation/cms",
+        "Name":  "Guests"
+    },
+    {
+        "Path":  "content/documentation/core documentation/calendar management",
+        "Name":  "Administrators"
+    },
+    {
+        "Path":  "content/documentation/core documentation/calendar management",
+        "Name":  "Users"
+    },
+    {
+        "Path":  "content/documentation/core documentation/calendar management",
+        "Name":  "Guests"
+    },
+    {
+        "Path":  "content/documentation/sso documentation",
+        "Name":  "Administrators"
+    },
+    {
+        "Path":  "content/documentation/sso documentation",
+        "Name":  "Users"
+    },
+    {
+        "Path":  "content/documentation/sso documentation",
+        "Name":  "Guests"
+    },
+    {
+        "Path":  "content/documentation/sso documentation/forgot your password",
+        "Name":  "Administrators"
+    },
+    {
+        "Path":  "content/documentation/sso documentation/forgot your password",
+        "Name":  "Users"
+    },
+    {
+        "Path":  "content/documentation/sso documentation/forgot your password",
+        "Name":  "Guests"
+    },
+    {
+        "Path":  "content/documentation/sso documentation/managing your profile",
+        "Name":  "Administrators"
+    },
+    {
+        "Path":  "content/documentation/sso documentation/managing your profile",
+        "Name":  "Users"
+    },
+    {
+        "Path":  "content/documentation/sso documentation/managing your profile",
+        "Name":  "Guests"
+    },
+    {
+        "Path":  "content/documentation/sso documentation/logging in",
+        "Name":  "Administrators"
+    },
+    {
+        "Path":  "content/documentation/sso documentation/logging in",
+        "Name":  "Users"
+    },
+    {
+        "Path":  "content/documentation/sso documentation/logging in",
+        "Name":  "Guests"
+    }
+]

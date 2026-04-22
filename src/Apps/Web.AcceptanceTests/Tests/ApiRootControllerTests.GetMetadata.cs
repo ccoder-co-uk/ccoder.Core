@@ -29,6 +29,7 @@ public sealed partial class ApiRootControllerTests
 
         typeNames.Should().Contain(
         [
+            "SSORole",
             "Role",
             "Privilege",
             "User",
@@ -49,6 +50,29 @@ public sealed partial class ApiRootControllerTests
             "WorkflowEvent",
             "LogEntry",
             "LogDataItem",
+        ]);
+
+        string[] contextTypes = document.RootElement
+            .EnumerateArray()
+            .SelectMany(typeSet =>
+            {
+                string contextName = typeSet.GetProperty("Name").GetString() ?? string.Empty;
+                return typeSet.GetProperty("Types")
+                    .EnumerateArray()
+                    .Select(type => $"{contextName}/{type.GetProperty("Name").GetString()}");
+            })
+            .ToArray();
+
+        contextTypes.Should().Contain(
+        [
+            "Security/SSORole",
+            "Core/FlowDefinition",
+        ]);
+
+        contextTypes.Should().NotContain(
+        [
+            "Core/BusinessProcess",
+            "Workflow/BusinessProcess",
         ]);
     }
 }

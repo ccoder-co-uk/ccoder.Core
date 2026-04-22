@@ -4,6 +4,7 @@ class Api
     constructor(args) {
         args = args || {};
         this.apiRoot = args.apiRoot || session.apiRoot;
+        this.token = args.token || session.token;
 
         this.cache = {
             meta: [],

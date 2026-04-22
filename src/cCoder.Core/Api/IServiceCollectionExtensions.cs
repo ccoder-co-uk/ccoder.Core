@@ -108,6 +108,12 @@ internal static class IServiceCollectionExtensions
             opt.RouteOptions.EnableQualifiedOperationCall = false;
             opt.EnableAttributeRouting = true;
             opt.RouteOptions.EnableKeyAsSegment = false;
+            opt.Expand()
+                .Count()
+                .Filter()
+                .Select()
+                .OrderBy()
+                .SetMaxTop(1000);
 
             foreach (CoreApiRouteDefinition routeDefinition in routeDefinitions
                 ?? [])
