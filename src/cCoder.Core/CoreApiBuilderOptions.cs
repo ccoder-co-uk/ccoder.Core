@@ -12,6 +12,7 @@ using cCoder.Mail;
 using cCoder.Mail.Models;
 using cCoder.Scheduling;
 using cCoder.Scheduling.Models;
+using cCoder.Security;
 using cCoder.Security.Api;
 using cCoder.Security.Data.EF.MSSQL;
 using cCoder.Security.Objects;
@@ -69,6 +70,9 @@ public partial class CoreApiBuilderOptions
                 securityServices,
                 configuration.GetSection("settings")["DecryptionKey"]);
         });
+        SqlSessionCacheFallback.UseInMemorySessionCacheUntilSqlSessionStoreExists(
+            services,
+            configuration.GetConnectionString("SSO"));
 
         AddAllDomains(domains =>
         {

@@ -55,8 +55,13 @@ internal sealed class WebAcceptanceFactory : WebApplicationFactory<Program>
                     Services = new Dictionary<string, string>(),
                 }
             );
-            services.AddSingleton<ISecurityDbContextFactory>(
-                _ => new MSSQLSecurityDbContextFactory(settings.SsoConnectionString)
+            services.AddScoped<ISecurityDbContextFactory>(
+                provider => new MSSQLSecurityDbContextFactory(settings.SsoConnectionString)
+                {
+                    GetAuthInfo = ignoreAuthInfo => ignoreAuthInfo
+                        ? new SSOAuthInfo { SSOUserId = "Guest" }
+                        : provider.GetService<ISSOAuthInfo>(),
+                }
             );
             cCoder.Data.IServiceCollectionExtensions.AddCoreData(
                 services,

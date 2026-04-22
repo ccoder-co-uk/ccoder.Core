@@ -1,6 +1,6 @@
 using cCoder.AppSecurity.Models;
 using cCoder.Data.Models.Security;
-using cCoder.Security.Api.Interfaces;
+using cCoder.Security.Exposures;
 using cCoder.Security.Objects.DTOs;
 using cCoder.Security.Objects.Entities;
 

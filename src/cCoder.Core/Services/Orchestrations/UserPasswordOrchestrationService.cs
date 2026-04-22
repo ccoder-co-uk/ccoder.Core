@@ -3,7 +3,7 @@ using cCoder.AppSecurity.Services.Orchestrations;
 using cCoder.Core.Services.Foundations.ContentManagement;
 using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.Security;
-using cCoder.Security.Api.Interfaces;
+using cCoder.Security.Exposures;
 
 namespace cCoder.Core.Services.Orchestrations;
 

@@ -5,6 +5,7 @@ using cCoder.Mail;
 using cCoder.Mail.Exposures.HostedServices;
 using cCoder.Scheduling;
 using cCoder.Scheduling.Exposures.HostedServices;
+using cCoder.Security;
 using cCoder.Security.Api;
 using cCoder.Security.Data.EF.MSSQL;
 using cCoder.Security.Services;
@@ -22,7 +23,7 @@ public partial class CoreBuilderOptions
 
         string coreConnection = configuration.GetConnectionString("Core");
 
-        services.AddSecurityServices((securityServices, securityConfig) =>
+        services.AddSecurity((securityServices, securityConfig) =>
         {
             securityConfig.AddMSSQLModelProvider(
                 securityServices,
@@ -32,6 +33,9 @@ public partial class CoreBuilderOptions
                 securityServices,
                 configuration.GetSection("settings")["DecryptionKey"]);
         });
+        SqlSessionCacheFallback.UseInMemorySessionCacheUntilSqlSessionStoreExists(
+            services,
+            configuration.GetConnectionString("SSO"));
 
         cCoder.Data.IServiceCollectionExtensions.AddCoreData(services, coreConnection);
         services.AddSingleton<ICoreAllowedOriginStore, CoreAllowedOriginStore>();
