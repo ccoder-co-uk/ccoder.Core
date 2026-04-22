@@ -13,6 +13,7 @@ using cCoder.Security.Objects.Entities;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace cCoder.Core;
@@ -78,7 +79,7 @@ public static partial class WebApplicationExtensions
         ILogger log = null)
     {
         app.UseCoreApiDocumentation();
-        app.UseCoreApiShell();
+        app.UseCoreSecurityExposure(log);
         app.UseAppSecurityExposure(log);
         cCoder.ContentManagement.WebApplicationExtensions.UseContentManagementExposure(
             app,
@@ -93,6 +94,7 @@ public static partial class WebApplicationExtensions
         app.UseCoreDefaultCors();
         app.UseCoreExceptionHandling(HandleUnhandledException);
         app.UseCoreEventHandlers();
+        app.UseCoreApiShell();
         return app;
     }
 
@@ -134,21 +136,36 @@ public static partial class WebApplicationExtensions
             || request.Path.StartsWithSegments("/Api/Hubs", StringComparison.OrdinalIgnoreCase))
             return;
 
-        ICoreAuthInfo authInfo = context.RequestServices.GetRequiredService<ICoreAuthInfo>();
-        IContentManagementAppService appService =
-            context.RequestServices.GetRequiredService<IContentManagementAppService>();
         Config config = context.RequestServices.GetRequiredService<Config>();
+        string ssoUserId = "Guest";
 
         string url = HttpUtility.UrlDecode(request.GetDisplayUrl());
         string logEntry =
-            $"{context.Connection.RemoteIpAddress} as {authInfo.SSOUserId}: {request.Method} - {url}";
+            $"{context.Connection.RemoteIpAddress} as {ssoUserId}: {request.Method} - {url}";
 
-        if (context.Session is not null
-            && config.ConnectionStrings?.TryGetValue("SSO", out string ssoConnectionString) == true
-            && !string.IsNullOrWhiteSpace(ssoConnectionString))
+        if (config.ConnectionStrings?.TryGetValue("SSO", out string ssoConnectionString) == true
+            && !string.IsNullOrWhiteSpace(ssoConnectionString)
+            && await SqlTableExistsAsync(ssoConnectionString, "dbo", "Sessions", context.RequestAborted)
+            && await SqlTableExistsAsync(ssoConnectionString, "dbo", "UserEvents", context.RequestAborted))
         {
             try
             {
+                ICoreAuthInfo authInfo = context.RequestServices.GetRequiredService<ICoreAuthInfo>();
+                IContentManagementAppService appService =
+                    context.RequestServices.GetRequiredService<IContentManagementAppService>();
+
+                ssoUserId = authInfo.SSOUserId ?? "Guest";
+                logEntry =
+                    $"{context.Connection.RemoteIpAddress} as {ssoUserId}: {request.Method} - {url}";
+
+                string tenantId = null;
+
+                if (config.ConnectionStrings?.TryGetValue("Core", out string coreConnectionString) == true
+                    && await SqlTableExistsAsync(coreConnectionString, "CMS", "Apps", context.RequestAborted))
+                {
+                    tenantId = appService.GetByDomain(request.Host.Host, ignoreFilters: true)?.TenantId;
+                }
+
                 using SecurityDbContext sso = new MSSQLSecurityDbContextFactory(ssoConnectionString)
                     .CreateDbContext();
 
@@ -159,11 +176,10 @@ public static partial class WebApplicationExtensions
 
                 UserEvent userEvent = new()
                 {
-                    TenantId = appService.GetByDomain(request.Host.Host, ignoreFilters: true)?.TenantId,
-                    CreatedBy = authInfo.SSOUserId,
+                    TenantId = tenantId,
+                    CreatedBy = ssoUserId,
                     EventName = $"{requestType}{request.Method}{request.Path.Value}",
                     CreatedOn = DateTimeOffset.UtcNow,
-                    SessionId = context.Session.Id,
                     Value = url,
                 };
 
@@ -179,5 +195,34 @@ public static partial class WebApplicationExtensions
         }
 
         logger.LogDebug(logEntry);
+    }
+
+    private static async Task<bool> SqlTableExistsAsync(
+        string connectionString,
+        string schema,
+        string table,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            SqlConnectionStringBuilder builder = new(connectionString)
+            {
+                ConnectTimeout = 2,
+            };
+
+            await using SqlConnection connection = new(builder.ConnectionString);
+            await connection.OpenAsync(cancellationToken);
+            await using SqlCommand command = connection.CreateCommand();
+            command.CommandTimeout = 2;
+            command.CommandText = "SELECT OBJECT_ID(@tableName, 'U')";
+            command.Parameters.AddWithValue("@tableName", $"{schema}.{table}");
+
+            object result = await command.ExecuteScalarAsync(cancellationToken);
+            return result is not null and not DBNull;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
     }
 }

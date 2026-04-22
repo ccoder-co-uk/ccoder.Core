@@ -4,6 +4,7 @@ using cCoder.Core.Cors;
 using cCoder.DocumentManagement;
 using cCoder.Mail;
 using cCoder.Scheduling;
+using cCoder.Security;
 using cCoder.Workflow;
 using EventLibrary.AzureServiceBus;
 using EventLibrary.AzureServiceBus.Models;
@@ -31,6 +32,7 @@ public static partial class WebApplicationExtensions
         app.UseAppSecurityEventHandlers();
         app.UseAppSecurityDeleteEventHandlers();
         app.ListenToContentManagementEvents();
+        app.ListenToSecurityEvents();
         app.UseDocumentManagementEventHandlers();
         app.UseMailEventHandlers();
         app.UseSchedulingEventHandlers();

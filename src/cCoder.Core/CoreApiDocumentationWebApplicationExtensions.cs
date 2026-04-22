@@ -27,15 +27,14 @@ internal static class CoreApiDocumentationWebApplicationExtensions
     {
         string[] contexts = ["Core", .. (apiContexts ?? [])
             .Where(context => !string.IsNullOrWhiteSpace(context))
-            .Distinct(StringComparer.OrdinalIgnoreCase)];
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .Where(context => !string.Equals(context, "Core", StringComparison.OrdinalIgnoreCase))];
 
         app.UseSwagger()
             .UseSwaggerUI(options =>
             {
                 foreach (string context in contexts)
                     options.SwaggerEndpoint($"/swagger/{context}/swagger.json", $"{context} API");
-
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "Core API");
             })
             .UseODataBatching()
             .UseODataRouteDebug();

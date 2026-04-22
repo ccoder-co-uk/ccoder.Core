@@ -4,6 +4,7 @@ using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 using ContentMetadataCache = cCoder.ContentManagement.Exposures.Caching.IMetadataCache;
 
 
@@ -157,8 +158,46 @@ internal sealed class AcceptanceApplicationSeeder(IServiceProvider services)
             })
             .ToArray();
 
+        NormalizeCommonObjects(commonObjects);
+
         await core.Set<CommonObject>().AddRangeAsync(commonObjects);
         await core.SaveChangesAsync();
+    }
+
+    private static void NormalizeCommonObjects(IEnumerable<CommonObject> commonObjects)
+    {
+        DateTimeOffset now = DateTimeOffset.UtcNow;
+
+        foreach (CommonObject commonObject in commonObjects)
+        {
+            NormalizeDateTimeOffsetProperty(commonObject, nameof(CommonObject.CreatedOn), now);
+            NormalizeDateTimeOffsetProperty(commonObject, nameof(CommonObject.LastUpdated), now);
+            NormalizeStringProperty(commonObject, nameof(CommonObject.CreatedBy), "acceptance");
+            NormalizeStringProperty(commonObject, nameof(CommonObject.LastUpdatedBy), "acceptance");
+        }
+    }
+
+    private static void NormalizeDateTimeOffsetProperty(CommonObject commonObject, string propertyName, DateTimeOffset fallbackValue)
+    {
+        PropertyInfo property = typeof(CommonObject).GetProperty(propertyName)!;
+        object value = property.GetValue(commonObject);
+
+        if (value is null)
+        {
+            property.SetValue(commonObject, fallbackValue);
+            return;
+        }
+
+        if (value is DateTimeOffset dateTimeOffset && dateTimeOffset == default)
+            property.SetValue(commonObject, fallbackValue);
+    }
+
+    private static void NormalizeStringProperty(CommonObject commonObject, string propertyName, string fallbackValue)
+    {
+        PropertyInfo property = typeof(CommonObject).GetProperty(propertyName)!;
+
+        if (property.GetValue(commonObject) is not string value || string.IsNullOrWhiteSpace(value))
+            property.SetValue(commonObject, fallbackValue);
     }
 
     private static void RefreshCaches(IServiceProvider services)
