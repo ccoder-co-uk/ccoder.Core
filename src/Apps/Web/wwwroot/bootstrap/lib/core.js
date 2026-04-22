@@ -4,6 +4,7 @@ class Api
     constructor(args) {
         args = args || {};
         this.apiRoot = args.apiRoot || session.apiRoot;
+        this.token = args.token || session.token;
 
         this.cache = {
             meta: [],
@@ -243,6 +244,7 @@ window.api = new Api({
     baseUrl: session.apiRoot,
     token: session.token
 });
+
 const html = {
     encode: function (value) { return $('<div />').text(value).html(); },
     decode: function (value) { return $('<div/>').html(value).text(); }

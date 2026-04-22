@@ -5,6 +5,7 @@ using EventLibrary;
 using EventLibrary.AzureServiceBus;
 using EventLibrary.AzureServiceBus.Models;
 using EventLibrary.Models;
+using Web.Services.Setup;
 
 namespace Web;
 
@@ -21,6 +22,12 @@ public class Program
                 CreateExternalEventProvider<App>(["app_add", "app_update", "app_delete"]),
                 CreateExternalEventProvider<Folder>(["folder_delete"]));
         });
+        builder.Services.AddScoped<IFirstTimeSetupStateService, FirstTimeSetupStateService>();
+        builder.Services.AddScoped<FirstTimeSetupAssetService>();
+        builder.Services.AddScoped<IFirstTimeSetupUserService, FirstTimeSetupUserService>();
+        builder.Services.AddScoped<IFirstTimeSetupTenantService, FirstTimeSetupTenantService>();
+        builder.Services.AddScoped<IFirstTimeSetupAppService, FirstTimeSetupAppService>();
+        builder.Services.AddScoped<IFirstTimeSetupOrchestrationService, FirstTimeSetupOrchestrationService>();
 
         WebApplication app = builder.Build();
         app.StartCoreWeb();

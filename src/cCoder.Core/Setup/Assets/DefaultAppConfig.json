@@ -1,0 +1,77 @@
+{
+  "Deployment": {
+    "Targets": [],
+    "DMS": [
+      "Content"
+    ]
+  },
+  "Components": {
+    "Grids": {
+      "Details": "Expand"
+    }
+  },
+  "CRM": {
+    "ClientFolder": "crm/clients/",
+    "SourceAppId": 0,
+    "NextEnvironment": "",
+    "EnvironmentUrlSuffix": ""
+  },
+  "Themes": {
+    "Default": {
+      "paintLoginMid": false,
+      "margins": "12px",
+      "paintLoginBottom": false,
+      "shadows": "6px 6px 12px rgba(14, 74, 122, 0.18)",
+      "colours": {
+        "primary": "#0E4A7A",
+        "secondary": "#1C9FB5",
+        "background": "white",
+        "text": "#1F2933",
+        "text2": "#FFFFFF",
+        "links": "#0E7490",
+        "error": "#C62828",
+        "charts": [
+          "#0E4A7A",
+          "#1C9FB5",
+          "#F59E0B",
+          "#4B5563",
+          "#10B981"
+        ]
+      },
+      "font": {
+        "size": "14px",
+        "family": "Segoe UI, sans-serif"
+      },
+      "border": {
+        "style": "solid 1px #ccc",
+        "width": "1px",
+        "radius": "8px"
+      },
+      "notifications": {
+        "error": {
+          "text": "#222",
+          "background": "#FFECEC"
+        },
+        "warning": {
+          "text": "#222",
+          "background": "#FFF4D9"
+        },
+        "info": {
+          "text": "#222",
+          "background": "#E5F5FA"
+        },
+        "success": {
+          "text": "#222",
+          "background": "#EAF7EC"
+        }
+      },
+      "columns": {
+        "small": 150,
+        "medium": 250,
+        "large": 400,
+        "date": 110,
+        "checkbox": 50
+      }
+    }
+  }
+}
