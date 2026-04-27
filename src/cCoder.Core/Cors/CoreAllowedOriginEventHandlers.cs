@@ -1,5 +1,5 @@
 using cCoder.Data.Models.CMS;
-using EventLibrary;
+using cCoder.Eventing;
 
 namespace cCoder.Core.Cors;
 
