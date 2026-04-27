@@ -38,17 +38,6 @@
     <LocalSecurityEfMssqlProject>..\..\..\cCoder.Security\src\cCoder.Security.Data.EF.MSSQL\cCoder.Security.Data.EF.MSSQL.csproj</LocalSecurityEfMssqlProject>
     <LocalWorkflowProject>..\..\..\cCoder.Workflow\src\cCoder.Workflow\cCoder.Workflow.csproj</LocalWorkflowProject>
     <LocalWorkflowActivitiesProject>..\..\..\cCoder.Workflow\src\cCoder.Workflow.Activities\cCoder.Workflow.Activities.csproj</LocalWorkflowActivitiesProject>
-    <UseLocalAppSecurity Condition="'$(UseLocalAppSecurity)' == '' and Exists('$(LocalAppSecurityProject)')">true</UseLocalAppSecurity>
-    <UseLocalData Condition="'$(UseLocalData)' == '' and Exists('$(LocalDataProject)')">true</UseLocalData>
-    <UseLocalContentManagement Condition="'$(UseLocalContentManagement)' == '' and Exists('$(LocalContentManagementProject)')">true</UseLocalContentManagement>
-    <UseLocalDocumentManagement Condition="'$(UseLocalDocumentManagement)' == '' and Exists('$(LocalDocumentManagementProject)')">true</UseLocalDocumentManagement>
-    <UseLocalEventing Condition="'$(UseLocalEventing)' == '' and Exists('$(LocalEventingProject)') and Exists('$(LocalEventingAzureServiceBusProject)') and Exists('$(LocalEventingHttpProject)')">true</UseLocalEventing>
-    <UseLocalLogging Condition="'$(UseLocalLogging)' == '' and Exists('$(LocalLoggingProject)')">true</UseLocalLogging>
-    <UseLocalMail Condition="'$(UseLocalMail)' == '' and Exists('$(LocalMailProject)')">true</UseLocalMail>
-    <UseLocalPackaging Condition="'$(UseLocalPackaging)' == '' and Exists('$(LocalPackagingProject)')">true</UseLocalPackaging>
-    <UseLocalScheduling Condition="'$(UseLocalScheduling)' == '' and Exists('$(LocalSchedulingProject)')">true</UseLocalScheduling>
-    <UseLocalSecurity Condition="'$(UseLocalSecurity)' == '' and Exists('$(LocalSecurityProject)') and Exists('$(LocalSecurityEfMssqlProject)')">true</UseLocalSecurity>
-    <UseLocalWorkflow Condition="'$(UseLocalWorkflow)' == '' and Exists('$(LocalWorkflowProject)') and Exists('$(LocalWorkflowActivitiesProject)')">true</UseLocalWorkflow>
     <UseLocalAppSecurity Condition="'$(UseLocalAppSecurity)' == ''">false</UseLocalAppSecurity>
     <UseLocalData Condition="'$(UseLocalData)' == ''">false</UseLocalData>
     <UseLocalContentManagement Condition="'$(UseLocalContentManagement)' == ''">false</UseLocalContentManagement>
