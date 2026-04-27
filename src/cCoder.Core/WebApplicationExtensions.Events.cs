@@ -6,9 +6,9 @@ using cCoder.Mail;
 using cCoder.Scheduling;
 using cCoder.Security;
 using cCoder.Workflow;
-using EventLibrary.AzureServiceBus;
-using EventLibrary.AzureServiceBus.Models;
-using EventLibrary.Models;
+using cCoder.Eventing.AzureServiceBus;
+using cCoder.Eventing.AzureServiceBus.Models;
+using cCoder.Eventing.Models;
 
 namespace cCoder.Core;
 
@@ -17,12 +17,12 @@ public static partial class WebApplicationExtensions
     private static WebApplication ListenToExternalEvents(this WebApplication app)
     {
         app.UseAppSecurityEventHandlers();
-        app.UseAppSecurityDeleteEventHandlers();
         app.UseDocumentManagementEventHandlers();
         app.UseMailEventHandlers();
         app.UseSchedulingEventHandlers();
         app.UseWorkflowScheduledTaskExecutionHandlers();
         app.UseCoreInternalEventHandlers();
+        app.UseAppSecurityDeleteEventHandlers();
         app.UseConfiguredExternalEventProviders();
         return app;
     }
@@ -30,7 +30,6 @@ public static partial class WebApplicationExtensions
     private static WebApplication UseCoreEventHandlers(this WebApplication app)
     {
         app.UseAppSecurityEventHandlers();
-        app.UseAppSecurityDeleteEventHandlers();
         app.ListenToContentManagementEvents();
         app.ListenToSecurityEvents();
         app.UseDocumentManagementEventHandlers();
@@ -38,6 +37,7 @@ public static partial class WebApplicationExtensions
         app.UseSchedulingEventHandlers();
         app.UseWorkflowEventHandlers();
         app.UseCoreInternalEventHandlers();
+        app.UseAppSecurityDeleteEventHandlers();
         return app;
     }
 
@@ -78,7 +78,7 @@ public static partial class WebApplicationExtensions
                 .GetMethod(
                     nameof(SubscribeConfiguredExternalEventProviderCore),
                     System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!
-                .MakeGenericMethod(provider.MessageType)
+                .MakeGenericMethod(provider.DataType)
                 .Invoke(null, [azureServiceBusEventHub, provider, eventName]);
         }
     }
@@ -88,13 +88,13 @@ public static partial class WebApplicationExtensions
         EventProvider provider,
         string eventName)
     {
-        if (!provider.CanReceive<T>(eventName))
+        if (!provider.CanReceive(eventName))
             return;
 
         azureServiceBusEventHub.ListenToEvent<T>(
             eventName,
             (serviceProvider, message) =>
-                provider.HandleReceiveAsync(
+                provider.ReceiveAsync(
                     serviceProvider,
                     eventName,
                     new EventMessage<T>

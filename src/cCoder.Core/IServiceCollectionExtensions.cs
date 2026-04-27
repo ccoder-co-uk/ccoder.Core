@@ -1,7 +1,5 @@
 
 using cCoder.Core.Logging;
-using cCoder.Core.Models;
-using EventLibrary.Models;
 
 namespace cCoder.Core;
 
@@ -9,34 +7,21 @@ public static partial class IServiceCollectionExtensions
 {
     public static void AddCoreWeb(
         this IServiceCollection services,
-        Action<CoreWebOptions> configure = null)
+        Action<CoreApiBuilderOptions> configure = null)
     {
-        CoreWebOptions options = new();
-        configure?.Invoke(options);
-
-        IConfiguration configuration = options.Configuration ?? GetRequiredConfiguration(services);
-        ConfigureDefaultLogging(services, configuration);
+        ConfigureDefaultLogging(services, GetRequiredConfiguration(services));
         services.AddSingleton<ILoggerProvider, CoreWebSignalRLoggingProvider>();
-
-        services.AddCoreApi(core => core
-            .WithEventProviders(options.EventProviders)
-            .UseDefaultBaseline(configuration));
+        services.AddCoreApi(configure ?? (_ => { }));
     }
 
     public static void AddCoreHostedServices(
         this IServiceCollection services,
-        Action<CoreHostedServicesOptions> configure = null)
+        Action<CoreBuilderOptions> configure = null)
     {
-        CoreHostedServicesOptions options = new();
-        configure?.Invoke(options);
-
-        IConfiguration configuration = options.Configuration ?? GetRequiredConfiguration(services);
-        ConfigureDefaultLogging(services, configuration);
+        ConfigureDefaultLogging(services, GetRequiredConfiguration(services));
         services.AddSingleton<ILoggerProvider, CoreHostedSignalRLoggingProvider>();
-
-        services.AddCore(core => core
-            .WithEventProviders(options.EventProviders)
-            .UseDefaultBaseline(configuration));
+        services.AddCore(configure ?? (_ => { }));
+        cCoder.Core.Api.IServiceCollectionExtensions.AddAspNet(services);
     }
 
     public static void AddCoreApi(
@@ -55,5 +40,6 @@ public static partial class IServiceCollectionExtensions
     {
         CoreBuilderOptions config = new(services);
         setupAction(config);
+        config.Apply();
     }
 }

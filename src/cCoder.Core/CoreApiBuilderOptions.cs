@@ -19,7 +19,7 @@ using cCoder.Security.Objects;
 using cCoder.Core.Api;
 using cCoder.Workflow;
 using cCoder.Workflow.Models;
-using EventLibrary.Models;
+using cCoder.Eventing.Models;
 using Microsoft.OData.ModelBuilder;
 using DataConfig = cCoder.Data.Config;
 using ContentManagementRuntimeConfig = cCoder.ContentManagement.Models.Config;
@@ -34,55 +34,19 @@ public partial class CoreApiBuilderOptions
     private readonly List<EventProvider> eventProviders = [];
 
     private readonly IServiceCollection services;
-    private IConfiguration configuration;
+    private DataConfig coreConfiguration;
+    private string sessionCacheConnectionString;
     private bool applied;
 
     public CoreApiBuilderOptions(IServiceCollection services) =>
         this.services = services;
 
-    public CoreApiBuilderOptions UseConfiguration(IConfiguration configuration)
+    public CoreApiBuilderOptions WithCoreConfiguration(DataConfig configuration)
     {
-        this.configuration = configuration;
-
-        DataConfig config = new();
-        configuration.Bind(config);
-
-        services.AddSingleton(config);
-        services.AddSingleton(CreateContentManagementRuntimeConfig(config));
-        services.AddSingleton(CreateMailRuntimeConfig(config));
-
-        return this;
-    }
-
-    public CoreApiBuilderOptions UseDefaultBaseline(
-        IConfiguration configuration)
-    {
-        UseConfiguration(configuration);
-        services.AddCoreApiEventing(configuration, eventProviders);
-
-        AddSecurityApi((securityServices, securityConfig) =>
-        {
-            securityConfig.RootPath = "Api/Security";
-            securityConfig.AddMSSQLModelProvider(
-                securityServices,
-                configuration.GetConnectionString("SSO"));
-            securityConfig.UseAESHMMACPasswordEncryption(
-                securityServices,
-                configuration.GetSection("settings")["DecryptionKey"]);
-        });
-        SqlSessionCacheFallback.UseInMemorySessionCacheUntilSqlSessionStoreExists(
-            services,
-            configuration.GetConnectionString("SSO"));
-
-        AddAllDomains(domains =>
-        {
-            domains.Connection = configuration.GetConnectionString("Core");
-            domains.RootPath = "Api";
-            domains.SplitDomains = true;
-            domains.IncludeLegacyCoreContext = true;
-        });
-
-        RegisterContext("Api/Core", static builder => builder.ConfigureCoreAggregateApiModel());
+        coreConfiguration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+        services.AddSingleton(configuration);
+        services.AddSingleton(CreateContentManagementRuntimeConfig(configuration));
+        services.AddSingleton(CreateMailRuntimeConfig(configuration));
 
         return this;
     }
@@ -90,6 +54,31 @@ public partial class CoreApiBuilderOptions
     public CoreApiBuilderOptions WithEventProviders(params EventProvider[] eventProviders)
     {
         this.eventProviders.AddRange((eventProviders ?? []).Where(provider => provider is not null));
+        return this;
+    }
+
+    public CoreApiBuilderOptions WithSessionCache(string connectionString)
+    {
+        sessionCacheConnectionString = connectionString;
+        return this;
+    }
+
+    public CoreApiBuilderOptions WithSecurity(
+        string connectionString,
+        string decryptionKey,
+        string rootPath = "Api/Security")
+    {
+        AddSecurityApi((securityServices, securityConfig) =>
+        {
+            securityConfig.RootPath = rootPath;
+            securityConfig.AddMSSQLModelProvider(
+                securityServices,
+                connectionString);
+            securityConfig.UseAESHMMACPasswordEncryption(
+                securityServices,
+                decryptionKey);
+        });
+
         return this;
     }
 
@@ -119,29 +108,46 @@ public partial class CoreApiBuilderOptions
         CoreDomainsConfig domains = new();
         configure(domains);
 
+        if (string.IsNullOrWhiteSpace(domains.Connection)
+            && coreConfiguration?.ConnectionStrings is not null
+            && coreConfiguration.ConnectionStrings.TryGetValue("Core", out string coreConnection))
+        {
+            domains.Connection = coreConnection;
+        }
+
         if (string.IsNullOrWhiteSpace(domains.Connection))
         {
             throw new InvalidOperationException(
-                "CoreDomainsConfig.Connection must be provided when adding the core business domains.");
+                "CoreDomainsConfig.Connection must be provided when adding the core business domains or available via core configuration.");
         }
 
         cCoder.Data.IServiceCollectionExtensions.AddCoreData(services, domains.Connection);
 
-        AddAppSecurityApi((_, domain) => ConfigureDomainRouting(domain, "AppSecurity", domains));
-        AddContentManagementApi((_, domain) => ConfigureDomainRouting(domain, "ContentManagement", domains));
-        AddDocumentManagementApi((_, domain) => ConfigureDomainRouting(domain, "DocumentManagement", domains));
-        AddLoggingApi((_, domain) => ConfigureDomainRouting(domain, "Logging", domains));
-        AddMailApi((_, domain) => ConfigureDomainRouting(domain, "Mail", domains));
-        AddSchedulingApi((_, domain) => ConfigureDomainRouting(domain, "Scheduling", domains));
-        AddWorkflowApi((_, domain) => ConfigureDomainRouting(domain, "Workflow", domains));
+        AddAppSecurityApi(domain => ConfigureDomainRouting(domain, "AppSecurity", domains));
+        AddContentManagementApi(domain => ConfigureDomainRouting(domain, "ContentManagement", domains));
+        AddDocumentManagementApi(domain => ConfigureDomainRouting(domain, "DocumentManagement", domains));
+        AddLoggingApi(domain => ConfigureDomainRouting(domain, "Logging", domains));
+        AddMailApi(domain => ConfigureDomainRouting(domain, "Mail", domains));
+        AddSchedulingApi(domain => ConfigureDomainRouting(domain, "Scheduling", domains));
+        AddWorkflowApi(domain => ConfigureDomainRouting(domain, "Workflow", domains));
 
         return this;
     }
 
-    public CoreApiBuilderOptions AddAppSecurityApi(
-        Action<IServiceCollection, AppSecurityConfiguration> configure = null)
+    public CoreApiBuilderOptions UseLegacyCoreContext(string routePath = "Api/Core")
     {
-        AppSecurityConfiguration domain = services.AddAppSecurity(configure ?? ((_, _) => { }));
+        RegisterContext(routePath, static builder => builder.ConfigureCoreAggregateApiModel());
+        return this;
+    }
+
+    public CoreApiBuilderOptions AddAppSecurityApi(
+        Action<AppSecurityConfiguration> configure = null)
+    {
+        AppSecurityConfiguration domain = services.AddAppSecurity((_, configuration) =>
+        {
+            ApplyCoreDefaults(configuration);
+            configure?.Invoke(configuration);
+        });
         RegisterDomainContext(
             domain.RootPath,
             domain.IncludeLegacyCoreContext,
@@ -150,10 +156,13 @@ public partial class CoreApiBuilderOptions
     }
 
     public CoreApiBuilderOptions AddContentManagementApi(
-        Action<IServiceCollection, ContentManagementConfiguration> configure = null)
+        Action<ContentManagementConfiguration> configure = null)
     {
-        ContentManagementConfiguration domain =
-            services.AddContentManagement(configure ?? ((_, _) => { }));
+        ContentManagementConfiguration domain = services.AddContentManagement((_, configuration) =>
+        {
+            ApplyCoreDefaults(configuration);
+            configure?.Invoke(configuration);
+        });
         RegisterDomainContext(
             domain.RootPath,
             domain.IncludeLegacyCoreContext,
@@ -162,10 +171,13 @@ public partial class CoreApiBuilderOptions
     }
 
     public CoreApiBuilderOptions AddDocumentManagementApi(
-        Action<IServiceCollection, DocumentManagementConfiguration> configure = null)
+        Action<DocumentManagementConfiguration> configure = null)
     {
-        DocumentManagementConfiguration domain =
-            services.AddDocumentManagement(configure ?? ((_, _) => { }));
+        DocumentManagementConfiguration domain = services.AddDocumentManagement((_, configuration) =>
+        {
+            ApplyCoreDefaults(configuration);
+            configure?.Invoke(configuration);
+        });
         RegisterDomainContext(
             domain.RootPath,
             domain.IncludeLegacyCoreContext,
@@ -174,9 +186,13 @@ public partial class CoreApiBuilderOptions
     }
 
     public CoreApiBuilderOptions AddLoggingApi(
-        Action<IServiceCollection, LoggingConfiguration> configure = null)
+        Action<LoggingConfiguration> configure = null)
     {
-        LoggingConfiguration domain = services.AddLogging(configure ?? ((_, _) => { }));
+        LoggingConfiguration domain = services.AddLogging((_, configuration) =>
+        {
+            ApplyCoreDefaults(configuration);
+            configure?.Invoke(configuration);
+        });
         RegisterDomainContext(
             domain.RootPath,
             domain.IncludeLegacyCoreContext,
@@ -185,9 +201,13 @@ public partial class CoreApiBuilderOptions
     }
 
     public CoreApiBuilderOptions AddMailApi(
-        Action<IServiceCollection, MailConfiguration> configure = null)
+        Action<MailConfiguration> configure = null)
     {
-        MailConfiguration domain = services.AddMail(configure ?? ((_, _) => { }));
+        MailConfiguration domain = services.AddMail((_, configuration) =>
+        {
+            ApplyCoreDefaults(configuration);
+            configure?.Invoke(configuration);
+        });
         RegisterDomainContext(
             domain.RootPath,
             domain.IncludeLegacyCoreContext,
@@ -196,9 +216,13 @@ public partial class CoreApiBuilderOptions
     }
 
     public CoreApiBuilderOptions AddSchedulingApi(
-        Action<IServiceCollection, SchedulingConfiguration> configure = null)
+        Action<SchedulingConfiguration> configure = null)
     {
-        SchedulingConfiguration domain = services.AddScheduling(configure ?? ((_, _) => { }));
+        SchedulingConfiguration domain = services.AddScheduling((_, configuration) =>
+        {
+            ApplyCoreDefaults(configuration);
+            configure?.Invoke(configuration);
+        });
         RegisterDomainContext(
             domain.RootPath,
             domain.IncludeLegacyCoreContext,
@@ -207,9 +231,13 @@ public partial class CoreApiBuilderOptions
     }
 
     public CoreApiBuilderOptions AddWorkflowApi(
-        Action<IServiceCollection, WorkflowConfiguration> configure = null)
+        Action<WorkflowConfiguration> configure = null)
     {
-        WorkflowConfiguration domain = services.AddWorkflow(configure ?? ((_, _) => { }));
+        WorkflowConfiguration domain = services.AddWorkflow((_, configuration) =>
+        {
+            ApplyCoreDefaults(configuration);
+            configure?.Invoke(configuration);
+        });
         RegisterDomainContext(
             domain.RootPath,
             domain.IncludeLegacyCoreContext,
@@ -222,6 +250,9 @@ public partial class CoreApiBuilderOptions
         if (applied)
             return;
 
+        ApplyCoreData();
+        ApplySessionCacheFallback();
+        services.AddCoreApiEventing(eventProviders);
         IEnumerable<CoreApiRouteDefinition> routes = BuildRouteDefinitions();
         cCoder.Core.Api.IServiceCollectionExtensions.AddCoreApi(services, routes);
         services.AddCoreApiDocumentation(routes);
@@ -254,4 +285,129 @@ public partial class CoreApiBuilderOptions
             DebugInfo = config.DebugInfo,
             LogSQL = config.LogSQL,
         };
+
+    private void ApplyCoreDefaults(AppSecurityConfiguration configuration) =>
+        ApplyCoreDefaults(
+            configuration.ConnectionStrings,
+            configuration.Settings,
+            configuration.Services,
+            debugInfo: value => configuration.DebugInfo = value,
+            logSql: value => configuration.LogSQL = value,
+            configuration.DebugInfo,
+            configuration.LogSQL);
+
+    private void ApplyCoreDefaults(ContentManagementConfiguration configuration) =>
+        ApplyCoreDefaults(
+            configuration.ConnectionStrings,
+            configuration.Settings,
+            configuration.Services,
+            debugInfo: value => configuration.DebugInfo = value,
+            logSql: value => configuration.LogSQL = value,
+            configuration.DebugInfo,
+            configuration.LogSQL);
+
+    private void ApplyCoreDefaults(DocumentManagementConfiguration configuration) =>
+        ApplyCoreDefaults(
+            configuration.ConnectionStrings,
+            configuration.Settings,
+            configuration.Services,
+            debugInfo: value => configuration.DebugInfo = value,
+            logSql: value => configuration.LogSQL = value,
+            configuration.DebugInfo,
+            configuration.LogSQL);
+
+    private void ApplyCoreDefaults(LoggingConfiguration configuration) =>
+        ApplyCoreDefaults(
+            configuration.ConnectionStrings,
+            configuration.Settings,
+            configuration.Services,
+            debugInfo: value => configuration.DebugInfo = value,
+            logSql: value => configuration.LogSQL = value,
+            configuration.DebugInfo,
+            configuration.LogSQL);
+
+    private void ApplyCoreDefaults(MailConfiguration configuration) =>
+        ApplyCoreDefaults(
+            configuration.ConnectionStrings,
+            configuration.Settings,
+            configuration.Services,
+            debugInfo: value => configuration.DebugInfo = value,
+            logSql: value => configuration.LogSQL = value,
+            configuration.DebugInfo,
+            configuration.LogSQL);
+
+    private void ApplyCoreDefaults(SchedulingConfiguration configuration) =>
+        ApplyCoreDefaults(
+            configuration.ConnectionStrings,
+            configuration.Settings,
+            configuration.Services,
+            debugInfo: value => configuration.DebugInfo = value,
+            logSql: value => configuration.LogSQL = value,
+            configuration.DebugInfo,
+            configuration.LogSQL);
+
+    private void ApplyCoreDefaults(WorkflowConfiguration configuration) =>
+        ApplyCoreDefaults(
+            configuration.ConnectionStrings,
+            configuration.Settings,
+            configuration.Services,
+            debugInfo: value => configuration.DebugInfo = value,
+            logSql: value => configuration.LogSQL = value,
+            configuration.DebugInfo,
+            configuration.LogSQL);
+
+    private void ApplyCoreDefaults(
+        IDictionary<string, string> connectionStrings,
+        IDictionary<string, string> settings,
+        IDictionary<string, string> servicesMap,
+        Action<bool> debugInfo,
+        Action<bool> logSql,
+        bool currentDebugInfo,
+        bool currentLogSql)
+    {
+        if (coreConfiguration is null)
+            return;
+
+        MergeMissingEntries(connectionStrings, coreConfiguration.ConnectionStrings);
+        MergeMissingEntries(settings, coreConfiguration.Settings);
+        MergeMissingEntries(servicesMap, coreConfiguration.Services);
+        debugInfo(currentDebugInfo || coreConfiguration.DebugInfo);
+        logSql(currentLogSql || coreConfiguration.LogSQL);
+    }
+
+    private static void MergeMissingEntries(
+        IDictionary<string, string> target,
+        IDictionary<string, string> defaults)
+    {
+        if (target is null || defaults is null)
+            return;
+
+        foreach ((string key, string value) in defaults)
+        {
+            if (!target.ContainsKey(key))
+                target[key] = value;
+        }
+    }
+
+    private void ApplySessionCacheFallback()
+    {
+        if (string.IsNullOrWhiteSpace(sessionCacheConnectionString))
+            return;
+
+        SqlSessionCacheFallback.UseInMemorySessionCacheUntilSqlSessionStoreExists(
+            services,
+            sessionCacheConnectionString);
+    }
+
+    private void ApplyCoreData()
+    {
+        if (coreConfiguration?.ConnectionStrings is null
+            || !coreConfiguration.ConnectionStrings.TryGetValue("Core", out string connectionString)
+            || string.IsNullOrWhiteSpace(connectionString))
+        {
+            return;
+        }
+
+        services.AddCoreData(connectionString);
+    }
 }
