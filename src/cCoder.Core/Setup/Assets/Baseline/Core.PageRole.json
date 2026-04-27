@@ -256,18 +256,6 @@
         "Role":  "Guests"
     },
     {
-        "Path":  "Documentation/CoreDocumentation/AppManagement/Testimonials",
-        "Role":  "Administrators"
-    },
-    {
-        "Path":  "Documentation/CoreDocumentation/AppManagement/Testimonials",
-        "Role":  "Users"
-    },
-    {
-        "Path":  "Documentation/CoreDocumentation/AppManagement/Testimonials",
-        "Role":  "Guests"
-    },
-    {
         "Path":  "Admin/ContentManagement",
         "Role":  "Administrators"
     },

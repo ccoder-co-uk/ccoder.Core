@@ -319,6 +319,7 @@ GET Api/Workflow/FlowInstanceData/$count
 GET Api/Workflow/WorkflowEvent
 GET Api/Workflow/WorkflowEvent({key})
 GET Api/Workflow/WorkflowEvent/$count
+GET Setup
 GET {*path}
 PATCH Api/AppSecurity/Privilege({key})
 PATCH Api/AppSecurity/Role({key})
@@ -457,6 +458,7 @@ POST Api/DocumentManagement/FileContent
 POST Api/DocumentManagement/Folder
 POST Api/DocumentManagement/Folder/Copy
 POST Api/DocumentManagement/FolderRole
+POST Api/Eventing/Http
 POST Api/ExecuteScript
 POST Api/Logging/LogDataItem
 POST Api/Logging/LogEntry
@@ -476,6 +478,7 @@ POST Api/Workflow/FlowDefinition({key})/Execute
 POST Api/Workflow/FlowDefinition/ExecuteScript
 POST Api/Workflow/FlowInstanceData
 POST Api/Workflow/WorkflowEvent
+POST Setup
 PUT Api
 PUT Api/AppSecurity/Privilege({key})
 PUT Api/AppSecurity/Role({key})

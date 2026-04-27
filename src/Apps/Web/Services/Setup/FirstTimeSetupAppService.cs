@@ -77,17 +77,13 @@ internal sealed class FirstTimeSetupAppService(
         IAppOrchestrationService appOrchestrationService =
             serviceProvider.GetRequiredService<IAppOrchestrationService>();
 
-        App app = await appOrchestrationService.AddAsync(
-            new App
-            {
-                Name = request.TenantName.Trim(),
-                Domain = request.Domain,
-                DefaultTheme = "Default",
-                DefaultCultureId = string.Empty,
-                TenantId = tenantId,
-                ConfigJson = assetService.LoadDefaultAppConfig()
-            });
+        App app = await ResolveFirstAppAsync(
+            request,
+            tenantId,
+            appOrchestrationService,
+            cancellationToken);
 
+        await EnsureBootstrapAdminMembershipsAsync(app.Id, firstAdminUserId, cancellationToken);
         await PersistBaselineFoldersAsync(app.Id, packages, cancellationToken);
         await PersistBaselineDmsAssetsAsync(app.Id, firstAdminUserId, cancellationToken);
         await ImportBaselinePackagesAsync(app.Id, packages);
@@ -105,10 +101,85 @@ internal sealed class FirstTimeSetupAppService(
         return app;
     }
 
+    private async Task<App> ResolveFirstAppAsync(
+        FirstTimeSetupRequest request,
+        string tenantId,
+        IAppOrchestrationService appOrchestrationService,
+        CancellationToken cancellationToken)
+    {
+        await using DbContext core = coreContextFactory.CreateCoreContext();
+
+        App existingApp = await core.Set<App>()
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(found =>
+                found.Domain == request.Domain
+                || (found.TenantId == tenantId && found.Name == request.TenantName.Trim()),
+                cancellationToken);
+
+        if (existingApp is null)
+        {
+            return await appOrchestrationService.AddAsync(
+                new App
+                {
+                    Name = request.TenantName.Trim(),
+                    Domain = request.Domain,
+                    DefaultTheme = "Default",
+                    DefaultCultureId = string.Empty,
+                    TenantId = tenantId,
+                    ConfigJson = assetService.LoadDefaultAppConfig()
+                });
+        }
+
+        existingApp.Name = request.TenantName.Trim();
+        existingApp.Domain = request.Domain;
+        existingApp.DefaultTheme = "Default";
+        existingApp.DefaultCultureId = string.Empty;
+        existingApp.TenantId = tenantId;
+        existingApp.ConfigJson = assetService.LoadDefaultAppConfig();
+
+        await core.SaveChangesAsync(cancellationToken);
+        return existingApp;
+    }
+
+    private async Task EnsureBootstrapAdminMembershipsAsync(
+        int appId,
+        string userId,
+        CancellationToken cancellationToken)
+    {
+        await using DbContext core = coreContextFactory.CreateCoreContext();
+
+        Role[] roles = await core.Set<Role>()
+            .IgnoreQueryFilters()
+            .Where(role =>
+                role.AppId == appId
+                && (role.Name == "Administrators" || role.Name == "Users"))
+            .ToArrayAsync(cancellationToken);
+
+        foreach (Role role in roles)
+        {
+            bool exists = await core.Set<UserRole>()
+                .IgnoreQueryFilters()
+                .AnyAsync(
+                    userRole => userRole.RoleId == role.Id && userRole.UserId == userId,
+                    cancellationToken);
+
+            if (exists)
+                continue;
+
+            await core.Set<UserRole>().AddAsync(
+                new UserRole
+                {
+                    RoleId = role.Id,
+                    UserId = userId
+                },
+                cancellationToken);
+        }
+
+        await core.SaveChangesAsync(cancellationToken);
+    }
+
     private async Task ImportBaselinePackagesAsync(int appId, IEnumerable<Package> packages)
     {
-        cCoder.Packaging.Brokers.IContentManagementPackageManagerBroker contentManagementPackageManagerBroker =
-            serviceProvider.GetRequiredService<cCoder.Packaging.Brokers.IContentManagementPackageManagerBroker>();
         cCoder.Packaging.Brokers.IWorkflowPackageManagerBroker workflowPackageManagerBroker =
             serviceProvider.GetRequiredService<cCoder.Packaging.Brokers.IWorkflowPackageManagerBroker>();
         cCoder.Packaging.Brokers.ISchedulingPackageManagerBroker schedulingPackageManagerBroker =
@@ -135,7 +206,7 @@ internal sealed class FirstTimeSetupAppService(
 
             if (itemTypes.Any(type => ContentManagementTypes.Contains(type)))
             {
-                await contentManagementPackageManagerBroker.ImportPackageAsync(appId, importPackage);
+                await ImportContentManagementPackageAsync(appId, importPackage);
                 continue;
             }
 
@@ -148,6 +219,356 @@ internal sealed class FirstTimeSetupAppService(
             if (itemTypes.Any(type => SchedulingTypes.Contains(type)))
                 await schedulingPackageManagerBroker.ImportPackageAsync(appId, importPackage);
         }
+    }
+
+    private async Task ImportContentManagementPackageAsync(int appId, Package package)
+    {
+        await using DbContext core = coreContextFactory.CreateCoreContext();
+
+        foreach (PackageItem item in package.Items ?? [])
+        {
+            switch (item.Type)
+            {
+                case "Core/Component":
+                    await PersistComponentsAsync(
+                        core,
+                        appId,
+                        JsonConvert.DeserializeObject<Component[]>(item.Data) ?? []);
+                    break;
+                case "Core/Layout":
+                    await PersistLayoutsAsync(
+                        core,
+                        appId,
+                        JsonConvert.DeserializeObject<Layout[]>(item.Data) ?? []);
+                    break;
+                case "Core/Page":
+                    await PersistPagesAsync(
+                        core,
+                        appId,
+                        JsonConvert.DeserializeObject<Page[]>(item.Data) ?? []);
+                    break;
+                case "Core/PageRole":
+                    await PersistPageRolesAsync(
+                        core,
+                        appId,
+                        JsonConvert.DeserializeObject<cCoder.ContentManagement.Models.PageRoleInfo[]>(item.Data) ?? []);
+                    break;
+                case "Core/Template":
+                    await PersistTemplatesAsync(
+                        core,
+                        appId,
+                        JsonConvert.DeserializeObject<Template[]>(item.Data) ?? []);
+                    break;
+            }
+        }
+    }
+
+    private static async Task PersistLayoutsAsync(DbContext core, int appId, IEnumerable<Layout> layouts)
+    {
+        Layout[] items = layouts.ToArray();
+
+        if (items.Length == 0)
+            return;
+
+        Layout[] existingLayouts = await core.Set<Layout>()
+            .IgnoreQueryFilters()
+            .Where(found => found.AppId == appId)
+            .ToArrayAsync();
+
+        foreach (Layout item in items)
+        {
+            Layout existingLayout = existingLayouts.FirstOrDefault(found =>
+                string.Equals(found.Name, item.Name, StringComparison.OrdinalIgnoreCase));
+
+            if (existingLayout is null)
+            {
+                await core.Set<Layout>().AddAsync(new Layout
+                {
+                    AppId = appId,
+                    Name = item.Name,
+                    Description = item.Description,
+                    HeaderHtml = item.HeaderHtml,
+                    Html = item.Html,
+                    Script = item.Script,
+                    CreatedBy = item.CreatedBy,
+                    CreatedOn = item.CreatedOn,
+                    LastUpdated = item.LastUpdated,
+                    LastUpdatedBy = item.LastUpdatedBy,
+                });
+                continue;
+            }
+
+            existingLayout.Description = item.Description;
+            existingLayout.HeaderHtml = item.HeaderHtml;
+            existingLayout.Html = item.Html;
+            existingLayout.Script = item.Script;
+            existingLayout.CreatedBy = item.CreatedBy;
+            existingLayout.CreatedOn = item.CreatedOn;
+            existingLayout.LastUpdated = item.LastUpdated;
+            existingLayout.LastUpdatedBy = item.LastUpdatedBy;
+        }
+
+        await core.SaveChangesAsync();
+    }
+
+    private static async Task PersistTemplatesAsync(DbContext core, int appId, IEnumerable<Template> templates)
+    {
+        Template[] items = templates.ToArray();
+
+        if (items.Length == 0)
+            return;
+
+        Template[] existingTemplates = await core.Set<Template>()
+            .IgnoreQueryFilters()
+            .Where(found => found.AppId == appId)
+            .ToArrayAsync();
+
+        foreach (Template item in items)
+        {
+            Template existingTemplate = existingTemplates.FirstOrDefault(found =>
+                string.Equals(found.Name, item.Name, StringComparison.OrdinalIgnoreCase));
+
+            if (existingTemplate is null)
+            {
+                await core.Set<Template>().AddAsync(new Template
+                {
+                    AppId = appId,
+                    Name = item.Name,
+                    Description = item.Description,
+                    ResourceKey = item.ResourceKey,
+                    RawString = item.RawString,
+                    CreatedBy = item.CreatedBy,
+                    CreatedOn = item.CreatedOn,
+                    LastUpdated = item.LastUpdated,
+                    LastUpdatedBy = item.LastUpdatedBy,
+                });
+                continue;
+            }
+
+            existingTemplate.Description = item.Description;
+            existingTemplate.ResourceKey = item.ResourceKey;
+            existingTemplate.RawString = item.RawString;
+            existingTemplate.CreatedBy = item.CreatedBy;
+            existingTemplate.CreatedOn = item.CreatedOn;
+            existingTemplate.LastUpdated = item.LastUpdated;
+            existingTemplate.LastUpdatedBy = item.LastUpdatedBy;
+        }
+
+        await core.SaveChangesAsync();
+    }
+
+    private static async Task PersistComponentsAsync(DbContext core, int appId, IEnumerable<Component> components)
+    {
+        Component[] items = components.ToArray();
+
+        if (items.Length == 0)
+            return;
+
+        Component[] existingComponents = await core.Set<Component>()
+            .IgnoreQueryFilters()
+            .Where(found => found.AppId == appId)
+            .ToArrayAsync();
+
+        foreach (Component item in items)
+        {
+            Component existingComponent = existingComponents.FirstOrDefault(found =>
+                string.Equals(found.Name, item.Name, StringComparison.OrdinalIgnoreCase));
+
+            if (existingComponent is null)
+            {
+                await core.Set<Component>().AddAsync(new Component
+                {
+                    AppId = appId,
+                    Name = item.Name,
+                    Description = item.Description,
+                    ResourceKey = item.ResourceKey,
+                    Content = item.Content,
+                    Script = item.Script,
+                    Key = item.Key,
+                    CreatedBy = item.CreatedBy,
+                    CreatedOn = item.CreatedOn,
+                    LastUpdated = item.LastUpdated,
+                    LastUpdatedBy = item.LastUpdatedBy,
+                });
+                continue;
+            }
+
+            existingComponent.Description = item.Description;
+            existingComponent.ResourceKey = item.ResourceKey;
+            existingComponent.Content = item.Content;
+            existingComponent.Script = item.Script;
+            existingComponent.Key = item.Key;
+            existingComponent.CreatedBy = item.CreatedBy;
+            existingComponent.CreatedOn = item.CreatedOn;
+            existingComponent.LastUpdated = item.LastUpdated;
+            existingComponent.LastUpdatedBy = item.LastUpdatedBy;
+        }
+
+        await core.SaveChangesAsync();
+    }
+
+    private static async Task PersistPagesAsync(DbContext core, int appId, IEnumerable<Page> pages)
+    {
+        Page[] items = pages
+            .OrderBy(item => GetPageDepth(item.Path))
+            .ThenBy(item => item.Order)
+            .ToArray();
+
+        if (items.Length == 0)
+            return;
+
+        foreach (Page item in items)
+        {
+            string normalizedPath = NormalizePagePath(item.Path);
+            string parentPath = GetParentPagePath(normalizedPath);
+
+            Page existingPage = await core.Set<Page>()
+                .IgnoreQueryFilters()
+                .Include(found => found.PageInfo)
+                .Include(found => found.Contents)
+                .FirstOrDefaultAsync(found =>
+                    found.AppId == appId &&
+                    found.Path == normalizedPath);
+
+            Page parent = string.IsNullOrWhiteSpace(parentPath)
+                ? null
+                : await core.Set<Page>()
+                    .IgnoreQueryFilters()
+                    .FirstOrDefaultAsync(found =>
+                        found.AppId == appId &&
+                        found.Path == parentPath);
+
+            if (existingPage is null)
+            {
+                Page newPage = new()
+                {
+                    AppId = appId,
+                    ParentId = parent?.Id,
+                    Order = item.Order,
+                    ShowOnMenus = item.ShowOnMenus,
+                    Name = item.Name,
+                    LastUpdated = item.LastUpdated,
+                    LastUpdatedBy = item.LastUpdatedBy,
+                    CreatedOn = item.CreatedOn,
+                    CreatedBy = item.CreatedBy,
+                    Path = normalizedPath,
+                    ResourceKey = item.ResourceKey,
+                    Layout = item.Layout,
+                    PageInfo = (item.PageInfo ?? [])
+                        .Select(info => new PageInfo
+                        {
+                            CultureId = info.CultureId,
+                            Title = info.Title,
+                            Description = info.Description,
+                            Keywords = info.Keywords,
+                        })
+                        .ToList(),
+                    Contents = (item.Contents ?? [])
+                        .Select(content => new cCoder.Data.Models.CMS.Content
+                        {
+                            CultureId = content.CultureId,
+                            Name = content.Name,
+                            Html = content.Html,
+                        })
+                        .ToList(),
+                };
+
+                await core.Set<Page>().AddAsync(newPage);
+                await core.SaveChangesAsync();
+                continue;
+            }
+
+            existingPage.ParentId = parent?.Id;
+            existingPage.Order = item.Order;
+            existingPage.ShowOnMenus = item.ShowOnMenus;
+            existingPage.Name = item.Name;
+            existingPage.LastUpdated = item.LastUpdated;
+            existingPage.LastUpdatedBy = item.LastUpdatedBy;
+            existingPage.CreatedOn = item.CreatedOn;
+            existingPage.CreatedBy = item.CreatedBy;
+            existingPage.Path = normalizedPath;
+            existingPage.ResourceKey = item.ResourceKey;
+            existingPage.Layout = item.Layout;
+
+            core.Set<PageInfo>().RemoveRange(existingPage.PageInfo ?? []);
+            core.Set<cCoder.Data.Models.CMS.Content>().RemoveRange(existingPage.Contents ?? []);
+
+            existingPage.PageInfo = (item.PageInfo ?? [])
+                .Select(info => new PageInfo
+                {
+                    PageId = existingPage.Id,
+                    CultureId = info.CultureId,
+                    Title = info.Title,
+                    Description = info.Description,
+                    Keywords = info.Keywords,
+                })
+                .ToList();
+            existingPage.Contents = (item.Contents ?? [])
+                .Select(content => new cCoder.Data.Models.CMS.Content
+                {
+                    PageId = existingPage.Id,
+                    CultureId = content.CultureId,
+                    Name = content.Name,
+                    Html = content.Html,
+                })
+                .ToList();
+
+            await core.SaveChangesAsync();
+        }
+    }
+
+    private static async Task PersistPageRolesAsync(
+        DbContext core,
+        int appId,
+        IEnumerable<cCoder.ContentManagement.Models.PageRoleInfo> pageRoles)
+    {
+        cCoder.ContentManagement.Models.PageRoleInfo[] items = pageRoles.ToArray();
+
+        if (items.Length == 0)
+            return;
+
+        Dictionary<string, int> pageIdsByPath = await core.Set<Page>()
+            .IgnoreQueryFilters()
+            .Where(found => found.AppId == appId)
+            .ToDictionaryAsync(found => found.Path, found => found.Id, StringComparer.OrdinalIgnoreCase);
+
+        Dictionary<string, Guid> roleIdsByName = await core.Set<Role>()
+            .IgnoreQueryFilters()
+            .Where(found => found.AppId == appId)
+            .ToDictionaryAsync(found => found.Name, found => found.Id, StringComparer.OrdinalIgnoreCase);
+
+        HashSet<string> existingPairs =
+        [
+            .. await core.Set<PageRole>()
+                .IgnoreQueryFilters()
+                .Where(found => pageIdsByPath.Values.Contains(found.PageId))
+                .Select(found => found.PageId + "|" + found.RoleId)
+                .ToArrayAsync()
+        ];
+
+        foreach (cCoder.ContentManagement.Models.PageRoleInfo item in items)
+        {
+            string normalizedPath = NormalizePagePath(item.Path);
+
+            if (!pageIdsByPath.TryGetValue(normalizedPath, out int pageId))
+                throw new InvalidOperationException($"Baseline page role target page was not imported: {normalizedPath}");
+
+            if (!roleIdsByName.TryGetValue(item.Role, out Guid roleId))
+                throw new InvalidOperationException($"Baseline page role target role was not found: {item.Role}");
+
+            string key = pageId + "|" + roleId;
+
+            if (!existingPairs.Add(key))
+                continue;
+
+            await core.Set<PageRole>().AddAsync(new PageRole
+            {
+                PageId = pageId,
+                RoleId = roleId,
+            });
+        }
+
+        await core.SaveChangesAsync();
     }
 
     private async Task EnsureGuestUserAsync(CancellationToken cancellationToken)
@@ -182,7 +603,45 @@ internal sealed class FirstTimeSetupAppService(
         Package[] clonedPackages = packages.ToArray();
 
         await using DbContext core = coreContextFactory.CreateCoreContext();
-        await core.Set<Package>().AddRangeAsync(clonedPackages, cancellationToken);
+        string[] packageNames = clonedPackages
+            .Select(package => package.Name)
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        Package[] existingPackages = await core.Set<Package>()
+            .IgnoreQueryFilters()
+            .Include(found => found.Items)
+            .Where(found => packageNames.Contains(found.Name))
+            .ToArrayAsync(cancellationToken);
+
+        foreach (Package package in clonedPackages)
+        {
+            Package existingPackage = existingPackages.FirstOrDefault(found =>
+                string.Equals(found.Name, package.Name, StringComparison.OrdinalIgnoreCase));
+
+            if (existingPackage is null)
+            {
+                await core.Set<Package>().AddAsync(package, cancellationToken);
+                continue;
+            }
+
+            existingPackage.Description = package.Description;
+            existingPackage.Category = package.Category;
+            existingPackage.SourceApi = package.SourceApi;
+
+            core.Set<PackageItem>().RemoveRange(existingPackage.Items ?? []);
+            existingPackage.Items = (package.Items ?? [])
+                .Select(item => new PackageItem
+                {
+                    Id = Guid.NewGuid(),
+                    PackageId = existingPackage.Id,
+                    Type = item.Type,
+                    Data = item.Data,
+                })
+                .ToArray();
+        }
+
         await core.SaveChangesAsync(cancellationToken);
     }
 
@@ -451,12 +910,60 @@ internal sealed class FirstTimeSetupAppService(
         NormalizeCommonObjects(items, createdBy);
 
         await using DbContext core = coreContextFactory.CreateCoreContext();
-        await core.Set<CommonObject>().AddRangeAsync(items, cancellationToken);
+        string[] names = items
+            .Select(item => item.Name)
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        CommonObject[] existingItems = await core.Set<CommonObject>()
+            .IgnoreQueryFilters()
+            .Where(found => names.Contains(found.Name))
+            .ToArrayAsync(cancellationToken);
+
+        foreach (CommonObject item in items)
+        {
+            CommonObject existingItem = existingItems.FirstOrDefault(found =>
+                string.Equals(found.Name, item.Name, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(found.Type, item.Type, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(found.Key ?? string.Empty, item.Key ?? string.Empty, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(found.Culture ?? string.Empty, item.Culture ?? string.Empty, StringComparison.OrdinalIgnoreCase));
+
+            if (existingItem is null)
+            {
+                await core.Set<CommonObject>().AddAsync(item, cancellationToken);
+                continue;
+            }
+
+            existingItem.Description = item.Description;
+            existingItem.LastUpdated = item.LastUpdated;
+            existingItem.LastUpdatedBy = item.LastUpdatedBy;
+            existingItem.CreatedOn = item.CreatedOn;
+            existingItem.CreatedBy = item.CreatedBy;
+            existingItem.Version = item.Version;
+            existingItem.Key = item.Key;
+            existingItem.Type = item.Type;
+            existingItem.Json = item.Json;
+            existingItem.Culture = item.Culture;
+        }
+
         await core.SaveChangesAsync(cancellationToken);
     }
 
     private static bool ContainsType(IEnumerable<string> itemTypes, string expectedType) =>
         itemTypes.Any(type => string.Equals(type, expectedType, StringComparison.OrdinalIgnoreCase));
+
+    private static int GetPageDepth(string path) =>
+        string.IsNullOrWhiteSpace(path)
+            ? 0
+            : path.Trim('/').Split('/', StringSplitOptions.RemoveEmptyEntries).Length;
+
+    private static string GetParentPagePath(string path)
+    {
+        string normalizedPath = NormalizePagePath(path);
+        int separatorIndex = normalizedPath.LastIndexOf('/');
+        return separatorIndex <= 0 ? string.Empty : normalizedPath[..separatorIndex];
+    }
 
     private static IEnumerable<string> ExtractFolderRolePaths(string data)
     {

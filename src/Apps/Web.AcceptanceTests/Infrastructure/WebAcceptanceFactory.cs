@@ -32,6 +32,7 @@ internal sealed class WebAcceptanceFactory : WebApplicationFactory<Program>
                 new KeyValuePair<string, string>("ConnectionStrings:SSO", settings.SsoConnectionString),
                 new KeyValuePair<string, string>("Settings:DecryptionKey", settings.DecryptionKey),
                 new KeyValuePair<string, string>("Settings:enableExternalEventing", "false"),
+                new KeyValuePair<string, string>("Eventing:Http:HubUrl", string.Empty),
             ]);
         });
         builder.ConfigureServices(services =>
