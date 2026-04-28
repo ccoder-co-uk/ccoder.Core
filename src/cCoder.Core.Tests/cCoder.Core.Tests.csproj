@@ -21,9 +21,9 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\cCoder.Core\cCoder.Core.csproj" />
-    <PackageReference Include="cCoder.AppSecurity" Version="2026.4.*" />
-    <PackageReference Include="cCoder.ContentManagement" Version="2026.4.*" />
-    <PackageReference Include="cCoder.Data" Version="2026.4.*" />
+    <PackageReference Include="cCoder.AppSecurity" Version="2026.4.28.1311" />
+    <PackageReference Include="cCoder.ContentManagement" Version="2026.4.28.1242" />
+    <PackageReference Include="cCoder.Data" Version="2026.4.28.1240" />
   </ItemGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
