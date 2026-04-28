@@ -12,6 +12,7 @@ public static partial class IServiceCollectionExtensions
         ConfigureDefaultLogging(services, GetRequiredConfiguration(services));
         services.AddSingleton<ILoggerProvider, CoreWebSignalRLoggingProvider>();
         services.AddCoreApi(configure ?? (_ => { }));
+        services.AddCoreFirstTimeSetup();
     }
 
     public static void AddCoreHostedServices(

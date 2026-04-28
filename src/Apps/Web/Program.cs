@@ -52,7 +52,6 @@ public class Program
             serviceBusConnection,
             httpEventHubUrl,
             options => ConfigureHttpEventing(config, options));
-        builder.Services.AddCoreFirstTimeSetup();
 
         WebApplication app = builder.Build();
         app.StartCoreWeb();
