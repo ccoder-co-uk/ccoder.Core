@@ -1,6 +1,6 @@
 namespace Web.Services.Setup;
 
-internal static class SetupRequestHostNormalizer
+public static class SetupRequestHostNormalizer
 {
     public static string Normalize(string host) =>
         (host ?? string.Empty)
