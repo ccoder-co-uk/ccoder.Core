@@ -12,7 +12,7 @@ namespace Web;
 
 public class Program
 {
-    private const string DefaultHttpEventHubPath = "Api/Eventing/Http";
+    private const string DefaultHttpEventHubPath = "Api/Eventing";
 
     public static void Main(string[] args)
     {
