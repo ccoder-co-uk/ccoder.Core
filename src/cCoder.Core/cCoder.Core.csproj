@@ -69,6 +69,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Setup\Assets\**\*" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Apps\Web\Controllers\SetupController.cs" Link="Apps\Web\Controllers\SetupController.cs" />
+    <Compile Include="..\Apps\Web\Models\FirstTimeSetupRequest.cs" Link="Apps\Web\Models\FirstTimeSetupRequest.cs" />
+    <Compile Include="..\Apps\Web\Models\FirstTimeSetupViewModel.cs" Link="Apps\Web\Models\FirstTimeSetupViewModel.cs" />
+    <Compile Include="..\Apps\Web\Services\Setup\*.cs" Link="Apps\Web\Services\Setup\%(Filename)%(Extension)" />
+  </ItemGroup>
   <ItemGroup Condition="'$(UseLocalAppSecurity)' == 'true'">
     <ProjectReference Include="$(LocalAppSecurityProject)" AdditionalProperties="UseLocalData=$(UseLocalData);UseLocalSecurity=$(UseLocalSecurity)" />
   </ItemGroup>
