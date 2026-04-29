@@ -11,8 +11,8 @@ public static partial class IServiceCollectionExtensions
     {
         ConfigureDefaultLogging(services, GetRequiredConfiguration(services));
         services.AddSingleton<ILoggerProvider, CoreWebSignalRLoggingProvider>();
-        services.AddCoreApi(configure ?? (_ => { }));
-        services.AddCoreFirstTimeSetup();
+        AddCoreApi(services, configure ?? (_ => { }));
+        AddCoreFirstTimeSetup(services);
     }
 
     public static void AddCoreHostedServices(
@@ -21,26 +21,7 @@ public static partial class IServiceCollectionExtensions
     {
         ConfigureDefaultLogging(services, GetRequiredConfiguration(services));
         services.AddSingleton<ILoggerProvider, CoreHostedSignalRLoggingProvider>();
-        services.AddCore(configure ?? (_ => { }));
+        AddCore(services, configure ?? (_ => { }));
         cCoder.Core.Api.IServiceCollectionExtensions.AddAspNet(services);
-    }
-
-    public static void AddCoreApi(
-        this IServiceCollection services,
-        Action<CoreApiBuilderOptions> setupAction)
-    {
-        CoreApiBuilderOptions config = new(services);
-        setupAction(config);
-        config.Apply();
-    }
-
-    public static void AddCore(
-        this IServiceCollection services,
-        Action<CoreBuilderOptions> setupAction
-    )
-    {
-        CoreBuilderOptions config = new(services);
-        setupAction(config);
-        config.Apply();
     }
 }

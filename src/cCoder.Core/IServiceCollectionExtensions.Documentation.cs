@@ -1,10 +1,9 @@
 using cCoder.Core.Models;
 using Microsoft.OpenApi;
 
-
 namespace cCoder.Core;
 
-internal static class CoreApiDocumentationServiceCollectionExtensions
+public static partial class IServiceCollectionExtensions
 {
     internal static IServiceCollection AddCoreApiDocumentation(
         this IServiceCollection services,
@@ -143,6 +142,3 @@ internal static class CoreApiDocumentationServiceCollectionExtensions
     private static string NormalizePath(string relativePath) =>
         relativePath.StartsWith('/') ? relativePath : $"/{relativePath}";
 }
-
-
-
