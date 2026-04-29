@@ -1,5 +1,4 @@
 using cCoder.Core;
-using cCoder.Core.Models;
 using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.DMS;
 using cCoder.Eventing;
@@ -13,23 +12,22 @@ public class Program
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
         IConfiguration config = ConfigureApplication(builder.Configuration);
-        CoreHostConfiguration hostConfiguration = CoreHostConfigurationReader.ReadForHostedServices(config);
 
         builder.Services.AddCoreHostedServices(coreBuilder =>
         {
             coreBuilder.ConfigureDomainsWith(coreConfig =>
             {
-                coreConfig.CoreConnectionString = hostConfiguration.CoreConnectionString;
-                coreConfig.SecurityConnectionString = hostConfiguration.SecurityConnectionString;
-                coreConfig.DecryptionKey = hostConfiguration.DecryptionKey;
-                coreConfig.CacheSource = hostConfiguration.CacheSource;
-                coreConfig.CacheSourceAppId = hostConfiguration.CacheSourceAppId;
-                coreConfig.CacheExpiry = hostConfiguration.CacheExpiry;
-                coreConfig.SslPort = hostConfiguration.SslPort;
-                coreConfig.WorkflowServiceUrl = hostConfiguration.WorkflowServiceUrl;
-                coreConfig.MaxConcurrency = hostConfiguration.MaxConcurrency;
-                coreConfig.DebugInfo = hostConfiguration.DebugInfo;
-                coreConfig.LogSQL = hostConfiguration.LogSQL;
+                coreConfig.CoreConnectionString = config.GetValue<string>("ConnectionStrings:Core");
+                coreConfig.SecurityConnectionString = config.GetValue<string>("ConnectionStrings:SSO");
+                coreConfig.DecryptionKey = config.GetValue<string>("Settings:DecryptionKey");
+                coreConfig.CacheSource = config.GetValue<string>("Settings:CacheSource");
+                coreConfig.CacheSourceAppId = config.GetValue<int?>("Settings:CacheSourceAppId");
+                coreConfig.CacheExpiry = config.GetValue<int?>("Settings:CacheExpiry");
+                coreConfig.SslPort = config.GetValue<int?>("Settings:sslPort");
+                coreConfig.WorkflowServiceUrl = config.GetValue<string>("Services:Workflow");
+                coreConfig.MaxConcurrency = config.GetValue<int?>("Eventing:Http:MaxConcurrency") ?? 1;
+                coreConfig.DebugInfo = config.GetValue<bool>("DebugInfo");
+                coreConfig.LogSQL = config.GetValue<bool>("LogSQL");
                 coreConfig.EventProviders =
                 [
                     CreateExternalReceiveProvider<App>(["app_add", "app_update", "app_delete"]),
