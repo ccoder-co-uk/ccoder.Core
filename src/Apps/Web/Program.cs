@@ -1,5 +1,4 @@
 using cCoder.Core;
-using cCoder.Core.Models;
 using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.DMS;
 using cCoder.Eventing.Http;
@@ -13,27 +12,26 @@ public class Program
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
         IConfiguration config = ConfigureApplication(builder.Configuration);
-        CoreHostConfiguration hostConfiguration = CoreHostConfigurationReader.ReadForWeb(config);
 
         builder.Services.AddCoreWeb(coreBuilder =>
         {
             coreBuilder.ConfigureDomainsWith(coreConfig =>
             {
-                coreConfig.CoreConnectionString = hostConfiguration.CoreConnectionString;
-                coreConfig.SecurityConnectionString = hostConfiguration.SecurityConnectionString;
-                coreConfig.DecryptionKey = hostConfiguration.DecryptionKey;
-                coreConfig.CacheSource = hostConfiguration.CacheSource;
-                coreConfig.CacheSourceAppId = hostConfiguration.CacheSourceAppId;
-                coreConfig.CacheExpiry = hostConfiguration.CacheExpiry;
-                coreConfig.SslPort = hostConfiguration.SslPort;
-                coreConfig.WorkflowServiceUrl = hostConfiguration.WorkflowServiceUrl;
-                coreConfig.HttpEventHubUrl = hostConfiguration.HttpEventHubUrl;
-                coreConfig.EnableHttpEventing = hostConfiguration.EnableHttpEventing;
-                coreConfig.MaxConcurrency = hostConfiguration.MaxConcurrency;
-                coreConfig.DebugInfo = hostConfiguration.DebugInfo;
-                coreConfig.LogSQL = hostConfiguration.LogSQL;
+                coreConfig.CoreConnectionString = config.GetValue<string>("ConnectionStrings:Core");
+                coreConfig.SecurityConnectionString = config.GetValue<string>("ConnectionStrings:SSO");
+                coreConfig.DecryptionKey = config.GetValue<string>("Settings:DecryptionKey");
+                coreConfig.CacheSource = config.GetValue<string>("Settings:CacheSource");
+                coreConfig.CacheSourceAppId = config.GetValue<int?>("Settings:CacheSourceAppId");
+                coreConfig.CacheExpiry = config.GetValue<int?>("Settings:CacheExpiry");
+                coreConfig.SslPort = config.GetValue<int?>("Settings:sslPort");
+                coreConfig.WorkflowServiceUrl = config.GetValue<string>("Services:Workflow");
+                coreConfig.HttpEventHubUrl = GetHttpEventHubUrl(config);
+                coreConfig.EnableHttpEventing = !string.IsNullOrWhiteSpace(coreConfig.HttpEventHubUrl);
+                coreConfig.MaxConcurrency = config.GetValue<int?>("Eventing:Http:MaxConcurrency") ?? 1;
+                coreConfig.DebugInfo = config.GetValue<bool>("DebugInfo");
+                coreConfig.LogSQL = config.GetValue<bool>("LogSQL");
 
-                if (hostConfiguration.EnableHttpEventing)
+                if (coreConfig.EnableHttpEventing)
                 {
                     coreConfig.EventProviders =
                     [
@@ -58,6 +56,23 @@ public class Program
             .AddEnvironmentVariables();
 
         return configuration;
+    }
+
+    private static string GetHttpEventHubUrl(IConfiguration configuration)
+    {
+        string explicitHubUrl = configuration.GetValue<string>("Eventing:Http:HubUrl");
+
+        if (!string.IsNullOrWhiteSpace(explicitHubUrl))
+            return explicitHubUrl;
+
+        if (!(configuration.GetValue<bool?>("Settings:enableExternalEventing") ?? true))
+            return string.Empty;
+
+        string hostedServicesRoot = configuration.GetValue<string>("Services:HostedServices");
+
+        return string.IsNullOrWhiteSpace(hostedServicesRoot)
+            ? null
+            : $"{hostedServicesRoot.TrimEnd('/')}/Api/Eventing";
     }
 
     private static EventProvider<T> CreateExternalSendProvider<T>(string[] eventNames) =>
