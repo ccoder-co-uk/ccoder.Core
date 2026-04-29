@@ -1,10 +1,9 @@
 using cCoder.Data.Models;
 using Microsoft.AspNetCore.OData;
 
-
 namespace cCoder.Core;
 
-internal static class CoreApiDocumentationWebApplicationExtensions
+public static partial class WebApplicationExtensions
 {
     internal static WebApplication UseCoreApiDocumentation(this WebApplication app)
     {
@@ -42,6 +41,3 @@ internal static class CoreApiDocumentationWebApplicationExtensions
         return app;
     }
 }
-
-
-

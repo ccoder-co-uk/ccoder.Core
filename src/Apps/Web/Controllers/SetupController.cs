@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Web.Models;
 using Web.Services.Setup;
 
@@ -8,7 +9,8 @@ namespace Web.Controllers;
 public sealed class SetupController(
     IFirstTimeSetupStateService setupStateService,
     IFirstTimeSetupOrchestrationService setupOrchestrationService,
-    cCoder.Core.Services.Orchestrations.IUserRegistrationOrchestrationService userRegistrationOrchestrationService)
+    cCoder.Core.Services.Orchestrations.IUserRegistrationOrchestrationService userRegistrationOrchestrationService,
+    ILogger<SetupController> log)
     : Controller
 {
     [HttpGet("")]
@@ -45,6 +47,7 @@ public sealed class SetupController(
         }
         catch (Exception ex)
         {
+            log.LogError(ex, "First-time setup failed.");
             ModelState.AddModelError(string.Empty, ex.Message);
             return View(CreateViewModel(setup));
         }

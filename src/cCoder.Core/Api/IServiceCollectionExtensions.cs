@@ -102,6 +102,14 @@ internal static class IServiceCollectionExtensions
         services.AddPackaging();
 
         DefaultODataBatchHandler batchHandler = new();
+        CoreApiRouteDefinition[] definitions = (routeDefinitions ?? [])
+            .Where(route =>
+                route is not null
+                && (string.Equals(route.Name, "Core", StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(route.RoutePath, "Api/Core", StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(route.Name, "Security", StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(route.RoutePath, "Api/Security", StringComparison.OrdinalIgnoreCase)))
+            .ToArray();
 
         services.AddControllers().AddOData(opt =>
         {
@@ -115,8 +123,7 @@ internal static class IServiceCollectionExtensions
                 .OrderBy()
                 .SetMaxTop(1000);
 
-            foreach (CoreApiRouteDefinition routeDefinition in routeDefinitions
-                ?? [])
+            foreach (CoreApiRouteDefinition routeDefinition in definitions)
             {
                 _ = opt.AddRouteComponents(
                     routeDefinition.RoutePath,
