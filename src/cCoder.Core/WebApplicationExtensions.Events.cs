@@ -2,13 +2,11 @@ using cCoder.AppSecurity;
 using cCoder.ContentManagement;
 using cCoder.Core.Cors;
 using cCoder.DocumentManagement;
+using cCoder.Logging;
 using cCoder.Mail;
 using cCoder.Scheduling;
 using cCoder.Security;
 using cCoder.Workflow;
-using cCoder.Eventing.AzureServiceBus;
-using cCoder.Eventing.AzureServiceBus.Models;
-using cCoder.Eventing.Models;
 
 namespace cCoder.Core;
 
@@ -16,28 +14,21 @@ public static partial class WebApplicationExtensions
 {
     private static WebApplication ListenToExternalEvents(this WebApplication app)
     {
-        app.UseAppSecurityEventHandlers();
-        app.UseDocumentManagementEventHandlers();
-        app.UseMailEventHandlers();
-        app.UseSchedulingEventHandlers();
-        app.UseWorkflowScheduledTaskExecutionHandlers();
+        app.StartAppSecurityHostedServices();
+        app.StartContentManagementHostedServices();
+        app.StartDocumentManagementHostedServices();
+        app.StartLoggingHostedServices();
+        app.StartMailHostedServices();
+        app.StartSchedulingHostedServices();
+        app.StartWorkflowHostedServices();
         app.UseCoreInternalEventHandlers();
-        app.UseAppSecurityDeleteEventHandlers();
-        app.UseConfiguredExternalEventProviders();
         return app;
     }
 
     private static WebApplication UseCoreEventHandlers(this WebApplication app)
     {
-        app.UseAppSecurityEventHandlers();
-        app.ListenToContentManagementEvents();
         app.ListenToSecurityEvents();
-        app.UseDocumentManagementEventHandlers();
-        app.UseMailEventHandlers();
-        app.UseSchedulingEventHandlers();
-        app.UseWorkflowEventHandlers();
         app.UseCoreInternalEventHandlers();
-        app.UseAppSecurityDeleteEventHandlers();
         return app;
     }
 
@@ -50,62 +41,5 @@ public static partial class WebApplicationExtensions
             handlers.ListenToAllEvents();
 
         return app;
-    }
-
-    private static WebApplication UseConfiguredExternalEventProviders(this WebApplication app)
-    {
-        IAzureServiceBusEventHub azureServiceBusEventHub =
-            app.Services.GetService<IAzureServiceBusEventHub>();
-
-        if (azureServiceBusEventHub is null)
-            return app;
-
-        foreach (EventProvider provider in app.Services.GetServices<EventProvider>())
-            SubscribeConfiguredExternalEventProvider(azureServiceBusEventHub, provider);
-
-        return app;
-    }
-
-    private static void SubscribeConfiguredExternalEventProvider(
-        IAzureServiceBusEventHub azureServiceBusEventHub,
-        EventProvider provider)
-    {
-        foreach (string eventName in (provider.Events ?? [])
-                     .Where(eventName => !string.IsNullOrWhiteSpace(eventName))
-                     .Distinct(StringComparer.Ordinal))
-        {
-            typeof(WebApplicationExtensions)
-                .GetMethod(
-                    nameof(SubscribeConfiguredExternalEventProviderCore),
-                    System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!
-                .MakeGenericMethod(provider.DataType)
-                .Invoke(null, [azureServiceBusEventHub, provider, eventName]);
-        }
-    }
-
-    private static void SubscribeConfiguredExternalEventProviderCore<T>(
-        IAzureServiceBusEventHub azureServiceBusEventHub,
-        EventProvider provider,
-        string eventName)
-    {
-        if (!provider.CanReceive(eventName))
-            return;
-
-        azureServiceBusEventHub.ListenToEvent<T>(
-            eventName,
-            (serviceProvider, message) =>
-                provider.ReceiveAsync(
-                    serviceProvider,
-                    eventName,
-                    new EventMessage<T>
-                    {
-                        AuthInfo = new EventAuthInfo
-                        {
-                            SSOUserId =
-                                serviceProvider.GetService<IServiceBusEventAuthInfo>()?.SSOUserId
-                                ?? "Guest",
-                        },
-                        Data = message,
-                    }));
     }
 }

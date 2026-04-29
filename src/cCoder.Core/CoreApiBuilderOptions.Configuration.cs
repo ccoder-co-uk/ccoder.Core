@@ -1,3 +1,4 @@
+using cCoder.Core.Api;
 using cCoder.Core.Models;
 using cCoder.Data.Models;
 using Microsoft.OData.Edm;
@@ -115,6 +116,26 @@ public partial class CoreApiBuilderOptions
         configType.GetProperty("IncludeLegacyCoreContext")?.SetValue(
             configuration,
             defaults.SplitDomains && defaults.IncludeLegacyCoreContext);
+    }
+
+    private static CoreApiRouteDefinition[] EnsureRequiredRoutes(
+        IEnumerable<CoreApiRouteDefinition> routes)
+    {
+        CoreApiRouteDefinition[] definitions = (routes ?? [])
+            .Where(route => route is not null)
+            .ToArray();
+
+        if (definitions.Any(route => string.Equals(route.Name, "Security", StringComparison.OrdinalIgnoreCase)))
+            return definitions;
+
+        return
+        [
+            .. definitions,
+            new CoreApiRouteDefinition(
+                "Security",
+                "Api/Security",
+                BuildRouteModel([static builder => builder.ConfigureCoreSecurityApiModel()]))
+        ];
     }
 
 }
