@@ -15,10 +15,20 @@ namespace Web.AcceptanceTests.Infrastructure;
 internal sealed class WebAcceptanceFactory : WebApplicationFactory<Program>
 {
     private readonly AcceptanceSettings settings;
+    private readonly string originalHttpEventHubUrl;
+    private readonly string originalHostedServicesUrl;
+    private readonly string originalExternalEventingSetting;
 
     public WebAcceptanceFactory(AcceptanceSettings settings)
     {
         this.settings = settings;
+        originalHttpEventHubUrl = Environment.GetEnvironmentVariable("Eventing__Http__HubUrl");
+        originalHostedServicesUrl = Environment.GetEnvironmentVariable("Services__HostedServices");
+        originalExternalEventingSetting = Environment.GetEnvironmentVariable("Settings__enableExternalEventing");
+
+        Environment.SetEnvironmentVariable("Eventing__Http__HubUrl", null);
+        Environment.SetEnvironmentVariable("Services__HostedServices", null);
+        Environment.SetEnvironmentVariable("Settings__enableExternalEventing", "false");
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -69,6 +79,14 @@ internal sealed class WebAcceptanceFactory : WebApplicationFactory<Program>
                 settings.CoreConnectionString
             );
         });
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        Environment.SetEnvironmentVariable("Eventing__Http__HubUrl", originalHttpEventHubUrl);
+        Environment.SetEnvironmentVariable("Services__HostedServices", originalHostedServicesUrl);
+        Environment.SetEnvironmentVariable("Settings__enableExternalEventing", originalExternalEventingSetting);
+        base.Dispose(disposing);
     }
 }
 

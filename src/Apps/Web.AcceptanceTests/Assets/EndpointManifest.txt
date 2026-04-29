@@ -458,6 +458,7 @@ POST Api/DocumentManagement/FileContent
 POST Api/DocumentManagement/Folder
 POST Api/DocumentManagement/Folder/Copy
 POST Api/DocumentManagement/FolderRole
+POST Api/Eventing
 POST Api/Eventing/Http
 POST Api/ExecuteScript
 POST Api/Logging/LogDataItem

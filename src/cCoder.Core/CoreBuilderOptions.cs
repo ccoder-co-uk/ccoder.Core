@@ -1,5 +1,4 @@
 using cCoder.AppSecurity;
-using cCoder.AppSecurity.Exposures.HostedServices;
 using cCoder.ContentManagement;
 using cCoder.Core.Api;
 using cCoder.Core.Cors;
@@ -7,13 +6,12 @@ using cCoder.Core.Models;
 using cCoder.Data;
 using cCoder.DocumentManagement.Models;
 using cCoder.DocumentManagement;
+using cCoder.Logging;
 using cCoder.Logging.Models;
 using cCoder.Mail;
-using cCoder.Mail.Exposures.HostedServices;
 using cCoder.Mail.Models;
 using cCoder.Packaging;
 using cCoder.Scheduling;
-using cCoder.Scheduling.Exposures.HostedServices;
 using cCoder.Scheduling.Models;
 using cCoder.Security;
 using cCoder.Security.Api;
@@ -21,12 +19,13 @@ using cCoder.Security.Data.EF.MSSQL;
 using cCoder.AppSecurity.Models;
 using cCoder.ContentManagement.Models;
 using cCoder.Workflow;
-using cCoder.Workflow.Exposures.HostedServices;
 using cCoder.Workflow.Models;
 using cCoder.Eventing.Models;
+using cCoder.Eventing.Http;
+using cCoder.Eventing.Http.Models;
 using Microsoft.OData.Edm;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using DataConfig = cCoder.Data.Config;
+using System.Text.Json.Serialization;
 using ContentManagementRuntimeConfig = cCoder.ContentManagement.Models.Config;
 using MailRuntimeConfig = cCoder.Mail.Models.Config;
 
@@ -37,20 +36,32 @@ public partial class CoreBuilderOptions
 {
     private readonly IServiceCollection services;
     private readonly List<EventProvider> eventProviders = [];
-    private DataConfig coreConfiguration;
+    private CoreConfiguration coreConfiguration;
     private string sessionCacheConnectionString;
 
     public CoreBuilderOptions(IServiceCollection services) => 
         this.services = services;
 
-    public CoreBuilderOptions WithCoreConfiguration(DataConfig configuration)
+    public CoreBuilderOptions WithCoreConfiguration(Action<CoreConfiguration> configure)
     {
-        coreConfiguration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-        services.AddSingleton(configuration);
-        services.AddSingleton(CreateContentManagementRuntimeConfig(configuration));
-        services.AddSingleton(CreateMailRuntimeConfig(configuration));
+        coreConfiguration ??= new CoreConfiguration();
+        configure?.Invoke(coreConfiguration);
+
+        Data.Config runtimeConfiguration = CreateRuntimeConfiguration(coreConfiguration);
+        services.AddSingleton(coreConfiguration);
+        services.AddSingleton(runtimeConfiguration);
+        services.AddSingleton(CreateContentManagementRuntimeConfig(runtimeConfiguration));
+        services.AddSingleton(CreateMailRuntimeConfig(runtimeConfiguration));
 
         return this;
+    }
+
+    public CoreBuilderOptions WithCoreConfiguration(Data.Config configuration)
+    {
+        configuration ??= new Data.Config();
+
+        return WithCoreConfiguration(coreConfig =>
+            CoreConfigurationMapper.PopulateFromRuntimeConfiguration(coreConfig, configuration));
     }
 
     public CoreBuilderOptions WithEventProviders(params EventProvider[] eventProviders)
@@ -59,23 +70,40 @@ public partial class CoreBuilderOptions
         return this;
     }
 
+    public CoreBuilderOptions AddStorage(string connectionString = null)
+    {
+        if (!string.IsNullOrWhiteSpace(connectionString))
+            EnsureCoreConfiguration().CoreConnectionString = connectionString;
+
+        return this;
+    }
+
     public CoreBuilderOptions WithSecurity(
         string connectionString,
         string decryptionKey)
     {
-        services.AddSecurity((securityServices, securityConfig) =>
+        cCoder.Security.IServiceCollectionExtensions.AddSecurity(services, (securityServices, securityConfig) =>
         {
             securityConfig.AddMSSQLModelProvider(
                 securityServices,
-                connectionString);
-
+                connectionString ?? string.Empty);
             securityConfig.UseAESHMMACPasswordEncryption(
                 securityServices,
-                decryptionKey);
+                decryptionKey ?? string.Empty);
         });
 
-        return this;
+        return WithCoreConfiguration(coreConfig =>
+        {
+            if (!string.IsNullOrWhiteSpace(connectionString))
+                coreConfig.SecurityConnectionString = connectionString;
+
+            if (!string.IsNullOrWhiteSpace(decryptionKey))
+                coreConfig.DecryptionKey = decryptionKey;
+        });
     }
+
+    public CoreBuilderOptions UseHttpEventing() =>
+        WithCoreConfiguration(coreConfig => coreConfig.EnableHttpEventing = true);
 
     public CoreBuilderOptions WithSessionCache(string connectionString)
     {
@@ -85,12 +113,14 @@ public partial class CoreBuilderOptions
 
     public CoreBuilderOptions UseMSSQLProvider(string connectionString = null)
     {
-        if (string.IsNullOrWhiteSpace(connectionString)
-            && coreConfiguration?.ConnectionStrings is not null
-            && coreConfiguration.ConnectionStrings.TryGetValue("Core", out string coreConnection))
-        {
-            connectionString = coreConnection;
-        }
+        AddStorage(connectionString);
+
+        return this;
+    }
+
+    private string ResolveCoreConnectionString()
+    {
+        string connectionString = coreConfiguration?.CoreConnectionString;
 
         if (string.IsNullOrWhiteSpace(connectionString))
         {
@@ -98,8 +128,7 @@ public partial class CoreBuilderOptions
                 "A core database connection must be provided directly or available via core configuration.");
         }
 
-        services.AddCoreData(connectionString);
-        return this;
+        return connectionString;
     }
 
     public CoreBuilderOptions UseContentManagement(
@@ -108,7 +137,7 @@ public partial class CoreBuilderOptions
         bool servicesOnly = false
     )
     {
-        services.AddContentManagement((_, configuration) =>
+        services.AddContentManagementHostedServices(configuration =>
         {
             ApplyCoreDefaults(configuration);
             configure?.Invoke(configuration);
@@ -126,7 +155,7 @@ public partial class CoreBuilderOptions
     public CoreBuilderOptions UseDocumentManagement(
         Action<DocumentManagementConfiguration> configure = null)
     {
-        services.AddDocumentManagement((_, configuration) =>
+        services.AddDocumentManagementHostedServices(configuration =>
         {
             ApplyCoreDefaults(configuration);
             configure?.Invoke(configuration);
@@ -148,29 +177,27 @@ public partial class CoreBuilderOptions
 
     public CoreBuilderOptions UseMail(Action<MailConfiguration> configure = null)
     {
-        services.AddMail((_, configuration) =>
+        services.AddMailHostedServices(configuration =>
         {
             ApplyCoreDefaults(configuration);
             configure?.Invoke(configuration);
         });
-        services.AddHostedService<MailSenderHostedService>();
         return this;
     }
 
     public CoreBuilderOptions UseScheduling(Action<SchedulingConfiguration> configure = null)
     {
-        services.AddScheduling((_, configuration) =>
+        services.AddSchedulingHostedServices(configuration =>
         {
             ApplyCoreDefaults(configuration);
             configure?.Invoke(configuration);
         });
-        services.AddHostedService<TaskRunnerHostedService>();
         return this;
     }
 
     public CoreBuilderOptions UseWorkflow(Action<WorkflowConfiguration> configure = null)
     {
-        services.AddWorkflowHostedServices((_, configuration) =>
+        services.AddWorkflowHostedServices(configuration =>
         {
             ApplyCoreDefaults(configuration);
             configure?.Invoke(configuration);
@@ -180,7 +207,7 @@ public partial class CoreBuilderOptions
 
     public CoreBuilderOptions UseAppSecurity(Action<AppSecurityConfiguration> configure = null)
     {
-        services.AddAppSecurityHostedServices((_, configuration) =>
+        services.AddAppSecurityHostedServices(configuration =>
         {
             ApplyCoreDefaults(configuration);
             configure?.Invoke(configuration);
@@ -191,7 +218,7 @@ public partial class CoreBuilderOptions
 
     public CoreBuilderOptions UseLogging(Action<LoggingConfiguration> configure = null)
     {
-        cCoder.Logging.LoggingServiceCollectionConfigurationExtensions.AddLogging(services, (_, configuration) =>
+        services.AddLoggingHostedServices(configuration =>
         {
             ApplyCoreDefaults(configuration);
             configure?.Invoke(configuration);
@@ -205,13 +232,43 @@ public partial class CoreBuilderOptions
         return this;
     }
 
-    internal void Apply()
+    public CoreBuilderOptions ConfigureDomainsWith(Action<CoreConfiguration> configure)
     {
-        ApplySessionCacheFallback();
-        services.AddCoreHostedEventing(eventProviders);
+        CoreConfiguration configuration = new();
+        configure?.Invoke(configuration);
+
+        WithCoreConfiguration(coreConfig =>
+            CoreConfigurationMapper.Copy(configuration, coreConfig));
+
+        AddStorage(configuration.CoreConnectionString);
+        WithSecurity(
+            configuration.SecurityConnectionString,
+            configuration.DecryptionKey);
+        UseAppSecurity();
+        UseContentManagement();
+        UseDocumentManagement();
+        UseLogging();
+        UseMail();
+        UseScheduling();
+        UseWorkflow();
+        UseHttpEventing();
+        WithEventProviders(configuration.EventProviders ?? []);
+
+        return this;
     }
 
-    private static ContentManagementRuntimeConfig CreateContentManagementRuntimeConfig(DataConfig config) =>
+    public CoreBuilderOptions UseAll(Action<CoreConfiguration> configure) =>
+        ConfigureDomainsWith(configure);
+
+    internal void Apply()
+    {
+        ApplyCoreData();
+        ApplySessionCacheFallback();
+        ApplyHttpEventing();
+        services.AddCoreEventing(eventProviders);
+    }
+
+    private static ContentManagementRuntimeConfig CreateContentManagementRuntimeConfig(Data.Config config) =>
         new()
         {
             ConnectionStrings = new Dictionary<string, string>(
@@ -224,7 +281,7 @@ public partial class CoreBuilderOptions
             LogSQL = config.LogSQL,
         };
 
-    private static MailRuntimeConfig CreateMailRuntimeConfig(DataConfig config) =>
+    private static MailRuntimeConfig CreateMailRuntimeConfig(Data.Config config) =>
         new()
         {
             ConnectionStrings = new Dictionary<string, string>(
@@ -316,28 +373,15 @@ public partial class CoreBuilderOptions
         bool currentDebugInfo,
         bool currentLogSql)
     {
-        if (coreConfiguration is null)
-            return;
-
-        MergeMissingEntries(connectionStrings, coreConfiguration.ConnectionStrings);
-        MergeMissingEntries(settings, coreConfiguration.Settings);
-        MergeMissingEntries(servicesMap, coreConfiguration.Services);
-        debugInfo(currentDebugInfo || coreConfiguration.DebugInfo);
-        logSql(currentLogSql || coreConfiguration.LogSQL);
-    }
-
-    private static void MergeMissingEntries(
-        IDictionary<string, string> target,
-        IDictionary<string, string> defaults)
-    {
-        if (target is null || defaults is null)
-            return;
-
-        foreach ((string key, string value) in defaults)
-        {
-            if (!target.ContainsKey(key))
-                target[key] = value;
-        }
+        CoreConfigurationMapper.ApplyDefaults(
+            coreConfiguration,
+            connectionStrings,
+            settings,
+            servicesMap,
+            debugInfo,
+            logSql,
+            currentDebugInfo,
+            currentLogSql);
     }
 
     private void ApplySessionCacheFallback()
@@ -349,4 +393,26 @@ public partial class CoreBuilderOptions
             services,
             sessionCacheConnectionString);
     }
+
+    private void ApplyCoreData() =>
+        services.AddCoreData(ResolveCoreConnectionString());
+
+    private void ApplyHttpEventing()
+    {
+        if (coreConfiguration?.EnableHttpEventing != true)
+            return;
+
+        services.AddHttpEventingHostedServices(options =>
+        {
+            options.HubUrl = coreConfiguration.HttpEventHubUrl;
+            options.MaxConcurrency = coreConfiguration.MaxConcurrency;
+            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        });
+    }
+
+    private static Data.Config CreateRuntimeConfiguration(CoreConfiguration configuration) =>
+        CoreConfigurationMapper.CreateRuntimeConfiguration(configuration);
+
+    private CoreConfiguration EnsureCoreConfiguration() =>
+        coreConfiguration ??= new CoreConfiguration();
 }

@@ -18,4 +18,9 @@
   <ItemGroup>
     <ProjectReference Include="..\..\cCoder.Core\cCoder.Core.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Controllers\SetupController.cs" />
+    <Compile Remove="Models\FirstTimeSetup*.cs" />
+    <Compile Remove="Services\Setup\**\*.cs" />
+  </ItemGroup>
 </Project>
