@@ -121,7 +121,7 @@
     <PackageReference Include="cCoder.Mail" Version="2026.4.29.913" Condition="'$(UseLocalMail)' != 'true'" />
     <PackageReference Include="cCoder.Packaging" Version="2026.4.28.1241" Condition="'$(UseLocalPackaging)' != 'true'" />
     <PackageReference Include="cCoder.Scheduling" Version="2026.4.29.913" Condition="'$(UseLocalScheduling)' != 'true'" />
-    <PackageReference Include="cCoder.Security" Version="2026.4.27.1805" Condition="'$(UseLocalSecurity)' != 'true'" />
+    <PackageReference Include="cCoder.Security" Version="2026.4.29.2038" Condition="'$(UseLocalSecurity)' != 'true'" />
     <PackageReference Include="cCoder.Security.Data.EF.MSSQL" Version="2026.4.29.2038" Condition="'$(UseLocalSecurity)' != 'true'" />
     <PackageReference Include="cCoder.Workflow" Version="2026.4.29.913" Condition="'$(UseLocalWorkflow)' != 'true'" />
     <PackageReference Include="cCoder.Workflow.Activities" Version="2026.4.29.913" Condition="'$(UseLocalWorkflow)' != 'true'" />
