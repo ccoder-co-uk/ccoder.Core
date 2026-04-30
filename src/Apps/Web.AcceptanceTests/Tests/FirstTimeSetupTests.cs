@@ -52,12 +52,14 @@ public sealed partial class FirstTimeSetupTests
 
         homeResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         homeContent.Should().Contain("/Api/DMS/Content/CompanyLogoTransparent.png");
-        homeContent.Should().Contain("Welcome to cCoder");
-        homeContent.Should().Contain("Open the admin area");
+        homeContent.Should().Contain("Modern bespoke platforms built for connected businesses.");
+        homeContent.Should().Contain("Open Platform");
+        homeContent.Should().Contain("Explore the platform");
+        homeContent.Should().Contain("Notify me");
         homeContent.Should().NotContain("Further Information");
         homeContent.Should().NotContain("Corporate LinX");
         homeContent.Should().Contain("/everything.min.js");
-        homeContent.Should().Contain("Acceptance Admin");
+        homeContent.Should().NotContain("Acceptance Admin");
         homeContent.Should().NotContain("Guest (Login)");
 
         await using DbContext probeCore = harness.Factory.Services
