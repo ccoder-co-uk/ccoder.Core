@@ -44,6 +44,6 @@ public sealed partial class FirstTimeSetupTests
         string content = await response.Content.ReadAsStringAsync();
 
         response.EnsureSuccessStatusCode();
-        content.Should().Contain("Modern bespoke platforms built for connected businesses.");
+        content.Should().Contain("Welcome to cCoder");
     }
 }
