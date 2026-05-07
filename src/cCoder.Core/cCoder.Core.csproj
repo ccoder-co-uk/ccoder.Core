@@ -64,6 +64,8 @@
   <ItemGroup>
     <None Include="..\..\LICENSE.txt" Pack="true" PackagePath="\" />
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+    <None Include="buildTransitive\cCoder.Core.targets" Pack="true" PackagePath="buildTransitive\cCoder.Core.targets" />
+    <None Include="..\Apps\Web\wwwroot\**\*" Pack="true" PackagePath="contentFiles\any\any\wwwroot\%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Setup\Assets\**\*" />
