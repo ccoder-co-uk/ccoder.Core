@@ -2,9 +2,9 @@ using cCoder.Data;
 using cCoder.Data.Models.Security;
 using cCoder.Security.Exposures;
 using Microsoft.EntityFrameworkCore;
-using Web.Models;
+using cCoder.Core.Models;
 
-namespace Web.Services.Setup;
+namespace cCoder.Core.Services.Setup;
 
 internal sealed class FirstTimeSetupUserService(
     IAccountManager accountManager,

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Web.Models;
+namespace cCoder.Core.Models;
 
 public sealed class FirstTimeSetupRequest
 {

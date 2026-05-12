@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace Web.Services.Setup;
+namespace cCoder.Core.Services.Setup;
 
 internal static partial class FirstTimeSetupIdentifiers
 {

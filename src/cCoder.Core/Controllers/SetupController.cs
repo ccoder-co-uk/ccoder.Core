@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Web.Models;
-using Web.Services.Setup;
+using cCoder.Core.Models;
+using cCoder.Core.Services.Setup;
 
-namespace Web.Controllers;
+namespace cCoder.Core.Controllers;
 
 [Route("Setup")]
 public sealed class SetupController(
