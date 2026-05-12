@@ -199,14 +199,13 @@ public partial class CoreApiBuilderOptions
             configuration.SecurityConnectionString,
             configuration.DecryptionKey,
             configuration.SecurityRootPath);
-        AddAppSecurityApi();
-        AddContentManagementApi();
-        AddDocumentManagementApi();
-        AddLoggingApi();
-        AddMailApi();
-        AddSchedulingApi();
-        AddWorkflowApi();
-        UseLegacyCoreApi();
+        AddAppSecurityApi(domain => domain.IncludeLegacyCoreContext = false);
+        AddContentManagementApi(domain => domain.IncludeLegacyCoreContext = false);
+        AddDocumentManagementApi(domain => domain.IncludeLegacyCoreContext = false);
+        AddLoggingApi(domain => domain.IncludeLegacyCoreContext = false);
+        AddMailApi(domain => domain.IncludeLegacyCoreContext = false);
+        AddSchedulingApi(domain => domain.IncludeLegacyCoreContext = false);
+        AddWorkflowApi(domain => domain.IncludeLegacyCoreContext = false);
         UseHttpEventing(configuration.HttpEventHubUrl, options => options.MaxConcurrency = configuration.MaxConcurrency);
         WithEventProviders(configuration.EventProviders ?? []);
 
