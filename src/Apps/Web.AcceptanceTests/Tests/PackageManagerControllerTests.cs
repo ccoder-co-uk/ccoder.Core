@@ -23,7 +23,7 @@ public sealed partial class PackageManagerControllerTests(WebAcceptanceFixture f
     private const string AcceptanceAdminRoleName = "Acceptance Administrators";
     private HttpClient Client { get; } = fixture.Client;
     private string BaseUrl { get; } = "/Api/Core/Package";
-    private string AppBaseUrl { get; } = "/Api/Core/App";
+    private string AppBaseUrl { get; } = "/Api/ContentManagement/App";
     private static JsonSerializerOptions JsonOptions { get; } = new() { PropertyNameCaseInsensitive = true };
 
     private static string Unique(string prefix) => $"{prefix}-{Guid.NewGuid():N}";
