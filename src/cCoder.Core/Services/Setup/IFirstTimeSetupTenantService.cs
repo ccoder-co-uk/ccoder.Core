@@ -1,6 +1,6 @@
-using Web.Models;
+using cCoder.Core.Models;
 
-namespace Web.Services.Setup;
+namespace cCoder.Core.Services.Setup;
 
 internal interface IFirstTimeSetupTenantService
 {

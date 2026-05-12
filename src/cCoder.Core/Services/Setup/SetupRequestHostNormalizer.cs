@@ -1,4 +1,4 @@
-namespace Web.Services.Setup;
+namespace cCoder.Core.Services.Setup;
 
 public static class SetupRequestHostNormalizer
 {

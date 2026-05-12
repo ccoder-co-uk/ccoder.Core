@@ -6,7 +6,7 @@ using cCoder.Security.Objects.Entities;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
-namespace Web.Services.Setup;
+namespace cCoder.Core.Services.Setup;
 
 internal sealed class FirstTimeSetupStateService(
     ICoreContextFactory coreContextFactory,

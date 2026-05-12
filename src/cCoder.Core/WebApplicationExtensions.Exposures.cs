@@ -17,21 +17,27 @@ public static partial class WebApplicationExtensions
 
     private static WebApplication UseCoreApiShell(this WebApplication app)
     {
-        StaticFileOptions options = new()
+        StaticFileOptions defaultStaticFileOptions = new()
         {
             OnPrepareResponse = ctx =>
                 ctx.Context.Response.Headers[HeaderNames.CacheControl] = "public,max-age=" + 86400,
         };
 
+        app.UseStaticFiles(defaultStaticFileOptions);
+
         if (Directory.Exists("\\.well-known"))
         {
-            options.FileProvider = new PhysicalFileProvider("\\.well-known");
-            options.RequestPath = new PathString("\\.well-known");
-            options.ServeUnknownFileTypes = true;
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider("\\.well-known"),
+                RequestPath = new PathString("\\.well-known"),
+                ServeUnknownFileTypes = true,
+                OnPrepareResponse = defaultStaticFileOptions.OnPrepareResponse,
+            });
         }
 
-        app.UseStaticFiles(options);
         app.UseRouting();
+        app.MapStaticAssets();
         app.MapControllers();
         app.MapControllerRoute(
             name: "default",

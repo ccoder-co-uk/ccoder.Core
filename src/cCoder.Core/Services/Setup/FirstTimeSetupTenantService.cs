@@ -3,9 +3,9 @@ using cCoder.Security.Data.EF.Interfaces;
 using cCoder.Security.Exposures;
 using cCoder.Security.Objects.Entities;
 using Microsoft.EntityFrameworkCore;
-using Web.Models;
+using cCoder.Core.Models;
 
-namespace Web.Services.Setup;
+namespace cCoder.Core.Services.Setup;
 
 internal sealed class FirstTimeSetupTenantService(
     ITenantManager tenantManager,

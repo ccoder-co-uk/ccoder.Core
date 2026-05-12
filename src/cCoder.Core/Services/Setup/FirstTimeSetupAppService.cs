@@ -10,9 +10,9 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Reflection;
-using Web.Models;
+using cCoder.Core.Models;
 
-namespace Web.Services.Setup;
+namespace cCoder.Core.Services.Setup;
 
 internal sealed class FirstTimeSetupAppService(
     FirstTimeSetupAssetService assetService,

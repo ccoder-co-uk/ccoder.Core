@@ -46,7 +46,6 @@
     "inputFiles": [
       "wwwroot/bootstrap/lib/Core/api.js",
       "wwwroot/bootstrap/lib/Core/util.js",
-      "wwwroot/bootstrap/lib/Core/form.js",
       "wwwroot/bootstrap/lib/Core/model.js"
     ],
     "minify": {

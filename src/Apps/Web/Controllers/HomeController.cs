@@ -2,13 +2,13 @@ using System.Dynamic;
 using cCoder.ContentManagement.Exposures;
 using cCoder.ContentManagement.Services.Processings;
 using cCoder.Data;
+using cCoder.Core.Models;
+using cCoder.Core.Services.Setup;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using App = cCoder.Data.Models.CMS.App;
 using RenderResult = cCoder.ContentManagement.Models.RenderResult;
-using Web.Models;
-using Web.Services.Setup;
 
 
 namespace Web.Controllers
