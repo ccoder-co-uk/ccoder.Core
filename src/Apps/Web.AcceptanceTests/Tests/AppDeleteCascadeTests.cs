@@ -21,7 +21,7 @@ namespace Web.AcceptanceTests.Tests.Api;
 public sealed class AppDeleteCascadeTests(WebAcceptanceFixture fixture)
 {
     private HttpClient Client { get; } = fixture.Client;
-    private string BaseUrl { get; } = "/Api/ContentManagement/App";
+    private string BaseUrl { get; } = "/Api/Core/App";
 
     private sealed record SeededApp(int AppId, Guid RoleId, string Domain);
 
