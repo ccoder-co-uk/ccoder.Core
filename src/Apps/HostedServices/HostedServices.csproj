@@ -19,10 +19,11 @@
     <ProjectReference Include="..\..\cCoder.Core\cCoder.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Content Update="wwwroot\css\site.css">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Update="wwwroot\lib\queuestats.js">
+    <Content Remove="wwwroot\bootstrap\**" />
+    <None Remove="wwwroot\bootstrap\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="wwwroot\css\hostedservices.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

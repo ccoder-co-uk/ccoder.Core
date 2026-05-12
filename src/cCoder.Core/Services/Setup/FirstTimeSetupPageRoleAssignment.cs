@@ -1,4 +1,4 @@
-namespace Web.Services.Setup;
+namespace cCoder.Core.Services.Setup;
 
 internal sealed class FirstTimeSetupPageRoleAssignment
 {
