@@ -1,6 +1,5 @@
-using Web.Services.Setup;
-
 using cCoder.Core.Models;
+using cCoder.Core.Services.Setup;
 using cCoder.Data;
 using cCoder.Security;
 using cCoder.Security.Data.EF.MSSQL;
@@ -14,12 +13,19 @@ public static partial class IServiceCollectionExtensions
     {
         EnsureFirstTimeSetupSecurityServices(services);
         EnsureFirstTimeSetupSecurityManagers(services);
+        AddCoreFirstTimeSetupApplicationParts(services);
         services.AddScoped<IFirstTimeSetupStateService, FirstTimeSetupStateService>();
+        services.AddScoped<Web.Services.Setup.IFirstTimeSetupStateService, Web.Services.Setup.LegacyFirstTimeSetupStateServiceAdapter>();
         services.AddScoped<FirstTimeSetupAssetService>();
         services.AddScoped<IFirstTimeSetupUserService, FirstTimeSetupUserService>();
         services.AddScoped<IFirstTimeSetupTenantService, FirstTimeSetupTenantService>();
         services.AddScoped<IFirstTimeSetupAppService, FirstTimeSetupAppService>();
         services.AddScoped<IFirstTimeSetupOrchestrationService, FirstTimeSetupOrchestrationService>();
+    }
+
+    private static void AddCoreFirstTimeSetupApplicationParts(IServiceCollection services)
+    {
+        services.AddMvc().AddApplicationPart(typeof(Controllers.SetupController).Assembly);
     }
 
     private static void EnsureFirstTimeSetupSecurityServices(IServiceCollection services)

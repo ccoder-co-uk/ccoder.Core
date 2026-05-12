@@ -446,6 +446,35 @@ public sealed partial class FirstTimeSetupTests
     }
 
     [Fact]
+    public async Task ShouldAllowAdministratorToReadGuestUserForRoleManagement()
+    {
+        await using SetupHarness harness = await SetupHarness.CreateAsync();
+
+        await SubmitSetupAsync(harness);
+
+        using HttpResponseMessage userResponse =
+            await harness.Client.GetAsync("/Api/Core/User?$filter=Id eq 'Guest'");
+        string userJson = await userResponse.Content.ReadAsStringAsync();
+
+        userResponse.StatusCode.Should().Be(HttpStatusCode.OK, userJson);
+        JsonNode userNode = JsonNode.Parse(userJson)!;
+        JsonArray users = userNode["value"]?.AsArray() ?? [];
+        users.Should().ContainSingle();
+        users[0]?["Id"]?.ToString().Should().Be("Guest");
+        users[0]?["DisplayName"]?.ToString().Should().Be("Guest");
+
+        using HttpResponseMessage userRoleResponse =
+            await harness.Client.GetAsync("/Api/AppSecurity/UserRole?$filter=UserId eq 'Guest'&$expand=User,Role");
+        string userRoleJson = await userRoleResponse.Content.ReadAsStringAsync();
+
+        userRoleResponse.StatusCode.Should().Be(HttpStatusCode.OK, userRoleJson);
+        JsonNode userRoleNode = JsonNode.Parse(userRoleJson)!;
+        JsonArray userRoles = userRoleNode["value"]?.AsArray() ?? [];
+        userRoles.Should().NotBeEmpty();
+        userRoles.All(link => link?["User"]?["Id"]?.ToString() == "Guest").Should().BeTrue();
+    }
+
+    [Fact]
     public async Task ShouldReturnTopNavRootPagesForAdministratorAndHideAdminMenuForGuest()
     {
         await using SetupHarness harness = await SetupHarness.CreateAsync();

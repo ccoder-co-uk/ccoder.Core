@@ -2,7 +2,7 @@ using cCoder.Core.Setup;
 using cCoder.Data.Models;
 using cCoder.Data.Models.Packaging;
 
-namespace Web.Services.Setup;
+namespace cCoder.Core.Services.Setup;
 
 internal sealed class FirstTimeSetupAssetService
 {

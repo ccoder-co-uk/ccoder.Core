@@ -1,4 +1,4 @@
-namespace Web.Models;
+namespace cCoder.Core.Models;
 
 public sealed class FirstTimeSetupViewModel
 {
