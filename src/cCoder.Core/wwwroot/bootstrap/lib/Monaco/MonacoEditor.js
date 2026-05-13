@@ -1,31 +1,92 @@
+var monacoEditorLoader = {
+    loaderUrl: "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/loader.min.js",
+    vsPath: "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs",
+    baseUrl: "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/",
+    loadPromise: null,
+
+    configureWorker: function() {
+        if (window.MonacoEnvironment) return;
+
+        let proxy = URL.createObjectURL(new Blob([
+            "self.MonacoEnvironment = { baseUrl: '" + monacoEditorLoader.baseUrl + "' };"
+        ],
+            { type: 'text/javascript' }));
+        window.MonacoEnvironment = { getWorkerUrl: () => proxy };
+    },
+
+    loadMonaco: function() {
+        if (window.monaco && window.monaco.editor) {
+            return Promise.resolve(window.monaco);
+        }
+
+        if (monacoEditorLoader.loadPromise) {
+            return monacoEditorLoader.loadPromise;
+        }
+
+        monacoEditorLoader.configureWorker();
+
+        monacoEditorLoader.loadPromise = new Promise((resolve, reject) => {
+            const configure = () => {
+                if (typeof window.require === 'undefined' || !window.require.config) {
+                    reject(new Error("Monaco loader did not initialise."));
+                    return;
+                }
+
+                window.require.config({
+                    paths: {
+                        'vs': monacoEditorLoader.vsPath
+                    }
+                });
+                window.require(["vs/editor/editor.main"], () => resolve(window.monaco), reject);
+            };
+
+            if (typeof window.require !== 'undefined' && window.require.config) {
+                configure();
+                return;
+            }
+
+            let existing = document.querySelector("script[src='" + monacoEditorLoader.loaderUrl + "']");
+            if (existing) {
+                let timeout = setTimeout(() => reject(new Error("Timed out loading Monaco loader.")), 10000);
+                const configureOnce = () => {
+                    clearTimeout(timeout);
+                    configure();
+                };
+
+                existing.addEventListener("load", configureOnce, { once: true });
+                existing.addEventListener("error", () => reject(new Error("Failed to load Monaco loader.")), { once: true });
+                setTimeout(() => {
+                    if (typeof window.require !== 'undefined' && window.require.config) {
+                        configureOnce();
+                    }
+                }, 0);
+                return;
+            }
+
+            let script = document.createElement("script");
+            script.src = monacoEditorLoader.loaderUrl;
+            script.async = true;
+            script.addEventListener("load", configure, { once: true });
+            script.addEventListener("error", () => reject(new Error("Failed to load Monaco loader.")), { once: true });
+            document.head.appendChild(script);
+        });
+
+        return monacoEditorLoader.loadPromise;
+    }
+};
+
 class MonacoEditor {
     constructor(container, args) {
         this.container = container;
         this.language = args.language;//default to javascript language.
         this.code = args.code || "";
         this.fullscreen = false;
-        //Load from CDN.
-        require.config({
-            paths: {
-                'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs'
-            }
-        });
-        window.MonacoEnvrionment = { getWorkerUrl: () => proxy };
-        let proxy = URL.createObjectURL(new Blob([`
-			self.MonacoEnvironment = {
-				baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/'
-			};
-		`],
-            { type: 'text/javascript' }));
-        if(typeof require !== 'undefined') {
-            require(["vs/editor/editor.main"], () => {
-                this.monaco = monaco;
-            });
-        }
 
     }
 
     dispose() {
+        if (!this.editor) return;
+
         this.editor.onDidChangeModelContent(function(event) {  });
         $(this.container).html("");//Clear the container of the editor as well.
     }
@@ -39,8 +100,8 @@ class MonacoEditor {
     }
 
     init(callback) {
-        require(["vs/editor/editor.main"], () => {
-            this.monaco = monaco;
+        monacoEditorLoader.loadMonaco().then((monacoInstance) => {
+            this.monaco = monacoInstance;
             this.showAutoCompletion();//Register autocomplete before monaco editor gets created.
             this.model = this.monaco.editor.createModel(this.code, this.language, null);
             this.editor = this.monaco.editor.create(this.container, {
@@ -56,7 +117,7 @@ class MonacoEditor {
             });
 
             if (session.app.Config.Themes[session.theme].IsDark) {
-                monaco.editor.setTheme("vs-dark");
+                this.monaco.editor.setTheme("vs-dark");
             }
             
             this.editor.addAction({
@@ -95,7 +156,7 @@ class MonacoEditor {
             });
             this.editor.onDidChangeModelContent(this.onChange || function(event) {  });
             if(callback) callback();
-        });
+        }).catch(error);
 
     }
 }
