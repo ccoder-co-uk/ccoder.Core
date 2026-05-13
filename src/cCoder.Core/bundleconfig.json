@@ -164,7 +164,7 @@
       "wwwroot/dependencies/bootstrap/bootstrap.bundle.min.js",
       "wwwroot/dependencies/kendo/kendo.all.v2024.2.514.min.js",
       "wwwroot/dependencies/kendo/kendo-ui-license.js",
-      "wwwroot/dependencies/other/monaco.min.js",
+      "wwwroot/bootstrap/lib/monaco.min.js",
       "wwwroot/dependencies/other/signalr.min.js"
     ],
     "minify": {
