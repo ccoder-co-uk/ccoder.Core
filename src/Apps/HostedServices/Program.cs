@@ -11,7 +11,7 @@ public class Program
     public static void Main(string[] args)
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-        IConfiguration config = ConfigureApplication(builder.Configuration);
+        IConfiguration config = ConfigureApplication(builder.Configuration, builder.Environment);
 
         builder.Services.AddCoreHostedServices(coreBuilder =>
         {
@@ -41,11 +41,12 @@ public class Program
         app.Run();
     }
 
-    private static IConfiguration ConfigureApplication(ConfigurationManager configuration)
+    private static IConfiguration ConfigureApplication(ConfigurationManager configuration, IWebHostEnvironment environment)
     {
         configuration
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile($"appsettings.{environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
             .AddJsonFile("appsettings.testing.json", optional: true, reloadOnChange: true)
             .AddEnvironmentVariables();
 
