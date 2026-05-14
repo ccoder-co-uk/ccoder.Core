@@ -1,6 +1,15 @@
-﻿<div class="row">
-    <header>
-        <h1><img src="https://admin.corporatelinx.com/Api/DMS/Content/CompanyLogo.png" alt="Corporate LinX" /> Hosted Services Dashboard</h1>
+@inject IConfiguration Configuration
+@{
+    string webHost = Context.Request.Host.Host;
+    string configuredSslPort = Configuration["Settings:sslPort"] ?? string.Empty;
+    string webRoot = string.IsNullOrWhiteSpace(configuredSslPort)
+        ? $"https://{webHost}"
+        : $"https://{webHost}:{configuredSslPort}";
+    string logoUrl = $"{webRoot.TrimEnd('/')}/Api/DMS/Content/CompanyLogoTransparent.png";
+}
+<div class="row">
+    <header class="dashboard-header">
+        <h1><img src="@logoUrl" alt="cCoder" /> Hosted Services Dashboard</h1>
     </header>
 
     <partial name="/Views/Workflow/Index.cshtml">
