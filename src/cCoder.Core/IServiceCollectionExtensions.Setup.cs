@@ -20,7 +20,6 @@ public static partial class IServiceCollectionExtensions
                 new Web.Services.Setup.LegacyFirstTimeSetupStateServiceAdapter(
                     serviceProvider.GetRequiredService<IFirstTimeSetupStateService>()));
         services.AddScoped<FirstTimeSetupAssetService>();
-        services.AddScoped<BaselineAssetRepairService>();
         services.AddScoped<IFirstTimeSetupUserService, FirstTimeSetupUserService>();
         services.AddScoped<IFirstTimeSetupTenantService, FirstTimeSetupTenantService>();
         services.AddScoped<IFirstTimeSetupAppService, FirstTimeSetupAppService>();

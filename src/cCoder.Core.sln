@@ -7,11 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cCoder.Core", "cCoder.Core\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Apps", "Apps", "{FC8EAF25-8BB6-474F-9DC8-9BD999E984AE}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{47E3D502-305C-4498-B4F4-B25D32E7419D}"
-	ProjectSection(SolutionItems) = preProject
-		cCoder.Core.runsettings = cCoder.Core.runsettings
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web", "Apps\Web\Web.csproj", "{264EC0FF-AB4E-4645-84D4-E87D12AEE93A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HostedServices", "Apps\HostedServices\HostedServices.csproj", "{622E4723-6B1D-47E4-B776-E097046BD3CF}"
