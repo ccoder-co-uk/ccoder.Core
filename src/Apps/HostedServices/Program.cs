@@ -47,7 +47,6 @@ public class Program
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             .AddJsonFile($"appsettings.{environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
-            .AddJsonFile("appsettings.testing.json", optional: true, reloadOnChange: true)
             .AddEnvironmentVariables();
 
         return configuration;
