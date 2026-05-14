@@ -1,5 +1,4 @@
 using cCoder.Core.Cors;
-using cCoder.Core.Services.Setup;
 using cCoder.Data;
 using cCoder.Logging.Exposures.Hubs;
 using cCoder.Security.Data.EF;
@@ -27,13 +26,6 @@ public static partial class WebApplicationExtensions
             .RefreshAsync()
             .GetAwaiter()
             .GetResult();
-        using (IServiceScope scope = app.Services.CreateScope())
-        {
-            scope.ServiceProvider.GetRequiredService<BaselineAssetRepairService>()
-                .RepairAsync()
-                .GetAwaiter()
-                .GetResult();
-        }
 
         app.UseHttpsRedirection();
         app.UseCoreApi(log);
