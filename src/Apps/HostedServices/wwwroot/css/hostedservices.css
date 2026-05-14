@@ -1,52 +1,227 @@
-header {
-    border: solid 1px #CCC;
-    box-shadow: 4px 4px 4px #EFEFEF;
-    margin: 20px auto;
+.hosted-services-dashboard {
+    padding-top: 24px;
+    padding-bottom: 32px;
 }
 
-header > h1 {
-    line-height: 80px;
+.dashboard-header {
+    margin: 24px auto;
+    padding: 16px 20px;
+    border: 1px solid var(--bs-border-color, #d7dde4);
+    border-radius: 16px;
+    background: var(--bs-body-bg, #fff);
+    box-shadow: 0 16px 32px rgba(14, 74, 122, 0.08);
 }
 
-header > h1 > img {
-    height: 80px;
-}
-
-.statContainer > h2 {
+.dashboard-header > h1 {
+    display: flex;
+    align-items: center;
+    gap: 16px;
     margin: 0;
-    padding: 5px 10px;
-    background: #2E4B75;
-    color: white;
-    font-size: 130%;
+    color: var(--bs-primary, #0e4a7a);
+    line-height: 1.2;
 }
 
-table {
-    width: 100%;
-    border: solid 1px #EFEFEF;
-    border-collapse: collapse;
-    margin: 0;
-}
-
-th {
-    text-align: left;
-    border: solid 1px #EFEFEF;
-    background: #EE8A00;
-    color: white;
-    border-collapse: collapse;
-    padding: 5px 10px;
-}
-
-td {
-    text-align: left;
-    border: solid 1px #EFEFEF;
-    border-collapse: collapse;
-    padding: 5px 10px;
+.dashboard-header > h1 > img {
+    max-height: 72px;
+    width: auto;
 }
 
 .statContainer {
     min-height: 265px;
     margin-bottom: 20px;
     padding: 0;
-    border: solid 1px #ccc;
-    box-shadow: 4px 4px 4px #EFEFEF;
+    border: 1px solid var(--bs-border-color, #d7dde4);
+    border-radius: 16px;
+    background: var(--bs-body-bg, #fff);
+    box-shadow: 0 16px 32px rgba(14, 74, 122, 0.08);
+    overflow: hidden;
+}
+
+.statTitle {
+    margin: 0;
+    padding: 14px 18px 12px;
+    background: transparent;
+    color: #1699c3;
+    font-size: 130%;
+    line-height: 1.2;
+}
+
+.statTitle::after {
+    content: "";
+    display: block;
+    width: min(640px, calc(100% - 24px));
+    margin-top: 10px;
+    border-bottom: 2px solid #1ab0d8;
+}
+
+table {
+    width: 100%;
+    margin: 0;
+    border-collapse: collapse;
+    background: var(--bs-body-bg, #fff);
+}
+
+th,
+td {
+    text-align: left;
+    border: 1px solid var(--bs-border-color, #d7dde4);
+    padding: 10px 12px;
+}
+
+.dashboard-grid {
+    border-top: 1px solid var(--bs-border-color, #d7dde4);
+}
+
+.dashboard-grid thead th {
+    background: #fafbfd;
+    color: var(--bs-body-color, #1f2937);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.dashboard-grid tbody td {
+    color: var(--bs-body-color, #1f2937);
+    background: #fff;
+}
+
+.dashboard-grid tbody tr:nth-child(even) td {
+    background: #f6f8fb;
+}
+
+.dashboard-grid tbody tr:hover td {
+    background: #eef5fb;
+}
+
+.dashboard-grid a {
+    color: var(--bs-primary, #0e4a7a);
+    text-decoration: none;
+}
+
+.dashboard-grid a:hover {
+    text-decoration: underline;
+}
+
+.toolbar {
+    width: calc(100% - 36px);
+    margin: 0 18px 12px;
+    padding: 6px 0;
+    background: #fafbfd;
+    border-bottom: 1px solid var(--bs-border-color, #d7dde4);
+}
+
+.toolbar > div {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.toolbar label {
+    margin: 5px;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+    border: 1px solid #ccc;
+}
+
+.dropdown-select {
+    padding: 3px 5px;
+    background-color: white;
+    cursor: pointer;
+    min-width: 140px;
+}
+
+.dropdown-select > span {
+    float: right;
+    border-left: solid 1px #ccc;
+    padding: 6px 10px;
+    padding-top: 0;
+    background: #efefef;
+    margin: -4px -6px;
+    pointer-events: none;
+    border: 1px solid #ccc;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #efefef;
+    min-width: 140px;
+    box-shadow: 0 4px 8px #aaa;
+    z-index: 1;
+}
+
+.dropdown-content .option:hover {
+    background-color: #ccc;
+}
+
+.dropdown-content label {
+    padding: 5px;
+    cursor: pointer;
+    width: 65%;
+}
+
+.dropdown-content input[type="checkbox"] {
+    margin: 0 10px;
+}
+
+.execConsole > .console {
+    margin: 0 18px 18px;
+    padding: 5px;
+    height: 400px;
+    overflow: auto;
+    border: 1px solid #ccc;
+    background-color: #fff;
+}
+
+.execConsole {
+    border-top: 1px solid var(--bs-border-color, #d7dde4);
+}
+
+.execConsole > .console > .message {
+    line-height: 14px;
+}
+
+.execConsole > .console > .message > * {
+    vertical-align: top;
+    line-height: 14px;
+    margin: 0;
+    padding: 1px;
+}
+
+.execConsole > .console > .message > .message {
+    display: inline-block;
+    border: none;
+    max-width: 90%;
+    word-wrap: break-word;
+    text-wrap: pretty;
+}
+
+.execConsole > .console > .message .level {
+    display: inline-block;
+    margin-right: 10px;
+    min-width: 60px;
+}
+
+.execConsole > .console > .message .time {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.execConsole > .console > .message.success,
+.execConsole > .console > .message.info {
+    color: green;
+}
+
+.execConsole > .console > .message.debug {
+    color: blue;
+}
+
+.execConsole > .console > .message.warn {
+    color: #d8a700;
+}
+
+.execConsole > .console > .message.error,
+.execConsole > .console > .message.fatal {
+    color: red;
 }
