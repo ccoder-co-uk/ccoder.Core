@@ -112,26 +112,33 @@ public static partial class WebApplicationExtensions
         return app;
     }
 
-    private static WebApplication UseLegacyDocumentManagementRouteRedirects(this WebApplication app) =>
+    private static WebApplication UseLegacyDocumentManagementRouteRedirects(this WebApplication app)
+    {
         app.Use(async (context, next) =>
         {
-            string path = context.Request.Path.Value ?? string.Empty;
-
-            foreach (string entity in LegacyDocumentManagementRouteEntities)
-            {
-                string legacyPrefix = $"/Api/Core/{entity}";
-
-                if (!IsLegacyDocumentManagementRoute(path, legacyPrefix))
-                    continue;
-
-                context.Request.Path =
-                    $"/Api/DocumentManagement/{entity}{path[legacyPrefix.Length..]}";
-
-                break;
-            }
+            context.Request.Path = RewriteLegacyDocumentManagementRoute(context.Request.Path);
 
             await next();
         });
+        return app;
+    }
+
+    internal static PathString RewriteLegacyDocumentManagementRoute(PathString requestPath)
+    {
+        string path = requestPath.Value ?? string.Empty;
+
+        foreach (string entity in LegacyDocumentManagementRouteEntities)
+        {
+            string legacyPrefix = $"/Api/Core/{entity}";
+
+            if (!IsLegacyDocumentManagementRoute(path, legacyPrefix))
+                continue;
+
+            return new PathString($"/Api/DocumentManagement/{entity}{path[legacyPrefix.Length..]}");
+        }
+
+        return requestPath;
+    }
 
     private static bool IsLegacyDocumentManagementRoute(string path, string legacyPrefix) =>
         path.Equals(legacyPrefix, StringComparison.OrdinalIgnoreCase)
