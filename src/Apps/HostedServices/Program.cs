@@ -1,8 +1,7 @@
 using cCoder.Core;
-using cCoder.Data.Models.CMS;
-using cCoder.Data.Models.DMS;
-using cCoder.Eventing;
-using cCoder.Eventing.Models;
+using cCoder.Eventing.Http.Controllers;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.AspNetCore.Mvc.Controllers;
 
 namespace HostedServices;
 
@@ -28,13 +27,13 @@ public class Program
                 coreConfig.MaxConcurrency = config.GetValue<int?>("Eventing:Http:MaxConcurrency") ?? 1;
                 coreConfig.DebugInfo = config.GetValue<bool>("DebugInfo");
                 coreConfig.LogSQL = config.GetValue<bool>("LogSQL");
-                coreConfig.EventProviders =
-                [
-                    CreateExternalReceiveProvider<App>(["app_add", "app_update", "app_delete"]),
-                    CreateExternalReceiveProvider<Folder>(["folder_delete"])
-                ];
             });
         });
+        builder.Services.AddControllers()
+            .ConfigureApplicationPartManager(manager =>
+                manager.FeatureProviders.Add(
+                    new ExcludeHttpEventControllerFeatureProvider(typeof(HttpEventController))));
+        builder.Services.AddScoped<ReceivedHttpEventProcessor>();
 
         WebApplication app = builder.Build();
         app.StartCoreHostedServices();
@@ -52,24 +51,18 @@ public class Program
         return configuration;
     }
 
-    private static EventProvider<T> CreateExternalReceiveProvider<T>(string[] eventNames) =>
-        new()
+    private sealed class ExcludeHttpEventControllerFeatureProvider(Type controllerType)
+        : IApplicationFeatureProvider<ControllerFeature>
+    {
+        public void PopulateFeature(
+            IEnumerable<ApplicationPart> parts,
+            ControllerFeature feature)
         {
-            Events = eventNames,
-            ReceiveHandler = async (serviceProvider, eventName, message) =>
+            for (int index = feature.Controllers.Count - 1; index >= 0; index--)
             {
-                IEventHub eventHub = serviceProvider.GetRequiredService<IEventHub>();
-
-                await eventHub.RaiseEventAsync(
-                    eventName,
-                    new EventMessage<T>
-                    {
-                        AuthInfo = new EventAuthInfo
-                        {
-                            SSOUserId = message.AuthInfo?.SSOUserId ?? "Guest",
-                        },
-                        Data = message.Data,
-                    });
+                if (feature.Controllers[index].AsType() == controllerType)
+                    feature.Controllers.RemoveAt(index);
             }
-        };
+        }
+    }
 }

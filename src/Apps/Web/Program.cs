@@ -25,7 +25,7 @@ public class Program
                 coreConfig.CacheExpiry = config.GetValue<int?>("Settings:CacheExpiry");
                 coreConfig.SslPort = config.GetValue<int?>("Settings:sslPort");
                 coreConfig.WorkflowServiceUrl = config.GetValue<string>("Services:Workflow");
-                coreConfig.HttpEventHubUrl = GetHttpEventHubUrl(config);
+                coreConfig.HttpEventHubUrl = HttpEventHubUrlResolver.Resolve(config);
                 coreConfig.EnableHttpEventing = !string.IsNullOrWhiteSpace(coreConfig.HttpEventHubUrl);
                 coreConfig.MaxConcurrency = config.GetValue<int?>("Eventing:Http:MaxConcurrency") ?? 1;
                 coreConfig.DebugInfo = config.GetValue<bool>("DebugInfo");
@@ -53,26 +53,10 @@ public class Program
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             .AddJsonFile($"appsettings.{environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+            .AddJsonFile("appsettings.testing.json", optional: true, reloadOnChange: true)
             .AddEnvironmentVariables();
 
         return configuration;
-    }
-
-    private static string GetHttpEventHubUrl(IConfiguration configuration)
-    {
-        string explicitHubUrl = configuration.GetValue<string>("Eventing:Http:HubUrl");
-
-        if (!string.IsNullOrWhiteSpace(explicitHubUrl))
-            return explicitHubUrl;
-
-        if (!(configuration.GetValue<bool?>("Settings:enableExternalEventing") ?? true))
-            return string.Empty;
-
-        string hostedServicesRoot = configuration.GetValue<string>("Services:HostedServices");
-
-        return string.IsNullOrWhiteSpace(hostedServicesRoot)
-            ? null
-            : $"{hostedServicesRoot.TrimEnd('/')}/Api/Eventing";
     }
 
     private static EventProvider<T> CreateExternalSendProvider<T>(string[] eventNames) =>
