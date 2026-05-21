@@ -15,6 +15,14 @@ public static partial class WebApplicationExtensions
     private static readonly Regex DmsRouteRegex = new(@"^\/api\/dms.*", RegexOptions.Compiled);
     private static readonly Regex WebDavRouteRegex = new(@"^\/api\/webdav.*", RegexOptions.Compiled);
 
+    private static readonly string[] LegacyDocumentManagementRouteEntities =
+    [
+        "Folder",
+        "FolderRole",
+        "File",
+        "FileContent"
+    ];
+
     private static WebApplication UseCoreApiShell(this WebApplication app)
     {
         StaticFileOptions defaultStaticFileOptions = new()
@@ -36,6 +44,7 @@ public static partial class WebApplicationExtensions
             });
         }
 
+        app.UseLegacyDocumentManagementRouteRedirects();
         app.UseRouting();
         app.MapStaticAssets();
         app.MapControllers();
@@ -102,6 +111,32 @@ public static partial class WebApplicationExtensions
 
         return app;
     }
+
+    private static WebApplication UseLegacyDocumentManagementRouteRedirects(this WebApplication app) =>
+        app.Use(async (context, next) =>
+        {
+            string path = context.Request.Path.Value ?? string.Empty;
+
+            foreach (string entity in LegacyDocumentManagementRouteEntities)
+            {
+                string legacyPrefix = $"/Api/Core/{entity}";
+
+                if (!IsLegacyDocumentManagementRoute(path, legacyPrefix))
+                    continue;
+
+                context.Request.Path =
+                    $"/Api/DocumentManagement/{entity}{path[legacyPrefix.Length..]}";
+
+                break;
+            }
+
+            await next();
+        });
+
+    private static bool IsLegacyDocumentManagementRoute(string path, string legacyPrefix) =>
+        path.Equals(legacyPrefix, StringComparison.OrdinalIgnoreCase)
+        || path.StartsWith($"{legacyPrefix}(", StringComparison.OrdinalIgnoreCase)
+        || path.StartsWith($"{legacyPrefix}/", StringComparison.OrdinalIgnoreCase);
 
     private static WebApplication UseWorkflowExposure(this WebApplication app, ILogger log = null)
     {
