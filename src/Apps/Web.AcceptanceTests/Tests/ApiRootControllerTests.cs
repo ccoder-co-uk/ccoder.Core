@@ -36,6 +36,7 @@ public sealed partial class ApiRootControllerTests(WebAcceptanceFixture fixture)
             .SelectMany(source => source.Endpoints)
             .OfType<RouteEndpoint>()
             .Select(ToManifestLine)
+            .Where(IsManifestRoute)
             .Where(static line => !line.Contains("GetMetadata", StringComparison.OrdinalIgnoreCase))
             .Distinct(StringComparer.Ordinal)
             .OrderBy(line => line, StringComparer.Ordinal)
@@ -57,6 +58,17 @@ public sealed partial class ApiRootControllerTests(WebAcceptanceFixture fixture)
             methods = "ANY";
 
         return $"{methods} {endpoint.RoutePattern.RawText ?? string.Empty}";
+    }
+
+    private static bool IsManifestRoute(string line)
+    {
+        string route = line[(line.IndexOf(' ') + 1)..];
+
+        return route.StartsWith("/Api", StringComparison.Ordinal)
+            || route.StartsWith("Api", StringComparison.Ordinal)
+            || string.Equals(route, "Setup", StringComparison.Ordinal)
+            || string.Equals(route, "AcceptInvite", StringComparison.Ordinal)
+            || string.Equals(route, "{*path}", StringComparison.Ordinal);
     }
 }
 

@@ -8,6 +8,7 @@ ANY {*path}
 DELETE Api/AppSecurity/Privilege({key})
 DELETE Api/AppSecurity/Role({key})
 DELETE Api/AppSecurity/User({key})
+DELETE Api/AppSecurity/UserRole(RoleId={keyRoleId},UserId={keyUserId})
 DELETE Api/ContentManagement/App({key})
 DELETE Api/ContentManagement/CommonObject({key})
 DELETE Api/ContentManagement/Component({key})
@@ -48,6 +49,7 @@ DELETE Api/Core/SentEmail({key})
 DELETE Api/Core/Submission({key})
 DELETE Api/Core/Template({key})
 DELETE Api/Core/User({key})
+DELETE Api/Core/UserRole(RoleId={keyRoleId},UserId={keyUserId})
 DELETE Api/Core/WorkflowEvent({key})
 DELETE Api/DocumentManagement/File({key})
 DELETE Api/DocumentManagement/FileContent({key})
@@ -66,6 +68,7 @@ DELETE Api/Security/Tenant({key})
 DELETE Api/Workflow/FlowDefinition({key})
 DELETE Api/Workflow/FlowInstanceData({key})
 DELETE Api/Workflow/WorkflowEvent({key})
+GET {*path}
 GET Api
 GET Api/AppSecurity
 GET Api/AppSecurity/$metadata
@@ -320,7 +323,6 @@ GET Api/Workflow/WorkflowEvent
 GET Api/Workflow/WorkflowEvent({key})
 GET Api/Workflow/WorkflowEvent/$count
 GET Setup
-GET {*path}
 PATCH Api/AppSecurity/Privilege({key})
 PATCH Api/AppSecurity/Role({key})
 PATCH Api/AppSecurity/User({key})
