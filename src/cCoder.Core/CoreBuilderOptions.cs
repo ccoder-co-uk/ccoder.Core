@@ -213,6 +213,7 @@ public partial class CoreBuilderOptions
             configure?.Invoke(configuration);
         });
         services.AddSingleton<ICoreAllowedOriginStore, CoreAllowedOriginStore>();
+        services.TryAddTransient<HostedServicesAppSecurityAppAddOrchestrationService>();
         return this;
     }
 
@@ -402,7 +403,7 @@ public partial class CoreBuilderOptions
         if (coreConfiguration?.EnableHttpEventing != true)
             return;
 
-        services.AddHttpEventingHostedServices(options =>
+        services.AddHttpEventing(options =>
         {
             options.HubUrl = coreConfiguration.HttpEventHubUrl;
             options.MaxConcurrency = coreConfiguration.MaxConcurrency;
