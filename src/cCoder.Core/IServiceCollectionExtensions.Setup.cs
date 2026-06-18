@@ -15,10 +15,6 @@ public static partial class IServiceCollectionExtensions
         EnsureFirstTimeSetupSecurityServices(services);
         EnsureFirstTimeSetupSecurityManagers(services);
         services.AddScoped<IFirstTimeSetupStateService, FirstTimeSetupStateService>();
-        services.AddScoped<Web.Services.Setup.IFirstTimeSetupStateService>(
-            serviceProvider =>
-                new Web.Services.Setup.LegacyFirstTimeSetupStateServiceAdapter(
-                    serviceProvider.GetRequiredService<IFirstTimeSetupStateService>()));
         services.AddScoped<FirstTimeSetupAssetService>();
         services.AddScoped<IFirstTimeSetupUserService, FirstTimeSetupUserService>();
         services.AddScoped<IFirstTimeSetupTenantService, FirstTimeSetupTenantService>();
