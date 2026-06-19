@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using Web.AcceptanceTests.Models;
 using Xunit;
 
@@ -51,7 +52,8 @@ public sealed class WebAcceptanceFixture : IAsyncLifetime
     private static string AddDatabaseSuffix(string variableName)
     {
         string connectionString =
-            Environment.GetEnvironmentVariable(variableName, EnvironmentVariableTarget.Machine) ?? string.Empty;
+            Environment.GetEnvironmentVariable(variableName, EnvironmentVariableTarget.Machine)
+            ?? ReadConfiguredConnectionString(variableName);
 
         if (string.IsNullOrWhiteSpace(connectionString))
             return string.Empty;
@@ -72,6 +74,20 @@ public sealed class WebAcceptanceFixture : IAsyncLifetime
 
         builder.InitialCatalog = $"{databaseName}-{suffix}";
         return builder.ConnectionString;
+    }
+
+    private static string ReadConfiguredConnectionString(string variableName)
+    {
+        string connectionName = variableName.Contains("CORE", StringComparison.OrdinalIgnoreCase)
+            ? "Core"
+            : "SSO";
+
+        IConfigurationRoot configuration = new ConfigurationBuilder()
+            .SetBasePath(AppContext.BaseDirectory)
+            .AddJsonFile("appsettings.testing.json", optional: true)
+            .Build();
+
+        return configuration.GetConnectionString(connectionName) ?? string.Empty;
     }
 }
 
