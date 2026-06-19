@@ -118,18 +118,18 @@
     <PackageReference Include="cCoder.Scheduling" Version="2026.5.29.1638" Condition="'$(UseLocalScheduling)' != 'true'" />
     <PackageReference Include="cCoder.Security" Version="2026.4.29.2038" Condition="'$(UseLocalSecurity)' != 'true'" />
     <PackageReference Include="cCoder.Security.Data.EF.MSSQL" Version="2026.4.29.2038" Condition="'$(UseLocalSecurity)' != 'true'" />
-    <PackageReference Include="cCoder.Workflow" Version="2026.5.29.1638" Condition="'$(UseLocalWorkflow)' != 'true'" />
-    <PackageReference Include="cCoder.Workflow.Activities" Version="2026.5.29.1638" Condition="'$(UseLocalWorkflow)' != 'true'" />
+    <PackageReference Include="cCoder.Workflow" Version="2026.6.19.947" Condition="'$(UseLocalWorkflow)' != 'true'" />
+    <PackageReference Include="cCoder.Workflow.Activities" Version="2026.6.19.947" Condition="'$(UseLocalWorkflow)' != 'true'" />
     <PackageReference Include="Microsoft.AspNetCore.OData" Version="9.4.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.9" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.7.2" />
     <PackageReference Include="itext" Version="9.6.0" />
     <PackageReference Include="itext.pdfhtml" Version="6.3.2" />
     <PackageReference Include="itext.bouncy-castle-adapter" Version="9.6.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="10.1.7" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.1.7" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.1.7" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="10.2.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.2.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.2.1" />
   </ItemGroup>
 </Project>
 
