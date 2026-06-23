@@ -8,9 +8,11 @@ using cCoder.Mail;
 using cCoder.Scheduling;
 using cCoder.Security;
 using cCoder.Workflow;
+using cCoder.Data.Models.Workflow;
 using AppSecurityAppOrchestrationService = cCoder.AppSecurity.Services.Orchestrations.IAppOrchestrationService;
 using MailEventHandlerService = cCoder.Mail.Services.Foundations.Events.IEventHandlerService;
 using SchedulingEventHandlerService = cCoder.Scheduling.Services.Foundations.Events.IEventHandlerService;
+using WorkflowInstanceManagementOrchestrationService = cCoder.Workflow.Services.Orchestrations.IWorkflowInstanceManagementOrchestrationService;
 using WorkflowEventHandlerService = cCoder.Workflow.Services.Foundations.Events.IEventHandlerService;
 using CmsApp = cCoder.Data.Models.CMS.App;
 
@@ -30,6 +32,7 @@ public static partial class WebApplicationExtensions
         app.UseMailHostedServiceEventHandlers();
         app.UseSchedulingHostedServiceEventHandlers();
         app.UseWorkflowHostedServiceEventHandlers();
+        app.UseHostedServicesWorkflowExecutionEventHandlers();
         app.UseCoreInternalEventHandlers();
         app.UseAppSecurityHostedServiceUpdateEventHandlers();
         app.UseAppSecurityHostedServiceDeleteEventHandlers();
@@ -119,6 +122,18 @@ public static partial class WebApplicationExtensions
 
         foreach (WorkflowEventHandlerService handlers in services.GetServices<WorkflowEventHandlerService>())
             handlers.ListenToAllEvents();
+
+        return app;
+    }
+
+    private static WebApplication UseHostedServicesWorkflowExecutionEventHandlers(this WebApplication app)
+    {
+        using IServiceScope scope = app.Services.CreateScope();
+        IEventHub eventHub = scope.ServiceProvider.GetRequiredService<IEventHub>();
+
+        eventHub.ListenToEvent<FlowInstanceData, WorkflowInstanceManagementOrchestrationService>(
+            "flow_instance_data_add",
+            static (service, entity) => service.ExecuteWaitingQueuedInstanceByIdAsync(entity.FlowDefinitionId));
 
         return app;
     }
