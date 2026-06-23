@@ -13,7 +13,6 @@ using FluentAssertions;
 using HostedServices.AcceptanceTests.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Web.AcceptanceTests.Infrastructure;
 using Xunit;
 using AppEntity = cCoder.Data.Models.CMS.App;
 using DmsFile = cCoder.Data.Models.DMS.File;
@@ -276,6 +275,77 @@ public sealed class EventControllerTests(HostedServicesAcceptanceFixture fixture
             core.Set<MailServer>().IgnoreQueryFilters().Any(server => server.AppId == appId).Should().BeFalse();
             core.Set<Calendar>().IgnoreQueryFilters().Any(calendar => calendar.AppId == appId).Should().BeFalse();
             core.Set<FlowDefinition>().IgnoreQueryFilters().Any(flow => flow.Id == flowId).Should().BeFalse();
+        }
+        finally
+        {
+            await DeleteAppGraphAsync(appId);
+        }
+    }
+
+    [Fact]
+    public async Task Post_GivenFolderDeleteEvent_ShouldCreateWorkflowInstanceAndTriggerExecutionAttempt()
+    {
+        int appId = await CreateAppAsync();
+        Guid roleId = Guid.NewGuid();
+        Guid rootFolderId = Guid.NewGuid();
+        Guid childFolderId = Guid.NewGuid();
+        Guid fileId = Guid.NewGuid();
+        Guid flowId;
+
+        try
+        {
+            await SeedFolderDeleteScenarioAsync(appId, roleId, rootFolderId, childFolderId, fileId);
+
+            using IServiceScope seedScope = fixture.Factory.Services.CreateScope();
+            using var seedCore = seedScope.ServiceProvider
+                .GetRequiredService<ICoreContextFactory>()
+                .CreateCoreContext();
+
+            flowId = (await seedCore.AddAppFlowDefinitionAsync(new FlowDefinition
+            {
+                AppId = appId,
+                Name = Unique("Subscribed Flow"),
+                Description = "Acceptance flow",
+                DefinitionJson =
+                    "{\"Name\":\"Acceptance\",\"Activities\":[{\"$type\":\"cCoder.Core.Objects.Workflow.Activities.Start, cCoder.Core.Objects\",\"Ref\":\"start\"}],\"Links\":[]}",
+                ConfigJson = "{}",
+                CreatedBy = "Guest",
+                CreatedOn = DateTimeOffset.UtcNow,
+                LastUpdatedBy = "Guest",
+                LastUpdated = DateTimeOffset.UtcNow,
+            })).Id;
+
+            _ = await seedCore.AddWorkflowEventAsync(new WorkflowEvent
+            {
+                FlowId = flowId,
+                Type = "Acceptance",
+                EventContext = "folder_deletecontent",
+                ExecuteAs = "Guest",
+                CreatedBy = "Guest",
+                CreatedOn = DateTimeOffset.UtcNow,
+            });
+
+            HttpStatusCode statusCode = await PostEventAsync(
+                "folder_delete",
+                new Folder
+                {
+                    Id = rootFolderId,
+                    AppId = appId,
+                    Name = "content",
+                    Path = "content",
+                });
+
+            using IServiceScope scope = fixture.Factory.Services.CreateScope();
+            using var core = scope.ServiceProvider
+                .GetRequiredService<ICoreContextFactory>()
+                .CreateCoreContext();
+
+            statusCode.Should().Be(HttpStatusCode.OK);
+
+            FlowInstanceData instance = core.Set<FlowInstanceData>().IgnoreQueryFilters()
+                .Single(instance => instance.FlowDefinitionId == flowId);
+
+            instance.State.Should().NotBe("Queued");
         }
         finally
         {
@@ -626,6 +696,21 @@ public sealed class EventControllerTests(HostedServicesAcceptanceFixture fixture
         await core.DeleteAllAsync(
             core.Set<ScheduledTask>().IgnoreQueryFilters()
                 .Where(task => task.AppId == appId)
+                .ToArray());
+
+        Guid[] flowIds =
+            [.. core.Set<FlowDefinition>().IgnoreQueryFilters()
+                .Where(flow => flow.AppId == appId)
+                .Select(flow => flow.Id)];
+
+        await core.DeleteAllAsync(
+            core.Set<WorkflowEvent>().IgnoreQueryFilters()
+                .Where(workflowEvent => flowIds.Contains(workflowEvent.FlowId))
+                .ToArray());
+
+        await core.DeleteAllAsync(
+            core.Set<FlowInstanceData>().IgnoreQueryFilters()
+                .Where(instance => flowIds.Contains(instance.FlowDefinitionId))
                 .ToArray());
 
         await core.DeleteAllAsync(
