@@ -2,6 +2,8 @@ using cCoder.Core;
 using cCoder.Eventing.Http.Controllers;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using cCoder.Workflow.Services.Orchestrations;
 
 namespace HostedServices;
 
@@ -34,6 +36,8 @@ public class Program
                 manager.FeatureProviders.Add(
                     new ExcludeHttpEventControllerFeatureProvider(typeof(HttpEventController))));
         builder.Services.AddScoped<ReceivedHttpEventProcessor>();
+        builder.Services.RemoveAll<IWorkflowInstanceManagementOrchestrationService>();
+        builder.Services.AddTransient<IWorkflowInstanceManagementOrchestrationService, HostedServicesWorkflowInstanceManagementOrchestrationService>();
 
         WebApplication app = builder.Build();
         app.StartCoreHostedServices();

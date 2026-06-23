@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Web.AcceptanceTests.Models;
+using HostedServices.AcceptanceTests.Models;
 using HostedServicesProgram = HostedServices.Program;
 
 namespace HostedServices.AcceptanceTests.Infrastructure;
