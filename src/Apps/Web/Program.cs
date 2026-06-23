@@ -1,6 +1,7 @@
 using cCoder.Core;
 using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.DMS;
+using cCoder.Data.Models.Workflow;
 using cCoder.Eventing.Http;
 using cCoder.Eventing.Models;
 
@@ -36,7 +37,8 @@ public class Program
                     coreConfig.EventProviders =
                     [
                         CreateExternalSendProvider<App>(["app_add", "app_update", "app_delete"]),
-                        CreateExternalSendProvider<Folder>(["folder_delete"])
+                        CreateExternalSendProvider<Folder>(["folder_delete"]),
+                        CreateExternalSendProvider<FlowInstanceData>(["flow_instance_data_add"])
                     ];
                 }
             });

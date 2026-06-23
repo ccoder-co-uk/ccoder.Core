@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using Web.AcceptanceTests.Infrastructure;
-using Web.AcceptanceTests.Models;
+using HostedServices.AcceptanceTests.Models;
+using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace HostedServices.AcceptanceTests.Infrastructure;
@@ -10,7 +9,7 @@ namespace HostedServices.AcceptanceTests.Infrastructure;
 public sealed class HostedServicesAcceptanceFixture : IAsyncLifetime
 {
     private AcceptanceDatabaseManager databaseManager;
-
+    private ServiceProvider databaseServices;
     internal HostedServicesAcceptanceFactory Factory { get; private set; } = null!;
 
     public HttpClient Client { get; private set; } = null!;
@@ -24,10 +23,11 @@ public sealed class HostedServicesAcceptanceFixture : IAsyncLifetime
             DecryptionKey = "000000000000000000000000000000000000000000000000",
         };
 
+        databaseServices = AcceptanceServiceProviderFactory.Create(settings);
         Factory = new HostedServicesAcceptanceFactory(settings);
-        databaseManager = new AcceptanceDatabaseManager(Factory.Services);
+        databaseManager = new AcceptanceDatabaseManager(databaseServices);
         await databaseManager.ResetDatabasesAsync();
-        await SeedAsync();
+        await new AcceptanceApplicationSeeder(Factory.Services).SeedAsync();
         Client = Factory.CreateClient(new WebApplicationFactoryClientOptions
         {
             AllowAutoRedirect = false,
@@ -42,21 +42,16 @@ public sealed class HostedServicesAcceptanceFixture : IAsyncLifetime
         if (databaseManager is not null)
             await databaseManager.DropDatabasesAsync();
 
+        if (databaseServices is not null)
+            await databaseServices.DisposeAsync();
+
         if (Factory is not null)
             await Factory.DisposeAsync();
     }
 
-    private Task SeedAsync() =>
-        new AcceptanceApplicationSeeder(Factory.Services).SeedAsync();
-
     private static string AddDatabaseSuffix(string variableName)
     {
-        string connectionString =
-            Environment.GetEnvironmentVariable(variableName, EnvironmentVariableTarget.Machine)
-            ?? ReadConfiguredConnectionString(variableName);
-
-        if (string.IsNullOrWhiteSpace(connectionString))
-            return string.Empty;
+        string connectionString = ReadRequiredConnectionString(variableName);
 
         SqlConnectionStringBuilder builder = new(connectionString)
         {
@@ -76,18 +71,18 @@ public sealed class HostedServicesAcceptanceFixture : IAsyncLifetime
         return builder.ConnectionString;
     }
 
-    private static string ReadConfiguredConnectionString(string variableName)
+    private static string ReadRequiredConnectionString(string variableName)
     {
-        string connectionName = variableName.Contains("CORE", StringComparison.OrdinalIgnoreCase)
-            ? "Core"
-            : "SSO";
+        string connectionString =
+            Environment.GetEnvironmentVariable(variableName)
+            ?? Environment.GetEnvironmentVariable(variableName, EnvironmentVariableTarget.User)
+            ?? Environment.GetEnvironmentVariable(variableName, EnvironmentVariableTarget.Machine);
 
-        IConfigurationRoot configuration = new ConfigurationBuilder()
-            .SetBasePath(AppContext.BaseDirectory)
-            .AddJsonFile("appsettings.testing.json", optional: true)
-            .Build();
+        if (!string.IsNullOrWhiteSpace(connectionString))
+            return connectionString;
 
-        return configuration.GetConnectionString(connectionName) ?? string.Empty;
+        throw new InvalidOperationException(
+            $"Acceptance connection string environment variable '{variableName}' was not found.");
     }
 }
 

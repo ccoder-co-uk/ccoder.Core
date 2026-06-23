@@ -38,7 +38,11 @@ internal static class IServiceCollectionExtensions
         services.AddHttpContextAccessor();
         services.AddScoped(typeof(HttpContext), ctx => CreateHttpContext(ctx.GetService<IHttpContextAccessor>()?.HttpContext));
         services.AddScoped(typeof(HttpRequest), ctx => ctx.GetRequiredService<HttpContext>().Request);
-        services.AddScoped(typeof(ISession), ctx => ctx.GetRequiredService<HttpContext>().Session);
+        services.AddScoped(typeof(ISession), ctx =>
+        {
+            HttpContext httpContext = ctx.GetRequiredService<HttpContext>();
+            return httpContext.Features.Get<ISessionFeature>()?.Session ?? NoOpSession.Instance;
+        });
 
         services.AddSession();
         services.AddHsts(options =>
