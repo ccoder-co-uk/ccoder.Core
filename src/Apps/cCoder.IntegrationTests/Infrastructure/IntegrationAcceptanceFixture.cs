@@ -106,24 +106,7 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
             timeout: TimeSpan.FromMinutes(2));
         Console.WriteLine("Integration fixture: Workflow started.");
 
-        hostedServicesApplication = new ExternalProcessApplication("HostedServices");
-        await hostedServicesApplication.StartAsync(
-            "dotnet",
-            "run --no-build --no-launch-profile --project src\\Apps\\HostedServices\\HostedServices.csproj",
-            repositoryRoot,
-            new Dictionary<string, string>
-            {
-                ["ASPNETCORE_ENVIRONMENT"] = "Acceptance",
-                ["ASPNETCORE_URLS"] = HostedServicesBaseAddress.ToString(),
-                ["ConnectionStrings__Core"] = Settings.CoreConnectionString,
-                ["ConnectionStrings__SSO"] = Settings.SsoConnectionString,
-                ["Settings__DecryptionKey"] = Settings.DecryptionKey,
-                ["Settings__sslPort"] = webHttpsPort.ToString(),
-                ["Services__Workflow"] = WorkflowBaseAddress.ToString()
-            },
-            readinessProbe: () => ProbeAsync(new Uri(HostedServicesBaseAddress, "Workflow/GetStats")),
-            timeout: TimeSpan.FromMinutes(2));
-        Console.WriteLine("Integration fixture: HostedServices started.");
+        await StartHostedServicesAsync();
 
         webApplication = new ExternalProcessApplication("Web");
         await webApplication.StartAsync(
@@ -149,6 +132,14 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
 
         WebClient = CreateClient(WebBaseAddress, useInsecureHandler: true);
         HostedServicesClient = CreateClient(HostedServicesBaseAddress, useInsecureHandler: false);
+    }
+
+    public async Task RestartHostedServicesAsync()
+    {
+        if (hostedServicesApplication is not null)
+            await hostedServicesApplication.DisposeAsync();
+
+        await StartHostedServicesAsync();
     }
 
     public async Task DisposeAsync()
@@ -207,10 +198,36 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
 
     private async Task BuildApplicationAsync(string projectPath, string msbuildProperties)
     {
+        string localBuildProperties = ResolveLocalBuildProperties();
+        string combinedProperties = CombineMsBuildProperties(localBuildProperties, msbuildProperties);
+
         await RunCommandAsync(
             "dotnet",
-            $"build {projectPath} --no-restore -p:UseSharedCompilation=false {msbuildProperties}");
+            $"restore {projectPath} {combinedProperties}");
+
+        await RunCommandAsync(
+            "dotnet",
+            $"build {projectPath} --no-restore -p:UseSharedCompilation=false {combinedProperties}");
     }
+
+    private string ResolveLocalBuildProperties()
+    {
+        string localSchedulingProject = Path.GetFullPath(
+            Path.Combine(
+                repositoryRoot,
+                "..",
+                "cCoder.Scheduling",
+                "src",
+                "cCoder.Scheduling",
+                "cCoder.Scheduling.csproj"));
+
+        return File.Exists(localSchedulingProject)
+            ? "-p:UseLocalScheduling=true -p:GenerateAssemblyInfo=false -p:GenerateTargetFrameworkAttribute=false"
+            : string.Empty;
+    }
+
+    private static string CombineMsBuildProperties(params string[] values) =>
+        string.Join(" ", values.Where(value => !string.IsNullOrWhiteSpace(value)));
 
     private async Task RunCommandAsync(string fileName, string arguments)
     {
@@ -319,6 +336,28 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
         }
 
         throw new InvalidOperationException("Could not locate the ccoder.Core repository root.");
+    }
+
+    private async Task StartHostedServicesAsync()
+    {
+        hostedServicesApplication = new ExternalProcessApplication("HostedServices");
+        await hostedServicesApplication.StartAsync(
+            "dotnet",
+            "run --no-build --no-launch-profile --project src\\Apps\\HostedServices\\HostedServices.csproj",
+            repositoryRoot,
+            new Dictionary<string, string>
+            {
+                ["ASPNETCORE_ENVIRONMENT"] = "Acceptance",
+                ["ASPNETCORE_URLS"] = HostedServicesBaseAddress.ToString(),
+                ["ConnectionStrings__Core"] = Settings.CoreConnectionString,
+                ["ConnectionStrings__SSO"] = Settings.SsoConnectionString,
+                ["Settings__DecryptionKey"] = Settings.DecryptionKey,
+                ["Settings__sslPort"] = WebBaseAddress.Port.ToString(),
+                ["Services__Workflow"] = WorkflowBaseAddress.ToString()
+            },
+            readinessProbe: () => ProbeAsync(new Uri(HostedServicesBaseAddress, "Workflow/GetStats")),
+            timeout: TimeSpan.FromMinutes(2));
+        Console.WriteLine("Integration fixture: HostedServices started.");
     }
 
     private static string ResolveFuncExecutablePath()
