@@ -77,7 +77,12 @@ internal sealed class ExternalProcessApplication : IAsyncDisposable
             if (!process.HasExited)
             {
                 process.Kill(entireProcessTree: true);
-                await process.WaitForExitAsync();
+
+                Task waitForExitTask = process.WaitForExitAsync();
+                Task completedTask = await Task.WhenAny(waitForExitTask, Task.Delay(TimeSpan.FromSeconds(15)));
+
+                if (completedTask == waitForExitTask)
+                    await waitForExitTask;
             }
         }
         catch
