@@ -148,4 +148,48 @@ public sealed partial class WorkflowEventIntegrationTests
             await DeleteFlowArtifactsAsync(flowId, taskId);
         }
     }
+
+    [Fact]
+    public async Task ScheduledTaskRunner_QueuesTaskForExecuteOnlyUserWithoutReadPrivilege()
+    {
+        Guid flowId = Guid.Empty;
+        int taskId = 0;
+        string executeOnlyUserId = null;
+        Guid executeOnlyRoleId = Guid.Empty;
+
+        try
+        {
+            (executeOnlyUserId, executeOnlyRoleId) = await CreateExecuteOnlyUserAsync(BaselineAppId);
+
+            flowId = await CreateFlowDefinitionAsync(BaselineAppId, Unique("Execute Only Scheduled Flow"));
+            taskId = await CreateScheduledTaskAsync(
+                flowId,
+                Unique("Execute Only Scheduled Task"),
+                nextExecution: DateTimeOffset.UtcNow.AddMinutes(-5),
+                executeAs: executeOnlyUserId);
+
+            await fixture.RestartHostedServicesAsync();
+
+            await WaitUntilAsync(
+                async () => await HasAnyFlowInstanceAsync(flowId),
+                attempts: 60,
+                diagnosticsFactory: () => BuildFlowDiagnosticsAsync(flowId));
+
+            fixture.HostedServicesOutput.Should().NotContain("Exception thrown whilst raising scheduled_task_execute event");
+            fixture.HostedServicesOutput.Should().NotContain("Access Denied!");
+
+            FlowInstanceData instance = await GetLatestInstanceAsync(flowId);
+            instance.Should().NotBeNull();
+            instance.Caller.Should().Be(executeOnlyUserId);
+            instance.State.Should().NotBe("Queued");
+
+            FlowInstanceData[] instances = await GetFlowInstancesAsync(flowId);
+            instances.Should().HaveCount(1);
+        }
+        finally
+        {
+            await DeleteFlowArtifactsAsync(flowId, taskId);
+            await DeleteExecuteOnlyUserAsync(executeOnlyUserId, executeOnlyRoleId);
+        }
+    }
 }
