@@ -30,6 +30,10 @@ public sealed partial class WorkflowEventIntegrationTests
             instance.State.Should().Be("Complete");
             instance.ContextString.Should().Contain("Execution complete.");
             instance.ContextString.Should().NotContain("Execution failed.");
+
+            FlowInstanceData[] instances = await GetFlowInstancesAsync(flowId);
+            instances.Should().HaveCount(1);
+            instances.Should().OnlyContain(found => found.State == "Complete");
         }
         finally
         {

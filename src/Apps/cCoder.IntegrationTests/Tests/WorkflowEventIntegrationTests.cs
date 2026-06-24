@@ -136,6 +136,31 @@ public sealed partial class WorkflowEventIntegrationTests
             .FirstAsync();
     }
 
+    private async Task<FlowInstanceData[]> GetFlowInstancesAsync(Guid flowId)
+    {
+        await using CoreDataContext core = CreateCoreContext();
+        return await core.Set<FlowInstanceData>().IgnoreQueryFilters()
+            .Where(instance => instance.FlowDefinitionId == flowId)
+            .OrderByDescending(instance => instance.Start)
+            .ToArrayAsync();
+    }
+
+    private async Task UpdateScheduledTaskNextExecutionAsync(int taskId, DateTimeOffset nextExecution)
+    {
+        await using CoreDataContext core = CreateCoreContext();
+        ScheduledTask task = await core.Set<ScheduledTask>().IgnoreQueryFilters()
+            .FirstAsync(found => found.Id == taskId);
+
+        task.NextExecution = nextExecution;
+        task.LastUpdated = DateTimeOffset.UtcNow;
+        task.UpdatedBy = "acceptance";
+
+        _ = await core.SaveChangesAsync();
+    }
+
+    private bool HostedServicesOutputContains(string value) =>
+        fixture.HostedServicesOutput.Contains(value, StringComparison.Ordinal);
+
     private async Task PostAsync(string relativeUrl) =>
         await SendWithOptionalHostAsync(HttpMethod.Post, relativeUrl);
 
