@@ -53,7 +53,10 @@ public sealed partial class WorkflowEventIntegrationTests
         return flow.Id;
     }
 
-    private async Task<int> CreateScheduledTaskAsync(Guid flowId, string name)
+    private async Task<int> CreateScheduledTaskAsync(
+        Guid flowId,
+        string name,
+        DateTimeOffset? nextExecution = null)
     {
         ScheduledTask task = await PostAsJsonAsync<ScheduledTask>("/Api/Core/ScheduledTask", new
         {
@@ -68,7 +71,7 @@ public sealed partial class WorkflowEventIntegrationTests
             updatedBy = "Guest",
             created = DateTimeOffset.UtcNow,
             lastUpdated = DateTimeOffset.UtcNow,
-            nextExecution = DateTimeOffset.UtcNow.AddMinutes(5)
+            nextExecution = nextExecution ?? DateTimeOffset.UtcNow.AddMinutes(5)
         });
 
         return task.Id;

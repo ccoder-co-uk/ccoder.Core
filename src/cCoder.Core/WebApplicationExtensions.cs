@@ -6,6 +6,7 @@ using cCoder.Security.Data.EF.Interfaces;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging.Abstractions;
 using System.Security.Cryptography;
 using System.Text;
@@ -45,6 +46,11 @@ public static partial class WebApplicationExtensions
             .RefreshAsync()
             .GetAwaiter()
             .GetResult();
+
+        IHostedService[] hostedServices = app.Services.GetServices<IHostedService>().ToArray();
+        log.LogInformation(
+            "Registered hosted services: {HostedServices}",
+            string.Join(", ", hostedServices.Select(service => service.GetType().FullName)));
 
         app.ListenToExternalEvents();
         app.UseRouting();
