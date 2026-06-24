@@ -56,7 +56,8 @@ public sealed partial class WorkflowEventIntegrationTests
     private async Task<int> CreateScheduledTaskAsync(
         Guid flowId,
         string name,
-        DateTimeOffset? nextExecution = null)
+        DateTimeOffset? nextExecution = null,
+        string executeAs = null)
     {
         ScheduledTask task = await PostAsJsonAsync<ScheduledTask>("/Api/Core/ScheduledTask", new
         {
@@ -66,7 +67,7 @@ public sealed partial class WorkflowEventIntegrationTests
             description = "Integration scheduled task",
             executionArgs = "{}",
             scheduleInTicks = TimeSpan.FromMinutes(5).Ticks,
-            executeAs = AdminUserId,
+            executeAs = executeAs ?? AdminUserId,
             createdBy = "Guest",
             updatedBy = "Guest",
             created = DateTimeOffset.UtcNow,
@@ -110,6 +111,118 @@ public sealed partial class WorkflowEventIntegrationTests
 
             if (flow is not null)
                 await core.DeleteAsync(flow);
+        }
+    }
+
+    private async Task<(string userId, Guid roleId)> CreateExecuteOnlyUserAsync(int appId)
+    {
+        string userId = $"scheduled-{Guid.NewGuid():N}";
+        Guid roleId = Guid.NewGuid();
+
+        await using CoreDataContext core = CreateCoreContext();
+
+        await core.AddUserAsync(new cCoder.Data.Models.Security.User
+        {
+            Id = userId,
+            DefaultCultureId = "en-GB",
+            DisplayName = "Scheduled Execute Only",
+            Email = $"{userId}@integration.local",
+            IsActive = true
+        });
+
+        await core.AddRoleAsync(new cCoder.Data.Models.Security.Role
+        {
+            Id = roleId,
+            AppId = appId,
+            Name = $"Execute Only {userId}",
+            Description = "Integration execute-only role",
+            Privs = "flowdefinition_execute"
+        });
+
+        await core.AddUserRoleAsync(new cCoder.Data.Models.Security.UserRole
+        {
+            RoleId = roleId,
+            UserId = userId
+        });
+
+        await using DbContext sso = fixture.DatabaseServices
+            .GetRequiredService<ISecurityDbContextFactory>()
+            .CreateDbContext(true);
+
+        sso.Add(new cCoder.Security.Objects.Entities.SSOUser
+        {
+            Id = userId,
+            DisplayName = "Scheduled Execute Only",
+            Email = $"{userId}@integration.local",
+            EmailConfirmed = true
+        });
+
+        await sso.SaveChangesAsync();
+
+        return (userId, roleId);
+    }
+
+    private async Task DeleteExecuteOnlyUserAsync(string userId, Guid roleId)
+    {
+        if (string.IsNullOrWhiteSpace(userId) && roleId == Guid.Empty)
+            return;
+
+        await using CoreDataContext core = CreateCoreContext();
+
+        if (roleId != Guid.Empty)
+        {
+            cCoder.Data.Models.Security.UserRole[] userRoles = await core.Set<cCoder.Data.Models.Security.UserRole>()
+                .IgnoreQueryFilters()
+                .Where(found => found.RoleId == roleId)
+                .ToArrayAsync();
+
+            if (userRoles.Length > 0)
+                await core.DeleteAllAsync(userRoles);
+
+            cCoder.Data.Models.Security.Role role = await core.Set<cCoder.Data.Models.Security.Role>()
+                .IgnoreQueryFilters()
+                .FirstOrDefaultAsync(found => found.Id == roleId);
+
+            if (role is not null)
+                await core.DeleteAsync(role);
+        }
+
+        if (!string.IsNullOrWhiteSpace(userId))
+        {
+            cCoder.Data.Models.Security.User user = await core.Set<cCoder.Data.Models.Security.User>()
+                .IgnoreQueryFilters()
+                .FirstOrDefaultAsync(found => found.Id == userId);
+
+            if (user is not null)
+                await core.DeleteAsync(user);
+        }
+
+        if (!string.IsNullOrWhiteSpace(userId))
+        {
+            await using DbContext sso = fixture.DatabaseServices
+                .GetRequiredService<ISecurityDbContextFactory>()
+                .CreateDbContext(true);
+
+            cCoder.Security.Objects.Entities.Token[] tokens = await sso.Set<cCoder.Security.Objects.Entities.Token>()
+                .IgnoreQueryFilters()
+                .Where(found => found.UserName == userId)
+                .ToArrayAsync();
+
+            if (tokens.Length > 0)
+            {
+                sso.RemoveRange(tokens);
+                await sso.SaveChangesAsync();
+            }
+
+            cCoder.Security.Objects.Entities.SSOUser ssoUser = await sso.Set<cCoder.Security.Objects.Entities.SSOUser>()
+                .IgnoreQueryFilters()
+                .FirstOrDefaultAsync(found => found.Id == userId);
+
+            if (ssoUser is not null)
+            {
+                sso.Remove(ssoUser);
+                await sso.SaveChangesAsync();
+            }
         }
     }
 
