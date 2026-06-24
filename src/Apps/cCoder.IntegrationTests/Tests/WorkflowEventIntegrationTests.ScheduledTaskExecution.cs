@@ -34,6 +34,10 @@ public sealed partial class WorkflowEventIntegrationTests
             instance.State.Should().Be("Complete");
             instance.ContextString.Should().Contain("Execution complete.");
             instance.ContextString.Should().NotContain("Execution failed.");
+
+            FlowInstanceData[] instances = await GetFlowInstancesAsync(flowId);
+            instances.Should().HaveCount(1);
+            instances.Should().OnlyContain(found => found.State == "Complete");
         }
         finally
         {
@@ -71,6 +75,9 @@ public sealed partial class WorkflowEventIntegrationTests
             instance.Should().NotBeNull();
             instance.Caller.Should().Be(AdminUserId);
             instance.State.Should().Be("Complete");
+            FlowInstanceData[] instances = await GetFlowInstancesAsync(flowId);
+            instances.Should().HaveCount(1);
+            instances.Should().OnlyContain(found => found.State == "Complete");
 
             await using CoreDataContext core = CreateCoreContext();
             ScheduledTask task = await core.Set<ScheduledTask>().IgnoreQueryFilters()
@@ -80,6 +87,61 @@ public sealed partial class WorkflowEventIntegrationTests
             task.LastExecuted.Should().BeAfter(DateTimeOffset.UtcNow.AddMinutes(-3));
             task.NextExecution.Should().NotBeNull();
             task.NextExecution.Should().BeAfter(DateTimeOffset.UtcNow.AddSeconds(-5));
+        }
+        finally
+        {
+            await DeleteFlowArtifactsAsync(flowId, taskId);
+        }
+    }
+
+    [Fact]
+    public async Task ScheduledTaskRunner_ExecutesTaskThatBecomesDueAfterStartupWithoutExceptions()
+    {
+        Guid flowId = Guid.Empty;
+        int taskId = 0;
+
+        try
+        {
+            flowId = await CreateFlowDefinitionAsync(BaselineAppId, Unique("Delayed Hosted Scheduled Flow"));
+            taskId = await CreateScheduledTaskAsync(
+                flowId,
+                Unique("Delayed Hosted Scheduled Task"),
+                nextExecution: DateTimeOffset.UtcNow.AddHours(1));
+
+            await fixture.RestartHostedServicesAsync();
+
+            await WaitUntilAsync(
+                () => Task.FromResult(HostedServicesOutputContains("No scheduled tasks are due to run.")),
+                attempts: 40,
+                delayMilliseconds: 250,
+                diagnosticsFactory: () => BuildFlowDiagnosticsAsync(flowId));
+
+            await UpdateScheduledTaskNextExecutionAsync(taskId, DateTimeOffset.UtcNow.AddMinutes(-5));
+
+            await WaitUntilAsync(
+                async () => await HasFlowInstanceStateAsync(flowId, "Complete"),
+                attempts: 180,
+                delayMilliseconds: 500,
+                diagnosticsFactory: () => BuildFlowDiagnosticsAsync(flowId));
+
+            fixture.HostedServicesOutput.Should().NotContain("Exception thrown whilst raising scheduled_task_execute event");
+            fixture.HostedServicesOutput.Should().NotContain("Object reference not set to an instance of an object");
+
+            FlowInstanceData instance = await GetLatestInstanceAsync(flowId);
+            instance.Should().NotBeNull();
+            instance.Caller.Should().Be(AdminUserId);
+            instance.State.Should().Be("Complete");
+            FlowInstanceData[] instances = await GetFlowInstancesAsync(flowId);
+            instances.Should().HaveCount(1);
+            instances.Should().OnlyContain(found => found.State == "Complete");
+
+            await using CoreDataContext core = CreateCoreContext();
+            ScheduledTask task = await core.Set<ScheduledTask>().IgnoreQueryFilters()
+                .FirstAsync(found => found.Id == taskId);
+
+            task.LastExecuted.Should().NotBeNull();
+            task.NextExecution.Should().NotBeNull();
+            task.NextExecution.Should().BeAfter(DateTimeOffset.UtcNow.AddMinutes(-1));
         }
         finally
         {

@@ -23,6 +23,10 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
     private ExternalProcessApplication hostedServicesApplication;
     private ExternalProcessApplication workflowApplication;
     private readonly string repositoryRoot = FindRepositoryRoot();
+    private string acceptanceArtifactsRoot;
+    private string workflowOutputDirectory;
+    private string hostedServicesOutputDirectory;
+    private string webOutputDirectory;
 
     internal AcceptanceSettings Settings { get; private set; }
 
@@ -56,14 +60,18 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
         int webHttpsPort = FindFreePort();
         int hostedServicesHttpPort = FindFreePort();
         int workflowHttpPort = FindFreePort();
-        string workflowOutputDirectory = Path.Combine(
+        acceptanceArtifactsRoot = Path.Combine(
             repositoryRoot,
-            "src",
-            "Apps",
-            "Workflow",
-            "bin",
-            "Debug",
-            "net10.0");
+            "artifacts",
+            "integration-tests",
+            Guid.NewGuid().ToString("N"));
+        workflowOutputDirectory = Path.Combine(acceptanceArtifactsRoot, "Workflow");
+        hostedServicesOutputDirectory = Path.Combine(acceptanceArtifactsRoot, "HostedServices");
+        webOutputDirectory = Path.Combine(acceptanceArtifactsRoot, "Web");
+
+        Directory.CreateDirectory(workflowOutputDirectory);
+        Directory.CreateDirectory(hostedServicesOutputDirectory);
+        Directory.CreateDirectory(webOutputDirectory);
 
         WebBaseAddress = new Uri($"https://localhost:{webHttpsPort}/");
         HostedServicesBaseAddress = new Uri($"http://localhost:{hostedServicesHttpPort}/");
@@ -80,17 +88,23 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
 
         await BuildApplicationAsync(
             "src\\Apps\\Workflow\\Workflow.csproj",
-            string.Empty);
+            string.Empty,
+            workflowOutputDirectory,
+            Path.Combine(acceptanceArtifactsRoot, "obj", "Workflow"));
         Console.WriteLine("Integration fixture: Workflow built.");
 
         await BuildApplicationAsync(
             "src\\Apps\\HostedServices\\HostedServices.csproj",
-            string.Empty);
+            string.Empty,
+            hostedServicesOutputDirectory,
+            Path.Combine(acceptanceArtifactsRoot, "obj", "HostedServices"));
         Console.WriteLine("Integration fixture: HostedServices built.");
 
         await BuildApplicationAsync(
             "src\\Apps\\Web\\Web.csproj",
-            string.Empty);
+            string.Empty,
+            webOutputDirectory,
+            Path.Combine(acceptanceArtifactsRoot, "obj", "Web"));
         Console.WriteLine("Integration fixture: Web built.");
 
         workflowApplication = new ExternalProcessApplication("Workflow");
@@ -111,8 +125,8 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
         webApplication = new ExternalProcessApplication("Web");
         await webApplication.StartAsync(
             "dotnet",
-            "run --no-build --no-launch-profile --project src\\Apps\\Web\\Web.csproj",
-            repositoryRoot,
+            $"\"{Path.Combine(webOutputDirectory, "Web.dll")}\"",
+            webOutputDirectory,
             new Dictionary<string, string>
             {
                 ["ASPNETCORE_ENVIRONMENT"] = "Acceptance",
@@ -161,6 +175,16 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
 
         if (databaseServices is not null)
             await databaseServices.DisposeAsync();
+
+        try
+        {
+            if (!string.IsNullOrWhiteSpace(acceptanceArtifactsRoot) && Directory.Exists(acceptanceArtifactsRoot))
+                Directory.Delete(acceptanceArtifactsRoot, recursive: true);
+        }
+        catch
+        {
+            // Best-effort cleanup only. A failed delete should not hide the test outcome.
+        }
     }
 
     private static int FindFreePort()
@@ -196,10 +220,17 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
         }
     }
 
-    private async Task BuildApplicationAsync(string projectPath, string msbuildProperties)
+    private async Task BuildApplicationAsync(
+        string projectPath,
+        string msbuildProperties,
+        string outputDirectory,
+        string intermediateDirectory)
     {
         string localBuildProperties = ResolveLocalBuildProperties();
-        string combinedProperties = CombineMsBuildProperties(localBuildProperties, msbuildProperties);
+        string outputProperties =
+            $"-p:OutputPath=\"{FormatMsBuildPath(outputDirectory, trailingSlash: false)}\" " +
+            $"-p:IntermediateOutputPath=\"{FormatMsBuildPath(intermediateDirectory, trailingSlash: true)}\"";
+        string combinedProperties = CombineMsBuildProperties(localBuildProperties, msbuildProperties, outputProperties);
 
         await RunCommandAsync(
             "dotnet",
@@ -207,11 +238,23 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
 
         await RunCommandAsync(
             "dotnet",
-            $"build {projectPath} --no-restore -p:UseSharedCompilation=false {combinedProperties}");
+            $"build {projectPath} --no-restore -m:1 -p:BuildInParallel=false -p:UseSharedCompilation=false {combinedProperties}");
     }
 
     private string ResolveLocalBuildProperties()
     {
+        bool useLocalScheduling = string.Equals(
+            Environment.GetEnvironmentVariable("CCODER_INTEGRATION_USE_LOCAL_SCHEDULING"),
+            "true",
+            StringComparison.OrdinalIgnoreCase);
+        bool useLocalWorkflow = string.Equals(
+            Environment.GetEnvironmentVariable("CCODER_INTEGRATION_USE_LOCAL_WORKFLOW"),
+            "true",
+            StringComparison.OrdinalIgnoreCase);
+
+        if (!useLocalScheduling && !useLocalWorkflow)
+            return string.Empty;
+
         string localSchedulingProject = Path.GetFullPath(
             Path.Combine(
                 repositoryRoot,
@@ -220,14 +263,44 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
                 "src",
                 "cCoder.Scheduling",
                 "cCoder.Scheduling.csproj"));
+        string localWorkflowProject = Path.GetFullPath(
+            Path.Combine(
+                repositoryRoot,
+                "..",
+                "cCoder.Workflow",
+                "src",
+                "cCoder.Workflow",
+                "cCoder.Workflow.csproj"));
 
-        return File.Exists(localSchedulingProject)
-            ? "-p:UseLocalScheduling=true -p:GenerateAssemblyInfo=false -p:GenerateTargetFrameworkAttribute=false"
-            : string.Empty;
+        List<string> properties = [];
+
+        if (useLocalScheduling && File.Exists(localSchedulingProject))
+            properties.Add("-p:UseLocalScheduling=true");
+
+        if (useLocalWorkflow && File.Exists(localWorkflowProject))
+            properties.Add("-p:UseLocalWorkflow=true");
+
+        if (properties.Count > 0)
+        {
+            properties.Add("-p:GenerateAssemblyInfo=false");
+            properties.Add("-p:GenerateTargetFrameworkAttribute=false");
+        }
+
+        return string.Join(" ", properties);
     }
 
     private static string CombineMsBuildProperties(params string[] values) =>
         string.Join(" ", values.Where(value => !string.IsNullOrWhiteSpace(value)));
+
+    private static string FormatMsBuildPath(string path, bool trailingSlash)
+    {
+        string formattedPath = path.Replace('\\', '/');
+
+        if (trailingSlash && !formattedPath.EndsWith('/'))
+            formattedPath += '/';
+
+        return formattedPath;
+    }
 
     private async Task RunCommandAsync(string fileName, string arguments)
     {
@@ -343,8 +416,8 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
         hostedServicesApplication = new ExternalProcessApplication("HostedServices");
         await hostedServicesApplication.StartAsync(
             "dotnet",
-            "run --no-build --no-launch-profile --project src\\Apps\\HostedServices\\HostedServices.csproj",
-            repositoryRoot,
+            $"\"{Path.Combine(hostedServicesOutputDirectory, "HostedServices.dll")}\"",
+            hostedServicesOutputDirectory,
             new Dictionary<string, string>
             {
                 ["ASPNETCORE_ENVIRONMENT"] = "Acceptance",
