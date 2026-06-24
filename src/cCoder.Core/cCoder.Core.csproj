@@ -118,8 +118,8 @@
     <PackageReference Include="cCoder.Scheduling" Version="2026.6.24.1257" Condition="'$(UseLocalScheduling)' != 'true'" />
     <PackageReference Include="cCoder.Security" Version="2026.4.29.2038" Condition="'$(UseLocalSecurity)' != 'true'" />
     <PackageReference Include="cCoder.Security.Data.EF.MSSQL" Version="2026.4.29.2038" Condition="'$(UseLocalSecurity)' != 'true'" />
-    <PackageReference Include="cCoder.Workflow" Version="2026.6.24.1257" Condition="'$(UseLocalWorkflow)' != 'true'" />
-    <PackageReference Include="cCoder.Workflow.Activities" Version="2026.6.24.1257" Condition="'$(UseLocalWorkflow)' != 'true'" />
+    <PackageReference Include="cCoder.Workflow" Version="2026.6.24.2257" Condition="'$(UseLocalWorkflow)' != 'true'" />
+    <PackageReference Include="cCoder.Workflow.Activities" Version="2026.6.24.2257" Condition="'$(UseLocalWorkflow)' != 'true'" />
     <PackageReference Include="Microsoft.AspNetCore.OData" Version="9.4.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.9" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
