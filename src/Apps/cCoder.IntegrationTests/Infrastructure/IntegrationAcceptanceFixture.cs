@@ -199,10 +199,15 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
     private async Task BuildApplicationAsync(string projectPath, string msbuildProperties)
     {
         string localBuildProperties = ResolveLocalBuildProperties();
+        string combinedProperties = CombineMsBuildProperties(localBuildProperties, msbuildProperties);
 
         await RunCommandAsync(
             "dotnet",
-            $"build {projectPath} --no-restore -p:UseSharedCompilation=false {localBuildProperties} {msbuildProperties}");
+            $"restore {projectPath} {combinedProperties}");
+
+        await RunCommandAsync(
+            "dotnet",
+            $"build {projectPath} --no-restore -p:UseSharedCompilation=false {combinedProperties}");
     }
 
     private string ResolveLocalBuildProperties()
@@ -220,6 +225,9 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
             ? "-p:UseLocalScheduling=true -p:GenerateAssemblyInfo=false -p:GenerateTargetFrameworkAttribute=false"
             : string.Empty;
     }
+
+    private static string CombineMsBuildProperties(params string[] values) =>
+        string.Join(" ", values.Where(value => !string.IsNullOrWhiteSpace(value)));
 
     private async Task RunCommandAsync(string fileName, string arguments)
     {
