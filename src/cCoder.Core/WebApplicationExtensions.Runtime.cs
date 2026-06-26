@@ -16,8 +16,6 @@ public static partial class WebApplicationExtensions
 
     private static WebApplication UseCoreDefaultCors(this WebApplication app)
     {
-        ICoreAllowedOriginStore originStore =
-            app.Services.GetRequiredService<ICoreAllowedOriginStore>();
         IHttpContextAccessor httpContextAccessor =
             app.Services.GetRequiredService<IHttpContextAccessor>();
 
@@ -26,7 +24,12 @@ public static partial class WebApplicationExtensions
             string origin = context.Request.Headers.Origin.ToString();
 
             if (!string.IsNullOrWhiteSpace(origin))
+            {
+                ICoreAllowedOriginStore originStore =
+                    context.RequestServices.GetRequiredService<ICoreAllowedOriginStore>();
+
                 context.Items[IsCoreCorsOriginAllowed] = await originStore.IsAllowedAsync(origin);
+            }
 
             await next();
         });
