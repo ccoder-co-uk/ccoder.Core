@@ -1,7 +1,7 @@
 using System.Net;
 using System.Text;
 using cCoder.AppSecurity.Brokers;
-using cCoder.Core.Api.OData.Responses;
+using cCoder.Core.Exposures.OData.Responses;
 using cCoder.Data;
 using cCoder.Data.Models;
 using Microsoft.AspNetCore.Mvc;

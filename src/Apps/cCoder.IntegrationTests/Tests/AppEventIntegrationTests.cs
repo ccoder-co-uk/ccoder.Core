@@ -140,7 +140,7 @@ public sealed partial class AppEventIntegrationTests
             AppId = appId,
             Name = Unique("DeleteRole"),
             Description = "Delete role",
-            Privs = "app_admin,app_delete,folder_delete,file_delete"
+            Privs = "app_admin,app_delete,AppCulture_delete,folder_delete,file_delete"
         });
 
         await core.AddUserRoleAsync(new UserRole { RoleId = roleId, UserId = "Guest" });
@@ -364,7 +364,23 @@ public sealed partial class AppEventIntegrationTests
 
         using HttpResponseMessage response = await fixture.WebClient.SendAsync(request);
         string content = await response.Content.ReadAsStringAsync();
-        response.StatusCode.Should().Be(HttpStatusCode.OK, content);
+        response.StatusCode.Should().Be(HttpStatusCode.OK, BuildFailureMessage(content));
+    }
+
+    private string BuildFailureMessage(string content) =>
+        $"""
+        {content}
+
+        Web output:
+        {Tail(fixture.WebOutput)}
+        """;
+
+    private static string Tail(string value, int length = 6000)
+    {
+        if (string.IsNullOrWhiteSpace(value) || value.Length <= length)
+            return value ?? string.Empty;
+
+        return value[^length..];
     }
 
     private static async Task WaitUntilAsync(

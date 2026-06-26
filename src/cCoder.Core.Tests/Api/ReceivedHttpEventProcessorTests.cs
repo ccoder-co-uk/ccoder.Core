@@ -91,12 +91,44 @@ public sealed class ReceivedHttpEventProcessorTests
         });
 
         workflowManagementServiceMock.Verify(service =>
-            service.ExecuteWaitingQueuedInstanceByIdAsync(flowInstanceData.FlowDefinitionId),
+            service.ExecuteWaitingQueuedInstanceByIdAsync(flowInstanceData.Id),
             Times.Once);
 
         eventHubMock.Verify(eventHub => eventHub.RaiseEventAsync(
                 It.IsAny<string>(),
                 It.IsAny<EventMessage<FlowInstanceData>>()),
+            Times.Never);
+    }
+
+    [Fact]
+    public async Task ProcessAsync_GivenNonQueuedFlowInstanceDataAddMessage_ShouldNotExecuteWorkflow()
+    {
+        Mock<IEventHub> eventHubMock = new();
+        Mock<IWorkflowInstanceManagementOrchestrationService> workflowManagementServiceMock = new();
+        FlowInstanceData flowInstanceData = new()
+        {
+            Id = Guid.NewGuid(),
+            FlowDefinitionId = Guid.NewGuid(),
+            State = "Executing",
+            Caller = "admin"
+        };
+
+        ReceivedHttpEventProcessor processor = new(
+            eventHubMock.Object,
+            workflowManagementServiceMock.Object,
+            new HttpEventingOptions
+            {
+                JsonSerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web)
+            });
+
+        await processor.ProcessAsync(new HttpEventMessage
+        {
+            EventName = "flow_instance_data_add",
+            Data = JsonSerializer.Serialize(flowInstanceData),
+        });
+
+        workflowManagementServiceMock.Verify(service =>
+            service.ExecuteWaitingQueuedInstanceByIdAsync(It.IsAny<Guid>()),
             Times.Never);
     }
 }

@@ -1,4 +1,4 @@
-using cCoder.Core.Setup;
+using cCoder.Core.Exposures.Setup;
 using cCoder.Data.Models;
 using cCoder.Data.Models.Packaging;
 

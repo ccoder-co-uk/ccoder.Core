@@ -1,19 +1,21 @@
-using cCoder.ContentManagement.Exposures;
 using App = cCoder.Data.Models.CMS.App;
+using cCoder.ContentManagement.Exposures;
 
 namespace cCoder.Core.Brokers.ContentManagement;
 
-internal class ContentManagementAppBroker(IContentManagementAppExposure contentManagementAppExposure)
+internal class ContentManagementAppBroker(IAppManager appManager)
     : IContentManagementAppBroker
 {
     public App Get(int id, bool ignoreFilters = false) =>
-        contentManagementAppExposure.Get(id, ignoreFilters);
+        appManager.Get(id, ignoreFilters);
 
     public App GetByDomain(string domain, bool ignoreFilters = false) =>
-        contentManagementAppExposure.GetByDomain(domain, ignoreFilters);
+        appManager.GetByDomain(domain, ignoreFilters);
 
-    public ValueTask<App> AddAsync(App app) => contentManagementAppExposure.AddAsync(app);
-    public ValueTask<App> UpdateAsync(App app) => contentManagementAppExposure.UpdateAsync(app);
-    public ValueTask DeleteAsync(int appId) => contentManagementAppExposure.DeleteAsync(appId);
+    public IQueryable<App> GetAll(bool ignoreFilters = false) =>
+        appManager.GetAll(ignoreFilters);
+
+    public ValueTask<App> AddAsync(App app) => appManager.AddAsync(app);
+    public ValueTask<App> UpdateAsync(App app) => appManager.UpdateAsync(app);
+    public ValueTask DeleteAsync(int appId) => appManager.DeleteAsync(appId);
 }
-

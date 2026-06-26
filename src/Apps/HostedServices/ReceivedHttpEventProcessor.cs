@@ -78,13 +78,16 @@ public sealed class ReceivedHttpEventProcessor(
             ?? throw new InvalidOperationException(
                 "You must provide a valid workflow instance payload when receiving events.");
 
-        if (flowInstanceData.FlowDefinitionId == Guid.Empty)
+        if (flowInstanceData.Id == Guid.Empty)
         {
             throw new InvalidOperationException(
-                "You must provide a workflow instance payload with a valid flow definition id.");
+                "You must provide a workflow instance payload with a valid id.");
         }
 
-        await workflowInstanceManagementService.ExecuteWaitingQueuedInstanceByIdAsync(
-            flowInstanceData.FlowDefinitionId);
+        if (string.Equals(flowInstanceData.State, "Queued", StringComparison.OrdinalIgnoreCase))
+        {
+            await workflowInstanceManagementService.ExecuteWaitingQueuedInstanceByIdAsync(
+                flowInstanceData.Id);
+        }
     }
 }
