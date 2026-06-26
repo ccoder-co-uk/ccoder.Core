@@ -20,7 +20,7 @@ public static partial class IServiceCollectionExtensions
         AddCoreFoundationServices(services);
         AddCoreProcessingServices(services);
         AddCoreOrchestrationServices(services);
-        services.AddSingleton<ICoreAllowedOriginStore, CoreAllowedOriginStore>();
+        services.AddScoped<ICoreAllowedOriginStore, CoreAllowedOriginStore>();
         AddCoreODataExposures(services, routeDefinitions);
 
         return services;
