@@ -17,10 +17,11 @@ using cCoder.Security.Api;
 using cCoder.Security.Data.EF.MSSQL;
 using cCoder.Security.Exposures;
 using cCoder.Security.Objects;
-using cCoder.Core.Api;
+using cCoder.Core.Exposures;
 using cCoder.Workflow;
 using cCoder.Workflow.Models;
 using cCoder.Eventing.Models;
+using cCoder.Eventing.AzureServiceBus;
 using cCoder.Eventing.Http;
 using cCoder.Eventing.Http.Models;
 using Microsoft.OData.ModelBuilder;
@@ -120,6 +121,15 @@ public partial class CoreApiBuilderOptions
             }
         });
 
+    public CoreApiBuilderOptions UseServiceBusEventing(string connectionString) =>
+        WithCoreConfiguration(coreConfig =>
+        {
+            coreConfig.EnableServiceBusEventing = true;
+
+            if (!string.IsNullOrWhiteSpace(connectionString))
+                coreConfig.ServiceBusConnectionString = connectionString;
+        });
+
     public CoreApiBuilderOptions AddSecurityApi(
         Action<IServiceCollection, SecurityConfiguration> configure = null)
     {
@@ -207,7 +217,7 @@ public partial class CoreApiBuilderOptions
         AddSchedulingApi();
         AddWorkflowApi();
         UseLegacyCoreApi();
-        UseHttpEventing(configuration.HttpEventHubUrl, options => options.MaxConcurrency = configuration.MaxConcurrency);
+        UseConfiguredExternalEventing(configuration);
         WithEventProviders(configuration.EventProviders ?? []);
 
         return this;
@@ -378,9 +388,10 @@ public partial class CoreApiBuilderOptions
         ApplyCoreData();
         ApplySessionCacheFallback();
         ApplyHttpEventing();
+        ApplyServiceBusEventing();
         services.AddCoreEventing(eventProviders);
         IEnumerable<CoreApiRouteDefinition> routes = EnsureRequiredRoutes(BuildRouteDefinitions());
-        cCoder.Core.Api.IServiceCollectionExtensions.AddCoreApi(services, routes);
+        services.AddCoreApi(routes);
         services.AddCoreApiDocumentation(routes);
         RegisterApiInfos(routes);
         applied = true;
@@ -528,6 +539,34 @@ public partial class CoreApiBuilderOptions
             options.MaxConcurrency = coreConfiguration.MaxConcurrency;
             options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
         });
+    }
+
+    private void ApplyServiceBusEventing()
+    {
+        if (coreConfiguration?.EnableServiceBusEventing != true)
+            return;
+
+        services.AddAzureServiceBusEventing(options =>
+        {
+            options.ConnectionString = coreConfiguration.ServiceBusConnectionString;
+            options.MaxConcurrency = coreConfiguration.MaxConcurrency;
+        });
+    }
+
+    private void UseConfiguredExternalEventing(CoreConfiguration configuration)
+    {
+        if (configuration.EnableServiceBusEventing)
+        {
+            UseServiceBusEventing(configuration.ServiceBusConnectionString);
+            return;
+        }
+
+        if (configuration.EnableHttpEventing || !string.IsNullOrWhiteSpace(configuration.HttpEventHubUrl))
+        {
+            UseHttpEventing(
+                configuration.HttpEventHubUrl,
+                options => options.MaxConcurrency = configuration.MaxConcurrency);
+        }
     }
 
     private string ResolveCoreConnectionString()

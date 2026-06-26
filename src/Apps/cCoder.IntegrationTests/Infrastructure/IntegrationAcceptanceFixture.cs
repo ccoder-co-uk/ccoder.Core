@@ -1,6 +1,8 @@
 using System.Diagnostics;
 using System.Net;
 using System.Text;
+using Azure.Messaging.ServiceBus;
+using Azure.Messaging.ServiceBus.Administration;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.DependencyInjection;
 using cCoder.IntegrationTests.Models;
@@ -11,6 +13,15 @@ namespace cCoder.IntegrationTests.Infrastructure;
 public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
 {
     private const string DecryptionKey = "000000000000000000000000000000000000000000000000";
+    private static readonly string[] ServiceBusEventQueues =
+    [
+        "app_add",
+        "app_update",
+        "app_delete",
+        "folder_delete",
+        "flow_instance_data_add"
+    ];
+
     private readonly HttpClientHandler insecureHttpHandler = new()
     {
         AutomaticDecompression = DecompressionMethods.All,
@@ -54,8 +65,20 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
         {
             CoreConnectionString = AddDatabaseSuffix("CCODER_ACCEPTANCE_CORE_CONNECTION_STRING"),
             SsoConnectionString = AddDatabaseSuffix("CCODER_ACCEPTANCE_SSO_CONNECTION_STRING"),
-            DecryptionKey = DecryptionKey
+            DecryptionKey = DecryptionKey,
+            EventProviderType = ResolveEventProviderType(),
+            ServiceBusConnectionString = ResolveOptionalSetting(
+                "CCODER_INTEGRATION_SERVICE_BUS_CONNECTION_STRING",
+                "ConnectionStrings__ServiceBus",
+                "EVENT_LIBRARY_AZURE_SERVICE_BUS_CONNECTION_STRING"),
+            ServiceBusMaxConcurrency = ResolveIntSetting(
+                "CCODER_INTEGRATION_SERVICE_BUS_MAX_CONCURRENCY",
+                "Eventing__ServiceBus__MaxConcurrency",
+                1)
         };
+
+        if (Settings.UseServiceBusEventing)
+            await EnsureServiceBusQueuesAreCleanAsync();
 
         int webHttpsPort = FindFreePort();
         int hostedServicesHttpPort = FindFreePort();
@@ -122,24 +145,18 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
 
         await StartHostedServicesAsync();
 
+        Dictionary<string, string> webEnvironment = CreateCommonApplicationEnvironment();
+        webEnvironment["ASPNETCORE_URLS"] = WebBaseAddress.ToString();
+        webEnvironment["Settings__sslPort"] = webHttpsPort.ToString();
+        webEnvironment["Settings__enableExternalEventing"] = "true";
+        webEnvironment["Services__HostedServices"] = HostedServicesBaseAddress.ToString();
+
         webApplication = new ExternalProcessApplication("Web");
         await webApplication.StartAsync(
             "dotnet",
             $"\"{Path.Combine(webOutputDirectory, "Web.dll")}\"",
             webOutputDirectory,
-            new Dictionary<string, string>
-            {
-                ["ASPNETCORE_ENVIRONMENT"] = "Acceptance",
-                ["ASPNETCORE_URLS"] = WebBaseAddress.ToString(),
-                ["ConnectionStrings__Core"] = Settings.CoreConnectionString,
-                ["ConnectionStrings__SSO"] = Settings.SsoConnectionString,
-                ["Settings__DecryptionKey"] = Settings.DecryptionKey,
-                ["Settings__sslPort"] = webHttpsPort.ToString(),
-                ["Settings__enableExternalEventing"] = "true",
-                ["Services__Workflow"] = WorkflowBaseAddress.ToString(),
-                ["Services__HostedServices"] = HostedServicesBaseAddress.ToString(),
-                ["Eventing__Http__MaxConcurrency"] = "1"
-            },
+            webEnvironment,
             readinessProbe: () => ProbeAsync(new Uri(WebBaseAddress, "Api/Time"), useInsecureHandler: true),
             timeout: TimeSpan.FromMinutes(2));
         Console.WriteLine("Integration fixture: Web started.");
@@ -178,6 +195,9 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
 
         try
         {
+            if (Settings?.UseServiceBusEventing == true)
+                await DrainServiceBusQueuesAsync();
+
             if (!string.IsNullOrWhiteSpace(acceptanceArtifactsRoot) && Directory.Exists(acceptanceArtifactsRoot))
                 Directory.Delete(acceptanceArtifactsRoot, recursive: true);
         }
@@ -413,24 +433,120 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
 
     private async Task StartHostedServicesAsync()
     {
+        Dictionary<string, string> hostedServicesEnvironment = CreateCommonApplicationEnvironment();
+        hostedServicesEnvironment["ASPNETCORE_URLS"] = HostedServicesBaseAddress.ToString();
+        hostedServicesEnvironment["Settings__sslPort"] = WebBaseAddress.Port.ToString();
+
         hostedServicesApplication = new ExternalProcessApplication("HostedServices");
         await hostedServicesApplication.StartAsync(
             "dotnet",
             $"\"{Path.Combine(hostedServicesOutputDirectory, "HostedServices.dll")}\"",
             hostedServicesOutputDirectory,
-            new Dictionary<string, string>
-            {
-                ["ASPNETCORE_ENVIRONMENT"] = "Acceptance",
-                ["ASPNETCORE_URLS"] = HostedServicesBaseAddress.ToString(),
-                ["ConnectionStrings__Core"] = Settings.CoreConnectionString,
-                ["ConnectionStrings__SSO"] = Settings.SsoConnectionString,
-                ["Settings__DecryptionKey"] = Settings.DecryptionKey,
-                ["Settings__sslPort"] = WebBaseAddress.Port.ToString(),
-                ["Services__Workflow"] = WorkflowBaseAddress.ToString()
-            },
+            hostedServicesEnvironment,
             readinessProbe: () => ProbeAsync(new Uri(HostedServicesBaseAddress, "Workflow/GetStats")),
             timeout: TimeSpan.FromMinutes(2));
         Console.WriteLine("Integration fixture: HostedServices started.");
+    }
+
+    private Dictionary<string, string> CreateCommonApplicationEnvironment()
+    {
+        Dictionary<string, string> environment = new()
+        {
+            ["ASPNETCORE_ENVIRONMENT"] = "Acceptance",
+            ["ConnectionStrings__Core"] = Settings.CoreConnectionString,
+            ["ConnectionStrings__SSO"] = Settings.SsoConnectionString,
+            ["Settings__DecryptionKey"] = Settings.DecryptionKey,
+            ["Services__Workflow"] = WorkflowBaseAddress.ToString(),
+            ["Eventing__ProviderType"] = Settings.EventProviderType,
+            ["Eventing__Http__MaxConcurrency"] = "1"
+        };
+
+        if (Settings.UseServiceBusEventing)
+        {
+            environment["ConnectionStrings__ServiceBus"] = Settings.ServiceBusConnectionString;
+            environment["Eventing__ServiceBus__MaxConcurrency"] =
+                Settings.ServiceBusMaxConcurrency.ToString();
+        }
+
+        return environment;
+    }
+
+    private async Task EnsureServiceBusQueuesAreCleanAsync()
+    {
+        if (string.IsNullOrWhiteSpace(Settings.ServiceBusConnectionString))
+        {
+            throw new InvalidOperationException(
+                "Service Bus integration mode requires CCODER_INTEGRATION_SERVICE_BUS_CONNECTION_STRING or ConnectionStrings__ServiceBus.");
+        }
+
+        ServiceBusAdministrationClient administrationClient = new(Settings.ServiceBusConnectionString);
+
+        foreach (string queueName in ServiceBusEventQueues)
+        {
+            if (!await administrationClient.QueueExistsAsync(queueName))
+                await administrationClient.CreateQueueAsync(queueName);
+        }
+
+        await DrainServiceBusQueuesAsync();
+    }
+
+    private async Task DrainServiceBusQueuesAsync()
+    {
+        if (string.IsNullOrWhiteSpace(Settings?.ServiceBusConnectionString))
+            return;
+
+        await using ServiceBusClient client = new(Settings.ServiceBusConnectionString);
+
+        foreach (string queueName in ServiceBusEventQueues)
+        {
+            ServiceBusReceiver receiver = client.CreateReceiver(queueName);
+
+            while (true)
+            {
+                IReadOnlyList<ServiceBusReceivedMessage> messages =
+                    await receiver.ReceiveMessagesAsync(100, TimeSpan.FromSeconds(1));
+
+                if (messages.Count == 0)
+                    break;
+
+                foreach (ServiceBusReceivedMessage message in messages)
+                    await receiver.CompleteMessageAsync(message);
+            }
+
+            await receiver.DisposeAsync();
+        }
+    }
+
+    private static string ResolveEventProviderType() =>
+        ResolveOptionalSetting("CCODER_INTEGRATION_EVENT_PROVIDER", "Eventing__ProviderType")
+        ?? "Http";
+
+    private static int ResolveIntSetting(
+        string primaryName,
+        string secondaryName,
+        int fallback)
+    {
+        string raw = ResolveOptionalSetting(primaryName, secondaryName);
+
+        return int.TryParse(raw, out int value)
+            ? value
+            : fallback;
+    }
+
+    private static string ResolveOptionalSetting(params string[] variableNames)
+    {
+        foreach (string variableName in variableNames)
+        {
+            string value =
+                Environment.GetEnvironmentVariable(variableName)
+                ?? Environment.GetEnvironmentVariable(variableName, EnvironmentVariableTarget.User)
+                ?? Environment.GetEnvironmentVariable(variableName, EnvironmentVariableTarget.Machine);
+
+            if (!string.IsNullOrWhiteSpace(value))
+                return value;
+        }
+
+        return null;
     }
 
     private static string ResolveFuncExecutablePath()

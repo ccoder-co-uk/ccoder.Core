@@ -1,8 +1,14 @@
 using cCoder.AppSecurity;
 using cCoder.ContentManagement;
-using cCoder.Core.Api;
-using cCoder.Core.Cors;
+using cCoder.Core.Exposures;
+using cCoder.Core.Brokers.ContentManagement;
+using cCoder.Core.Brokers.Http;
+using cCoder.Core.Exposures.Cors;
 using cCoder.Core.Models;
+using cCoder.Core.Services.Foundations.AllowedOrigins;
+using cCoder.Core.Services.Foundations.ContentManagement;
+using cCoder.Core.Services.Orchestrations;
+using cCoder.Core.Services.Processings.AllowedOrigins;
 using cCoder.Data;
 using cCoder.DocumentManagement.Models;
 using cCoder.DocumentManagement;
@@ -21,6 +27,7 @@ using cCoder.ContentManagement.Models;
 using cCoder.Workflow;
 using cCoder.Workflow.Models;
 using cCoder.Eventing.Models;
+using cCoder.Eventing.AzureServiceBus;
 using cCoder.Eventing.Http;
 using cCoder.Eventing.Http.Models;
 using Microsoft.OData.Edm;
@@ -105,6 +112,9 @@ public partial class CoreBuilderOptions
     public CoreBuilderOptions UseHttpEventing() =>
         WithCoreConfiguration(coreConfig => coreConfig.EnableHttpEventing = true);
 
+    public CoreBuilderOptions UseServiceBusEventing() =>
+        WithCoreConfiguration(coreConfig => coreConfig.EnableServiceBusEventing = true);
+
     public CoreBuilderOptions WithSessionCache(string connectionString)
     {
         sessionCacheConnectionString = connectionString;
@@ -142,6 +152,11 @@ public partial class CoreBuilderOptions
             ApplyCoreDefaults(configuration);
             configure?.Invoke(configuration);
         });
+        services.TryAddTransient<IContentManagementAppBroker, ContentManagementAppBroker>();
+        services.TryAddTransient<IHttpRequestBroker, HttpRequestBroker>();
+        services.TryAddTransient<IContentManagementAppService, ContentManagementAppService>();
+        services.TryAddTransient<IAllowedOriginStoreService, AllowedOriginStoreService>();
+        services.TryAddTransient<IAllowedOriginProcessingService, AllowedOriginProcessingService>();
         services.TryAddTransient<cCoder.Packaging.Brokers.IAppDomainProvider, Brokers.Packaging.AppDomainProvider>();
         services.TryAddTransient<cCoder.Packaging.Brokers.IAppSecurityPackageManagerBroker, Brokers.Packaging.AppSecurityPackageManagerBroker>();
         services.TryAddTransient<cCoder.Packaging.Brokers.IContentManagementPackageManagerBroker, Brokers.Packaging.ContentManagementPackageManagerBroker>();
@@ -252,7 +267,7 @@ public partial class CoreBuilderOptions
         UseMail();
         UseScheduling();
         UseWorkflow();
-        UseHttpEventing();
+        UseConfiguredExternalEventing(configuration);
         WithEventProviders(configuration.EventProviders ?? []);
 
         return this;
@@ -266,6 +281,7 @@ public partial class CoreBuilderOptions
         ApplyCoreData();
         ApplySessionCacheFallback();
         ApplyHttpEventing();
+        ApplyServiceBusEventing();
         services.AddCoreEventing(eventProviders);
     }
 
@@ -409,6 +425,30 @@ public partial class CoreBuilderOptions
             options.MaxConcurrency = coreConfiguration.MaxConcurrency;
             options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
         });
+    }
+
+    private void ApplyServiceBusEventing()
+    {
+        if (coreConfiguration?.EnableServiceBusEventing != true)
+            return;
+
+        services.AddAzureServiceBusEventing(options =>
+        {
+            options.ConnectionString = coreConfiguration.ServiceBusConnectionString;
+            options.MaxConcurrency = coreConfiguration.MaxConcurrency;
+        });
+    }
+
+    private void UseConfiguredExternalEventing(CoreConfiguration configuration)
+    {
+        if (configuration.EnableServiceBusEventing)
+        {
+            UseServiceBusEventing();
+            return;
+        }
+
+        if (configuration.EnableHttpEventing || !string.IsNullOrWhiteSpace(configuration.HttpEventHubUrl))
+            UseHttpEventing();
     }
 
     private static Data.Config CreateRuntimeConfiguration(CoreConfiguration configuration) =>

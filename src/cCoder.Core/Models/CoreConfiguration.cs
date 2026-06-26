@@ -13,9 +13,12 @@ public sealed class CoreConfiguration
     public int? CacheExpiry { get; set; }
     public int? SslPort { get; set; }
     public string WorkflowServiceUrl { get; set; } = string.Empty;
+    public string EventProviderType { get; set; } = "Http";
     public string HttpEventHubUrl { get; set; } = string.Empty;
+    public string ServiceBusConnectionString { get; set; } = string.Empty;
     public int MaxConcurrency { get; set; } = 1;
     public bool EnableHttpEventing { get; set; }
+    public bool EnableServiceBusEventing { get; set; }
     public EventProvider[] EventProviders { get; set; } = [];
     public IDictionary<string, string> ConnectionStrings { get; set; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
     public IDictionary<string, string> Settings { get; set; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);

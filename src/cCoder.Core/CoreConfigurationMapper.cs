@@ -40,7 +40,16 @@ internal static class CoreConfigurationMapper
         if (TryGetValue(target.Services, "Workflow", out string workflowServiceUrl))
             target.WorkflowServiceUrl = workflowServiceUrl;
 
-        target.EnableHttpEventing = !string.IsNullOrWhiteSpace(target.HttpEventHubUrl);
+        if (TryGetValue(target.ConnectionStrings, "ServiceBus", out string serviceBusConnectionString))
+            target.ServiceBusConnectionString = serviceBusConnectionString;
+
+        target.EnableHttpEventing =
+            string.Equals(target.EventProviderType, "Http", StringComparison.OrdinalIgnoreCase)
+            && !string.IsNullOrWhiteSpace(target.HttpEventHubUrl);
+
+        target.EnableServiceBusEventing =
+            string.Equals(target.EventProviderType, "ServiceBus", StringComparison.OrdinalIgnoreCase)
+            && !string.IsNullOrWhiteSpace(target.ServiceBusConnectionString);
     }
 
     internal static void Copy(
@@ -56,9 +65,12 @@ internal static class CoreConfigurationMapper
         target.CacheExpiry = source.CacheExpiry;
         target.SslPort = source.SslPort;
         target.WorkflowServiceUrl = source.WorkflowServiceUrl;
+        target.EventProviderType = source.EventProviderType;
         target.HttpEventHubUrl = source.HttpEventHubUrl;
+        target.ServiceBusConnectionString = source.ServiceBusConnectionString;
         target.MaxConcurrency = source.MaxConcurrency;
         target.EnableHttpEventing = source.EnableHttpEventing;
+        target.EnableServiceBusEventing = source.EnableServiceBusEventing;
         target.EventProviders = source.EventProviders ?? [];
         target.ConnectionStrings = CloneDictionary(source.ConnectionStrings);
         target.Settings = CloneDictionary(source.Settings);
@@ -92,6 +104,7 @@ internal static class CoreConfigurationMapper
 
         SetIfMissing(connectionStrings, "Core", defaults.CoreConnectionString);
         SetIfMissing(connectionStrings, "SSO", defaults.SecurityConnectionString);
+        SetIfMissing(connectionStrings, "ServiceBus", defaults.ServiceBusConnectionString);
         SetIfMissing(settings, "DecryptionKey", defaults.DecryptionKey);
         SetIfMissing(settings, "CacheSource", defaults.CacheSource);
         SetIfMissing(settings, "CacheSourceAppId", defaults.CacheSourceAppId);
@@ -111,6 +124,7 @@ internal static class CoreConfigurationMapper
         Dictionary<string, string> connectionStrings = CloneDictionary(configuration.ConnectionStrings);
         SetIfPresent(connectionStrings, "Core", configuration.CoreConnectionString);
         SetIfPresent(connectionStrings, "SSO", configuration.SecurityConnectionString);
+        SetIfPresent(connectionStrings, "ServiceBus", configuration.ServiceBusConnectionString);
         return connectionStrings;
     }
 
