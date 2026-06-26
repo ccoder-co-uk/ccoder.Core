@@ -89,7 +89,12 @@ public sealed partial class AppEventIntegrationTests
             await WaitUntilAsync(async () =>
             {
                 await using CoreDataContext core = CreateCoreContext();
-                return await core.Set<Folder>().IgnoreQueryFilters().AnyAsync(folder => folder.AppId == appId && folder.Path == "content");
+                return await core.Set<Role>().IgnoreQueryFilters().CountAsync(role => role.AppId == appId) >= 3
+                    && await core.Set<AppCulture>().IgnoreQueryFilters().AnyAsync(culture => culture.AppId == appId && culture.CultureId == "en-GB")
+                    && await core.Set<Folder>().IgnoreQueryFilters().AnyAsync(folder => folder.AppId == appId && folder.Path == "content")
+                    && await core.Set<MailServer>().IgnoreQueryFilters().AnyAsync(server => server.AppId == appId && server.Name == "Integration SMTP")
+                    && await core.Set<Calendar>().IgnoreQueryFilters().AnyAsync(calendar => calendar.AppId == appId && calendar.Name == "Integration Calendar")
+                    && await core.Set<FlowDefinition>().IgnoreQueryFilters().AnyAsync(flow => flow.AppId == appId && flow.Name == flowName);
             });
 
             await using CoreDataContext verification = CreateCoreContext();

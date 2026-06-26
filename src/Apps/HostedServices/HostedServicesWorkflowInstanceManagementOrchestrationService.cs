@@ -25,6 +25,7 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
         try
         {
             await DropOldInstancesAsync(cancellationToken);
+            await RequeueHungExecutingInstancesAsync(cancellationToken);
             await ExecuteWaitingQueuedInstancesAsync(cancellationToken);
         }
         catch (Exception exception)
@@ -41,11 +42,7 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
 
     public async ValueTask ExecuteWaitingQueuedInstanceByIdAsync(Guid id)
     {
-        FlowInstanceData firstInstance =
-            workflowInstanceManagementBroker.GetNextQueuedOrExecutingInstance(id);
-
-        if (firstInstance is not null && firstInstance.State == "Queued")
-            await ExecuteInstanceAsync(firstInstance.Id);
+        await ExecuteInstanceAsync(id);
     }
 
     private async ValueTask DropOldInstancesAsync(CancellationToken cancellationToken)
@@ -57,21 +54,29 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
             log.LogInformation("Dropped {Count} Workflow instances older than 7 days.", dropCount);
     }
 
+    private async ValueTask RequeueHungExecutingInstancesAsync(CancellationToken cancellationToken)
+    {
+        int requeueCount = await workflowInstanceManagementBroker
+            .RequeueHungExecutingInstancesAsync(DateTimeOffset.UtcNow.AddMinutes(-30), cancellationToken);
+
+        if (requeueCount > 0)
+        {
+            log.LogWarning(
+                "Requeued {Count} Workflow instances that were still executing after 30 minutes.",
+                requeueCount);
+        }
+    }
+
     private async ValueTask ExecuteWaitingQueuedInstancesAsync(CancellationToken cancellationToken)
     {
         List<Task> executions = [];
 
-        foreach (FlowInstanceData nextInstance in workflowInstanceManagementBroker.GetNextQueuedOrExecutingInstances())
+        foreach (Guid instanceId in workflowInstanceManagementBroker.GetQueuedInstances()
+            .Select(instance => instance.Id)
+            .Distinct())
         {
             cancellationToken.ThrowIfCancellationRequested();
-
-            bool isQueued = nextInstance.State == "Queued";
-            bool isApparentlyHung =
-                nextInstance.State == "Executing"
-                && nextInstance.Start < DateTimeOffset.UtcNow.AddMinutes(-15);
-
-            if (isQueued || isApparentlyHung)
-                executions.Add(ExecuteInstanceAsync(nextInstance.Id, cancellationToken));
+            executions.Add(ExecuteInstanceAsync(instanceId, cancellationToken));
         }
 
         await Task.WhenAll(executions);
@@ -82,7 +87,7 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
         CancellationToken cancellationToken = default)
     {
         FlowInstanceData dbInstance = await workflowInstanceManagementBroker
-            .MarkExecutingAsync(instanceId, cancellationToken);
+            .ClaimQueuedInstanceAsync(instanceId, cancellationToken);
 
         if (dbInstance is null)
             return;

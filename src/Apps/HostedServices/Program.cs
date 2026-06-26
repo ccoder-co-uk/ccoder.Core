@@ -26,7 +26,13 @@ public class Program
                 coreConfig.CacheExpiry = config.GetValue<int?>("Settings:CacheExpiry");
                 coreConfig.SslPort = config.GetValue<int?>("Settings:sslPort");
                 coreConfig.WorkflowServiceUrl = config.GetValue<string>("Services:Workflow");
-                coreConfig.MaxConcurrency = config.GetValue<int?>("Eventing:Http:MaxConcurrency") ?? 1;
+                coreConfig.EventProviderType = ResolveEventProviderType(config);
+                coreConfig.HttpEventHubUrl = HttpEventHubUrlResolver.Resolve(config);
+                coreConfig.ServiceBusConnectionString = config.GetConnectionString("ServiceBus");
+                coreConfig.EnableHttpEventing = IsHttpEventProvider(coreConfig.EventProviderType);
+                coreConfig.EnableServiceBusEventing = IsServiceBusEventProvider(coreConfig.EventProviderType)
+                    && !string.IsNullOrWhiteSpace(coreConfig.ServiceBusConnectionString);
+                coreConfig.MaxConcurrency = ResolveMaxConcurrency(config, coreConfig.EventProviderType);
                 coreConfig.DebugInfo = config.GetValue<bool>("DebugInfo");
                 coreConfig.LogSQL = config.GetValue<bool>("LogSQL");
             });
@@ -54,6 +60,22 @@ public class Program
 
         return configuration;
     }
+
+    private static string ResolveEventProviderType(IConfiguration config) =>
+        config.GetValue<string>("Eventing:ProviderType")
+        ?? config.GetValue<string>("Eventing:Provider")
+        ?? "Http";
+
+    private static int ResolveMaxConcurrency(IConfiguration config, string eventProviderType) =>
+        IsServiceBusEventProvider(eventProviderType)
+            ? config.GetValue<int?>("Eventing:ServiceBus:MaxConcurrency") ?? 1
+            : config.GetValue<int?>("Eventing:Http:MaxConcurrency") ?? 1;
+
+    private static bool IsServiceBusEventProvider(string eventProviderType) =>
+        string.Equals(eventProviderType, "ServiceBus", StringComparison.OrdinalIgnoreCase);
+
+    private static bool IsHttpEventProvider(string eventProviderType) =>
+        string.Equals(eventProviderType, "Http", StringComparison.OrdinalIgnoreCase);
 
     private sealed class ExcludeHttpEventControllerFeatureProvider(Type controllerType)
         : IApplicationFeatureProvider<ControllerFeature>

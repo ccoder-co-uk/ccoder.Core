@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
-using cCoder.Core.Api;
-using cCoder.Core.Api.Hubs;
+using cCoder.Core.Exposures;
+using cCoder.Core.Exposures.Hubs;
 using cCoder.DocumentManagement.Exposures.Middleware;
 using cCoder.Logging.Exposures.Hubs;
 using cCoder.Workflow.Exposures.Hubs;
