@@ -1,4 +1,3 @@
-using cCoder.Core.Cors;
 using cCoder.Data;
 using cCoder.Logging.Exposures.Hubs;
 using cCoder.Security.Data.EF;
@@ -8,6 +7,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging.Abstractions;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -15,23 +15,36 @@ namespace cCoder.Core;
 
 public static partial class WebApplicationExtensions
 {
+    private static readonly ConditionalWeakTable<WebApplication, object> StartedCoreWebApps = new();
+    private static readonly object StartedCoreWebAppsLock = new();
+
     public static WebApplication StartCoreWeb(this WebApplication app)
     {
+        if (!TryMarkCoreWebStarted(app))
+            return app;
+
         ILogger log = app.Services
             .GetService<ILoggerFactory>()?
             .CreateLogger("cCoder.Core.Web")
             ?? NullLogger.Instance;
 
         app.EnsureCoreDatabasesMigrated(log);
-        app.Services.GetRequiredService<ICoreAllowedOriginStore>()
-            .RefreshAsync()
-            .GetAwaiter()
-            .GetResult();
-
         app.UseHttpsRedirection();
         app.UseCoreApi(log);
 
         return app;
+    }
+
+    private static bool TryMarkCoreWebStarted(WebApplication app)
+    {
+        lock (StartedCoreWebAppsLock)
+        {
+            if (StartedCoreWebApps.TryGetValue(app, out _))
+                return false;
+
+            StartedCoreWebApps.Add(app, new object());
+            return true;
+        }
     }
 
     public static WebApplication StartCoreHostedServices(this WebApplication app)
@@ -42,11 +55,6 @@ public static partial class WebApplicationExtensions
             ?? NullLogger.Instance;
 
         app.EnsureCoreDatabasesMigrated(log);
-        app.Services.GetRequiredService<ICoreAllowedOriginStore>()
-            .RefreshAsync()
-            .GetAwaiter()
-            .GetResult();
-
         IHostedService[] hostedServices = app.Services.GetServices<IHostedService>().ToArray();
         log.LogInformation(
             "Registered hosted services: {HostedServices}",

@@ -10,6 +10,7 @@ public sealed class HostedServicesAcceptanceFixture : IAsyncLifetime
 {
     private AcceptanceDatabaseManager databaseManager;
     private ServiceProvider databaseServices;
+    private Dictionary<string, string> previousEnvironmentValues;
     internal HostedServicesAcceptanceFactory Factory { get; private set; } = null!;
 
     public HttpClient Client { get; private set; } = null!;
@@ -23,6 +24,7 @@ public sealed class HostedServicesAcceptanceFixture : IAsyncLifetime
             DecryptionKey = "000000000000000000000000000000000000000000000000",
         };
 
+        ApplyEnvironment(settings);
         databaseServices = AcceptanceServiceProviderFactory.Create(settings);
         Factory = new HostedServicesAcceptanceFactory(settings);
         databaseManager = new AcceptanceDatabaseManager(databaseServices);
@@ -47,6 +49,33 @@ public sealed class HostedServicesAcceptanceFixture : IAsyncLifetime
 
         if (Factory is not null)
             await Factory.DisposeAsync();
+
+        RestoreEnvironment();
+    }
+
+    private void ApplyEnvironment(AcceptanceSettings settings)
+    {
+        previousEnvironmentValues = new Dictionary<string, string>
+        {
+            ["ConnectionStrings__Core"] = Environment.GetEnvironmentVariable("ConnectionStrings__Core"),
+            ["ConnectionStrings__SSO"] = Environment.GetEnvironmentVariable("ConnectionStrings__SSO"),
+            ["Settings__DecryptionKey"] = Environment.GetEnvironmentVariable("Settings__DecryptionKey"),
+            ["Eventing__Http__HubUrl"] = Environment.GetEnvironmentVariable("Eventing__Http__HubUrl"),
+        };
+
+        Environment.SetEnvironmentVariable("ConnectionStrings__Core", settings.CoreConnectionString);
+        Environment.SetEnvironmentVariable("ConnectionStrings__SSO", settings.SsoConnectionString);
+        Environment.SetEnvironmentVariable("Settings__DecryptionKey", settings.DecryptionKey);
+        Environment.SetEnvironmentVariable("Eventing__Http__HubUrl", string.Empty);
+    }
+
+    private void RestoreEnvironment()
+    {
+        if (previousEnvironmentValues is null)
+            return;
+
+        foreach ((string name, string value) in previousEnvironmentValues)
+            Environment.SetEnvironmentVariable(name, value);
     }
 
     private static string AddDatabaseSuffix(string variableName)

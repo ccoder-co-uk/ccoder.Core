@@ -12,6 +12,9 @@ internal class ContentManagementAppService(IContentManagementAppBroker contentMa
     public App GetByDomain(string domain, bool ignoreFilters = false) =>
         contentManagementAppBroker.GetByDomain(domain, ignoreFilters);
 
+    public IQueryable<App> GetAll(bool ignoreFilters = false) =>
+        contentManagementAppBroker.GetAll(ignoreFilters);
+
     public async ValueTask<App> AddAsync(App app) =>
         await contentManagementAppBroker.AddAsync(app);
 

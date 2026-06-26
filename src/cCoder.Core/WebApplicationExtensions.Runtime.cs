@@ -1,10 +1,12 @@
 using cCoder.ContentManagement.Exposures.Caching;
-using cCoder.Core.Cors;
+using cCoder.Core.Exposures.Cors;
 
 namespace cCoder.Core;
 
 public static partial class WebApplicationExtensions
 {
+    private const string IsCoreCorsOriginAllowed = "cCoder.Core.Exposures.Cors.IsOriginAllowed";
+
     private static WebApplication UseCoreCaching(this WebApplication app)
     {
         app.Services.GetService<ICommonObjectCache>()?.Refresh();
@@ -16,12 +18,28 @@ public static partial class WebApplicationExtensions
     {
         ICoreAllowedOriginStore originStore =
             app.Services.GetRequiredService<ICoreAllowedOriginStore>();
+        IHttpContextAccessor httpContextAccessor =
+            app.Services.GetRequiredService<IHttpContextAccessor>();
+
+        app.Use(async (context, next) =>
+        {
+            string origin = context.Request.Headers.Origin.ToString();
+
+            if (!string.IsNullOrWhiteSpace(origin))
+                context.Items[IsCoreCorsOriginAllowed] = await originStore.IsAllowedAsync(origin);
+
+            await next();
+        });
 
         app.UseCors(builder =>
         {
             builder.AllowAnyHeader();
             builder.AllowAnyMethod();
-            builder.SetIsOriginAllowed(originStore.IsAllowed);
+            builder.SetIsOriginAllowed(_ =>
+                httpContextAccessor.HttpContext?.Items.TryGetValue(
+                    IsCoreCorsOriginAllowed,
+                    out object isAllowed) == true
+                && isAllowed is true);
             builder.AllowCredentials();
         });
 

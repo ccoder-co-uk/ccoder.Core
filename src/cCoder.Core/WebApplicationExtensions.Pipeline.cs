@@ -17,8 +17,8 @@ public static partial class WebApplicationExtensions
     {
         app.UseCoreApiDocumentation();
         app.UseCoreSecurityExposure(log);
-        app.StartAppSecurityWeb(log);
         app.StartContentManagementWeb(LogRequest, log);
+        app.StartAppSecurityWeb(log);
         app.StartMailWeb(log);
         app.StartDocumentManagementWeb(log);
         app.UsePackagingExposure(log);
