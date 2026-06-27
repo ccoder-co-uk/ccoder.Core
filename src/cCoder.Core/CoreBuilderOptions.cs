@@ -5,6 +5,7 @@ using cCoder.Core.Brokers.ContentManagement;
 using cCoder.Core.Brokers.Http;
 using cCoder.Core.Exposures.Cors;
 using cCoder.Core.Models;
+using cCoder.Core.Services.Foundations.Eventing;
 using cCoder.Core.Services.Foundations.AllowedOrigins;
 using cCoder.Core.Services.Foundations.ContentManagement;
 using cCoder.Core.Services.Orchestrations;
@@ -227,7 +228,7 @@ public partial class CoreBuilderOptions
             ApplyCoreDefaults(configuration);
             configure?.Invoke(configuration);
         });
-        services.AddSingleton<ICoreAllowedOriginStore, CoreAllowedOriginStore>();
+        services.AddScoped<ICoreAllowedOriginStore, CoreAllowedOriginStore>();
         services.TryAddTransient<HostedServicesAppSecurityAppAddOrchestrationService>();
         return this;
     }
@@ -431,6 +432,9 @@ public partial class CoreBuilderOptions
     {
         if (coreConfiguration?.EnableServiceBusEventing != true)
             return;
+
+        services.TryAddTransient<ServiceBusAppDeleteForwardingService>();
+        services.TryAddTransient<ServiceBusFolderDeleteForwardingService>();
 
         services.AddAzureServiceBusEventing(options =>
         {
