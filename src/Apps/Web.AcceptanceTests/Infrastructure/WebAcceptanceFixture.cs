@@ -52,7 +52,9 @@ public sealed class WebAcceptanceFixture : IAsyncLifetime
     private static string AddDatabaseSuffix(string variableName)
     {
         string connectionString =
-            Environment.GetEnvironmentVariable(variableName, EnvironmentVariableTarget.Machine)
+            Environment.GetEnvironmentVariable(variableName)
+            ?? Environment.GetEnvironmentVariable(variableName, EnvironmentVariableTarget.User)
+            ?? Environment.GetEnvironmentVariable(variableName, EnvironmentVariableTarget.Machine)
             ?? ReadConfiguredConnectionString(variableName);
 
         if (string.IsNullOrWhiteSpace(connectionString))
