@@ -1,5 +1,7 @@
 using System.Diagnostics;
 using System.Net;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using Azure.Messaging.ServiceBus;
 using Azure.Messaging.ServiceBus.Administration;
@@ -148,6 +150,7 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
         await StartHostedServicesAsync();
 
         Dictionary<string, string> webEnvironment = CreateCommonApplicationEnvironment();
+        AddHttpsCertificateEnvironment(webEnvironment);
         webEnvironment["ASPNETCORE_URLS"] = WebBaseAddress.ToString();
         webEnvironment["Settings__sslPort"] = webHttpsPort.ToString();
         webEnvironment["Settings__enableExternalEventing"] = "true";
@@ -494,6 +497,49 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
         }
 
         return environment;
+    }
+
+    private void AddHttpsCertificateEnvironment(Dictionary<string, string> environment)
+    {
+        string certificatePath = Path.Combine(acceptanceArtifactsRoot, "localhost-https.pfx");
+        string certificatePassword = Guid.NewGuid().ToString("N");
+
+        using RSA rsa = RSA.Create(2048);
+        CertificateRequest request = new(
+            "CN=localhost",
+            rsa,
+            HashAlgorithmName.SHA256,
+            RSASignaturePadding.Pkcs1);
+
+        SubjectAlternativeNameBuilder subjectAlternativeNameBuilder = new();
+        subjectAlternativeNameBuilder.AddDnsName("localhost");
+        subjectAlternativeNameBuilder.AddIpAddress(IPAddress.Loopback);
+        subjectAlternativeNameBuilder.AddIpAddress(IPAddress.IPv6Loopback);
+
+        request.CertificateExtensions.Add(subjectAlternativeNameBuilder.Build());
+        request.CertificateExtensions.Add(
+            new X509BasicConstraintsExtension(
+                certificateAuthority: false,
+                hasPathLengthConstraint: false,
+                pathLengthConstraint: 0,
+                critical: false));
+        request.CertificateExtensions.Add(
+            new X509KeyUsageExtension(
+                X509KeyUsageFlags.DigitalSignature | X509KeyUsageFlags.KeyEncipherment,
+                critical: true));
+        request.CertificateExtensions.Add(
+            new X509EnhancedKeyUsageExtension(
+                [new Oid("1.3.6.1.5.5.7.3.1")],
+                critical: false));
+
+        using X509Certificate2 certificate = request.CreateSelfSigned(
+            DateTimeOffset.UtcNow.AddMinutes(-5),
+            DateTimeOffset.UtcNow.AddDays(1));
+
+        File.WriteAllBytes(certificatePath, certificate.Export(X509ContentType.Pkcs12, certificatePassword));
+
+        environment["ASPNETCORE_Kestrel__Certificates__Default__Path"] = certificatePath;
+        environment["ASPNETCORE_Kestrel__Certificates__Default__Password"] = certificatePassword;
     }
 
     private async Task EnsureServiceBusQueuesAreCleanAsync()
