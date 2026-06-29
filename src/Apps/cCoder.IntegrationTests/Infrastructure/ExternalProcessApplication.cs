@@ -22,7 +22,8 @@ internal sealed class ExternalProcessApplication : IAsyncDisposable
         string workingDirectory,
         IReadOnlyDictionary<string, string> environmentVariables,
         Func<Task<bool>> readinessProbe,
-        TimeSpan timeout)
+        TimeSpan timeout,
+        Func<string> readinessDiagnostics = null)
     {
         process = new Process
         {
@@ -64,7 +65,13 @@ internal sealed class ExternalProcessApplication : IAsyncDisposable
             await Task.Delay(500, cancellationTokenSource.Token).ContinueWith(_ => { }, TaskScheduler.Default);
         }
 
-        throw new TimeoutException($"Process '{Name}' did not become ready within {timeout}.{Environment.NewLine}{Output}");
+        string diagnostics = readinessDiagnostics?.Invoke();
+        string readinessDetails = string.IsNullOrWhiteSpace(diagnostics)
+            ? string.Empty
+            : $"{Environment.NewLine}Readiness diagnostics:{Environment.NewLine}{diagnostics}";
+
+        throw new TimeoutException(
+            $"Process '{Name}' did not become ready within {timeout}.{readinessDetails}{Environment.NewLine}{Output}");
     }
 
     public async ValueTask DisposeAsync()
