@@ -38,6 +38,7 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
     private string workflowOutputDirectory;
     private string hostedServicesOutputDirectory;
     private string webOutputDirectory;
+    private string lastHealthProbeFailure;
 
     internal AcceptanceSettings Settings { get; private set; }
 
@@ -140,7 +141,8 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
                 ["FUNCTIONS_WORKER_RUNTIME"] = "dotnet-isolated"
             },
             readinessProbe: () => ProbeHealthAsync(WorkflowBaseAddress),
-            timeout: TimeSpan.FromMinutes(2));
+            timeout: TimeSpan.FromMinutes(2),
+            readinessDiagnostics: GetHealthProbeDiagnostics);
         Console.WriteLine("Integration fixture: Workflow started.");
 
         await StartHostedServicesAsync();
@@ -158,7 +160,8 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
             webOutputDirectory,
             webEnvironment,
             readinessProbe: () => ProbeHealthAsync(WebBaseAddress, useInsecureHandler: true),
-            timeout: TimeSpan.FromMinutes(2));
+            timeout: TimeSpan.FromMinutes(2),
+            readinessDiagnostics: GetHealthProbeDiagnostics);
         Console.WriteLine("Integration fixture: Web started.");
 
         WebClient = CreateClient(WebBaseAddress, useInsecureHandler: true);
@@ -425,25 +428,49 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
             hostedServicesOutputDirectory,
             hostedServicesEnvironment,
             readinessProbe: () => ProbeHealthAsync(HostedServicesBaseAddress),
-            timeout: TimeSpan.FromMinutes(2));
+            timeout: TimeSpan.FromMinutes(2),
+            readinessDiagnostics: GetHealthProbeDiagnostics);
         Console.WriteLine("Integration fixture: HostedServices started.");
     }
 
     private async Task<bool> ProbeHealthAsync(Uri baseAddress, bool useInsecureHandler = false)
     {
         using HttpClient client = CreateClient(baseAddress, useInsecureHandler);
+        Uri healthUri = new(baseAddress, "Health");
 
         try
         {
             using HttpResponseMessage response = await client.GetAsync("Health");
             string content = await response.Content.ReadAsStringAsync();
-            return response.IsSuccessStatusCode
-                && string.Equals(content, "OK", StringComparison.Ordinal);
-        }
-        catch
-        {
+            if (response.IsSuccessStatusCode
+                && string.Equals(content, "OK", StringComparison.Ordinal))
+            {
+                lastHealthProbeFailure = null;
+                return true;
+            }
+
+            lastHealthProbeFailure =
+                $"GET {healthUri} returned {(int)response.StatusCode} {response.StatusCode} with body '{content}'.";
             return false;
         }
+        catch (Exception exception)
+        {
+            lastHealthProbeFailure = $"GET {healthUri} failed: {FormatException(exception)}";
+            return false;
+        }
+    }
+
+    private string GetHealthProbeDiagnostics() =>
+        lastHealthProbeFailure ?? "No health probe failure was recorded.";
+
+    private static string FormatException(Exception exception)
+    {
+        List<string> messages = [];
+
+        for (Exception current = exception; current is not null; current = current.InnerException)
+            messages.Add($"{current.GetType().FullName}: {current.Message}");
+
+        return string.Join(" ---> ", messages);
     }
 
     private Dictionary<string, string> CreateCommonApplicationEnvironment()
