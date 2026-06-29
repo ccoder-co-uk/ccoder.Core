@@ -18,12 +18,12 @@ public static partial class WebApplicationExtensions
         app.UseCoreApiDocumentation();
         app.UseCoreSecurityExposure(log);
         app.StartContentManagementWeb(LogRequest, log);
-        app.StartAppSecurityWeb(log);
         app.StartMailWeb(log);
         app.StartDocumentManagementWeb(log);
         app.UsePackagingExposure(log);
         app.StartSchedulingWeb(log);
         app.StartWorkflowWeb(log);
+        app.StartAppSecurityWeb(log);
         app.StartLoggingWeb(log);
         app.UseCoreDefaultCors();
         app.UseCoreExceptionHandling(HandleUnhandledException);

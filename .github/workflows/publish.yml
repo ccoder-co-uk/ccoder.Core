@@ -20,7 +20,10 @@ defaults:
 
 jobs:
   build-test-pack:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
+    defaults:
+      run:
+        shell: powershell
 
     steps:
       - name: Checkout core
@@ -28,42 +31,19 @@ jobs:
         with:
           path: ccoder.Core
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 10.x
-
       - name: Create version number
         id: version
         run: |
           "value=$(Get-Date -Format 'yyyy.M.d.HHmm')" >> $env:GITHUB_OUTPUT
 
-      - name: Restore core package
-        run: dotnet restore ccoder.Core/src/cCoder.Core/cCoder.Core.csproj --source https://api.nuget.org/v3/index.json --no-cache
+      - name: Restore
+        run: dotnet restore ccoder.Core/src/cCoder.Core.sln --source https://api.nuget.org/v3/index.json --no-cache
 
-      - name: Restore core tests
-        run: dotnet restore ccoder.Core/src/cCoder.Core.Tests/cCoder.Core.Tests.csproj --source https://api.nuget.org/v3/index.json --no-cache
-
-      - name: Restore aggregate web host
-        run: dotnet restore ccoder.Core/src/Apps/Web/Web.csproj --source https://api.nuget.org/v3/index.json --no-cache
-
-      - name: Restore hosted services host
-        run: dotnet restore ccoder.Core/src/Apps/HostedServices/HostedServices.csproj --source https://api.nuget.org/v3/index.json --no-cache
-
-      - name: Build core package
-        run: dotnet build ccoder.Core/src/cCoder.Core/cCoder.Core.csproj -c Release --no-restore /p:Version="${{ steps.version.outputs.value }}"
-
-      - name: Build core tests
-        run: dotnet build ccoder.Core/src/cCoder.Core.Tests/cCoder.Core.Tests.csproj -c Release --no-restore /p:Version="${{ steps.version.outputs.value }}"
-
-      - name: Build aggregate web host
-        run: dotnet build ccoder.Core/src/Apps/Web/Web.csproj -c Release --no-restore /p:Version="${{ steps.version.outputs.value }}"
-
-      - name: Build hosted services host
-        run: dotnet build ccoder.Core/src/Apps/HostedServices/HostedServices.csproj -c Release --no-restore /p:Version="${{ steps.version.outputs.value }}"
+      - name: Build
+        run: dotnet build ccoder.Core/src/cCoder.Core.sln -c Release --no-restore /p:Version="${{ steps.version.outputs.value }}"
 
       - name: Test
-        run: dotnet test ccoder.Core/src/cCoder.Core.Tests/cCoder.Core.Tests.csproj -c Release --no-build
+        run: dotnet test ccoder.Core/src/cCoder.Core.sln -c Release --no-build --settings ccoder.Core/src/cCoder.Core.runsettings
 
       - name: Pack
         run: |
