@@ -139,7 +139,7 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
             {
                 ["FUNCTIONS_WORKER_RUNTIME"] = "dotnet-isolated"
             },
-            readinessProbe: () => ProbeServerAsync(WorkflowBaseAddress),
+            readinessProbe: () => ProbeHealthAsync(WorkflowBaseAddress),
             timeout: TimeSpan.FromMinutes(2));
         Console.WriteLine("Integration fixture: Workflow started.");
 
@@ -157,9 +157,7 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
             $"\"{Path.Combine(webOutputDirectory, "Web.dll")}\"",
             webOutputDirectory,
             webEnvironment,
-            readinessProbe: async () =>
-                await ProbeAsync(new Uri(WebBaseAddress, "Api/Time"), useInsecureHandler: true)
-                || HasApplicationStarted(webApplication),
+            readinessProbe: () => ProbeHealthAsync(WebBaseAddress, useInsecureHandler: true),
             timeout: TimeSpan.FromMinutes(2));
         Console.WriteLine("Integration fixture: Web started.");
 
@@ -241,9 +239,6 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
             return false;
         }
     }
-
-    private static bool HasApplicationStarted(ExternalProcessApplication application) =>
-        application.Output.Contains("Application started.", StringComparison.Ordinal);
 
     private async Task BuildApplicationAsync(
         string projectPath,
@@ -370,25 +365,6 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
                 $"Command '{fileName} {arguments}' failed with exit code {process.ExitCode}.{Environment.NewLine}{output}");
     }
 
-    private static async Task<bool> ProbeServerAsync(Uri baseAddress)
-    {
-        using HttpClient client = new()
-        {
-            BaseAddress = new Uri($"{baseAddress.Scheme}://{baseAddress.Authority}/"),
-            Timeout = TimeSpan.FromSeconds(5)
-        };
-
-        try
-        {
-            using HttpResponseMessage response = await client.GetAsync(string.Empty);
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
-    }
-
     private static string AddDatabaseSuffix(string variableName)
     {
         string connectionString = ReadRequiredConnectionString(variableName);
@@ -448,9 +424,26 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
             $"\"{Path.Combine(hostedServicesOutputDirectory, "HostedServices.dll")}\"",
             hostedServicesOutputDirectory,
             hostedServicesEnvironment,
-            readinessProbe: () => ProbeAsync(new Uri(HostedServicesBaseAddress, "Workflow/GetStats")),
+            readinessProbe: () => ProbeHealthAsync(HostedServicesBaseAddress),
             timeout: TimeSpan.FromMinutes(2));
         Console.WriteLine("Integration fixture: HostedServices started.");
+    }
+
+    private async Task<bool> ProbeHealthAsync(Uri baseAddress, bool useInsecureHandler = false)
+    {
+        using HttpClient client = CreateClient(baseAddress, useInsecureHandler);
+
+        try
+        {
+            using HttpResponseMessage response = await client.GetAsync("Health");
+            string content = await response.Content.ReadAsStringAsync();
+            return response.IsSuccessStatusCode
+                && string.Equals(content, "OK", StringComparison.Ordinal);
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     private Dictionary<string, string> CreateCommonApplicationEnvironment()
