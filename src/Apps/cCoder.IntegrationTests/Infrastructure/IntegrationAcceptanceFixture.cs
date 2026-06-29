@@ -1,5 +1,7 @@
 using System.Diagnostics;
 using System.Net;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using Azure.Messaging.ServiceBus;
 using Azure.Messaging.ServiceBus.Administration;
@@ -38,6 +40,7 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
     private string workflowOutputDirectory;
     private string hostedServicesOutputDirectory;
     private string webOutputDirectory;
+    private string lastHealthProbeFailure;
 
     internal AcceptanceSettings Settings { get; private set; }
 
@@ -139,13 +142,15 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
             {
                 ["FUNCTIONS_WORKER_RUNTIME"] = "dotnet-isolated"
             },
-            readinessProbe: () => ProbeServerAsync(WorkflowBaseAddress),
-            timeout: TimeSpan.FromMinutes(2));
+            readinessProbe: () => ProbeHealthAsync(WorkflowBaseAddress),
+            timeout: TimeSpan.FromMinutes(2),
+            readinessDiagnostics: GetHealthProbeDiagnostics);
         Console.WriteLine("Integration fixture: Workflow started.");
 
         await StartHostedServicesAsync();
 
         Dictionary<string, string> webEnvironment = CreateCommonApplicationEnvironment();
+        AddHttpsCertificateEnvironment(webEnvironment);
         webEnvironment["ASPNETCORE_URLS"] = WebBaseAddress.ToString();
         webEnvironment["Settings__sslPort"] = webHttpsPort.ToString();
         webEnvironment["Settings__enableExternalEventing"] = "true";
@@ -157,8 +162,9 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
             $"\"{Path.Combine(webOutputDirectory, "Web.dll")}\"",
             webOutputDirectory,
             webEnvironment,
-            readinessProbe: () => ProbeAsync(new Uri(WebBaseAddress, "Api/Time"), useInsecureHandler: true),
-            timeout: TimeSpan.FromMinutes(2));
+            readinessProbe: () => ProbeHealthAsync(WebBaseAddress, useInsecureHandler: true),
+            timeout: TimeSpan.FromMinutes(2),
+            readinessDiagnostics: GetHealthProbeDiagnostics);
         Console.WriteLine("Integration fixture: Web started.");
 
         WebClient = CreateClient(WebBaseAddress, useInsecureHandler: true);
@@ -365,25 +371,6 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
                 $"Command '{fileName} {arguments}' failed with exit code {process.ExitCode}.{Environment.NewLine}{output}");
     }
 
-    private static async Task<bool> ProbeServerAsync(Uri baseAddress)
-    {
-        using HttpClient client = new()
-        {
-            BaseAddress = new Uri($"{baseAddress.Scheme}://{baseAddress.Authority}/"),
-            Timeout = TimeSpan.FromSeconds(5)
-        };
-
-        try
-        {
-            using HttpResponseMessage response = await client.GetAsync(string.Empty);
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
-    }
-
     private static string AddDatabaseSuffix(string variableName)
     {
         string connectionString = ReadRequiredConnectionString(variableName);
@@ -443,9 +430,50 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
             $"\"{Path.Combine(hostedServicesOutputDirectory, "HostedServices.dll")}\"",
             hostedServicesOutputDirectory,
             hostedServicesEnvironment,
-            readinessProbe: () => ProbeAsync(new Uri(HostedServicesBaseAddress, "Workflow/GetStats")),
-            timeout: TimeSpan.FromMinutes(2));
+            readinessProbe: () => ProbeHealthAsync(HostedServicesBaseAddress),
+            timeout: TimeSpan.FromMinutes(2),
+            readinessDiagnostics: GetHealthProbeDiagnostics);
         Console.WriteLine("Integration fixture: HostedServices started.");
+    }
+
+    private async Task<bool> ProbeHealthAsync(Uri baseAddress, bool useInsecureHandler = false)
+    {
+        using HttpClient client = CreateClient(baseAddress, useInsecureHandler);
+        Uri healthUri = new(baseAddress, "Health");
+
+        try
+        {
+            using HttpResponseMessage response = await client.GetAsync("Health");
+            string content = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode
+                && string.Equals(content, "OK", StringComparison.Ordinal))
+            {
+                lastHealthProbeFailure = null;
+                return true;
+            }
+
+            lastHealthProbeFailure =
+                $"GET {healthUri} returned {(int)response.StatusCode} {response.StatusCode} with body '{content}'.";
+            return false;
+        }
+        catch (Exception exception)
+        {
+            lastHealthProbeFailure = $"GET {healthUri} failed: {FormatException(exception)}";
+            return false;
+        }
+    }
+
+    private string GetHealthProbeDiagnostics() =>
+        lastHealthProbeFailure ?? "No health probe failure was recorded.";
+
+    private static string FormatException(Exception exception)
+    {
+        List<string> messages = [];
+
+        for (Exception current = exception; current is not null; current = current.InnerException)
+            messages.Add($"{current.GetType().FullName}: {current.Message}");
+
+        return string.Join(" ---> ", messages);
     }
 
     private Dictionary<string, string> CreateCommonApplicationEnvironment()
@@ -469,6 +497,49 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
         }
 
         return environment;
+    }
+
+    private void AddHttpsCertificateEnvironment(Dictionary<string, string> environment)
+    {
+        string certificatePath = Path.Combine(acceptanceArtifactsRoot, "localhost-https.pfx");
+        string certificatePassword = Guid.NewGuid().ToString("N");
+
+        using RSA rsa = RSA.Create(2048);
+        CertificateRequest request = new(
+            "CN=localhost",
+            rsa,
+            HashAlgorithmName.SHA256,
+            RSASignaturePadding.Pkcs1);
+
+        SubjectAlternativeNameBuilder subjectAlternativeNameBuilder = new();
+        subjectAlternativeNameBuilder.AddDnsName("localhost");
+        subjectAlternativeNameBuilder.AddIpAddress(IPAddress.Loopback);
+        subjectAlternativeNameBuilder.AddIpAddress(IPAddress.IPv6Loopback);
+
+        request.CertificateExtensions.Add(subjectAlternativeNameBuilder.Build());
+        request.CertificateExtensions.Add(
+            new X509BasicConstraintsExtension(
+                certificateAuthority: false,
+                hasPathLengthConstraint: false,
+                pathLengthConstraint: 0,
+                critical: false));
+        request.CertificateExtensions.Add(
+            new X509KeyUsageExtension(
+                X509KeyUsageFlags.DigitalSignature | X509KeyUsageFlags.KeyEncipherment,
+                critical: true));
+        request.CertificateExtensions.Add(
+            new X509EnhancedKeyUsageExtension(
+                [new Oid("1.3.6.1.5.5.7.3.1")],
+                critical: false));
+
+        using X509Certificate2 certificate = request.CreateSelfSigned(
+            DateTimeOffset.UtcNow.AddMinutes(-5),
+            DateTimeOffset.UtcNow.AddDays(1));
+
+        File.WriteAllBytes(certificatePath, certificate.Export(X509ContentType.Pkcs12, certificatePassword));
+
+        environment["ASPNETCORE_Kestrel__Certificates__Default__Path"] = certificatePath;
+        environment["ASPNETCORE_Kestrel__Certificates__Default__Password"] = certificatePassword;
     }
 
     private async Task EnsureServiceBusQueuesAreCleanAsync()

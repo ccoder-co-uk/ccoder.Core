@@ -785,7 +785,10 @@ public sealed partial class FirstTimeSetupTests
         private static string AddDatabaseSuffix(string variableName, string suffix)
         {
             string connectionString =
-                Environment.GetEnvironmentVariable(variableName, EnvironmentVariableTarget.Machine) ?? string.Empty;
+                Environment.GetEnvironmentVariable(variableName)
+                ?? Environment.GetEnvironmentVariable(variableName, EnvironmentVariableTarget.User)
+                ?? Environment.GetEnvironmentVariable(variableName, EnvironmentVariableTarget.Machine)
+                ?? string.Empty;
 
             if (string.IsNullOrWhiteSpace(connectionString))
                 return string.Empty;
