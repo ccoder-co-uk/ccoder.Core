@@ -157,7 +157,9 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
             $"\"{Path.Combine(webOutputDirectory, "Web.dll")}\"",
             webOutputDirectory,
             webEnvironment,
-            readinessProbe: () => ProbeAsync(new Uri(WebBaseAddress, "Api/Time"), useInsecureHandler: true),
+            readinessProbe: async () =>
+                await ProbeAsync(new Uri(WebBaseAddress, "Api/Time"), useInsecureHandler: true)
+                || HasApplicationStarted(webApplication),
             timeout: TimeSpan.FromMinutes(2));
         Console.WriteLine("Integration fixture: Web started.");
 
@@ -239,6 +241,9 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
             return false;
         }
     }
+
+    private static bool HasApplicationStarted(ExternalProcessApplication application) =>
+        application.Output.Contains("Application started.", StringComparison.Ordinal);
 
     private async Task BuildApplicationAsync(
         string projectPath,
