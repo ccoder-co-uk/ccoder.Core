@@ -17,8 +17,6 @@ using cCoder.Data.Models.Workflow;
 using AppSecurityAppOrchestrationService = cCoder.AppSecurity.Services.Orchestrations.IAppOrchestrationService;
 using MailEventHandlerService = cCoder.Mail.Services.Foundations.Events.IEventHandlerService;
 using SchedulingEventHandlerService = cCoder.Scheduling.Services.Foundations.Events.IEventHandlerService;
-using WorkflowInstanceManagementOrchestrationService = cCoder.Workflow.Services.Orchestrations.IWorkflowInstanceManagementOrchestrationService;
-using WorkflowEventHandlerService = cCoder.Workflow.Services.Foundations.Events.IEventHandlerService;
 using CmsApp = cCoder.Data.Models.CMS.App;
 
 namespace cCoder.Core;
@@ -36,8 +34,6 @@ public static partial class WebApplicationExtensions
         app.StartWorkflowHostedServices();
         app.UseMailHostedServiceEventHandlers();
         app.UseSchedulingHostedServiceEventHandlers();
-        app.UseWorkflowHostedServiceEventHandlers();
-        app.UseHostedServicesWorkflowExecutionEventHandlers();
         app.UseHostedServicesServiceBusEventBridge();
         app.UseAppSecurityHostedServiceUpdateEventHandlers();
         app.UseAppSecurityHostedServiceDeleteEventHandlers();
@@ -47,19 +43,7 @@ public static partial class WebApplicationExtensions
     private static WebApplication UseCoreEventHandlers(this WebApplication app)
     {
         app.ListenToSecurityEvents();
-        app.UseWorkflowScheduledTaskExecuteEventHandlers();
         app.UseServiceBusAppDeleteForwarder();
-        return app;
-    }
-
-    private static WebApplication UseWorkflowScheduledTaskExecuteEventHandlers(this WebApplication app)
-    {
-        using IServiceScope scope = app.Services.CreateScope();
-        IServiceProvider services = scope.ServiceProvider;
-
-        foreach (WorkflowEventHandlerService handlers in services.GetServices<WorkflowEventHandlerService>())
-            handlers.ListenToScheduledTaskExecuteEvents();
-
         return app;
     }
 
@@ -141,35 +125,6 @@ public static partial class WebApplicationExtensions
         return app;
     }
 
-    private static WebApplication UseWorkflowHostedServiceEventHandlers(this WebApplication app)
-    {
-        using IServiceScope scope = app.Services.CreateScope();
-        IServiceProvider services = scope.ServiceProvider;
-
-        foreach (WorkflowEventHandlerService handlers in services.GetServices<WorkflowEventHandlerService>())
-        {
-            handlers.ListenToAllEvents();
-            handlers.ListenToScheduledTaskExecuteEvents();
-        }
-
-        return app;
-    }
-
-    private static WebApplication UseHostedServicesWorkflowExecutionEventHandlers(this WebApplication app)
-    {
-        using IServiceScope scope = app.Services.CreateScope();
-        IEventHub eventHub = scope.ServiceProvider.GetService<IEventHub>();
-
-        eventHub?.ListenToEvent<FlowInstanceData, WorkflowInstanceManagementOrchestrationService>(
-            "flow_instance_data_add",
-            static async (service, entity) =>
-            {
-                await ExecuteQueuedWorkflowInstanceAsync(service, entity);
-            });
-
-        return app;
-    }
-
     private static WebApplication UseHostedServicesServiceBusEventBridge(this WebApplication app)
     {
         using IServiceScope scope = app.Services.CreateScope();
@@ -210,11 +165,4 @@ public static partial class WebApplicationExtensions
                     });
             });
 
-    private static async ValueTask ExecuteQueuedWorkflowInstanceAsync(
-        WorkflowInstanceManagementOrchestrationService service,
-        FlowInstanceData entity)
-    {
-        if (string.Equals(entity.State, "Queued", StringComparison.OrdinalIgnoreCase))
-            await service.ExecuteWaitingQueuedInstanceByIdAsync(entity.Id);
-    }
 }

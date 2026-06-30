@@ -1,10 +1,9 @@
+using cCoder.Workflow.Engine;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Workflow;
-using Workflow.Services;
 
 IHost host = new HostBuilder()
     .ConfigureFunctionsWebApplication()
@@ -23,9 +22,7 @@ IHost host = new HostBuilder()
     })
     .ConfigureServices(services =>
     {
-        services.AddTransient<FlowRunner>();
-        services.AddTransient<WorkflowExecutionService>();
-        services.AddTransient<WorkflowScriptExecutionService>();
+        services.AddWorkflowEngine();
     })
     .Build();
 

@@ -58,6 +58,9 @@ public class Program
                             IsServiceBusEventProvider(coreConfig.EventProviderType)
                                 ? []
                                 : ["folder_delete"]),
+                        CreateExternalSendProvider<ScheduledTask>(
+                            coreConfig.EventProviderType,
+                            ["scheduled_task_execute"]),
                         CreateExternalSendProvider<FlowInstanceData>(coreConfig.EventProviderType, ["flow_instance_data_add"])
                     ];
 
