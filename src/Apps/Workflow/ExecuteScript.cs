@@ -1,11 +1,11 @@
+using cCoder.Workflow.Engine.Exposures;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
-using Workflow.Services;
 
 namespace Workflow;
 
-public sealed class ExecuteScript(WorkflowScriptExecutionService scriptExecutionService)
+public sealed class ExecuteScript(IWorkflowScriptExecutionService scriptExecutionService)
 {
     [Function(nameof(ExecuteScript))]
     public async Task<HttpResponseData> Run(

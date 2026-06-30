@@ -2,6 +2,7 @@ using cCoder.Core;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.DMS;
+using cCoder.Data.Models.Planning;
 using cCoder.Data.Models.Workflow;
 using cCoder.Eventing;
 using cCoder.Eventing.Models;
@@ -41,6 +42,7 @@ public class Program
                 [
                     CreateExternalReceiveProvider<App>(["app_add", "app_update", "app_delete"]),
                     CreateExternalReceiveProvider<Folder>(["folder_delete"]),
+                    CreateExternalReceiveProvider<ScheduledTask>(["scheduled_task_execute"]),
                     CreateQueuedFlowInstanceReceiveProvider(),
                 ];
             });

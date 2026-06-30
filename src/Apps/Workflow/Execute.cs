@@ -1,12 +1,13 @@
 using cCoder.Workflow.Activities.Models;
+using cCoder.Workflow.Engine.Exposures;
+using cCoder.Workflow.Engine.Support;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Newtonsoft.Json;
-using Workflow.Services;
 
 namespace Workflow;
 
-public sealed class Execute(WorkflowExecutionService executionService)
+public sealed class Execute(IFlowRunner flowRunner)
 {
     [Function(nameof(Execute))]
     public async Task<HttpResponseData> Run(
@@ -16,7 +17,7 @@ public sealed class Execute(WorkflowExecutionService executionService)
         WorkflowRequest workflowRequest = JsonConvert.DeserializeObject<WorkflowRequest>(json, WorkflowJson.GetJsonSettings())
             ?? throw new InvalidOperationException("Workflow request payload could not be deserialized.");
 
-        await executionService.ExecuteAsync(workflowRequest);
+        await flowRunner.RunAsync(workflowRequest);
 
         HttpResponseData response = request.CreateResponse(System.Net.HttpStatusCode.OK);
         await response.WriteStringAsync("OK");
