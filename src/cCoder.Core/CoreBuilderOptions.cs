@@ -420,7 +420,7 @@ public partial class CoreBuilderOptions
         if (coreConfiguration?.EnableHttpEventing != true)
             return;
 
-        services.AddHttpEventing(options =>
+        services.AddHttpEventingHostedServices(options =>
         {
             options.HubUrl = coreConfiguration.HttpEventHubUrl;
             options.MaxConcurrency = coreConfiguration.MaxConcurrency;
