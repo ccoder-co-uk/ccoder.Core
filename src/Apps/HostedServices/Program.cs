@@ -1,8 +1,10 @@
 using cCoder.Core;
-using cCoder.Eventing.Http.Controllers;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using cCoder.Data.Models.CMS;
+using cCoder.Data.Models.DMS;
+using cCoder.Data.Models.Workflow;
+using cCoder.Eventing;
+using cCoder.Eventing.Models;
 using cCoder.Workflow.Services.Orchestrations;
 
 namespace HostedServices;
@@ -35,13 +37,14 @@ public class Program
                 coreConfig.MaxConcurrency = ResolveMaxConcurrency(config, coreConfig.EventProviderType);
                 coreConfig.DebugInfo = config.GetValue<bool>("DebugInfo");
                 coreConfig.LogSQL = config.GetValue<bool>("LogSQL");
+                coreConfig.EventProviders =
+                [
+                    CreateExternalReceiveProvider<App>(["app_add", "app_update", "app_delete"]),
+                    CreateExternalReceiveProvider<Folder>(["folder_delete"]),
+                    CreateQueuedFlowInstanceReceiveProvider(),
+                ];
             });
         });
-        builder.Services.AddControllers()
-            .ConfigureApplicationPartManager(manager =>
-                manager.FeatureProviders.Add(
-                    new ExcludeHttpEventControllerFeatureProvider(typeof(HttpEventController))));
-        builder.Services.AddScoped<ReceivedHttpEventProcessor>();
         builder.Services.RemoveAll<IWorkflowInstanceManagementOrchestrationService>();
         builder.Services.AddTransient<IWorkflowInstanceManagementOrchestrationService, HostedServicesWorkflowInstanceManagementOrchestrationService>();
 
@@ -77,18 +80,45 @@ public class Program
     private static bool IsHttpEventProvider(string eventProviderType) =>
         string.Equals(eventProviderType, "Http", StringComparison.OrdinalIgnoreCase);
 
-    private sealed class ExcludeHttpEventControllerFeatureProvider(Type controllerType)
-        : IApplicationFeatureProvider<ControllerFeature>
-    {
-        public void PopulateFeature(
-            IEnumerable<ApplicationPart> parts,
-            ControllerFeature feature)
+    private static EventProvider<T> CreateExternalReceiveProvider<T>(string[] eventNames) =>
+        new()
         {
-            for (int index = feature.Controllers.Count - 1; index >= 0; index--)
+            Events = eventNames,
+            ReceiveHandler = async (serviceProvider, eventName, message) =>
             {
-                if (feature.Controllers[index].AsType() == controllerType)
-                    feature.Controllers.RemoveAt(index);
+                IEventHub eventHub = serviceProvider.GetRequiredService<IEventHub>();
+
+                await eventHub.RaiseEventAsync(
+                    eventName,
+                    new EventMessage<T>
+                    {
+                        AuthInfo = new EventAuthInfo
+                        {
+                            SSOUserId = message.AuthInfo?.SSOUserId ?? "Guest",
+                        },
+                        Data = message.Data,
+                    });
             }
-        }
-    }
+        };
+
+    private static EventProvider<FlowInstanceData> CreateQueuedFlowInstanceReceiveProvider() =>
+        new()
+        {
+            Events = ["flow_instance_data_add"],
+            ReceiveHandler = async (serviceProvider, _, message) =>
+            {
+                if (message.Data?.Id == Guid.Empty)
+                    throw new InvalidOperationException(
+                        "You must provide a workflow instance payload with a valid id.");
+
+                if (!string.Equals(message.Data?.State, "Queued", StringComparison.OrdinalIgnoreCase))
+                    return;
+
+                IWorkflowInstanceManagementOrchestrationService workflowInstanceManagementService =
+                    serviceProvider.GetRequiredService<IWorkflowInstanceManagementOrchestrationService>();
+
+                await workflowInstanceManagementService.ExecuteWaitingQueuedInstanceByIdAsync(
+                    message.Data.Id);
+            }
+        };
 }
