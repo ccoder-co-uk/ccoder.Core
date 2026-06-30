@@ -38,6 +38,7 @@
     <LocalSecurityEfMssqlProject>..\..\..\cCoder.Security\src\cCoder.Security.Data.EF.MSSQL\cCoder.Security.Data.EF.MSSQL.csproj</LocalSecurityEfMssqlProject>
     <LocalWorkflowProject>..\..\..\cCoder.Workflow\src\cCoder.Workflow\cCoder.Workflow.csproj</LocalWorkflowProject>
     <LocalWorkflowActivitiesProject>..\..\..\cCoder.Workflow\src\cCoder.Workflow.Activities\cCoder.Workflow.Activities.csproj</LocalWorkflowActivitiesProject>
+    <LocalWorkflowEngineProject>..\..\..\cCoder.Workflow\src\cCoder.Workflow.Engine\cCoder.Workflow.Engine.csproj</LocalWorkflowEngineProject>
     <UseLocalAppSecurity Condition="'$(UseLocalAppSecurity)' == ''">false</UseLocalAppSecurity>
     <UseLocalData Condition="'$(UseLocalData)' == ''">false</UseLocalData>
     <UseLocalContentManagement Condition="'$(UseLocalContentManagement)' == ''">false</UseLocalContentManagement>
@@ -59,7 +60,7 @@
     <UseLocalPackaging Condition="'$(UseLocalPackaging)' == 'true' and !Exists('$(LocalPackagingProject)')">false</UseLocalPackaging>
     <UseLocalScheduling Condition="'$(UseLocalScheduling)' == 'true' and !Exists('$(LocalSchedulingProject)')">false</UseLocalScheduling>
     <UseLocalSecurity Condition="'$(UseLocalSecurity)' == 'true' and !(Exists('$(LocalSecurityProject)') and Exists('$(LocalSecurityEfMssqlProject)'))">false</UseLocalSecurity>
-    <UseLocalWorkflow Condition="'$(UseLocalWorkflow)' == 'true' and !(Exists('$(LocalWorkflowProject)') and Exists('$(LocalWorkflowActivitiesProject)'))">false</UseLocalWorkflow>
+    <UseLocalWorkflow Condition="'$(UseLocalWorkflow)' == 'true' and !(Exists('$(LocalWorkflowProject)') and Exists('$(LocalWorkflowActivitiesProject)') and Exists('$(LocalWorkflowEngineProject)'))">false</UseLocalWorkflow>
     <UseLocalData Condition="'$(UseLocalSecurity)' == 'true' and Exists('$(LocalDataProject)')">true</UseLocalData>
   </PropertyGroup>
   <ItemGroup>
@@ -105,6 +106,7 @@
   <ItemGroup Condition="'$(UseLocalWorkflow)' == 'true'">
     <ProjectReference Include="$(LocalWorkflowProject)" AdditionalProperties="UseLocalData=$(UseLocalData);UseLocalSecurity=$(UseLocalSecurity)" />
     <ProjectReference Include="$(LocalWorkflowActivitiesProject)" AdditionalProperties="UseLocalData=$(UseLocalData);UseLocalSecurity=$(UseLocalSecurity)" />
+    <ProjectReference Include="$(LocalWorkflowEngineProject)" AdditionalProperties="UseLocalData=$(UseLocalData);UseLocalSecurity=$(UseLocalSecurity)" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
@@ -121,8 +123,9 @@
     <PackageReference Include="cCoder.Scheduling" Version="2026.6.24.1257" Condition="'$(UseLocalScheduling)' != 'true'" />
     <PackageReference Include="cCoder.Security" Version="2026.4.29.2038" Condition="'$(UseLocalSecurity)' != 'true'" />
     <PackageReference Include="cCoder.Security.Data.EF.MSSQL" Version="2026.4.29.2038" Condition="'$(UseLocalSecurity)' != 'true'" />
-    <PackageReference Include="cCoder.Workflow" Version="2026.6.26.1319" Condition="'$(UseLocalWorkflow)' != 'true'" />
-    <PackageReference Include="cCoder.Workflow.Activities" Version="2026.6.26.1319" Condition="'$(UseLocalWorkflow)' != 'true'" />
+    <PackageReference Include="cCoder.Workflow" Version="2026.6.30.1840" Condition="'$(UseLocalWorkflow)' != 'true'" />
+    <PackageReference Include="cCoder.Workflow.Activities" Version="2026.6.30.1840" Condition="'$(UseLocalWorkflow)' != 'true'" />
+    <PackageReference Include="cCoder.Workflow.Engine" Version="2026.6.30.1840" Condition="'$(UseLocalWorkflow)' != 'true'" />
     <PackageReference Include="Microsoft.AspNetCore.OData" Version="9.4.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.9" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
