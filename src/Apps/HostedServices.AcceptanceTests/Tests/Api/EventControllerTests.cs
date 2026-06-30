@@ -47,12 +47,26 @@ public sealed class EventControllerTests(HostedServicesAcceptanceFixture fixture
                     Path = "content",
                 });
 
+            statusCode.Should().Be(HttpStatusCode.Accepted);
+            await WaitForAsync(
+                () =>
+                {
+                    using IServiceScope waitScope = fixture.Factory.Services.CreateScope();
+                    using var waitCore = waitScope.ServiceProvider
+                        .GetRequiredService<ICoreContextFactory>()
+                        .CreateCoreContext();
+
+                    return !waitCore.Set<Folder>().IgnoreQueryFilters()
+                        .Any(folder => folder.Id == childFolderId);
+                },
+                "folder_delete should remove descendant folders");
+
             using IServiceScope scope = fixture.Factory.Services.CreateScope();
             using var core = scope.ServiceProvider
                 .GetRequiredService<ICoreContextFactory>()
                 .CreateCoreContext();
 
-            statusCode.Should().Be(HttpStatusCode.OK);
+            statusCode.Should().Be(HttpStatusCode.Accepted);
             core.Set<Folder>().IgnoreQueryFilters().Any(folder => folder.Id == rootFolderId).Should().BeTrue();
             core.Set<Folder>().IgnoreQueryFilters().Any(folder => folder.Id == childFolderId).Should().BeFalse();
             core.Set<DmsFile>().IgnoreQueryFilters().Any(file => file.Id == fileId).Should().BeFalse();
@@ -142,12 +156,40 @@ public sealed class EventControllerTests(HostedServicesAcceptanceFixture fixture
                     ]
                 });
 
+            statusCode.Should().Be(HttpStatusCode.Accepted);
+            await WaitForAsync(
+                () =>
+                {
+                    using IServiceScope waitScope = fixture.Factory.Services.CreateScope();
+                    using var waitCore = waitScope.ServiceProvider
+                        .GetRequiredService<ICoreContextFactory>()
+                        .CreateCoreContext();
+
+                    return waitCore.Set<Role>().IgnoreQueryFilters()
+                        .Any(role => role.AppId == appId && role.Name == "Administrators")
+                        && waitCore.Set<Role>().IgnoreQueryFilters()
+                            .Any(role => role.AppId == appId && role.Name == "Users")
+                        && waitCore.Set<Role>().IgnoreQueryFilters()
+                            .Any(role => role.AppId == appId && role.Name == "Guests")
+                        && waitCore.Set<AppCulture>().IgnoreQueryFilters()
+                            .Any(culture => culture.AppId == appId && culture.CultureId == "en-GB")
+                        && waitCore.Set<Folder>().IgnoreQueryFilters()
+                            .Any(folder => folder.AppId == appId && folder.Path == "content")
+                        && waitCore.Set<MailServer>().IgnoreQueryFilters()
+                            .Any(server => server.AppId == appId && server.Name == "Acceptance SMTP")
+                        && waitCore.Set<Calendar>().IgnoreQueryFilters()
+                            .Any(calendar => calendar.AppId == appId && calendar.Name == "Acceptance Calendar")
+                        && waitCore.Set<FlowDefinition>().IgnoreQueryFilters()
+                            .Any(flow => flow.AppId == appId && flow.Name == flowName);
+                },
+                "app_add should create cross-domain children");
+
             using IServiceScope scope = fixture.Factory.Services.CreateScope();
             using var core = scope.ServiceProvider
                 .GetRequiredService<ICoreContextFactory>()
                 .CreateCoreContext();
 
-            statusCode.Should().Be(HttpStatusCode.OK);
+            statusCode.Should().Be(HttpStatusCode.Accepted);
             core.Set<Role>().IgnoreQueryFilters().Any(role => role.AppId == appId && role.Name == "Administrators").Should().BeTrue();
             core.Set<Role>().IgnoreQueryFilters().Any(role => role.AppId == appId && role.Name == "Users").Should().BeTrue();
             core.Set<Role>().IgnoreQueryFilters().Any(role => role.AppId == appId && role.Name == "Guests").Should().BeTrue();
@@ -212,12 +254,26 @@ public sealed class EventControllerTests(HostedServicesAcceptanceFixture fixture
                     ]
                 });
 
+            statusCode.Should().Be(HttpStatusCode.Accepted);
+            await WaitForAsync(
+                () =>
+                {
+                    using IServiceScope waitScope = fixture.Factory.Services.CreateScope();
+                    using var waitCore = waitScope.ServiceProvider
+                        .GetRequiredService<ICoreContextFactory>()
+                        .CreateCoreContext();
+
+                    return waitCore.Set<Role>().IgnoreQueryFilters()
+                        .Any(role => role.Id == roleId && role.Privs == "app_read,folder_update");
+                },
+                "app_update should update children");
+
             using IServiceScope scope = fixture.Factory.Services.CreateScope();
             using var core = scope.ServiceProvider
                 .GetRequiredService<ICoreContextFactory>()
                 .CreateCoreContext();
 
-            statusCode.Should().Be(HttpStatusCode.OK);
+            statusCode.Should().Be(HttpStatusCode.Accepted);
             core.Set<Role>().IgnoreQueryFilters()
                 .Single(role => role.Id == roleId)
                 .Privs.Should().Be("app_read,folder_update");
@@ -259,12 +315,26 @@ public sealed class EventControllerTests(HostedServicesAcceptanceFixture fixture
                     Id = appId
                 });
 
+            statusCode.Should().Be(HttpStatusCode.Accepted);
+            await WaitForAsync(
+                () =>
+                {
+                    using IServiceScope waitScope = fixture.Factory.Services.CreateScope();
+                    using var waitCore = waitScope.ServiceProvider
+                        .GetRequiredService<ICoreContextFactory>()
+                        .CreateCoreContext();
+
+                    return !waitCore.Set<Role>().IgnoreQueryFilters()
+                        .Any(role => role.AppId == appId);
+                },
+                "app_delete should remove cross-domain children");
+
             using IServiceScope scope = fixture.Factory.Services.CreateScope();
             using var core = scope.ServiceProvider
                 .GetRequiredService<ICoreContextFactory>()
                 .CreateCoreContext();
 
-            statusCode.Should().Be(HttpStatusCode.OK);
+            statusCode.Should().Be(HttpStatusCode.Accepted);
             core.Set<AppEntity>().IgnoreQueryFilters().Any(app => app.Id == appId).Should().BeTrue();
             core.Set<Role>().IgnoreQueryFilters().Any(role => role.AppId == appId).Should().BeFalse();
             core.Set<UserRole>().IgnoreQueryFilters().Any(userRole => userRole.RoleId == roleId).Should().BeFalse();
@@ -340,7 +410,21 @@ public sealed class EventControllerTests(HostedServicesAcceptanceFixture fixture
                 .GetRequiredService<ICoreContextFactory>()
                 .CreateCoreContext();
 
-            statusCode.Should().Be(HttpStatusCode.OK);
+            statusCode.Should().Be(HttpStatusCode.Accepted);
+            await WaitForAsync(
+                () =>
+                {
+                    using IServiceScope waitScope = fixture.Factory.Services.CreateScope();
+                    using var waitCore = waitScope.ServiceProvider
+                        .GetRequiredService<ICoreContextFactory>()
+                        .CreateCoreContext();
+
+                    return waitCore.Set<FlowInstanceData>().IgnoreQueryFilters()
+                        .Any(instance =>
+                            instance.FlowDefinitionId == flowId
+                            && instance.State != "Queued");
+                },
+                "folder_delete should create and execute the subscribed workflow instance");
 
             FlowInstanceData instance = core.Set<FlowInstanceData>().IgnoreQueryFilters()
                 .Single(instance => instance.FlowDefinitionId == flowId);
@@ -388,8 +472,36 @@ public sealed class EventControllerTests(HostedServicesAcceptanceFixture fixture
             });
 
         string content = await response.Content.ReadAsStringAsync();
-        response.StatusCode.Should().Be(HttpStatusCode.OK, content);
+        response.StatusCode.Should().Be(HttpStatusCode.Accepted, content);
         return response.StatusCode;
+    }
+
+    private static async Task WaitForAsync(
+        Func<bool> condition,
+        string because)
+    {
+        DateTimeOffset stopAt = DateTimeOffset.UtcNow.AddSeconds(15);
+        Exception lastException = null;
+
+        while (DateTimeOffset.UtcNow < stopAt)
+        {
+            try
+            {
+                if (condition())
+                    return;
+            }
+            catch (Exception exception)
+            {
+                lastException = exception;
+            }
+
+            await Task.Delay(100);
+        }
+
+        if (lastException is not null)
+            throw new TimeoutException($"Timed out waiting because {because}.", lastException);
+
+        throw new TimeoutException($"Timed out waiting because {because}.");
     }
 
     private async Task SeedFolderDeleteScenarioAsync(
