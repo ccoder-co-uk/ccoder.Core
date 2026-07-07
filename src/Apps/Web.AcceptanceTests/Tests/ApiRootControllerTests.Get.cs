@@ -21,7 +21,6 @@ public sealed partial class ApiRootControllerTests
         actualContent.Should().Contain("\"name\":\"DocumentManagement\"");
         actualContent.Should().Contain("\"name\":\"Logging\"");
         actualContent.Should().Contain("\"name\":\"Mail\"");
-        actualContent.Should().Contain("\"name\":\"Scheduling\"");
         actualContent.Should().Contain("\"name\":\"Security\"");
         actualContent.Should().Contain("\"swaggerDef\":\"/swagger/Core/swagger.json\"");
         actualContent.Should().Contain("\"swaggerDef\":\"/swagger/AppSecurity/swagger.json\"");
@@ -29,7 +28,6 @@ public sealed partial class ApiRootControllerTests
         actualContent.Should().Contain("\"swaggerDef\":\"/swagger/DocumentManagement/swagger.json\"");
         actualContent.Should().Contain("\"swaggerDef\":\"/swagger/Logging/swagger.json\"");
         actualContent.Should().Contain("\"swaggerDef\":\"/swagger/Mail/swagger.json\"");
-        actualContent.Should().Contain("\"swaggerDef\":\"/swagger/Scheduling/swagger.json\"");
         actualContent.Should().Contain("\"swaggerDef\":\"/swagger/Security/swagger.json\"");
         actualContent.Should().Contain("\"swaggerDef\":\"/swagger/Workflow/swagger.json\"");
         actualContent.Should().Contain("\"name\":\"Workflow\"");

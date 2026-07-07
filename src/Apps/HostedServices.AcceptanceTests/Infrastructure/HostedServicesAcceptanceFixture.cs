@@ -27,7 +27,10 @@ public sealed class HostedServicesAcceptanceFixture : IAsyncLifetime
         ApplyEnvironment(settings);
         databaseServices = AcceptanceServiceProviderFactory.Create(settings);
         Factory = new HostedServicesAcceptanceFactory(settings);
-        databaseManager = new AcceptanceDatabaseManager(databaseServices);
+        databaseManager = new AcceptanceDatabaseManager(
+            databaseServices,
+            settings.CoreConnectionString,
+            settings.SsoConnectionString);
         await databaseManager.ResetDatabasesAsync();
         await new AcceptanceApplicationSeeder(Factory.Services).SeedAsync();
         Client = Factory.CreateClient(new WebApplicationFactoryClientOptions
@@ -41,16 +44,26 @@ public sealed class HostedServicesAcceptanceFixture : IAsyncLifetime
     {
         Client?.Dispose();
 
-        if (databaseManager is not null)
-            await databaseManager.DropDatabasesAsync();
+        try
+        {
+            if (Factory is not null)
+                await Factory.DisposeAsync();
 
-        if (databaseServices is not null)
-            await databaseServices.DisposeAsync();
-
-        if (Factory is not null)
-            await Factory.DisposeAsync();
-
-        RestoreEnvironment();
+            if (databaseServices is not null)
+                await databaseServices.DisposeAsync();
+        }
+        finally
+        {
+            try
+            {
+                if (databaseManager is not null)
+                    await databaseManager.DropDatabasesAsync();
+            }
+            finally
+            {
+                RestoreEnvironment();
+            }
+        }
     }
 
     private void ApplyEnvironment(AcceptanceSettings settings)

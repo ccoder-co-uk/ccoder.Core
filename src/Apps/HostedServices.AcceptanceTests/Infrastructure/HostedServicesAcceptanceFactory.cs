@@ -53,11 +53,9 @@ internal sealed class HostedServicesAcceptanceFactory
                     Services = new Dictionary<string, string>(),
                 });
             services.AddScoped<ISecurityDbContextFactory>(
-                provider => new MSSQLSecurityDbContextFactory(settings.SsoConnectionString)
+                _ => new MSSQLSecurityDbContextFactory(settings.SsoConnectionString)
                 {
-                    GetAuthInfo = ignoreAuthInfo => ignoreAuthInfo
-                        ? new SSOAuthInfo { SSOUserId = "Guest" }
-                        : provider.GetService<ISSOAuthInfo>(),
+                    GetAuthInfo = _ => new SSOAuthInfo { SSOUserId = "Guest" },
                 });
             cCoder.Data.IServiceCollectionExtensions.AddCoreData(
                 services,

@@ -15,12 +15,13 @@ public sealed partial class FolderEventIntegrationTests
 
         try
         {
-            flowId = await CreateFlowDefinitionAsync(BaselineAppId, Unique("Folder Delete Flow"));
+            string authToken = await CreateAuthTokenAsync(AdminUserId);
+            flowId = await CreateFlowDefinitionAsync(BaselineAppId, Unique("Folder Delete Flow"), authToken);
             string folderName = Unique("flow-folder");
             folderId = await CreateFolderAsync(BaselineAppId, folderName);
-            workflowEventId = await CreateWorkflowEventAsync(flowId, $"folder_delete{folderName}");
+            workflowEventId = await CreateWorkflowEventAsync(flowId, $"folder_delete{folderName}", authToken);
 
-            await SendWithOptionalHostAsync(HttpMethod.Delete, $"/Api/Core/Folder({folderId})");
+            await SendWithOptionalHostAsync(HttpMethod.Delete, $"/Api/Core/Folder({folderId})", authToken: authToken);
 
             await WaitUntilAsync(async () => await HasAnyFlowInstanceAsync(flowId));
 

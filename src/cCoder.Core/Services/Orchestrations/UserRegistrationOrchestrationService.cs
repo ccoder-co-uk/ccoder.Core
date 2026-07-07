@@ -1,47 +1,26 @@
-using cCoder.AppSecurity.Models;
-using cCoder.Data.Models.Security;
-using cCoder.Security.Exposures;
 using cCoder.Security.Objects.DTOs;
 using cCoder.Security.Objects.Entities;
+using cCoder.Security.Services.Orchestrations.Interfaces;
 
 namespace cCoder.Core.Services.Orchestrations;
 
 public class UserRegistrationOrchestrationService(
-    IAccountManager accountManager,
-    ICMSUserRegistrationOrchestrationService coreUserProcessingService)
+    IAuthenticationOrchestrationService authenticationOrchestrationService,
+    ISSOUserOrchestrationService ssoUserOrchestrationService)
     : IUserRegistrationOrchestrationService
 {
     public ValueTask ConfirmRegistrationAsync(string token) =>
-        accountManager.ConfirmRegistrationAsync(token);
+        ssoUserOrchestrationService.ConfirmRegistration(token);
 
     public ValueTask<Token> LoginAsync(string username, string password) =>
-        accountManager.LoginAsync(username, password);
+        authenticationOrchestrationService.LoginAsync(username, password);
 
     public ValueTask LogoutAsync() =>
-        accountManager.LogoutAsync();
+        authenticationOrchestrationService.LogoutAsync();
 
     public SSOUser Me() =>
-        accountManager.Me();
+        authenticationOrchestrationService.Me();
 
-    public async ValueTask<SSOUser> RegisterAsync(RegisterUser registerForm)
-    {
-        (SSOUser ssoUser, string confirmationToken) =
-            await accountManager.RegisterAsync(registerForm);
-
-        User coreUser = new()
-        {
-            DefaultCultureId = registerForm.Culture,
-            Id = ssoUser.Id,
-            Email = ssoUser.Email,
-            DisplayName = ssoUser.DisplayName,
-            IsActive = true,
-        };
-
-        await coreUserProcessingService.RegisterUserAsync(
-            coreUser,
-            registerForm.AppId,
-            confirmationToken);
-
-        return ssoUser;
-    }
+    public async ValueTask<SSOUser> RegisterAsync(RegisterUser registerForm) =>
+        (await ssoUserOrchestrationService.Register(registerForm)).Item1;
 }

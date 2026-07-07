@@ -23,7 +23,6 @@ public sealed partial class PackageManagerControllerTests(WebAcceptanceFixture f
     private const string AcceptanceAdminRoleName = "Acceptance Administrators";
     private HttpClient Client { get; } = fixture.Client;
     private string BaseUrl { get; } = "/Api/Core/Package";
-    private string AppBaseUrl { get; } = "/Api/Core/App";
     private static JsonSerializerOptions JsonOptions { get; } = new() { PropertyNameCaseInsensitive = true };
 
     private static string Unique(string prefix) => $"{prefix}-{Guid.NewGuid():N}";
@@ -39,7 +38,7 @@ public sealed partial class PackageManagerControllerTests(WebAcceptanceFixture f
                 [
                     package.Name,
                     group.Key,
-                    group.Sum(item => CountSerializedEntities(item.Data)),
+                    group.Sum(item => CountComparableCapturedEntities(group.Key, item.Data)),
                 ];
             }
         }
@@ -149,6 +148,13 @@ public sealed partial class PackageManagerControllerTests(WebAcceptanceFixture f
             _ => CountExportedEntities(packages, packageName, itemType),
         };
 
+    private static int CountComparableCapturedEntities(string itemType, string data) =>
+        itemType switch
+        {
+            "Core/PageRole" => CountValidPageRoleEntities(data),
+            _ => CountSerializedEntities(data),
+        };
+
     private static int CountSerializedEntities(string data)
     {
         if (string.IsNullOrWhiteSpace(data))
@@ -180,9 +186,32 @@ public sealed partial class PackageManagerControllerTests(WebAcceptanceFixture f
         };
     }
 
+    private static int CountValidPageRoleEntities(string data)
+    {
+        if (string.IsNullOrWhiteSpace(data))
+            return 0;
+
+        using JsonDocument document = JsonDocument.Parse(data);
+
+        return document.RootElement.ValueKind switch
+        {
+            JsonValueKind.Array => document.RootElement.EnumerateArray().Count(IsValidPageRole),
+            JsonValueKind.Object => IsValidPageRole(document.RootElement) ? 1 : 0,
+            _ => 0,
+        };
+    }
+
     private static bool IsExcluded(JsonElement element, string propertyName, string excludedValue) =>
         element.TryGetProperty(propertyName, out JsonElement value)
         && string.Equals(value.GetString(), excludedValue, StringComparison.OrdinalIgnoreCase);
+
+    private static bool IsValidPageRole(JsonElement element) =>
+        HasNonEmptyString(element, "Path")
+        && HasNonEmptyString(element, "Role");
+
+    private static bool HasNonEmptyString(JsonElement element, string propertyName) =>
+        element.TryGetProperty(propertyName, out JsonElement value)
+        && !string.IsNullOrWhiteSpace(value.GetString());
 
     private async Task GrantGuestAdminAsync(int appId)
     {

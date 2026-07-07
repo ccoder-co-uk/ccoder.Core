@@ -67,7 +67,6 @@ public sealed partial class ApiRootControllerTests(WebAcceptanceFixture fixture)
         return route.StartsWith("/Api", StringComparison.Ordinal)
             || route.StartsWith("Api", StringComparison.Ordinal)
             || string.Equals(route, "Setup", StringComparison.Ordinal)
-            || string.Equals(route, "AcceptInvite", StringComparison.Ordinal)
             || string.Equals(route, "{*path}", StringComparison.Ordinal);
     }
 }

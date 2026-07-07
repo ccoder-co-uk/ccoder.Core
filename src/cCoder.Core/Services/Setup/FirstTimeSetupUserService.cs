@@ -1,13 +1,13 @@
 using cCoder.Data;
 using cCoder.Data.Models.Security;
-using cCoder.Security.Exposures;
+using cCoder.Security.Services.Orchestrations.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using cCoder.Core.Models;
 
 namespace cCoder.Core.Services.Setup;
 
 internal sealed class FirstTimeSetupUserService(
-    IAccountManager accountManager,
+    IAuthenticationOrchestrationService authenticationOrchestrationService,
     ICoreContextFactory coreContextFactory)
     : IFirstTimeSetupUserService
 {
@@ -19,7 +19,7 @@ internal sealed class FirstTimeSetupUserService(
         if (string.IsNullOrWhiteSpace(userId))
             throw new InvalidOperationException("Bootstrap user ID is required.");
 
-        await accountManager.LoginAsync(userId, password);
+        await authenticationOrchestrationService.LoginAsync(userId, password);
     }
 
     public async Task EnsureBootstrapCoreUserAsync(

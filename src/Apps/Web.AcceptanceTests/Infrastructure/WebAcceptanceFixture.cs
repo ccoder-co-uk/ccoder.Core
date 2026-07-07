@@ -13,19 +13,24 @@ public sealed class WebAcceptanceFixture : IAsyncLifetime
 
     internal WebAcceptanceFactory Factory { get; private set; } = null!;
 
+    internal AcceptanceSettings Settings { get; private set; } = null!;
+
     public HttpClient Client { get; private set; } = null!;
 
     public async Task InitializeAsync()
     {
-        AcceptanceSettings settings = new()
+        Settings = new()
         {
             CoreConnectionString = AddDatabaseSuffix("CCODER_ACCEPTANCE_CORE_CONNECTION_STRING"),
             SsoConnectionString = AddDatabaseSuffix("CCODER_ACCEPTANCE_SSO_CONNECTION_STRING"),
             DecryptionKey = "000000000000000000000000000000000000000000000000",
         };
 
-        Factory = new WebAcceptanceFactory(settings);
-        databaseManager = new AcceptanceDatabaseManager(Factory.Services);
+        Factory = new WebAcceptanceFactory(Settings);
+        databaseManager = new AcceptanceDatabaseManager(
+            Factory.Services,
+            Settings.CoreConnectionString,
+            Settings.SsoConnectionString);
         await databaseManager.ResetDatabasesAsync();
         await SeedAsync();
         Client = Factory.CreateClient(new WebApplicationFactoryClientOptions
@@ -39,11 +44,16 @@ public sealed class WebAcceptanceFixture : IAsyncLifetime
     {
         Client?.Dispose();
 
-        if (databaseManager is not null)
-            await databaseManager.DropDatabasesAsync();
-
-        if (Factory is not null)
-            await Factory.DisposeAsync();
+        try
+        {
+            if (Factory is not null)
+                await Factory.DisposeAsync();
+        }
+        finally
+        {
+            if (databaseManager is not null)
+                await databaseManager.DropDatabasesAsync();
+        }
     }
 
     private Task SeedAsync() =>

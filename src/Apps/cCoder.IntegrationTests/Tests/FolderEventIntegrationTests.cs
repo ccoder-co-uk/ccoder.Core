@@ -6,10 +6,13 @@ using cCoder.Data;
 using cCoder.Data.Models.DMS;
 using cCoder.Data.Models.Workflow;
 using cCoder.IntegrationTests.Infrastructure;
+using cCoder.Security.Data.EF.Interfaces;
+using cCoder.Security.Objects.Entities;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
+using SsoToken = cCoder.Security.Objects.Entities.Token;
 
 namespace cCoder.IntegrationTests.Tests;
 
@@ -32,7 +35,7 @@ public sealed partial class FolderEventIntegrationTests
     public FolderEventIntegrationTests(IntegrationAcceptanceFixture fixture) =>
         this.fixture = fixture;
 
-    private async Task<Guid> CreateFlowDefinitionAsync(int appId, string name)
+    private async Task<Guid> CreateFlowDefinitionAsync(int appId, string name, string authToken)
     {
         FlowDefinition flow = await PostAsJsonAsync<FlowDefinition>("/Api/Core/FlowDefinition", new
         {
@@ -45,12 +48,12 @@ public sealed partial class FolderEventIntegrationTests
             createdOn = DateTimeOffset.UtcNow,
             lastUpdatedBy = "Guest",
             lastUpdated = DateTimeOffset.UtcNow
-        });
+        }, authToken);
 
         return flow.Id;
     }
 
-    private async Task<Guid> CreateWorkflowEventAsync(Guid flowId, string eventContext)
+    private async Task<Guid> CreateWorkflowEventAsync(Guid flowId, string eventContext, string authToken)
     {
         WorkflowEvent workflowEvent = await PostAsJsonAsync<WorkflowEvent>("/Api/Core/WorkflowEvent", new
         {
@@ -60,7 +63,7 @@ public sealed partial class FolderEventIntegrationTests
             executeAs = AdminUserId,
             createdBy = "Guest",
             createdOn = DateTimeOffset.UtcNow
-        });
+        }, authToken);
 
         return workflowEvent.Id;
     }
@@ -147,7 +150,7 @@ public sealed partial class FolderEventIntegrationTests
         object payload,
         string authToken = null)
     {
-        using HttpRequestMessage request = new(HttpMethod.Post, relativeUrl)
+        using HttpRequestMessage request = new(HttpMethod.Post, WithAuthToken(relativeUrl, authToken))
         {
             Content = JsonContent.Create(payload, options: RequestJsonOptions)
         };
@@ -165,16 +168,58 @@ public sealed partial class FolderEventIntegrationTests
             ?? throw new InvalidOperationException($"Expected payload for {relativeUrl}.");
     }
 
-    private async Task SendWithOptionalHostAsync(HttpMethod method, string relativeUrl, string host = null)
+    private async Task SendWithOptionalHostAsync(
+        HttpMethod method,
+        string relativeUrl,
+        string host = null,
+        string authToken = null)
     {
-        using HttpRequestMessage request = new(method, relativeUrl);
+        using HttpRequestMessage request = new(method, WithAuthToken(relativeUrl, authToken));
 
         if (!string.IsNullOrWhiteSpace(host))
             request.Headers.Host = host;
 
+        if (!string.IsNullOrWhiteSpace(authToken))
+        {
+            request.Headers.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("bearer", authToken);
+        }
+
         using HttpResponseMessage response = await fixture.WebClient.SendAsync(request);
         string content = await response.Content.ReadAsStringAsync();
         response.StatusCode.Should().Be(HttpStatusCode.OK, content);
+    }
+
+    private async Task<string> CreateAuthTokenAsync(string userId)
+    {
+        await using DbContext sso = fixture.DatabaseServices
+            .GetRequiredService<ISecurityDbContextFactory>()
+            .CreateDbContext(true);
+
+        string tokenId = Guid.NewGuid().ToString("N");
+
+        sso.Add(new SsoToken
+        {
+            Id = tokenId,
+            Reason = (int)TokenUse.Auth,
+            Expires = DateTimeOffset.UtcNow.AddHours(1),
+            UserName = userId
+        });
+
+        await sso.SaveChangesAsync();
+        return tokenId;
+    }
+
+    private static string WithAuthToken(string relativeUrl, string authToken)
+    {
+        if (string.IsNullOrWhiteSpace(authToken))
+            return relativeUrl;
+
+        string separator = relativeUrl.Contains('?')
+            ? "&"
+            : "?";
+
+        return $"{relativeUrl}{separator}t={WebUtility.UrlEncode(authToken)}";
     }
 
     private async Task<string> BuildFlowDiagnosticsAsync(Guid flowId)

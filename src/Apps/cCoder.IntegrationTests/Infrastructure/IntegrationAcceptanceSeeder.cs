@@ -23,16 +23,21 @@ internal sealed class IntegrationAcceptanceSeeder(IServiceProvider services)
     private const string AcceptanceAdminPrivileges =
         "app_admin,"
         + "app_create,app_read,app_update,app_delete,"
+        + "appculture_read,"
         + "calendar_create,calendar_read,calendar_update,calendar_delete,"
         + "commonobject_create,commonobject_update,commonobject_delete,"
-        + "culture_create,culture_update,culture_delete,"
+        + "culture_create,culture_read,culture_update,culture_delete,"
         + "file_create,file_read,file_update,file_delete,"
         + "filecontent_create,filecontent_read,filecontent_update,filecontent_delete,"
         + "flowdefinition_create,flowdefinition_read,flowdefinition_update,flowdefinition_delete,flowdefinition_execute,"
         + "folder_create,folder_read,folder_update,folder_delete,"
+        + "folderrole_read,"
         + "package_create,package_update,package_delete,"
         + "packageitem_create,packageitem_update,packageitem_delete,"
+        + "page_read,pagerole_read,"
         + "scheduledtask_create,scheduledtask_read,scheduledtask_update,scheduledtask_delete,"
+        + "user_create,user_read,user_update,user_delete,"
+        + "userrole_create,userrole_read,userrole_update,userrole_delete,"
         + "workflowevent_create,workflowevent_read,workflowevent_update,workflowevent_delete";
 
     public async Task SeedAsync()
@@ -51,8 +56,10 @@ internal sealed class IntegrationAcceptanceSeeder(IServiceProvider services)
         await EnsureAcceptanceAdminRoleAsync(core);
         await EnsureUserHasRoleAsync(core, GuestUserId);
         await EnsureUserHasRoleAsync(core, AdminUserId);
+        await EnsureTenantAsync(sso);
         await EnsureSsoUserAsync(sso, GuestUserId, "Guest", string.Empty);
         await EnsureSsoUserAsync(sso, AdminUserId, "Acceptance Admin", "admin@localhost");
+        await EnsureSsoAdministratorRoleAsync(sso);
         await SeedCapturedAppDataAsync(core);
         await SeedCommonObjectsAsync(core);
     }
@@ -160,6 +167,75 @@ internal sealed class IntegrationAcceptanceSeeder(IServiceProvider services)
         }
     }
 
+    private static async Task EnsureTenantAsync(DbContext sso)
+    {
+        bool hasTenant = await sso.Set<Tenant>().IgnoreQueryFilters()
+            .AnyAsync(existing => existing.Id == AcceptanceTenantId);
+
+        if (hasTenant)
+            return;
+
+        DateTimeOffset now = DateTimeOffset.UtcNow;
+
+        sso.Add(new Tenant
+        {
+            Id = AcceptanceTenantId,
+            Name = "Acceptance",
+            Description = "Acceptance test tenant",
+            CreatedBy = AdminUserId,
+            LastUpdatedBy = AdminUserId,
+            CreatedOn = now,
+            LastUpdated = now
+        });
+
+        await sso.SaveChangesAsync();
+    }
+
+    private static async Task EnsureSsoAdministratorRoleAsync(DbContext sso)
+    {
+        SSORole role = await sso.Set<SSORole>().IgnoreQueryFilters()
+            .SingleOrDefaultAsync(existing =>
+                existing.TenantId == AcceptanceTenantId
+                && existing.Name == "Administrators");
+
+        if (role is null)
+        {
+            role = new SSORole
+            {
+                Id = Guid.NewGuid(),
+                TenantId = AcceptanceTenantId,
+                Name = "Administrators",
+                Description = "Acceptance tenant administrators",
+                UsersArePortalAdmins = true,
+                Privs = "security_admin,tenant_read,userrole_read,userrole_create,userrole_delete"
+            };
+
+            await sso.Set<SSORole>().AddAsync(role);
+            await sso.SaveChangesAsync();
+        }
+        else if (!role.UsersArePortalAdmins)
+        {
+            role.UsersArePortalAdmins = true;
+            await sso.SaveChangesAsync();
+        }
+
+        bool hasAdminRole = await sso.Set<SSOUserRole>().IgnoreQueryFilters()
+            .AnyAsync(existing =>
+                existing.RoleId == role.Id
+                && existing.UserId == AdminUserId);
+
+        if (!hasAdminRole)
+        {
+            await sso.Set<SSOUserRole>().AddAsync(new SSOUserRole
+            {
+                RoleId = role.Id,
+                UserId = AdminUserId
+            });
+
+            await sso.SaveChangesAsync();
+        }
+    }
+
     private static async Task SeedCapturedAppDataAsync(DbContext core)
     {
         await SeedRolesAsync(core);
@@ -252,12 +328,22 @@ internal sealed class IntegrationAcceptanceSeeder(IServiceProvider services)
                 AppId = AppId,
                 Name = role.Name,
                 Description = role.Description,
-                Privs = role.Privs,
+                Privs = NormalizeRolePrivileges(role),
             })
             .ToArray();
 
         await core.Set<Role>().AddRangeAsync(roles);
         await core.SaveChangesAsync();
+    }
+
+    private static string NormalizeRolePrivileges(Role role)
+    {
+        if (role.Name != "Users" || role.Privs?.Split(',').Contains("user_update") == true)
+            return role.Privs;
+
+        return string.IsNullOrWhiteSpace(role.Privs)
+            ? "user_update"
+            : $"{role.Privs},user_update";
     }
 
     private static async Task SeedLayoutsAsync(DbContext core)
@@ -301,7 +387,7 @@ internal sealed class IntegrationAcceptanceSeeder(IServiceProvider services)
                 Name = template.Name,
                 Description = template.Description,
                 ResourceKey = template.ResourceKey,
-                RawString = template.RawString,
+                RawString = NormalizeTemplate(template),
                 CreatedOn = template.CreatedOn,
                 CreatedBy = template.CreatedBy,
                 LastUpdated = template.LastUpdated,
@@ -311,6 +397,38 @@ internal sealed class IntegrationAcceptanceSeeder(IServiceProvider services)
 
         await core.Set<Template>().AddRangeAsync(templates);
         await core.SaveChangesAsync();
+    }
+
+    private static string NormalizeTemplate(Template template)
+    {
+        if (!string.Equals(template.Name, "UserInvite", StringComparison.OrdinalIgnoreCase))
+            return template.RawString;
+
+        return """
+        <html style="font-family: [theme[font.family]]; width:800px; margin:0 auto; padding:0;">
+            <head>
+                <title>[email[subject]]</title>
+                <style>
+                    * { font-size: [theme[font.size]]; font-family: [theme[font.family]]; color: #1F2933; }
+                    a { color: [theme[colours.links]]; cursor: pointer; }
+                    hr { border-top: [theme[border.style]]; }
+                </style>
+            </head>
+            <body style="width: 800px; margin: 20px auto; padding: 0; background: white;">
+                <header style="padding: 20px 30px 0;">
+                    <a href="[app[root]]" style="font-size: 28px; font-weight: 700; text-decoration: none; color: [theme[colours.primary]];">cCoder</a>
+                    <h2 style="background: [theme[colours.primary]]; color: [theme[colours.text2]]; padding: 12px 16px; font-size: 140%; margin-top: 16px;">You have been invited</h2>
+                </header>
+                <div style="margin: 10px auto; padding: 5px 40px 30px;">
+                    <p>[resource_description[InvitationStatement]]</p>
+                    <p>[resource_displayname[Click]] <a href="[app[root]]/AcceptInvite?user=[model[SSOUser.Id]]&e=[model[CoreUser.Email]]&t=[model[EncodedToken]]">[resource_displayname[Here]]</a> to complete your account setup and sign in.</p>
+                </div>
+                <div style="background-color: [theme[colours.primary]]; color: [theme[colours.text2]]; width: 100%;">
+                    <p style="padding: 10px; text-align: right; background: [theme[colours.primary]]; color: [theme[colours.text2]]; margin: 0;">&copy; 2026, cCoder</p>
+                </div>
+            </body>
+        </html>
+        """;
     }
 
     private static async Task SeedResourcesAsync(DbContext core)

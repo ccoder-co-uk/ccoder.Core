@@ -9,6 +9,7 @@ using cCoder.Data.Models.Security;
 using cCoder.Security.Data.EF.Interfaces;
 using cCoder.Security.Exposures;
 using cCoder.Security.Objects.Entities;
+using cCoder.Security.Services.Orchestrations.Interfaces;
 using cCoder.AppSecurity.Services.Orchestrations;
 using cCoder.AppSecurity.Brokers;
 using FluentAssertions;
@@ -287,8 +288,9 @@ public sealed partial class FirstTimeSetupTests
             .AnyAsync(found => found.UserId == "admin" && found.RoleId == portalAdminRole.Id);
         hasGlobalPortalAdminLink.Should().BeTrue();
 
-        IAccountManager accountManager = harness.Factory.Services.GetRequiredService<IAccountManager>();
-        Token loginToken = await accountManager.LoginAsync("admin", "Password123!");
+        IAuthenticationOrchestrationService authenticationService =
+            harness.Factory.Services.GetRequiredService<IAuthenticationOrchestrationService>();
+        Token loginToken = await authenticationService.LoginAsync("admin", "Password123!");
         loginToken.Id.Should().NotBeNullOrWhiteSpace();
 
         using HttpResponseMessage tenantsResponse =
@@ -453,7 +455,7 @@ public sealed partial class FirstTimeSetupTests
         await SubmitSetupAsync(harness);
 
         using HttpResponseMessage userResponse =
-            await harness.Client.GetAsync("/Api/Core/User?$filter=Id eq 'Guest'");
+            await harness.Client.GetAsync("/Api/AppSecurity/User?$filter=Id eq 'Guest'");
         string userJson = await userResponse.Content.ReadAsStringAsync();
 
         userResponse.StatusCode.Should().Be(HttpStatusCode.OK, userJson);
@@ -612,8 +614,9 @@ public sealed partial class FirstTimeSetupTests
             string loginProbe;
             try
             {
-                IAccountManager accountManager = harness.Factory.Services.GetRequiredService<IAccountManager>();
-                var token = await accountManager.LoginAsync("admin", "Password123!");
+                IAuthenticationOrchestrationService authenticationService =
+                    harness.Factory.Services.GetRequiredService<IAuthenticationOrchestrationService>();
+                var token = await authenticationService.LoginAsync("admin", "Password123!");
                 loginProbe = $"LoginProbe=OK:{token?.UserName}";
             }
             catch (Exception ex)
@@ -695,8 +698,9 @@ public sealed partial class FirstTimeSetupTests
                 }
                 else
                 {
-                    IAccountManager accountManager = harness.Factory.Services.GetRequiredService<IAccountManager>();
-                    await accountManager.ConfirmRegistrationAsync(confirmationTokenId);
+                    ISSOUserOrchestrationService ssoUserOrchestrationService =
+                        harness.Factory.Services.GetRequiredService<ISSOUserOrchestrationService>();
+                    await ssoUserOrchestrationService.ConfirmRegistration(confirmationTokenId);
                     confirmProbe = "ConfirmProbe=OK";
                 }
             }
@@ -767,7 +771,10 @@ public sealed partial class FirstTimeSetupTests
             };
 
             WebAcceptanceFactory factory = new(settings);
-            AcceptanceDatabaseManager databaseManager = new(factory.Services);
+            AcceptanceDatabaseManager databaseManager = new(
+                factory.Services,
+                settings.CoreConnectionString,
+                settings.SsoConnectionString);
             await databaseManager.ResetDatabasesAsync();
 
             HttpClient client = CreateClient(factory);
@@ -778,8 +785,15 @@ public sealed partial class FirstTimeSetupTests
         public async ValueTask DisposeAsync()
         {
             Client.Dispose();
-            await databaseManager.DropDatabasesAsync();
-            await Factory.DisposeAsync();
+
+            try
+            {
+                await Factory.DisposeAsync();
+            }
+            finally
+            {
+                await databaseManager.DropDatabasesAsync();
+            }
         }
 
         private static string AddDatabaseSuffix(string variableName, string suffix)

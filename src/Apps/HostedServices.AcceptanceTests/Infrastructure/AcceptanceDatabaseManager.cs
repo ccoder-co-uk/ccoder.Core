@@ -7,24 +7,23 @@ using Microsoft.Extensions.DependencyInjection;
 namespace HostedServices.AcceptanceTests.Infrastructure;
 
 internal sealed class AcceptanceDatabaseManager(
-    IServiceProvider services)
+    IServiceProvider services,
+    string coreConnectionString,
+    string ssoConnectionString)
 {
     public Task ResetDatabasesAsync()
     {
-        using IServiceScope scope = services.CreateScope();
-        using var sso = scope.ServiceProvider.GetRequiredService<ISecurityDbContextFactory>()
-            .CreateDbContext(true);
-        using var core = scope.ServiceProvider.GetRequiredService<ICoreContextFactory>()
-            .CreateCoreContext();
-
-        string ssoConnectionString = sso.Database.GetConnectionString();
-        string coreConnectionString = core.Database.GetConnectionString();
-
         EnsureSafeAcceptanceDatabase(ssoConnectionString, "dev-Members");
         EnsureSafeAcceptanceDatabase(coreConnectionString, "dev-Core");
 
         ForceDropDatabase(ssoConnectionString);
         ForceDropDatabase(coreConnectionString);
+
+        using IServiceScope scope = services.CreateScope();
+        using var sso = scope.ServiceProvider.GetRequiredService<ISecurityDbContextFactory>()
+            .CreateDbContext(true);
+        using var core = scope.ServiceProvider.GetRequiredService<ICoreContextFactory>()
+            .CreateCoreContext();
 
         sso.Migrate();
         core.Migrate();
@@ -34,17 +33,14 @@ internal sealed class AcceptanceDatabaseManager(
 
     public Task MigrateDatabasesAsync()
     {
+        EnsureSafeAcceptanceDatabase(ssoConnectionString, "dev-Members");
+        EnsureSafeAcceptanceDatabase(coreConnectionString, "dev-Core");
+
         using IServiceScope scope = services.CreateScope();
         using var sso = scope.ServiceProvider.GetRequiredService<ISecurityDbContextFactory>()
             .CreateDbContext(true);
         using var core = scope.ServiceProvider.GetRequiredService<ICoreContextFactory>()
             .CreateCoreContext();
-
-        string ssoConnectionString = sso.Database.GetConnectionString();
-        string coreConnectionString = core.Database.GetConnectionString();
-
-        EnsureSafeAcceptanceDatabase(ssoConnectionString, "dev-Members");
-        EnsureSafeAcceptanceDatabase(coreConnectionString, "dev-Core");
 
         sso.Migrate();
         core.Migrate();
@@ -54,15 +50,6 @@ internal sealed class AcceptanceDatabaseManager(
 
     public Task DropDatabasesAsync()
     {
-        using IServiceScope scope = services.CreateScope();
-        using var sso = scope.ServiceProvider.GetRequiredService<ISecurityDbContextFactory>()
-            .CreateDbContext(true);
-        using var core = scope.ServiceProvider.GetRequiredService<ICoreContextFactory>()
-            .CreateCoreContext();
-
-        string ssoConnectionString = sso.Database.GetConnectionString();
-        string coreConnectionString = core.Database.GetConnectionString();
-
         EnsureSafeAcceptanceDatabase(ssoConnectionString, "dev-Members");
         EnsureSafeAcceptanceDatabase(coreConnectionString, "dev-Core");
 

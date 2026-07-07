@@ -14,7 +14,6 @@ public sealed partial class SwaggerMiddlewareTests
     [InlineData("/swagger/DocumentManagement/swagger.json")]
     [InlineData("/swagger/Logging/swagger.json")]
     [InlineData("/swagger/Mail/swagger.json")]
-    [InlineData("/swagger/Scheduling/swagger.json")]
     [InlineData("/swagger/Security/swagger.json")]
     [InlineData("/swagger/Workflow/swagger.json")]
     [InlineData("/swagger/v1/swagger.json")]

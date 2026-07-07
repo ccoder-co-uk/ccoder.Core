@@ -4,7 +4,6 @@ using cCoder.DocumentManagement;
 using cCoder.Logging;
 using cCoder.Mail;
 using cCoder.Packaging;
-using cCoder.Scheduling;
 using cCoder.Workflow;
 
 namespace cCoder.Core;
@@ -21,7 +20,6 @@ public static partial class WebApplicationExtensions
         app.StartMailWeb(log);
         app.StartDocumentManagementWeb(log);
         app.UsePackagingExposure(log);
-        app.StartSchedulingWeb(log);
         app.StartWorkflowWeb(log);
         app.StartAppSecurityWeb(log);
         app.StartLoggingWeb(log);
