@@ -14,8 +14,6 @@ public sealed class BaselineAssetCatalog
 
     private readonly Assembly assembly;
     private readonly JsonSerializerSettings settings = ObjectExtensions.GetJSONSettings();
-    private Package[] packages;
-
     public BaselineAssetCatalog()
         : this(typeof(BaselineAssetCatalog).Assembly)
     {
@@ -36,14 +34,14 @@ public sealed class BaselineAssetCatalog
             settings) ?? [];
 
     public Package[] LoadPackages() =>
-        LoadManifestPackages()
+        UIBaseline.Packages
             .Select(ClonePackage)
             .Where(package => package.Items?.Count > 0)
             .ToArray();
 
     public T[] LoadPackageItems<T>(string packageName, string itemType)
     {
-        Package package = LoadManifestPackages().First(found =>
+        Package package = UIBaseline.Packages.First(found =>
             string.Equals(found.Name, packageName, StringComparison.OrdinalIgnoreCase));
 
         return (package.Items ?? [])
@@ -61,39 +59,6 @@ public sealed class BaselineAssetCatalog
             .Select(group => group.First())
             .Select(CloneCommonObject)
             .ToArray();
-
-    private Package[] LoadManifestPackages()
-    {
-        if (packages is not null)
-            return packages;
-
-        PackageDefinition[] definitions =
-            JsonConvert.DeserializeObject<PackageDefinition[]>(LoadText(Path.Combine("Baseline", "BaselinePackages.json")), settings)
-            ?? [];
-
-        packages = definitions.Select(definition =>
-            new Package
-            {
-                Id = Guid.Empty,
-                Name = definition.Name,
-                Description = definition.Description,
-                Category = definition.Category,
-                SourceApi = definition.SourceApi,
-                Items = (definition.Items ?? [])
-                    .Where(item => !string.IsNullOrWhiteSpace(item.Type) && !string.IsNullOrWhiteSpace(item.FileName))
-                    .Select(item => new PackageItem
-                    {
-                        Id = Guid.Empty,
-                        PackageId = Guid.Empty,
-                        Type = item.Type,
-                        Data = LoadText(Path.Combine("Baseline", item.FileName)),
-                    })
-                    .ToArray(),
-            })
-            .ToArray();
-
-        return packages;
-    }
 
     private string LoadText(string relativePath)
     {
@@ -249,23 +214,4 @@ public sealed class BaselineAssetCatalog
                 : [];
     }
 
-    private sealed class PackageDefinition
-    {
-        public string Name { get; set; }
-
-        public string Description { get; set; }
-
-        public string Category { get; set; }
-
-        public string SourceApi { get; set; }
-
-        public BaselinePackageItemDefinition[] Items { get; set; }
-    }
-
-    private sealed class BaselinePackageItemDefinition
-    {
-        public string Type { get; set; }
-
-        public string FileName { get; set; }
-    }
 }

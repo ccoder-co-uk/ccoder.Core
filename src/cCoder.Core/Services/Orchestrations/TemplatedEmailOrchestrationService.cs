@@ -2,10 +2,10 @@ using cCoder.AppSecurity.Brokers;
 using cCoder.ContentManagement.Exposures;
 using cCoder.Core.Services.Foundations.ContentManagement;
 using cCoder.Core.Services.Foundations.Mail;
-using cCoder.Mail.Models;
 using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.Mail;
 using cCoder.Data.Models.Security;
+using cCoder.Mail.Models;
 using cCoder.Mail.Services.Orchestrations;
 using CoreApp = cCoder.Data.Models.CMS.App;
 using ContentTemplate = cCoder.Data.Models.CMS.Template;
@@ -16,7 +16,7 @@ namespace cCoder.Core.Services.Orchestrations;
 public partial class TemplatedEmailOrchestrationService(
     IContentManagementAppService contentManagementAppService,
     ITemplateRenderer templateRenderer,
-    IMailServerOrchestrationService mailServerOrchestrationService,
+    IMailSenderConfigurationOrchestrationService mailSenderOrchestrationService,
     IMailManagerService mailManagerService,
     IAuthorizationBroker authorizationBroker
 ) : ITemplatedEmailOrchestrationService
@@ -29,20 +29,20 @@ public partial class TemplatedEmailOrchestrationService(
         string toEmail,
         string subject,
         string sentByUserId,
-        string mailServerName = "Default"
+        string mailSenderName = "Default"
     )
     {
         ContentTemplate template = app.Templates.FirstOrDefault(candidate => candidate.Name == templateName)
             ?? throw new InvalidOperationException($"Template '{templateName}' was not found.");
 
-        MailServer mailServer = mailServerOrchestrationService
+        MailSender mailSender = mailSenderOrchestrationService
             .GetAll(true)
-            .Where(server => server.AppId == app.Id)
-            .FirstOrDefault(server => server.Name == mailServerName)
-            ?? mailServerOrchestrationService
+            .Where(sender => sender.AppId == app.Id)
+            .FirstOrDefault(sender => sender.Name == mailSenderName)
+            ?? mailSenderOrchestrationService
                 .GetAll(true)
-                .FirstOrDefault(server => server.AppId == app.Id)
-            ?? throw new InvalidOperationException("Mail Server configuration could not be found.");
+                .FirstOrDefault(sender => sender.AppId == app.Id)
+            ?? throw new InvalidOperationException("Mail Sender configuration could not be found.");
 
         string content = templateRenderer.Render(
             app.Id,
@@ -53,12 +53,13 @@ public partial class TemplatedEmailOrchestrationService(
         QueuedEmail email = new()
         {
             AppId = app.Id,
-            MailServerName = mailServer.Name,
+            MailServerName = mailSender.Name,
+            MailSenderId = mailSender.Id,
             To = toEmail,
             Subject = subject,
             Content = content
                 .Replace("[email[subject]]", subject)
-                .Replace("[email[from]]", mailServer.User)
+                .Replace("[email[from]]", mailSender.FromEmail ?? mailSender.User)
                 .Replace("[email[to]]", toEmail),
             IsBodyHtml = true,
             SentByUserId = sentByUserId,

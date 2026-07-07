@@ -7,8 +7,8 @@ using cCoder.Eventing.AzureServiceBus.Models;
 using cCoder.Eventing.Models;
 using cCoder.Logging;
 using cCoder.Mail;
-using cCoder.Scheduling;
 using cCoder.Security;
+using cCoder.Security.Objects.Events;
 using cCoder.Workflow;
 using cCoder.Core.Services.Foundations.Eventing;
 using cCoder.Core.Services.Orchestrations;
@@ -16,7 +16,6 @@ using cCoder.Data.Models.DMS;
 using cCoder.Data.Models.Workflow;
 using AppSecurityAppOrchestrationService = cCoder.AppSecurity.Services.Orchestrations.IAppOrchestrationService;
 using MailEventHandlerService = cCoder.Mail.Services.Foundations.Events.IEventHandlerService;
-using SchedulingEventHandlerService = cCoder.Scheduling.Services.Foundations.Events.IEventHandlerService;
 using CmsApp = cCoder.Data.Models.CMS.App;
 
 namespace cCoder.Core;
@@ -30,10 +29,9 @@ public static partial class WebApplicationExtensions
         app.StartDocumentManagementHostedServices();
         app.StartLoggingHostedServices();
         app.StartMailHostedServices();
-        app.StartSchedulingHostedServices();
         app.StartWorkflowHostedServices();
+        app.UseCoreEventHandlers();
         app.UseMailHostedServiceEventHandlers();
-        app.UseSchedulingHostedServiceEventHandlers();
         app.UseHostedServicesServiceBusEventBridge();
         app.UseAppSecurityHostedServiceUpdateEventHandlers();
         app.UseAppSecurityHostedServiceDeleteEventHandlers();
@@ -43,7 +41,26 @@ public static partial class WebApplicationExtensions
     private static WebApplication UseCoreEventHandlers(this WebApplication app)
     {
         app.ListenToSecurityEvents();
+        app.UseSecurityAccountEmailEventHandlers();
         app.UseServiceBusAppDeleteForwarder();
+        return app;
+    }
+
+    private static WebApplication UseSecurityAccountEmailEventHandlers(this WebApplication app)
+    {
+        using IServiceScope scope = app.Services.CreateScope();
+        IEventHub eventHub = scope.ServiceProvider.GetRequiredService<IEventHub>();
+
+        eventHub.ListenToEvent<SecurityAccountEvent, ISecurityAccountEmailOrchestrationService>(
+            SecurityAccountEventNames.RegistrationCreated,
+            static (service, accountEvent) => service.QueueRegistrationCreatedEmailAsync(accountEvent));
+        eventHub.ListenToEvent<SecurityAccountEvent, ISecurityAccountEmailOrchestrationService>(
+            SecurityAccountEventNames.InvitationCreated,
+            static (service, accountEvent) => service.QueueInvitationCreatedEmailAsync(accountEvent));
+        eventHub.ListenToEvent<SecurityAccountEvent, ISecurityAccountEmailOrchestrationService>(
+            SecurityAccountEventNames.PasswordResetRequested,
+            static (service, accountEvent) => service.QueuePasswordResetRequestedEmailAsync(accountEvent));
+
         return app;
     }
 
@@ -109,17 +126,6 @@ public static partial class WebApplicationExtensions
         IServiceProvider services = scope.ServiceProvider;
 
         foreach (MailEventHandlerService handlers in services.GetServices<MailEventHandlerService>())
-            handlers.ListenToAllEvents();
-
-        return app;
-    }
-
-    private static WebApplication UseSchedulingHostedServiceEventHandlers(this WebApplication app)
-    {
-        using IServiceScope scope = app.Services.CreateScope();
-        IServiceProvider services = scope.ServiceProvider;
-
-        foreach (SchedulingEventHandlerService handlers in services.GetServices<SchedulingEventHandlerService>())
             handlers.ListenToAllEvents();
 
         return app;

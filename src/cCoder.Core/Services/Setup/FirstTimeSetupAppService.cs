@@ -233,34 +233,45 @@ internal sealed class FirstTimeSetupAppService(
                     await PersistComponentsAsync(
                         core,
                         appId,
-                        JsonConvert.DeserializeObject<Component[]>(item.Data) ?? []);
+                        UnpackPackageItem<Component>(item.Data));
                     break;
                 case "Core/Layout":
                     await PersistLayoutsAsync(
                         core,
                         appId,
-                        JsonConvert.DeserializeObject<Layout[]>(item.Data) ?? []);
+                        UnpackPackageItem<Layout>(item.Data));
                     break;
                 case "Core/Page":
                     await PersistPagesAsync(
                         core,
                         appId,
-                        JsonConvert.DeserializeObject<Page[]>(item.Data) ?? []);
+                        UnpackPackageItem<Page>(item.Data));
                     break;
                 case "Core/PageRole":
                     await PersistPageRolesAsync(
                         core,
                         appId,
-                        JsonConvert.DeserializeObject<cCoder.ContentManagement.Models.PageRoleInfo[]>(item.Data) ?? []);
+                        UnpackPackageItem<cCoder.ContentManagement.Models.PageRoleInfo>(item.Data));
                     break;
                 case "Core/Template":
                     await PersistTemplatesAsync(
                         core,
                         appId,
-                        JsonConvert.DeserializeObject<Template[]>(item.Data) ?? []);
+                        UnpackPackageItem<Template>(item.Data));
                     break;
             }
         }
+    }
+
+    private static T[] UnpackPackageItem<T>(string data)
+    {
+        string trimmed = data.TrimStart();
+
+        return trimmed.StartsWith("[", StringComparison.Ordinal)
+            ? JsonConvert.DeserializeObject<T[]>(trimmed) ?? []
+            : JsonConvert.DeserializeObject<T>(trimmed) is T item
+                ? [item]
+                : [];
     }
 
     private static async Task PersistLayoutsAsync(DbContext core, int appId, IEnumerable<Layout> layouts)

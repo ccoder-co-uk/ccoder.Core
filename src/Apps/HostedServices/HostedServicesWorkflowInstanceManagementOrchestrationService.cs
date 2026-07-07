@@ -24,9 +24,8 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
     {
         try
         {
-            await DropOldInstancesAsync(cancellationToken);
-            await RequeueHungExecutingInstancesAsync(cancellationToken);
-            await ExecuteWaitingQueuedInstancesAsync(cancellationToken);
+            await RunInstanceMaintenanceAsync(cancellationToken);
+            await RunQueueInstanceManagementAsync(cancellationToken);
         }
         catch (Exception exception)
         {
@@ -43,6 +42,63 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
     public async ValueTask ExecuteWaitingQueuedInstanceByIdAsync(Guid id)
     {
         await ExecuteInstanceAsync(id);
+    }
+
+    public async Task RunInstanceMaintenanceContinuouslyAsync(CancellationToken cancellationToken = default)
+    {
+        await RunInstanceMaintenanceAsync(cancellationToken);
+
+        using PeriodicTimer timer = new(TimeSpan.FromMinutes(1));
+
+        while (!cancellationToken.IsCancellationRequested
+            && await timer.WaitForNextTickAsync(cancellationToken))
+        {
+            await RunInstanceMaintenanceAsync(cancellationToken);
+        }
+    }
+
+    public async Task RunInstanceMaintenanceAsync(CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            await DropOldInstancesAsync(cancellationToken);
+        }
+        catch (Exception exception)
+        {
+            log.LogError(exception, exception.Message);
+
+            if (exception.InnerException is not null)
+                log.LogError(exception.InnerException, exception.InnerException.Message);
+        }
+    }
+
+    public async Task RunQueueInstanceManagementContinuouslyAsync(CancellationToken cancellationToken = default)
+    {
+        await RunQueueInstanceManagementAsync(cancellationToken);
+
+        using PeriodicTimer timer = new(TimeSpan.FromMinutes(1));
+
+        while (!cancellationToken.IsCancellationRequested
+            && await timer.WaitForNextTickAsync(cancellationToken))
+        {
+            await RunQueueInstanceManagementAsync(cancellationToken);
+        }
+    }
+
+    public async Task RunQueueInstanceManagementAsync(CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            await ExecuteWaitingQueuedInstancesAsync(cancellationToken);
+            await RequeueHungExecutingInstancesAsync(cancellationToken);
+        }
+        catch (Exception exception)
+        {
+            log.LogError(exception, exception.Message);
+
+            if (exception.InnerException is not null)
+                log.LogError(exception.InnerException, exception.InnerException.Message);
+        }
     }
 
     private async ValueTask DropOldInstancesAsync(CancellationToken cancellationToken)
@@ -94,8 +150,8 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
 
         try
         {
-            IAccountManager accountManager = serviceProvider.GetRequiredService<IAccountManager>();
-            Token token = await accountManager.IssueTokenAsync(dbInstance.Caller);
+            ITokenManager tokenManager = serviceProvider.GetRequiredService<ITokenManager>();
+            Token token = await tokenManager.IssueTokenAsync(dbInstance.Caller, TokenUse.WorkflowExecution);
 
             WorkflowRequest request = new()
             {

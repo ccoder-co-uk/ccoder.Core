@@ -303,6 +303,7 @@ public class PackageManagerController(
     {
         PageRolePackageItem[] items = pageRoleItems
             .SelectMany(item => DeserializePackageItems<PageRolePackageItem>(item.Data))
+            .Where(item => !string.IsNullOrWhiteSpace(item.Path) && !string.IsNullOrWhiteSpace(item.Role))
             .ToArray();
 
         if (items.Length == 0)
@@ -310,10 +311,15 @@ public class PackageManagerController(
 
         await using DbContext core = coreContextFactory.CreateCoreContext();
 
-        Dictionary<string, int> pageIdsByPath = await core.Set<Page>()
+        Page[] existingPages = await core.Set<Page>()
             .IgnoreQueryFilters()
             .Where(found => found.AppId == appId)
-            .ToDictionaryAsync(found => NormalizePagePath(found.Path), found => found.Id, StringComparer.OrdinalIgnoreCase);
+            .ToArrayAsync();
+
+        Dictionary<string, int> pageIdsByPath = existingPages
+            .Where(found => !string.IsNullOrWhiteSpace(found.Path))
+            .GroupBy(found => NormalizePagePath(found.Path), StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.First().Id, StringComparer.OrdinalIgnoreCase);
 
         Dictionary<string, Guid> roleIdsByName = await core.Set<Role>()
             .IgnoreQueryFilters()
@@ -388,7 +394,8 @@ public class PackageManagerController(
 
         Dictionary<string, Folder> foldersByPath = existingFolders
             .Where(found => !string.IsNullOrWhiteSpace(found.Path))
-            .ToDictionary(found => NormalizeFolderPath(found.Path), StringComparer.OrdinalIgnoreCase);
+            .GroupBy(found => NormalizeFolderPath(found.Path), StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.First(), StringComparer.OrdinalIgnoreCase);
 
         string[] paths = items
             .Select(item => NormalizeFolderPath(item.Path))

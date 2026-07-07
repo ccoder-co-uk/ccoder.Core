@@ -18,6 +18,7 @@ internal sealed class WebAcceptanceFactory : WebApplicationFactory<Program>
     private readonly string originalHttpEventHubUrl;
     private readonly string originalHostedServicesUrl;
     private readonly string originalExternalEventingSetting;
+    private readonly string originalAggregateDomainsSetting;
 
     public WebAcceptanceFactory(AcceptanceSettings settings)
     {
@@ -25,10 +26,12 @@ internal sealed class WebAcceptanceFactory : WebApplicationFactory<Program>
         originalHttpEventHubUrl = Environment.GetEnvironmentVariable("Eventing__Http__HubUrl");
         originalHostedServicesUrl = Environment.GetEnvironmentVariable("Services__HostedServices");
         originalExternalEventingSetting = Environment.GetEnvironmentVariable("Settings__enableExternalEventing");
+        originalAggregateDomainsSetting = Environment.GetEnvironmentVariable("Settings__AggregateDomains");
 
         Environment.SetEnvironmentVariable("Eventing__Http__HubUrl", null);
         Environment.SetEnvironmentVariable("Services__HostedServices", null);
         Environment.SetEnvironmentVariable("Settings__enableExternalEventing", "false");
+        Environment.SetEnvironmentVariable("Settings__AggregateDomains", settings.AggregateDomains.ToString());
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -41,6 +44,7 @@ internal sealed class WebAcceptanceFactory : WebApplicationFactory<Program>
                 new KeyValuePair<string, string>("ConnectionStrings:Core", settings.CoreConnectionString),
                 new KeyValuePair<string, string>("ConnectionStrings:SSO", settings.SsoConnectionString),
                 new KeyValuePair<string, string>("Settings:DecryptionKey", settings.DecryptionKey),
+                new KeyValuePair<string, string>("Settings:AggregateDomains", settings.AggregateDomains.ToString()),
                 new KeyValuePair<string, string>("Settings:enableExternalEventing", "false"),
                 new KeyValuePair<string, string>("Eventing:Http:HubUrl", string.Empty),
             ]);
@@ -61,6 +65,7 @@ internal sealed class WebAcceptanceFactory : WebApplicationFactory<Program>
                     Settings = new Dictionary<string, string>
                     {
                         ["DecryptionKey"] = settings.DecryptionKey,
+                        ["AggregateDomains"] = settings.AggregateDomains.ToString(),
                         ["enableExternalEventing"] = "false",
                     },
                     Services = new Dictionary<string, string>(),
@@ -86,6 +91,7 @@ internal sealed class WebAcceptanceFactory : WebApplicationFactory<Program>
         Environment.SetEnvironmentVariable("Eventing__Http__HubUrl", originalHttpEventHubUrl);
         Environment.SetEnvironmentVariable("Services__HostedServices", originalHostedServicesUrl);
         Environment.SetEnvironmentVariable("Settings__enableExternalEventing", originalExternalEventingSetting);
+        Environment.SetEnvironmentVariable("Settings__AggregateDomains", originalAggregateDomainsSetting);
         base.Dispose(disposing);
     }
 }

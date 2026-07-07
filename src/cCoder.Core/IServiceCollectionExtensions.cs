@@ -2,6 +2,7 @@ using cCoder.Core.Exposures.Logging;
 using cCoder.Core.Models;
 using cCoder.Eventing;
 using cCoder.Eventing.Models;
+using cCoder.Security.Objects.Events;
 using Microsoft.OpenApi;
 
 namespace cCoder.Core;
@@ -80,6 +81,7 @@ public static partial class IServiceCollectionExtensions
             configuration.EventProviders =
                 (eventProviders ?? []).Where(provider => provider is not null).ToArray();
         });
+        services.AddEventingForType<SecurityAccountEvent>();
     }
 
     private static void AddCoreApi(

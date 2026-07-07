@@ -14,7 +14,7 @@ public interface ITemplatedEmailOrchestrationService
         string toEmail,
         string subject,
         string sentByUserId,
-        string mailServerName = "Default"
+        string mailSenderName = "Default"
     );
 
     ValueTask<QueuedEmail> QueueAsync(TemplatedEmailDetails details);

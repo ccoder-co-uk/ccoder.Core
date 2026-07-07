@@ -7,12 +7,21 @@ public sealed class CoreConfiguration
     public string CoreConnectionString { get; set; } = string.Empty;
     public string SecurityConnectionString { get; set; } = string.Empty;
     public string SecurityRootPath { get; set; } = "Api/Security";
+    public bool AggregateDomains { get; set; }
     public string DecryptionKey { get; set; } = string.Empty;
     public string CacheSource { get; set; } = string.Empty;
     public int? CacheSourceAppId { get; set; }
     public int? CacheExpiry { get; set; }
     public int? SslPort { get; set; }
     public string WorkflowServiceUrl { get; set; } = string.Empty;
+    public string MailGraphTenantId { get; set; } = string.Empty;
+    public string MailGraphClientId { get; set; } = string.Empty;
+    public string MailGraphClientSecret { get; set; } = string.Empty;
+    public string MailGraphBaseUrl { get; set; } = string.Empty;
+    public string MailGraphLoginBaseUrl { get; set; } = string.Empty;
+    public string MailGraphReceiveUser { get; set; } = string.Empty;
+    public string MailDefaultSenderProviderName { get; set; } = string.Empty;
+    public string MailDefaultReceiverProviderName { get; set; } = string.Empty;
     public string EventProviderType { get; set; } = "Http";
     public string HttpEventHubUrl { get; set; } = string.Empty;
     public string ServiceBusConnectionString { get; set; } = string.Empty;

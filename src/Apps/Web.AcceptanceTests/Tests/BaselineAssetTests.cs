@@ -72,6 +72,10 @@ public sealed class BaselineAssetTests
             "RolePrivManagement",
             "MailManagement",
             "FolderManagement",
+            "AcceptInvite",
+            "InviteUser",
+            "PendingUserInvites",
+            "UserInvitations",
         ]);
     }
 
@@ -83,26 +87,27 @@ public sealed class BaselineAssetTests
 
         Component cms = components.Single(component => component.Name == "CMS");
         cms.Script.Should().Contain("\"Name\": \"Core\"");
-        cms.Script.Should().Contain("[meta[Core/Page]]");
-        cms.Script.Should().Contain("[meta[Core/Layout]]");
-        cms.Script.Should().NotContain("[meta[ContentManagement/Page]]");
+        cms.Script.Should().Contain("[meta[ContentManagement/Page]]");
+        cms.Script.Should().Contain("[meta[ContentManagement/Layout]]");
+        cms.Script.Should().NotContain("[meta[Core/Page]]");
 
         Component componentManagement = components.Single(component => component.Name == "ComponentManagement");
         componentManagement.Script.Should().Contain("\"Name\": \"ContentManagement\"");
-        componentManagement.Script.Should().Contain("[meta[Core/Component]]");
-        componentManagement.Script.Should().NotContain("[meta[ContentManagement/Component]]");
+        componentManagement.Script.Should().Contain("[meta[ContentManagement/Component]]");
+        componentManagement.Script.Should().NotContain("[meta[Core/Component]]");
 
         Component workflowManagement = components.Single(component => component.Name == "WorkflowManagement");
         workflowManagement.Script.Should().Contain("\"Name\": \"Workflow\"");
-        workflowManagement.Script.Should().Contain("[meta[Core/FlowDefinition]]");
-        workflowManagement.Script.Should().NotContain("[meta[Workflow/FlowDefinition]]");
+        workflowManagement.Script.Should().Contain("[meta[Workflow/FlowDefinition]]");
+        workflowManagement.Script.Should().NotContain("[meta[Core/FlowDefinition]]");
 
         Component scheduling = components.Single(component => component.Name == "Scheduling");
         scheduling.Script.Should().Contain("\"Name\": \"Core\"");
-        scheduling.Script.Should().Contain("[meta[Core/ScheduledTask]]");
-        scheduling.Script.Should().Contain("[meta[Core/FlowDefinition]]");
+        scheduling.Script.Should().Contain("[meta[Workflow/ScheduledTask]]");
+        scheduling.Script.Should().Contain("[meta[Workflow/FlowDefinition]]");
+        scheduling.Script.Should().NotContain("[meta[Core/ScheduledTask]]");
+        scheduling.Script.Should().NotContain("[meta[Core/FlowDefinition]]");
         scheduling.Script.Should().NotContain("[meta[Scheduling/ScheduledTask]]");
-        scheduling.Script.Should().NotContain("[meta[Workflow/FlowDefinition]]");
 
         Component logStream = components.Single(component => component.Name == "LogStream");
         logStream.Script.Should().Contain("session.apiRoot + \"Hubs/Logs\"");
@@ -110,26 +115,48 @@ public sealed class BaselineAssetTests
 
         Component roleManagement = components.Single(component => component.Name == "RoleManagement");
         roleManagement.Script.Should().Contain("\"Name\": \"AppSecurity\"");
-        roleManagement.Script.Should().Contain("[meta[Core/Role]]");
-        roleManagement.Script.Should().NotContain("[meta[AppSecurity/Role]]");
+        roleManagement.Script.Should().Contain("[meta[AppSecurity/Role]]");
+        roleManagement.Script.Should().NotContain("[meta[Core/Role]]");
 
         Component commonCache = components.Single(component => component.Name == "CommonCacheEndpoint");
         commonCache.Script.Should().Contain("\"Name\": \"Core\"");
-        commonCache.Script.Should().Contain("[meta[Core/Component]]");
+        commonCache.Script.Should().Contain("[meta[ContentManagement/Component]]");
         commonCache.Script.Should().Contain(".component[name=CommonCacheEndpoint]");
         commonCache.Script.Should().NotContain("\"Name\": \"CommonCache\"");
-        commonCache.Script.Should().NotContain("[meta[ContentManagement/Component]]");
+        commonCache.Script.Should().NotContain("[meta[Core/Component]]");
 
         Component commonCacheComponents = components.Single(component => component.Name == "CommonCacheComponents");
-        commonCacheComponents.Script.Should().Contain("type=Core/Component");
-        commonCacheComponents.Script.Should().NotContain("type=ContentManagement/Component");
+        commonCacheComponents.Script.Should().Contain("type=ContentManagement/Component");
+        commonCacheComponents.Script.Should().NotContain("type=Core/Component");
 
         Component appManagement = components.Single(component => component.Name == "AppManagement");
         appManagement.Content.Should().NotContain("TestimonialManagement");
         appManagement.Content.Should().NotContain("testimonialmanagement");
 
+        Component register = components.Single(component => component.Name == "Register");
+        register.Script.Should().Contain("Account/Register");
+        register.Script.Should().NotContain("api.register");
+        register.Script.Should().NotContain("api.login(loginModel.Email");
+
+        Component acceptInvite = components.Single(component => component.Name == "AcceptInvite");
+        acceptInvite.Key.Should().Be("Account");
+        acceptInvite.ResourceKey.Should().Be("Account");
+        acceptInvite.Script.Should().Contain("Account/AcceptInvite");
+        acceptInvite.Script.Should().NotContain("Security/SSOUser/AcceptInvite");
+        acceptInvite.Script.Should().NotContain("B2B");
+
+        Component inviteUser = components.Single(component => component.Name == "InviteUser");
+        inviteUser.Key.Should().Be("Account Management");
+        inviteUser.ResourceKey.Should().Be("Account");
+        inviteUser.Script.Should().Contain("Account/Invite");
+        inviteUser.Script.Should().NotContain("B2B");
+
+        Component pendingUserInvites = components.Single(component => component.Name == "PendingUserInvites");
+        pendingUserInvites.Script.Should().Contain("Account/ResendInvite");
+        pendingUserInvites.Script.Should().NotContain("B2B");
+
         Component detailedNav = components.Single(component => component.Name == "DetailedNav");
-        detailedNav.Script.Should().Contain("Core/Page?$filter=AppId eq ");
+        detailedNav.Script.Should().Contain("ContentManagement/Page?$filter=AppId eq ");
 
         Component sideNav = components.Single(component => component.Name == "Sidenav");
         sideNav.Content.Should().Contain("documentationTree");
@@ -144,11 +171,8 @@ public sealed class BaselineAssetTests
             .ToArray();
 
         metadataReferences.Should().NotContain(reference =>
-            reference.StartsWith("ContentManagement/", StringComparison.OrdinalIgnoreCase)
-            || reference.StartsWith("AppSecurity/", StringComparison.OrdinalIgnoreCase)
-            || reference.StartsWith("Scheduling/", StringComparison.OrdinalIgnoreCase)
-            || string.Equals(reference, "Workflow/FlowDefinition", StringComparison.OrdinalIgnoreCase)
-            || string.Equals(reference, "Workflow/FlowInstanceData", StringComparison.OrdinalIgnoreCase));
+            reference.StartsWith("Core/", StringComparison.OrdinalIgnoreCase)
+            || reference.StartsWith("Scheduling/", StringComparison.OrdinalIgnoreCase));
     }
 
     [Fact]
@@ -212,7 +236,7 @@ public sealed class BaselineAssetTests
         string[] paths = catalog.LoadPackages()
             .SelectMany(package => package.Items ?? [])
             .Where(item => string.Equals(item.Type, "Core/FolderRole", StringComparison.OrdinalIgnoreCase))
-            .SelectMany(item => JArray.Parse(item.Data).OfType<JObject>())
+            .SelectMany(item => ParsePackageItemObjects(item.Data))
             .Select(role => role.Value<string>("Path"))
             .Where(path => !string.IsNullOrWhiteSpace(path))
             .ToArray();
@@ -228,6 +252,17 @@ public sealed class BaselineAssetTests
         paths.Should().NotContain(path =>
             string.Equals(path, "documentation", StringComparison.OrdinalIgnoreCase)
             || path.StartsWith("documentation/", StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static IEnumerable<JObject> ParsePackageItemObjects(string data)
+    {
+        JToken token = JToken.Parse(data);
+
+        return token is JArray array
+            ? array.OfType<JObject>()
+            : token is JObject item
+                ? [item]
+                : [];
     }
 
     [Fact]
@@ -247,6 +282,17 @@ public sealed class BaselineAssetTests
             !string.Equals(script.Key, "B2B", StringComparison.OrdinalIgnoreCase));
         scripts.Should().OnlyContain(script =>
             !string.IsNullOrWhiteSpace(script.Content));
+
+        Script migrateApp = scripts.Single(script => script.Name == "MigrateApp");
+        migrateApp.Content.Should().Contain("ContentManagement/App(");
+        migrateApp.Content.Should().Contain("ContentManagement/App?");
+        migrateApp.Content.Should().Contain("Packaging/Package/ImportThis");
+        migrateApp.Content.Should().Contain("DocumentManagement/Folder?");
+        migrateApp.Content.Should().Contain("DocumentManagement/File?");
+        migrateApp.Content.Should().NotContain("Core/App");
+        migrateApp.Content.Should().NotContain("Core/Package");
+        migrateApp.Content.Should().NotContain("Core/Folder");
+        migrateApp.Content.Should().NotContain("Core/File");
     }
 
     [Fact]
@@ -263,9 +309,18 @@ public sealed class BaselineAssetTests
             "Admin/AshPortalAdmin",
         ]);
 
-        pages.Where(page => page.Path is "Login" or "ResetPassword" or "Admin/WorkflowDesigner")
+        pages.Where(page => page.Path is "Login" or "ResetPassword" or "AcceptInvite" or "Admin/WorkflowDesigner")
             .Should()
             .OnlyContain(page => !page.ShowOnMenus);
+
+        Page acceptInvite = pages.Single(page => page.Path == "AcceptInvite");
+        acceptInvite.Contents.Should().Contain(content =>
+            string.Equals(content.Html, "[component[AcceptInvite]]", StringComparison.OrdinalIgnoreCase));
+
+        Page userInvitations = pages.Single(page => page.Path == "Admin/UserInvitations");
+        userInvitations.ShowOnMenus.Should().BeTrue();
+        userInvitations.Contents.Should().Contain(content =>
+            string.Equals(content.Html, "[component[UserInvitations]]", StringComparison.OrdinalIgnoreCase));
 
         pages.Single(page => page.Path == string.Empty).ShowOnMenus.Should().BeTrue();
 
