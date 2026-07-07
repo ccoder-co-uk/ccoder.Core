@@ -8,8 +8,8 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="cCoder.Data" Version="2026.7.3.2151" />
-    <PackageReference Include="cCoder.Workflow.Activities" Version="2026.7.7.1435" />
-    <PackageReference Include="cCoder.Workflow.Engine" Version="2026.7.7.1435" />
+    <PackageReference Include="cCoder.Workflow.Activities" Version="2026.7.7.2007" />
+    <PackageReference Include="cCoder.Workflow.Engine" Version="2026.7.7.2007" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="2.52.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.3.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http.AspNetCore" Version="2.1.0" />

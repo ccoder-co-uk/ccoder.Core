@@ -83,6 +83,7 @@ internal sealed class FirstTimeSetupAppService(
             appOrchestrationService,
             cancellationToken);
 
+        await EnsureDefaultAppRolesAsync(app.Id, firstAdminUserId, cancellationToken);
         await EnsureBootstrapAdminMembershipsAsync(app.Id, firstAdminUserId, cancellationToken);
         await PersistBaselineFoldersAsync(app.Id, packages, cancellationToken);
         await PersistBaselineDmsAssetsAsync(app.Id, firstAdminUserId, cancellationToken);
@@ -177,6 +178,133 @@ internal sealed class FirstTimeSetupAppService(
 
         await core.SaveChangesAsync(cancellationToken);
     }
+
+    private async Task EnsureDefaultAppRolesAsync(
+        int appId,
+        string firstAdminUserId,
+        CancellationToken cancellationToken)
+    {
+        await using DbContext core = coreContextFactory.CreateCoreContext();
+
+        Privilege[] privileges = await core.Set<Privilege>()
+            .IgnoreQueryFilters()
+            .ToArrayAsync(cancellationToken);
+
+        string[] administratorPrivileges =
+        [
+            .. privileges
+                .Where(privilege => privilege.Id != "app_create")
+                .Select(privilege => privilege.Id)
+        ];
+
+        string[] userPrivileges =
+        [
+            .. privileges
+                .Where(privilege =>
+                    string.Equals(privilege.Operation, "Read", StringComparison.OrdinalIgnoreCase)
+                    && !IsWorkflowType(privilege.Type))
+                .Select(privilege => privilege.Id)
+        ];
+
+        Role administrators = await EnsureRoleAsync(
+            core,
+            appId,
+            "Administrators",
+            administratorPrivileges,
+            cancellationToken);
+
+        Role users = await EnsureRoleAsync(
+            core,
+            appId,
+            "Users",
+            userPrivileges,
+            cancellationToken);
+
+        Role guests = await EnsureRoleAsync(
+            core,
+            appId,
+            "Guests",
+            userPrivileges,
+            cancellationToken);
+
+        await EnsureUserRoleAsync(core, administrators.Id, firstAdminUserId, cancellationToken);
+        await EnsureUserRoleAsync(core, users.Id, firstAdminUserId, cancellationToken);
+        await EnsureUserRoleAsync(core, guests.Id, "Guest", cancellationToken);
+        await core.SaveChangesAsync(cancellationToken);
+    }
+
+    private static async Task<Role> EnsureRoleAsync(
+        DbContext core,
+        int appId,
+        string name,
+        IEnumerable<string> privileges,
+        CancellationToken cancellationToken)
+    {
+        Role role = await core.Set<Role>()
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(
+                found => found.AppId == appId && found.Name == name,
+                cancellationToken);
+
+        if (role is null)
+        {
+            role = new Role
+            {
+                Id = Guid.NewGuid(),
+                AppId = appId,
+                Name = name,
+                Privs = string.Empty
+            };
+
+            await core.Set<Role>().AddAsync(role, cancellationToken);
+        }
+
+        role.Privs = JoinPrivileges(role.Privs, privileges);
+        return role;
+    }
+
+    private static async Task EnsureUserRoleAsync(
+        DbContext core,
+        Guid roleId,
+        string userId,
+        CancellationToken cancellationToken)
+    {
+        bool exists = await core.Set<UserRole>()
+            .IgnoreQueryFilters()
+            .AnyAsync(
+                userRole => userRole.RoleId == roleId && userRole.UserId == userId,
+                cancellationToken);
+
+        if (exists)
+            return;
+
+        await core.Set<UserRole>().AddAsync(
+            new UserRole
+            {
+                RoleId = roleId,
+                UserId = userId
+            },
+            cancellationToken);
+    }
+
+    private static string JoinPrivileges(
+        string existingPrivileges,
+        IEnumerable<string> requiredPrivileges)
+    {
+        HashSet<string> privileges = new(
+            (existingPrivileges ?? string.Empty)
+                .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries),
+            StringComparer.OrdinalIgnoreCase);
+
+        foreach (string privilege in requiredPrivileges)
+            privileges.Add(privilege);
+
+        return string.Join(',', privileges.OrderBy(privilege => privilege, StringComparer.OrdinalIgnoreCase));
+    }
+
+    private static bool IsWorkflowType(string type) =>
+        type.StartsWith("Flow", StringComparison.OrdinalIgnoreCase)
+        || type.StartsWith("Workflow", StringComparison.OrdinalIgnoreCase);
 
     private async Task ImportBaselinePackagesAsync(int appId, IEnumerable<Package> packages)
     {

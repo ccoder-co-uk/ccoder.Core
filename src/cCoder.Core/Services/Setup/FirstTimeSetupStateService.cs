@@ -33,27 +33,6 @@ internal sealed class FirstTimeSetupStateService(
             if (!hasApp)
                 return false;
 
-            bool hasRootPage = await core.Set<Page>()
-                .IgnoreQueryFilters()
-                .AnyAsync(page => page.Path == string.Empty, cancellationToken);
-
-            if (!hasRootPage)
-                return false;
-
-            bool hasCommonObjects = await core.Set<CommonObject>()
-                .IgnoreQueryFilters()
-                .AnyAsync(cancellationToken);
-
-            if (!hasCommonObjects)
-                return false;
-
-            bool hasFiles = await core.Set<cCoder.Data.Models.DMS.File>()
-                .IgnoreQueryFilters()
-                .AnyAsync(cancellationToken);
-
-            if (!hasFiles)
-                return false;
-
             return await sso.Set<Tenant>()
                 .IgnoreQueryFilters()
                 .AnyAsync(cancellationToken);
