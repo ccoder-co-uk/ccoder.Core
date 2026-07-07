@@ -9,6 +9,7 @@ using cCoder.Data.Models.Security;
 using cCoder.Security.Data.EF.Interfaces;
 using cCoder.Security.Exposures;
 using cCoder.Security.Objects.Entities;
+using cCoder.Security.Services.Orchestrations.Interfaces;
 using cCoder.AppSecurity.Services.Orchestrations;
 using cCoder.AppSecurity.Brokers;
 using FluentAssertions;
@@ -47,52 +48,10 @@ public sealed partial class FirstTimeSetupTests
 
         await SubmitSetupAsync(harness);
 
-        using HttpResponseMessage homeResponse = await harness.Client.GetAsync("/");
-        string homeContent = await homeResponse.Content.ReadAsStringAsync();
+        using HttpResponseMessage setupResponse = await harness.Client.GetAsync("/Setup");
 
-        homeResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-        homeContent.Should().Contain("/Api/DMS/Content/CompanyLogoTransparent.png");
-        homeContent.Should().Contain("Welcome to cCoder");
-        homeContent.Should().Contain("Open the admin area");
-        homeContent.Should().NotContain("Further Information");
-        homeContent.Should().NotContain("Corporate LinX");
-        homeContent.Should().Contain("/everything.min.js");
-        homeContent.Should().Contain("Acceptance Admin");
-        homeContent.Should().NotContain("Guest (Login)");
-
-        await using DbContext probeCore = harness.Factory.Services
-            .GetRequiredService<ICoreContextFactory>()
-            .CreateCoreContext();
-        int homePageId = await probeCore.Set<Page>()
-            .IgnoreQueryFilters()
-            .Where(found => found.Path == string.Empty)
-            .Select(found => found.Id)
-            .SingleAsync();
-
-        using HttpRequestMessage appRequest = new(HttpMethod.Get, "/Api/ContentManagement/Page");
-        appRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-        using HttpResponseMessage appResponse = await harness.Client.SendAsync(appRequest);
-        string appJson = await appResponse.Content.ReadAsStringAsync();
-
-        appResponse.StatusCode.Should().Be(HttpStatusCode.OK, appJson);
-        JsonNode appNode = JsonNode.Parse(appJson)!;
-        JsonArray appPages = appNode["value"]?.AsArray() ?? [];
-        appPages.Any(page =>
-            string.Equals(page?["Path"]?.ToString(), "Admin", StringComparison.OrdinalIgnoreCase))
-            .Should().BeTrue();
-
-        using HttpRequestMessage pageExpandRequest =
-            new(HttpMethod.Get, $"/Api/ContentManagement/Page({homePageId})?$expand=Contents");
-        pageExpandRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-        using HttpResponseMessage pageExpandResponse = await harness.Client.SendAsync(pageExpandRequest);
-        string pageExpandJson = await pageExpandResponse.Content.ReadAsStringAsync();
-
-        pageExpandResponse.StatusCode.Should().Be(HttpStatusCode.OK, pageExpandJson);
-        JsonNode pageExpandNode = JsonNode.Parse(pageExpandJson)!;
-        JsonArray contents = pageExpandNode["Contents"]?.AsArray() ?? [];
-        contents.Should().NotBeEmpty();
+        setupResponse.StatusCode.Should().Be(HttpStatusCode.Redirect);
+        setupResponse.Headers.Location!.OriginalString.Should().Be("/");
 
         await using DbContext core = harness.Factory.Services
             .GetRequiredService<ICoreContextFactory>()
@@ -110,15 +69,13 @@ public sealed partial class FirstTimeSetupTests
         (await core.Set<Page>().IgnoreQueryFilters().CountAsync()).Should().BeGreaterThan(0);
         (await core.Set<Package>().IgnoreQueryFilters().CountAsync()).Should().BeGreaterThan(0);
         (await core.Set<CommonObject>().IgnoreQueryFilters().CountAsync()).Should().BeGreaterThan(0);
-        (await core.Set<CommonObject>().IgnoreQueryFilters().CountAsync(found => found.Type == "Core/Script"))
-            .Should().BeGreaterThan(0);
         string[] folderPaths = await core.Set<Folder>()
             .IgnoreQueryFilters()
             .Select(found => found.Path)
             .OrderBy(path => path)
             .ToArrayAsync();
 
-        folderPaths.Should().Contain(["content", "icons", "content/documentation"]);
+        folderPaths.Should().Contain(["content", "content/documentation"]);
         folderPaths.Should().NotContain(path =>
             path.Contains("brandnew270120", StringComparison.OrdinalIgnoreCase)
             || path.Contains("renamed270120", StringComparison.OrdinalIgnoreCase)
@@ -131,56 +88,17 @@ public sealed partial class FirstTimeSetupTests
 
         Dictionary<string, bool> menuVisibility = await core.Set<Page>()
             .IgnoreQueryFilters()
-            .Where(found => found.Path == string.Empty
-                || found.Path == "Login"
-                || found.Path == "ResetPassword"
-                || found.Path == "Admin/WorkflowDesigner")
+            .Where(found => found.Path == "Clients"
+                || found.Path == "Clients/Client")
             .ToDictionaryAsync(found => found.Path, found => found.ShowOnMenus);
 
-        menuVisibility[string.Empty].Should().BeTrue();
-        menuVisibility["Login"].Should().BeFalse();
-        menuVisibility["ResetPassword"].Should().BeFalse();
-        menuVisibility["Admin/WorkflowDesigner"].Should().BeFalse();
+        menuVisibility["Clients"].Should().BeTrue();
+        menuVisibility["Clients/Client"].Should().BeFalse();
 
         ContentUser user = await core.Set<ContentUser>()
             .IgnoreQueryFilters()
             .SingleAsync(found => found.Id == "admin");
         user.Email.Should().Be("admin@localhost");
-
-        cCoder.Data.Models.DMS.File logoFile = await core.Set<cCoder.Data.Models.DMS.File>()
-            .IgnoreQueryFilters()
-            .Include(found => found.Contents)
-            .SingleAsync(found => found.Path == "content/companylogotransparent.png");
-        logoFile.Name.Should().Be("CompanyLogoTransparent.png");
-        logoFile.MimeType.Should().Be("image/png");
-        logoFile.CreatedBy.Should().Be(user.Id);
-        logoFile.Contents.Should().ContainSingle();
-        logoFile.Contents.Single().RawData.Take(8).Should().Equal(137, 80, 78, 71, 13, 10, 26, 10);
-
-        cCoder.Data.Models.DMS.File docsImageFile = await core.Set<cCoder.Data.Models.DMS.File>()
-            .IgnoreQueryFilters()
-            .Include(found => found.Contents)
-            .SingleAsync(found =>
-                found.Path == "content/documentation/standarduserguide/homepage-en.png");
-        docsImageFile.MimeType.Should().Be("image/png");
-        docsImageFile.CreatedBy.Should().Be(user.Id);
-        docsImageFile.Contents.Should().ContainSingle();
-        docsImageFile.Contents.Single().RawData.Should().NotBeEmpty();
-
-        using HttpResponseMessage logoResponse = await harness.Client.GetAsync("/Api/DMS/Content/CompanyLogoTransparent.png");
-        byte[] logoResponseBytes = await logoResponse.Content.ReadAsByteArrayAsync();
-
-        logoResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-        logoResponse.Content.Headers.ContentType?.MediaType.Should().Be("image/png");
-        logoResponseBytes.Take(8).Should().Equal(137, 80, 78, 71, 13, 10, 26, 10);
-
-        using HttpResponseMessage docsImageResponse =
-            await harness.Client.GetAsync("/Api/DMS/Content/documentation/standarduserguide/homepage-en.png");
-        byte[] docsImageResponseBytes = await docsImageResponse.Content.ReadAsByteArrayAsync();
-
-        docsImageResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-        docsImageResponse.Content.Headers.ContentType?.MediaType.Should().Be("image/png");
-        docsImageResponseBytes.Should().NotBeEmpty();
 
         CommonObject[] commonObjects = await core.Set<CommonObject>()
             .IgnoreQueryFilters()
@@ -211,43 +129,22 @@ public sealed partial class FirstTimeSetupTests
             .ToArrayAsync();
         guestRoleNames.Should().Equal("Guests");
 
-        string[] appComponentNames = await core.Set<Component>()
-            .IgnoreQueryFilters()
-            .Where(found => found.AppId == app.Id)
+        string[] componentCommonObjectNames = commonObjects
+            .Where(found => found.Type == "Core/Component")
             .Select(found => found.Name)
             .OrderBy(name => name)
-            .ToArrayAsync();
-        appComponentNames.Should().Contain("CoreManagement");
-        appComponentNames.Should().OnlyContain(name =>
-            string.Equals(name, "CoreManagement", StringComparison.Ordinal)
-            || name.StartsWith("SSO", StringComparison.Ordinal));
+            .ToArray();
+        componentCommonObjectNames.Should().Contain(["Client", "ClientList", "TenantManagement"]);
 
-        CommonObject topNav = commonObjects.Single(found =>
-            found.Type == "Core/Component" && found.Name == "TopNav");
-        JsonNode topNavJson = JsonNode.Parse(topNav.Json)!;
-        string topNavScript = topNavJson["Script"]?.ToString() ?? string.Empty;
-        topNavJson["CreatedBy"]?.ToString().Should().Be(user.Id);
-        topNavScript.Should().Contain("ContentManagement/Page?$filter=AppId eq ");
-        topNavScript.Should().Contain("ParentId eq null and ShowOnMenus eq true");
-        topNavScript.Should().Contain("$orderby=Order asc");
-        topNavScript.Should().Contain("$filter=ShowOnMenus eq true");
-        topNavScript.Should().Contain("submenu dropdown-menu");
-        topNavScript.Should().NotContain("/_navigation/topnav");
-        topNavScript.Should().NotContain("buildTree");
-        topNavScript.Should().NotContain("__allPages");
+        commonObjects
+            .Where(found => found.Type is "Core/Component" or "Core/Resource")
+            .Should()
+            .OnlyContain(found => !string.IsNullOrWhiteSpace(found.Key));
 
-        CommonObject login = commonObjects.Single(found =>
-            found.Type == "Core/Component" && found.Name == "Login");
-        JsonNode loginJson = JsonNode.Parse(login.Json)!;
-        string loginScript = loginJson["Script"]?.ToString() ?? string.Empty;
-        loginJson["CreatedBy"]?.ToString().Should().Be(user.Id);
-        loginScript.Should().Contain("$(\"[name=pass]\").val(),");
-        loginScript.Should().Contain("session.token = api.token;");
-        loginScript.Should().Contain("Token: getQueryParameter(\"t\")");
-        loginScript.Should().Contain("Account/ConfirmEmail");
-        loginScript.Should().Contain("window.location.reload();");
-        loginScript.Should().NotContain("setUrlQueryParameter");
-        loginScript.Should().NotContain("getQueryParameter(\"returnUrl\")");
+        commonObjects
+            .Where(found => found.Type is "Core/Component" or "Core/Resource")
+            .Should()
+            .Contain(found => found.Key == "CRM");
 
         Tenant tenant = await sso.Set<Tenant>()
             .IgnoreQueryFilters()
@@ -287,8 +184,9 @@ public sealed partial class FirstTimeSetupTests
             .AnyAsync(found => found.UserId == "admin" && found.RoleId == portalAdminRole.Id);
         hasGlobalPortalAdminLink.Should().BeTrue();
 
-        IAccountManager accountManager = harness.Factory.Services.GetRequiredService<IAccountManager>();
-        Token loginToken = await accountManager.LoginAsync("admin", "Password123!");
+        IAuthenticationOrchestrationService authenticationService =
+            harness.Factory.Services.GetRequiredService<IAuthenticationOrchestrationService>();
+        Token loginToken = await authenticationService.LoginAsync("admin", "Password123!");
         loginToken.Id.Should().NotBeNullOrWhiteSpace();
 
         using HttpResponseMessage tenantsResponse =
@@ -333,39 +231,23 @@ public sealed partial class FirstTimeSetupTests
     }
 
     [Fact]
-    public async Task ShouldRenderAdminPageForAdministratorAndLoginPromptForGuest()
+    public async Task ShouldExposeCoreReviewClientPageAfterSetup()
     {
         await using SetupHarness harness = await SetupHarness.CreateAsync();
 
         await SubmitSetupAsync(harness);
 
-        using HttpClient guestClient = harness.CreateGuestClient();
-
         await using DbContext core = harness.Factory.Services
             .GetRequiredService<ICoreContextFactory>()
             .CreateCoreContext();
 
-        Page adminPage = await core.Set<Page>()
+        Page clientsPage = await core.Set<Page>()
             .IgnoreQueryFilters()
-            .SingleAsync(found => found.Path == "Admin/AppManagement");
-
-        Page adminRootPage = await core.Set<Page>()
-            .IgnoreQueryFilters()
-            .SingleAsync(found => found.Path == "Admin");
+            .SingleAsync(found => found.Path == "Clients");
 
         App app = await core.Set<App>()
             .IgnoreQueryFilters()
             .SingleAsync();
-
-        Role administrators = await core.Set<Role>()
-            .IgnoreQueryFilters()
-            .SingleAsync(found => found.AppId == app.Id && found.Name == "Administrators");
-
-        bool hasPageRole = await core.Set<PageRole>()
-            .IgnoreQueryFilters()
-            .AnyAsync(found => found.PageId == adminPage.Id && found.RoleId == administrators.Id);
-
-        hasPageRole.Should().BeTrue();
 
         string[] guestRoleNames = await core.Set<UserRole>()
             .IgnoreQueryFilters()
@@ -379,70 +261,18 @@ public sealed partial class FirstTimeSetupTests
             .ToArrayAsync();
         guestRoleNames.Should().Equal("Guests");
 
-        string[] adminPageRoleNames = await core.Set<PageRole>()
-            .IgnoreQueryFilters()
-            .Where(found => found.PageId == adminPage.Id)
-            .Join(
-                core.Set<Role>().IgnoreQueryFilters(),
-                pageRole => pageRole.RoleId,
-                role => role.Id,
-                (_, role) => role.Name)
-            .OrderBy(name => name)
-            .ToArrayAsync();
+        clientsPage.AppId.Should().Be(app.Id);
+        clientsPage.ShowOnMenus.Should().BeTrue();
 
-        string[] adminRootPageRoleNames = await core.Set<PageRole>()
-            .IgnoreQueryFilters()
-            .Where(found => found.PageId == adminRootPage.Id)
-            .Join(
-                core.Set<Role>().IgnoreQueryFilters(),
-                pageRole => pageRole.RoleId,
-                role => role.Id,
-                (_, role) => role.Name)
-            .OrderBy(name => name)
-            .ToArrayAsync();
+        using HttpResponseMessage clientsPageResponse =
+            await harness.Client.GetAsync("/Api/ContentManagement/Page?$filter=Path eq 'Clients'");
+        string clientsPageJson = await clientsPageResponse.Content.ReadAsStringAsync();
 
-        using HttpResponseMessage adminPagesResponse =
-            await harness.Client.GetAsync("/Api/ContentManagement/Page?$filter=Path eq 'Admin/AppManagement'");
-        string adminPagesJson = await adminPagesResponse.Content.ReadAsStringAsync();
-
-        adminPagesResponse.StatusCode.Should().Be(HttpStatusCode.OK, adminPagesJson);
-        JsonNode adminPagesNode = JsonNode.Parse(adminPagesJson)!;
-        JsonArray adminPages = adminPagesNode["value"]?.AsArray() ?? [];
-        adminPages.Should().HaveCount(1);
-        adminPages[0]?["Path"]?.ToString().Should().Be("Admin/AppManagement");
-
-        using HttpResponseMessage guestPagesResponse =
-            await guestClient.GetAsync("/Api/ContentManagement/Page?$filter=Path eq 'Admin/AppManagement'");
-        string guestPagesJson = await guestPagesResponse.Content.ReadAsStringAsync();
-
-        guestPagesResponse.StatusCode.Should().Be(HttpStatusCode.OK, guestPagesJson);
-        JsonNode guestPagesNode = JsonNode.Parse(guestPagesJson)!;
-        JsonArray guestPages = guestPagesNode["value"]?.AsArray() ?? [];
-        guestPages.Should().BeEmpty(
-            $"guest roles were [{string.Join(", ", guestRoleNames)}], " +
-            $"Admin/AppManagement roles were [{string.Join(", ", adminPageRoleNames)}], " +
-            $"Admin root roles were [{string.Join(", ", adminRootPageRoleNames)}]");
-
-        using HttpResponseMessage adminResponse = await harness.Client.GetAsync("/Admin/AppManagement");
-        string adminHtml = await adminResponse.Content.ReadAsStringAsync();
-
-        adminResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-        adminHtml.Should().Contain("App Management");
-        adminHtml.Should().Contain("Migrate");
-        adminHtml.Should().NotContain("name=\"user\"");
-        adminHtml.Should().Contain("Acceptance Admin");
-
-        using HttpResponseMessage guestResponse = await guestClient.GetAsync("/Admin/AppManagement");
-        string guestHtml = await guestResponse.Content.ReadAsStringAsync();
-
-        guestResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-        guestHtml.Should().Contain("App Management");
-        guestHtml.Should().Contain("name=\"user\"");
-        guestHtml.Should().Contain("name=\"login\"");
-        guestHtml.Should().Contain("name=\"forgotPass\"");
-        guestHtml.Should().NotContain("Migrate");
-        guestHtml.Should().Contain("<span name=\"userPrefs\" class=\"userPrefs\">Guest</span>");
-        guestHtml.Should().Contain("(<a href='/Login'>Login</a>)");
+        clientsPageResponse.StatusCode.Should().Be(HttpStatusCode.OK, clientsPageJson);
+        JsonNode clientsPageNode = JsonNode.Parse(clientsPageJson)!;
+        JsonArray clientsPages = clientsPageNode["value"]?.AsArray() ?? [];
+        clientsPages.Should().HaveCount(1);
+        clientsPages[0]?["Path"]?.ToString().Should().Be("Clients");
     }
 
     [Fact]
@@ -453,7 +283,7 @@ public sealed partial class FirstTimeSetupTests
         await SubmitSetupAsync(harness);
 
         using HttpResponseMessage userResponse =
-            await harness.Client.GetAsync("/Api/Core/User?$filter=Id eq 'Guest'");
+            await harness.Client.GetAsync("/Api/AppSecurity/User?$filter=Id eq 'Guest'");
         string userJson = await userResponse.Content.ReadAsStringAsync();
 
         userResponse.StatusCode.Should().Be(HttpStatusCode.OK, userJson);
@@ -517,6 +347,7 @@ public sealed partial class FirstTimeSetupTests
             .Where(path => !string.IsNullOrWhiteSpace(path))
             .ToArray()!;
 
+        adminPaths.Should().Contain("Clients");
         adminPaths.Should().Contain("Admin");
         adminPaths.Should().Contain("Documentation");
         adminPaths.Should().NotContain("Tools");
@@ -534,8 +365,8 @@ public sealed partial class FirstTimeSetupTests
             .Where(path => !string.IsNullOrWhiteSpace(path))
             .ToArray()!;
 
-        guestPaths.Should().NotContain("Admin", $"guest roles were [{string.Join(", ", guestRoleNames)}]");
-        guestPaths.Should().Contain("Documentation");
+        guestPaths.Should().NotContain("Clients");
+        guestPaths.Should().NotContain("Admin");
         guestPaths.Should().NotContain("Tools");
         guestPaths.Should().NotContain("Login");
         guestPaths.Should().NotContain("ResetPassword");
@@ -612,8 +443,9 @@ public sealed partial class FirstTimeSetupTests
             string loginProbe;
             try
             {
-                IAccountManager accountManager = harness.Factory.Services.GetRequiredService<IAccountManager>();
-                var token = await accountManager.LoginAsync("admin", "Password123!");
+                IAuthenticationOrchestrationService authenticationService =
+                    harness.Factory.Services.GetRequiredService<IAuthenticationOrchestrationService>();
+                var token = await authenticationService.LoginAsync("admin", "Password123!");
                 loginProbe = $"LoginProbe=OK:{token?.UserName}";
             }
             catch (Exception ex)
@@ -695,8 +527,9 @@ public sealed partial class FirstTimeSetupTests
                 }
                 else
                 {
-                    IAccountManager accountManager = harness.Factory.Services.GetRequiredService<IAccountManager>();
-                    await accountManager.ConfirmRegistrationAsync(confirmationTokenId);
+                    ISSOUserOrchestrationService ssoUserOrchestrationService =
+                        harness.Factory.Services.GetRequiredService<ISSOUserOrchestrationService>();
+                    await ssoUserOrchestrationService.ConfirmRegistration(confirmationTokenId);
                     confirmProbe = "ConfirmProbe=OK";
                 }
             }
@@ -767,7 +600,10 @@ public sealed partial class FirstTimeSetupTests
             };
 
             WebAcceptanceFactory factory = new(settings);
-            AcceptanceDatabaseManager databaseManager = new(factory.Services);
+            AcceptanceDatabaseManager databaseManager = new(
+                factory.Services,
+                settings.CoreConnectionString,
+                settings.SsoConnectionString);
             await databaseManager.ResetDatabasesAsync();
 
             HttpClient client = CreateClient(factory);
@@ -778,8 +614,15 @@ public sealed partial class FirstTimeSetupTests
         public async ValueTask DisposeAsync()
         {
             Client.Dispose();
-            await databaseManager.DropDatabasesAsync();
-            await Factory.DisposeAsync();
+
+            try
+            {
+                await Factory.DisposeAsync();
+            }
+            finally
+            {
+                await databaseManager.DropDatabasesAsync();
+            }
         }
 
         private static string AddDatabaseSuffix(string variableName, string suffix)

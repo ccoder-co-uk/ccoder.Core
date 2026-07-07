@@ -178,6 +178,17 @@ public sealed partial class WorkflowEventIntegrationTests
             fixture.HostedServicesOutput.Should().NotContain("Exception thrown whilst raising scheduled_task_execute event");
             fixture.HostedServicesOutput.Should().NotContain("Access Denied!");
 
+            await WaitUntilAsync(
+                async () =>
+                {
+                    FlowInstanceData latestInstance = await GetLatestInstanceAsync(flowId);
+
+                    return latestInstance.State != "Queued";
+                },
+                attempts: 180,
+                delayMilliseconds: 500,
+                diagnosticsFactory: () => BuildFlowDiagnosticsAsync(flowId));
+
             FlowInstanceData instance = await GetLatestInstanceAsync(flowId);
             instance.Should().NotBeNull();
             instance.Caller.Should().Be(executeOnlyUserId);

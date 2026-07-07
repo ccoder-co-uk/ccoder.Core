@@ -6,6 +6,7 @@
     <OutputType>Library</OutputType>
     <IsPackable>true</IsPackable>
     <NoWarn>1591</NoWarn>
+    <Features>experimental-data-section-string-literals</Features>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -33,9 +34,8 @@
     <LocalLoggingProject>..\..\..\cCoder.Logging\src\cCoder.Logging\cCoder.Logging.csproj</LocalLoggingProject>
     <LocalMailProject>..\..\..\cCoder.Mail\src\cCoder.Mail\cCoder.Mail.csproj</LocalMailProject>
     <LocalPackagingProject>..\..\..\cCoder.Packaging\src\cCoder.Packaging\cCoder.Packaging.csproj</LocalPackagingProject>
-    <LocalSchedulingProject>..\..\..\cCoder.Scheduling\src\cCoder.Scheduling\cCoder.Scheduling.csproj</LocalSchedulingProject>
     <LocalSecurityProject>..\..\..\cCoder.Security\src\cCoder.Security\cCoder.Security.csproj</LocalSecurityProject>
-    <LocalSecurityEfMssqlProject>..\..\..\cCoder.Security\src\cCoder.Security.Data.EF.MSSQL\cCoder.Security.Data.EF.MSSQL.csproj</LocalSecurityEfMssqlProject>
+    <LocalSecurityDataProject>..\..\..\cCoder.Security\src\cCoder.Security.Data\cCoder.Security.Data.csproj</LocalSecurityDataProject>
     <LocalWorkflowProject>..\..\..\cCoder.Workflow\src\cCoder.Workflow\cCoder.Workflow.csproj</LocalWorkflowProject>
     <LocalWorkflowActivitiesProject>..\..\..\cCoder.Workflow\src\cCoder.Workflow.Activities\cCoder.Workflow.Activities.csproj</LocalWorkflowActivitiesProject>
     <LocalWorkflowEngineProject>..\..\..\cCoder.Workflow\src\cCoder.Workflow.Engine\cCoder.Workflow.Engine.csproj</LocalWorkflowEngineProject>
@@ -47,7 +47,6 @@
     <UseLocalLogging Condition="'$(UseLocalLogging)' == ''">false</UseLocalLogging>
     <UseLocalMail Condition="'$(UseLocalMail)' == ''">false</UseLocalMail>
     <UseLocalPackaging Condition="'$(UseLocalPackaging)' == ''">false</UseLocalPackaging>
-    <UseLocalScheduling Condition="'$(UseLocalScheduling)' == ''">false</UseLocalScheduling>
     <UseLocalSecurity Condition="'$(UseLocalSecurity)' == ''">false</UseLocalSecurity>
     <UseLocalWorkflow Condition="'$(UseLocalWorkflow)' == ''">false</UseLocalWorkflow>
     <UseLocalAppSecurity Condition="'$(UseLocalAppSecurity)' == 'true' and !Exists('$(LocalAppSecurityProject)')">false</UseLocalAppSecurity>
@@ -58,10 +57,8 @@
     <UseLocalLogging Condition="'$(UseLocalLogging)' == 'true' and !Exists('$(LocalLoggingProject)')">false</UseLocalLogging>
     <UseLocalMail Condition="'$(UseLocalMail)' == 'true' and !Exists('$(LocalMailProject)')">false</UseLocalMail>
     <UseLocalPackaging Condition="'$(UseLocalPackaging)' == 'true' and !Exists('$(LocalPackagingProject)')">false</UseLocalPackaging>
-    <UseLocalScheduling Condition="'$(UseLocalScheduling)' == 'true' and !Exists('$(LocalSchedulingProject)')">false</UseLocalScheduling>
-    <UseLocalSecurity Condition="'$(UseLocalSecurity)' == 'true' and !(Exists('$(LocalSecurityProject)') and Exists('$(LocalSecurityEfMssqlProject)'))">false</UseLocalSecurity>
+    <UseLocalSecurity Condition="'$(UseLocalSecurity)' == 'true' and !(Exists('$(LocalSecurityProject)') and Exists('$(LocalSecurityDataProject)'))">false</UseLocalSecurity>
     <UseLocalWorkflow Condition="'$(UseLocalWorkflow)' == 'true' and !(Exists('$(LocalWorkflowProject)') and Exists('$(LocalWorkflowActivitiesProject)') and Exists('$(LocalWorkflowEngineProject)'))">false</UseLocalWorkflow>
-    <UseLocalData Condition="'$(UseLocalSecurity)' == 'true' and Exists('$(LocalDataProject)')">true</UseLocalData>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\..\LICENSE.txt" Pack="true" PackagePath="\" />
@@ -96,12 +93,9 @@
   <ItemGroup Condition="'$(UseLocalPackaging)' == 'true'">
     <ProjectReference Include="$(LocalPackagingProject)" AdditionalProperties="UseLocalData=$(UseLocalData)" />
   </ItemGroup>
-  <ItemGroup Condition="'$(UseLocalScheduling)' == 'true'">
-    <ProjectReference Include="$(LocalSchedulingProject)" AdditionalProperties="UseLocalData=$(UseLocalData)" />
-  </ItemGroup>
   <ItemGroup Condition="'$(UseLocalSecurity)' == 'true'">
     <ProjectReference Include="$(LocalSecurityProject)" />
-    <ProjectReference Include="$(LocalSecurityEfMssqlProject)" />
+    <ProjectReference Include="$(LocalSecurityDataProject)" />
   </ItemGroup>
   <ItemGroup Condition="'$(UseLocalWorkflow)' == 'true'">
     <ProjectReference Include="$(LocalWorkflowProject)" AdditionalProperties="UseLocalData=$(UseLocalData);UseLocalSecurity=$(UseLocalSecurity)" />
@@ -110,22 +104,21 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
-    <PackageReference Include="cCoder.AppSecurity" Version="2026.6.19.1241" Condition="'$(UseLocalAppSecurity)' != 'true'" />
-    <PackageReference Include="cCoder.ContentManagement" Version="2026.6.26.1124" Condition="'$(UseLocalContentManagement)' != 'true'" />
-    <PackageReference Include="cCoder.Data" Version="2026.5.6.1849" Condition="'$(UseLocalData)' != 'true'" />
-    <PackageReference Include="cCoder.DocumentManagement" Version="2026.6.19.1239" Condition="'$(UseLocalDocumentManagement)' != 'true'" />
-    <PackageReference Include="cCoder.Eventing" Version="2026.4.28.2114" Condition="'$(UseLocalEventing)' != 'true'" />
-    <PackageReference Include="cCoder.Eventing.AzureServiceBus" Version="2026.6.26.1646" Condition="'$(UseLocalEventing)' != 'true'" />
-    <PackageReference Include="cCoder.Eventing.Http" Version="2026.4.28.2114" Condition="'$(UseLocalEventing)' != 'true'" />
-    <PackageReference Include="cCoder.Logging" Version="2026.6.19.1238" Condition="'$(UseLocalLogging)' != 'true'" />
-    <PackageReference Include="cCoder.Mail" Version="2026.6.24.1257" Condition="'$(UseLocalMail)' != 'true'" />
-    <PackageReference Include="cCoder.Packaging" Version="2026.6.24.1257" Condition="'$(UseLocalPackaging)' != 'true'" />
-    <PackageReference Include="cCoder.Scheduling" Version="2026.6.24.1257" Condition="'$(UseLocalScheduling)' != 'true'" />
-    <PackageReference Include="cCoder.Security" Version="2026.4.29.2038" Condition="'$(UseLocalSecurity)' != 'true'" />
-    <PackageReference Include="cCoder.Security.Data.EF.MSSQL" Version="2026.4.29.2038" Condition="'$(UseLocalSecurity)' != 'true'" />
-    <PackageReference Include="cCoder.Workflow" Version="2026.6.30.1840" Condition="'$(UseLocalWorkflow)' != 'true'" />
-    <PackageReference Include="cCoder.Workflow.Activities" Version="2026.6.30.1840" Condition="'$(UseLocalWorkflow)' != 'true'" />
-    <PackageReference Include="cCoder.Workflow.Engine" Version="2026.6.30.1840" Condition="'$(UseLocalWorkflow)' != 'true'" />
+    <PackageReference Include="cCoder.AppSecurity" Version="2026.7.7.2003" Condition="'$(UseLocalAppSecurity)' != 'true'" />
+    <PackageReference Include="cCoder.ContentManagement" Version="2026.7.7.1957" Condition="'$(UseLocalContentManagement)' != 'true'" />
+    <PackageReference Include="cCoder.Data" Version="2026.7.3.2151" Condition="'$(UseLocalData)' != 'true'" />
+    <PackageReference Include="cCoder.DocumentManagement" Version="2026.7.7.2004" Condition="'$(UseLocalDocumentManagement)' != 'true'" />
+    <PackageReference Include="cCoder.Eventing" Version="2026.7.3.1811" Condition="'$(UseLocalEventing)' != 'true'" />
+    <PackageReference Include="cCoder.Eventing.AzureServiceBus" Version="2026.7.3.1811" Condition="'$(UseLocalEventing)' != 'true'" />
+    <PackageReference Include="cCoder.Eventing.Http" Version="2026.7.3.1811" Condition="'$(UseLocalEventing)' != 'true'" />
+    <PackageReference Include="cCoder.Logging" Version="2026.7.7.2011" Condition="'$(UseLocalLogging)' != 'true'" />
+    <PackageReference Include="cCoder.Mail" Version="2026.7.7.2005" Condition="'$(UseLocalMail)' != 'true'" />
+    <PackageReference Include="cCoder.Packaging" Version="2026.7.7.1316" Condition="'$(UseLocalPackaging)' != 'true'" />
+    <PackageReference Include="cCoder.Security" Version="2026.7.7.1439" Condition="'$(UseLocalSecurity)' != 'true'" />
+    <PackageReference Include="cCoder.Security.Data" Version="2026.7.7.1439" Condition="'$(UseLocalSecurity)' != 'true'" />
+    <PackageReference Include="cCoder.Workflow" Version="2026.7.7.2007" Condition="'$(UseLocalWorkflow)' != 'true'" />
+    <PackageReference Include="cCoder.Workflow.Activities" Version="2026.7.7.2007" Condition="'$(UseLocalWorkflow)' != 'true'" />
+    <PackageReference Include="cCoder.Workflow.Engine" Version="2026.7.7.2007" Condition="'$(UseLocalWorkflow)' != 'true'" />
     <PackageReference Include="Microsoft.AspNetCore.OData" Version="9.4.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.9" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />

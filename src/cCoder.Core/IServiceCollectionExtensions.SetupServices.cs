@@ -3,8 +3,9 @@ using cCoder.Core.Models;
 using cCoder.Core.Services.Setup;
 using cCoder.Data;
 using cCoder.Security;
-using cCoder.Security.Data.EF.MSSQL;
+using cCoder.Security.Data.EF;
 using cCoder.Security.Exposures;
+using cCoder.Security.Services.Orchestrations.Interfaces;
 
 namespace cCoder.Core;
 
@@ -75,12 +76,12 @@ public static partial class IServiceCollectionExtensions
 
     private static void EnsureFirstTimeSetupSecurityManagers(IServiceCollection services)
     {
-        if (!services.Any(descriptor => descriptor.ServiceType == typeof(IAccountManager)))
+        if (!services.Any(descriptor => descriptor.ServiceType == typeof(ITokenManager)))
         {
-            Type accountManagerType = Type.GetType("cCoder.Security.Api.AccountManager, cCoder.Security");
+            Type tokenManagerType = Type.GetType("cCoder.Security.Exposures.TokenManager, cCoder.Security");
 
-            if (accountManagerType is not null)
-                services.AddTransient(typeof(IAccountManager), accountManagerType);
+            if (tokenManagerType is not null)
+                services.AddTransient(typeof(ITokenManager), tokenManagerType);
         }
 
         if (!services.Any(descriptor => descriptor.ServiceType == typeof(ITenantManager)))

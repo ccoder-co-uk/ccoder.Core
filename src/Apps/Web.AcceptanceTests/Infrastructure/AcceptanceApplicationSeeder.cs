@@ -17,16 +17,22 @@ internal sealed class AcceptanceApplicationSeeder(IServiceProvider services)
     private const string AcceptanceAdminRoleName = "Acceptance Administrators";
     private const string AcceptanceAdminPrivileges =
         "app_admin,"
+        + "app_read,"
+        + "appculture_read,"
         + "calendar_create,calendar_read,calendar_update,calendar_delete,"
         + "commonobject_create,commonobject_update,commonobject_delete,"
-        + "culture_create,culture_update,culture_delete,"
+        + "culture_create,culture_read,culture_update,culture_delete,"
         + "file_create,file_read,file_update,file_delete,"
         + "filecontent_create,filecontent_read,filecontent_update,filecontent_delete,"
         + "flowdefinition_create,flowdefinition_read,flowdefinition_update,flowdefinition_delete,flowdefinition_execute,"
         + "folder_create,folder_read,folder_update,folder_delete,"
+        + "folderrole_read,"
         + "package_create,package_update,package_delete,"
         + "packageitem_create,packageitem_update,packageitem_delete,"
+        + "page_read,pagerole_read,"
         + "scheduledtask_create,scheduledtask_read,scheduledtask_update,scheduledtask_delete,"
+        + "user_create,user_read,user_update,user_delete,"
+        + "userrole_create,userrole_read,userrole_update,userrole_delete,"
         + "workflowevent_create,workflowevent_read,workflowevent_update,workflowevent_delete";
 
     public async Task SeedAsync()
@@ -223,12 +229,22 @@ internal sealed class AcceptanceApplicationSeeder(IServiceProvider services)
                 AppId = AppId,
                 Name = role.Name,
                 Description = role.Description,
-                Privs = role.Privs,
+                Privs = NormalizeRolePrivileges(role),
             })
             .ToArray();
 
         await core.Set<Role>().AddRangeAsync(roles);
         await core.SaveChangesAsync();
+    }
+
+    private static string NormalizeRolePrivileges(Role role)
+    {
+        if (role.Name != "Users" || role.Privs?.Split(',').Contains("user_update") == true)
+            return role.Privs;
+
+        return string.IsNullOrWhiteSpace(role.Privs)
+            ? "user_update"
+            : $"{role.Privs},user_update";
     }
 
     private static async Task SeedLayoutsAsync(DbContext core)

@@ -15,12 +15,12 @@ using DmsFile = cCoder.Data.Models.DMS.File;
 using AppFlowDefinition = cCoder.Data.Models.Workflow.FlowDefinition;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Testing;
 namespace Web.AcceptanceTests.Tests.Api;
 
 [Collection(WebAcceptanceCollection.Name)]
 public sealed class AppDeleteCascadeTests(WebAcceptanceFixture fixture)
 {
-    private HttpClient Client { get; } = fixture.Client;
     private string BaseUrl { get; } = "/Api/Core/App";
 
     private sealed record SeededApp(int AppId, Guid RoleId, string Domain);
@@ -224,10 +224,22 @@ public sealed class AppDeleteCascadeTests(WebAcceptanceFixture fixture)
 
     private async Task<int> DeleteAppAsync(string host, int id)
     {
+        using WebAcceptanceFactory factory = new(new()
+        {
+            CoreConnectionString = fixture.Settings.CoreConnectionString,
+            SsoConnectionString = fixture.Settings.SsoConnectionString,
+            DecryptionKey = fixture.Settings.DecryptionKey,
+            AggregateDomains = true,
+        });
+        using HttpClient client = factory.CreateClient(new WebApplicationFactoryClientOptions
+        {
+            AllowAutoRedirect = false,
+            BaseAddress = new Uri("https://localhost"),
+        });
         using HttpRequestMessage request = new(HttpMethod.Delete, $"{BaseUrl}({id})");
         request.Headers.Host = host;
 
-        using HttpResponseMessage response = await Client.SendAsync(request);
+        using HttpResponseMessage response = await client.SendAsync(request);
         string content = await response.Content.ReadAsStringAsync();
         response.StatusCode.Should().Be(HttpStatusCode.OK, content);
         return (int)response.StatusCode;

@@ -10,11 +10,8 @@ using cCoder.Logging;
 using cCoder.Logging.Models;
 using cCoder.Mail;
 using cCoder.Mail.Models;
-using cCoder.Scheduling;
-using cCoder.Scheduling.Models;
 using cCoder.Security;
-using cCoder.Security.Api;
-using cCoder.Security.Data.EF.MSSQL;
+using cCoder.Security.Data.EF;
 using cCoder.Security.Exposures;
 using cCoder.Security.Objects;
 using cCoder.Core.Exposures;
@@ -182,7 +179,6 @@ public partial class CoreApiBuilderOptions
         AddDocumentManagementApi(domain => ConfigureDomainRouting(domain, "DocumentManagement", domains));
         AddLoggingApi(domain => ConfigureDomainRouting(domain, "Logging", domains));
         AddMailApi(domain => ConfigureDomainRouting(domain, "Mail", domains));
-        AddSchedulingApi(domain => ConfigureDomainRouting(domain, "Scheduling", domains));
         AddWorkflowApi(domain => ConfigureDomainRouting(domain, "Workflow", domains));
 
         return this;
@@ -215,7 +211,6 @@ public partial class CoreApiBuilderOptions
         AddDocumentManagementApi();
         AddLoggingApi();
         AddMailApi();
-        AddSchedulingApi();
         AddWorkflowApi();
         UseLegacyCoreApi();
         UseConfiguredExternalEventing(configuration);
@@ -233,11 +228,13 @@ public partial class CoreApiBuilderOptions
         AppSecurityConfiguration domain = new();
         ApplyCoreDefaults(domain);
         configure?.Invoke(domain);
+        ApplyDomainRouteMode(domain, "AppSecurity");
 
         services.AddAppSecurityWeb(
             configuration =>
             {
                 ApplyConfiguration(domain, configuration);
+                ApplyDomainRouteMode(configuration, "AppSecurity");
                 configuration.IncludeLegacyCoreContext = false;
             },
             new ODataConventionModelBuilder());
@@ -255,11 +252,13 @@ public partial class CoreApiBuilderOptions
         ContentManagementConfiguration domain = new();
         ApplyCoreDefaults(domain);
         configure?.Invoke(domain);
+        ApplyDomainRouteMode(domain, "ContentManagement");
 
         services.AddContentManagementWeb(
             configuration =>
             {
                 ApplyConfiguration(domain, configuration);
+                ApplyDomainRouteMode(configuration, "ContentManagement");
                 configuration.IncludeLegacyCoreContext = false;
             },
             new ODataConventionModelBuilder());
@@ -277,11 +276,13 @@ public partial class CoreApiBuilderOptions
         DocumentManagementConfiguration domain = new();
         ApplyCoreDefaults(domain);
         configure?.Invoke(domain);
+        ApplyDomainRouteMode(domain, "DocumentManagement");
 
         services.AddDocumentManagementWeb(
             configuration =>
             {
                 ApplyConfiguration(domain, configuration);
+                ApplyDomainRouteMode(configuration, "DocumentManagement");
                 configuration.IncludeLegacyCoreContext = false;
             },
             new ODataConventionModelBuilder());
@@ -299,11 +300,13 @@ public partial class CoreApiBuilderOptions
         LoggingConfiguration domain = new();
         ApplyCoreDefaults(domain);
         configure?.Invoke(domain);
+        ApplyDomainRouteMode(domain, "Logging");
 
         services.AddLoggingWeb(
             configuration =>
             {
                 ApplyConfiguration(domain, configuration);
+                ApplyDomainRouteMode(configuration, "Logging");
                 configuration.IncludeLegacyCoreContext = false;
             },
             new ODataConventionModelBuilder());
@@ -321,11 +324,13 @@ public partial class CoreApiBuilderOptions
         MailConfiguration domain = new();
         ApplyCoreDefaults(domain);
         configure?.Invoke(domain);
+        ApplyDomainRouteMode(domain, "Mail");
 
         services.AddMailWeb(
             configuration =>
             {
                 ApplyConfiguration(domain, configuration);
+                ApplyDomainRouteMode(configuration, "Mail");
                 configuration.IncludeLegacyCoreContext = false;
             },
             new ODataConventionModelBuilder());
@@ -337,39 +342,19 @@ public partial class CoreApiBuilderOptions
         return this;
     }
 
-    public CoreApiBuilderOptions AddSchedulingApi(
-        Action<SchedulingConfiguration> configure = null)
-    {
-        SchedulingConfiguration domain = new();
-        ApplyCoreDefaults(domain);
-        configure?.Invoke(domain);
-
-        services.AddSchedulingWeb(
-            configuration =>
-            {
-                ApplyConfiguration(domain, configuration);
-                configuration.IncludeLegacyCoreContext = false;
-            },
-            new ODataConventionModelBuilder());
-
-        RegisterDomainContext(
-            domain.RootPath,
-            domain.IncludeLegacyCoreContext,
-            static builder => builder.ConfigureSchedulingApiModel());
-        return this;
-    }
-
     public CoreApiBuilderOptions AddWorkflowApi(
         Action<WorkflowConfiguration> configure = null)
     {
         WorkflowConfiguration domain = new();
         ApplyCoreDefaults(domain);
         configure?.Invoke(domain);
+        ApplyDomainRouteMode(domain, "Workflow");
 
         services.AddWorkflowWeb(
             configuration =>
             {
                 ApplyConfiguration(domain, configuration);
+                ApplyDomainRouteMode(configuration, "Workflow");
                 configuration.IncludeLegacyCoreContext = false;
             },
             new ODataConventionModelBuilder());
@@ -464,7 +449,8 @@ public partial class CoreApiBuilderOptions
             configuration.DebugInfo,
             configuration.LogSQL);
 
-    private void ApplyCoreDefaults(MailConfiguration configuration) =>
+    private void ApplyCoreDefaults(MailConfiguration configuration)
+    {
         ApplyCoreDefaults(
             configuration.ConnectionStrings,
             configuration.Settings,
@@ -474,15 +460,8 @@ public partial class CoreApiBuilderOptions
             configuration.DebugInfo,
             configuration.LogSQL);
 
-    private void ApplyCoreDefaults(SchedulingConfiguration configuration) =>
-        ApplyCoreDefaults(
-            configuration.ConnectionStrings,
-            configuration.Settings,
-            configuration.Services,
-            debugInfo: value => configuration.DebugInfo = value,
-            logSql: value => configuration.LogSQL = value,
-            configuration.DebugInfo,
-            configuration.LogSQL);
+        ApplyMailDefaults(configuration);
+    }
 
     private void ApplyCoreDefaults(WorkflowConfiguration configuration) =>
         ApplyCoreDefaults(
@@ -659,20 +638,14 @@ public partial class CoreApiBuilderOptions
         target.ConnectionStrings = new Dictionary<string, string>(source.ConnectionStrings, StringComparer.OrdinalIgnoreCase);
         target.Settings = new Dictionary<string, string>(source.Settings, StringComparer.OrdinalIgnoreCase);
         target.Services = new Dictionary<string, string>(source.Services, StringComparer.OrdinalIgnoreCase);
-        CopyEventProviders(source.EventProviders, target.EventProviders);
-    }
-
-    private static void ApplyConfiguration(
-        SchedulingConfiguration source,
-        SchedulingConfiguration target)
-    {
-        target.RootPath = source.RootPath;
-        target.IncludeLegacyCoreContext = source.IncludeLegacyCoreContext;
-        target.DebugInfo = source.DebugInfo;
-        target.LogSQL = source.LogSQL;
-        target.ConnectionStrings = new Dictionary<string, string>(source.ConnectionStrings, StringComparer.OrdinalIgnoreCase);
-        target.Settings = new Dictionary<string, string>(source.Settings, StringComparer.OrdinalIgnoreCase);
-        target.Services = new Dictionary<string, string>(source.Services, StringComparer.OrdinalIgnoreCase);
+        target.MicrosoftGraph.TenantId = source.MicrosoftGraph.TenantId;
+        target.MicrosoftGraph.ClientId = source.MicrosoftGraph.ClientId;
+        target.MicrosoftGraph.ClientSecret = source.MicrosoftGraph.ClientSecret;
+        target.MicrosoftGraph.GraphBaseUrl = source.MicrosoftGraph.GraphBaseUrl;
+        target.MicrosoftGraph.LoginBaseUrl = source.MicrosoftGraph.LoginBaseUrl;
+        target.MicrosoftGraph.ReceiveUser = source.MicrosoftGraph.ReceiveUser;
+        target.DefaultSenderProviderName = source.DefaultSenderProviderName;
+        target.DefaultReceiverProviderName = source.DefaultReceiverProviderName;
         CopyEventProviders(source.EventProviders, target.EventProviders);
     }
 
@@ -699,5 +672,26 @@ public partial class CoreApiBuilderOptions
 
         foreach (EventProvider provider in source)
             target.Add(provider);
+    }
+
+    private void ApplyMailDefaults(MailConfiguration configuration)
+    {
+        if (coreConfiguration is null)
+            return;
+
+        SetIfPresent(coreConfiguration.MailGraphTenantId, value => configuration.MicrosoftGraph.TenantId = value);
+        SetIfPresent(coreConfiguration.MailGraphClientId, value => configuration.MicrosoftGraph.ClientId = value);
+        SetIfPresent(coreConfiguration.MailGraphClientSecret, value => configuration.MicrosoftGraph.ClientSecret = value);
+        SetIfPresent(coreConfiguration.MailGraphBaseUrl, value => configuration.MicrosoftGraph.GraphBaseUrl = value);
+        SetIfPresent(coreConfiguration.MailGraphLoginBaseUrl, value => configuration.MicrosoftGraph.LoginBaseUrl = value);
+        SetIfPresent(coreConfiguration.MailGraphReceiveUser, value => configuration.MicrosoftGraph.ReceiveUser = value);
+        SetIfPresent(coreConfiguration.MailDefaultSenderProviderName, value => configuration.DefaultSenderProviderName = value);
+        SetIfPresent(coreConfiguration.MailDefaultReceiverProviderName, value => configuration.DefaultReceiverProviderName = value);
+    }
+
+    private static void SetIfPresent(string value, Action<string> apply)
+    {
+        if (!string.IsNullOrWhiteSpace(value))
+            apply(value);
     }
 }

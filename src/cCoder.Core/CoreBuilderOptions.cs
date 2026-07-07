@@ -18,11 +18,8 @@ using cCoder.Logging.Models;
 using cCoder.Mail;
 using cCoder.Mail.Models;
 using cCoder.Packaging;
-using cCoder.Scheduling;
-using cCoder.Scheduling.Models;
 using cCoder.Security;
-using cCoder.Security.Api;
-using cCoder.Security.Data.EF.MSSQL;
+using cCoder.Security.Data.EF;
 using cCoder.AppSecurity.Models;
 using cCoder.ContentManagement.Models;
 using cCoder.Workflow;
@@ -201,16 +198,6 @@ public partial class CoreBuilderOptions
         return this;
     }
 
-    public CoreBuilderOptions UseScheduling(Action<SchedulingConfiguration> configure = null)
-    {
-        services.AddSchedulingHostedServices(configuration =>
-        {
-            ApplyCoreDefaults(configuration);
-            configure?.Invoke(configuration);
-        });
-        return this;
-    }
-
     public CoreBuilderOptions UseWorkflow(Action<WorkflowConfiguration> configure = null)
     {
         services.AddWorkflowHostedServices(configuration =>
@@ -266,7 +253,6 @@ public partial class CoreBuilderOptions
         UseDocumentManagement();
         UseLogging();
         UseMail();
-        UseScheduling();
         UseWorkflow();
         UseConfiguredExternalEventing(configuration);
         WithEventProviders(configuration.EventProviders ?? []);
@@ -352,7 +338,8 @@ public partial class CoreBuilderOptions
             configuration.DebugInfo,
             configuration.LogSQL);
 
-    private void ApplyCoreDefaults(MailConfiguration configuration) =>
+    private void ApplyCoreDefaults(MailConfiguration configuration)
+    {
         ApplyCoreDefaults(
             configuration.ConnectionStrings,
             configuration.Settings,
@@ -362,15 +349,8 @@ public partial class CoreBuilderOptions
             configuration.DebugInfo,
             configuration.LogSQL);
 
-    private void ApplyCoreDefaults(SchedulingConfiguration configuration) =>
-        ApplyCoreDefaults(
-            configuration.ConnectionStrings,
-            configuration.Settings,
-            configuration.Services,
-            debugInfo: value => configuration.DebugInfo = value,
-            logSql: value => configuration.LogSQL = value,
-            configuration.DebugInfo,
-            configuration.LogSQL);
+        ApplyMailDefaults(configuration);
+    }
 
     private void ApplyCoreDefaults(WorkflowConfiguration configuration) =>
         ApplyCoreDefaults(
@@ -460,4 +440,25 @@ public partial class CoreBuilderOptions
 
     private CoreConfiguration EnsureCoreConfiguration() =>
         coreConfiguration ??= new CoreConfiguration();
+
+    private void ApplyMailDefaults(MailConfiguration configuration)
+    {
+        if (coreConfiguration is null)
+            return;
+
+        SetIfPresent(coreConfiguration.MailGraphTenantId, value => configuration.MicrosoftGraph.TenantId = value);
+        SetIfPresent(coreConfiguration.MailGraphClientId, value => configuration.MicrosoftGraph.ClientId = value);
+        SetIfPresent(coreConfiguration.MailGraphClientSecret, value => configuration.MicrosoftGraph.ClientSecret = value);
+        SetIfPresent(coreConfiguration.MailGraphBaseUrl, value => configuration.MicrosoftGraph.GraphBaseUrl = value);
+        SetIfPresent(coreConfiguration.MailGraphLoginBaseUrl, value => configuration.MicrosoftGraph.LoginBaseUrl = value);
+        SetIfPresent(coreConfiguration.MailGraphReceiveUser, value => configuration.MicrosoftGraph.ReceiveUser = value);
+        SetIfPresent(coreConfiguration.MailDefaultSenderProviderName, value => configuration.DefaultSenderProviderName = value);
+        SetIfPresent(coreConfiguration.MailDefaultReceiverProviderName, value => configuration.DefaultReceiverProviderName = value);
+    }
+
+    private static void SetIfPresent(string value, Action<string> apply)
+    {
+        if (!string.IsNullOrWhiteSpace(value))
+            apply(value);
+    }
 }

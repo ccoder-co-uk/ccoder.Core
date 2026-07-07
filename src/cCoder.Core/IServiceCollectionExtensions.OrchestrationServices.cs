@@ -8,8 +8,7 @@ public static partial class IServiceCollectionExtensions
     {
         services.AddTransient<IAppOrchestrationService, AppOrchestrationService>();
         services.AddTransient<ITemplatedEmailOrchestrationService, TemplatedEmailOrchestrationService>();
-        services.AddTransient<ICMSUserRegistrationOrchestrationService, CMSUserRegistrationOrchestrationService>();
         services.AddTransient<IUserRegistrationOrchestrationService, UserRegistrationOrchestrationService>();
-        services.AddTransient<IUserPasswordOrchestrationService, UserPasswordOrchestrationService>();
+        services.AddTransient<ISecurityAccountEmailOrchestrationService, SecurityAccountEmailOrchestrationService>();
     }
 }
