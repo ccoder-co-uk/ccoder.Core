@@ -32,7 +32,9 @@ public class Program
                 coreConfig.CacheSourceAppId = config.GetValue<int?>("Settings:CacheSourceAppId");
                 coreConfig.CacheExpiry = config.GetValue<int?>("Settings:CacheExpiry");
                 coreConfig.SslPort = config.GetValue<int?>("Settings:sslPort");
+                coreConfig.AggregateDomains = config.GetValue<bool>("Settings:AggregateDomains");
                 coreConfig.WorkflowServiceUrl = config.GetValue<string>("Services:Workflow");
+                ApplyMailConfiguration(config, coreConfig);
                 coreConfig.EventProviderType = ResolveEventProviderType(config);
                 coreConfig.HttpEventHubUrl = HttpEventHubUrlResolver.Resolve(config);
                 coreConfig.ServiceBusConnectionString = config.GetConnectionString("ServiceBus");
@@ -190,4 +192,57 @@ public class Program
 
     private static bool IsHttpEventProvider(string eventProviderType) =>
         string.Equals(eventProviderType, "Http", StringComparison.OrdinalIgnoreCase);
+
+    private static void ApplyMailConfiguration(
+        IConfiguration config,
+        cCoder.Core.Models.CoreConfiguration coreConfig)
+    {
+        coreConfig.MailGraphTenantId = ResolveSetting(
+            config,
+            "Mail:MicrosoftGraph:TenantId",
+            "CCODER_MAIL_GRAPH_TENANT_ID");
+        coreConfig.MailGraphClientId = ResolveSetting(
+            config,
+            "Mail:MicrosoftGraph:ClientId",
+            "CCODER_MAIL_GRAPH_CLIENT_ID");
+        coreConfig.MailGraphClientSecret = ResolveSetting(
+            config,
+            "Mail:MicrosoftGraph:ClientSecret",
+            "CCODER_MAIL_GRAPH_CLIENT_SECRET");
+        coreConfig.MailGraphBaseUrl = ResolveSetting(
+            config,
+            "Mail:MicrosoftGraph:GraphBaseUrl",
+            "CCODER_MAIL_GRAPH_BASE_URL");
+        coreConfig.MailGraphLoginBaseUrl = ResolveSetting(
+            config,
+            "Mail:MicrosoftGraph:LoginBaseUrl",
+            "CCODER_MAIL_GRAPH_LOGIN_BASE_URL");
+        coreConfig.MailGraphReceiveUser = ResolveSetting(
+            config,
+            "Mail:MicrosoftGraph:ReceiveUser",
+            "CCODER_MAIL_INTEGRATION_RECEIVE_USER",
+            "CCODER_MAIL_INTEGRATION_SEND_USER",
+            "CCODER_MAIL_INTEGRATION_SMTP_USER");
+        coreConfig.MailDefaultSenderProviderName = ResolveSetting(
+            config,
+            "Mail:DefaultSenderProviderName",
+            "CCODER_MAIL_DEFAULT_SENDER_PROVIDER");
+        coreConfig.MailDefaultReceiverProviderName = ResolveSetting(
+            config,
+            "Mail:DefaultReceiverProviderName",
+            "CCODER_MAIL_DEFAULT_RECEIVER_PROVIDER");
+    }
+
+    private static string ResolveSetting(IConfiguration config, params string[] keys)
+    {
+        foreach (string key in keys)
+        {
+            string value = config.GetValue<string>(key);
+
+            if (!string.IsNullOrWhiteSpace(value))
+                return value;
+        }
+
+        return null;
+    }
 }

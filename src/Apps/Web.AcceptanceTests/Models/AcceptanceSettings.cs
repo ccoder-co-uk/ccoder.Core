@@ -7,4 +7,6 @@ internal sealed class AcceptanceSettings
     public string SsoConnectionString { get; init; } = string.Empty;
 
     public string DecryptionKey { get; init; } = string.Empty;
+
+    public bool AggregateDomains { get; init; }
 }

@@ -7,24 +7,23 @@ using Microsoft.Extensions.DependencyInjection;
 namespace cCoder.IntegrationTests.Infrastructure;
 
 internal sealed class IntegrationAcceptanceDatabaseManager(
-    IServiceProvider services)
+    IServiceProvider services,
+    string coreConnectionString,
+    string ssoConnectionString)
 {
     public Task ResetDatabasesAsync()
     {
-        using IServiceScope scope = services.CreateScope();
-        using var sso = scope.ServiceProvider.GetRequiredService<ISecurityDbContextFactory>()
-            .CreateDbContext(true);
-        using var core = scope.ServiceProvider.GetRequiredService<ICoreContextFactory>()
-            .CreateCoreContext();
-
-        string ssoConnectionString = sso.Database.GetConnectionString();
-        string coreConnectionString = core.Database.GetConnectionString();
-
         EnsureSafeAcceptanceDatabase(ssoConnectionString, "dev-Members");
         EnsureSafeAcceptanceDatabase(coreConnectionString, "dev-Core");
 
         ForceDropDatabase(ssoConnectionString);
         ForceDropDatabase(coreConnectionString);
+
+        using IServiceScope scope = services.CreateScope();
+        using var sso = scope.ServiceProvider.GetRequiredService<ISecurityDbContextFactory>()
+            .CreateDbContext(true);
+        using var core = scope.ServiceProvider.GetRequiredService<ICoreContextFactory>()
+            .CreateCoreContext();
 
         sso.Migrate();
         core.Migrate();
@@ -34,15 +33,6 @@ internal sealed class IntegrationAcceptanceDatabaseManager(
 
     public Task DropDatabasesAsync()
     {
-        using IServiceScope scope = services.CreateScope();
-        using var sso = scope.ServiceProvider.GetRequiredService<ISecurityDbContextFactory>()
-            .CreateDbContext(true);
-        using var core = scope.ServiceProvider.GetRequiredService<ICoreContextFactory>()
-            .CreateCoreContext();
-
-        string ssoConnectionString = sso.Database.GetConnectionString();
-        string coreConnectionString = core.Database.GetConnectionString();
-
         EnsureSafeAcceptanceDatabase(ssoConnectionString, "dev-Members");
         EnsureSafeAcceptanceDatabase(coreConnectionString, "dev-Core");
 

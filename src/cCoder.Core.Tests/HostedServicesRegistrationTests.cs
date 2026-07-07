@@ -1,7 +1,6 @@
 using cCoder.Core;
 using cCoder.Eventing.AzureServiceBus;
 using cCoder.Eventing.AzureServiceBus.Models;
-using cCoder.Scheduling.Exposures.HostedServices;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,7 +12,7 @@ namespace cCoder.Core.Tests;
 public sealed class HostedServicesRegistrationTests
 {
     [Fact]
-    public void AddCoreHostedServices_ShouldRegisterTaskRunnerHostedService()
+    public void AddCoreHostedServices_ShouldRegisterWorkflowHostedServices()
     {
         IConfiguration configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string>
@@ -39,9 +38,10 @@ public sealed class HostedServicesRegistrationTests
             });
         });
 
-        services.Should().Contain(descriptor =>
+        services.Count(descriptor =>
             descriptor.ServiceType == typeof(IHostedService)
-            && descriptor.ImplementationType == typeof(TaskRunnerHostedService));
+            && descriptor.ImplementationFactory is not null)
+            .Should().BeGreaterThanOrEqualTo(3);
     }
 
     [Fact]

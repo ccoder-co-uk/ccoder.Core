@@ -105,7 +105,10 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
 
         databaseServices = IntegrationServiceProviderFactory.Create(Settings);
         Console.WriteLine("Integration fixture: database service provider created.");
-        databaseManager = new IntegrationAcceptanceDatabaseManager(databaseServices);
+        databaseManager = new IntegrationAcceptanceDatabaseManager(
+            databaseServices,
+            Settings.CoreConnectionString,
+            Settings.SsoConnectionString);
         await databaseManager.ResetDatabasesAsync();
         Console.WriteLine("Integration fixture: acceptance databases reset.");
 
@@ -193,18 +196,20 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
         if (workflowApplication is not null)
             await workflowApplication.DisposeAsync();
 
-        if (databaseManager is not null)
-            await databaseManager.DropDatabasesAsync();
-
         if (databaseServices is not null)
             await databaseServices.DisposeAsync();
+
+        if (databaseManager is not null)
+            await databaseManager.DropDatabasesAsync();
 
         try
         {
             if (Settings?.UseServiceBusEventing == true)
                 await DrainServiceBusQueuesAsync();
 
-            if (!string.IsNullOrWhiteSpace(acceptanceArtifactsRoot) && Directory.Exists(acceptanceArtifactsRoot))
+            if (!ShouldKeepArtifacts()
+                && !string.IsNullOrWhiteSpace(acceptanceArtifactsRoot)
+                && Directory.Exists(acceptanceArtifactsRoot))
                 Directory.Delete(acceptanceArtifactsRoot, recursive: true);
         }
         catch
@@ -258,6 +263,8 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
             $"-p:IntermediateOutputPath=\"{FormatMsBuildPath(intermediateDirectory, trailingSlash: true)}\"";
         string combinedProperties = CombineMsBuildProperties(localBuildProperties, msbuildProperties, outputProperties);
 
+        Console.WriteLine($"Integration fixture: building {projectPath} with properties: {combinedProperties}");
+
         await RunCommandAsync(
             "dotnet",
             $"restore {projectPath} {combinedProperties}");
@@ -269,26 +276,41 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
 
     private string ResolveLocalBuildProperties()
     {
-        bool useLocalScheduling = string.Equals(
-            Environment.GetEnvironmentVariable("CCODER_INTEGRATION_USE_LOCAL_SCHEDULING"),
-            "true",
-            StringComparison.OrdinalIgnoreCase);
         bool useLocalWorkflow = string.Equals(
             Environment.GetEnvironmentVariable("CCODER_INTEGRATION_USE_LOCAL_WORKFLOW"),
             "true",
             StringComparison.OrdinalIgnoreCase);
+        bool useLocalSecurity = string.Equals(
+            Environment.GetEnvironmentVariable("CCODER_INTEGRATION_USE_LOCAL_SECURITY"),
+            "true",
+            StringComparison.OrdinalIgnoreCase);
+        bool useLocalAppSecurity = string.Equals(
+            Environment.GetEnvironmentVariable("CCODER_INTEGRATION_USE_LOCAL_APPSECURITY"),
+            "true",
+            StringComparison.OrdinalIgnoreCase);
+        bool useLocalData = string.Equals(
+            Environment.GetEnvironmentVariable("CCODER_INTEGRATION_USE_LOCAL_DATA"),
+            "true",
+            StringComparison.OrdinalIgnoreCase);
+        string localSecurityAssemblyVersion = ResolveOptionalSetting(
+            "CCODER_INTEGRATION_LOCAL_SECURITY_ASSEMBLY_VERSION");
 
-        if (!useLocalScheduling && !useLocalWorkflow)
-            return string.Empty;
-
-        string localSchedulingProject = Path.GetFullPath(
+        string localAppSecurityProject = Path.GetFullPath(
             Path.Combine(
                 repositoryRoot,
                 "..",
-                "cCoder.Scheduling",
+                "cCoder.AppSecurity",
                 "src",
-                "cCoder.Scheduling",
-                "cCoder.Scheduling.csproj"));
+                "cCoder.AppSecurity",
+                "cCoder.AppSecurity.csproj"));
+        string localDataProject = Path.GetFullPath(
+            Path.Combine(
+                repositoryRoot,
+                "..",
+                "cCoder.Data",
+                "src",
+                "cCoder.Data",
+                "cCoder.Data.csproj"));
         string localWorkflowProject = Path.GetFullPath(
             Path.Combine(
                 repositoryRoot,
@@ -297,19 +319,40 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
                 "src",
                 "cCoder.Workflow",
                 "cCoder.Workflow.csproj"));
+        string localSecurityProject = Path.GetFullPath(
+            Path.Combine(
+                repositoryRoot,
+                "..",
+                "cCoder.Security",
+                "src",
+                "cCoder.Security",
+                "cCoder.Security.csproj"));
+
+        if (!useLocalWorkflow
+            && !useLocalSecurity
+            && !useLocalAppSecurity
+            && !useLocalData)
+            return string.Empty;
 
         List<string> properties = [];
 
-        if (useLocalScheduling && File.Exists(localSchedulingProject))
-            properties.Add("-p:UseLocalScheduling=true");
+        if (useLocalAppSecurity && File.Exists(localAppSecurityProject))
+            properties.Add("-p:UseLocalAppSecurity=true");
+
+        if (useLocalData && File.Exists(localDataProject))
+            properties.Add("-p:UseLocalData=true");
+
+        if (useLocalSecurity && File.Exists(localSecurityProject))
+            properties.Add("-p:UseLocalSecurity=true");
 
         if (useLocalWorkflow && File.Exists(localWorkflowProject))
             properties.Add("-p:UseLocalWorkflow=true");
 
-        if (properties.Count > 0)
+        if (useLocalSecurity && !string.IsNullOrWhiteSpace(localSecurityAssemblyVersion))
         {
-            properties.Add("-p:GenerateAssemblyInfo=false");
-            properties.Add("-p:GenerateTargetFrameworkAttribute=false");
+            properties.Add($"-p:Version={localSecurityAssemblyVersion}");
+            properties.Add($"-p:AssemblyVersion={localSecurityAssemblyVersion}");
+            properties.Add($"-p:FileVersion={localSecurityAssemblyVersion}");
         }
 
         return string.Join(" ", properties);
@@ -346,6 +389,9 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
             },
             EnableRaisingEvents = true
         };
+
+        process.StartInfo.EnvironmentVariables["MSBUILDDISABLENODEREUSE"] = "1";
+        process.StartInfo.EnvironmentVariables["DOTNET_CLI_TELEMETRY_OPTOUT"] = "1";
 
         process.OutputDataReceived += (_, args) =>
         {
@@ -484,10 +530,25 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
             ["ConnectionStrings__Core"] = Settings.CoreConnectionString,
             ["ConnectionStrings__SSO"] = Settings.SsoConnectionString,
             ["Settings__DecryptionKey"] = Settings.DecryptionKey,
+            ["Settings__AggregateDomains"] = "true",
             ["Services__Workflow"] = WorkflowBaseAddress.ToString(),
             ["Eventing__ProviderType"] = Settings.EventProviderType,
             ["Eventing__Http__MaxConcurrency"] = "1"
         };
+
+        AddOptionalEnvironment(environment, "CCODER_MAIL_GRAPH_TENANT_ID");
+        AddOptionalEnvironment(environment, "CCODER_MAIL_GRAPH_CLIENT_ID");
+        AddOptionalEnvironment(environment, "CCODER_MAIL_GRAPH_CLIENT_SECRET");
+        AddOptionalEnvironment(environment, "CCODER_MAIL_GRAPH_BASE_URL");
+        AddOptionalEnvironment(environment, "CCODER_MAIL_GRAPH_LOGIN_BASE_URL");
+        AddOptionalEnvironment(environment, "CCODER_MAIL_INTEGRATION_SEND_HOST");
+        AddOptionalEnvironment(environment, "CCODER_MAIL_INTEGRATION_SEND_USER");
+        AddOptionalEnvironment(environment, "CCODER_MAIL_INTEGRATION_SMTP_USER");
+        AddOptionalEnvironment(environment, "CCODER_MAIL_INTEGRATION_SMTP_FROM");
+        AddOptionalEnvironment(environment, "CCODER_MAIL_INTEGRATION_RECEIVE_USER");
+        AddOptionalEnvironment(environment, "CCODER_MAIL_INTEGRATION_TO");
+        AddOptionalEnvironment(environment, "CCODER_MAIL_DEFAULT_SENDER_PROVIDER");
+        AddOptionalEnvironment(environment, "CCODER_MAIL_DEFAULT_RECEIVER_PROVIDER");
 
         if (Settings.UseServiceBusEventing)
         {
@@ -497,6 +558,16 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
         }
 
         return environment;
+    }
+
+    private static void AddOptionalEnvironment(
+        IDictionary<string, string> environment,
+        string variableName)
+    {
+        string value = ResolveOptionalSetting(variableName);
+
+        if (!string.IsNullOrWhiteSpace(value))
+            environment[variableName] = value;
     }
 
     private void AddHttpsCertificateEnvironment(Dictionary<string, string> environment)
@@ -591,6 +662,12 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
     private static string ResolveEventProviderType() =>
         ResolveOptionalSetting("CCODER_INTEGRATION_EVENT_PROVIDER", "Eventing__ProviderType")
         ?? "Http";
+
+    private static bool ShouldKeepArtifacts() =>
+        string.Equals(
+            Environment.GetEnvironmentVariable("CCODER_INTEGRATION_KEEP_ARTIFACTS"),
+            "true",
+            StringComparison.OrdinalIgnoreCase);
 
     private static int ResolveIntSetting(
         string primaryName,

@@ -1,3 +1,4 @@
+using System.Net;
 using cCoder.Security.Data.Models;
 using cCoder.Security.Exposures;
 using cCoder.Security.Objects.Entities;
@@ -40,10 +41,9 @@ public sealed partial class FirstTimeSetupTests
 
         await SubmitSetupAsync(harness);
 
-        using HttpResponseMessage response = await harness.Client.GetAsync("/");
-        string content = await response.Content.ReadAsStringAsync();
+        using HttpResponseMessage response = await harness.Client.GetAsync("/Setup");
 
-        response.EnsureSuccessStatusCode();
-        content.Should().Contain("Welcome to cCoder");
+        response.StatusCode.Should().Be(HttpStatusCode.Redirect);
+        response.Headers.Location!.OriginalString.Should().Be("/");
     }
 }

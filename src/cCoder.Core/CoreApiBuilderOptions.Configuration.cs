@@ -37,16 +37,13 @@ public partial class CoreApiBuilderOptions
         bool includeLegacyCoreContext,
         Action<ODataConventionModelBuilder> configureModel)
     {
-        RegisterContext(routePath, configureModel);
-
-        if (includeLegacyCoreContext
-            && !string.Equals(
-                EnsureRoutePath(routePath, "Core"),
-                "Api/Core",
-                StringComparison.OrdinalIgnoreCase))
+        if (coreConfiguration?.AggregateDomains == true)
         {
             RegisterContext("Api/Core", configureModel);
+            return;
         }
+
+        RegisterContext(routePath, configureModel);
     }
 
     private void RegisterApiInfos(IEnumerable<CoreApiRouteDefinition> routes)
@@ -102,20 +99,29 @@ public partial class CoreApiBuilderOptions
         return routePath.Trim().Trim('/');
     }
 
-    private static void ConfigureDomainRouting<TDomainConfiguration>(
+    private void ConfigureDomainRouting<TDomainConfiguration>(
         TDomainConfiguration configuration,
         string domainName,
         CoreDomainsConfig defaults)
     {
         Type configType = typeof(TDomainConfiguration);
-        string routePath = defaults.SplitDomains
-            ? $"{defaults.RootPath.Trim().TrimEnd('/')}/{domainName}"
-            : $"{defaults.RootPath.Trim().TrimEnd('/')}/Core";
+        string rootPath = defaults.RootPath.Trim().TrimEnd('/');
+        string routePath = coreConfiguration?.AggregateDomains == true
+            ? $"{rootPath}/Core"
+            : $"{rootPath}/{domainName}";
 
         configType.GetProperty("RootPath")?.SetValue(configuration, routePath);
-        configType.GetProperty("IncludeLegacyCoreContext")?.SetValue(
-            configuration,
-            defaults.SplitDomains && defaults.IncludeLegacyCoreContext);
+        configType.GetProperty("IncludeLegacyCoreContext")?.SetValue(configuration, false);
+    }
+
+    private void ApplyDomainRouteMode<TDomainConfiguration>(
+        TDomainConfiguration configuration,
+        string domainName)
+    {
+        Type configType = typeof(TDomainConfiguration);
+
+        configType.GetProperty("RootPath")?.SetValue(configuration, $"Api/{domainName}");
+        configType.GetProperty("IncludeLegacyCoreContext")?.SetValue(configuration, false);
     }
 
     private static CoreApiRouteDefinition[] EnsureRequiredRoutes(

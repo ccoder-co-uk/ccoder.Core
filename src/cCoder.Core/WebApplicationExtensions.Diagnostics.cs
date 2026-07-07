@@ -7,6 +7,7 @@ using cCoder.Security.Objects.Entities;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace cCoder.Core;
 
@@ -83,6 +84,20 @@ public static partial class WebApplicationExtensions
                 using SecurityDbContext sso = new MSSQLSecurityDbContextFactory(ssoConnectionString)
                     .CreateDbContext();
 
+                string existingUserId = await sso.Set<SSOUser>()
+                    .IgnoreQueryFilters()
+                    .Where(user => user.Id == ssoUserId)
+                    .Select(user => user.Id)
+                    .FirstOrDefaultAsync(context.RequestAborted);
+
+                string existingTenantId = string.IsNullOrWhiteSpace(tenantId)
+                    ? null
+                    : await sso.Set<Tenant>()
+                        .IgnoreQueryFilters()
+                        .Where(tenant => tenant.Id == tenantId)
+                        .Select(tenant => tenant.Id)
+                        .FirstOrDefaultAsync(context.RequestAborted);
+
                 string requestType =
                     request.Path.Value?.StartsWith("/api/", StringComparison.InvariantCultureIgnoreCase) == true
                         ? "Api_"
@@ -90,8 +105,8 @@ public static partial class WebApplicationExtensions
 
                 UserEvent userEvent = new()
                 {
-                    TenantId = tenantId,
-                    CreatedBy = ssoUserId,
+                    TenantId = existingTenantId,
+                    CreatedBy = existingUserId,
                     EventName = $"{requestType}{request.Method}{request.Path.Value}",
                     CreatedOn = DateTimeOffset.UtcNow,
                     Value = url,

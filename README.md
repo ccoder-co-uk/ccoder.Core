@@ -36,11 +36,22 @@ $env:CCODER_ACCEPTANCE_SSO_CONNECTION_STRING = "Server=...;Database=Security;...
 
 The acceptance and integration tests append suite-specific suffixes to the configured database names, reset those databases before running, and drop them during cleanup. The integration suite defaults to HTTP eventing; set `CCODER_INTEGRATION_EVENT_PROVIDER=ServiceBus` plus `CCODER_INTEGRATION_SERVICE_BUS_CONNECTION_STRING` to exercise Azure Service Bus eventing.
 
+When validating local changes across unpublished Security/AppSecurity repositories, the integration fixture can build against sibling local repositories:
+
+```powershell
+$env:CCODER_INTEGRATION_LOCAL_SECURITY_ASSEMBLY_VERSION = "2026.4.29.2038"
+dotnet test src\Apps\cCoder.IntegrationTests\cCoder.IntegrationTests.csproj /p:UseLocalSecurity=true /p:UseLocalAppSecurity=true
+```
+
+The local assembly version override is only needed while downstream packages still reference the currently published Security assembly version. Once the package chain has been republished, consume the published package versions and run without the override.
+
 The publish workflow runs on a self-hosted runner and always restores, builds, and tests `src/cCoder.Core.sln` before packing.
 
 ## Platform Functionality
 
 `cCoder.Core` gives consumers the composed platform package rather than asking each application to assemble the individual cCoder domain packages by hand. It brings together the shared data model, security, application permissions, content, documents, mail, scheduling, workflow, logging, eventing, and package import/export capabilities used by the aggregate hosts.
+
+Account registration, invitation, password reset, and SSO lifecycle ownership lives in `cCoder.Security`. `cCoder.Core` consumes typed Security account events only to resolve the app from the request domain and queue app-template emails.
 
 | Domain piece | What consumers get | Details |
 | --- | --- | --- |

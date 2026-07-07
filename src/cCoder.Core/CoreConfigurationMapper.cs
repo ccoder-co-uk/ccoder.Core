@@ -22,6 +22,9 @@ internal static class CoreConfigurationMapper
         if (TryGetValue(target.ConnectionStrings, "SSO", out string securityConnectionString))
             target.SecurityConnectionString = securityConnectionString;
 
+        if (TryGetBool(target.Settings, "AggregateDomains", out bool aggregateDomains))
+            target.AggregateDomains = aggregateDomains;
+
         if (TryGetValue(target.Settings, "DecryptionKey", out string decryptionKey))
             target.DecryptionKey = decryptionKey;
 
@@ -39,6 +42,30 @@ internal static class CoreConfigurationMapper
 
         if (TryGetValue(target.Services, "Workflow", out string workflowServiceUrl))
             target.WorkflowServiceUrl = workflowServiceUrl;
+
+        if (TryGetValue(target.Settings, "MailGraphTenantId", out string mailGraphTenantId))
+            target.MailGraphTenantId = mailGraphTenantId;
+
+        if (TryGetValue(target.Settings, "MailGraphClientId", out string mailGraphClientId))
+            target.MailGraphClientId = mailGraphClientId;
+
+        if (TryGetValue(target.Settings, "MailGraphClientSecret", out string mailGraphClientSecret))
+            target.MailGraphClientSecret = mailGraphClientSecret;
+
+        if (TryGetValue(target.Settings, "MailGraphBaseUrl", out string mailGraphBaseUrl))
+            target.MailGraphBaseUrl = mailGraphBaseUrl;
+
+        if (TryGetValue(target.Settings, "MailGraphLoginBaseUrl", out string mailGraphLoginBaseUrl))
+            target.MailGraphLoginBaseUrl = mailGraphLoginBaseUrl;
+
+        if (TryGetValue(target.Settings, "MailGraphReceiveUser", out string mailGraphReceiveUser))
+            target.MailGraphReceiveUser = mailGraphReceiveUser;
+
+        if (TryGetValue(target.Settings, "MailDefaultSenderProviderName", out string mailDefaultSenderProviderName))
+            target.MailDefaultSenderProviderName = mailDefaultSenderProviderName;
+
+        if (TryGetValue(target.Settings, "MailDefaultReceiverProviderName", out string mailDefaultReceiverProviderName))
+            target.MailDefaultReceiverProviderName = mailDefaultReceiverProviderName;
 
         if (TryGetValue(target.ConnectionStrings, "ServiceBus", out string serviceBusConnectionString))
             target.ServiceBusConnectionString = serviceBusConnectionString;
@@ -59,12 +86,21 @@ internal static class CoreConfigurationMapper
         target.CoreConnectionString = source.CoreConnectionString;
         target.SecurityConnectionString = source.SecurityConnectionString;
         target.SecurityRootPath = source.SecurityRootPath;
+        target.AggregateDomains = source.AggregateDomains;
         target.DecryptionKey = source.DecryptionKey;
         target.CacheSource = source.CacheSource;
         target.CacheSourceAppId = source.CacheSourceAppId;
         target.CacheExpiry = source.CacheExpiry;
         target.SslPort = source.SslPort;
         target.WorkflowServiceUrl = source.WorkflowServiceUrl;
+        target.MailGraphTenantId = source.MailGraphTenantId;
+        target.MailGraphClientId = source.MailGraphClientId;
+        target.MailGraphClientSecret = source.MailGraphClientSecret;
+        target.MailGraphBaseUrl = source.MailGraphBaseUrl;
+        target.MailGraphLoginBaseUrl = source.MailGraphLoginBaseUrl;
+        target.MailGraphReceiveUser = source.MailGraphReceiveUser;
+        target.MailDefaultSenderProviderName = source.MailDefaultSenderProviderName;
+        target.MailDefaultReceiverProviderName = source.MailDefaultReceiverProviderName;
         target.EventProviderType = source.EventProviderType;
         target.HttpEventHubUrl = source.HttpEventHubUrl;
         target.ServiceBusConnectionString = source.ServiceBusConnectionString;
@@ -106,10 +142,19 @@ internal static class CoreConfigurationMapper
         SetIfMissing(connectionStrings, "SSO", defaults.SecurityConnectionString);
         SetIfMissing(connectionStrings, "ServiceBus", defaults.ServiceBusConnectionString);
         SetIfMissing(settings, "DecryptionKey", defaults.DecryptionKey);
+        SetIfMissing(settings, "AggregateDomains", defaults.AggregateDomains);
         SetIfMissing(settings, "CacheSource", defaults.CacheSource);
         SetIfMissing(settings, "CacheSourceAppId", defaults.CacheSourceAppId);
         SetIfMissing(settings, "CacheExpiry", defaults.CacheExpiry);
         SetIfMissing(settings, "sslPort", defaults.SslPort);
+        SetIfMissing(settings, "MailGraphTenantId", defaults.MailGraphTenantId);
+        SetIfMissing(settings, "MailGraphClientId", defaults.MailGraphClientId);
+        SetIfMissing(settings, "MailGraphClientSecret", defaults.MailGraphClientSecret);
+        SetIfMissing(settings, "MailGraphBaseUrl", defaults.MailGraphBaseUrl);
+        SetIfMissing(settings, "MailGraphLoginBaseUrl", defaults.MailGraphLoginBaseUrl);
+        SetIfMissing(settings, "MailGraphReceiveUser", defaults.MailGraphReceiveUser);
+        SetIfMissing(settings, "MailDefaultSenderProviderName", defaults.MailDefaultSenderProviderName);
+        SetIfMissing(settings, "MailDefaultReceiverProviderName", defaults.MailDefaultReceiverProviderName);
         SetIfMissing(servicesMap, "Workflow", defaults.WorkflowServiceUrl);
 
         MergeMissingEntries(connectionStrings, defaults.ConnectionStrings);
@@ -132,10 +177,19 @@ internal static class CoreConfigurationMapper
     {
         Dictionary<string, string> settings = CloneDictionary(configuration.Settings);
         SetIfPresent(settings, "DecryptionKey", configuration.DecryptionKey);
+        SetIfPresent(settings, "AggregateDomains", configuration.AggregateDomains);
         SetIfPresent(settings, "CacheSource", configuration.CacheSource);
         SetIfPresent(settings, "CacheSourceAppId", configuration.CacheSourceAppId);
         SetIfPresent(settings, "CacheExpiry", configuration.CacheExpiry);
         SetIfPresent(settings, "sslPort", configuration.SslPort);
+        SetIfPresent(settings, "MailGraphTenantId", configuration.MailGraphTenantId);
+        SetIfPresent(settings, "MailGraphClientId", configuration.MailGraphClientId);
+        SetIfPresent(settings, "MailGraphClientSecret", configuration.MailGraphClientSecret);
+        SetIfPresent(settings, "MailGraphBaseUrl", configuration.MailGraphBaseUrl);
+        SetIfPresent(settings, "MailGraphLoginBaseUrl", configuration.MailGraphLoginBaseUrl);
+        SetIfPresent(settings, "MailGraphReceiveUser", configuration.MailGraphReceiveUser);
+        SetIfPresent(settings, "MailDefaultSenderProviderName", configuration.MailDefaultSenderProviderName);
+        SetIfPresent(settings, "MailDefaultReceiverProviderName", configuration.MailDefaultReceiverProviderName);
         return settings;
     }
 
@@ -185,6 +239,17 @@ internal static class CoreConfigurationMapper
             && int.TryParse(raw, NumberStyles.Integer, CultureInfo.InvariantCulture, out value);
     }
 
+    private static bool TryGetBool(
+        IDictionary<string, string> values,
+        string key,
+        out bool value)
+    {
+        value = default;
+
+        return values?.TryGetValue(key, out string raw) == true
+            && bool.TryParse(raw, out value);
+    }
+
     private static void SetIfMissing(
         IDictionary<string, string> values,
         string key,
@@ -207,6 +272,12 @@ internal static class CoreConfigurationMapper
         SetIfMissing(values, key, value.Value.ToString(CultureInfo.InvariantCulture));
     }
 
+    private static void SetIfMissing(
+        IDictionary<string, string> values,
+        string key,
+        bool value) =>
+        SetIfMissing(values, key, value ? "true" : "false");
+
     private static void SetIfPresent(
         IDictionary<string, string> values,
         string key,
@@ -228,4 +299,10 @@ internal static class CoreConfigurationMapper
 
         SetIfPresent(values, key, value.Value.ToString(CultureInfo.InvariantCulture));
     }
+
+    private static void SetIfPresent(
+        IDictionary<string, string> values,
+        string key,
+        bool value) =>
+        SetIfPresent(values, key, value ? "true" : "false");
 }
