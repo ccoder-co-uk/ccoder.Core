@@ -5,6 +5,12 @@ using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.Packaging;
 using cCoder.Data.Models.Security;
 using Newtonsoft.Json;
+using AppSecurityUIBaseline = cCoder.AppSecurity.Exposures.Setup.UIBaseline;
+using ContentManagementUIBaseline = cCoder.ContentManagement.Exposures.Setup.UIBaseline;
+using DocumentManagementUIBaseline = cCoder.DocumentManagement.Exposures.Setup.UIBaseline;
+using LoggingUIBaseline = cCoder.Logging.Exposures.Setup.UIBaseline;
+using MailUIBaseline = cCoder.Mail.Exposures.Setup.UIBaseline;
+using WorkflowUIBaseline = cCoder.Workflow.Exposures.Setup.UIBaseline;
 
 namespace cCoder.Core.Exposures.Setup;
 
@@ -33,15 +39,21 @@ public sealed class BaselineAssetCatalog
             LoadText(Path.Combine("Baseline", "DMS", "BaselineDmsAssets.json")),
             settings) ?? [];
 
-    public Package[] LoadPackages() =>
+    public Package[] LoadCoreReviewPackages() =>
         UIBaseline.Packages
+            .Select(ClonePackage)
+            .Where(package => package.Items?.Count > 0)
+            .ToArray();
+
+    public Package[] LoadPackages() =>
+        LoadBaselinePackages()
             .Select(ClonePackage)
             .Where(package => package.Items?.Count > 0)
             .ToArray();
 
     public T[] LoadPackageItems<T>(string packageName, string itemType)
     {
-        Package package = UIBaseline.Packages.First(found =>
+        Package package = LoadBaselinePackages().First(found =>
             string.Equals(found.Name, packageName, StringComparison.OrdinalIgnoreCase));
 
         return (package.Items ?? [])
@@ -51,14 +63,30 @@ public sealed class BaselineAssetCatalog
     }
 
     public CommonObject[] LoadCommonObjects() =>
-        LoadPackageItems<Resource>("Resources", "Core/Resource")
+        LoadPackageItems<Resource>("Core/Resource")
             .Select(ToCommonObject)
-            .Concat(LoadPackageItems<Component>("Components", "Core/Component").Select(ToCommonObject))
-            .Concat(LoadPackageItems<Script>("Scripts", "Core/Script").Select(ToCommonObject))
+            .Concat(LoadPackageItems<Component>("Core/Component").Select(ToCommonObject))
+            .Concat(LoadPackageItems<Script>("Core/Script").Select(ToCommonObject))
             .GroupBy(item => $"{item.Type}\u001f{item.Key}\u001f{item.Culture}\u001f{item.Name}", StringComparer.OrdinalIgnoreCase)
             .Select(group => group.First())
             .Select(CloneCommonObject)
             .ToArray();
+
+    private T[] LoadPackageItems<T>(string itemType) =>
+        LoadBaselinePackages()
+            .SelectMany(package => package.Items ?? [])
+            .Where(item => string.Equals(item.Type, itemType, StringComparison.OrdinalIgnoreCase))
+            .SelectMany(item => UnpackItems<T>(item.Data))
+            .ToArray();
+
+    private static IEnumerable<Package> LoadBaselinePackages() =>
+        UIBaseline.Packages
+            .Concat(AppSecurityUIBaseline.Packages)
+            .Concat(ContentManagementUIBaseline.Packages)
+            .Concat(DocumentManagementUIBaseline.Packages)
+            .Concat(LoggingUIBaseline.Packages)
+            .Concat(MailUIBaseline.Packages)
+            .Concat(WorkflowUIBaseline.Packages);
 
     private string LoadText(string relativePath)
     {
@@ -213,5 +241,4 @@ public sealed class BaselineAssetCatalog
                 ? [item]
                 : [];
     }
-
 }
