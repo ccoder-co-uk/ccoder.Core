@@ -9,4 +9,9 @@ internal interface IFirstTimeSetupAppService
         FirstTimeSetupRequest request,
         string tenantId,
         CancellationToken cancellationToken = default);
+
+    Task RollbackAsync(
+        string bootstrapUserId,
+        string tenantId,
+        CancellationToken cancellationToken = default);
 }
