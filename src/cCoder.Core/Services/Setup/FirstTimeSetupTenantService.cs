@@ -76,6 +76,44 @@ internal sealed class FirstTimeSetupTenantService(
         return tenantId;
     }
 
+    public async Task RollbackAsync(
+        string bootstrapUserId,
+        string tenantId,
+        CancellationToken cancellationToken = default)
+    {
+        await using DbContext sso = securityDbContextFactory.CreateDbContext(true);
+
+        Tenant tenant = await sso.Set<Tenant>()
+            .IgnoreQueryFilters()
+            .SingleOrDefaultAsync(found => found.Id == tenantId, cancellationToken);
+
+        if (tenant is null)
+            return;
+
+        SSOUserRole[] userRoles = await sso.Set<SSOUserRole>()
+            .IgnoreQueryFilters()
+            .Where(found => found.UserId == bootstrapUserId)
+            .ToArrayAsync(cancellationToken);
+
+        SSORole[] tenantRoles = await sso.Set<SSORole>()
+            .IgnoreQueryFilters()
+            .Where(found => found.TenantId == tenantId)
+            .ToArrayAsync(cancellationToken);
+
+        SSOUser ssoUser = await sso.Set<SSOUser>()
+            .IgnoreQueryFilters()
+            .SingleOrDefaultAsync(found => found.Id == bootstrapUserId, cancellationToken);
+
+        sso.RemoveRange(userRoles);
+        sso.RemoveRange(tenantRoles);
+
+        if (ssoUser is not null)
+            sso.Remove(ssoUser);
+
+        sso.Remove(tenant);
+        await sso.SaveChangesAsync(cancellationToken);
+    }
+
     private async Task EnsureBootstrapAdministratorAccessAsync(
         string tenantId,
         string userId,

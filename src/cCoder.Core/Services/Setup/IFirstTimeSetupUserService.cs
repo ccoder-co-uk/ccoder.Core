@@ -18,4 +18,8 @@ internal interface IFirstTimeSetupUserService
         FirstTimeSetupBootstrapUser bootstrapUser,
         int appId,
         CancellationToken cancellationToken = default);
+
+    Task RollbackAsync(
+        string bootstrapUserId,
+        CancellationToken cancellationToken = default);
 }
