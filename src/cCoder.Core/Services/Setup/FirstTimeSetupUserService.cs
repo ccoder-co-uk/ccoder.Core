@@ -65,6 +65,29 @@ internal sealed class FirstTimeSetupUserService(
         }
     }
 
+    public async Task RollbackAsync(
+        string bootstrapUserId,
+        CancellationToken cancellationToken = default)
+    {
+        await using DbContext core = coreContextFactory.CreateCoreContext();
+
+        User coreUser = await core.Set<User>()
+            .IgnoreQueryFilters()
+            .SingleOrDefaultAsync(found => found.Id == bootstrapUserId, cancellationToken);
+
+        if (coreUser is null)
+            return;
+
+        UserRole[] userRoles = await core.Set<UserRole>()
+            .IgnoreQueryFilters()
+            .Where(found => found.UserId == bootstrapUserId)
+            .ToArrayAsync(cancellationToken);
+
+        core.RemoveRange(userRoles);
+        core.Remove(coreUser);
+        await core.SaveChangesAsync(cancellationToken);
+    }
+
     private async Task EnsureRequiredRoleMembershipsAsync(
         int appId,
         string userId,
