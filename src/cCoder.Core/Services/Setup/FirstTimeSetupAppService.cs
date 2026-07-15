@@ -102,6 +102,33 @@ internal sealed class FirstTimeSetupAppService(
         return app;
     }
 
+    public async Task RollbackAsync(
+        string bootstrapUserId,
+        string tenantId,
+        CancellationToken cancellationToken = default)
+    {
+        await using DbContext core = coreContextFactory.CreateCoreContext();
+
+        App app = await core.Set<App>()
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(found =>
+                found.TenantId == tenantId
+                || found.Domain == tenantId,
+                cancellationToken);
+
+        if (app is null)
+            return;
+
+        UserRole[] appUserRoles = await core.Set<UserRole>()
+            .IgnoreQueryFilters()
+            .Where(found => found.UserId == bootstrapUserId)
+            .ToArrayAsync(cancellationToken);
+
+        core.RemoveRange(appUserRoles);
+        core.Remove(app);
+        await core.SaveChangesAsync(cancellationToken);
+    }
+
     private async Task<App> ResolveFirstAppAsync(
         FirstTimeSetupRequest request,
         string tenantId,
