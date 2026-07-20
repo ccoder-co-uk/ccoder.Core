@@ -371,7 +371,7 @@ function removeQueryParameter(key, sourceURL) {
 
     async function loadComponent(container, componentName, callback) {
         let result = await api
-            .get("Core/Component/Render()?AppId=" + session.app.Id + "&Name=" + componentName + "&culture=" + session.culture + "&theme=" + session.theme);
+            .get("ContentManagement/Component/Render()?AppId=" + session.app.Id + "&Name=" + componentName + "&culture=" + session.culture + "&theme=" + session.theme);
 
         try {
             $(container).append(result.value);
@@ -525,6 +525,7 @@ function getMonthlyDateRange(start, end, format) {
 
     return months;
 }
+
 const model = {
     clone: (obj) => JSON.parse(JSON.stringify(obj)),
 
