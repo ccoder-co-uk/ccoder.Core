@@ -29,7 +29,7 @@ public sealed partial class AppEventIntegrationTests
 
             await SendAsJsonAsync(
                 HttpMethod.Put,
-                $"/Api/Core/App({appId})",
+                $"/Api/ContentManagement/App({appId})",
                 new
                 {
                     id = appId,

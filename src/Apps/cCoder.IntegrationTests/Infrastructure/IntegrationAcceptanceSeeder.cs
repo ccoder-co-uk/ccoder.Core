@@ -317,11 +317,14 @@ internal sealed class IntegrationAcceptanceSeeder(IServiceProvider services)
 
     private static async Task SeedRolesAsync(DbContext core)
     {
-        if (await core.Set<Role>().AnyAsync(role => role.AppId == AppId && role.Name != AcceptanceAdminRoleName))
-            return;
+        string[] existingRoleNames = await core.Set<Role>()
+            .Where(role => role.AppId == AppId)
+            .Select(role => role.Name)
+            .ToArrayAsync();
 
         Role[] roles = AcceptanceSeedData
             .LoadPackageItems<Role>("Roles", "Core/Role")
+            .Where(role => !existingRoleNames.Contains(role.Name))
             .Select(role => new Role
             {
                 Id = Guid.NewGuid(),
@@ -331,6 +334,9 @@ internal sealed class IntegrationAcceptanceSeeder(IServiceProvider services)
                 Privs = NormalizeRolePrivileges(role),
             })
             .ToArray();
+
+        if (roles.Length == 0)
+            return;
 
         await core.Set<Role>().AddRangeAsync(roles);
         await core.SaveChangesAsync();

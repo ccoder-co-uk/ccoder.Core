@@ -25,7 +25,7 @@ internal static class IntegrationServiceProviderFactory
                 Settings = new Dictionary<string, string>
                 {
                     ["DecryptionKey"] = settings.DecryptionKey,
-                    ["AggregateDomains"] = "true"
+                    ["AggregateDomains"] = "false"
                 },
                 Services = new Dictionary<string, string>()
             });

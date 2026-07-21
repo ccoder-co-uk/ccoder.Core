@@ -188,16 +188,44 @@ public sealed partial class SecurityAccountEventIntegrationTests
 
         createdUser.IsActive.Should().Be(expectedIsActive);
 
-        bool hasUsersRole = await verification.Set<UserRole>().IgnoreQueryFilters()
-            .AnyAsync(userRole =>
-                userRole.UserId == createdUser.Id
-                && verification.Set<Role>().IgnoreQueryFilters()
-                    .Any(role =>
-                        role.Id == userRole.RoleId
-                        && role.AppId == BaselineAppId
-                        && role.Name == "Users"));
+        try
+        {
+            await WaitUntilAsync(async () =>
+            {
+                await using CoreDataContext core = CreateCoreContext();
 
-        hasUsersRole.Should().BeTrue();
+                return await core.Set<UserRole>().IgnoreQueryFilters()
+                    .AnyAsync(userRole =>
+                        userRole.UserId == createdUser.Id
+                        && core.Set<Role>().IgnoreQueryFilters()
+                            .Any(role =>
+                                role.Id == userRole.RoleId
+                                && role.AppId == BaselineAppId
+                                && role.Name == "Users"));
+            });
+        }
+        catch (TimeoutException exception)
+        {
+            await using CoreDataContext diagnosticContext = CreateCoreContext();
+            string roleState = string.Join(
+                Environment.NewLine,
+                await diagnosticContext.Set<Role>().IgnoreQueryFilters()
+                    .Where(role => role.Name == "Users")
+                    .Select(role => $"Users role: {role.Id}, AppId={role.AppId}")
+                    .ToArrayAsync());
+            string assignmentState = string.Join(
+                Environment.NewLine,
+                await diagnosticContext.Set<UserRole>().IgnoreQueryFilters()
+                    .Where(userRole => userRole.UserId == createdUser.Id)
+                    .Select(userRole => $"User role assignment: UserId={userRole.UserId}, RoleId={userRole.RoleId}")
+                    .ToArrayAsync());
+
+            throw new TimeoutException(
+                BuildFailureMessage(
+                    $"Timed out waiting for the default Users role assignment.{Environment.NewLine}" +
+                    $"{roleState}{Environment.NewLine}{assignmentState}"),
+                exception);
+        }
     }
 
     private async Task<QueuedEmail> AssertQueuedEmailAsync(RegisterUser user, string subjectFragment)
@@ -260,7 +288,7 @@ public sealed partial class SecurityAccountEventIntegrationTests
         while (DateTimeOffset.UtcNow < deadline)
         {
             using HttpResponseMessage response = await fixture.WebClient.PostAsJsonAsync(
-                "/Api/Core/ReceivedEmail/Receive",
+                "/Api/Mail/ReceivedEmail/Receive",
                 new MailboxReceiveRequest
                 {
                     User = receiveUser,
