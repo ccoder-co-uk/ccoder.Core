@@ -104,28 +104,28 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
-    <PackageReference Include="cCoder.AppSecurity" Version="2026.7.21.733" Condition="'$(UseLocalAppSecurity)' != 'true'" />
-    <PackageReference Include="cCoder.ContentManagement" Version="2026.7.21.743" Condition="'$(UseLocalContentManagement)' != 'true'" />
-    <PackageReference Include="cCoder.Data" Version="2026.7.3.2151" Condition="'$(UseLocalData)' != 'true'" />
-    <PackageReference Include="cCoder.DocumentManagement" Version="2026.7.21.746" Condition="'$(UseLocalDocumentManagement)' != 'true'" />
+    <PackageReference Include="cCoder.AppSecurity" Version="2026.7.21.1338" Condition="'$(UseLocalAppSecurity)' != 'true'" />
+    <PackageReference Include="cCoder.ContentManagement" Version="2026.7.21.1138" Condition="'$(UseLocalContentManagement)' != 'true'" />
+    <PackageReference Include="cCoder.Data" Version="2026.7.21.1024" Condition="'$(UseLocalData)' != 'true'" />
+    <PackageReference Include="cCoder.DocumentManagement" Version="2026.7.21.1142" Condition="'$(UseLocalDocumentManagement)' != 'true'" />
     <PackageReference Include="cCoder.Eventing" Version="2026.7.3.1811" Condition="'$(UseLocalEventing)' != 'true'" />
     <PackageReference Include="cCoder.Eventing.AzureServiceBus" Version="2026.7.3.1811" Condition="'$(UseLocalEventing)' != 'true'" />
     <PackageReference Include="cCoder.Eventing.Http" Version="2026.7.3.1811" Condition="'$(UseLocalEventing)' != 'true'" />
-    <PackageReference Include="cCoder.Logging" Version="2026.7.21.747" Condition="'$(UseLocalLogging)' != 'true'" />
-    <PackageReference Include="cCoder.Mail" Version="2026.7.21.748" Condition="'$(UseLocalMail)' != 'true'" />
-    <PackageReference Include="cCoder.Packaging" Version="2026.7.21.632" Condition="'$(UseLocalPackaging)' != 'true'" />
+    <PackageReference Include="cCoder.Logging" Version="2026.7.21.1231" Condition="'$(UseLocalLogging)' != 'true'" />
+    <PackageReference Include="cCoder.Mail" Version="2026.7.21.1143" Condition="'$(UseLocalMail)' != 'true'" />
+    <PackageReference Include="cCoder.Packaging" Version="2026.7.21.1040" Condition="'$(UseLocalPackaging)' != 'true'" />
     <PackageReference Include="cCoder.Security" Version="2026.7.7.1439" Condition="'$(UseLocalSecurity)' != 'true'" />
     <PackageReference Include="cCoder.Security.Data" Version="2026.7.7.1439" Condition="'$(UseLocalSecurity)' != 'true'" />
-    <PackageReference Include="cCoder.Workflow" Version="2026.7.21.750" Condition="'$(UseLocalWorkflow)' != 'true'" />
-    <PackageReference Include="cCoder.Workflow.Activities" Version="2026.7.21.750" Condition="'$(UseLocalWorkflow)' != 'true'" />
-    <PackageReference Include="cCoder.Workflow.Engine" Version="2026.7.21.750" Condition="'$(UseLocalWorkflow)' != 'true'" />
-    <PackageReference Include="Microsoft.AspNetCore.OData" Version="9.4.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.9" />
+    <PackageReference Include="cCoder.Workflow" Version="2026.7.21.1202" Condition="'$(UseLocalWorkflow)' != 'true'" />
+    <PackageReference Include="cCoder.Workflow.Activities" Version="2026.7.21.1202" Condition="'$(UseLocalWorkflow)' != 'true'" />
+    <PackageReference Include="cCoder.Workflow.Engine" Version="2026.7.21.1202" Condition="'$(UseLocalWorkflow)' != 'true'" />
+    <PackageReference Include="Microsoft.AspNetCore.OData" Version="9.5.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.10" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.7.2" />
-    <PackageReference Include="itext" Version="9.6.0" />
-    <PackageReference Include="itext.pdfhtml" Version="6.3.2" />
-    <PackageReference Include="itext.bouncy-castle-adapter" Version="9.6.0" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.7.3" />
+    <PackageReference Include="itext" Version="9.7.0" />
+    <PackageReference Include="itext.pdfhtml" Version="6.3.3" />
+    <PackageReference Include="itext.bouncy-castle-adapter" Version="9.7.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="10.2.3" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.2.3" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.2.3" />

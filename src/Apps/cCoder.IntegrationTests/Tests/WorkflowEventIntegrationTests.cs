@@ -37,7 +37,7 @@ public sealed partial class WorkflowEventIntegrationTests
 
     private async Task<Guid> CreateFlowDefinitionAsync(int appId, string name)
     {
-        FlowDefinition flow = await PostAsJsonAsync<FlowDefinition>("/Api/Core/FlowDefinition", new
+        FlowDefinition flow = await PostAsJsonAsync<FlowDefinition>("/Api/Workflow/FlowDefinition", new
         {
             appId,
             name,
@@ -59,7 +59,7 @@ public sealed partial class WorkflowEventIntegrationTests
         DateTimeOffset? nextExecution = null,
         string executeAs = null)
     {
-        ScheduledTask task = await PostAsJsonAsync<ScheduledTask>("/Api/Core/ScheduledTask", new
+        ScheduledTask task = await PostAsJsonAsync<ScheduledTask>("/Api/Workflow/ScheduledTask", new
         {
             appId = BaselineAppId,
             flowId,

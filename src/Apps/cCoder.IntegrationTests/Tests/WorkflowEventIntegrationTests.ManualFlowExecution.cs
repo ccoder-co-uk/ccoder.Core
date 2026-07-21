@@ -16,7 +16,7 @@ public sealed partial class WorkflowEventIntegrationTests
             flowId = await CreateFlowDefinitionAsync(BaselineAppId, Unique("Manual Flow"));
             string authToken = await CreateAuthTokenAsync(AdminUserId);
 
-            await PostRawAsync($"/Api/Core/FlowDefinition({flowId})/Execute?t={authToken}", "{}");
+            await PostRawAsync($"/Api/Workflow/FlowDefinition({flowId})/Execute?t={authToken}", "{}");
 
             await WaitUntilAsync(async () => await HasAnyFlowInstanceAsync(flowId));
 

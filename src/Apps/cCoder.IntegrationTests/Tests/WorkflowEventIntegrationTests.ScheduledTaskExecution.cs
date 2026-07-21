@@ -20,7 +20,7 @@ public sealed partial class WorkflowEventIntegrationTests
             flowId = await CreateFlowDefinitionAsync(BaselineAppId, Unique("Scheduled Flow"));
             taskId = await CreateScheduledTaskAsync(flowId, Unique("Scheduled Task"));
 
-            await PostAsync($"/Api/Core/ScheduledTask({taskId})/Execute?incrementNextExecution=true");
+            await PostAsync($"/Api/Workflow/ScheduledTask({taskId})/Execute?incrementNextExecution=true");
 
             await WaitUntilAsync(async () => await HasAnyFlowInstanceAsync(flowId));
 
