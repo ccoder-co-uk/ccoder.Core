@@ -260,7 +260,7 @@ public sealed partial class SecurityAccountEventIntegrationTests
         while (DateTimeOffset.UtcNow < deadline)
         {
             using HttpResponseMessage response = await fixture.WebClient.PostAsJsonAsync(
-                "/Api/Core/ReceivedEmail/Receive",
+                "/Api/Mail/ReceivedEmail/Receive",
                 new MailboxReceiveRequest
                 {
                     User = receiveUser,

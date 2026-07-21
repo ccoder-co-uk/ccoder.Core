@@ -31,7 +31,7 @@ public sealed partial class AppEventIntegrationTests
             await GrantGuestAdminAsync(appId);
             await SeedAppDeleteScenarioAsync(appId, roleId, flowId, folderId, fileId);
 
-            await SendWithOptionalHostAsync(HttpMethod.Delete, $"/Api/Core/App({appId})", host: appDomain);
+            await SendWithOptionalHostAsync(HttpMethod.Delete, $"/Api/ContentManagement/App({appId})", host: appDomain);
 
             await WaitUntilAsync(async () =>
             {

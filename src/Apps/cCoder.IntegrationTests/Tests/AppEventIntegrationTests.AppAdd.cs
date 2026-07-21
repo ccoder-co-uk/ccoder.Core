@@ -25,7 +25,7 @@ public sealed partial class AppEventIntegrationTests
         {
             await EnsureCultureAsync("en-GB", "English (UK)");
 
-            AppEntity app = await PostAsJsonAsync<AppEntity>("/Api/Core/App", new
+            AppEntity app = await PostAsJsonAsync<AppEntity>("/Api/ContentManagement/App", new
             {
                 name = Unique("Integration App"),
                 domain = $"{Unique("integration")}.local",

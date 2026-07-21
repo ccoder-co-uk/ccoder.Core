@@ -530,7 +530,7 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
             ["ConnectionStrings__Core"] = Settings.CoreConnectionString,
             ["ConnectionStrings__SSO"] = Settings.SsoConnectionString,
             ["Settings__DecryptionKey"] = Settings.DecryptionKey,
-            ["Settings__AggregateDomains"] = "true",
+            ["Settings__AggregateDomains"] = "false",
             ["Services__Workflow"] = WorkflowBaseAddress.ToString(),
             ["Eventing__ProviderType"] = Settings.EventProviderType,
             ["Eventing__Http__MaxConcurrency"] = "1"

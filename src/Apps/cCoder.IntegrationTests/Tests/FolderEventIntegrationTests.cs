@@ -37,7 +37,7 @@ public sealed partial class FolderEventIntegrationTests
 
     private async Task<Guid> CreateFlowDefinitionAsync(int appId, string name, string authToken)
     {
-        FlowDefinition flow = await PostAsJsonAsync<FlowDefinition>("/Api/Core/FlowDefinition", new
+        FlowDefinition flow = await PostAsJsonAsync<FlowDefinition>("/Api/Workflow/FlowDefinition", new
         {
             appId,
             name,
@@ -55,7 +55,7 @@ public sealed partial class FolderEventIntegrationTests
 
     private async Task<Guid> CreateWorkflowEventAsync(Guid flowId, string eventContext, string authToken)
     {
-        WorkflowEvent workflowEvent = await PostAsJsonAsync<WorkflowEvent>("/Api/Core/WorkflowEvent", new
+        WorkflowEvent workflowEvent = await PostAsJsonAsync<WorkflowEvent>("/Api/Workflow/WorkflowEvent", new
         {
             flowId,
             type = "Acceptance",
