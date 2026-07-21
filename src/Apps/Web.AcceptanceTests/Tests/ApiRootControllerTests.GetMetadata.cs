@@ -66,7 +66,7 @@ public sealed partial class ApiRootControllerTests
         contextTypes.Should().Contain(
         [
             "Security/SSORole",
-            "Core/FlowDefinition",
+            "Workflow/FlowDefinition",
         ]);
 
         contextTypes.Should().NotContain(
