@@ -317,11 +317,14 @@ internal sealed class IntegrationAcceptanceSeeder(IServiceProvider services)
 
     private static async Task SeedRolesAsync(DbContext core)
     {
-        if (await core.Set<Role>().AnyAsync(role => role.AppId == AppId && role.Name != AcceptanceAdminRoleName))
-            return;
+        string[] existingRoleNames = await core.Set<Role>()
+            .Where(role => role.AppId == AppId)
+            .Select(role => role.Name)
+            .ToArrayAsync();
 
         Role[] roles = AcceptanceSeedData
-            .LoadPackageItems<Role>("Roles", "AppSecurity/Role")
+            .LoadPackageItems<Role>("Roles", "Core/Role")
+            .Where(role => !existingRoleNames.Contains(role.Name))
             .Select(role => new Role
             {
                 Id = Guid.NewGuid(),
@@ -331,6 +334,9 @@ internal sealed class IntegrationAcceptanceSeeder(IServiceProvider services)
                 Privs = NormalizeRolePrivileges(role),
             })
             .ToArray();
+
+        if (roles.Length == 0)
+            return;
 
         await core.Set<Role>().AddRangeAsync(roles);
         await core.SaveChangesAsync();
@@ -352,7 +358,7 @@ internal sealed class IntegrationAcceptanceSeeder(IServiceProvider services)
             return;
 
         Layout[] layouts = AcceptanceSeedData
-            .LoadPackageItems<Layout>("Layouts", "ContentManagement/Layout")
+            .LoadPackageItems<Layout>("Layouts", "Core/Layout")
             .Select(layout => new Layout
             {
                 Id = 0,
@@ -379,7 +385,7 @@ internal sealed class IntegrationAcceptanceSeeder(IServiceProvider services)
             return;
 
         Template[] templates = AcceptanceSeedData
-            .LoadPackageItems<Template>("Templates", "ContentManagement/Template")
+            .LoadPackageItems<Template>("Templates", "Core/Template")
             .Select(template => new Template
             {
                 Id = 0,
@@ -437,7 +443,7 @@ internal sealed class IntegrationAcceptanceSeeder(IServiceProvider services)
             return;
 
         Resource[] resources = AcceptanceSeedData
-            .LoadPackageItems<Resource>("Resources", "ContentManagement/Resource")
+            .LoadPackageItems<Resource>("Resources", "Core/Resource")
             .Select(resource => new Resource
             {
                 Id = 0,
@@ -465,7 +471,7 @@ internal sealed class IntegrationAcceptanceSeeder(IServiceProvider services)
             return;
 
         Component[] components = AcceptanceSeedData
-            .LoadPackageItems<Component>("Components", "ContentManagement/Component")
+            .LoadPackageItems<Component>("Components", "Core/Component")
             .Select(component => new Component
             {
                 Id = 0,
@@ -493,7 +499,7 @@ internal sealed class IntegrationAcceptanceSeeder(IServiceProvider services)
             return;
 
         Script[] scripts = AcceptanceSeedData
-            .LoadPackageItems<Script>("Scripts", "ContentManagement/Script")
+            .LoadPackageItems<Script>("Scripts", "Core/Script")
             .Select(script => new Script
             {
                 Id = 0,
