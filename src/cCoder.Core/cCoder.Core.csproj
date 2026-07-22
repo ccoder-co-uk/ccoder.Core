@@ -106,7 +106,7 @@
     <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
     <PackageReference Include="cCoder.AppSecurity" Version="2026.7.22.841" Condition="'$(UseLocalAppSecurity)' != 'true'" />
     <PackageReference Include="cCoder.ContentManagement" Version="2026.7.22.909" Condition="'$(UseLocalContentManagement)' != 'true'" />
-    <PackageReference Include="cCoder.Data" Version="2026.7.22.823" Condition="'$(UseLocalData)' != 'true'" />
+    <PackageReference Include="cCoder.Data" Version="2026.7.22.1156" Condition="'$(UseLocalData)' != 'true'" />
     <PackageReference Include="cCoder.DocumentManagement" Version="2026.7.22.903" Condition="'$(UseLocalDocumentManagement)' != 'true'" />
     <PackageReference Include="cCoder.Eventing" Version="2026.7.3.1811" Condition="'$(UseLocalEventing)' != 'true'" />
     <PackageReference Include="cCoder.Eventing.AzureServiceBus" Version="2026.7.3.1811" Condition="'$(UseLocalEventing)' != 'true'" />
@@ -114,8 +114,8 @@
     <PackageReference Include="cCoder.Logging" Version="2026.7.22.913" Condition="'$(UseLocalLogging)' != 'true'" />
     <PackageReference Include="cCoder.Mail" Version="2026.7.22.911" Condition="'$(UseLocalMail)' != 'true'" />
     <PackageReference Include="cCoder.Packaging" Version="2026.7.22.803" Condition="'$(UseLocalPackaging)' != 'true'" />
-    <PackageReference Include="cCoder.Security" Version="2026.7.22.814" Condition="'$(UseLocalSecurity)' != 'true'" />
-    <PackageReference Include="cCoder.Security.Data" Version="2026.7.22.814" Condition="'$(UseLocalSecurity)' != 'true'" />
+    <PackageReference Include="cCoder.Security" Version="2026.7.22.1145" Condition="'$(UseLocalSecurity)' != 'true'" />
+    <PackageReference Include="cCoder.Security.Data" Version="2026.7.22.1145" Condition="'$(UseLocalSecurity)' != 'true'" />
     <PackageReference Include="cCoder.Workflow" Version="2026.7.22.927" Condition="'$(UseLocalWorkflow)' != 'true'" />
     <PackageReference Include="cCoder.Workflow.Activities" Version="2026.7.22.927" Condition="'$(UseLocalWorkflow)' != 'true'" />
     <PackageReference Include="cCoder.Workflow.Engine" Version="2026.7.22.927" Condition="'$(UseLocalWorkflow)' != 'true'" />

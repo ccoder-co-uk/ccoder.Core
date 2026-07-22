@@ -214,6 +214,17 @@ public sealed partial class WorkflowEventIntegrationTests
                 await sso.SaveChangesAsync();
             }
 
+            UserEvent[] userEvents = await sso.Set<UserEvent>()
+                .IgnoreQueryFilters()
+                .Where(found => found.CreatedBy == userId)
+                .ToArrayAsync();
+
+            if (userEvents.Length > 0)
+            {
+                sso.RemoveRange(userEvents);
+                await sso.SaveChangesAsync();
+            }
+
             cCoder.Security.Objects.Entities.SSOUser ssoUser = await sso.Set<cCoder.Security.Objects.Entities.SSOUser>()
                 .IgnoreQueryFilters()
                 .FirstOrDefaultAsync(found => found.Id == userId);

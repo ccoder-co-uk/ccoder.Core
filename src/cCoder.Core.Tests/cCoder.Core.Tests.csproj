@@ -24,7 +24,7 @@
     <ProjectReference Include="..\Apps\HostedServices\HostedServices.csproj" />
     <PackageReference Include="cCoder.AppSecurity" Version="2026.7.22.841" />
     <PackageReference Include="cCoder.ContentManagement" Version="2026.7.22.909" />
-    <PackageReference Include="cCoder.Data" Version="2026.7.22.823" />
+    <PackageReference Include="cCoder.Data" Version="2026.7.22.1156" />
   </ItemGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
