@@ -4,7 +4,9 @@
 
 using System.Text.Json;
 using cCoder.Data.Models;
+using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.Packaging;
+using cCoder.Data.Models.Security;
 using Newtonsoft.Json;
 
 namespace cCoder.IntegrationTests.Infrastructure;
@@ -20,7 +22,37 @@ internal static class AcceptanceSeedData
 value:             value.GetRawText(),settings:             cCoder.Data.Extensions.ObjectExtensions.GetJSONSettings());
     }
 
-    public static T[] LoadPackageItems<T>(string packageName, string itemType)
+    public static Role[] LoadRoles(string packageName, string itemType) =>
+        LoadPackageItems(packageName: packageName, itemType: itemType, modelType: typeof(Role))
+            .Cast<Role>()
+            .ToArray();
+
+    public static Layout[] LoadLayouts(string packageName, string itemType) =>
+        LoadPackageItems(packageName: packageName, itemType: itemType, modelType: typeof(Layout))
+            .Cast<Layout>()
+            .ToArray();
+
+    public static Template[] LoadTemplates(string packageName, string itemType) =>
+        LoadPackageItems(packageName: packageName, itemType: itemType, modelType: typeof(Template))
+            .Cast<Template>()
+            .ToArray();
+
+    public static Resource[] LoadResources(string packageName, string itemType) =>
+        LoadPackageItems(packageName: packageName, itemType: itemType, modelType: typeof(Resource))
+            .Cast<Resource>()
+            .ToArray();
+
+    public static Component[] LoadComponents(string packageName, string itemType) =>
+        LoadPackageItems(packageName: packageName, itemType: itemType, modelType: typeof(Component))
+            .Cast<Component>()
+            .ToArray();
+
+    public static Script[] LoadScripts(string packageName, string itemType) =>
+        LoadPackageItems(packageName: packageName, itemType: itemType, modelType: typeof(Script))
+            .Cast<Script>()
+            .ToArray();
+
+    private static object[] LoadPackageItems(string packageName, string itemType, Type modelType)
     {
         Package package = LoadExportPackages()
             .First(predicate: found =>
@@ -28,7 +60,7 @@ value:             value.GetRawText(),settings:             cCoder.Data.Extensio
 
         return package.Items
             .Where(predicate: item => string.Equals(a: item.Type,b: itemType,comparisonType: StringComparison.OrdinalIgnoreCase))
-            .SelectMany(selector: item => UnpackItems<T>(data: item.Data))
+            .SelectMany(selector: item => UnpackItems(data: item.Data, modelType: modelType))
             .ToArray();
     }
 
@@ -56,16 +88,25 @@ value:             value.GetRawText(),settings:             cCoder.Data.Extensio
 value:             value.GetRawText(),settings:             cCoder.Data.Extensions.ObjectExtensions.GetJSONSettings());
     }
 
-    private static IEnumerable<T> UnpackItems<T>(string data)
+    private static IEnumerable<object> UnpackItems(string data, Type modelType)
     {
         string trimmed = data.TrimStart();
 
-        return trimmed.StartsWith(value: "[",comparisonType: StringComparison.Ordinal)
-            ? JsonConvert.DeserializeObject<T[]>(
-value:                 trimmed,settings:                 cCoder.Data.Extensions.ObjectExtensions.GetJSONSettings())
-            : [
-                JsonConvert.DeserializeObject<T>(
-value:                     trimmed,settings:                     cCoder.Data.Extensions.ObjectExtensions.GetJSONSettings())
-            ];
+        if (trimmed.StartsWith(value: "[", comparisonType: StringComparison.Ordinal))
+        {
+            Array values = (Array)JsonConvert.DeserializeObject(
+                value: trimmed,
+                type: modelType.MakeArrayType(),
+                settings: cCoder.Data.Extensions.ObjectExtensions.GetJSONSettings());
+
+            return values.Cast<object>();
+        }
+
+        object value = JsonConvert.DeserializeObject(
+            value: trimmed,
+            type: modelType,
+            settings: cCoder.Data.Extensions.ObjectExtensions.GetJSONSettings());
+
+        return [value];
     }
 }

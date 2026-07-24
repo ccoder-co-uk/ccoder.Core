@@ -16,6 +16,7 @@ public sealed partial class WorkflowEventIntegrationTests
     [Fact]
     public async Task ScheduledTaskExecution_QueuesAndCompletesWorkflowInstance()
     {
+        // Given
         Guid flowId = Guid.Empty;
         int taskId = 0;
 
@@ -24,6 +25,7 @@ public sealed partial class WorkflowEventIntegrationTests
             flowId = await CreateFlowDefinitionAsync(appId: BaselineAppId,name: Unique(prefix: "Scheduled Flow"));
             taskId = await CreateScheduledTaskAsync(flowId: flowId,name: Unique(prefix: "Scheduled Task"));
 
+            // When
             await PostAsync(relativeUrl: $"/Api/Workflow/ScheduledTask({taskId})/Execute?incrementNextExecution=true");
 
             await WaitUntilAsync(predicate: async () => await HasAnyFlowInstanceAsync(flowId: flowId));
@@ -33,6 +35,7 @@ predicate:                 async () => await HasFlowInstanceStateAsync(flowId: f
 
             FlowInstanceData instance = await GetLatestInstanceAsync(flowId: flowId);
 
+            // Then
             instance.Should()
                 .NotBeNull();
 
@@ -65,6 +68,7 @@ predicate:                 async () => await HasFlowInstanceStateAsync(flowId: f
     [Fact]
     public async Task ScheduledTaskRunner_ExecutesDueScheduledTask()
     {
+        // Given
         Guid flowId = Guid.Empty;
         int taskId = 0;
 
@@ -75,6 +79,7 @@ predicate:                 async () => await HasFlowInstanceStateAsync(flowId: f
             taskId = await CreateScheduledTaskAsync(
 flowId:                 flowId,name:                 Unique(prefix: "Hosted Scheduled Task"),                nextExecution: DateTimeOffset.UtcNow.AddMinutes(minutes: -5));
 
+            // When
             await fixture.RestartHostedServicesAsync();
 
             await WaitUntilAsync(
@@ -85,6 +90,7 @@ predicate:                 async () => await HasFlowInstanceStateAsync(flowId: f
 
             FlowInstanceData instance = await GetLatestInstanceAsync(flowId: flowId);
 
+            // Then
             instance.Should()
                 .NotBeNull();
 
@@ -129,6 +135,7 @@ predicate:                 async () => await HasFlowInstanceStateAsync(flowId: f
     [Fact]
     public async Task ScheduledTaskRunner_ExecutesTaskThatBecomesDueAfterStartupWithoutExceptions()
     {
+        // Given
         Guid flowId = Guid.Empty;
         int taskId = 0;
 
@@ -144,11 +151,13 @@ flowId:                 flowId,name:                 Unique(prefix: "Delayed Hos
             await WaitUntilAsync(
 predicate:                 () => Task.FromResult(result: HostedServicesOutputContains(value: "No scheduled tasks are due to run.")),                attempts: 40,                delayMilliseconds: 250,                diagnosticsFactory: () => BuildFlowDiagnosticsAsync(flowId: flowId));
 
+            // When
             await UpdateScheduledTaskNextExecutionAsync(taskId: taskId,nextExecution: DateTimeOffset.UtcNow.AddMinutes(minutes: -5));
 
             await WaitUntilAsync(
 predicate:                 async () => await HasFlowInstanceStateAsync(flowId: flowId,state: "Complete"),                attempts: 180,                delayMilliseconds: 500,                diagnosticsFactory: () => BuildFlowDiagnosticsAsync(flowId: flowId));
 
+            // Then
             fixture.HostedServicesOutput.Should()
                 .NotContain(unexpected: "Exception thrown whilst raising scheduled_task_execute event");
 
@@ -198,6 +207,7 @@ predicate:                 async () => await HasFlowInstanceStateAsync(flowId: f
     [Fact]
     public async Task ScheduledTaskRunner_QueuesTaskForExecuteOnlyUserWithoutReadPrivilege()
     {
+        // Given
         Guid flowId = Guid.Empty;
         int taskId = 0;
         string executeOnlyUserId = null;
@@ -212,11 +222,13 @@ predicate:                 async () => await HasFlowInstanceStateAsync(flowId: f
             taskId = await CreateScheduledTaskAsync(
 flowId:                 flowId,name:                 Unique(prefix: "Execute Only Scheduled Task"),                nextExecution: DateTimeOffset.UtcNow.AddMinutes(minutes: -5),                executeAs: executeOnlyUserId);
 
+            // When
             await fixture.RestartHostedServicesAsync();
 
             await WaitUntilAsync(
 predicate:                 async () => await HasAnyFlowInstanceAsync(flowId: flowId),                attempts: 60,                diagnosticsFactory: () => BuildFlowDiagnosticsAsync(flowId: flowId));
 
+            // Then
             fixture.HostedServicesOutput.Should()
                 .NotContain(unexpected: "Exception thrown whilst raising scheduled_task_execute event");
 

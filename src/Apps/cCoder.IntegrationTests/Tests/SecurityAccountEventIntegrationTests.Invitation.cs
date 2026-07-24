@@ -15,6 +15,7 @@ public sealed partial class SecurityAccountEventIntegrationTests
     [Fact]
     public async Task Invitation_CreatesAppUserQueuesInvitationEmailAndAllowsAcceptedLogin()
     {
+        // Given
         await EnsureMailSenderAsync();
         RegisterUser user = CreateRegisterUser(purpose: "invitation");
         await CleanupAccountAsync(email: user.Email);
@@ -22,8 +23,10 @@ public sealed partial class SecurityAccountEventIntegrationTests
         DateTimeOffset requestedAt = DateTimeOffset.UtcNow;
         string authToken = await CreateAuthTokenAsync(userId: AdminUserId);
 
+        // When
         (SSOUser invitedUser, string inviteToken) = await InviteAsync(user: user,authToken: authToken);
 
+        // Then
         invitedUser.Email.Should()
             .Be(expected: user.Email);
 

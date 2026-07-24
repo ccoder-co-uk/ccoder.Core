@@ -17,6 +17,7 @@ public sealed partial class FirstTimeSetupTests
     [Fact]
     public async Task ShouldResumeWhenSecurityTenantAlreadyExists()
     {
+        // Given
         await using SetupHarness harness = await SetupHarness.CreateAsync();
 
         ITenantManager tenantManager = harness.Factory.Services.GetRequiredService<ITenantManager>();
@@ -43,10 +44,12 @@ setupDetails:             new SetupDetails
                 }
             });
 
+        // When
         await SubmitSetupAsync(harness: harness);
 
         using HttpResponseMessage response = await harness.Client.GetAsync(requestUri: "/Setup");
 
+        // Then
         response.StatusCode.Should()
             .Be(expected: HttpStatusCode.Redirect);
 

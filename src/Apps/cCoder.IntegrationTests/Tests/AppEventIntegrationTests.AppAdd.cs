@@ -21,6 +21,7 @@ public sealed partial class AppEventIntegrationTests
     [Fact]
     public async Task AppAdd_RaisesExternalEventAndHostedServicesCreatesChildren()
     {
+        // Given
         int appId = 0;
         string flowName = Unique(prefix: "App Add Flow");
         string authToken = await CreateAuthTokenAsync(userId: AdminUserId);
@@ -29,7 +30,10 @@ public sealed partial class AppEventIntegrationTests
         {
             await EnsureCultureAsync(cultureId: "en-GB",name: "English (UK)");
 
-            AppEntity app = await PostAsJsonAsync<AppEntity>(relativeUrl: "/Api/ContentManagement/App",payload: new
+            // When
+            AppEntity app = (AppEntity)await PostAsJsonAsync(
+                relativeUrl: "/Api/ContentManagement/App",
+                payload: new
             {
                 name = Unique(prefix: "Integration App"),
                 domain = $"{Unique(prefix: "integration")}.local",
@@ -86,7 +90,9 @@ public sealed partial class AppEventIntegrationTests
                         lastUpdated = DateTimeOffset.UtcNow
                     }
                 }
-            },authToken: authToken);
+                },
+                responseType: typeof(AppEntity),
+                authToken: authToken);
 
             appId = app.Id;
 
@@ -116,6 +122,7 @@ public sealed partial class AppEventIntegrationTests
 
             await using CoreDataContext verification = CreateCoreContext();
 
+            // Then
             (await verification.Set<Role>()
                 .IgnoreQueryFilters()
                 .CountAsync(predicate: role => role.AppId == appId)).Should()

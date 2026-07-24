@@ -9,13 +9,18 @@ using Xunit;
 namespace Web.AcceptanceTests.Tests;
 
 [Collection(WebAcceptanceCollection.Name)]
-public sealed class HealthEndpointTests(WebAcceptanceFixture fixture)
+public sealed partial class HealthEndpointTests(WebAcceptanceFixture fixture)
 {
     [Fact]
     public async Task ShouldReturnOk()
     {
-        string content = await fixture.Client.GetStringAsync(requestUri: "Health");
+        // Given
+        const string healthEndpoint = "Health";
 
+        // When
+        string content = await fixture.Client.GetStringAsync(requestUri: healthEndpoint);
+
+        // Then
         content.Should()
             .Be(expected: "OK");
     }

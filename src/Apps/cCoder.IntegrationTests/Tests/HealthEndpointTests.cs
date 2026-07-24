@@ -9,15 +9,20 @@ using Xunit;
 namespace cCoder.IntegrationTests.Tests;
 
 [Collection(IntegrationAcceptanceCollection.Name)]
-public sealed class HealthEndpointTests(IntegrationAcceptanceFixture fixture)
+public sealed partial class HealthEndpointTests(IntegrationAcceptanceFixture fixture)
 {
     [Fact]
     public async Task ShouldReturnOkFromAllApps()
     {
-        string web = await fixture.WebClient.GetStringAsync(requestUri: "Health");
-        string hostedServices = await fixture.HostedServicesClient.GetStringAsync(requestUri: "Health");
+        // Given
+        const string healthEndpoint = "Health";
+
+        // When
+        string web = await fixture.WebClient.GetStringAsync(requestUri: healthEndpoint);
+        string hostedServices = await fixture.HostedServicesClient.GetStringAsync(requestUri: healthEndpoint);
         string workflow = await GetWorkflowHealthAsync();
 
+        // Then
         web.Should()
             .Be(expected: "OK");
 

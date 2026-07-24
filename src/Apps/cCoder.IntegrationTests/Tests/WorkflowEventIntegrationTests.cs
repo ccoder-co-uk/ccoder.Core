@@ -41,7 +41,9 @@ public sealed partial class WorkflowEventIntegrationTests
 
     private async Task<Guid> CreateFlowDefinitionAsync(int appId, string name)
     {
-        FlowDefinition flow = await PostAsJsonAsync<FlowDefinition>(relativeUrl: "/Api/Workflow/FlowDefinition",payload: new
+        FlowDefinition flow = (FlowDefinition)await PostAsJsonAsync(
+            relativeUrl: "/Api/Workflow/FlowDefinition",
+            payload: new
         {
             appId,
             name,
@@ -52,7 +54,8 @@ public sealed partial class WorkflowEventIntegrationTests
             createdOn = DateTimeOffset.UtcNow,
             lastUpdatedBy = "Guest",
             lastUpdated = DateTimeOffset.UtcNow
-        });
+            },
+            responseType: typeof(FlowDefinition));
 
         return flow.Id;
     }
@@ -63,7 +66,9 @@ public sealed partial class WorkflowEventIntegrationTests
         DateTimeOffset? nextExecution = null,
         string executeAs = null)
     {
-        ScheduledTask task = await PostAsJsonAsync<ScheduledTask>(relativeUrl: "/Api/Workflow/ScheduledTask",payload: new
+        ScheduledTask task = (ScheduledTask)await PostAsJsonAsync(
+            relativeUrl: "/Api/Workflow/ScheduledTask",
+            payload: new
         {
             appId = BaselineAppId,
             flowId,
@@ -77,7 +82,8 @@ public sealed partial class WorkflowEventIntegrationTests
             created = DateTimeOffset.UtcNow,
             lastUpdated = DateTimeOffset.UtcNow,
             nextExecution = nextExecution ?? DateTimeOffset.UtcNow.AddMinutes(minutes: 5)
-        });
+            },
+            responseType: typeof(ScheduledTask));
 
         return task.Id;
     }
@@ -317,8 +323,8 @@ workflowEvents:                 core.Set<WorkflowEvent>()
     private bool HostedServicesOutputContains(string value) =>
         fixture.HostedServicesOutput.Contains(value: value,comparisonType: StringComparison.Ordinal);
 
-    private async Task PostAsync(string relativeUrl) =>
-        await SendWithOptionalHostAsync(method: HttpMethod.Post,relativeUrl: relativeUrl);
+    private Task PostAsync(string relativeUrl) =>
+        SendWithOptionalHostAsync(method: HttpMethod.Post,relativeUrl: relativeUrl);
 
     private async Task PostRawAsync(string relativeUrl, string body, string host = null)
     {
@@ -339,9 +345,10 @@ workflowEvents:                 core.Set<WorkflowEvent>()
             .Be(expected: HttpStatusCode.OK,because: content);
     }
 
-    private async Task<T> PostAsJsonAsync<T>(
+    private async Task<object> PostAsJsonAsync(
         string relativeUrl,
         object payload,
+        Type responseType,
         string authToken = null)
     {
         using HttpRequestMessage request = new(HttpMethod.Post, relativeUrl)
@@ -361,7 +368,7 @@ workflowEvents:                 core.Set<WorkflowEvent>()
         response.StatusCode.Should()
             .Be(expected: HttpStatusCode.OK,because: content);
 
-        return JsonSerializer.Deserialize<T>(json: content,options: JsonOptions)
+        return JsonSerializer.Deserialize(json: content, returnType: responseType, options: JsonOptions)
             ?? throw new InvalidOperationException($"Expected payload for {relativeUrl}.");
     }
 

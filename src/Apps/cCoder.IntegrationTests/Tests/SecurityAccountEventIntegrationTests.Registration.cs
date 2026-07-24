@@ -15,6 +15,7 @@ public sealed partial class SecurityAccountEventIntegrationTests
     [Fact]
     public async Task Registration_SendsConfirmationEmailAndCompletesRegistration()
     {
+        // Given
         await EnsureMailSenderAsync();
         RegisterUser user = CreateRegisterUser(purpose: "registration");
         await CleanupAccountAsync(email: user.Email);
@@ -22,8 +23,10 @@ public sealed partial class SecurityAccountEventIntegrationTests
         DateTimeOffset requestedAt = DateTimeOffset.UtcNow;
         string authToken = await CreateAuthTokenAsync(userId: AdminUserId);
 
+        // When
         (SSOUser registeredUser, string confirmationToken) = await RegisterAsync(user: user,authToken: authToken);
 
+        // Then
         registeredUser.Email.Should()
             .Be(expected: user.Email);
 

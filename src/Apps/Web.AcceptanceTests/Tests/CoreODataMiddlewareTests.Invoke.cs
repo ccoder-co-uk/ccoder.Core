@@ -14,8 +14,11 @@ public sealed partial class CoreODataMiddlewareTests
     [Fact]
     public async Task Invoke_ReturnsServiceDocument()
     {
+        // Given
+        string requestUri = BaseUrl;
+
         // When
-        using HttpResponseMessage response = await Client.GetAsync(requestUri: BaseUrl);
+        using HttpResponseMessage response = await Client.GetAsync(requestUri: requestUri);
         string content = await response.Content.ReadAsStringAsync();
 
         response.StatusCode.Should()
@@ -31,8 +34,11 @@ public sealed partial class CoreODataMiddlewareTests
     [Fact]
     public async Task Invoke_ReturnsMetadataDocument()
     {
+        // Given
+        string requestUri = $"{BaseUrl}/$metadata";
+
         // When
-        using HttpResponseMessage response = await Client.GetAsync(requestUri: $"{BaseUrl}/$metadata");
+        using HttpResponseMessage response = await Client.GetAsync(requestUri: requestUri);
         string content = await response.Content.ReadAsStringAsync();
 
         response.StatusCode.Should()

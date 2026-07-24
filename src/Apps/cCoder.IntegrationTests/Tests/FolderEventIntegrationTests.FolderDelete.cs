@@ -13,6 +13,7 @@ public sealed partial class FolderEventIntegrationTests
     [Fact]
     public async Task FolderDelete_RaisesExternalEventAndCompletesSubscribedWorkflow()
     {
+        // Given
         Guid flowId = Guid.Empty;
         Guid workflowEventId = Guid.Empty;
         Guid folderId = Guid.Empty;
@@ -25,6 +26,7 @@ public sealed partial class FolderEventIntegrationTests
             folderId = await CreateFolderAsync(appId: BaselineAppId,name: folderName);
             workflowEventId = await CreateWorkflowEventAsync(flowId: flowId,eventContext: $"folder_delete{folderName}",authToken: authToken);
 
+            // When
             await SendWithOptionalHostAsync(method: HttpMethod.Delete,relativeUrl: $"/Api/DocumentManagement/Folder({folderId})",authToken: authToken);
 
             await WaitUntilAsync(predicate: async () => await HasAnyFlowInstanceAsync(flowId: flowId));
@@ -34,6 +36,7 @@ predicate:                 async () => await HasFlowInstanceStateAsync(flowId: f
 
             FlowInstanceData instance = await GetLatestInstanceAsync(flowId: flowId);
 
+            // Then
             instance.Caller.Should()
                 .Be(expected: AdminUserId);
 

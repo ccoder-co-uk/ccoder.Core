@@ -35,11 +35,14 @@ public sealed partial class FirstTimeSetupTests
     [Fact]
     public async Task ShouldRenderSetupExperienceWhenEnvironmentIsEmpty()
     {
+        // Given
         await using SetupHarness harness = await SetupHarness.CreateAsync();
 
+        // When
         using HttpResponseMessage response = await harness.Client.GetAsync(requestUri: "/");
         string content = await response.Content.ReadAsStringAsync();
 
+        // Then
         response.StatusCode.Should()
             .Be(expected: HttpStatusCode.OK);
 
@@ -53,8 +56,10 @@ public sealed partial class FirstTimeSetupTests
     [Fact]
     public async Task ShouldCreateTenantAdminAndBaselineAppWhenSetupSubmitted()
     {
+        // Given
         await using SetupHarness harness = await SetupHarness.CreateAsync();
 
+        // When
         await SubmitSetupAsync(harness: harness);
 
         using HttpResponseMessage setupResponse = await harness.Client.GetAsync(requestUri: "/Setup");
@@ -77,6 +82,7 @@ public sealed partial class FirstTimeSetupTests
             .IgnoreQueryFilters()
             .SingleAsync();
 
+        // Then
         app.Domain.Should()
             .Be(expected: "localhost");
 
@@ -280,6 +286,7 @@ requestUri:                 $"/Api/Security/SSOUserRole?$filter=RoleId eq {porta
     [Fact]
     public async Task ShouldCreateDatabasesWhenSetupSubmittedAgainstMissingDatabases()
     {
+        // Given
         await using SetupHarness harness = await SetupHarness.CreateAsync();
         await harness.DropDatabasesAsync();
 
@@ -292,6 +299,7 @@ requestUri:                 $"/Api/Security/SSOUserRole?$filter=RoleId eq {porta
         setupHtml.Should()
             .Contain(expected: "Welcome to cCoder.Core platform setup");
 
+        // When
         await SubmitSetupAsync(harness: harness);
 
         await using DbContext core = harness.Factory.Services
@@ -302,6 +310,7 @@ requestUri:                 $"/Api/Security/SSOUserRole?$filter=RoleId eq {porta
             .GetRequiredService<ISecurityDbContextFactory>()
             .CreateDbContext(ignoreAuthInfo: true);
 
+        // Then
         (await core.Set<App>()
             .IgnoreQueryFilters()
             .CountAsync()).Should()
@@ -316,6 +325,7 @@ requestUri:                 $"/Api/Security/SSOUserRole?$filter=RoleId eq {porta
     [Fact]
     public async Task ShouldExposeCoreReviewClientPageAfterSetup()
     {
+        // Given
         await using SetupHarness harness = await SetupHarness.CreateAsync();
 
         await SubmitSetupAsync(harness: harness);
@@ -324,6 +334,7 @@ requestUri:                 $"/Api/Security/SSOUserRole?$filter=RoleId eq {porta
             .GetRequiredService<ICoreContextFactory>()
             .CreateCoreContext();
 
+        // When
         Page clientsPage = await core.Set<Page>()
             .IgnoreQueryFilters()
             .SingleAsync(predicate: found => found.Path == "Clients");
@@ -341,6 +352,7 @@ inner:                 core.Set<Role>()
             .OrderBy(keySelector: name => name)
             .ToArrayAsync();
 
+        // Then
         guestRoleNames.Should()
             .Equal(expected: "Guests");
 
@@ -372,10 +384,12 @@ inner:                 core.Set<Role>()
     [Fact]
     public async Task ShouldAllowAdministratorToReadGuestUserForRoleManagement()
     {
+        // Given
         await using SetupHarness harness = await SetupHarness.CreateAsync();
 
         await SubmitSetupAsync(harness: harness);
 
+        // When
         using HttpResponseMessage userResponse =
             await harness.Client.GetAsync(requestUri: "/Api/AppSecurity/User?$filter=Id eq 'Guest'");
 
@@ -387,6 +401,7 @@ inner:                 core.Set<Role>()
         JsonNode userNode = JsonNode.Parse(json: userJson)!;
         JsonArray users = userNode["value"]?.AsArray() ?? [];
 
+        // Then
         users.Should()
             .ContainSingle();
 
@@ -420,6 +435,7 @@ inner:                 core.Set<Role>()
     [Fact]
     public async Task ShouldReturnTopNavRootPagesForAdministratorAndHideAdminMenuForGuest()
     {
+        // Given
         await using SetupHarness harness = await SetupHarness.CreateAsync();
 
         await SubmitSetupAsync(harness: harness);
@@ -449,6 +465,7 @@ inner:                 core.Set<Role>()
         string query =
             $"/Api/ContentManagement/Page?$filter=AppId eq {app.Id} and ParentId eq null and ShowOnMenus eq true&$orderby=Order asc&$expand=PageInfo,Pages($filter=ShowOnMenus eq true;$orderby=Order asc;$expand=PageInfo,Pages($filter=ShowOnMenus eq true;$orderby=Order asc;$expand=PageInfo))";
 
+        // When
         using HttpResponseMessage adminResponse = await harness.Client.GetAsync(requestUri: query);
         string adminJson = await adminResponse.Content.ReadAsStringAsync();
 
@@ -463,6 +480,7 @@ inner:                 core.Set<Role>()
             .Where(predicate: path => !string.IsNullOrWhiteSpace(value: path))
             .ToArray()!;
 
+        // Then
         adminPaths.Should()
             .Contain(expected: "Clients");
 

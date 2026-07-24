@@ -360,9 +360,10 @@ roles:             core.Set<Role>()
         }
     }
 
-    private async Task<T> PostAsJsonAsync<T>(
+    private async Task<object> PostAsJsonAsync(
         string relativeUrl,
         object payload,
+        Type responseType,
         string authToken = null)
     {
         using HttpRequestMessage request = new(HttpMethod.Post, relativeUrl)
@@ -382,7 +383,7 @@ roles:             core.Set<Role>()
         response.StatusCode.Should()
             .Be(expected: HttpStatusCode.OK,because: content);
 
-        return JsonSerializer.Deserialize<T>(json: content,options: JsonOptions)
+        return JsonSerializer.Deserialize(json: content, returnType: responseType, options: JsonOptions)
             ?? throw new InvalidOperationException($"Expected payload for {relativeUrl}.");
     }
 

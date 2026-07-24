@@ -13,6 +13,7 @@ public sealed partial class WorkflowEventIntegrationTests
     [Fact]
     public async Task ManualFlowExecution_QueuesAndCompletesWorkflowInstance()
     {
+        // Given
         Guid flowId = Guid.Empty;
 
         try
@@ -20,6 +21,7 @@ public sealed partial class WorkflowEventIntegrationTests
             flowId = await CreateFlowDefinitionAsync(appId: BaselineAppId,name: Unique(prefix: "Manual Flow"));
             string authToken = await CreateAuthTokenAsync(userId: AdminUserId);
 
+            // When
             await PostRawAsync(relativeUrl: $"/Api/Workflow/FlowDefinition({flowId})/Execute?t={authToken}",body: "{}");
 
             await WaitUntilAsync(predicate: async () => await HasAnyFlowInstanceAsync(flowId: flowId));
@@ -29,6 +31,7 @@ predicate:                 async () => await HasFlowInstanceStateAsync(flowId: f
 
             FlowInstanceData instance = await GetLatestInstanceAsync(flowId: flowId);
 
+            // Then
             instance.Should()
                 .NotBeNull();
 

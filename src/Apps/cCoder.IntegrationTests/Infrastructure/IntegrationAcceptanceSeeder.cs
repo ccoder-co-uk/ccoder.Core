@@ -357,7 +357,7 @@ entity:                 new CoreUser
             .ToArrayAsync();
 
         Role[] roles = AcceptanceSeedData
-            .LoadPackageItems<Role>(packageName: "Roles",itemType: "Core/Role")
+            .LoadRoles(packageName: "Roles",itemType: "Core/Role")
             .Where(predicate: role => !existingRoleNames.Contains(value: role.Name))
             .Select(selector: role => new Role
             {
@@ -402,7 +402,7 @@ entity:                 new CoreUser
         }
 
         Layout[] layouts = AcceptanceSeedData
-            .LoadPackageItems<Layout>(packageName: "Layouts",itemType: "Core/Layout")
+            .LoadLayouts(packageName: "Layouts",itemType: "Core/Layout")
             .Select(selector: layout => new Layout
             {
                 Id = 0,
@@ -434,7 +434,7 @@ entity:                 new CoreUser
         }
 
         Template[] templates = AcceptanceSeedData
-            .LoadPackageItems<Template>(packageName: "Templates",itemType: "Core/Template")
+            .LoadTemplates(packageName: "Templates",itemType: "Core/Template")
             .Select(selector: template => new Template
             {
                 Id = 0,
@@ -499,7 +499,7 @@ entity:                 new CoreUser
         }
 
         Resource[] resources = AcceptanceSeedData
-            .LoadPackageItems<Resource>(packageName: "Resources",itemType: "Core/Resource")
+            .LoadResources(packageName: "Resources",itemType: "Core/Resource")
             .Select(selector: resource => new Resource
             {
                 Id = 0,
@@ -532,7 +532,7 @@ entity:                 new CoreUser
         }
 
         Component[] components = AcceptanceSeedData
-            .LoadPackageItems<Component>(packageName: "Components",itemType: "Core/Component")
+            .LoadComponents(packageName: "Components",itemType: "Core/Component")
             .Select(selector: component => new Component
             {
                 Id = 0,
@@ -565,7 +565,7 @@ entity:                 new CoreUser
         }
 
         Script[] scripts = AcceptanceSeedData
-            .LoadPackageItems<Script>(packageName: "Scripts",itemType: "Core/Script")
+            .LoadScripts(packageName: "Scripts",itemType: "Core/Script")
             .Select(selector: script => new Script
             {
                 Id = 0,

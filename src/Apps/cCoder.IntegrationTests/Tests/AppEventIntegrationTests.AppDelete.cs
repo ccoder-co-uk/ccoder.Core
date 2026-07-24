@@ -22,6 +22,7 @@ public sealed partial class AppEventIntegrationTests
     [Fact]
     public async Task AppDelete_RaisesExternalEventAndHostedServicesRemovesCrossDomainChildren()
     {
+        // Given
         int appId = 0;
         Guid roleId = Guid.NewGuid();
         Guid flowId = Guid.NewGuid();
@@ -35,6 +36,7 @@ public sealed partial class AppEventIntegrationTests
             await GrantGuestAdminAsync(appId: appId);
             await SeedAppDeleteScenarioAsync(appId: appId,roleId: roleId,flowId: flowId,folderId: folderId,fileId: fileId);
 
+            // When
             await SendWithOptionalHostAsync(method: HttpMethod.Delete,relativeUrl: $"/Api/ContentManagement/App({appId})",host: appDomain);
 
             await WaitUntilAsync(predicate: async () =>
@@ -48,6 +50,7 @@ public sealed partial class AppEventIntegrationTests
 
             await using CoreDataContext verification = CreateCoreContext();
 
+            // Then
             (await verification.Set<AppEntity>()
                 .IgnoreQueryFilters()
                 .AnyAsync(predicate: app => app.Id == appId)).Should()

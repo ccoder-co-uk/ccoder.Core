@@ -12,7 +12,7 @@ using Xunit;
 
 namespace Web.AcceptanceTests.Tests;
 
-public sealed class BaselineAssetTests
+public sealed partial class BaselineAssetTests
 {
     [Theory]
     [InlineData("Core.Resource.latest.json")]
@@ -20,25 +20,37 @@ public sealed class BaselineAssetTests
     [InlineData("Core.Script.latest.json")]
     public void Common_cache_assets_are_present_and_non_empty(string fileName)
     {
+        // Given
         using var json = AcceptanceAssetLoader.LoadJson(fileName: fileName);
 
-        json.RootElement.ValueKind.Should()
-            .BeOneOf(JsonValueKind.Array, JsonValueKind.Object);
+        // When
+        JsonValueKind valueKind = json.RootElement.ValueKind;
+        int contentLength = json.RootElement.GetRawText().Length;
 
-        json.RootElement.GetRawText().Length.Should()
+        // Then
+        valueKind.Should()
+            .BeOneOf(
+                validValues: [JsonValueKind.Array, JsonValueKind.Object]);
+
+        contentLength.Should()
             .BeGreaterThan(expected: 2);
     }
 
     [Fact]
     public void App_export_asset_is_present_and_contains_items()
     {
+        // Given
         using var json = AcceptanceAssetLoader.LoadJson(fileName: "App.1.Export.json");
 
-        json.RootElement.ValueKind.Should()
+        // When
+        JsonElement rootElement = json.RootElement;
+        bool hasValue = rootElement.TryGetProperty(propertyName: "value", value: out var value);
+
+        // Then
+        rootElement.ValueKind.Should()
             .Be(expected: JsonValueKind.Object);
 
-        json.RootElement.TryGetProperty(propertyName: "value",value: out var value)
-            .Should()
+        hasValue.Should()
             .BeTrue();
 
         value.ValueKind.Should()
@@ -63,12 +75,15 @@ public sealed class BaselineAssetTests
     [Fact]
     public void Baseline_packages_include_domain_owned_packages()
     {
+        // Given
         BaselineAssetCatalog catalog = new();
 
+        // When
         string[] packageNames = catalog.LoadPackages()
             .Select(selector: package => package.Name)
             .ToArray();
 
+        // Then
         packageNames.Should()
             .Contain(
 expected:         [
@@ -84,12 +99,15 @@ expected:         [
     [Fact]
     public void Core_review_baseline_only_contains_unresolved_crm_review_items()
     {
+        // Given
         BaselineAssetCatalog catalog = new();
 
+        // When
         string[] packageNames = catalog.LoadCoreReviewPackages()
             .Select(selector: package => package.Name)
             .ToArray();
 
+        // Then
         packageNames.Should()
             .BeEquivalentTo(
 expectation:         [

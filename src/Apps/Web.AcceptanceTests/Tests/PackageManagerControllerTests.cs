@@ -29,7 +29,8 @@ public sealed partial class PackageManagerControllerTests(WebAcceptanceFixture f
     private string BaseUrl { get; } = "/Api/Core/Package";
     private static JsonSerializerOptions JsonOptions { get; } = new() { PropertyNameCaseInsensitive = true };
 
-    private static string Unique(string prefix) => $"{prefix}-{Guid.NewGuid():N}";
+    private static string Unique(string prefix) =>
+        $"{prefix}-{Guid.NewGuid():N}";
 
     public static IEnumerable<object[]> CapturedPackageTypeCounts()
     {

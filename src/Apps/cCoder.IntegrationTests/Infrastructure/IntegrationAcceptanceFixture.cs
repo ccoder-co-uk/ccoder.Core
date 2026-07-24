@@ -75,9 +75,12 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
             DecryptionKey = DecryptionKey,
             EventProviderType = ResolveEventProviderType(),
             ServiceBusConnectionString = ResolveOptionalSetting(
-                "CCODER_INTEGRATION_SERVICE_BUS_CONNECTION_STRING",
-                "ConnectionStrings__ServiceBus",
-                "EVENT_LIBRARY_AZURE_SERVICE_BUS_CONNECTION_STRING"),
+                variableNames:
+                [
+                    "CCODER_INTEGRATION_SERVICE_BUS_CONNECTION_STRING",
+                    "ConnectionStrings__ServiceBus",
+                    "EVENT_LIBRARY_AZURE_SERVICE_BUS_CONNECTION_STRING"
+                ]),
             ServiceBusMaxConcurrency = ResolveIntSetting(
 primaryName:                 "CCODER_INTEGRATION_SERVICE_BUS_MAX_CONCURRENCY",secondaryName:                 "Eventing__ServiceBus__MaxConcurrency",fallback:                 1)
         };
@@ -271,7 +274,8 @@ fileName:             "dotnet",arguments:             $"\"{Path.Combine(path1: w
             $"-p:OutputPath=\"{FormatMsBuildPath(path: outputDirectory,trailingSlash: false)}\" " +
             $"-p:IntermediateOutputPath=\"{FormatMsBuildPath(path: intermediateDirectory,trailingSlash: true)}\"";
 
-        string combinedProperties = CombineMsBuildProperties(localBuildProperties, msbuildProperties, outputProperties);
+        string combinedProperties = CombineMsBuildProperties(
+            values: [localBuildProperties, msbuildProperties, outputProperties]);
 
         Console.WriteLine(value: $"Integration fixture: building {projectPath} with properties: {combinedProperties}");
 
@@ -301,39 +305,51 @@ variableNames:             "CCODER_INTEGRATION_LOCAL_SECURITY_ASSEMBLY_VERSION")
 
         string localAppSecurityProject = Path.GetFullPath(
 path:             Path.Combine(
-                repositoryRoot,
-                "..",
-                "cCoder.AppSecurity",
-                "src",
-                "cCoder.AppSecurity",
-                "cCoder.AppSecurity.csproj"));
+                paths:
+                [
+                    repositoryRoot,
+                    "..",
+                    "cCoder.AppSecurity",
+                    "src",
+                    "cCoder.AppSecurity",
+                    "cCoder.AppSecurity.csproj"
+                ]));
 
         string localDataProject = Path.GetFullPath(
 path:             Path.Combine(
-                repositoryRoot,
-                "..",
-                "cCoder.Data",
-                "src",
-                "cCoder.Data",
-                "cCoder.Data.csproj"));
+                paths:
+                [
+                    repositoryRoot,
+                    "..",
+                    "cCoder.Data",
+                    "src",
+                    "cCoder.Data",
+                    "cCoder.Data.csproj"
+                ]));
 
         string localWorkflowProject = Path.GetFullPath(
 path:             Path.Combine(
-                repositoryRoot,
-                "..",
-                "cCoder.Workflow",
-                "src",
-                "cCoder.Workflow",
-                "cCoder.Workflow.csproj"));
+                paths:
+                [
+                    repositoryRoot,
+                    "..",
+                    "cCoder.Workflow",
+                    "src",
+                    "cCoder.Workflow",
+                    "cCoder.Workflow.csproj"
+                ]));
 
         string localSecurityProject = Path.GetFullPath(
 path:             Path.Combine(
-                repositoryRoot,
-                "..",
-                "cCoder.Security",
-                "src",
-                "cCoder.Security",
-                "cCoder.Security.csproj"));
+                paths:
+                [
+                    repositoryRoot,
+                    "..",
+                    "cCoder.Security",
+                    "src",
+                    "cCoder.Security",
+                    "cCoder.Security.csproj"
+                ]));
 
         if (!useLocalWorkflow
             && !useLocalSecurity
@@ -710,7 +726,8 @@ notBefore:             DateTimeOffset.UtcNow.AddMinutes(minutes: -5),notAfter:  
     }
 
     private static string ResolveEventProviderType() =>
-        ResolveOptionalSetting("CCODER_INTEGRATION_EVENT_PROVIDER", "Eventing__ProviderType")
+        ResolveOptionalSetting(
+            variableNames: ["CCODER_INTEGRATION_EVENT_PROVIDER", "Eventing__ProviderType"])
         ?? "Http";
 
     private static bool ShouldKeepArtifacts() =>
@@ -722,7 +739,7 @@ a:             Environment.GetEnvironmentVariable(variable: "CCODER_INTEGRATION_
         string secondaryName,
         int fallback)
     {
-        string raw = ResolveOptionalSetting(primaryName, secondaryName);
+        string raw = ResolveOptionalSetting(variableNames: [primaryName, secondaryName]);
 
         return int.TryParse(s: raw,result: out int value)
             ? value
@@ -750,13 +767,16 @@ a:             Environment.GetEnvironmentVariable(variable: "CCODER_INTEGRATION_
     private static string ResolveFuncExecutablePath()
     {
         string bundledFuncExe = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "npm",
-            "node_modules",
-            "azure-functions-core-tools",
-            "bin",
-            "in-proc6",
-            "func.exe");
+            paths:
+            [
+                Environment.GetFolderPath(folder: Environment.SpecialFolder.ApplicationData),
+                "npm",
+                "node_modules",
+                "azure-functions-core-tools",
+                "bin",
+                "in-proc6",
+                "func.exe"
+            ]);
 
         if (File.Exists(path: bundledFuncExe))
         {
@@ -764,12 +784,15 @@ a:             Environment.GetEnvironmentVariable(variable: "CCODER_INTEGRATION_
         }
 
         string fallbackFuncExe = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "npm",
-            "node_modules",
-            "azure-functions-core-tools",
-            "bin",
-            "func.exe");
+            paths:
+            [
+                Environment.GetFolderPath(folder: Environment.SpecialFolder.ApplicationData),
+                "npm",
+                "node_modules",
+                "azure-functions-core-tools",
+                "bin",
+                "func.exe"
+            ]);
 
         if (File.Exists(path: fallbackFuncExe))
         {

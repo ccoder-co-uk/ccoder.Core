@@ -16,10 +16,13 @@ public sealed partial class PackageManagerControllerTests
     [Fact]
     public async Task ShouldReturnSeededPackagesWhenExport()
     {
+        // Given
         Package[] expectedPackages = AcceptanceSeedData.LoadExportPackages();
 
+        // When
         IReadOnlyList<Package> actualPackages = await ExportPackagesAsync(appId: 1);
 
+        // Then
         actualPackages.Should()
             .HaveCountGreaterThan(expected: 5);
 
@@ -33,6 +36,7 @@ public sealed partial class PackageManagerControllerTests
     [Fact]
     public async Task ShouldExportExpectedEntityCountsForEachCapturedPackageType()
     {
+        // Given
         var created = await AddAppAsync(app: new cCoder.Data.Models.CMS.App
         {
             Name = Unique(prefix: "Export Target"),
@@ -45,8 +49,10 @@ public sealed partial class PackageManagerControllerTests
 
         await ImportPackagesAsync(appId: created.Id,packages: AcceptanceSeedData.LoadExportPackages());
 
+        // When
         IReadOnlyList<Package> actualPackages = await ExportPackagesAsync(appId: created.Id);
 
+        // Then
         using AssertionScope _ = new();
 
         foreach (object[] row in CapturedPackageTypeCounts())
@@ -64,7 +70,10 @@ public sealed partial class PackageManagerControllerTests
     [Fact]
     public async Task ShouldIncludeAppConfigurationPackageWhenExport()
     {
+        // Given
         var expectedApp = await GetStoredAppAsync(appId: 1);
+
+        // When
         IReadOnlyList<Package> packages = await ExportPackagesAsync(appId: 1);
 
         Package appConfiguration = packages.Single(predicate: found =>
@@ -76,6 +85,7 @@ public sealed partial class PackageManagerControllerTests
 
         using JsonDocument document = JsonDocument.Parse(json: appConfiguration.Items.Single().Data);
 
+        // Then
         document.RootElement.GetProperty(propertyName: "Name")
             .GetString()
             .Should()

@@ -23,7 +23,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 namespace Web.AcceptanceTests.Tests.Api;
 
 [Collection(WebAcceptanceCollection.Name)]
-public sealed class AppDeleteCascadeTests(WebAcceptanceFixture fixture)
+public sealed partial class AppDeleteCascadeTests(WebAcceptanceFixture fixture)
 {
     private string BaseUrl { get; } = "/Api/Core/App";
 
@@ -32,17 +32,21 @@ public sealed class AppDeleteCascadeTests(WebAcceptanceFixture fixture)
     [Fact]
     public async Task Delete_RemovesCrossDomainChildren()
     {
+        // Given
         SeededApp seededApp = await SeedDatabase(
-            "app_delete",
-            "folder_delete",
-            "file_delete",
-            "mailserver_delete",
-            "queuedemail_delete",
-            "sentemail_delete",
-            "role_delete",
-            "scheduledtask_delete",
-            "userrole_delete",
-            "flowdefinition_delete");
+            privileges:
+            [
+                "app_delete",
+                "folder_delete",
+                "file_delete",
+                "mailserver_delete",
+                "queuedemail_delete",
+                "sentemail_delete",
+                "role_delete",
+                "scheduledtask_delete",
+                "userrole_delete",
+                "flowdefinition_delete"
+            ]);
 
         Guid flowId = Guid.NewGuid();
         Guid rootFolderId = Guid.NewGuid();
@@ -166,6 +170,7 @@ public sealed class AppDeleteCascadeTests(WebAcceptanceFixture fixture)
                 });
             }
 
+            // When
             int actualStatusCode = await DeleteAppAsync(host: seededApp.Domain,id: seededApp.AppId);
 
             using IServiceScope verificationScope = fixture.Factory.Services.CreateScope();
@@ -174,6 +179,7 @@ public sealed class AppDeleteCascadeTests(WebAcceptanceFixture fixture)
                 .GetRequiredService<cCoder.Data.ICoreContextFactory>()
                 .CreateCoreContext();
 
+            // Then
             actualStatusCode.Should()
                 .Be(expected: 200);
 
@@ -255,7 +261,8 @@ public sealed class AppDeleteCascadeTests(WebAcceptanceFixture fixture)
         }
     }
 
-    private static string Unique(string prefix) => $"{prefix}-{Guid.NewGuid():N}";
+    private static string Unique(string prefix) =>
+        $"{prefix}-{Guid.NewGuid():N}";
 
     private async Task<SeededApp> SeedDatabase(params string[] privileges)
     {
@@ -391,19 +398,20 @@ public sealed class AppDeleteCascadeTests(WebAcceptanceFixture fixture)
         }
     }
 
-    private static async Task DeleteAllAsync<T>(
+    private static async Task DeleteAllAsync(
         CoreDataContext core,
-        IQueryable<T> query) where T : class
+        IQueryable query)
     {
-        T[] items = query.ToArray();
+        object[] items = query
+            .Cast<object>()
+            .ToArray();
 
         if (items.Length == 0)
         {
             return;
         }
 
-        core.Set<T>()
-            .RemoveRange(entities: items);
+        core.RemoveRange(entities: items);
 
         await core.SaveChangesAsync();
     }

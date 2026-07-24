@@ -41,7 +41,9 @@ public sealed partial class FolderEventIntegrationTests
 
     private async Task<Guid> CreateFlowDefinitionAsync(int appId, string name, string authToken)
     {
-        FlowDefinition flow = await PostAsJsonAsync<FlowDefinition>(relativeUrl: "/Api/Workflow/FlowDefinition",payload: new
+        FlowDefinition flow = (FlowDefinition)await PostAsJsonAsync(
+            relativeUrl: "/Api/Workflow/FlowDefinition",
+            payload: new
         {
             appId,
             name,
@@ -52,14 +54,18 @@ public sealed partial class FolderEventIntegrationTests
             createdOn = DateTimeOffset.UtcNow,
             lastUpdatedBy = "Guest",
             lastUpdated = DateTimeOffset.UtcNow
-        },authToken: authToken);
+            },
+            responseType: typeof(FlowDefinition),
+            authToken: authToken);
 
         return flow.Id;
     }
 
     private async Task<Guid> CreateWorkflowEventAsync(Guid flowId, string eventContext, string authToken)
     {
-        WorkflowEvent workflowEvent = await PostAsJsonAsync<WorkflowEvent>(relativeUrl: "/Api/Workflow/WorkflowEvent",payload: new
+        WorkflowEvent workflowEvent = (WorkflowEvent)await PostAsJsonAsync(
+            relativeUrl: "/Api/Workflow/WorkflowEvent",
+            payload: new
         {
             flowId,
             type = "Acceptance",
@@ -67,7 +73,9 @@ public sealed partial class FolderEventIntegrationTests
             executeAs = AdminUserId,
             createdBy = "Guest",
             createdOn = DateTimeOffset.UtcNow
-        },authToken: authToken);
+            },
+            responseType: typeof(WorkflowEvent),
+            authToken: authToken);
 
         return workflowEvent.Id;
     }
@@ -169,9 +177,10 @@ workflowEvents:                 core.Set<WorkflowEvent>()
             .FirstAsync();
     }
 
-    private async Task<T> PostAsJsonAsync<T>(
+    private async Task<object> PostAsJsonAsync(
         string relativeUrl,
         object payload,
+        Type responseType,
         string authToken = null)
     {
         using HttpRequestMessage request = new(HttpMethod.Post, WithAuthToken(relativeUrl: relativeUrl,authToken: authToken))
@@ -191,7 +200,7 @@ workflowEvents:                 core.Set<WorkflowEvent>()
         response.StatusCode.Should()
             .Be(expected: HttpStatusCode.OK,because: content);
 
-        return JsonSerializer.Deserialize<T>(json: content,options: JsonOptions)
+        return JsonSerializer.Deserialize(json: content, returnType: responseType, options: JsonOptions)
             ?? throw new InvalidOperationException($"Expected payload for {relativeUrl}.");
     }
 

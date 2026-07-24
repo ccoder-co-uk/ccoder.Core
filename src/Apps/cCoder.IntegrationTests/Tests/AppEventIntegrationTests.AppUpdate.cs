@@ -18,6 +18,7 @@ public sealed partial class AppEventIntegrationTests
     [Fact]
     public async Task AppUpdate_RaisesExternalEventAndHostedServicesUpdatesChildren()
     {
+        // Given
         int appId = 0;
         Guid roleId = Guid.NewGuid();
         Guid rootFolderId = Guid.NewGuid();
@@ -31,6 +32,7 @@ public sealed partial class AppEventIntegrationTests
             await GrantGuestAdminAsync(appId: appId);
             await SeedAppUpdateScenarioAsync(appId: appId,roleId: roleId,rootFolderId: rootFolderId,childFolderId: childFolderId,fileId: fileId);
 
+            // When
             await SendAsJsonAsync(
 method:                 HttpMethod.Put,relativeUrl:                 $"/Api/ContentManagement/App({appId})",payload:                 new
                 {
@@ -83,6 +85,7 @@ method:                 HttpMethod.Put,relativeUrl:                 $"/Api/Conte
 
             await using CoreDataContext verification = CreateCoreContext();
 
+            // Then
             (await verification.Set<Role>()
                 .IgnoreQueryFilters()
                 .SingleAsync(predicate: role => role.Id == roleId)).Privs.Should()

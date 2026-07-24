@@ -21,6 +21,7 @@ public sealed partial class PackageManagerControllerTests
     [Fact]
     public async Task ShouldImportPackageFromBodyWhenImportThis()
     {
+        // Given
         string name = Unique(prefix: "ImportedPackage");
 
         using HttpRequestMessage request = new(HttpMethod.Post, $"{BaseUrl}/ImportThis?appId=1")
@@ -39,9 +40,11 @@ public sealed partial class PackageManagerControllerTests
                 "application/json"),
         };
 
+        // When
         using HttpResponseMessage response = await Client.SendAsync(request: request);
         string content = await response.Content.ReadAsStringAsync();
 
+        // Then
         response.StatusCode.Should()
             .Be(expected: HttpStatusCode.OK,because: content);
     }
@@ -49,6 +52,7 @@ public sealed partial class PackageManagerControllerTests
     [Fact]
     public async Task ShouldImportPackageArrayFromBodyWhenImportThis()
     {
+        // Given
         string name = Unique(prefix: "ImportedPackages");
 
         using HttpRequestMessage request = new(HttpMethod.Post, $"{BaseUrl}/ImportThis?appId=1")
@@ -69,9 +73,11 @@ public sealed partial class PackageManagerControllerTests
                 "application/json"),
         };
 
+        // When
         using HttpResponseMessage response = await Client.SendAsync(request: request);
         string content = await response.Content.ReadAsStringAsync();
 
+        // Then
         response.StatusCode.Should()
             .Be(expected: HttpStatusCode.OK,because: content);
     }
@@ -79,6 +85,7 @@ public sealed partial class PackageManagerControllerTests
     [Fact]
     public async Task ShouldImportResourcesIntoSeededAppWhenImport()
     {
+        // Given
         string uniqueResourceKey = Unique(prefix: "resource-key");
 
         Package package = new("Resources")
@@ -104,9 +111,11 @@ value:                         new[]
             ],
         };
 
+        // When
         int statusCode = await ImportPackageAsync(appId: 1,package: package);
         IReadOnlyList<Package> exportedPackages = await ExportPackagesAsync(appId: 1);
 
+        // Then
         statusCode.Should()
             .Be(expected: (int)HttpStatusCode.OK);
 
@@ -120,6 +129,7 @@ value:                         new[]
     [Fact]
     public async Task ShouldRoundTripCapturedPackagesIntoNewApp()
     {
+        // Given
         CoreApp created = await AddAppAsync(app: new CoreApp
         {
             Name = Unique(prefix: "Imported Target"),
@@ -132,10 +142,12 @@ value:                         new[]
 
         Package[] capturedPackages = AcceptanceSeedData.LoadExportPackages();
 
+        // When
         await ImportPackagesAsync(appId: created.Id,packages: capturedPackages);
 
         IReadOnlyList<Package> exportedPackages = await ExportPackagesAsync(appId: created.Id);
 
+        // Then
         using AssertionScope _ = new();
 
         foreach (object[] row in CapturedPackageTypeCounts())
@@ -153,6 +165,7 @@ value:                         new[]
     [Fact]
     public async Task ShouldPreserveCapturedCustomPagePathsWhenImportedIntoNewApp()
     {
+        // Given
         CoreApp created = await AddAppAsync(app: new CoreApp
         {
             Name = Unique(prefix: "Imported Target"),
@@ -163,6 +176,7 @@ value:                         new[]
             ConfigJson = "{\"deployment\":{\"dms\":[\"Content\"]}}",
         });
 
+        // When
         await ImportPackagesAsync(appId: created.Id,packages: AcceptanceSeedData.LoadExportPackages());
 
         IReadOnlyList<Package> exportedPackages = await ExportPackagesAsync(appId: created.Id);
@@ -186,6 +200,7 @@ value:                         new[]
                 .GetString(),b: "Common Cache Endpoint",comparisonType: StringComparison.Ordinal));
         });
 
+        // Then
         hasCommonCachePage.Should()
             .BeTrue();
     }
@@ -193,6 +208,7 @@ value:                         new[]
     [Fact]
     public async Task ShouldImportAppConfigurationWithoutOverwritingLocalDomainOrTenant()
     {
+        // Given
         CoreApp created = await AddAppAsync(app: new CoreApp
         {
             Name = Unique(prefix: "Target App"),
@@ -232,10 +248,12 @@ value:                             new
                 },
             });
 
+        // When
         int statusCode = await ImportPackageAsync(body: body,appId: created.Id);
 
         CoreApp updated = await GetStoredAppAsync(appId: created.Id);
 
+        // Then
         statusCode.Should()
             .Be(expected: (int)HttpStatusCode.OK);
 

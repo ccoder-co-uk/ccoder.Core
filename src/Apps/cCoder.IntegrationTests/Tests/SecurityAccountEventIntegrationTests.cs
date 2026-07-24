@@ -48,8 +48,11 @@ public sealed partial class SecurityAccountEventIntegrationTests
         await using CoreDataContext core = CreateCoreContext();
 
         string sendUser = ReadMailSetting(
-            "CCODER_MAIL_INTEGRATION_SEND_USER",
-            "CCODER_MAIL_INTEGRATION_SMTP_USER");
+            names:
+            [
+                "CCODER_MAIL_INTEGRATION_SEND_USER",
+                "CCODER_MAIL_INTEGRATION_SMTP_USER"
+            ]);
 
         string from = TryReadMailSetting(names: "CCODER_MAIL_INTEGRATION_SMTP_FROM") ?? sendUser;
         string sendHost = TryReadMailSetting(names: "CCODER_MAIL_INTEGRATION_SEND_HOST") ?? "graph.microsoft.com";
@@ -82,11 +85,11 @@ public sealed partial class SecurityAccountEventIntegrationTests
         await core.SaveChangesAsync();
     }
 
-    private async Task<(SSOUser User, string Token)> RegisterAsync(RegisterUser user, string authToken) =>
-        await PostUserTokenResultAsync(relativeUrl: "/Api/Account/Register",user: user,authToken: authToken);
+    private Task<(SSOUser User, string Token)> RegisterAsync(RegisterUser user, string authToken) =>
+        PostUserTokenResultAsync(relativeUrl: "/Api/Account/Register",user: user,authToken: authToken);
 
-    private async Task<(SSOUser User, string Token)> InviteAsync(RegisterUser user, string authToken) =>
-        await PostUserTokenResultAsync(relativeUrl: "/Api/Account/Invite",user: user,authToken: authToken);
+    private Task<(SSOUser User, string Token)> InviteAsync(RegisterUser user, string authToken) =>
+        PostUserTokenResultAsync(relativeUrl: "/Api/Account/Invite",user: user,authToken: authToken);
 
     private async Task AcceptInviteAsync(string userId, string token, RegisterUser user)
     {
@@ -306,9 +309,12 @@ content:                     $"Timed out waiting for the default Users role assi
         DateTimeOffset deadline = DateTimeOffset.UtcNow.AddMinutes(minutes: 3);
 
         string receiveUser = ReadMailSetting(
-            "CCODER_MAIL_INTEGRATION_RECEIVE_USER",
-            "CCODER_MAIL_INTEGRATION_SEND_USER",
-            "CCODER_MAIL_INTEGRATION_SMTP_USER");
+            names:
+            [
+                "CCODER_MAIL_INTEGRATION_RECEIVE_USER",
+                "CCODER_MAIL_INTEGRATION_SEND_USER",
+                "CCODER_MAIL_INTEGRATION_SMTP_USER"
+            ]);
 
         while (DateTimeOffset.UtcNow < deadline)
         {
@@ -525,10 +531,13 @@ entities:             await core.Set<ReceivedEmail>()
         {
             DisplayName = $"Core {purpose} User",
             Email = ReadMailSetting(
-                "CCODER_MAIL_INTEGRATION_TO",
-                "CCODER_MAIL_INTEGRATION_RECEIVE_USER",
-                "CCODER_MAIL_INTEGRATION_SEND_USER",
-                "CCODER_MAIL_INTEGRATION_SMTP_USER"),
+                names:
+                [
+                    "CCODER_MAIL_INTEGRATION_TO",
+                    "CCODER_MAIL_INTEGRATION_RECEIVE_USER",
+                    "CCODER_MAIL_INTEGRATION_SEND_USER",
+                    "CCODER_MAIL_INTEGRATION_SMTP_USER"
+                ]),
             Password = DefaultPassword,
             Culture = "en-GB",
             PhoneNumber = "01234567890",

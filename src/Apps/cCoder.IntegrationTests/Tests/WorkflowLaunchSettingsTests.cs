@@ -8,27 +8,33 @@ using Xunit;
 
 namespace cCoder.IntegrationTests.Tests;
 
-public sealed class WorkflowLaunchSettingsTests
+public sealed partial class WorkflowLaunchSettingsTests
 {
     [Fact]
     public void WorkflowProfile_ShouldUseFunctionsHostArguments()
     {
+        // Given
         string repositoryRoot = FindRepositoryRoot();
 
         string launchSettingsPath = Path.Combine(
-            repositoryRoot,
-            "src",
-            "Apps",
-            "Workflow",
-            "Properties",
-            "launchSettings.json");
+            paths:
+            [
+                repositoryRoot,
+                "src",
+                "Apps",
+                "Workflow",
+                "Properties",
+                "launchSettings.json"
+            ]);
 
         using JsonDocument document = JsonDocument.Parse(json: File.ReadAllText(path: launchSettingsPath));
 
+        // When
         JsonElement profile = document.RootElement
             .GetProperty(propertyName: "profiles")
             .GetProperty(propertyName: "Workflow");
 
+        // Then
         profile.GetProperty(propertyName: "commandName")
             .GetString()
             .Should()
