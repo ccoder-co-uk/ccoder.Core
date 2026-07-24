@@ -87,12 +87,12 @@ value: LoadText(relativePath: Path.Combine(path1: "Baseline", path2: "DMS", path
 
     private static IEnumerable<Package> LoadBaselinePackages() =>
         UIBaseline.Packages
-            .Concat(AppSecurityUIBaseline.Packages)
-            .Concat(ContentManagementUIBaseline.Packages)
-            .Concat(DocumentManagementUIBaseline.Packages)
-            .Concat(LoggingUIBaseline.Packages)
-            .Concat(MailUIBaseline.Packages)
-            .Concat(WorkflowUIBaseline.Packages);
+            .Concat(second: AppSecurityUIBaseline.Packages)
+            .Concat(second: ContentManagementUIBaseline.Packages)
+            .Concat(second: DocumentManagementUIBaseline.Packages)
+            .Concat(second: LoggingUIBaseline.Packages)
+            .Concat(second: MailUIBaseline.Packages)
+            .Concat(second: WorkflowUIBaseline.Packages);
 
     private string LoadText(string relativePath)
     {
@@ -113,6 +113,7 @@ value: LoadText(relativePath: Path.Combine(path1: "Baseline", path2: "DMS", path
     {
         string resourceName = $"{ResourcePrefix}{relativePath.Replace(oldChar: '\\', newChar: '.')
             .Replace(oldChar: '/', newChar: '.')}";
+
         string normalizedResourceName = resourceName.Replace(oldChar: ' ', newChar: '_');
 
         return assembly.GetManifestResourceStream(name: resourceName)
@@ -123,6 +124,7 @@ value: LoadText(relativePath: Path.Combine(path1: "Baseline", path2: "DMS", path
     private static Package ClonePackage(Package package)
     {
         Guid packageId = Guid.NewGuid();
+
         PackageItem[] items = (package.Items ?? [])
             .Select(selector: item => ClonePackageItem(item: item, packageId: packageId))
             .ToArray();

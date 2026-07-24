@@ -152,10 +152,13 @@ public partial class CoreApiBuilderOptions
         cCoder.Security.IServiceCollectionExtensions.AddSecurityApi(services: services, configAction: (securityServices, securityConfig) =>
         {
             securityConfig.RootPath = coreConfiguration?.SecurityRootPath ?? rootPath;
+
             securityConfig.AddMSSQLModelProvider(
 services: securityServices, connectionString: coreConfiguration?.SecurityConnectionString ?? string.Empty);
+
             securityConfig.UseAESHMMACPasswordEncryption(
 services: securityServices, decryptionKey: coreConfiguration?.DecryptionKey ?? string.Empty);
+
             configure?.Invoke(arg1: securityServices, arg2: securityConfig);
             rootPath = EnsureRoutePath(routePath: securityConfig.RootPath, defaultContext: "Security");
             securityConfig.RootPath = null;
@@ -193,7 +196,7 @@ services: securityServices, decryptionKey: coreConfiguration?.DecryptionKey ?? s
         AddDocumentManagementApi(configure: domain => ConfigureDomainRouting(configuration: domain, domainName: "DocumentManagement", defaults: domains));
         AddLoggingApi(configure: domain => ConfigureDomainRouting(configuration: domain, domainName: "Logging", defaults: domains));
         AddMailApi(configure: domain => ConfigureDomainRouting(configuration: domain, domainName: "Mail", defaults: domains));
-        AddWorkflowApi(configure: domain => ConfigureDomainRouting(domain, "Workflow", domains));
+        AddWorkflowApi(configure: domain => ConfigureDomainRouting(configuration: domain, domainName: "Workflow", defaults: domains));
 
         return this;
     }
@@ -216,8 +219,10 @@ services: securityServices, decryptionKey: coreConfiguration?.DecryptionKey ?? s
             CoreConfigurationMapper.Copy(source: configuration, target: coreConfig));
 
         AddStorage(connectionString: configuration.CoreConnectionString);
+
         WithSecurity(
 connectionString: configuration.SecurityConnectionString, decryptionKey: configuration.DecryptionKey, rootPath: configuration.SecurityRootPath);
+
         AddAppSecurityApi();
         AddContentManagementApi();
         AddDocumentManagementApi();
@@ -252,6 +257,7 @@ configure: configuration =>
 
         RegisterDomainContext(
 routePath: domain.RootPath, includeLegacyCoreContext: domain.IncludeLegacyCoreContext, configureModel: static builder => builder.ConfigureAppSecurityApiModel());
+
         return this;
     }
 
@@ -273,6 +279,7 @@ newContentManagementConfiguration: configuration =>
 
         RegisterDomainContext(
 routePath: domain.RootPath, includeLegacyCoreContext: domain.IncludeLegacyCoreContext, configureModel: static builder => builder.ConfigureContentManagementApiModel());
+
         return this;
     }
 
@@ -294,6 +301,7 @@ configure: configuration =>
 
         RegisterDomainContext(
 routePath: domain.RootPath, includeLegacyCoreContext: domain.IncludeLegacyCoreContext, configureModel: static builder => builder.ConfigureDocumentManagementApiModel());
+
         return this;
     }
 
@@ -315,6 +323,7 @@ configure: configuration =>
 
         RegisterDomainContext(
 routePath: domain.RootPath, includeLegacyCoreContext: domain.IncludeLegacyCoreContext, configureModel: static builder => builder.ConfigureLoggingApiModel());
+
         return this;
     }
 
@@ -336,6 +345,7 @@ newMailConfiguration: configuration =>
 
         RegisterDomainContext(
 routePath: domain.RootPath, includeLegacyCoreContext: domain.IncludeLegacyCoreContext, configureModel: static builder => builder.ConfigureMailApiModel());
+
         return this;
     }
 
@@ -345,21 +355,19 @@ routePath: domain.RootPath, includeLegacyCoreContext: domain.IncludeLegacyCoreCo
         WorkflowConfiguration domain = new();
         ApplyCoreDefaults(configuration: domain);
         configure?.Invoke(obj: domain);
-        ApplyDomainRouteMode(domain, "Workflow");
+        ApplyDomainRouteMode(configuration: domain, domainName: "Workflow");
 
         services.AddWorkflowWeb(
-            configuration =>
+newConfigure: configuration =>
             {
-                ApplyConfiguration(domain, configuration);
-                ApplyDomainRouteMode(configuration, "Workflow");
+                ApplyConfiguration(source: domain, target: configuration);
+                ApplyDomainRouteMode(configuration: configuration, domainName: "Workflow");
                 configuration.IncludeLegacyCoreContext = false;
-            },
-            new ODataConventionModelBuilder());
+            }, builder: new ODataConventionModelBuilder());
 
         RegisterDomainContext(
-            domain.RootPath,
-            domain.IncludeLegacyCoreContext,
-            static builder => builder.ConfigureWorkflowApiModel());
+routePath: domain.RootPath, includeLegacyCoreContext: domain.IncludeLegacyCoreContext, configureModel: static builder => builder.ConfigureWorkflowApiModel());
+
         return this;
     }
 
@@ -434,13 +442,7 @@ connectionStrings: configuration.ConnectionStrings, settings: configuration.Sett
 
     private void ApplyCoreDefaults(WorkflowConfiguration configuration) =>
         ApplyCoreDefaults(
-            configuration.ConnectionStrings,
-            configuration.Settings,
-            configuration.Services,
-            debugInfo: value => configuration.DebugInfo = value,
-            logSql: value => configuration.LogSQL = value,
-            configuration.DebugInfo,
-            configuration.LogSQL);
+connectionStrings: configuration.ConnectionStrings, settings: configuration.Settings, servicesMap: configuration.Services, debugInfo: value => configuration.DebugInfo = value, logSql: value => configuration.LogSQL = value, currentDebugInfo: configuration.DebugInfo, currentLogSql: configuration.LogSQL);
 
     private void ApplyCoreDefaults(
         IDictionary<string, string> connectionStrings,
@@ -626,7 +628,7 @@ hubUrl: configuration.HttpEventHubUrl, configure: options => options.MaxConcurre
         target.ConnectionStrings = new Dictionary<string, string>(source.ConnectionStrings, StringComparer.OrdinalIgnoreCase);
         target.Settings = new Dictionary<string, string>(source.Settings, StringComparer.OrdinalIgnoreCase);
         target.Services = new Dictionary<string, string>(source.Services, StringComparer.OrdinalIgnoreCase);
-        CopyEventProviders(source.EventProviders, target.EventProviders);
+        CopyEventProviders(source: source.EventProviders, target: target.EventProviders);
     }
 
     private static void CopyEventProviders(

@@ -34,18 +34,18 @@ public class CoreModelBuilder : ODataModelBuilder
 
     private IEdmModel BuildModel()
     {
-        // Common stuff
         AddCommonComplextypes();
         _ = Builder.ComplexType<RenderResult>();
+
         Builder.EntityType<App>()
             .Ignore(propertyExpression: i => i.Config);
+
         Builder.EntityType<Submission>()
             .Ignore(propertyExpression: i => i.Data);
+
         Builder.EntityType<FlowInstanceData>()
             .Ignore(propertyExpression: i => i.ContextJson);
 
-        // Register CRUD Supporting object sets
-        // CMS stuff
         _ = AddSet<App, int>(setName: "App");
         _ = AddSet<Layout, int>();
         _ = AddSet<Template, int>();
@@ -60,7 +60,6 @@ public class CoreModelBuilder : ODataModelBuilder
         _ = AddSet<Submission, Guid>();
         _ = AddSet<Culture, string>();
 
-        // Security
         _ = AddSet<User, string>();
         _ = AddSet<Role, Guid>();
         _ = AddSet<Privilege, string>();
@@ -70,27 +69,21 @@ public class CoreModelBuilder : ODataModelBuilder
         _ = AddJoinSet<PageRole, object>(key: i => new { i.PageId, i.RoleId });
         _ = AddJoinSet<FolderRole, object>(key: i => new { i.FolderId, i.RoleId });
 
-        // Packaging
         _ = AddSet<Package, Guid>();
         _ = AddSet<PackageItem, Guid>();
 
-        // forms
 
-        // DMS stuff
         _ = AddSet<Data.Models.DMS.File, Guid>();
         _ = AddSet<Folder, Guid>();
         _ = AddSet<FileContent, Guid>();
 
-        // logging stuff
         _ = AddSet<LogEntry, int>();
         _ = AddSet<LogDataItem, int>();
 
-        // workflow stuff
         _ = AddSet<WorkflowEvent, Guid>();
         _ = AddSet<FlowDefinition, Guid>();
         _ = AddSet<FlowInstanceData, Guid>();
 
-        // other stuff
         _ = AddSet<Calendar, int>();
         _ = AddSet<CalendarEvent, int>();
         _ = AddSet<ScheduledTask, int>();
@@ -100,7 +93,6 @@ public class CoreModelBuilder : ODataModelBuilder
 
         Builder.Namespace = "";
 
-        // packaging
         _ = Builder.EntityType<Package>().Collection.Action(name: "Import");
         _ = Builder.EntityType<Package>().Collection.Action(name: "ImportThis");
 
@@ -108,61 +100,70 @@ public class CoreModelBuilder : ODataModelBuilder
             .EntityType<Folder>()
             .Collection.Action(name: "Copy")
             .ReturnsCollection<ContentManagement.Models.Result<Guid?>>();
-        // Page management
+
         _ = Builder.EntityType<Page>()
-            .Action(name: "AddContent").Parameter<Content>(name: "content");
+            .Action(name: "AddContent")
+                .Parameter<Content>(name: "content");
+
         _ = Builder.EntityType<Page>()
-            .Function(name: "RootFor").ReturnsFromEntitySet<Page>(entitySetName: "Page");
+            .Function(name: "RootFor")
+                .ReturnsFromEntitySet<Page>(entitySetName: "Page");
+
         _ = Builder.EntityType<Page>()
             .Function(name: "Menu").Returns<ContentManagement.Models.Result<string>>();
-        _ = Builder.EntityType<Page>().Collection.Function(name: "Render").Returns<RenderResult>();
 
-        // User and Role Functions
-        _ = Builder.EntityType<User>().Collection.Function(name: "Me").ReturnsFromEntitySet<User>(entitySetName: "User");
+        _ = Builder.EntityType<Page>().Collection.Function(name: "Render")
+            .Returns<RenderResult>();
 
-        // Resourcing
+        _ = Builder.EntityType<User>().Collection.Function(name: "Me")
+            .ReturnsFromEntitySet<User>(entitySetName: "User");
+
         _ = Builder
             .EntityType<Resource>()
             .Collection.Function(name: "GetAll")
             .ReturnsCollectionFromEntitySet<Resource>(entitySetName: "Resource");
 
-        // Component Actions
-        _ = Builder.EntityType<Component>().Collection.Function(name: "Render").Returns<string>();
+        _ = Builder.EntityType<Component>().Collection.Function(name: "Render")
+            .Returns<string>();
 
-        // Templating
-        _ = Builder.EntityType<Template>().Collection.Action(name: "Render").Returns<string>();
+        _ = Builder.EntityType<Template>().Collection.Action(name: "Render")
+            .Returns<string>();
+
         _ = Builder
             .EntityType<Template>()
             .Collection.Action(name: "HtmlToPdf")
             .Returns<FileContentResult>();
 
-        // Workflow
         _ = Builder
             .EntityType<FlowDefinition>()
             .Collection.Function(name: "KnownActivityTypes")
             .Returns<MetadataContainerSet>();
+
         _ = Builder
             .EntityType<FlowDefinition>()
             .Collection.Function(name: "KnownSystemTypes")
             .Returns<MetadataContainerSet[]>();
+
         _ = Builder.EntityType<FlowInstanceData>()
             .Action(name: "Raw");
+
         _ = Builder.EntityType<FlowDefinition>()
-            .Action(name: "Execute").Returns<Guid>();
+            .Action(name: "Execute")
+                .Returns<Guid>();
+
         _ = Builder
             .EntityType<FlowDefinition>()
             .Collection.Action(name: "ExecuteScript")
             .Returns<string>();
 
-        //Planning
         _ = Builder.EntityType<ScheduledTask>()
             .Action(name: "Execute");
 
-        //CommonObject
         _ = Builder
             .EntityType<CommonObject>()
             .Collection.Function(name: "Latest")
             .ReturnsFromEntitySet<CommonObject>(entitySetName: "CommonObject");
+
         _ = Builder
             .EntityType<CommonObject>()
             .Collection.Action(name: "Import")

@@ -2,34 +2,31 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.DocumentManagement.Exposures;
-using cCoder.DocumentManagement.Models;
-using cCoder.Data.Models.CMS;
-using cCoder.Data.Models.DMS;
-using cCoder.Data.Models.Security;
 using cCoder.Packaging.Models;
 using cCoder.Data.Models.Packaging;
-using PackagingBroker = cCoder.Packaging.Brokers.IDocumentManagementPackageManagerBroker;
+using cCoder.Workflow.Exposures;
+using cCoder.Workflow.Models;
+using PackagingBroker = cCoder.Packaging.Brokers.ISchedulingPackageManagerBroker;
 
 
-namespace cCoder.Core.Brokers.Packaging;
+namespace cCoder.Core.Dependencies.Packaging;
 
-internal class DocumentManagementPackageManagerBroker(
-    IDocumentManagementPackageManager documentManagementPackageManager = null
+internal class SchedulingPackageManagerBroker(
+    IWorkflowPackageManager workflowPackageManager = null
 ) : PackagingBroker
 {
     public ValueTask ImportPackageAsync(int appId, Package package) =>
-        documentManagementPackageManager == null
+        workflowPackageManager == null
             ? ValueTask.CompletedTask
-            : documentManagementPackageManager.ImportPackageAsync(appId: appId, package: ToExternalPackage(package: package));
+            : workflowPackageManager.ImportPackageAsync(appId: appId, package: ToExternalPackage(package: package));
 
     public Package ExportPackage(int appId, string packageName) =>
-        documentManagementPackageManager == null
+        workflowPackageManager == null
             ? null
-            : ToLocalPackage(package: documentManagementPackageManager.ExportPackage(appId: appId, packageName: packageName));
+            : ToLocalPackage(package: workflowPackageManager.ExportPackage(appId: appId, packageName: packageName));
 
-    private static DocumentManagementPackage ToExternalPackage(Package package) =>
-        package == null ? null : new DocumentManagementPackage(package.Name)
+    private static WorkflowPackage ToExternalPackage(Package package) =>
+        package == null ? null : new WorkflowPackage(package.Name)
         {
             Id = package.Id,
             Name = package.Name,
@@ -40,8 +37,8 @@ internal class DocumentManagementPackageManagerBroker(
                 .ToArray(),
         };
 
-    private static DocumentManagementPackageItem ToExternalPackageItem(PackageItem packageItem) =>
-        packageItem == null ? null : new DocumentManagementPackageItem
+    private static WorkflowPackageItem ToExternalPackageItem(PackageItem packageItem) =>
+        packageItem == null ? null : new WorkflowPackageItem
         {
             Id = packageItem.Id,
             PackageId = packageItem.PackageId,
@@ -49,7 +46,7 @@ internal class DocumentManagementPackageManagerBroker(
             Data = packageItem.Data,
         };
 
-    private static Package ToLocalPackage(DocumentManagementPackage package) =>
+    private static Package ToLocalPackage(WorkflowPackage package) =>
         package == null ? null : new Package(package.Name)
         {
             Id = package.Id,
@@ -61,7 +58,7 @@ internal class DocumentManagementPackageManagerBroker(
                 .ToArray(),
         };
 
-    private static PackageItem ToLocalPackageItem(DocumentManagementPackageItem packageItem) =>
+    private static PackageItem ToLocalPackageItem(WorkflowPackageItem packageItem) =>
         packageItem == null ? null : new PackageItem
         {
             Id = packageItem.Id,

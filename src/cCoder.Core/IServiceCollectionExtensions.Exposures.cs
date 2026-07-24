@@ -3,7 +3,8 @@
 // ---------------------------------------------------------------
 
 using cCoder.Core.Exposures.Cors;
-using cCoder.Core.Exposures.Formatters;
+using cCoder.Core.Dependencies.Formatters;
+using cCoder.Core.Dependencies.Sessions;
 using cCoder.Core.Exposures;
 using cCoder.Core.Models;
 using Microsoft.AspNetCore.Http.Features;
@@ -44,6 +45,7 @@ public static partial class IServiceCollectionExtensions
         services.AddHttpContextAccessor();
         services.AddScoped(serviceType: typeof(HttpContext), implementationFactory: ctx => CreateHttpContext(httpContext: ctx.GetService<IHttpContextAccessor>()?.HttpContext));
         services.AddScoped(serviceType: typeof(HttpRequest), implementationFactory: ctx => ctx.GetRequiredService<HttpContext>().Request);
+
         services.AddScoped(serviceType: typeof(ISession), implementationFactory: ctx =>
         {
             HttpContext httpContext = ctx.GetRequiredService<HttpContext>();
@@ -51,6 +53,7 @@ public static partial class IServiceCollectionExtensions
         });
 
         services.AddSession();
+
         services.AddHsts(configureOptions: options =>
         {
             options.Preload = true;
@@ -70,6 +73,7 @@ public static partial class IServiceCollectionExtensions
                 options.Conventions.Add(actionModelConvention: new SplitDomainApplicationModelConvention());
             }
         });
+
         services.AddRazorPages();
 
         services.Configure<KestrelServerOptions>(configureOptions: options =>
@@ -86,6 +90,7 @@ public static partial class IServiceCollectionExtensions
         IEnumerable<CoreApiRouteDefinition> routeDefinitions)
     {
         DefaultODataBatchHandler batchHandler = new();
+
         CoreApiRouteDefinition[] definitions = (routeDefinitions ?? [])
             .Where(predicate: route =>
                 route is not null
@@ -100,6 +105,7 @@ public static partial class IServiceCollectionExtensions
             opt.RouteOptions.EnableQualifiedOperationCall = false;
             opt.EnableAttributeRouting = true;
             opt.RouteOptions.EnableKeyAsSegment = false;
+
             opt.Expand()
                 .Count()
                 .Filter()

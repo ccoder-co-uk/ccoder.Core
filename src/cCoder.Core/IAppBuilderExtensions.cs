@@ -60,6 +60,7 @@ handler: async (context) =>
                     ILogger<IApplicationBuilder> log = context.RequestServices.GetService<
                         ILogger<IApplicationBuilder>
                     >();
+
                     Exception ex = context.Features.Get<IExceptionHandlerPathFeature>()?.Error;
 
                     context.Response.StatusCode =
@@ -70,6 +71,7 @@ handler: async (context) =>
                     if (ex != null)
                     {
                         log.LogError(message: ex.Message + "\n" + ex.StackTrace);
+
                         await context.Response.WriteAsync(
 text: "{ \"error\": \"" + ex.Message.Replace(oldValue: "\"", newValue: "\'") + "\" }"
                         );

@@ -5,7 +5,7 @@
 using Microsoft.AspNetCore.Http.Features;
 
 
-namespace cCoder.Core.Exposures;
+namespace cCoder.Core.Dependencies.Sessions;
 
 public sealed class NoOpSessionFeature : ISessionFeature
 {

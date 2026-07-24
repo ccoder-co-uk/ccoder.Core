@@ -11,8 +11,10 @@ internal class PlanningAppService(IPlanningAppBroker planningAppBroker) : IPlann
 {
     public ValueTask AddAsync(App app) =>
         planningAppBroker.AddAsync(app: app);
+
     public ValueTask UpdateAsync(App app) =>
         planningAppBroker.UpdateAsync(app: app);
+
     public ValueTask DeleteAsync(int appId) =>
         planningAppBroker.DeleteAsync(appId: appId);
 }

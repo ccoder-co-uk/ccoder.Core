@@ -76,6 +76,7 @@ message: "First-time setup is available because one or more platform databases a
 
         using CancellationTokenSource timeout = CancellationTokenSource
             .CreateLinkedTokenSource(token: cancellationToken);
+
         timeout.CancelAfter(delay: TimeSpan.FromSeconds(seconds: 2));
 
         try

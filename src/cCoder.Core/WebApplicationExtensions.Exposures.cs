@@ -42,12 +42,14 @@ public static partial class WebApplicationExtensions
         app.UseRouting();
         app.MapStaticAssets();
         app.MapControllers();
+
         app.MapControllerRoute(
             name: "default",
             pattern: @"{*path}",
             defaults: new { controller = "Home", action = "Index" },
             constraints: new { path = new NoApiRouteConstraint() }
         );
+
         app.MapHub<NotificationHub>(pattern: "/Api/Hubs/Notification");
         return app;
     }
@@ -63,6 +65,7 @@ public static partial class WebApplicationExtensions
         app.HandleExceptions();
         app.UseCoreFormatters();
         app.UseCoreCaching();
+
         app.Use(
 middleware: async (context, next) =>
             {
@@ -86,6 +89,7 @@ middleware: async (context, next) =>
                 await next();
             }
         );
+
         return app;
     }
 
@@ -95,6 +99,7 @@ middleware: async (context, next) =>
     )
     {
         log?.LogInformation(message: "Initialising Document Management");
+
         app.MapWhen(
 predicate: context => DmsRouteRegex.IsMatch(input: context.Request.Path.Value?.ToLower() ?? string.Empty), configuration: branch => branch.UseMiddleware<DMSMiddleware>()
         );

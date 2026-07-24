@@ -43,6 +43,7 @@ services: services, assemblyQualifiedTypeName: "cCoder.Security.Services.Foundat
             .Select(selector: descriptor => descriptor.ImplementationInstance)
             .OfType<CoreConfiguration>()
             .LastOrDefault();
+
         Config runtimeConfiguration = services
             .Where(predicate: descriptor => descriptor.ServiceType == typeof(Config))
             .Select(selector: descriptor => descriptor.ImplementationInstance)
@@ -67,8 +68,10 @@ services: services, assemblyQualifiedTypeName: "cCoder.Security.Services.Foundat
         cCoder.Security.IServiceCollectionExtensions.AddSecurity(services: services, configAction: (securityServices, securityConfig) =>
         {
             securityConfig.RootPath = null;
+
             securityConfig.AddMSSQLModelProvider(
 services: securityServices, connectionString: securityConnectionString ?? string.Empty);
+
             securityConfig.UseAESHMMACPasswordEncryption(
 services: securityServices, decryptionKey: decryptionKey ?? string.Empty);
         });

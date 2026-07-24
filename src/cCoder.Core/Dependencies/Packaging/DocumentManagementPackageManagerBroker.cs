@@ -2,33 +2,34 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.AppSecurity.Exposures;
-using cCoder.AppSecurity.Models;
+using cCoder.DocumentManagement.Exposures;
+using cCoder.DocumentManagement.Models;
 using cCoder.Data.Models.CMS;
+using cCoder.Data.Models.DMS;
 using cCoder.Data.Models.Security;
 using cCoder.Packaging.Models;
 using cCoder.Data.Models.Packaging;
-using PackagingBroker = cCoder.Packaging.Brokers.IAppSecurityPackageManagerBroker;
+using PackagingBroker = cCoder.Packaging.Brokers.IDocumentManagementPackageManagerBroker;
 
 
-namespace cCoder.Core.Brokers.Packaging;
+namespace cCoder.Core.Dependencies.Packaging;
 
-internal class AppSecurityPackageManagerBroker(
-    IAppSecurityPackageManager appSecurityPackageManager = null
+internal class DocumentManagementPackageManagerBroker(
+    IDocumentManagementPackageManager documentManagementPackageManager = null
 ) : PackagingBroker
 {
     public ValueTask ImportPackageAsync(int appId, Package package) =>
-        appSecurityPackageManager == null
+        documentManagementPackageManager == null
             ? ValueTask.CompletedTask
-            : appSecurityPackageManager.ImportPackageAsync(appId: appId, package: ToExternalPackage(package: package));
+            : documentManagementPackageManager.ImportPackageAsync(appId: appId, package: ToExternalPackage(package: package));
 
     public Package ExportPackage(int appId, string packageName) =>
-        appSecurityPackageManager == null
+        documentManagementPackageManager == null
             ? null
-            : ToLocalPackage(package: appSecurityPackageManager.ExportPackage(appId: appId, packageName: packageName));
+            : ToLocalPackage(package: documentManagementPackageManager.ExportPackage(appId: appId, packageName: packageName));
 
-    private static AppSecurityPackage ToExternalPackage(Package package) =>
-        package == null ? null : new AppSecurityPackage
+    private static DocumentManagementPackage ToExternalPackage(Package package) =>
+        package == null ? null : new DocumentManagementPackage(package.Name)
         {
             Id = package.Id,
             Name = package.Name,
@@ -39,8 +40,8 @@ internal class AppSecurityPackageManagerBroker(
                 .ToArray(),
         };
 
-    private static AppSecurityPackageItem ToExternalPackageItem(PackageItem packageItem) =>
-        packageItem == null ? null : new AppSecurityPackageItem
+    private static DocumentManagementPackageItem ToExternalPackageItem(PackageItem packageItem) =>
+        packageItem == null ? null : new DocumentManagementPackageItem
         {
             Id = packageItem.Id,
             PackageId = packageItem.PackageId,
@@ -48,7 +49,7 @@ internal class AppSecurityPackageManagerBroker(
             Data = packageItem.Data,
         };
 
-    private static Package ToLocalPackage(AppSecurityPackage package) =>
+    private static Package ToLocalPackage(DocumentManagementPackage package) =>
         package == null ? null : new Package(package.Name)
         {
             Id = package.Id,
@@ -60,7 +61,7 @@ internal class AppSecurityPackageManagerBroker(
                 .ToArray(),
         };
 
-    private static PackageItem ToLocalPackageItem(AppSecurityPackageItem packageItem) =>
+    private static PackageItem ToLocalPackageItem(DocumentManagementPackageItem packageItem) =>
         packageItem == null ? null : new PackageItem
         {
             Id = packageItem.Id,

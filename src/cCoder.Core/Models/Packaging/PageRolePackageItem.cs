@@ -2,10 +2,10 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.Core.Models;
+namespace cCoder.Core.Models.Packaging;
 
-namespace cCoder.Core.Exposures;
-
-public class ModelStateError : ModelStateErrorModel
+internal sealed class PageRolePackageItem
 {
+    public string Path { get; init; }
+    public string Role { get; init; }
 }

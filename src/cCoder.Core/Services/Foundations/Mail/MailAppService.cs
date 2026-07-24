@@ -11,8 +11,10 @@ internal class MailAppService(IMailAppBroker mailAppBroker) : IMailAppService
 {
     public ValueTask AddAsync(App app) =>
         mailAppBroker.AddAsync(app: app);
+
     public ValueTask UpdateAsync(App app) =>
         mailAppBroker.UpdateAsync(app: app);
+
     public ValueTask DeleteAsync(int appId) =>
         mailAppBroker.DeleteAsync(appId: appId);
 }

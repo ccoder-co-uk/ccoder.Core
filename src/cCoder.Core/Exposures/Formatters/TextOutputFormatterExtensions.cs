@@ -20,6 +20,7 @@ public static class FormatterODataHelper
         else
         {
             object result = UnpackSelectExpandWrapper(contextObject: contextObject);
+
             if (result is IDictionary<string, object> dict)
             {
                 ProcessDictionary(dict: dict);
@@ -68,6 +69,7 @@ public static class FormatterODataHelper
     private static void ProcessDictionary(IDictionary<string, object> dict)
     {
         string[] keys = dict.Keys.ToArray();
+
         foreach (string key in keys)
         {
             dict[key] = HandleOData(contextObject: dict[key]);

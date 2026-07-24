@@ -13,9 +13,11 @@ namespace cCoder.Core.Brokers.Workflow;
 internal class WorkflowAppBroker(IWorkflowAppExposure workflowAppExposure) : IWorkflowAppBroker
 {
     public ValueTask AddAsync(App app) =>
-        workflowAppExposure.AddAsync(app);
+        workflowAppExposure.AddAsync(newApp: app);
+
     public ValueTask UpdateAsync(App app) =>
-        workflowAppExposure.UpdateAsync(app);
+        workflowAppExposure.UpdateAsync(updatedApp: app);
+
     public ValueTask DeleteAsync(int appId) =>
-        workflowAppExposure.DeleteAsync(appId);
+        workflowAppExposure.DeleteAsync(appId: appId);
 }

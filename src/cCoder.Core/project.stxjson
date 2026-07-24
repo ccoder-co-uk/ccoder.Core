@@ -1,0 +1,6230 @@
+{
+  "Classes": [
+    {
+      "Name": "cCoder.Core.Brokers.AppSecurity.AppSecurityAppBroker",
+      "StandardElementType": "Broker",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "AddAsync",
+          "Inputs": [
+            {
+              "Name": "app",
+              "Type": "App"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        },
+        {
+          "Name": "DeleteAsync",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        },
+        {
+          "Name": "UpdateAsync",
+          "Inputs": [
+            {
+              "Name": "app",
+              "Type": "App"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Brokers.ContentManagement.ContentManagementAppBroker",
+      "StandardElementType": "Broker",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "AddAsync",
+          "Inputs": [
+            {
+              "Name": "app",
+              "Type": "cCoder.Data.Models.CMS.App"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.CMS.App\u003E"
+        },
+        {
+          "Name": "DeleteAsync",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        },
+        {
+          "Name": "Get",
+          "Inputs": [
+            {
+              "Name": "id",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "ignoreFilters",
+              "Type": "System.Boolean"
+            }
+          ],
+          "ReturnType": "cCoder.Data.Models.CMS.App"
+        },
+        {
+          "Name": "GetAll",
+          "Inputs": [
+            {
+              "Name": "ignoreFilters",
+              "Type": "System.Boolean"
+            }
+          ],
+          "ReturnType": "System.Linq.IQueryable\u003CcCoder.Data.Models.CMS.App\u003E"
+        },
+        {
+          "Name": "GetByDomain",
+          "Inputs": [
+            {
+              "Name": "domain",
+              "Type": "System.String"
+            },
+            {
+              "Name": "ignoreFilters",
+              "Type": "System.Boolean"
+            }
+          ],
+          "ReturnType": "cCoder.Data.Models.CMS.App"
+        },
+        {
+          "Name": "UpdateAsync",
+          "Inputs": [
+            {
+              "Name": "app",
+              "Type": "cCoder.Data.Models.CMS.App"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.CMS.App\u003E"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Brokers.DocumentManagement.DocumentManagementAppBroker",
+      "StandardElementType": "Broker",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "AddAsync",
+          "Inputs": [
+            {
+              "Name": "app",
+              "Type": "App"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        },
+        {
+          "Name": "DeleteAsync",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        },
+        {
+          "Name": "UpdateAsync",
+          "Inputs": [
+            {
+              "Name": "app",
+              "Type": "App"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Brokers.Http.HttpRequestBroker",
+      "StandardElementType": "Broker",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "GetCurrentRequest",
+          "Inputs": [],
+          "ReturnType": "HttpRequest"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Brokers.Mail.MailAppBroker",
+      "StandardElementType": "Broker",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "AddAsync",
+          "Inputs": [
+            {
+              "Name": "app",
+              "Type": "App"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        },
+        {
+          "Name": "DeleteAsync",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        },
+        {
+          "Name": "UpdateAsync",
+          "Inputs": [
+            {
+              "Name": "app",
+              "Type": "App"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Brokers.Mail.MailManagerBroker",
+      "StandardElementType": "Broker",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "AddAsync",
+          "Inputs": [
+            {
+              "Name": "email",
+              "Type": "QueuedEmail"
+            },
+            {
+              "Name": "checkPrivileges",
+              "Type": "System.Boolean"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CQueuedEmail\u003E"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Brokers.Packaging.AppDomainProvider",
+      "StandardElementType": "Dependency",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "GetDomain",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            }
+          ],
+          "ReturnType": "System.String"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Brokers.Planning.PlanningAppBroker",
+      "StandardElementType": "Broker",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "AddAsync",
+          "Inputs": [
+            {
+              "Name": "app",
+              "Type": "App"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        },
+        {
+          "Name": "DeleteAsync",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        },
+        {
+          "Name": "UpdateAsync",
+          "Inputs": [
+            {
+              "Name": "app",
+              "Type": "App"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Brokers.Workflow.WorkflowAppBroker",
+      "StandardElementType": "Broker",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "AddAsync",
+          "Inputs": [
+            {
+              "Name": "app",
+              "Type": "App"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        },
+        {
+          "Name": "DeleteAsync",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        },
+        {
+          "Name": "UpdateAsync",
+          "Inputs": [
+            {
+              "Name": "app",
+              "Type": "App"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.CoreApiBuilderOptions",
+      "StandardElementType": "Unknown",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "AddAllDomains",
+          "Inputs": [
+            {
+              "Name": "connection",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
+        },
+        {
+          "Name": "AddAllDomains",
+          "Inputs": [
+            {
+              "Name": "configure",
+              "Type": "System.Action\u003CcCoder.Core.Models.CoreDomainsConfig\u003E"
+            }
+          ],
+          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
+        },
+        {
+          "Name": "AddAppSecurityApi",
+          "Inputs": [
+            {
+              "Name": "configure",
+              "Type": "System.Action\u003CAppSecurityConfiguration\u003E"
+            }
+          ],
+          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
+        },
+        {
+          "Name": "AddContentManagementApi",
+          "Inputs": [
+            {
+              "Name": "configure",
+              "Type": "System.Action\u003CContentManagementConfiguration\u003E"
+            }
+          ],
+          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
+        },
+        {
+          "Name": "AddDocumentManagementApi",
+          "Inputs": [
+            {
+              "Name": "configure",
+              "Type": "System.Action\u003CDocumentManagementConfiguration\u003E"
+            }
+          ],
+          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
+        },
+        {
+          "Name": "AddLoggingApi",
+          "Inputs": [
+            {
+              "Name": "configure",
+              "Type": "System.Action\u003CLoggingConfiguration\u003E"
+            }
+          ],
+          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
+        },
+        {
+          "Name": "AddMailApi",
+          "Inputs": [
+            {
+              "Name": "configure",
+              "Type": "System.Action\u003CMailConfiguration\u003E"
+            }
+          ],
+          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
+        },
+        {
+          "Name": "AddSecurityApi",
+          "Inputs": [
+            {
+              "Name": "configure",
+              "Type": "System.Action\u003CIServiceCollection, SecurityConfiguration\u003E"
+            }
+          ],
+          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
+        },
+        {
+          "Name": "AddStorage",
+          "Inputs": [
+            {
+              "Name": "connectionString",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
+        },
+        {
+          "Name": "AddWorkflowApi",
+          "Inputs": [
+            {
+              "Name": "configure",
+              "Type": "System.Action\u003CWorkflowConfiguration\u003E"
+            }
+          ],
+          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
+        },
+        {
+          "Name": "ConfigureDomainsWith",
+          "Inputs": [
+            {
+              "Name": "configure",
+              "Type": "System.Action\u003CcCoder.Core.Models.CoreConfiguration\u003E"
+            }
+          ],
+          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
+        },
+        {
+          "Name": "UseAll",
+          "Inputs": [
+            {
+              "Name": "configure",
+              "Type": "System.Action\u003CcCoder.Core.Models.CoreConfiguration\u003E"
+            }
+          ],
+          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
+        },
+        {
+          "Name": "UseHttpEventing",
+          "Inputs": [
+            {
+              "Name": "hubUrl",
+              "Type": "System.String"
+            },
+            {
+              "Name": "configure",
+              "Type": "System.Action\u003CHttpEventingOptions\u003E"
+            }
+          ],
+          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
+        },
+        {
+          "Name": "UseLegacyCoreApi",
+          "Inputs": [
+            {
+              "Name": "routePath",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
+        },
+        {
+          "Name": "UseLegacyCoreContext",
+          "Inputs": [
+            {
+              "Name": "routePath",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
+        },
+        {
+          "Name": "UseServiceBusEventing",
+          "Inputs": [
+            {
+              "Name": "connectionString",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
+        },
+        {
+          "Name": "WithCoreConfiguration",
+          "Inputs": [
+            {
+              "Name": "configure",
+              "Type": "System.Action\u003CcCoder.Core.Models.CoreConfiguration\u003E"
+            }
+          ],
+          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
+        },
+        {
+          "Name": "WithCoreConfiguration",
+          "Inputs": [
+            {
+              "Name": "configuration",
+              "Type": "Data.Config"
+            }
+          ],
+          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
+        },
+        {
+          "Name": "WithEventProviders",
+          "Inputs": [
+            {
+              "Name": "eventProviders",
+              "Type": "EventProvider[]"
+            }
+          ],
+          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
+        },
+        {
+          "Name": "WithSecurity",
+          "Inputs": [
+            {
+              "Name": "connectionString",
+              "Type": "System.String"
+            },
+            {
+              "Name": "decryptionKey",
+              "Type": "System.String"
+            },
+            {
+              "Name": "rootPath",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
+        },
+        {
+          "Name": "WithSessionCache",
+          "Inputs": [
+            {
+              "Name": "connectionString",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.CoreBuilderOptions",
+      "StandardElementType": "Unknown",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "AddStorage",
+          "Inputs": [
+            {
+              "Name": "connectionString",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "cCoder.Core.CoreBuilderOptions"
+        },
+        {
+          "Name": "AuthorizeUsersWith",
+          "Inputs": [],
+          "ReturnType": "cCoder.Core.CoreBuilderOptions"
+        },
+        {
+          "Name": "ConfigureDomainsWith",
+          "Inputs": [
+            {
+              "Name": "configure",
+              "Type": "System.Action\u003CcCoder.Core.Models.CoreConfiguration\u003E"
+            }
+          ],
+          "ReturnType": "cCoder.Core.CoreBuilderOptions"
+        },
+        {
+          "Name": "UseAll",
+          "Inputs": [
+            {
+              "Name": "configure",
+              "Type": "System.Action\u003CcCoder.Core.Models.CoreConfiguration\u003E"
+            }
+          ],
+          "ReturnType": "cCoder.Core.CoreBuilderOptions"
+        },
+        {
+          "Name": "UseApiDocumentation",
+          "Inputs": [],
+          "ReturnType": "cCoder.Core.CoreBuilderOptions"
+        },
+        {
+          "Name": "UseAppSecurity",
+          "Inputs": [
+            {
+              "Name": "configure",
+              "Type": "System.Action\u003CAppSecurityConfiguration\u003E"
+            }
+          ],
+          "ReturnType": "cCoder.Core.CoreBuilderOptions"
+        },
+        {
+          "Name": "UseContentManagement",
+          "Inputs": [
+            {
+              "Name": "configure",
+              "Type": "System.Action\u003CContentManagementConfiguration\u003E"
+            },
+            {
+              "Name": "map",
+              "Type": "System.Collections.Generic.IDictionary\u003CSystem.String, IEdmModel\u003E"
+            },
+            {
+              "Name": "servicesOnly",
+              "Type": "System.Boolean"
+            }
+          ],
+          "ReturnType": "cCoder.Core.CoreBuilderOptions"
+        },
+        {
+          "Name": "UseDocumentManagement",
+          "Inputs": [
+            {
+              "Name": "configure",
+              "Type": "System.Action\u003CDocumentManagementConfiguration\u003E"
+            }
+          ],
+          "ReturnType": "cCoder.Core.CoreBuilderOptions"
+        },
+        {
+          "Name": "UseHttpEventing",
+          "Inputs": [],
+          "ReturnType": "cCoder.Core.CoreBuilderOptions"
+        },
+        {
+          "Name": "UseLogging",
+          "Inputs": [
+            {
+              "Name": "configure",
+              "Type": "System.Action\u003CLoggingConfiguration\u003E"
+            }
+          ],
+          "ReturnType": "cCoder.Core.CoreBuilderOptions"
+        },
+        {
+          "Name": "UseMSSQLProvider",
+          "Inputs": [
+            {
+              "Name": "connectionString",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "cCoder.Core.CoreBuilderOptions"
+        },
+        {
+          "Name": "UseMail",
+          "Inputs": [
+            {
+              "Name": "configure",
+              "Type": "System.Action\u003CMailConfiguration\u003E"
+            }
+          ],
+          "ReturnType": "cCoder.Core.CoreBuilderOptions"
+        },
+        {
+          "Name": "UseServiceBusEventing",
+          "Inputs": [],
+          "ReturnType": "cCoder.Core.CoreBuilderOptions"
+        },
+        {
+          "Name": "UseWorkflow",
+          "Inputs": [
+            {
+              "Name": "configure",
+              "Type": "System.Action\u003CWorkflowConfiguration\u003E"
+            }
+          ],
+          "ReturnType": "cCoder.Core.CoreBuilderOptions"
+        },
+        {
+          "Name": "WithCoreConfiguration",
+          "Inputs": [
+            {
+              "Name": "configure",
+              "Type": "System.Action\u003CcCoder.Core.Models.CoreConfiguration\u003E"
+            }
+          ],
+          "ReturnType": "cCoder.Core.CoreBuilderOptions"
+        },
+        {
+          "Name": "WithCoreConfiguration",
+          "Inputs": [
+            {
+              "Name": "configuration",
+              "Type": "Data.Config"
+            }
+          ],
+          "ReturnType": "cCoder.Core.CoreBuilderOptions"
+        },
+        {
+          "Name": "WithEventProviders",
+          "Inputs": [
+            {
+              "Name": "eventProviders",
+              "Type": "EventProvider[]"
+            }
+          ],
+          "ReturnType": "cCoder.Core.CoreBuilderOptions"
+        },
+        {
+          "Name": "WithSecurity",
+          "Inputs": [
+            {
+              "Name": "connectionString",
+              "Type": "System.String"
+            },
+            {
+              "Name": "decryptionKey",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "cCoder.Core.CoreBuilderOptions"
+        },
+        {
+          "Name": "WithSessionCache",
+          "Inputs": [
+            {
+              "Name": "connectionString",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "cCoder.Core.CoreBuilderOptions"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.CoreConfigurationMapper",
+      "StandardElementType": "Unknown",
+      "Properties": [],
+      "Methods": []
+    },
+    {
+      "Name": "cCoder.Core.Dependencies.Formatters.CsvFormatter",
+      "StandardElementType": "Dependency",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "WriteResponseBodyAsync",
+          "Inputs": [
+            {
+              "Name": "context",
+              "Type": "OutputFormatterWriteContext"
+            },
+            {
+              "Name": "selectedEncoding",
+              "Type": "System.Text.Encoding"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Dependencies.Formatters.ExcelFormatter",
+      "StandardElementType": "Dependency",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "WriteResponseBodyAsync",
+          "Inputs": [
+            {
+              "Name": "context",
+              "Type": "OutputFormatterWriteContext"
+            },
+            {
+              "Name": "selectedEncoding",
+              "Type": "System.Text.Encoding"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task"
+        },
+        {
+          "Name": "WriteResponseHeaders",
+          "Inputs": [
+            {
+              "Name": "context",
+              "Type": "OutputFormatterWriteContext"
+            }
+          ],
+          "ReturnType": "System.Void"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Dependencies.Formatters.XmlFormatter",
+      "StandardElementType": "Dependency",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "WriteResponseBodyAsync",
+          "Inputs": [
+            {
+              "Name": "context",
+              "Type": "OutputFormatterWriteContext"
+            },
+            {
+              "Name": "selectedEncoding",
+              "Type": "System.Text.Encoding"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Dependencies.Packaging.AppSecurityPackageManagerBroker",
+      "StandardElementType": "Dependency",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "ExportPackage",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "packageName",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "Package"
+        },
+        {
+          "Name": "ImportPackageAsync",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "package",
+              "Type": "Package"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Dependencies.Packaging.ContentManagementPackageManagerBroker",
+      "StandardElementType": "Dependency",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "ExportPackage",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "packageName",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "Package"
+        },
+        {
+          "Name": "ImportPackageAsync",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "package",
+              "Type": "Package"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Dependencies.Packaging.DocumentManagementPackageManagerBroker",
+      "StandardElementType": "Dependency",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "ExportPackage",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "packageName",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "Package"
+        },
+        {
+          "Name": "ImportPackageAsync",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "package",
+              "Type": "Package"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Dependencies.Packaging.SchedulingPackageManagerBroker",
+      "StandardElementType": "Dependency",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "ExportPackage",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "packageName",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "Package"
+        },
+        {
+          "Name": "ImportPackageAsync",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "package",
+              "Type": "Package"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Dependencies.Packaging.WorkflowPackageManagerBroker",
+      "StandardElementType": "Dependency",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "ExportPackage",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "packageName",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "Package"
+        },
+        {
+          "Name": "ImportPackageAsync",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "package",
+              "Type": "Package"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Dependencies.Sessions.NoOpSession",
+      "StandardElementType": "Dependency",
+      "Properties": [
+        {
+          "Name": "Id",
+          "Type": "System.String"
+        },
+        {
+          "Name": "Instance",
+          "Type": "cCoder.Core.Dependencies.Sessions.NoOpSession"
+        },
+        {
+          "Name": "IsAvailable",
+          "Type": "System.Boolean"
+        },
+        {
+          "Name": "Keys",
+          "Type": "System.Collections.Generic.IEnumerable\u003CSystem.String\u003E"
+        }
+      ],
+      "Methods": [
+        {
+          "Name": "Clear",
+          "Inputs": [],
+          "ReturnType": "System.Void"
+        },
+        {
+          "Name": "CommitAsync",
+          "Inputs": [
+            {
+              "Name": "cancellationToken",
+              "Type": "System.Threading.CancellationToken"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task"
+        },
+        {
+          "Name": "LoadAsync",
+          "Inputs": [
+            {
+              "Name": "cancellationToken",
+              "Type": "System.Threading.CancellationToken"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task"
+        },
+        {
+          "Name": "Remove",
+          "Inputs": [
+            {
+              "Name": "key",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.Void"
+        },
+        {
+          "Name": "Set",
+          "Inputs": [
+            {
+              "Name": "key",
+              "Type": "System.String"
+            },
+            {
+              "Name": "value",
+              "Type": "System.Byte[]"
+            }
+          ],
+          "ReturnType": "System.Void"
+        },
+        {
+          "Name": "TryGetValue",
+          "Inputs": [
+            {
+              "Name": "key",
+              "Type": "System.String"
+            },
+            {
+              "Name": "value",
+              "Type": "System.Byte[]"
+            }
+          ],
+          "ReturnType": "System.Boolean"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Dependencies.Sessions.NoOpSessionFeature",
+      "StandardElementType": "Dependency",
+      "Properties": [
+        {
+          "Name": "Session",
+          "Type": "ISession"
+        }
+      ],
+      "Methods": []
+    },
+    {
+      "Name": "cCoder.Core.Exposures.BadRequestResult",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": []
+    },
+    {
+      "Name": "cCoder.Core.Exposures.Controllers.AppController",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "Delete",
+          "Inputs": [
+            {
+              "Name": "key",
+              "Type": "System.Int32"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E"
+        },
+        {
+          "Name": "DeleteAggregateRoute",
+          "Inputs": [
+            {
+              "Name": "key",
+              "Type": "System.Int32"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E"
+        },
+        {
+          "Name": "Post",
+          "Inputs": [
+            {
+              "Name": "entity",
+              "Type": "App"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E"
+        },
+        {
+          "Name": "Put",
+          "Inputs": [
+            {
+              "Name": "key",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "entity",
+              "Type": "App"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E"
+        },
+        {
+          "Name": "PutAggregateRoute",
+          "Inputs": [
+            {
+              "Name": "key",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "entity",
+              "Type": "App"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Exposures.Controllers.PackageManagerController",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "Export",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "packageNames",
+              "Type": "System.String[]"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E"
+        },
+        {
+          "Name": "ImportAsync",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "package",
+              "Type": "Package"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E"
+        },
+        {
+          "Name": "ImportThisAsync",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Exposures.Controllers.SetupController",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "Index",
+          "Inputs": [
+            {
+              "Name": "cancellationToken",
+              "Type": "System.Threading.CancellationToken"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E"
+        },
+        {
+          "Name": "Index",
+          "Inputs": [
+            {
+              "Name": "setup",
+              "Type": "cCoder.Core.Models.FirstTimeSetupRequest"
+            },
+            {
+              "Name": "cancellationToken",
+              "Type": "System.Threading.CancellationToken"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Exposures.Controllers.TemplatedEmailController",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "AddTemplatedEmail",
+          "Inputs": [
+            {
+              "Name": "details",
+              "Type": "TemplatedEmailDetails"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Exposures.CoreAggregateApiModelBuilderExtensions",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": []
+    },
+    {
+      "Name": "cCoder.Core.Exposures.CoreSecurityApiModelBuilderExtensions",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": []
+    },
+    {
+      "Name": "cCoder.Core.Exposures.Cors.CoreAllowedOriginStore",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "IsAllowedAsync",
+          "Inputs": [
+            {
+              "Name": "origin",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CSystem.Boolean\u003E"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Exposures.Formatters.FormatterCsvFileBuilder",
+      "StandardElementType": "Exposure",
+      "Properties": [
+        {
+          "Name": "Culture",
+          "Type": "System.String"
+        },
+        {
+          "Name": "Delimiter",
+          "Type": "System.String"
+        },
+        {
+          "Name": "Quotes",
+          "Type": "System.String"
+        },
+        {
+          "Name": "Resources",
+          "Type": "System.Collections.Generic.IEnumerable\u003CResource\u003E"
+        }
+      ],
+      "Methods": [
+        {
+          "Name": "BuildFor",
+          "Inputs": [
+            {
+              "Name": "source",
+              "Type": "System.Object"
+            }
+          ],
+          "ReturnType": "System.String"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Exposures.Formatters.FormatterExcelFileBuilder",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "BuildFor",
+          "Inputs": [
+            {
+              "Name": "data",
+              "Type": "System.Object"
+            }
+          ],
+          "ReturnType": "System.IO.Stream"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Exposures.Formatters.FormatterExportExtensions",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "AddTextFile",
+          "Inputs": [
+            {
+              "Name": "zip",
+              "Type": "System.IO.Compression.ZipArchive"
+            },
+            {
+              "Name": "path",
+              "Type": "System.String"
+            },
+            {
+              "Name": "text",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.Void"
+        },
+        {
+          "Name": "ForNameAndCulture",
+          "Inputs": [
+            {
+              "Name": "potentials",
+              "Type": "System.Collections.Generic.IEnumerable\u003CResource\u003E"
+            },
+            {
+              "Name": "name",
+              "Type": "System.String"
+            },
+            {
+              "Name": "culture",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "Resource"
+        },
+        {
+          "Name": "GetClosestCulturalMatch",
+          "Inputs": [
+            {
+              "Name": "potentials",
+              "Type": "System.Collections.Generic.IEnumerable\u003CResource\u003E"
+            },
+            {
+              "Name": "culture",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "Resource"
+        },
+        {
+          "Name": "ToCsv",
+          "Inputs": [
+            {
+              "Name": "source",
+              "Type": "System.Object"
+            },
+            {
+              "Name": "resources",
+              "Type": "System.Collections.Generic.IEnumerable\u003CResource\u003E"
+            },
+            {
+              "Name": "delimiter",
+              "Type": "System.String"
+            },
+            {
+              "Name": "quotes",
+              "Type": "System.String"
+            },
+            {
+              "Name": "culture",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.String"
+        },
+        {
+          "Name": "ToExcel",
+          "Inputs": [
+            {
+              "Name": "source",
+              "Type": "System.Object"
+            },
+            {
+              "Name": "resources",
+              "Type": "System.Collections.Generic.IEnumerable\u003CResource\u003E"
+            },
+            {
+              "Name": "culture",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.IO.Stream"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Exposures.Formatters.FormatterIntExtensions",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "ToExcelColumn",
+          "Inputs": [
+            {
+              "Name": "index",
+              "Type": "System.Int32"
+            }
+          ],
+          "ReturnType": "System.String"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Exposures.Formatters.FormatterODataHelper",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "HandleOData",
+          "Inputs": [
+            {
+              "Name": "contextObject",
+              "Type": "System.Object"
+            }
+          ],
+          "ReturnType": "System.Object"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Exposures.Hubs.NotificationHub",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "ConsoleSend",
+          "Inputs": [
+            {
+              "Name": "level",
+              "Type": "System.String"
+            },
+            {
+              "Name": "message",
+              "Type": "System.String"
+            },
+            {
+              "Name": "thread",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task"
+        },
+        {
+          "Name": "Join",
+          "Inputs": [
+            {
+              "Name": "thread",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task"
+        },
+        {
+          "Name": "Leave",
+          "Inputs": [
+            {
+              "Name": "thread",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task"
+        },
+        {
+          "Name": "OnConnectedAsync",
+          "Inputs": [],
+          "ReturnType": "System.Threading.Tasks.Task"
+        },
+        {
+          "Name": "OnDisconnectedAsync",
+          "Inputs": [
+            {
+              "Name": "exception",
+              "Type": "System.Exception"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task"
+        },
+        {
+          "Name": "Send",
+          "Inputs": [
+            {
+              "Name": "level",
+              "Type": "System.String"
+            },
+            {
+              "Name": "message",
+              "Type": "System.String"
+            },
+            {
+              "Name": "thread",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.Void"
+        },
+        {
+          "Name": "SendTest",
+          "Inputs": [
+            {
+              "Name": "message",
+              "Type": "System.String"
+            },
+            {
+              "Name": "thread",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Exposures.IEdmModelExtensions",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "GetExtendedMetadataForType",
+          "Inputs": [
+            {
+              "Name": "model",
+              "Type": "IEdmModel"
+            },
+            {
+              "Name": "context",
+              "Type": "System.String"
+            },
+            {
+              "Name": "type",
+              "Type": "System.Type"
+            },
+            {
+              "Name": "hasEndpoint",
+              "Type": "System.Boolean"
+            }
+          ],
+          "ReturnType": "cCoder.Core.Models.Metadata.ExtendedMetadataContainer"
+        },
+        {
+          "Name": "GetMetadata",
+          "Inputs": [
+            {
+              "Name": "model",
+              "Type": "IEdmModel"
+            },
+            {
+              "Name": "contextName",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.Collections.Generic.IEnumerable\u003CcCoder.Core.Models.Metadata.ExtendedMetadataContainer\u003E"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Exposures.ModelStateError",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": []
+    },
+    {
+      "Name": "cCoder.Core.Exposures.NoApiRouteConstraint",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "Match",
+          "Inputs": [
+            {
+              "Name": "httpContext",
+              "Type": "HttpContext"
+            },
+            {
+              "Name": "route",
+              "Type": "IRouter"
+            },
+            {
+              "Name": "routeKey",
+              "Type": "System.String"
+            },
+            {
+              "Name": "values",
+              "Type": "RouteValueDictionary"
+            },
+            {
+              "Name": "routeDirection",
+              "Type": "RouteDirection"
+            }
+          ],
+          "ReturnType": "System.Boolean"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Exposures.OData.ControllerReadExtensions",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "ResolveKeyedGet",
+          "Inputs": [
+            {
+              "Name": "controller",
+              "Type": "ControllerBase"
+            },
+            {
+              "Name": "get",
+              "Type": "System.Func\u003CTEntity\u003E"
+            }
+          ],
+          "ReturnType": "IActionResult"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Exposures.OData.CoreModelBuilder",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "Build",
+          "Inputs": [],
+          "ReturnType": "cCoder.Core.Exposures.OData.ODataModel"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Exposures.OData.ODataModel",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": []
+    },
+    {
+      "Name": "cCoder.Core.Exposures.OData.ODataModelBuilder",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "Build",
+          "Inputs": [],
+          "ReturnType": "cCoder.Core.Exposures.OData.ODataModel"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Exposures.OData.Responses.RawResult",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "ExecuteResultAsync",
+          "Inputs": [
+            {
+              "Name": "context",
+              "Type": "ActionContext"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Exposures.Setup.BaselineAssetCatalog",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "LoadAssetBytes",
+          "Inputs": [
+            {
+              "Name": "relativePath",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.Byte[]"
+        },
+        {
+          "Name": "LoadCommonObjects",
+          "Inputs": [],
+          "ReturnType": "CommonObject[]"
+        },
+        {
+          "Name": "LoadCoreReviewPackages",
+          "Inputs": [],
+          "ReturnType": "Package[]"
+        },
+        {
+          "Name": "LoadDefaultAppConfig",
+          "Inputs": [],
+          "ReturnType": "System.String"
+        },
+        {
+          "Name": "LoadDmsAssetPaths",
+          "Inputs": [],
+          "ReturnType": "System.String[]"
+        },
+        {
+          "Name": "LoadPackageItems",
+          "Inputs": [
+            {
+              "Name": "packageName",
+              "Type": "System.String"
+            },
+            {
+              "Name": "itemType",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "T[]"
+        },
+        {
+          "Name": "LoadPackages",
+          "Inputs": [],
+          "ReturnType": "Package[]"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Exposures.Setup.UIBaseline",
+      "StandardElementType": "Exposure",
+      "Properties": [
+        {
+          "Name": "Packages",
+          "Type": "Package[]"
+        }
+      ],
+      "Methods": []
+    },
+    {
+      "Name": "cCoder.Core.HttpEventHubUrlResolver",
+      "StandardElementType": "Unknown",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "Normalize",
+          "Inputs": [
+            {
+              "Name": "value",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.String"
+        },
+        {
+          "Name": "Resolve",
+          "Inputs": [
+            {
+              "Name": "configuration",
+              "Type": "Microsoft.Extensions.Configuration.IConfiguration"
+            }
+          ],
+          "ReturnType": "System.String"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.IAppBuilderExtensions",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": []
+    },
+    {
+      "Name": "cCoder.Core.IServiceCollectionExtensions",
+      "StandardElementType": "App",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "AddCoreHostedServices",
+          "Inputs": [
+            {
+              "Name": "services",
+              "Type": "IServiceCollection"
+            },
+            {
+              "Name": "configure",
+              "Type": "System.Action\u003CcCoder.Core.CoreBuilderOptions\u003E"
+            }
+          ],
+          "ReturnType": "System.Void"
+        },
+        {
+          "Name": "AddCoreWeb",
+          "Inputs": [
+            {
+              "Name": "services",
+              "Type": "IServiceCollection"
+            },
+            {
+              "Name": "configure",
+              "Type": "System.Action\u003CcCoder.Core.CoreApiBuilderOptions\u003E"
+            }
+          ],
+          "ReturnType": "System.Void"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.IServiceCollectionExtensions.SplitDomainApplicationModelConvention",
+      "StandardElementType": "Dependency",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "Apply",
+          "Inputs": [
+            {
+              "Name": "action",
+              "Type": "ActionModel"
+            }
+          ],
+          "ReturnType": "System.Void"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Models.AuditResultByProperty",
+      "StandardElementType": "Model",
+      "Properties": [
+        {
+          "Name": "April",
+          "Type": "System.Int32"
+        },
+        {
+          "Name": "August",
+          "Type": "System.Int32"
+        },
+        {
+          "Name": "December",
+          "Type": "System.Int32"
+        },
+        {
+          "Name": "February",
+          "Type": "System.Int32"
+        },
+        {
+          "Name": "January",
+          "Type": "System.Int32"
+        },
+        {
+          "Name": "July",
+          "Type": "System.Int32"
+        },
+        {
+          "Name": "June",
+          "Type": "System.Int32"
+        },
+        {
+          "Name": "March",
+          "Type": "System.Int32"
+        },
+        {
+          "Name": "May",
+          "Type": "System.Int32"
+        },
+        {
+          "Name": "November",
+          "Type": "System.Int32"
+        },
+        {
+          "Name": "October",
+          "Type": "System.Int32"
+        },
+        {
+          "Name": "Property",
+          "Type": "System.String"
+        },
+        {
+          "Name": "September",
+          "Type": "System.Int32"
+        },
+        {
+          "Name": "Total",
+          "Type": "System.Int32"
+        }
+      ],
+      "Methods": []
+    },
+    {
+      "Name": "cCoder.Core.Models.AuditResultsByUser",
+      "StandardElementType": "Model",
+      "Properties": [
+        {
+          "Name": "April",
+          "Type": "System.Int32"
+        },
+        {
+          "Name": "August",
+          "Type": "System.Int32"
+        },
+        {
+          "Name": "December",
+          "Type": "System.Int32"
+        },
+        {
+          "Name": "February",
+          "Type": "System.Int32"
+        },
+        {
+          "Name": "January",
+          "Type": "System.Int32"
+        },
+        {
+          "Name": "July",
+          "Type": "System.Int32"
+        },
+        {
+          "Name": "June",
+          "Type": "System.Int32"
+        },
+        {
+          "Name": "March",
+          "Type": "System.Int32"
+        },
+        {
+          "Name": "May",
+          "Type": "System.Int32"
+        },
+        {
+          "Name": "November",
+          "Type": "System.Int32"
+        },
+        {
+          "Name": "October",
+          "Type": "System.Int32"
+        },
+        {
+          "Name": "September",
+          "Type": "System.Int32"
+        },
+        {
+          "Name": "Total",
+          "Type": "System.Int32"
+        },
+        {
+          "Name": "UserName",
+          "Type": "System.String"
+        }
+      ],
+      "Methods": []
+    },
+    {
+      "Name": "cCoder.Core.Models.CoreAllowedOriginSnapshot",
+      "StandardElementType": "Model",
+      "Properties": [
+        {
+          "Name": "Authorities",
+          "Type": "System.Collections.Generic.IReadOnlySet\u003CSystem.String\u003E"
+        },
+        {
+          "Name": "ExactOrigins",
+          "Type": "System.Collections.Generic.IReadOnlySet\u003CSystem.String\u003E"
+        },
+        {
+          "Name": "Hosts",
+          "Type": "System.Collections.Generic.IReadOnlySet\u003CSystem.String\u003E"
+        }
+      ],
+      "Methods": [
+        {
+          "Name": "\u003CClone\u003E$",
+          "Inputs": [],
+          "ReturnType": "cCoder.Core.Models.CoreAllowedOriginSnapshot"
+        },
+        {
+          "Name": "Deconstruct",
+          "Inputs": [
+            {
+              "Name": "ExactOrigins",
+              "Type": "System.Collections.Generic.IReadOnlySet\u003CSystem.String\u003E"
+            },
+            {
+              "Name": "Authorities",
+              "Type": "System.Collections.Generic.IReadOnlySet\u003CSystem.String\u003E"
+            },
+            {
+              "Name": "Hosts",
+              "Type": "System.Collections.Generic.IReadOnlySet\u003CSystem.String\u003E"
+            }
+          ],
+          "ReturnType": "System.Void"
+        },
+        {
+          "Name": "Equals",
+          "Inputs": [
+            {
+              "Name": "obj",
+              "Type": "System.Object?"
+            }
+          ],
+          "ReturnType": "System.Boolean"
+        },
+        {
+          "Name": "Equals",
+          "Inputs": [
+            {
+              "Name": "other",
+              "Type": "cCoder.Core.Models.CoreAllowedOriginSnapshot?"
+            }
+          ],
+          "ReturnType": "System.Boolean"
+        },
+        {
+          "Name": "GetHashCode",
+          "Inputs": [],
+          "ReturnType": "System.Int32"
+        },
+        {
+          "Name": "ToString",
+          "Inputs": [],
+          "ReturnType": "System.String"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Models.CoreApiRouteDefinition",
+      "StandardElementType": "Model",
+      "Properties": [
+        {
+          "Name": "Name",
+          "Type": "System.String"
+        },
+        {
+          "Name": "RouteModel",
+          "Type": "IEdmModel"
+        },
+        {
+          "Name": "RoutePath",
+          "Type": "System.String"
+        }
+      ],
+      "Methods": [
+        {
+          "Name": "\u003CClone\u003E$",
+          "Inputs": [],
+          "ReturnType": "cCoder.Core.Models.CoreApiRouteDefinition"
+        },
+        {
+          "Name": "Deconstruct",
+          "Inputs": [
+            {
+              "Name": "Name",
+              "Type": "System.String"
+            },
+            {
+              "Name": "RoutePath",
+              "Type": "System.String"
+            },
+            {
+              "Name": "RouteModel",
+              "Type": "IEdmModel"
+            }
+          ],
+          "ReturnType": "System.Void"
+        },
+        {
+          "Name": "Equals",
+          "Inputs": [
+            {
+              "Name": "obj",
+              "Type": "System.Object?"
+            }
+          ],
+          "ReturnType": "System.Boolean"
+        },
+        {
+          "Name": "Equals",
+          "Inputs": [
+            {
+              "Name": "other",
+              "Type": "cCoder.Core.Models.CoreApiRouteDefinition?"
+            }
+          ],
+          "ReturnType": "System.Boolean"
+        },
+        {
+          "Name": "GetHashCode",
+          "Inputs": [],
+          "ReturnType": "System.Int32"
+        },
+        {
+          "Name": "ToString",
+          "Inputs": [],
+          "ReturnType": "System.String"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Models.CoreConfiguration",
+      "StandardElementType": "Model",
+      "Properties": [
+        {
+          "Name": "AggregateDomains",
+          "Type": "System.Boolean"
+        },
+        {
+          "Name": "CacheExpiry",
+          "Type": "System.Int32?"
+        },
+        {
+          "Name": "CacheSource",
+          "Type": "System.String"
+        },
+        {
+          "Name": "CacheSourceAppId",
+          "Type": "System.Int32?"
+        },
+        {
+          "Name": "ConnectionStrings",
+          "Type": "System.Collections.Generic.IDictionary\u003CSystem.String, System.String\u003E"
+        },
+        {
+          "Name": "CoreConnectionString",
+          "Type": "System.String"
+        },
+        {
+          "Name": "DebugInfo",
+          "Type": "System.Boolean"
+        },
+        {
+          "Name": "DecryptionKey",
+          "Type": "System.String"
+        },
+        {
+          "Name": "EnableHttpEventing",
+          "Type": "System.Boolean"
+        },
+        {
+          "Name": "EnableServiceBusEventing",
+          "Type": "System.Boolean"
+        },
+        {
+          "Name": "EventProviderType",
+          "Type": "System.String"
+        },
+        {
+          "Name": "EventProviders",
+          "Type": "EventProvider[]"
+        },
+        {
+          "Name": "HttpEventHubUrl",
+          "Type": "System.String"
+        },
+        {
+          "Name": "LogSQL",
+          "Type": "System.Boolean"
+        },
+        {
+          "Name": "MailDefaultReceiverProviderName",
+          "Type": "System.String"
+        },
+        {
+          "Name": "MailDefaultSenderProviderName",
+          "Type": "System.String"
+        },
+        {
+          "Name": "MailGraphBaseUrl",
+          "Type": "System.String"
+        },
+        {
+          "Name": "MailGraphClientId",
+          "Type": "System.String"
+        },
+        {
+          "Name": "MailGraphClientSecret",
+          "Type": "System.String"
+        },
+        {
+          "Name": "MailGraphLoginBaseUrl",
+          "Type": "System.String"
+        },
+        {
+          "Name": "MailGraphReceiveUser",
+          "Type": "System.String"
+        },
+        {
+          "Name": "MailGraphTenantId",
+          "Type": "System.String"
+        },
+        {
+          "Name": "MaxConcurrency",
+          "Type": "System.Int32"
+        },
+        {
+          "Name": "SecurityConnectionString",
+          "Type": "System.String"
+        },
+        {
+          "Name": "SecurityRootPath",
+          "Type": "System.String"
+        },
+        {
+          "Name": "ServiceBusConnectionString",
+          "Type": "System.String"
+        },
+        {
+          "Name": "Services",
+          "Type": "System.Collections.Generic.IDictionary\u003CSystem.String, System.String\u003E"
+        },
+        {
+          "Name": "Settings",
+          "Type": "System.Collections.Generic.IDictionary\u003CSystem.String, System.String\u003E"
+        },
+        {
+          "Name": "SslPort",
+          "Type": "System.Int32?"
+        },
+        {
+          "Name": "WorkflowServiceUrl",
+          "Type": "System.String"
+        }
+      ],
+      "Methods": []
+    },
+    {
+      "Name": "cCoder.Core.Models.CoreDomainsConfig",
+      "StandardElementType": "Model",
+      "Properties": [
+        {
+          "Name": "Connection",
+          "Type": "System.String"
+        },
+        {
+          "Name": "IncludeLegacyCoreContext",
+          "Type": "System.Boolean"
+        },
+        {
+          "Name": "RootPath",
+          "Type": "System.String"
+        },
+        {
+          "Name": "SplitDomains",
+          "Type": "System.Boolean"
+        }
+      ],
+      "Methods": []
+    },
+    {
+      "Name": "cCoder.Core.Models.FirstTimeSetupRequest",
+      "StandardElementType": "Model",
+      "Properties": [
+        {
+          "Name": "ConfirmPassword",
+          "Type": "System.String"
+        },
+        {
+          "Name": "DisplayName",
+          "Type": "System.String"
+        },
+        {
+          "Name": "Domain",
+          "Type": "System.String"
+        },
+        {
+          "Name": "Email",
+          "Type": "System.String"
+        },
+        {
+          "Name": "Password",
+          "Type": "System.String"
+        },
+        {
+          "Name": "TenantName",
+          "Type": "System.String"
+        }
+      ],
+      "Methods": []
+    },
+    {
+      "Name": "cCoder.Core.Models.FirstTimeSetupViewModel",
+      "StandardElementType": "Model",
+      "Properties": [
+        {
+          "Name": "Domain",
+          "Type": "System.String"
+        },
+        {
+          "Name": "Setup",
+          "Type": "cCoder.Core.Models.FirstTimeSetupRequest"
+        }
+      ],
+      "Methods": []
+    },
+    {
+      "Name": "cCoder.Core.Models.Metadata.ExtendedMetadataContainer",
+      "StandardElementType": "Model",
+      "Properties": [
+        {
+          "Name": "Operations",
+          "Type": "System.Collections.Generic.IEnumerable\u003CcCoder.Core.Models.Metadata.OperationContainer\u003E"
+        }
+      ],
+      "Methods": []
+    },
+    {
+      "Name": "cCoder.Core.Models.Metadata.MetadataContainer",
+      "StandardElementType": "Model",
+      "Properties": [
+        {
+          "Name": "Category",
+          "Type": "System.String"
+        },
+        {
+          "Name": "Description",
+          "Type": "System.String"
+        },
+        {
+          "Name": "DisplayName",
+          "Type": "System.String"
+        },
+        {
+          "Name": "HasEndpoint",
+          "Type": "System.Boolean"
+        },
+        {
+          "Name": "IsEntity",
+          "Type": "System.Boolean"
+        },
+        {
+          "Name": "IsJoinEntity",
+          "Type": "System.Boolean"
+        },
+        {
+          "Name": "IsSystemManaged",
+          "Type": "System.Boolean"
+        },
+        {
+          "Name": "IsValueType",
+          "Type": "System.Boolean"
+        },
+        {
+          "Name": "Name",
+          "Type": "System.String"
+        },
+        {
+          "Name": "Properties",
+          "Type": "System.Collections.Generic.IEnumerable\u003CcCoder.Core.Models.Metadata.PropertyContainer\u003E"
+        },
+        {
+          "Name": "ServerType",
+          "Type": "System.String"
+        },
+        {
+          "Name": "ServerTypeName",
+          "Type": "System.String"
+        },
+        {
+          "Name": "Type",
+          "Type": "System.String"
+        }
+      ],
+      "Methods": []
+    },
+    {
+      "Name": "cCoder.Core.Models.Metadata.MetadataContainerSet",
+      "StandardElementType": "Model",
+      "Properties": [
+        {
+          "Name": "Name",
+          "Type": "System.String"
+        },
+        {
+          "Name": "Types",
+          "Type": "cCoder.Core.Models.Metadata.ExtendedMetadataContainer[]"
+        },
+        {
+          "Name": "UriBase",
+          "Type": "System.String"
+        }
+      ],
+      "Methods": []
+    },
+    {
+      "Name": "cCoder.Core.Models.Metadata.OperationContainer",
+      "StandardElementType": "Model",
+      "Properties": [
+        {
+          "Name": "Definition",
+          "Type": "System.String"
+        },
+        {
+          "Name": "HttpVerb",
+          "Type": "System.String"
+        },
+        {
+          "Name": "Name",
+          "Type": "System.String"
+        },
+        {
+          "Name": "Parameters",
+          "Type": "System.Collections.Generic.IDictionary\u003CSystem.String, System.String\u003E"
+        },
+        {
+          "Name": "Queryable",
+          "Type": "System.Boolean"
+        },
+        {
+          "Name": "ReturnType",
+          "Type": "cCoder.Core.Models.Metadata.MetadataContainer"
+        },
+        {
+          "Name": "Url",
+          "Type": "System.String"
+        }
+      ],
+      "Methods": []
+    },
+    {
+      "Name": "cCoder.Core.Models.Metadata.PropertyContainer",
+      "StandardElementType": "Model",
+      "Properties": [
+        {
+          "Name": "Description",
+          "Type": "System.String"
+        },
+        {
+          "Name": "DisplayName",
+          "Type": "System.String"
+        },
+        {
+          "Name": "IsGeneric",
+          "Type": "System.Boolean"
+        },
+        {
+          "Name": "IsReadOnly",
+          "Type": "System.Boolean"
+        },
+        {
+          "Name": "IsRequired",
+          "Type": "System.Boolean"
+        },
+        {
+          "Name": "IsSystemManaged",
+          "Type": "System.Boolean"
+        },
+        {
+          "Name": "IsValueType",
+          "Type": "System.Boolean"
+        },
+        {
+          "Name": "Name",
+          "Type": "System.String"
+        },
+        {
+          "Name": "ServerType",
+          "Type": "System.String"
+        },
+        {
+          "Name": "ServerTypeName",
+          "Type": "System.String"
+        },
+        {
+          "Name": "ShortDisplayName",
+          "Type": "System.String"
+        },
+        {
+          "Name": "Template",
+          "Type": "System.String"
+        },
+        {
+          "Name": "Type",
+          "Type": "System.String"
+        }
+      ],
+      "Methods": []
+    },
+    {
+      "Name": "cCoder.Core.Models.ModelStateErrorModel",
+      "StandardElementType": "Model",
+      "Properties": [
+        {
+          "Name": "Errors",
+          "Type": "System.String[]"
+        },
+        {
+          "Name": "Key",
+          "Type": "System.String"
+        },
+        {
+          "Name": "Value",
+          "Type": "System.Object"
+        }
+      ],
+      "Methods": []
+    },
+    {
+      "Name": "cCoder.Core.Models.OData.ODataModelContract",
+      "StandardElementType": "Model",
+      "Properties": [
+        {
+          "Name": "Context",
+          "Type": "System.String"
+        },
+        {
+          "Name": "Description",
+          "Type": "System.String"
+        },
+        {
+          "Name": "EDMModel",
+          "Type": "IEdmModel"
+        }
+      ],
+      "Methods": []
+    },
+    {
+      "Name": "cCoder.Core.Models.Packaging.AppConfigurationPackageItem",
+      "StandardElementType": "Model",
+      "Properties": [
+        {
+          "Name": "ConfigJson",
+          "Type": "System.String"
+        },
+        {
+          "Name": "DefaultCultureId",
+          "Type": "System.String"
+        },
+        {
+          "Name": "DefaultTheme",
+          "Type": "System.String"
+        },
+        {
+          "Name": "Domain",
+          "Type": "System.String"
+        },
+        {
+          "Name": "Id",
+          "Type": "System.Int32"
+        },
+        {
+          "Name": "Name",
+          "Type": "System.String"
+        },
+        {
+          "Name": "TenantId",
+          "Type": "System.String"
+        }
+      ],
+      "Methods": []
+    },
+    {
+      "Name": "cCoder.Core.Models.Packaging.FolderRolePackageItem",
+      "StandardElementType": "Model",
+      "Properties": [
+        {
+          "Name": "Name",
+          "Type": "System.String"
+        },
+        {
+          "Name": "Path",
+          "Type": "System.String"
+        }
+      ],
+      "Methods": []
+    },
+    {
+      "Name": "cCoder.Core.Models.Packaging.PageRolePackageItem",
+      "StandardElementType": "Model",
+      "Properties": [
+        {
+          "Name": "Path",
+          "Type": "System.String"
+        },
+        {
+          "Name": "Role",
+          "Type": "System.String"
+        }
+      ],
+      "Methods": []
+    },
+    {
+      "Name": "cCoder.Core.Models.Result",
+      "StandardElementType": "Model",
+      "Properties": [
+        {
+          "Name": "Id",
+          "Type": "System.String"
+        },
+        {
+          "Name": "Message",
+          "Type": "System.String"
+        },
+        {
+          "Name": "Success",
+          "Type": "System.Boolean"
+        }
+      ],
+      "Methods": []
+    },
+    {
+      "Name": "cCoder.Core.Models.Result\u003CT\u003E",
+      "StandardElementType": "Model",
+      "Properties": [
+        {
+          "Name": "Id",
+          "Type": "System.String"
+        },
+        {
+          "Name": "Item",
+          "Type": "T"
+        }
+      ],
+      "Methods": [
+        {
+          "Name": "ToNew",
+          "Inputs": [
+            {
+              "Name": "item",
+              "Type": "TNew"
+            }
+          ],
+          "ReturnType": "cCoder.Core.Models.Result\u003CTNew\u003E"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Foundations.AllowedOrigins.AllowedOriginStoreService",
+      "StandardElementType": "FoundationService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "GetAllowedOriginsAsync",
+          "Inputs": [],
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CSystem.String[]\u003E"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Foundations.AppSecurity.AppSecurityAppService",
+      "StandardElementType": "FoundationService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "AddAsync",
+          "Inputs": [
+            {
+              "Name": "app",
+              "Type": "App"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        },
+        {
+          "Name": "DeleteAsync",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        },
+        {
+          "Name": "UpdateAsync",
+          "Inputs": [
+            {
+              "Name": "app",
+              "Type": "App"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Foundations.ContentManagement.ContentManagementAppService",
+      "StandardElementType": "FoundationService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "AddAsync",
+          "Inputs": [
+            {
+              "Name": "app",
+              "Type": "App"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CApp\u003E"
+        },
+        {
+          "Name": "DeleteAsync",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        },
+        {
+          "Name": "Get",
+          "Inputs": [
+            {
+              "Name": "id",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "ignoreFilters",
+              "Type": "System.Boolean"
+            }
+          ],
+          "ReturnType": "App"
+        },
+        {
+          "Name": "GetAll",
+          "Inputs": [
+            {
+              "Name": "ignoreFilters",
+              "Type": "System.Boolean"
+            }
+          ],
+          "ReturnType": "System.Linq.IQueryable\u003CApp\u003E"
+        },
+        {
+          "Name": "GetByDomain",
+          "Inputs": [
+            {
+              "Name": "domain",
+              "Type": "System.String"
+            },
+            {
+              "Name": "ignoreFilters",
+              "Type": "System.Boolean"
+            }
+          ],
+          "ReturnType": "App"
+        },
+        {
+          "Name": "UpdateAsync",
+          "Inputs": [
+            {
+              "Name": "app",
+              "Type": "App"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CApp\u003E"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Foundations.DocumentManagement.DocumentManagementAppService",
+      "StandardElementType": "FoundationService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "AddAsync",
+          "Inputs": [
+            {
+              "Name": "app",
+              "Type": "App"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        },
+        {
+          "Name": "DeleteAsync",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        },
+        {
+          "Name": "UpdateAsync",
+          "Inputs": [
+            {
+              "Name": "app",
+              "Type": "App"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Foundations.Eventing.ServiceBusAppDeleteForwardingService",
+      "StandardElementType": "FoundationService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "ForwardAsync",
+          "Inputs": [
+            {
+              "Name": "app",
+              "Type": "App"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Foundations.Eventing.ServiceBusFolderDeleteForwardingService",
+      "StandardElementType": "FoundationService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "ForwardAsync",
+          "Inputs": [
+            {
+              "Name": "folder",
+              "Type": "Folder"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Foundations.Mail.MailAppService",
+      "StandardElementType": "FoundationService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "AddAsync",
+          "Inputs": [
+            {
+              "Name": "app",
+              "Type": "App"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        },
+        {
+          "Name": "DeleteAsync",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        },
+        {
+          "Name": "UpdateAsync",
+          "Inputs": [
+            {
+              "Name": "app",
+              "Type": "App"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Foundations.Mail.MailManagerService",
+      "StandardElementType": "FoundationService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "AddAsync",
+          "Inputs": [
+            {
+              "Name": "email",
+              "Type": "QueuedEmail"
+            },
+            {
+              "Name": "checkPrivileges",
+              "Type": "System.Boolean"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CQueuedEmail\u003E"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Foundations.Planning.PlanningAppService",
+      "StandardElementType": "FoundationService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "AddAsync",
+          "Inputs": [
+            {
+              "Name": "app",
+              "Type": "App"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        },
+        {
+          "Name": "DeleteAsync",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        },
+        {
+          "Name": "UpdateAsync",
+          "Inputs": [
+            {
+              "Name": "app",
+              "Type": "App"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Foundations.Workflow.WorkflowAppService",
+      "StandardElementType": "FoundationService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "AddAsync",
+          "Inputs": [
+            {
+              "Name": "app",
+              "Type": "App"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        },
+        {
+          "Name": "DeleteAsync",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        },
+        {
+          "Name": "UpdateAsync",
+          "Inputs": [
+            {
+              "Name": "app",
+              "Type": "App"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Orchestrations.AppOrchestrationService",
+      "StandardElementType": "OrchestrationService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "AddAsync",
+          "Inputs": [
+            {
+              "Name": "app",
+              "Type": "App"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CApp\u003E"
+        },
+        {
+          "Name": "DeleteAsync",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        },
+        {
+          "Name": "UpdateAsync",
+          "Inputs": [
+            {
+              "Name": "app",
+              "Type": "App"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CApp\u003E"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Orchestrations.HostedServicesAppSecurityAppAddOrchestrationService",
+      "StandardElementType": "OrchestrationService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "HandleAsync",
+          "Inputs": [
+            {
+              "Name": "app",
+              "Type": "App"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Orchestrations.SecurityAccountEmailOrchestrationService",
+      "StandardElementType": "OrchestrationService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "QueueInvitationCreatedEmailAsync",
+          "Inputs": [
+            {
+              "Name": "accountEvent",
+              "Type": "SecurityAccountEvent"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        },
+        {
+          "Name": "QueuePasswordResetRequestedEmailAsync",
+          "Inputs": [
+            {
+              "Name": "accountEvent",
+              "Type": "SecurityAccountEvent"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        },
+        {
+          "Name": "QueueRegistrationCreatedEmailAsync",
+          "Inputs": [
+            {
+              "Name": "accountEvent",
+              "Type": "SecurityAccountEvent"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Orchestrations.TemplatedEmailOrchestrationService",
+      "StandardElementType": "OrchestrationService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "QueueAsync",
+          "Inputs": [
+            {
+              "Name": "app",
+              "Type": "cCoder.Data.Models.CMS.App"
+            },
+            {
+              "Name": "templateName",
+              "Type": "System.String"
+            },
+            {
+              "Name": "culture",
+              "Type": "System.String"
+            },
+            {
+              "Name": "model",
+              "Type": "System.Object"
+            },
+            {
+              "Name": "toEmail",
+              "Type": "System.String"
+            },
+            {
+              "Name": "subject",
+              "Type": "System.String"
+            },
+            {
+              "Name": "sentByUserId",
+              "Type": "System.String"
+            },
+            {
+              "Name": "mailSenderName",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CQueuedEmail\u003E"
+        },
+        {
+          "Name": "QueueAsync",
+          "Inputs": [
+            {
+              "Name": "details",
+              "Type": "cCoder.Mail.Models.TemplatedEmailDetails"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CQueuedEmail\u003E"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Orchestrations.UserRegistrationOrchestrationService",
+      "StandardElementType": "OrchestrationService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "ConfirmRegistrationAsync",
+          "Inputs": [
+            {
+              "Name": "token",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        },
+        {
+          "Name": "LoginAsync",
+          "Inputs": [
+            {
+              "Name": "username",
+              "Type": "System.String"
+            },
+            {
+              "Name": "password",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CToken\u003E"
+        },
+        {
+          "Name": "LogoutAsync",
+          "Inputs": [],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        },
+        {
+          "Name": "Me",
+          "Inputs": [],
+          "ReturnType": "SSOUser"
+        },
+        {
+          "Name": "RegisterAsync",
+          "Inputs": [
+            {
+              "Name": "registerForm",
+              "Type": "RegisterUser"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CSSOUser\u003E"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Processings.AllowedOrigins.AllowedOriginProcessingService",
+      "StandardElementType": "ProcessingService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "CreateSnapshot",
+          "Inputs": [
+            {
+              "Name": "configuredOrigins",
+              "Type": "System.Collections.Generic.IEnumerable\u003CSystem.String\u003E"
+            }
+          ],
+          "ReturnType": "cCoder.Core.Models.CoreAllowedOriginSnapshot"
+        },
+        {
+          "Name": "IsAllowed",
+          "Inputs": [
+            {
+              "Name": "origin",
+              "Type": "System.String"
+            },
+            {
+              "Name": "snapshot",
+              "Type": "cCoder.Core.Models.CoreAllowedOriginSnapshot"
+            }
+          ],
+          "ReturnType": "System.Boolean"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Setup.FirstTimeSetupAppService",
+      "StandardElementType": "Unknown",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "CreateFirstAppAsync",
+          "Inputs": [
+            {
+              "Name": "request",
+              "Type": "cCoder.Core.Models.FirstTimeSetupRequest"
+            },
+            {
+              "Name": "tenantId",
+              "Type": "System.String"
+            },
+            {
+              "Name": "cancellationToken",
+              "Type": "System.Threading.CancellationToken"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task\u003CApp\u003E"
+        },
+        {
+          "Name": "RollbackAsync",
+          "Inputs": [
+            {
+              "Name": "bootstrapUserId",
+              "Type": "System.String"
+            },
+            {
+              "Name": "tenantId",
+              "Type": "System.String"
+            },
+            {
+              "Name": "cancellationToken",
+              "Type": "System.Threading.CancellationToken"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Setup.FirstTimeSetupAssetService",
+      "StandardElementType": "Unknown",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "LoadAssetBytes",
+          "Inputs": [
+            {
+              "Name": "relativePath",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.Byte[]"
+        },
+        {
+          "Name": "LoadCommonObjects",
+          "Inputs": [],
+          "ReturnType": "CommonObject[]"
+        },
+        {
+          "Name": "LoadDefaultAppConfig",
+          "Inputs": [],
+          "ReturnType": "System.String"
+        },
+        {
+          "Name": "LoadDmsAssetPaths",
+          "Inputs": [],
+          "ReturnType": "System.String[]"
+        },
+        {
+          "Name": "LoadPackageItems",
+          "Inputs": [
+            {
+              "Name": "packageName",
+              "Type": "System.String"
+            },
+            {
+              "Name": "itemType",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "T[]"
+        },
+        {
+          "Name": "LoadPackages",
+          "Inputs": [],
+          "ReturnType": "Package[]"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Setup.FirstTimeSetupBootstrapUser",
+      "StandardElementType": "Dependency",
+      "Properties": [
+        {
+          "Name": "ConfirmationToken",
+          "Type": "System.String"
+        },
+        {
+          "Name": "DisplayName",
+          "Type": "System.String"
+        },
+        {
+          "Name": "Email",
+          "Type": "System.String"
+        },
+        {
+          "Name": "UserId",
+          "Type": "System.String"
+        }
+      ],
+      "Methods": [
+        {
+          "Name": "\u003CClone\u003E$",
+          "Inputs": [],
+          "ReturnType": "cCoder.Core.Services.Setup.FirstTimeSetupBootstrapUser"
+        },
+        {
+          "Name": "Deconstruct",
+          "Inputs": [
+            {
+              "Name": "UserId",
+              "Type": "System.String"
+            },
+            {
+              "Name": "Email",
+              "Type": "System.String"
+            },
+            {
+              "Name": "DisplayName",
+              "Type": "System.String"
+            },
+            {
+              "Name": "ConfirmationToken",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.Void"
+        },
+        {
+          "Name": "Equals",
+          "Inputs": [
+            {
+              "Name": "obj",
+              "Type": "System.Object?"
+            }
+          ],
+          "ReturnType": "System.Boolean"
+        },
+        {
+          "Name": "Equals",
+          "Inputs": [
+            {
+              "Name": "other",
+              "Type": "cCoder.Core.Services.Setup.FirstTimeSetupBootstrapUser?"
+            }
+          ],
+          "ReturnType": "System.Boolean"
+        },
+        {
+          "Name": "GetHashCode",
+          "Inputs": [],
+          "ReturnType": "System.Int32"
+        },
+        {
+          "Name": "ToString",
+          "Inputs": [],
+          "ReturnType": "System.String"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Setup.FirstTimeSetupIdentifiers",
+      "StandardElementType": "Unknown",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "BuildTenantId",
+          "Inputs": [
+            {
+              "Name": "tenantName",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.String"
+        },
+        {
+          "Name": "BuildUserId",
+          "Inputs": [
+            {
+              "Name": "email",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.String"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Setup.FirstTimeSetupOrchestrationService",
+      "StandardElementType": "Unknown",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "SetupAsync",
+          "Inputs": [
+            {
+              "Name": "request",
+              "Type": "cCoder.Core.Models.FirstTimeSetupRequest"
+            },
+            {
+              "Name": "cancellationToken",
+              "Type": "System.Threading.CancellationToken"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task\u003CcCoder.Core.Services.Setup.FirstTimeSetupResult\u003E"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Setup.FirstTimeSetupPageRoleAssignment",
+      "StandardElementType": "Model",
+      "Properties": [
+        {
+          "Name": "Path",
+          "Type": "System.String"
+        },
+        {
+          "Name": "Role",
+          "Type": "System.String"
+        }
+      ],
+      "Methods": []
+    },
+    {
+      "Name": "cCoder.Core.Services.Setup.FirstTimeSetupResult",
+      "StandardElementType": "Dependency",
+      "Properties": [
+        {
+          "Name": "AppId",
+          "Type": "System.Int32"
+        },
+        {
+          "Name": "TenantId",
+          "Type": "System.String"
+        },
+        {
+          "Name": "UserId",
+          "Type": "System.String"
+        }
+      ],
+      "Methods": [
+        {
+          "Name": "\u003CClone\u003E$",
+          "Inputs": [],
+          "ReturnType": "cCoder.Core.Services.Setup.FirstTimeSetupResult"
+        },
+        {
+          "Name": "Deconstruct",
+          "Inputs": [
+            {
+              "Name": "TenantId",
+              "Type": "System.String"
+            },
+            {
+              "Name": "AppId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "UserId",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.Void"
+        },
+        {
+          "Name": "Equals",
+          "Inputs": [
+            {
+              "Name": "obj",
+              "Type": "System.Object?"
+            }
+          ],
+          "ReturnType": "System.Boolean"
+        },
+        {
+          "Name": "Equals",
+          "Inputs": [
+            {
+              "Name": "other",
+              "Type": "cCoder.Core.Services.Setup.FirstTimeSetupResult?"
+            }
+          ],
+          "ReturnType": "System.Boolean"
+        },
+        {
+          "Name": "GetHashCode",
+          "Inputs": [],
+          "ReturnType": "System.Int32"
+        },
+        {
+          "Name": "ToString",
+          "Inputs": [],
+          "ReturnType": "System.String"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Setup.FirstTimeSetupStateService",
+      "StandardElementType": "Unknown",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "IsInitializedAsync",
+          "Inputs": [
+            {
+              "Name": "cancellationToken",
+              "Type": "System.Threading.CancellationToken"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task\u003CSystem.Boolean\u003E"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Setup.FirstTimeSetupTenantService",
+      "StandardElementType": "Unknown",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "RollbackAsync",
+          "Inputs": [
+            {
+              "Name": "bootstrapUserId",
+              "Type": "System.String"
+            },
+            {
+              "Name": "tenantId",
+              "Type": "System.String"
+            },
+            {
+              "Name": "cancellationToken",
+              "Type": "System.Threading.CancellationToken"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task"
+        },
+        {
+          "Name": "SetupSecurityAsync",
+          "Inputs": [
+            {
+              "Name": "request",
+              "Type": "cCoder.Core.Models.FirstTimeSetupRequest"
+            },
+            {
+              "Name": "userId",
+              "Type": "System.String"
+            },
+            {
+              "Name": "cancellationToken",
+              "Type": "System.Threading.CancellationToken"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task\u003CSystem.String\u003E"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Setup.FirstTimeSetupUserService",
+      "StandardElementType": "Unknown",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "AuthenticateBootstrapUserAsync",
+          "Inputs": [
+            {
+              "Name": "userId",
+              "Type": "System.String"
+            },
+            {
+              "Name": "password",
+              "Type": "System.String"
+            },
+            {
+              "Name": "cancellationToken",
+              "Type": "System.Threading.CancellationToken"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task"
+        },
+        {
+          "Name": "CompleteFirstUserRegistrationAsync",
+          "Inputs": [
+            {
+              "Name": "request",
+              "Type": "cCoder.Core.Models.FirstTimeSetupRequest"
+            },
+            {
+              "Name": "bootstrapUser",
+              "Type": "cCoder.Core.Services.Setup.FirstTimeSetupBootstrapUser"
+            },
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "cancellationToken",
+              "Type": "System.Threading.CancellationToken"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task"
+        },
+        {
+          "Name": "EnsureBootstrapCoreUserAsync",
+          "Inputs": [
+            {
+              "Name": "bootstrapUser",
+              "Type": "cCoder.Core.Services.Setup.FirstTimeSetupBootstrapUser"
+            },
+            {
+              "Name": "cancellationToken",
+              "Type": "System.Threading.CancellationToken"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task"
+        },
+        {
+          "Name": "RollbackAsync",
+          "Inputs": [
+            {
+              "Name": "bootstrapUserId",
+              "Type": "System.String"
+            },
+            {
+              "Name": "cancellationToken",
+              "Type": "System.Threading.CancellationToken"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Setup.SetupRequestHostNormalizer",
+      "StandardElementType": "Unknown",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "Normalize",
+          "Inputs": [
+            {
+              "Name": "host",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.String"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.SqlSessionCacheFallback",
+      "StandardElementType": "Unknown",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "UseInMemorySessionCacheUntilSqlSessionStoreExists",
+          "Inputs": [
+            {
+              "Name": "services",
+              "Type": "IServiceCollection"
+            },
+            {
+              "Name": "ssoConnectionString",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.Void"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.WebApplicationExtensions",
+      "StandardElementType": "App",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "StartCoreHostedServices",
+          "Inputs": [
+            {
+              "Name": "app",
+              "Type": "WebApplication"
+            }
+          ],
+          "ReturnType": "WebApplication"
+        },
+        {
+          "Name": "StartCoreWeb",
+          "Inputs": [
+            {
+              "Name": "app",
+              "Type": "WebApplication"
+            }
+          ],
+          "ReturnType": "WebApplication"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.WebApplicationExtensions.StartupMigrationLock",
+      "StandardElementType": "Dependency",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "Dispose",
+          "Inputs": [],
+          "ReturnType": "System.Void"
+        }
+      ]
+    }
+  ],
+  "Links": [
+    {
+      "FromType": "cCoder.Core.Exposures.Controllers.AppController",
+      "ToType": "cCoder.Core.Models.CoreConfiguration"
+    },
+    {
+      "FromType": "cCoder.Core.Exposures.Controllers.AppController",
+      "ToType": "cCoder.Core.Services.Foundations.ContentManagement.ContentManagementAppService"
+    },
+    {
+      "FromType": "cCoder.Core.Exposures.Controllers.AppController",
+      "ToType": "cCoder.Core.Services.Orchestrations.AppOrchestrationService"
+    },
+    {
+      "FromType": "cCoder.Core.Exposures.Controllers.SetupController",
+      "ToType": "cCoder.Core.Services.Orchestrations.UserRegistrationOrchestrationService"
+    },
+    {
+      "FromType": "cCoder.Core.Exposures.Controllers.SetupController",
+      "ToType": "cCoder.Core.Services.Setup.FirstTimeSetupOrchestrationService"
+    },
+    {
+      "FromType": "cCoder.Core.Exposures.Controllers.SetupController",
+      "ToType": "cCoder.Core.Services.Setup.FirstTimeSetupStateService"
+    },
+    {
+      "FromType": "cCoder.Core.Exposures.Controllers.TemplatedEmailController",
+      "ToType": "cCoder.Core.Services.Orchestrations.TemplatedEmailOrchestrationService"
+    },
+    {
+      "FromType": "cCoder.Core.Exposures.Cors.CoreAllowedOriginStore",
+      "ToType": "cCoder.Core.Services.Foundations.AllowedOrigins.AllowedOriginStoreService"
+    },
+    {
+      "FromType": "cCoder.Core.Exposures.Cors.CoreAllowedOriginStore",
+      "ToType": "cCoder.Core.Services.Processings.AllowedOrigins.AllowedOriginProcessingService"
+    },
+    {
+      "FromType": "cCoder.Core.Models.CoreAllowedOriginSnapshot",
+      "ToType": "cCoder.Core.Models.CoreAllowedOriginSnapshot"
+    },
+    {
+      "FromType": "cCoder.Core.Models.CoreApiRouteDefinition",
+      "ToType": "cCoder.Core.Models.CoreApiRouteDefinition"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Foundations.AllowedOrigins.AllowedOriginStoreService",
+      "ToType": "cCoder.Core.Brokers.ContentManagement.ContentManagementAppBroker"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Foundations.AllowedOrigins.AllowedOriginStoreService",
+      "ToType": "cCoder.Core.Brokers.Http.HttpRequestBroker"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Foundations.AppSecurity.AppSecurityAppService",
+      "ToType": "cCoder.Core.Brokers.AppSecurity.AppSecurityAppBroker"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Foundations.ContentManagement.ContentManagementAppService",
+      "ToType": "cCoder.Core.Brokers.ContentManagement.ContentManagementAppBroker"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Foundations.DocumentManagement.DocumentManagementAppService",
+      "ToType": "cCoder.Core.Brokers.DocumentManagement.DocumentManagementAppBroker"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Foundations.Mail.MailAppService",
+      "ToType": "cCoder.Core.Brokers.Mail.MailAppBroker"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Foundations.Mail.MailManagerService",
+      "ToType": "cCoder.Core.Brokers.Mail.MailManagerBroker"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Foundations.Planning.PlanningAppService",
+      "ToType": "cCoder.Core.Brokers.Planning.PlanningAppBroker"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Foundations.Workflow.WorkflowAppService",
+      "ToType": "cCoder.Core.Brokers.Workflow.WorkflowAppBroker"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Orchestrations.AppOrchestrationService",
+      "ToType": "cCoder.Core.Services.Foundations.AppSecurity.AppSecurityAppService"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Orchestrations.AppOrchestrationService",
+      "ToType": "cCoder.Core.Services.Foundations.ContentManagement.ContentManagementAppService"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Orchestrations.AppOrchestrationService",
+      "ToType": "cCoder.Core.Services.Foundations.DocumentManagement.DocumentManagementAppService"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Orchestrations.AppOrchestrationService",
+      "ToType": "cCoder.Core.Services.Foundations.Mail.MailAppService"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Orchestrations.AppOrchestrationService",
+      "ToType": "cCoder.Core.Services.Foundations.Planning.PlanningAppService"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Orchestrations.AppOrchestrationService",
+      "ToType": "cCoder.Core.Services.Foundations.Workflow.WorkflowAppService"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Orchestrations.SecurityAccountEmailOrchestrationService",
+      "ToType": "cCoder.Core.Services.Foundations.ContentManagement.ContentManagementAppService"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Orchestrations.SecurityAccountEmailOrchestrationService",
+      "ToType": "cCoder.Core.Services.Orchestrations.TemplatedEmailOrchestrationService"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Orchestrations.TemplatedEmailOrchestrationService",
+      "ToType": "cCoder.Core.Services.Foundations.ContentManagement.ContentManagementAppService"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Orchestrations.TemplatedEmailOrchestrationService",
+      "ToType": "cCoder.Core.Services.Foundations.Mail.MailManagerService"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Setup.FirstTimeSetupAppService",
+      "ToType": "cCoder.Core.Services.Setup.FirstTimeSetupAssetService"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Setup.FirstTimeSetupBootstrapUser",
+      "ToType": "cCoder.Core.Services.Setup.FirstTimeSetupBootstrapUser"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Setup.FirstTimeSetupOrchestrationService",
+      "ToType": "cCoder.Core.Services.Setup.FirstTimeSetupStateService"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Setup.FirstTimeSetupOrchestrationService",
+      "ToType": "cCoder.Core.Services.Setup.FirstTimeSetupUserService"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Setup.FirstTimeSetupResult",
+      "ToType": "cCoder.Core.Services.Setup.FirstTimeSetupResult"
+    }
+  ],
+  "AnalysisItems": [
+    {
+      "Code": "STX0017",
+      "Description": "Identifier parameters must be named for their type, for example studentId.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Brokers.ContentManagement.ContentManagementAppBroker",
+      "LineNumber": 13
+    },
+    {
+      "Code": "STX0001",
+      "Description": "The type is not a valid Standard element type.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.CoreApiBuilderOptions",
+      "LineNumber": 13
+    },
+    {
+      "Code": "STX0001",
+      "Description": "The type is not a valid Standard element type.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.CoreBuilderOptions",
+      "LineNumber": 44
+    },
+    {
+      "Code": "STX0001",
+      "Description": "The type is not a valid Standard element type.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.CoreConfigurationMapper",
+      "LineNumber": 11
+    },
+    {
+      "Code": "STXAPI001",
+      "Description": "An API controller must have exactly one business dependency.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Controllers.AppController",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STXFORMAT013",
+      "Description": "C# source files must use one consistent line-ending style throughout the project.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Controllers.PackageManagerController",
+      "LineNumber": 6
+    },
+    {
+      "Code": "STXAPI004",
+      "Description": "API controller methods must use HTTP nouns: Get, Post, Put, or Delete.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Controllers.PackageManagerController",
+      "LineNumber": 54
+    },
+    {
+      "Code": "STXE002",
+      "Description": "An exposure must not contain loops.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Controllers.PackageManagerController",
+      "LineNumber": 69
+    },
+    {
+      "Code": "STXAPI004",
+      "Description": "API controller methods must use HTTP nouns: Get, Post, Put, or Delete.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Controllers.PackageManagerController",
+      "LineNumber": 95
+    },
+    {
+      "Code": "STXAPI004",
+      "Description": "API controller methods must use HTTP nouns: Get, Post, Put, or Delete.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Controllers.PackageManagerController",
+      "LineNumber": 107
+    },
+    {
+      "Code": "STXE002",
+      "Description": "An exposure must not contain loops.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Controllers.PackageManagerController",
+      "LineNumber": 139
+    },
+    {
+      "Code": "STXE002",
+      "Description": "An exposure must not contain loops.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Controllers.PackageManagerController",
+      "LineNumber": 149
+    },
+    {
+      "Code": "STXE002",
+      "Description": "An exposure must not contain loops.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Controllers.PackageManagerController",
+      "LineNumber": 220
+    },
+    {
+      "Code": "STXE002",
+      "Description": "An exposure must not contain loops.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Controllers.PackageManagerController",
+      "LineNumber": 373
+    },
+    {
+      "Code": "STXE002",
+      "Description": "An exposure must not contain loops.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Controllers.PackageManagerController",
+      "LineNumber": 448
+    },
+    {
+      "Code": "STXE002",
+      "Description": "An exposure must not contain loops.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Controllers.PackageManagerController",
+      "LineNumber": 496
+    },
+    {
+      "Code": "STXE002",
+      "Description": "An exposure must not contain loops.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Controllers.PackageManagerController",
+      "LineNumber": 780
+    },
+    {
+      "Code": "STXE002",
+      "Description": "An exposure must not contain loops.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Controllers.PackageManagerController",
+      "LineNumber": 791
+    },
+    {
+      "Code": "STXFORMAT001",
+      "Description": "Source files must not contain newline characters after the final code token.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Controllers.PackageManagerController",
+      "LineNumber": 844
+    },
+    {
+      "Code": "STXAPI001",
+      "Description": "An API controller must have exactly one business dependency.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Controllers.SetupController",
+      "LineNumber": 12
+    },
+    {
+      "Code": "STXAPI004",
+      "Description": "API controller methods must use HTTP nouns: Get, Post, Put, or Delete.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Controllers.SetupController",
+      "LineNumber": 20
+    },
+    {
+      "Code": "STXAPI004",
+      "Description": "API controller methods must use HTTP nouns: Get, Post, Put, or Delete.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Controllers.SetupController",
+      "LineNumber": 31
+    },
+    {
+      "Code": "STX0022",
+      "Description": "Creation method names must include the concrete type they create.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Controllers.SetupController",
+      "LineNumber": 65
+    },
+    {
+      "Code": "STXAPI004",
+      "Description": "API controller methods must use HTTP nouns: Get, Post, Put, or Delete.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Controllers.TemplatedEmailController",
+      "LineNumber": 18
+    },
+    {
+      "Code": "STXE005",
+      "Description": "An exposure must not sequence multiple routine calls.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.CoreAggregateApiModelBuilderExtensions",
+      "LineNumber": 12
+    },
+    {
+      "Code": "STXE005",
+      "Description": "An exposure must not sequence multiple routine calls.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.CoreSecurityApiModelBuilderExtensions",
+      "LineNumber": 12
+    },
+    {
+      "Code": "STXE003",
+      "Description": "An exposure may communicate with only one business service.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Cors.CoreAllowedOriginStore",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0002",
+      "Description": "Properties may only be declared on models.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterCsvFileBuilder",
+      "LineNumber": 16
+    },
+    {
+      "Code": "STX0002",
+      "Description": "Properties may only be declared on models.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterCsvFileBuilder",
+      "LineNumber": 17
+    },
+    {
+      "Code": "STX0002",
+      "Description": "Properties may only be declared on models.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterCsvFileBuilder",
+      "LineNumber": 18
+    },
+    {
+      "Code": "STX0002",
+      "Description": "Properties may only be declared on models.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterCsvFileBuilder",
+      "LineNumber": 19
+    },
+    {
+      "Code": "STXE005",
+      "Description": "An exposure must not sequence multiple routine calls.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterCsvFileBuilder",
+      "LineNumber": 21
+    },
+    {
+      "Code": "STXE001",
+      "Description": "An exposure must not contain branching logic.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterCsvFileBuilder",
+      "LineNumber": 31
+    },
+    {
+      "Code": "STXE001",
+      "Description": "An exposure must not contain branching logic.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterCsvFileBuilder",
+      "LineNumber": 36
+    },
+    {
+      "Code": "STXE001",
+      "Description": "An exposure must not contain branching logic.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterCsvFileBuilder",
+      "LineNumber": 49
+    },
+    {
+      "Code": "STXE005",
+      "Description": "An exposure must not sequence multiple routine calls.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterCsvFileBuilder",
+      "LineNumber": 85
+    },
+    {
+      "Code": "STXE002",
+      "Description": "An exposure must not contain loops.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterCsvFileBuilder",
+      "LineNumber": 95
+    },
+    {
+      "Code": "STXE005",
+      "Description": "An exposure must not sequence multiple routine calls.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterCsvFileBuilder",
+      "LineNumber": 105
+    },
+    {
+      "Code": "STXE001",
+      "Description": "An exposure must not contain branching logic.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterCsvFileBuilder",
+      "LineNumber": 112
+    },
+    {
+      "Code": "STXE002",
+      "Description": "An exposure must not contain loops.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterCsvFileBuilder",
+      "LineNumber": 117
+    },
+    {
+      "Code": "STXE002",
+      "Description": "An exposure must not contain loops.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterCsvFileBuilder",
+      "LineNumber": 129
+    },
+    {
+      "Code": "STXE005",
+      "Description": "An exposure must not sequence multiple routine calls.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterExcelFileBuilder",
+      "LineNumber": 20
+    },
+    {
+      "Code": "STXE001",
+      "Description": "An exposure must not contain branching logic.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterExcelFileBuilder",
+      "LineNumber": 30
+    },
+    {
+      "Code": "STXE005",
+      "Description": "An exposure must not sequence multiple routine calls.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterExcelFileBuilder",
+      "LineNumber": 51
+    },
+    {
+      "Code": "STXE005",
+      "Description": "An exposure must not sequence multiple routine calls.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterExcelFileBuilder",
+      "LineNumber": 63
+    },
+    {
+      "Code": "STXE005",
+      "Description": "An exposure must not sequence multiple routine calls.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterExcelFileBuilder",
+      "LineNumber": 82
+    },
+    {
+      "Code": "STXE005",
+      "Description": "An exposure must not sequence multiple routine calls.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterExcelFileBuilder",
+      "LineNumber": 96
+    },
+    {
+      "Code": "STXE005",
+      "Description": "An exposure must not sequence multiple routine calls.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterExcelFileBuilder",
+      "LineNumber": 120
+    },
+    {
+      "Code": "STXE001",
+      "Description": "An exposure must not contain branching logic.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterExcelFileBuilder",
+      "LineNumber": 125
+    },
+    {
+      "Code": "STXE001",
+      "Description": "An exposure must not contain branching logic.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterExcelFileBuilder",
+      "LineNumber": 127
+    },
+    {
+      "Code": "STXE005",
+      "Description": "An exposure must not sequence multiple routine calls.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterExcelFileBuilder",
+      "LineNumber": 222
+    },
+    {
+      "Code": "STXE002",
+      "Description": "An exposure must not contain loops.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterExcelFileBuilder",
+      "LineNumber": 230
+    },
+    {
+      "Code": "STXE005",
+      "Description": "An exposure must not sequence multiple routine calls.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterExcelFileBuilder",
+      "LineNumber": 247
+    },
+    {
+      "Code": "STXE001",
+      "Description": "An exposure must not contain branching logic.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterExcelFileBuilder",
+      "LineNumber": 261
+    },
+    {
+      "Code": "STXE002",
+      "Description": "An exposure must not contain loops.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterExcelFileBuilder",
+      "LineNumber": 267
+    },
+    {
+      "Code": "STXE002",
+      "Description": "An exposure must not contain loops.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterExcelFileBuilder",
+      "LineNumber": 273
+    },
+    {
+      "Code": "STXE001",
+      "Description": "An exposure must not contain branching logic.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterExcelFileBuilder",
+      "LineNumber": 278
+    },
+    {
+      "Code": "STXE005",
+      "Description": "An exposure must not sequence multiple routine calls.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterExportExtensions",
+      "LineNumber": 35
+    },
+    {
+      "Code": "STXE002",
+      "Description": "An exposure must not contain loops.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterExportExtensions",
+      "LineNumber": 43
+    },
+    {
+      "Code": "STXE001",
+      "Description": "An exposure must not contain branching logic.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterExportExtensions",
+      "LineNumber": 55
+    },
+    {
+      "Code": "STXE005",
+      "Description": "An exposure must not sequence multiple routine calls.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterExportExtensions",
+      "LineNumber": 64
+    },
+    {
+      "Code": "STXE002",
+      "Description": "An exposure must not contain loops.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterExportExtensions",
+      "LineNumber": 79
+    },
+    {
+      "Code": "STXE001",
+      "Description": "An exposure must not contain branching logic.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterExportExtensions",
+      "LineNumber": 91
+    },
+    {
+      "Code": "STXE001",
+      "Description": "An exposure must not contain branching logic.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterExportExtensions",
+      "LineNumber": 97
+    },
+    {
+      "Code": "STXE005",
+      "Description": "An exposure must not sequence multiple routine calls.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterExportExtensions",
+      "LineNumber": 107
+    },
+    {
+      "Code": "STXE005",
+      "Description": "An exposure must not sequence multiple routine calls.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterIntExtensions",
+      "LineNumber": 329
+    },
+    {
+      "Code": "STXE002",
+      "Description": "An exposure must not contain loops.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterIntExtensions",
+      "LineNumber": 334
+    },
+    {
+      "Code": "STXE002",
+      "Description": "An exposure must not contain loops.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterIntExtensions",
+      "LineNumber": 339
+    },
+    {
+      "Code": "STXE001",
+      "Description": "An exposure must not contain branching logic.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterODataHelper",
+      "LineNumber": 16
+    },
+    {
+      "Code": "STXE001",
+      "Description": "An exposure must not contain branching logic.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterODataHelper",
+      "LineNumber": 24
+    },
+    {
+      "Code": "STXE005",
+      "Description": "An exposure must not sequence multiple routine calls.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterODataHelper",
+      "LineNumber": 33
+    },
+    {
+      "Code": "STXE002",
+      "Description": "An exposure must not contain loops.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterODataHelper",
+      "LineNumber": 40
+    },
+    {
+      "Code": "STXE001",
+      "Description": "An exposure must not contain branching logic.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterODataHelper",
+      "LineNumber": 42
+    },
+    {
+      "Code": "STXE001",
+      "Description": "An exposure must not contain branching logic.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterODataHelper",
+      "LineNumber": 52
+    },
+    {
+      "Code": "STXE005",
+      "Description": "An exposure must not sequence multiple routine calls.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterODataHelper",
+      "LineNumber": 69
+    },
+    {
+      "Code": "STXE002",
+      "Description": "An exposure must not contain loops.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Formatters.FormatterODataHelper",
+      "LineNumber": 73
+    },
+    {
+      "Code": "STXE005",
+      "Description": "An exposure must not sequence multiple routine calls.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Hubs.NotificationHub",
+      "LineNumber": 25
+    },
+    {
+      "Code": "STXE005",
+      "Description": "An exposure must not sequence multiple routine calls.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Hubs.NotificationHub",
+      "LineNumber": 31
+    },
+    {
+      "Code": "STXE005",
+      "Description": "An exposure must not sequence multiple routine calls.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Hubs.NotificationHub",
+      "LineNumber": 37
+    },
+    {
+      "Code": "STXE001",
+      "Description": "An exposure must not contain branching logic.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Hubs.NotificationHub",
+      "LineNumber": 49
+    },
+    {
+      "Code": "STXE001",
+      "Description": "An exposure must not contain branching logic.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Hubs.NotificationHub",
+      "LineNumber": 54
+    },
+    {
+      "Code": "STXE002",
+      "Description": "An exposure must not contain loops.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Hubs.NotificationHub",
+      "LineNumber": 63
+    },
+    {
+      "Code": "STXE005",
+      "Description": "An exposure must not sequence multiple routine calls.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Hubs.NotificationHub",
+      "LineNumber": 69
+    },
+    {
+      "Code": "STXE001",
+      "Description": "An exposure must not contain branching logic.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Hubs.NotificationHub",
+      "LineNumber": 84
+    },
+    {
+      "Code": "STXE005",
+      "Description": "An exposure must not sequence multiple routine calls.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Hubs.NotificationHub",
+      "LineNumber": 94
+    },
+    {
+      "Code": "STXE001",
+      "Description": "An exposure must not contain branching logic.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Hubs.NotificationHub",
+      "LineNumber": 96
+    },
+    {
+      "Code": "STXFORMAT012",
+      "Description": "Expression-bodied methods must return awaitable calls directly instead of adding redundant async and await keywords.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Hubs.NotificationHub",
+      "LineNumber": 107
+    },
+    {
+      "Code": "STXE005",
+      "Description": "An exposure must not sequence multiple routine calls.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.IEdmModelExtensions",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STXE002",
+      "Description": "An exposure must not contain loops.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.IEdmModelExtensions",
+      "LineNumber": 22
+    },
+    {
+      "Code": "STXE001",
+      "Description": "An exposure must not contain branching logic.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.IEdmModelExtensions",
+      "LineNumber": 26
+    },
+    {
+      "Code": "STXE002",
+      "Description": "An exposure must not contain loops.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.IEdmModelExtensions",
+      "LineNumber": 32
+    },
+    {
+      "Code": "STXE001",
+      "Description": "An exposure must not contain branching logic.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.IEdmModelExtensions",
+      "LineNumber": 34
+    },
+    {
+      "Code": "STXE001",
+      "Description": "An exposure must not contain branching logic.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.IEdmModelExtensions",
+      "LineNumber": 38
+    },
+    {
+      "Code": "STXE005",
+      "Description": "An exposure must not sequence multiple routine calls.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.IEdmModelExtensions",
+      "LineNumber": 49
+    },
+    {
+      "Code": "STXE001",
+      "Description": "An exposure must not contain branching logic.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.IEdmModelExtensions",
+      "LineNumber": 60
+    },
+    {
+      "Code": "STXE001",
+      "Description": "An exposure must not contain branching logic.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.IEdmModelExtensions",
+      "LineNumber": 69
+    },
+    {
+      "Code": "STXE001",
+      "Description": "An exposure must not contain branching logic.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.IEdmModelExtensions",
+      "LineNumber": 94
+    },
+    {
+      "Code": "STXE001",
+      "Description": "An exposure must not contain branching logic.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.IEdmModelExtensions",
+      "LineNumber": 98
+    },
+    {
+      "Code": "STXE001",
+      "Description": "An exposure must not contain branching logic.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.IEdmModelExtensions",
+      "LineNumber": 108
+    },
+    {
+      "Code": "STXFORMAT013",
+      "Description": "C# source files must use one consistent line-ending style throughout the project.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.ModelStateError",
+      "LineNumber": 5
+    },
+    {
+      "Code": "STXFORMAT001",
+      "Description": "Source files must not contain newline characters after the final code token.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.ModelStateError",
+      "LineNumber": 11
+    },
+    {
+      "Code": "STXE001",
+      "Description": "An exposure must not contain branching logic.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.OData.ControllerReadExtensions",
+      "LineNumber": 22
+    },
+    {
+      "Code": "STXE005",
+      "Description": "An exposure must not sequence multiple routine calls.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.OData.CoreModelBuilder",
+      "LineNumber": 35
+    },
+    {
+      "Code": "STXFORMAT009",
+      "Description": "Every method chained from an invocation result must begin on a new line.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.OData.CoreModelBuilder",
+      "LineNumber": 113
+    },
+    {
+      "Code": "STXFORMAT013",
+      "Description": "C# source files must use one consistent line-ending style throughout the project.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.OData.ODataModel",
+      "LineNumber": 5
+    },
+    {
+      "Code": "STXFORMAT001",
+      "Description": "Source files must not contain newline characters after the final code token.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.OData.ODataModel",
+      "LineNumber": 16
+    },
+    {
+      "Code": "STXE005",
+      "Description": "An exposure must not sequence multiple routine calls.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.OData.ODataModelBuilder",
+      "LineNumber": 37
+    },
+    {
+      "Code": "STXE005",
+      "Description": "An exposure must not sequence multiple routine calls.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.OData.ODataModelBuilder",
+      "LineNumber": 53
+    },
+    {
+      "Code": "STXFORMAT004",
+      "Description": "Adjacent methods must have exactly one empty line between them.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.OData.ODataModelBuilder",
+      "LineNumber": 53
+    },
+    {
+      "Code": "STXE005",
+      "Description": "An exposure must not sequence multiple routine calls.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Setup.BaselineAssetCatalog",
+      "LineNumber": 57
+    },
+    {
+      "Code": "STXE005",
+      "Description": "An exposure must not sequence multiple routine calls.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Setup.BaselineAssetCatalog",
+      "LineNumber": 97
+    },
+    {
+      "Code": "STXE005",
+      "Description": "An exposure must not sequence multiple routine calls.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Setup.BaselineAssetCatalog",
+      "LineNumber": 104
+    },
+    {
+      "Code": "STXE005",
+      "Description": "An exposure must not sequence multiple routine calls.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Setup.BaselineAssetCatalog",
+      "LineNumber": 112
+    },
+    {
+      "Code": "STXE005",
+      "Description": "An exposure must not sequence multiple routine calls.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Setup.BaselineAssetCatalog",
+      "LineNumber": 124
+    },
+    {
+      "Code": "STXE005",
+      "Description": "An exposure must not sequence multiple routine calls.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Setup.BaselineAssetCatalog",
+      "LineNumber": 168
+    },
+    {
+      "Code": "STXE001",
+      "Description": "An exposure must not contain branching logic.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Setup.BaselineAssetCatalog",
+      "LineNumber": 183
+    },
+    {
+      "Code": "STXE001",
+      "Description": "An exposure must not contain branching logic.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Setup.BaselineAssetCatalog",
+      "LineNumber": 184
+    },
+    {
+      "Code": "STXE005",
+      "Description": "An exposure must not sequence multiple routine calls.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Setup.BaselineAssetCatalog",
+      "LineNumber": 203
+    },
+    {
+      "Code": "STXE001",
+      "Description": "An exposure must not contain branching logic.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Setup.BaselineAssetCatalog",
+      "LineNumber": 207
+    },
+    {
+      "Code": "STXE001",
+      "Description": "An exposure must not contain branching logic.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Setup.BaselineAssetCatalog",
+      "LineNumber": 209
+    },
+    {
+      "Code": "STX0002",
+      "Description": "Properties may only be declared on models.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Setup.UIBaseline",
+      "LineNumber": 11
+    },
+    {
+      "Code": "STX0002",
+      "Description": "Properties may only be declared on models.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Setup.UIBaseline",
+      "LineNumber": 11
+    },
+    {
+      "Code": "STX0002",
+      "Description": "Properties may only be declared on models.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Setup.UIBaseline",
+      "LineNumber": 11
+    },
+    {
+      "Code": "STX0002",
+      "Description": "Properties may only be declared on models.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Setup.UIBaseline",
+      "LineNumber": 11
+    },
+    {
+      "Code": "STX0001",
+      "Description": "The type is not a valid Standard element type.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.HttpEventHubUrlResolver",
+      "LineNumber": 9
+    },
+    {
+      "Code": "STXSTRUCT001",
+      "Description": "The source file must live in the standard folder for its element type.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.IAppBuilderExtensions",
+      "LineNumber": 11
+    },
+    {
+      "Code": "STXE001",
+      "Description": "An exposure must not contain branching logic.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.IAppBuilderExtensions",
+      "LineNumber": 22
+    },
+    {
+      "Code": "STXE001",
+      "Description": "An exposure must not contain branching logic.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.IAppBuilderExtensions",
+      "LineNumber": 27
+    },
+    {
+      "Code": "STXE001",
+      "Description": "An exposure must not contain branching logic.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.IAppBuilderExtensions",
+      "LineNumber": 67
+    },
+    {
+      "Code": "STXE001",
+      "Description": "An exposure must not contain branching logic.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.IAppBuilderExtensions",
+      "LineNumber": 71
+    },
+    {
+      "Code": "STXE002",
+      "Description": "An exposure must not contain loops.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.IAppBuilderExtensions",
+      "LineNumber": 81
+    },
+    {
+      "Code": "STXAPP009",
+      "Description": "Add{Domain} must delegate service registration to Add{Domain}{Layer} initializers.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.IServiceCollectionExtensions",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STXAPP001",
+      "Description": "Program.cs, IServiceCollectionExtensions.cs, IHostExtensions.cs, and WebApplicationExtensions.cs must live at the project root.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.IServiceCollectionExtensions",
+      "LineNumber": 19
+    },
+    {
+      "Code": "STXAPP008",
+      "Description": "IServiceCollection registrations must be declared as individual statements rather than fluent chains.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.IServiceCollectionExtensions",
+      "LineNumber": 103
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.CoreConfiguration",
+      "LineNumber": 11
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.CoreConfiguration",
+      "LineNumber": 12
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.CoreConfiguration",
+      "LineNumber": 13
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.CoreConfiguration",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.CoreConfiguration",
+      "LineNumber": 16
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.CoreConfiguration",
+      "LineNumber": 20
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.CoreConfiguration",
+      "LineNumber": 21
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.CoreConfiguration",
+      "LineNumber": 22
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.CoreConfiguration",
+      "LineNumber": 23
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.CoreConfiguration",
+      "LineNumber": 24
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.CoreConfiguration",
+      "LineNumber": 25
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.CoreConfiguration",
+      "LineNumber": 26
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.CoreConfiguration",
+      "LineNumber": 27
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.CoreConfiguration",
+      "LineNumber": 28
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.CoreConfiguration",
+      "LineNumber": 29
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.CoreConfiguration",
+      "LineNumber": 30
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.CoreConfiguration",
+      "LineNumber": 31
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.CoreConfiguration",
+      "LineNumber": 32
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.CoreConfiguration",
+      "LineNumber": 35
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.CoreConfiguration",
+      "LineNumber": 36
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.CoreConfiguration",
+      "LineNumber": 37
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.CoreConfiguration",
+      "LineNumber": 38
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.CoreDomainsConfig",
+      "LineNumber": 9
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.CoreDomainsConfig",
+      "LineNumber": 11
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.CoreDomainsConfig",
+      "LineNumber": 12
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.FirstTimeSetupRequest",
+      "LineNumber": 11
+    },
+    {
+      "Code": "STXM003",
+      "Description": "Model properties must not use framework validation attributes or the required modifier; validation belongs in service collectors.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.FirstTimeSetupRequest",
+      "LineNumber": 13
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.FirstTimeSetupRequest",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STXM003",
+      "Description": "Model properties must not use framework validation attributes or the required modifier; validation belongs in service collectors.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.FirstTimeSetupRequest",
+      "LineNumber": 17
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.FirstTimeSetupRequest",
+      "LineNumber": 19
+    },
+    {
+      "Code": "STXM003",
+      "Description": "Model properties must not use framework validation attributes or the required modifier; validation belongs in service collectors.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.FirstTimeSetupRequest",
+      "LineNumber": 21
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.FirstTimeSetupRequest",
+      "LineNumber": 24
+    },
+    {
+      "Code": "STXM003",
+      "Description": "Model properties must not use framework validation attributes or the required modifier; validation belongs in service collectors.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.FirstTimeSetupRequest",
+      "LineNumber": 26
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.FirstTimeSetupRequest",
+      "LineNumber": 28
+    },
+    {
+      "Code": "STXM003",
+      "Description": "Model properties must not use framework validation attributes or the required modifier; validation belongs in service collectors.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.FirstTimeSetupRequest",
+      "LineNumber": 30
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.FirstTimeSetupRequest",
+      "LineNumber": 34
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.FirstTimeSetupViewModel",
+      "LineNumber": 9
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.FirstTimeSetupViewModel",
+      "LineNumber": 11
+    },
+    {
+      "Code": "STXM001",
+      "Description": "Models must not declare methods.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.Metadata.MetadataContainer",
+      "LineNumber": 85
+    },
+    {
+      "Code": "STXFORMAT013",
+      "Description": "C# source files must use one consistent line-ending style throughout the project.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.ModelStateErrorModel",
+      "LineNumber": 1
+    },
+    {
+      "Code": "STXFORMAT001",
+      "Description": "Source files must not contain newline characters after the final code token.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.ModelStateErrorModel",
+      "LineNumber": 12
+    },
+    {
+      "Code": "STXFORMAT013",
+      "Description": "C# source files must use one consistent line-ending style throughout the project.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.OData.ODataModelContract",
+      "LineNumber": 1
+    },
+    {
+      "Code": "STXFORMAT001",
+      "Description": "Source files must not contain newline characters after the final code token.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.OData.ODataModelContract",
+      "LineNumber": 14
+    },
+    {
+      "Code": "STXFORMAT013",
+      "Description": "C# source files must use one consistent line-ending style throughout the project.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.Packaging.AppConfigurationPackageItem",
+      "LineNumber": 1
+    },
+    {
+      "Code": "STXFORMAT001",
+      "Description": "Source files must not contain newline characters after the final code token.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.Packaging.AppConfigurationPackageItem",
+      "LineNumber": 16
+    },
+    {
+      "Code": "STXFORMAT013",
+      "Description": "C# source files must use one consistent line-ending style throughout the project.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.Packaging.FolderRolePackageItem",
+      "LineNumber": 1
+    },
+    {
+      "Code": "STXFORMAT001",
+      "Description": "Source files must not contain newline characters after the final code token.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.Packaging.FolderRolePackageItem",
+      "LineNumber": 11
+    },
+    {
+      "Code": "STXFORMAT013",
+      "Description": "C# source files must use one consistent line-ending style throughout the project.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.Packaging.PageRolePackageItem",
+      "LineNumber": 1
+    },
+    {
+      "Code": "STXFORMAT001",
+      "Description": "Source files must not contain newline characters after the final code token.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.Packaging.PageRolePackageItem",
+      "LineNumber": 11
+    },
+    {
+      "Code": "STXM001",
+      "Description": "Models must not declare methods.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Models.Result\u003CT\u003E",
+      "LineNumber": 45
+    },
+    {
+      "Code": "STX0008",
+      "Description": "A service must declare its validations in a Validations partial.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.AllowedOrigins.AllowedOriginStoreService",
+      "LineNumber": 12
+    },
+    {
+      "Code": "STX0009",
+      "Description": "A service must declare TryCatch handling in an Exceptions partial.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.AllowedOrigins.AllowedOriginStoreService",
+      "LineNumber": 12
+    },
+    {
+      "Code": "STX0010",
+      "Description": "Every public service method must enter through a local TryCatch operation.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.AllowedOrigins.AllowedOriginStoreService",
+      "LineNumber": 12
+    },
+    {
+      "Code": "STXEX001",
+      "Description": "Every TryCatch overload must classify, wrap, and preserve validation exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.AllowedOrigins.AllowedOriginStoreService",
+      "LineNumber": 12
+    },
+    {
+      "Code": "STXEX002",
+      "Description": "Every TryCatch overload must classify, wrap, and preserve dependency exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.AllowedOrigins.AllowedOriginStoreService",
+      "LineNumber": 12
+    },
+    {
+      "Code": "STXEX003",
+      "Description": "Every TryCatch overload must wrap and preserve unclassified exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.AllowedOrigins.AllowedOriginStoreService",
+      "LineNumber": 12
+    },
+    {
+      "Code": "STX0003",
+      "Description": "A service containing only pass-through methods is redundant and should be retired.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.AppSecurity.AppSecurityAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0008",
+      "Description": "A service must declare its validations in a Validations partial.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.AppSecurity.AppSecurityAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0009",
+      "Description": "A service must declare TryCatch handling in an Exceptions partial.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.AppSecurity.AppSecurityAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0010",
+      "Description": "Every public service method must enter through a local TryCatch operation.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.AppSecurity.AppSecurityAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0011",
+      "Description": "Every service input must be validated inside TryCatch before business work.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.AppSecurity.AppSecurityAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STXEX001",
+      "Description": "Every TryCatch overload must classify, wrap, and preserve validation exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.AppSecurity.AppSecurityAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STXEX002",
+      "Description": "Every TryCatch overload must classify, wrap, and preserve dependency exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.AppSecurity.AppSecurityAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STXEX003",
+      "Description": "Every TryCatch overload must wrap and preserve unclassified exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.AppSecurity.AppSecurityAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0003",
+      "Description": "A service containing only pass-through methods is redundant and should be retired.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.ContentManagement.ContentManagementAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0008",
+      "Description": "A service must declare its validations in a Validations partial.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.ContentManagement.ContentManagementAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0009",
+      "Description": "A service must declare TryCatch handling in an Exceptions partial.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.ContentManagement.ContentManagementAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0010",
+      "Description": "Every public service method must enter through a local TryCatch operation.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.ContentManagement.ContentManagementAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0011",
+      "Description": "Every service input must be validated inside TryCatch before business work.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.ContentManagement.ContentManagementAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0012",
+      "Description": "Business-operation validation methods must evaluate their rules through a validation collector.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.ContentManagement.ContentManagementAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0023",
+      "Description": "Each business operation must call its operation-specific validation method.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.ContentManagement.ContentManagementAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STXEX001",
+      "Description": "Every TryCatch overload must classify, wrap, and preserve validation exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.ContentManagement.ContentManagementAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STXEX002",
+      "Description": "Every TryCatch overload must classify, wrap, and preserve dependency exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.ContentManagement.ContentManagementAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STXEX003",
+      "Description": "Every TryCatch overload must wrap and preserve unclassified exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.ContentManagement.ContentManagementAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0017",
+      "Description": "Identifier parameters must be named for their type, for example studentId.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.ContentManagement.ContentManagementAppService",
+      "LineNumber": 13
+    },
+    {
+      "Code": "STXFORMAT012",
+      "Description": "Expression-bodied methods must return awaitable calls directly instead of adding redundant async and await keywords.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.ContentManagement.ContentManagementAppService",
+      "LineNumber": 22
+    },
+    {
+      "Code": "STXFORMAT012",
+      "Description": "Expression-bodied methods must return awaitable calls directly instead of adding redundant async and await keywords.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.ContentManagement.ContentManagementAppService",
+      "LineNumber": 25
+    },
+    {
+      "Code": "STX0003",
+      "Description": "A service containing only pass-through methods is redundant and should be retired.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.DocumentManagement.DocumentManagementAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0008",
+      "Description": "A service must declare its validations in a Validations partial.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.DocumentManagement.DocumentManagementAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0009",
+      "Description": "A service must declare TryCatch handling in an Exceptions partial.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.DocumentManagement.DocumentManagementAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0010",
+      "Description": "Every public service method must enter through a local TryCatch operation.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.DocumentManagement.DocumentManagementAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0011",
+      "Description": "Every service input must be validated inside TryCatch before business work.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.DocumentManagement.DocumentManagementAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STXEX001",
+      "Description": "Every TryCatch overload must classify, wrap, and preserve validation exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.DocumentManagement.DocumentManagementAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STXEX002",
+      "Description": "Every TryCatch overload must classify, wrap, and preserve dependency exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.DocumentManagement.DocumentManagementAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STXEX003",
+      "Description": "Every TryCatch overload must wrap and preserve unclassified exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.DocumentManagement.DocumentManagementAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0008",
+      "Description": "A service must declare its validations in a Validations partial.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Eventing.ServiceBusAppDeleteForwardingService",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STX0009",
+      "Description": "A service must declare TryCatch handling in an Exceptions partial.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Eventing.ServiceBusAppDeleteForwardingService",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STX0010",
+      "Description": "Every public service method must enter through a local TryCatch operation.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Eventing.ServiceBusAppDeleteForwardingService",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STX0011",
+      "Description": "Every service input must be validated inside TryCatch before business work.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Eventing.ServiceBusAppDeleteForwardingService",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STX0013",
+      "Description": "A service must implement a local interface.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Eventing.ServiceBusAppDeleteForwardingService",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STXEX001",
+      "Description": "Every TryCatch overload must classify, wrap, and preserve validation exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Eventing.ServiceBusAppDeleteForwardingService",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STXEX002",
+      "Description": "Every TryCatch overload must classify, wrap, and preserve dependency exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Eventing.ServiceBusAppDeleteForwardingService",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STXEX003",
+      "Description": "Every TryCatch overload must wrap and preserve unclassified exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Eventing.ServiceBusAppDeleteForwardingService",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STXF002",
+      "Description": "A foundation service may only depend on brokers, exposures, or nothing.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Eventing.ServiceBusAppDeleteForwardingService",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STXFORMAT006",
+      "Description": "A single multiline method call must be expressed as an expression-bodied method.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Eventing.ServiceBusAppDeleteForwardingService",
+      "LineNumber": 19
+    },
+    {
+      "Code": "STX0008",
+      "Description": "A service must declare its validations in a Validations partial.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Eventing.ServiceBusFolderDeleteForwardingService",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STX0009",
+      "Description": "A service must declare TryCatch handling in an Exceptions partial.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Eventing.ServiceBusFolderDeleteForwardingService",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STX0010",
+      "Description": "Every public service method must enter through a local TryCatch operation.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Eventing.ServiceBusFolderDeleteForwardingService",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STX0011",
+      "Description": "Every service input must be validated inside TryCatch before business work.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Eventing.ServiceBusFolderDeleteForwardingService",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STX0013",
+      "Description": "A service must implement a local interface.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Eventing.ServiceBusFolderDeleteForwardingService",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STXEX001",
+      "Description": "Every TryCatch overload must classify, wrap, and preserve validation exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Eventing.ServiceBusFolderDeleteForwardingService",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STXEX002",
+      "Description": "Every TryCatch overload must classify, wrap, and preserve dependency exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Eventing.ServiceBusFolderDeleteForwardingService",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STXEX003",
+      "Description": "Every TryCatch overload must wrap and preserve unclassified exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Eventing.ServiceBusFolderDeleteForwardingService",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STXF002",
+      "Description": "A foundation service may only depend on brokers, exposures, or nothing.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Eventing.ServiceBusFolderDeleteForwardingService",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STXFORMAT006",
+      "Description": "A single multiline method call must be expressed as an expression-bodied method.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Eventing.ServiceBusFolderDeleteForwardingService",
+      "LineNumber": 19
+    },
+    {
+      "Code": "STX0003",
+      "Description": "A service containing only pass-through methods is redundant and should be retired.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Mail.MailAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0008",
+      "Description": "A service must declare its validations in a Validations partial.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Mail.MailAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0009",
+      "Description": "A service must declare TryCatch handling in an Exceptions partial.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Mail.MailAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0010",
+      "Description": "Every public service method must enter through a local TryCatch operation.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Mail.MailAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0011",
+      "Description": "Every service input must be validated inside TryCatch before business work.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Mail.MailAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STXEX001",
+      "Description": "Every TryCatch overload must classify, wrap, and preserve validation exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Mail.MailAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STXEX002",
+      "Description": "Every TryCatch overload must classify, wrap, and preserve dependency exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Mail.MailAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STXEX003",
+      "Description": "Every TryCatch overload must wrap and preserve unclassified exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Mail.MailAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0003",
+      "Description": "A service containing only pass-through methods is redundant and should be retired.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Mail.MailManagerService",
+      "LineNumber": 13
+    },
+    {
+      "Code": "STX0008",
+      "Description": "A service must declare its validations in a Validations partial.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Mail.MailManagerService",
+      "LineNumber": 13
+    },
+    {
+      "Code": "STX0009",
+      "Description": "A service must declare TryCatch handling in an Exceptions partial.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Mail.MailManagerService",
+      "LineNumber": 13
+    },
+    {
+      "Code": "STX0010",
+      "Description": "Every public service method must enter through a local TryCatch operation.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Mail.MailManagerService",
+      "LineNumber": 13
+    },
+    {
+      "Code": "STX0011",
+      "Description": "Every service input must be validated inside TryCatch before business work.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Mail.MailManagerService",
+      "LineNumber": 13
+    },
+    {
+      "Code": "STXEX001",
+      "Description": "Every TryCatch overload must classify, wrap, and preserve validation exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Mail.MailManagerService",
+      "LineNumber": 13
+    },
+    {
+      "Code": "STXEX002",
+      "Description": "Every TryCatch overload must classify, wrap, and preserve dependency exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Mail.MailManagerService",
+      "LineNumber": 13
+    },
+    {
+      "Code": "STXEX003",
+      "Description": "Every TryCatch overload must wrap and preserve unclassified exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Mail.MailManagerService",
+      "LineNumber": 13
+    },
+    {
+      "Code": "STX0003",
+      "Description": "A service containing only pass-through methods is redundant and should be retired.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Planning.PlanningAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0008",
+      "Description": "A service must declare its validations in a Validations partial.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Planning.PlanningAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0009",
+      "Description": "A service must declare TryCatch handling in an Exceptions partial.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Planning.PlanningAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0010",
+      "Description": "Every public service method must enter through a local TryCatch operation.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Planning.PlanningAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0011",
+      "Description": "Every service input must be validated inside TryCatch before business work.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Planning.PlanningAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STXEX001",
+      "Description": "Every TryCatch overload must classify, wrap, and preserve validation exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Planning.PlanningAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STXEX002",
+      "Description": "Every TryCatch overload must classify, wrap, and preserve dependency exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Planning.PlanningAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STXEX003",
+      "Description": "Every TryCatch overload must wrap and preserve unclassified exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Planning.PlanningAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0003",
+      "Description": "A service containing only pass-through methods is redundant and should be retired.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Workflow.WorkflowAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0008",
+      "Description": "A service must declare its validations in a Validations partial.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Workflow.WorkflowAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0009",
+      "Description": "A service must declare TryCatch handling in an Exceptions partial.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Workflow.WorkflowAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0010",
+      "Description": "Every public service method must enter through a local TryCatch operation.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Workflow.WorkflowAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0011",
+      "Description": "Every service input must be validated inside TryCatch before business work.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Workflow.WorkflowAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STXEX001",
+      "Description": "Every TryCatch overload must classify, wrap, and preserve validation exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Workflow.WorkflowAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STXEX002",
+      "Description": "Every TryCatch overload must classify, wrap, and preserve dependency exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Workflow.WorkflowAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STXEX003",
+      "Description": "Every TryCatch overload must wrap and preserve unclassified exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Workflow.WorkflowAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0008",
+      "Description": "A service must declare its validations in a Validations partial.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.AppOrchestrationService",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STX0009",
+      "Description": "A service must declare TryCatch handling in an Exceptions partial.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.AppOrchestrationService",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STX0010",
+      "Description": "Every public service method must enter through a local TryCatch operation.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.AppOrchestrationService",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STX0011",
+      "Description": "Every service input must be validated inside TryCatch before business work.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.AppOrchestrationService",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STXEX001",
+      "Description": "Every TryCatch overload must classify, wrap, and preserve validation exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.AppOrchestrationService",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STXEX002",
+      "Description": "Every TryCatch overload must classify, wrap, and preserve dependency exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.AppOrchestrationService",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STXEX003",
+      "Description": "Every TryCatch overload must wrap and preserve unclassified exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.AppOrchestrationService",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STXO001",
+      "Description": "An orchestration must have two or three foundation or processing dependencies and must not mix them.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.AppOrchestrationService",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STX0008",
+      "Description": "A service must declare its validations in a Validations partial.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.HostedServicesAppSecurityAppAddOrchestrationService",
+      "LineNumber": 12
+    },
+    {
+      "Code": "STX0009",
+      "Description": "A service must declare TryCatch handling in an Exceptions partial.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.HostedServicesAppSecurityAppAddOrchestrationService",
+      "LineNumber": 12
+    },
+    {
+      "Code": "STX0010",
+      "Description": "Every public service method must enter through a local TryCatch operation.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.HostedServicesAppSecurityAppAddOrchestrationService",
+      "LineNumber": 12
+    },
+    {
+      "Code": "STX0011",
+      "Description": "Every service input must be validated inside TryCatch before business work.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.HostedServicesAppSecurityAppAddOrchestrationService",
+      "LineNumber": 12
+    },
+    {
+      "Code": "STX0013",
+      "Description": "A service must implement a local interface.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.HostedServicesAppSecurityAppAddOrchestrationService",
+      "LineNumber": 12
+    },
+    {
+      "Code": "STXEX001",
+      "Description": "Every TryCatch overload must classify, wrap, and preserve validation exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.HostedServicesAppSecurityAppAddOrchestrationService",
+      "LineNumber": 12
+    },
+    {
+      "Code": "STXEX002",
+      "Description": "Every TryCatch overload must classify, wrap, and preserve dependency exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.HostedServicesAppSecurityAppAddOrchestrationService",
+      "LineNumber": 12
+    },
+    {
+      "Code": "STXEX003",
+      "Description": "Every TryCatch overload must wrap and preserve unclassified exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.HostedServicesAppSecurityAppAddOrchestrationService",
+      "LineNumber": 12
+    },
+    {
+      "Code": "STXO001",
+      "Description": "An orchestration must have two or three foundation or processing dependencies and must not mix them.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.HostedServicesAppSecurityAppAddOrchestrationService",
+      "LineNumber": 12
+    },
+    {
+      "Code": "STX0004",
+      "Description": "A service must not depend on another service at the same layer.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.SecurityAccountEmailOrchestrationService",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STX0006",
+      "Description": "Business implementation classes should be internal by default.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.SecurityAccountEmailOrchestrationService",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STX0008",
+      "Description": "A service must declare its validations in a Validations partial.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.SecurityAccountEmailOrchestrationService",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STX0009",
+      "Description": "A service must declare TryCatch handling in an Exceptions partial.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.SecurityAccountEmailOrchestrationService",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STX0010",
+      "Description": "Every public service method must enter through a local TryCatch operation.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.SecurityAccountEmailOrchestrationService",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STX0011",
+      "Description": "Every service input must be validated inside TryCatch before business work.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.SecurityAccountEmailOrchestrationService",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STXEX001",
+      "Description": "Every TryCatch overload must classify, wrap, and preserve validation exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.SecurityAccountEmailOrchestrationService",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STXEX002",
+      "Description": "Every TryCatch overload must classify, wrap, and preserve dependency exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.SecurityAccountEmailOrchestrationService",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STXEX003",
+      "Description": "Every TryCatch overload must wrap and preserve unclassified exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.SecurityAccountEmailOrchestrationService",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STXO001",
+      "Description": "An orchestration must have two or three foundation or processing dependencies and must not mix them.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.SecurityAccountEmailOrchestrationService",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STX0006",
+      "Description": "Business implementation classes should be internal by default.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.TemplatedEmailOrchestrationService",
+      "LineNumber": 20
+    },
+    {
+      "Code": "STX0008",
+      "Description": "A service must declare its validations in a Validations partial.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.TemplatedEmailOrchestrationService",
+      "LineNumber": 20
+    },
+    {
+      "Code": "STX0009",
+      "Description": "A service must declare TryCatch handling in an Exceptions partial.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.TemplatedEmailOrchestrationService",
+      "LineNumber": 20
+    },
+    {
+      "Code": "STX0010",
+      "Description": "Every public service method must enter through a local TryCatch operation.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.TemplatedEmailOrchestrationService",
+      "LineNumber": 20
+    },
+    {
+      "Code": "STX0011",
+      "Description": "Every service input must be validated inside TryCatch before business work.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.TemplatedEmailOrchestrationService",
+      "LineNumber": 20
+    },
+    {
+      "Code": "STXEX001",
+      "Description": "Every TryCatch overload must classify, wrap, and preserve validation exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.TemplatedEmailOrchestrationService",
+      "LineNumber": 20
+    },
+    {
+      "Code": "STXEX002",
+      "Description": "Every TryCatch overload must classify, wrap, and preserve dependency exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.TemplatedEmailOrchestrationService",
+      "LineNumber": 20
+    },
+    {
+      "Code": "STXEX003",
+      "Description": "Every TryCatch overload must wrap and preserve unclassified exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.TemplatedEmailOrchestrationService",
+      "LineNumber": 20
+    },
+    {
+      "Code": "STXO001",
+      "Description": "An orchestration must have two or three foundation or processing dependencies and must not mix them.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.TemplatedEmailOrchestrationService",
+      "LineNumber": 20
+    },
+    {
+      "Code": "STX0006",
+      "Description": "Business implementation classes should be internal by default.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.UserRegistrationOrchestrationService",
+      "LineNumber": 11
+    },
+    {
+      "Code": "STX0008",
+      "Description": "A service must declare its validations in a Validations partial.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.UserRegistrationOrchestrationService",
+      "LineNumber": 11
+    },
+    {
+      "Code": "STX0009",
+      "Description": "A service must declare TryCatch handling in an Exceptions partial.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.UserRegistrationOrchestrationService",
+      "LineNumber": 11
+    },
+    {
+      "Code": "STX0010",
+      "Description": "Every public service method must enter through a local TryCatch operation.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.UserRegistrationOrchestrationService",
+      "LineNumber": 11
+    },
+    {
+      "Code": "STX0011",
+      "Description": "Every service input must be validated inside TryCatch before business work.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.UserRegistrationOrchestrationService",
+      "LineNumber": 11
+    },
+    {
+      "Code": "STXEX001",
+      "Description": "Every TryCatch overload must classify, wrap, and preserve validation exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.UserRegistrationOrchestrationService",
+      "LineNumber": 11
+    },
+    {
+      "Code": "STXEX002",
+      "Description": "Every TryCatch overload must classify, wrap, and preserve dependency exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.UserRegistrationOrchestrationService",
+      "LineNumber": 11
+    },
+    {
+      "Code": "STXEX003",
+      "Description": "Every TryCatch overload must wrap and preserve unclassified exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.UserRegistrationOrchestrationService",
+      "LineNumber": 11
+    },
+    {
+      "Code": "STXO001",
+      "Description": "An orchestration must have two or three foundation or processing dependencies and must not mix them.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Orchestrations.UserRegistrationOrchestrationService",
+      "LineNumber": 11
+    },
+    {
+      "Code": "STX0008",
+      "Description": "A service must declare its validations in a Validations partial.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Processings.AllowedOrigins.AllowedOriginProcessingService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0009",
+      "Description": "A service must declare TryCatch handling in an Exceptions partial.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Processings.AllowedOrigins.AllowedOriginProcessingService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0010",
+      "Description": "Every public service method must enter through a local TryCatch operation.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Processings.AllowedOrigins.AllowedOriginProcessingService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0011",
+      "Description": "Every service input must be validated inside TryCatch before business work.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Processings.AllowedOrigins.AllowedOriginProcessingService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STXEX001",
+      "Description": "Every TryCatch overload must classify, wrap, and preserve validation exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Processings.AllowedOrigins.AllowedOriginProcessingService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STXEX002",
+      "Description": "Every TryCatch overload must classify, wrap, and preserve dependency exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Processings.AllowedOrigins.AllowedOriginProcessingService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STXEX003",
+      "Description": "Every TryCatch overload must wrap and preserve unclassified exceptions.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Processings.AllowedOrigins.AllowedOriginProcessingService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0022",
+      "Description": "Creation method names must include the concrete type they create.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Processings.AllowedOrigins.AllowedOriginProcessingService",
+      "LineNumber": 14
+    },
+    {
+      "Code": "STX0018",
+      "Description": "Service method names must include each model type they operate on.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Processings.AllowedOrigins.AllowedOriginProcessingService",
+      "LineNumber": 60
+    },
+    {
+      "Code": "STX0001",
+      "Description": "The type is not a valid Standard element type.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Setup.FirstTimeSetupAppService",
+      "LineNumber": 21
+    },
+    {
+      "Code": "STX0001",
+      "Description": "The type is not a valid Standard element type.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Setup.FirstTimeSetupAssetService",
+      "LineNumber": 11
+    },
+    {
+      "Code": "STXD001",
+      "Description": "Dependency elements may only be consumed by brokers.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Setup.FirstTimeSetupBootstrapUser",
+      "LineNumber": 7
+    },
+    {
+      "Code": "STX0001",
+      "Description": "The type is not a valid Standard element type.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Setup.FirstTimeSetupIdentifiers",
+      "LineNumber": 9
+    },
+    {
+      "Code": "STX0001",
+      "Description": "The type is not a valid Standard element type.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Setup.FirstTimeSetupOrchestrationService",
+      "LineNumber": 13
+    },
+    {
+      "Code": "STXD001",
+      "Description": "Dependency elements may only be consumed by brokers.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Setup.FirstTimeSetupResult",
+      "LineNumber": 7
+    },
+    {
+      "Code": "STX0001",
+      "Description": "The type is not a valid Standard element type.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Setup.FirstTimeSetupStateService",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STX0001",
+      "Description": "The type is not a valid Standard element type.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Setup.FirstTimeSetupTenantService",
+      "LineNumber": 14
+    },
+    {
+      "Code": "STX0001",
+      "Description": "The type is not a valid Standard element type.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Setup.FirstTimeSetupUserService",
+      "LineNumber": 13
+    },
+    {
+      "Code": "STX0001",
+      "Description": "The type is not a valid Standard element type.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Setup.SetupRequestHostNormalizer",
+      "LineNumber": 7
+    },
+    {
+      "Code": "STX0001",
+      "Description": "The type is not a valid Standard element type.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.SqlSessionCacheFallback",
+      "LineNumber": 12
+    }
+  ]
+}

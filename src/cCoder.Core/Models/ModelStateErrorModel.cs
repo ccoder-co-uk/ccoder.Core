@@ -2,10 +2,11 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.Core.Models;
+namespace cCoder.Core.Models;
 
-namespace cCoder.Core.Exposures;
-
-public class ModelStateError : ModelStateErrorModel
+public class ModelStateErrorModel
 {
+    public string Key { get; set; }
+    public object Value { get; set; }
+    public string[] Errors { get; set; }
 }

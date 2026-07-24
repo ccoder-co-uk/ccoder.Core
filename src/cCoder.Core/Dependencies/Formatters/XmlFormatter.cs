@@ -3,12 +3,13 @@
 // ---------------------------------------------------------------
 
 using System.Text;
+using cCoder.Core.Exposures.Formatters;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 
 
-namespace cCoder.Core.Exposures.Formatters;
+namespace cCoder.Core.Dependencies.Formatters;
 
 public class XmlFormatter : TextOutputFormatter
 {
@@ -46,6 +47,7 @@ public class XmlFormatter : TextOutputFormatter
         string json = JsonConvert.SerializeObject(
 value: new { item = FormatterODataHelper.HandleOData(contextObject: context.Object) }
         );
+
         System.Xml.Linq.XDocument xml = JsonConvert.DeserializeXNode(value: json, deserializeRootElementName: "root");
         return new StringBuilder(xml.ToString());
     }

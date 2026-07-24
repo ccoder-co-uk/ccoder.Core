@@ -235,7 +235,6 @@ namespace Web.Controllers
             log.LogWarning($"Problem with page request: {ex.Message}\n{ex.StackTrace}");
             log.LogWarning($"   Source: {Request.HttpContext.Connection.RemoteIpAddress}:{Request.HttpContext.Connection.RemotePort}");
 
-            // attempt to recover the apps own custom error page, or provide the system default defined below
             try
             {
                 string errorPageQuery = $"Core/Page/Render()?host={Host}&path=Error&theme={GetSessionValue("theme")}&culture={GetSessionValue("culture")}";

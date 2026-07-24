@@ -3,7 +3,7 @@
 // ---------------------------------------------------------------
 
 
-namespace cCoder.Core.Exposures;
+namespace cCoder.Core.Dependencies.Sessions;
 
 public sealed class NoOpSession : ISession
 {
@@ -15,6 +15,7 @@ public sealed class NoOpSession : ISession
 
     public Task LoadAsync(CancellationToken cancellationToken = default) =>
         Task.CompletedTask;
+
     public Task CommitAsync(CancellationToken cancellationToken = default) =>
         Task.CompletedTask;
 
@@ -25,6 +26,8 @@ public sealed class NoOpSession : ISession
     }
 
     public void Set(string key, byte[] value) { }
+
     public void Remove(string key) { }
+
     public void Clear() { }
 }

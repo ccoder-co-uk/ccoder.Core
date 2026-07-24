@@ -2,28 +2,33 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.ContentManagement.Exposures;
+using cCoder.AppSecurity.Exposures;
+using cCoder.AppSecurity.Models;
+using cCoder.Data.Models.CMS;
+using cCoder.Data.Models.Security;
 using cCoder.Packaging.Models;
 using cCoder.Data.Models.Packaging;
-using PackagingBroker = cCoder.Packaging.Brokers.IContentManagementPackageManagerBroker;
-using DataPackage = cCoder.Data.Models.Packaging.Package;
-using DataPackageItem = cCoder.Data.Models.Packaging.PackageItem;
+using PackagingBroker = cCoder.Packaging.Brokers.IAppSecurityPackageManagerBroker;
 
 
-namespace cCoder.Core.Brokers.Packaging;
+namespace cCoder.Core.Dependencies.Packaging;
 
-internal class ContentManagementPackageManagerBroker(
-    IContentManagementPackageManager contentManagementPackageManager
+internal class AppSecurityPackageManagerBroker(
+    IAppSecurityPackageManager appSecurityPackageManager = null
 ) : PackagingBroker
 {
     public ValueTask ImportPackageAsync(int appId, Package package) =>
-        contentManagementPackageManager.ImportPackageAsync(appId: appId, package: ToExternalPackage(package: package));
+        appSecurityPackageManager == null
+            ? ValueTask.CompletedTask
+            : appSecurityPackageManager.ImportPackageAsync(appId: appId, package: ToExternalPackage(package: package));
 
     public Package ExportPackage(int appId, string packageName) =>
-        ToLocalPackage(package: contentManagementPackageManager.ExportPackage(appId: appId, packageName: packageName));
+        appSecurityPackageManager == null
+            ? null
+            : ToLocalPackage(package: appSecurityPackageManager.ExportPackage(appId: appId, packageName: packageName));
 
-    private static DataPackage ToExternalPackage(Package package) =>
-        package == null ? null : new DataPackage(package.Name)
+    private static AppSecurityPackage ToExternalPackage(Package package) =>
+        package == null ? null : new AppSecurityPackage
         {
             Id = package.Id,
             Name = package.Name,
@@ -34,8 +39,8 @@ internal class ContentManagementPackageManagerBroker(
                 .ToArray(),
         };
 
-    private static DataPackageItem ToExternalPackageItem(PackageItem packageItem) =>
-        packageItem == null ? null : new DataPackageItem
+    private static AppSecurityPackageItem ToExternalPackageItem(PackageItem packageItem) =>
+        packageItem == null ? null : new AppSecurityPackageItem
         {
             Id = packageItem.Id,
             PackageId = packageItem.PackageId,
@@ -43,7 +48,7 @@ internal class ContentManagementPackageManagerBroker(
             Data = packageItem.Data,
         };
 
-    private static Package ToLocalPackage(DataPackage package) =>
+    private static Package ToLocalPackage(AppSecurityPackage package) =>
         package == null ? null : new Package(package.Name)
         {
             Id = package.Id,
@@ -55,7 +60,7 @@ internal class ContentManagementPackageManagerBroker(
                 .ToArray(),
         };
 
-    private static PackageItem ToLocalPackageItem(DataPackageItem packageItem) =>
+    private static PackageItem ToLocalPackageItem(AppSecurityPackageItem packageItem) =>
         packageItem == null ? null : new PackageItem
         {
             Id = packageItem.Id,

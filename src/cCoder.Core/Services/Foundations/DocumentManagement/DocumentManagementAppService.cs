@@ -12,8 +12,10 @@ internal class DocumentManagementAppService(IDocumentManagementAppBroker documen
 {
     public ValueTask AddAsync(App app) =>
         documentManagementAppBroker.AddAsync(app: app);
+
     public ValueTask UpdateAsync(App app) =>
         documentManagementAppBroker.UpdateAsync(app: app);
+
     public ValueTask DeleteAsync(int appId) =>
         documentManagementAppBroker.DeleteAsync(appId: appId);
 }

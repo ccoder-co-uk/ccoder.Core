@@ -2,31 +2,28 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using cCoder.ContentManagement.Exposures;
 using cCoder.Packaging.Models;
 using cCoder.Data.Models.Packaging;
-using cCoder.Workflow.Exposures;
-using cCoder.Workflow.Models;
-using PackagingBroker = cCoder.Packaging.Brokers.ISchedulingPackageManagerBroker;
+using PackagingBroker = cCoder.Packaging.Brokers.IContentManagementPackageManagerBroker;
+using DataPackage = cCoder.Data.Models.Packaging.Package;
+using DataPackageItem = cCoder.Data.Models.Packaging.PackageItem;
 
 
-namespace cCoder.Core.Brokers.Packaging;
+namespace cCoder.Core.Dependencies.Packaging;
 
-internal class SchedulingPackageManagerBroker(
-    IWorkflowPackageManager workflowPackageManager = null
+internal class ContentManagementPackageManagerBroker(
+    IContentManagementPackageManager contentManagementPackageManager
 ) : PackagingBroker
 {
     public ValueTask ImportPackageAsync(int appId, Package package) =>
-        workflowPackageManager == null
-            ? ValueTask.CompletedTask
-            : workflowPackageManager.ImportPackageAsync(appId, ToExternalPackage(package));
+        contentManagementPackageManager.ImportPackageAsync(appId: appId, package: ToExternalPackage(package: package));
 
     public Package ExportPackage(int appId, string packageName) =>
-        workflowPackageManager == null
-            ? null
-            : ToLocalPackage(workflowPackageManager.ExportPackage(appId, packageName));
+        ToLocalPackage(package: contentManagementPackageManager.ExportPackage(appId: appId, packageName: packageName));
 
-    private static WorkflowPackage ToExternalPackage(Package package) =>
-        package == null ? null : new WorkflowPackage(package.Name)
+    private static DataPackage ToExternalPackage(Package package) =>
+        package == null ? null : new DataPackage(package.Name)
         {
             Id = package.Id,
             Name = package.Name,
@@ -37,8 +34,8 @@ internal class SchedulingPackageManagerBroker(
                 .ToArray(),
         };
 
-    private static WorkflowPackageItem ToExternalPackageItem(PackageItem packageItem) =>
-        packageItem == null ? null : new WorkflowPackageItem
+    private static DataPackageItem ToExternalPackageItem(PackageItem packageItem) =>
+        packageItem == null ? null : new DataPackageItem
         {
             Id = packageItem.Id,
             PackageId = packageItem.PackageId,
@@ -46,7 +43,7 @@ internal class SchedulingPackageManagerBroker(
             Data = packageItem.Data,
         };
 
-    private static Package ToLocalPackage(WorkflowPackage package) =>
+    private static Package ToLocalPackage(DataPackage package) =>
         package == null ? null : new Package(package.Name)
         {
             Id = package.Id,
@@ -54,11 +51,11 @@ internal class SchedulingPackageManagerBroker(
             Description = package.Description,
             Category = package.Category,
             SourceApi = package.SourceApi,
-            Items = package.Items?.Select(ToLocalPackageItem)
+            Items = package.Items?.Select(selector: ToLocalPackageItem)
                 .ToArray(),
         };
 
-    private static PackageItem ToLocalPackageItem(WorkflowPackageItem packageItem) =>
+    private static PackageItem ToLocalPackageItem(DataPackageItem packageItem) =>
         packageItem == null ? null : new PackageItem
         {
             Id = packageItem.Id,

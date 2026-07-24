@@ -94,6 +94,7 @@ public partial class CoreApiBuilderOptions
     {
         string normalizedRoutePath = EnsureRoutePath(routePath: routePath, defaultContext: "Core");
         int lastSlashIndex = normalizedRoutePath.LastIndexOf(value: '/');
+
         return lastSlashIndex < 0
             ? normalizedRoutePath
             : normalizedRoutePath[(lastSlashIndex + 1)..];
@@ -116,6 +117,7 @@ public partial class CoreApiBuilderOptions
     {
         Type configType = typeof(TDomainConfiguration);
         string rootPath = defaults.RootPath.Trim().TrimEnd(trimChar: '/');
+
         string routePath = coreConfiguration?.AggregateDomains == true
             ? $"{rootPath}/Core"
             : $"{rootPath}/{domainName}";

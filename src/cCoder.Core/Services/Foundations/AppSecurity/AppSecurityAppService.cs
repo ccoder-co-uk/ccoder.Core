@@ -12,8 +12,10 @@ internal class AppSecurityAppService(IAppSecurityAppBroker appSecurityAppBroker)
 {
     public ValueTask AddAsync(App app) =>
         appSecurityAppBroker.AddAsync(app: app);
+
     public ValueTask UpdateAsync(App app) =>
         appSecurityAppBroker.UpdateAsync(app: app);
+
     public ValueTask DeleteAsync(int appId) =>
         appSecurityAppBroker.DeleteAsync(appId: appId);
 }

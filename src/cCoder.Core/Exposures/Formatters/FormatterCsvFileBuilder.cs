@@ -23,6 +23,7 @@ internal class FormatterCsvFileBuilder
         string dateFormat =
             Resources.FirstOrDefault(predicate: resource => resource.Name == "dateformat")?.DisplayName
             ?? "yyyy-MM-ddThh:mm:ssZ";
+
         string moneyFormat =
             Resources.FirstOrDefault(predicate: resource => resource.Name == "moneyformat")?.DisplayName
             ?? "n";
@@ -67,6 +68,7 @@ separator: Delimiter, values: properties.Select(selector: property =>
             .Where(predicate: property =>
                 property.PropertyType.IsValueType || property.PropertyType == typeof(string)
             );
+
         string sourceHeader = string.Join(
 separator: Delimiter, values: sourceProperties.Select(selector: property => $"{Quotes}{property.Name}{Quotes}")
         );

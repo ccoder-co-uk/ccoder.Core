@@ -97,6 +97,7 @@ public partial class CoreBuilderOptions
         {
             securityConfig.AddMSSQLModelProvider(
 services: securityServices, connectionString: connectionString ?? string.Empty);
+
             securityConfig.UseAESHMMACPasswordEncryption(
 services: securityServices, decryptionKey: decryptionKey ?? string.Empty);
         });
@@ -158,17 +159,18 @@ services: securityServices, decryptionKey: decryptionKey ?? string.Empty);
             ApplyCoreDefaults(configuration: configuration);
             configure?.Invoke(obj: configuration);
         });
+
         services.TryAddTransient<IContentManagementAppBroker, ContentManagementAppBroker>();
         services.TryAddTransient<IHttpRequestBroker, HttpRequestBroker>();
         services.TryAddTransient<IContentManagementAppService, ContentManagementAppService>();
         services.TryAddTransient<IAllowedOriginStoreService, AllowedOriginStoreService>();
         services.TryAddTransient<IAllowedOriginProcessingService, AllowedOriginProcessingService>();
         services.TryAddTransient<cCoder.Packaging.Brokers.IAppDomainProvider, Brokers.Packaging.AppDomainProvider>();
-        services.TryAddTransient<cCoder.Packaging.Brokers.IAppSecurityPackageManagerBroker, Brokers.Packaging.AppSecurityPackageManagerBroker>();
-        services.TryAddTransient<cCoder.Packaging.Brokers.IContentManagementPackageManagerBroker, Brokers.Packaging.ContentManagementPackageManagerBroker>();
-        services.TryAddTransient<cCoder.Packaging.Brokers.IDocumentManagementPackageManagerBroker, Brokers.Packaging.DocumentManagementPackageManagerBroker>();
-        services.TryAddTransient<cCoder.Packaging.Brokers.ISchedulingPackageManagerBroker, Brokers.Packaging.SchedulingPackageManagerBroker>();
-        services.TryAddTransient<cCoder.Packaging.Brokers.IWorkflowPackageManagerBroker, Brokers.Packaging.WorkflowPackageManagerBroker>();
+        services.TryAddTransient<cCoder.Packaging.Brokers.IAppSecurityPackageManagerBroker, Dependencies.Packaging.AppSecurityPackageManagerBroker>();
+        services.TryAddTransient<cCoder.Packaging.Brokers.IContentManagementPackageManagerBroker, Dependencies.Packaging.ContentManagementPackageManagerBroker>();
+        services.TryAddTransient<cCoder.Packaging.Brokers.IDocumentManagementPackageManagerBroker, Dependencies.Packaging.DocumentManagementPackageManagerBroker>();
+        services.TryAddTransient<cCoder.Packaging.Brokers.ISchedulingPackageManagerBroker, Dependencies.Packaging.SchedulingPackageManagerBroker>();
+        services.TryAddTransient<cCoder.Packaging.Brokers.IWorkflowPackageManagerBroker, Dependencies.Packaging.WorkflowPackageManagerBroker>();
         services.AddPackaging();
         return this;
     }
@@ -181,6 +183,7 @@ services: securityServices, decryptionKey: decryptionKey ?? string.Empty);
             ApplyCoreDefaults(configuration: configuration);
             configure?.Invoke(obj: configuration);
         });
+
         return this;
     }
 
@@ -203,16 +206,18 @@ services: securityServices, decryptionKey: decryptionKey ?? string.Empty);
             ApplyCoreDefaults(configuration: configuration);
             configure?.Invoke(obj: configuration);
         });
+
         return this;
     }
 
     public CoreBuilderOptions UseWorkflow(Action<WorkflowConfiguration> configure = null)
     {
-        services.AddWorkflowHostedServices(configuration =>
+        services.AddWorkflowHostedServices(newConfigure: configuration =>
         {
-            ApplyCoreDefaults(configuration);
-            configure?.Invoke(configuration);
+            ApplyCoreDefaults(configuration: configuration);
+            configure?.Invoke(obj: configuration);
         });
+
         return this;
     }
 
@@ -223,6 +228,7 @@ services: securityServices, decryptionKey: decryptionKey ?? string.Empty);
             ApplyCoreDefaults(configuration: configuration);
             configure?.Invoke(obj: configuration);
         });
+
         services.AddScoped<ICoreAllowedOriginStore, CoreAllowedOriginStore>();
         services.TryAddTransient<HostedServicesAppSecurityAppAddOrchestrationService>();
         return this;
@@ -235,6 +241,7 @@ services: securityServices, decryptionKey: decryptionKey ?? string.Empty);
             ApplyCoreDefaults(configuration: configuration);
             configure?.Invoke(obj: configuration);
         });
+
         return this;
     }
 
@@ -253,8 +260,10 @@ services: securityServices, decryptionKey: decryptionKey ?? string.Empty);
             CoreConfigurationMapper.Copy(source: configuration, target: coreConfig));
 
         AddStorage(connectionString: configuration.CoreConnectionString);
+
         WithSecurity(
 connectionString: configuration.SecurityConnectionString, decryptionKey: configuration.DecryptionKey);
+
         UseAppSecurity();
         UseContentManagement();
         UseDocumentManagement();
@@ -331,13 +340,7 @@ connectionStrings: configuration.ConnectionStrings, settings: configuration.Sett
 
     private void ApplyCoreDefaults(WorkflowConfiguration configuration) =>
         ApplyCoreDefaults(
-            configuration.ConnectionStrings,
-            configuration.Settings,
-            configuration.Services,
-            debugInfo: value => configuration.DebugInfo = value,
-            logSql: value => configuration.LogSQL = value,
-            configuration.DebugInfo,
-            configuration.LogSQL);
+connectionStrings: configuration.ConnectionStrings, settings: configuration.Settings, servicesMap: configuration.Services, debugInfo: value => configuration.DebugInfo = value, logSql: value => configuration.LogSQL = value, currentDebugInfo: configuration.DebugInfo, currentLogSql: configuration.LogSQL);
 
     private void ApplyCoreDefaults(
         IDictionary<string, string> connectionStrings,

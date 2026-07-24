@@ -67,21 +67,25 @@ a: resource.Name, b: name, comparisonType: StringComparison.OrdinalIgnoreCase
     )
     {
         Resource result = null;
+
         List<string> cultureParts = (culture ?? string.Empty)
             .ToLowerInvariant()
             .Split(separator: '-', options: StringSplitOptions.RemoveEmptyEntries)
             .ToList();
+
         int take = cultureParts.Count;
         string resultCulture = string.Empty;
 
         while (result == null && resultCulture != null)
         {
             resultCulture = string.Join(separator: "-", values: cultureParts.Take(count: take));
+
             result = potentials?.FirstOrDefault(predicate: resource =>
                 string.Equals(
 a: resource.Culture, b: resultCulture, comparisonType: StringComparison.OrdinalIgnoreCase
                 )
             );
+
             take--;
 
             if (take == 0)

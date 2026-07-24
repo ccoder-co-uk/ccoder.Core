@@ -95,8 +95,10 @@ request: request, tenantId: tenantId, appOrchestrationService: appOrchestrationS
 
         ICommonObjectCache commonObjectCache =
             serviceProvider.GetRequiredService<ICommonObjectCache>();
+
         IMetadataCache metadataCache =
             serviceProvider.GetRequiredService<IMetadataCache>();
+
         commonObjectCache.Refresh();
         metadataCache.Rebuild();
 
@@ -327,6 +329,7 @@ entity: new UserRole
     {
         cCoder.Packaging.Brokers.IWorkflowPackageManagerBroker workflowPackageManagerBroker =
             serviceProvider.GetRequiredService<cCoder.Packaging.Brokers.IWorkflowPackageManagerBroker>();
+
         cCoder.Packaging.Brokers.ISchedulingPackageManagerBroker schedulingPackageManagerBroker =
             serviceProvider.GetRequiredService<cCoder.Packaging.Brokers.ISchedulingPackageManagerBroker>();
 
@@ -447,6 +450,7 @@ core: core, appId: appId, templates: UnpackPackageItem<Template>(data: item.Data
                     LastUpdated = item.LastUpdated,
                     LastUpdatedBy = item.LastUpdatedBy,
                 });
+
                 continue;
             }
 
@@ -496,6 +500,7 @@ core: core, appId: appId, templates: UnpackPackageItem<Template>(data: item.Data
                     LastUpdated = item.LastUpdated,
                     LastUpdatedBy = item.LastUpdatedBy,
                 });
+
                 continue;
             }
 
@@ -546,6 +551,7 @@ core: core, appId: appId, templates: UnpackPackageItem<Template>(data: item.Data
                     LastUpdated = item.LastUpdated,
                     LastUpdatedBy = item.LastUpdatedBy,
                 });
+
                 continue;
             }
 
@@ -661,6 +667,7 @@ core: core, appId: appId, templates: UnpackPackageItem<Template>(data: item.Data
                     Keywords = info.Keywords,
                 })
                 .ToList();
+
             existingPage.Contents = (item.Contents ?? [])
                 .Select(selector: content => new cCoder.Data.Models.CMS.Content
                 {
@@ -770,6 +777,7 @@ entity: new User
         Package[] clonedPackages = packages.ToArray();
 
         await using DbContext core = coreContextFactory.CreateCoreContext();
+
         string[] packageNames = clonedPackages
             .Select(selector: package => package.Name)
             .Where(predicate: name => !string.IsNullOrWhiteSpace(value: name))
@@ -798,6 +806,7 @@ entity: new User
             existingPackage.SourceApi = package.SourceApi;
 
             core.Set<PackageItem>().RemoveRange(entities: existingPackage.Items ?? []);
+
             existingPackage.Items = (package.Items ?? [])
                 .Select(selector: item => new PackageItem
                 {
@@ -833,6 +842,7 @@ entity: new User
         }
 
         await using DbContext core = coreContextFactory.CreateCoreContext();
+
         Folder[] existingFolders = await core.Set<Folder>()
             .IgnoreQueryFilters()
             .Where(predicate: folder => folder.AppId == appId)
@@ -850,6 +860,7 @@ entity: new User
             }
 
             string parentPath = GetParentFolderPath(path: path);
+
             Folder folder = new()
             {
                 Id = Guid.NewGuid(),
@@ -889,6 +900,7 @@ entity: new User
         DateTimeOffset now = DateTimeOffset.UtcNow;
 
         await using DbContext core = coreContextFactory.CreateCoreContext();
+
         Folder[] existingFolders = await core.Set<Folder>()
             .IgnoreQueryFilters()
             .Where(predicate: folder => folder.AppId == appId)
@@ -998,6 +1010,7 @@ item: new FileContent
         }
 
         string parentPath = GetParentFolderPath(path: normalizedPath);
+
         Folder parent = string.IsNullOrWhiteSpace(value: parentPath)
             ? null
             : await EnsureFolderAsync(core: core, foldersByPath: foldersByPath, appId: appId, path: parentPath, cancellationToken: cancellationToken);
@@ -1065,6 +1078,7 @@ item: new FileContent
         }
 
         await using DbContext core = coreContextFactory.CreateCoreContext();
+
         Page[] pages = await core.Set<Page>()
             .IgnoreQueryFilters()
             .Where(predicate: page => page.AppId == appId)
@@ -1073,6 +1087,7 @@ item: new FileContent
         foreach (Page page in pages)
         {
             string normalizedPath = NormalizePagePath(path: page.Path);
+
             if (visibilityByPath.TryGetValue(key: normalizedPath, value: out bool showOnMenus))
             {
                 page.ShowOnMenus = showOnMenus;
@@ -1091,6 +1106,7 @@ item: new FileContent
         NormalizeCommonObjects(commonObjects: items, createdBy: createdBy);
 
         await using DbContext core = coreContextFactory.CreateCoreContext();
+
         string[] names = items
             .Select(selector: item => item.Name)
             .Where(predicate: name => !string.IsNullOrWhiteSpace(value: name))
@@ -1149,6 +1165,7 @@ item: new FileContent
     private static IEnumerable<string> ExtractFolderRolePaths(string data)
     {
         JToken token = JToken.Parse(json: data);
+
         IEnumerable<JObject> roles = token is JArray array
             ? array.OfType<JObject>()
             : token is JObject singleRole
@@ -1169,6 +1186,7 @@ item: new FileContent
     private static IEnumerable<(string Path, bool ShowOnMenus)> ExtractPageVisibility(string data)
     {
         JToken token = JToken.Parse(json: data);
+
         IEnumerable<JObject> pages = token is JArray array
             ? array.OfType<JObject>()
             : token is JObject singlePage
@@ -1277,6 +1295,7 @@ item: new FileContent
 
         JToken data = JToken.Parse(json: item.Data);
         JArray components = data is JArray array ? array : new JArray(data);
+
         JArray appScopedComponents = new(
             components
                 .OfType<JObject>()

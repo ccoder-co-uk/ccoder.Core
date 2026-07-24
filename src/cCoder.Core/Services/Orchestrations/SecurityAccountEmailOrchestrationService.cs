@@ -61,6 +61,7 @@ accountEvent: accountEvent, templateName: "ForgotPassword", subject: "Password R
             : accountEvent.Culture;
 
         SSOUser user = accountEvent.User;
+
         var coreUser = new
         {
             user.Id,
@@ -69,6 +70,7 @@ accountEvent: accountEvent, templateName: "ForgotPassword", subject: "Password R
             DefaultCultureId = culture,
             IsActive = !user.LockoutEnabled,
         };
+
         var renderModel = new
         {
             accountEvent.Token,

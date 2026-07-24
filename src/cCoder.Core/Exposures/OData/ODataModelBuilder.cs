@@ -39,6 +39,7 @@ public abstract class ODataModelBuilder
     {
         string setName = typeof(T).Name;
         EntitySetConfiguration<T> setConfig = Builder.EntitySet<T>(name: setName);
+
         _ = Builder.EntityType<T>()
             .HasKey(keyDefinitionExpression: key);
 
@@ -48,6 +49,7 @@ public abstract class ODataModelBuilder
     /// <summary>
     /// Used by shared metadata and lookup support
     /// </summary>
+
     protected virtual void AddCommonComplextypes()
     {
         _ = Builder.ComplexType<MetadataContainerSet>();

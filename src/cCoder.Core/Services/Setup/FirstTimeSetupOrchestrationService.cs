@@ -37,6 +37,7 @@ internal sealed class FirstTimeSetupOrchestrationService(
         }
 
         string bootstrapUserId = FirstTimeSetupIdentifiers.BuildUserId(email: request.Email);
+
         FirstTimeSetupBootstrapUser bootstrapUser = new(
             bootstrapUserId,
             request.Email.Trim(),
@@ -63,6 +64,7 @@ userId: bootstrapUser.UserId, password: request.Password, cancellationToken: can
 
             IFirstTimeSetupUserService bootstrapUserService =
                 bootstrapScope.ServiceProvider.GetRequiredService<IFirstTimeSetupUserService>();
+
             IFirstTimeSetupAppService appService =
                 bootstrapScope.ServiceProvider.GetRequiredService<IFirstTimeSetupAppService>();
 

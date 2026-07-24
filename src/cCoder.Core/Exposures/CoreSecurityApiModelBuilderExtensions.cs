@@ -19,7 +19,9 @@ internal static class CoreSecurityApiModelBuilderExtensions
         userType.Ignore(propertyExpression: u => u.LockoutEnabled);
         userType.Ignore(propertyExpression: u => u.LockoutEndDateUtc);
 
-        userType.Collection.Function(name: "Me").ReturnsFromEntitySet<SSOUser>(entitySetName: "SSOUser");
+        userType.Collection.Function(name: "Me")
+            .ReturnsFromEntitySet<SSOUser>(entitySetName: "SSOUser");
+
         userType.Collection.Action(name: "AcceptInvite");
 
         EntityTypeConfiguration<UserEvent> userEventType = builder.EntityType<UserEvent>();
@@ -32,6 +34,7 @@ internal static class CoreSecurityApiModelBuilderExtensions
         builder.EntitySet<TenantAnalysis>(name: "TenantAnalysis");
         builder.EntitySet<UserEvent>(name: "UserEvent");
         builder.EntitySet<SSOUserRole>(name: "SSOUserRole");
+
         builder.EntityType<SSOUserRole>()
             .HasKey(keyDefinitionExpression: ur => new { ur.UserId, ur.RoleId });
     }

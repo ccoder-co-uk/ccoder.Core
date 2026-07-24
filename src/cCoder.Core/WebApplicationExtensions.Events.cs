@@ -57,8 +57,10 @@ public static partial class WebApplicationExtensions
 
         eventHub.ListenToEvent<SecurityAccountEvent, ISecurityAccountEmailOrchestrationService>(
 name: SecurityAccountEventNames.RegistrationCreated, handler: static (service, accountEvent) => service.QueueRegistrationCreatedEmailAsync(accountEvent: accountEvent));
+
         eventHub.ListenToEvent<SecurityAccountEvent, ISecurityAccountEmailOrchestrationService>(
 name: SecurityAccountEventNames.InvitationCreated, handler: static (service, accountEvent) => service.QueueInvitationCreatedEmailAsync(accountEvent: accountEvent));
+
         eventHub.ListenToEvent<SecurityAccountEvent, ISecurityAccountEmailOrchestrationService>(
 name: SecurityAccountEventNames.PasswordResetRequested, handler: static (service, accountEvent) => service.QueuePasswordResetRequestedEmailAsync(accountEvent: accountEvent));
 
@@ -68,8 +70,10 @@ name: SecurityAccountEventNames.PasswordResetRequested, handler: static (service
     private static WebApplication UseServiceBusAppDeleteForwarder(this WebApplication app)
     {
         using IServiceScope scope = app.Services.CreateScope();
+
         IAzureServiceBusEventHub serviceBusEventHub =
             scope.ServiceProvider.GetService<IAzureServiceBusEventHub>();
+
         IEventHub eventHub = scope.ServiceProvider.GetRequiredService<IEventHub>();
 
         if (serviceBusEventHub is null)
@@ -79,6 +83,7 @@ name: SecurityAccountEventNames.PasswordResetRequested, handler: static (service
 
         eventHub.ListenToEvent<CmsApp, ServiceBusAppDeleteForwardingService>(
 name: "app_delete", handler: static (service, entity) => service.ForwardAsync(app: entity));
+
         eventHub.ListenToEvent<Folder, ServiceBusFolderDeleteForwardingService>(
 name: "folder_delete", handler: static (service, entity) => service.ForwardAsync(folder: entity));
 
@@ -157,6 +162,7 @@ name: "app_delete", handler: static (service, entity) => service.DeleteAsync(app
 name: eventName, handler: async (serviceProvider, entity) =>
             {
                 IEventHub localEventHub = serviceProvider.GetRequiredService<IEventHub>();
+
                 IServiceBusEventAuthInfo authInfo =
                     serviceProvider.GetService<IServiceBusEventAuthInfo>();
 

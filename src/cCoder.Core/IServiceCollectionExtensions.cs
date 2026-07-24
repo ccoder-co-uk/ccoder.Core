@@ -54,6 +54,7 @@ public static partial class IServiceCollectionExtensions
             c.ResolveConflictingActions(resolver: apiDescriptions => apiDescriptions.First());
             c.CustomSchemaIds(schemaIdSelector: type => type.FullName?.Replace(oldChar: '+', newChar: '.') ?? type.Name);
             AddSwaggerDocuments(options: c, routes: definitions);
+
             c.DocInclusionPredicate(
 predicate: (documentName, apiDescription) =>
                     ShouldIncludeInDocument(documentName: documentName, relativePath: apiDescription.RelativePath, routes: definitions));
@@ -82,6 +83,7 @@ predicate: (documentName, apiDescription) =>
             configuration.EventProviders =
                 (eventProviders ?? []).Where(predicate: provider => provider is not null).ToArray();
         });
+
         services.AddEventingForType<SecurityAccountEvent>();
     }
 
@@ -130,11 +132,13 @@ predicate: (documentName, apiDescription) =>
         {
             logBuilder.ClearProviders();
             logBuilder.AddFilter(levelFilter: level => level >= LogLevel.Debug);
+
             logBuilder.AddSimpleConsole(configure: options =>
             {
                 options.TimestampFormat = "yyyy-MM-ddTHH:mm:ss ";
                 options.SingleLine = true;
             });
+
             logBuilder.AddConfiguration(configuration: configuration.GetSection(key: "Logging"));
         });
 
@@ -235,6 +239,7 @@ predicate: (documentName, apiDescription) =>
     private static bool MatchesRoutePath(string path, string routePath)
     {
         string prefix = NormalizePath(relativePath: routePath);
+
         return path.Equals(value: prefix, comparisonType: StringComparison.OrdinalIgnoreCase)
             || path.StartsWith(value: $"{prefix}/", comparisonType: StringComparison.OrdinalIgnoreCase);
     }
@@ -242,6 +247,7 @@ predicate: (documentName, apiDescription) =>
     private static bool MatchesContextRoute(string path, string context)
     {
         string prefix = $"/Api/{context}";
+
         return path.Equals(value: prefix, comparisonType: StringComparison.OrdinalIgnoreCase)
             || path.StartsWith(value: $"{prefix}/", comparisonType: StringComparison.OrdinalIgnoreCase);
     }

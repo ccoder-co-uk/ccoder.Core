@@ -42,10 +42,12 @@ public static partial class WebApplicationExtensions
         {
             builder.AllowAnyHeader();
             builder.AllowAnyMethod();
+
             builder.SetIsOriginAllowed(isOriginAllowed: _ =>
                 httpContextAccessor.HttpContext?.Items.TryGetValue(
 key: IsCoreCorsOriginAllowed, value: out object isAllowed) == true
                 && isAllowed is true);
+
             builder.AllowCredentials();
         });
 

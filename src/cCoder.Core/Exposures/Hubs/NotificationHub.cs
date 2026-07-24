@@ -38,9 +38,11 @@ public class NotificationHub : Hub
     {
         log.LogDebug(message: $"User joining {thread}");
         await Groups.AddToGroupAsync(connectionId: Context.ConnectionId, groupName: thread);
+
         await Clients.Caller.SendAsync(
 method: "ConsoleReceive", arg1: "info", arg2: "Connected to instance " + thread, arg3: thread
         );
+
         await Clients.Group(groupName: thread)
             .SendAsync(method: "ConsoleReceive", arg1: "info", arg2: "User Joined", arg3: thread);
 
@@ -69,11 +71,14 @@ method: "ConsoleReceive", arg1: "info", arg2: "Connected to instance " + thread,
         log.LogDebug(message: $"User leaving {thread}");
 
         await Groups.RemoveFromGroupAsync(connectionId: Context.ConnectionId, groupName: thread);
+
         await Clients.Caller.SendAsync(
 method: "info", arg1: "Stopped listening to messages for " + thread, arg2: thread
         );
+
         await Clients.Group(groupName: thread)
             .SendAsync(method: "ConsoleReceive", arg1: "info", arg2: "User Left", arg3: thread);
+
         UserCounts[thread]--;
 
         if (UserCounts[thread] == 0)
@@ -83,7 +88,6 @@ method: "info", arg1: "Stopped listening to messages for " + thread, arg2: threa
     }
 
     public void Send(string level, string message, string thread) =>
-        // sends a normal notification message
         Clients.Group(groupName: thread)
             .SendAsync(method: level, arg1: message);
 
@@ -95,6 +99,7 @@ method: "info", arg1: "Stopped listening to messages for " + thread, arg2: threa
         }
 
         History[thread].Add(item: new HistoryItem { Message = message, Level = level });
+
         await Clients.Group(groupName: thread)
             .SendAsync(method: "ConsoleReceive", arg1: level, arg2: message, arg3: thread);
     }

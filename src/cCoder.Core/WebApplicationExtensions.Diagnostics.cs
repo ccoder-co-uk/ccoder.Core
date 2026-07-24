@@ -38,6 +38,7 @@ public static partial class WebApplicationExtensions
         }
 
         logger.LogError("{Message}\n{StackTrace}", exception.Message, exception.StackTrace);
+
         await context.Response.WriteAsync(
 text: "{ \"error\": \"" + exception.Message.Replace(oldValue: "\"", newValue: "\'") + "\" }");
 
@@ -64,6 +65,7 @@ text: "{ \"error\": \"" + exception.Message.Replace(oldValue: "\"", newValue: "\
         string ssoUserId = "Guest";
 
         string url = HttpUtility.UrlDecode(str: request.GetDisplayUrl());
+
         string logEntry =
             $"{context.Connection.RemoteIpAddress} as {ssoUserId}: {request.Method} - {url}";
 
@@ -75,10 +77,12 @@ text: "{ \"error\": \"" + exception.Message.Replace(oldValue: "\"", newValue: "\
             try
             {
                 ICoreAuthInfo authInfo = context.RequestServices.GetRequiredService<ICoreAuthInfo>();
+
                 IContentManagementAppService appService =
                     context.RequestServices.GetRequiredService<IContentManagementAppService>();
 
                 ssoUserId = authInfo.SSOUserId ?? "Guest";
+
                 logEntry =
                     $"{context.Connection.RemoteIpAddress} as {ssoUserId}: {request.Method} - {url}";
 

@@ -11,8 +11,10 @@ internal class WorkflowAppService(IWorkflowAppBroker workflowAppBroker) : IWorkf
 {
     public ValueTask AddAsync(App app) =>
         workflowAppBroker.AddAsync(app: app);
+
     public ValueTask UpdateAsync(App app) =>
         workflowAppBroker.UpdateAsync(app: app);
+
     public ValueTask DeleteAsync(int appId) =>
         workflowAppBroker.DeleteAsync(appId: appId);
 }

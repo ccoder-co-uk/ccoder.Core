@@ -4,6 +4,7 @@
 
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using cCoder.Core.Models.Packaging;
 using cCoder.Data;
 using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.DMS;
@@ -124,6 +125,7 @@ public class PackageManagerController(
         }
 
         Package entity = body.Deserialize<Package>(options: JsonOptions);
+
         if (entity is not null)
         {
             await ImportPackagesAsync(appId: appId, packages: [entity]);
@@ -247,20 +249,20 @@ appId: appId, package: new Package(sanitizedPackage.Name)
             {
                 await core.Set<Page>()
                     .AddAsync(entity: new Page
-                {
-                    AppId = appId,
-                    ParentId = parentId,
-                    Order = item.Order,
-                    ShowOnMenus = item.ShowOnMenus,
-                    Name = item.Name,
-                    LastUpdated = item.LastUpdated,
-                    LastUpdatedBy = item.LastUpdatedBy,
-                    CreatedOn = item.CreatedOn,
-                    CreatedBy = item.CreatedBy,
-                    Path = normalizedPath,
-                    ResourceKey = item.ResourceKey,
-                    Layout = item.Layout,
-                    PageInfo = (item.PageInfo ?? [])
+                    {
+                        AppId = appId,
+                        ParentId = parentId,
+                        Order = item.Order,
+                        ShowOnMenus = item.ShowOnMenus,
+                        Name = item.Name,
+                        LastUpdated = item.LastUpdated,
+                        LastUpdatedBy = item.LastUpdatedBy,
+                        CreatedOn = item.CreatedOn,
+                        CreatedBy = item.CreatedBy,
+                        Path = normalizedPath,
+                        ResourceKey = item.ResourceKey,
+                        Layout = item.Layout,
+                        PageInfo = (item.PageInfo ?? [])
                         .Select(selector: info => new PageInfo
                         {
                             CultureId = info.CultureId,
@@ -269,7 +271,7 @@ appId: appId, package: new Package(sanitizedPackage.Name)
                             Keywords = info.Keywords,
                         })
                         .ToList(),
-                    Contents = (item.Contents ?? [])
+                        Contents = (item.Contents ?? [])
                         .Select(selector: content => new cCoder.Data.Models.CMS.Content
                         {
                             CultureId = content.CultureId,
@@ -277,7 +279,7 @@ appId: appId, package: new Package(sanitizedPackage.Name)
                             Html = content.Html,
                         })
                         .ToList(),
-                });
+                    });
 
                 await core.SaveChangesAsync();
                 continue;
@@ -297,6 +299,7 @@ appId: appId, package: new Package(sanitizedPackage.Name)
 
             core.Set<PageInfo>()
                 .RemoveRange(entities: existingPage.PageInfo ?? []);
+
             core.Set<cCoder.Data.Models.CMS.Content>()
                 .RemoveRange(entities: existingPage.Contents ?? []);
 
@@ -310,6 +313,7 @@ appId: appId, package: new Package(sanitizedPackage.Name)
                     Keywords = info.Keywords,
                 })
                 .ToList();
+
             existingPage.Contents = (item.Contents ?? [])
                 .Select(selector: content => new cCoder.Data.Models.CMS.Content
                 {
@@ -381,6 +385,7 @@ appId: appId, package: new Package(sanitizedPackage.Name)
             }
 
             string key = pageId + "|" + roleId;
+
             if (existingPairs.Contains(item: key))
             {
                 continue;
@@ -400,10 +405,10 @@ appId: appId, package: new Package(sanitizedPackage.Name)
 
             await core.Set<PageRole>()
                 .AddAsync(entity: new PageRole
-            {
-                PageId = pageId,
-                RoleId = roleId,
-            });
+                {
+                    PageId = pageId,
+                    RoleId = roleId,
+                });
         }
 
         await core.SaveChangesAsync();
@@ -448,6 +453,7 @@ appId: appId, package: new Package(sanitizedPackage.Name)
             }
 
             string parentPath = GetParentFolderPath(path: path);
+
             Folder folder = new()
             {
                 Id = Guid.NewGuid(),
@@ -461,6 +467,7 @@ appId: appId, package: new Package(sanitizedPackage.Name)
             };
 
             foldersByPath[path] = folder;
+
             await core.Set<Folder>()
                 .AddAsync(entity: folder);
         }
@@ -501,6 +508,7 @@ appId: appId, package: new Package(sanitizedPackage.Name)
             }
 
             string key = folder.Id + "|" + roleId;
+
             if (!existingPairs.Add(item: key))
             {
                 continue;
@@ -508,10 +516,10 @@ appId: appId, package: new Package(sanitizedPackage.Name)
 
             await core.Set<FolderRole>()
                 .AddAsync(entity: new FolderRole
-            {
-                FolderId = folder.Id,
-                RoleId = roleId,
-            });
+                {
+                    FolderId = folder.Id,
+                    RoleId = roleId,
+                });
         }
 
         await core.SaveChangesAsync();
@@ -569,10 +577,10 @@ inner: core.Set<Page>()
 inner: core.Set<Role>()
     .IgnoreQueryFilters()
     .Where(predicate: found => found.AppId == appId), outerKeySelector: joined => joined.pageRole.RoleId, innerKeySelector: role => role.Id, resultSelector: (joined, role) => new PageRolePackageItem
-{
-    Path = joined.page.Path,
-    Role = role.Name,
-})
+    {
+        Path = joined.page.Path,
+        Role = role.Name,
+    })
             .ToArrayAsync();
 
         PageRolePackageItem[] items = rows
@@ -615,10 +623,10 @@ inner: core.Set<Folder>()
 inner: core.Set<Role>()
     .IgnoreQueryFilters()
     .Where(predicate: found => found.AppId == appId), outerKeySelector: joined => joined.folderRole.RoleId, innerKeySelector: role => role.Id, resultSelector: (joined, role) => new FolderRolePackageItem
-{
-    Path = joined.folder.Path,
-    Name = role.Name,
-})
+    {
+        Path = joined.folder.Path,
+        Name = role.Name,
+    })
             .ToArrayAsync();
 
         FolderRolePackageItem[] items = rows
@@ -650,6 +658,7 @@ inner: core.Set<Role>()
     private async Task ImportAppConfigurationAsync(int appId, PackageItem packageItem)
     {
         AppConfigurationPackageItem imported = DeserializeAppConfiguration(data: packageItem.Data);
+
         if (imported is null)
         {
             return;
@@ -737,6 +746,7 @@ inner: core.Set<Role>()
         }
 
         string trimmed = data.TrimStart();
+
         if (!trimmed.StartsWith(value: "{", comparisonType: StringComparison.Ordinal) && !trimmed.StartsWith(value: "[", comparisonType: StringComparison.Ordinal))
         {
             return data;
@@ -745,6 +755,7 @@ inner: core.Set<Role>()
         try
         {
             JsonNode node = JsonNode.Parse(json: data);
+
             if (node is null)
             {
                 return data;
@@ -830,35 +841,4 @@ inner: core.Set<Role>()
         int separatorIndex = normalizedPath.LastIndexOf(value: '/');
         return separatorIndex < 0 ? normalizedPath : normalizedPath[(separatorIndex + 1)..];
     }
-}
-
-internal sealed class AppConfigurationPackageItem
-{
-    public int Id { get; init; }
-
-    public string DefaultCultureId { get; init; }
-
-    public string TenantId { get; init; }
-
-    public string Name { get; init; }
-
-    public string Domain { get; init; }
-
-    public string DefaultTheme { get; init; }
-
-    public string ConfigJson { get; init; }
-}
-
-internal sealed class PageRolePackageItem
-{
-    public string Path { get; init; }
-
-    public string Role { get; init; }
-}
-
-internal sealed class FolderRolePackageItem
-{
-    public string Path { get; init; }
-
-    public string Name { get; init; }
 }

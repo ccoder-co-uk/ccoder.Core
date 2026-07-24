@@ -5,12 +5,13 @@
 using System.Linq.Dynamic.Core;
 using System.Text;
 using cCoder.ContentManagement.Exposures.Caching;
+using cCoder.Core.Exposures.Formatters;
 using cCoder.Data.Models.CMS;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Net.Http.Headers;
 
 
-namespace cCoder.Core.Exposures.Formatters;
+namespace cCoder.Core.Dependencies.Formatters;
 
 public class CsvFormatter : TextOutputFormatter
 {
@@ -30,6 +31,7 @@ public class CsvFormatter : TextOutputFormatter
     )
     {
         (string delimiter, string quotes, string culture) = ExtractValues(context: context);
+
         await context.HttpContext.Response.WriteAsync(
 text: FormatterODataHelper
                 .HandleOData(contextObject: context.Object)
@@ -67,6 +69,7 @@ text: FormatterODataHelper
         var commonObjectCache = context.HttpContext.RequestServices.GetRequiredService<ICommonObjectCache>();
         Resource[] cachedResources = commonObjectCache.GetAll<Resource>();
         List<Resource> resources = [];
+
         if (context.HttpContext.Request.Query.ContainsKey(key: "appId"))
         {
             resources.AddRange(
@@ -98,6 +101,7 @@ collection: new Resource[]
                 },
             }
         );
+
         resources.AddRange(collection: cachedResources);
         return resources.ToArray();
     }

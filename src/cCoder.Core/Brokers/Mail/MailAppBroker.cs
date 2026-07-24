@@ -14,8 +14,10 @@ internal class MailAppBroker(IMailAppExposure mailAppExposure) : IMailAppBroker
 {
     public ValueTask AddAsync(App app) =>
         mailAppExposure.AddAsync(newApp: app);
+
     public ValueTask UpdateAsync(App app) =>
         mailAppExposure.UpdateAsync(updatedApp: app);
+
     public ValueTask DeleteAsync(int appId) =>
         mailAppExposure.DeleteAsync(appId: appId);
 }

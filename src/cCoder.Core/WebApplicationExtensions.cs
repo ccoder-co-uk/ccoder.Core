@@ -63,8 +63,10 @@ public static partial class WebApplicationExtensions
             ?? NullLogger.Instance;
 
         app.EnsureCoreDatabasesMigrated(log: log);
+
         IHostedService[] hostedServices = app.Services.GetServices<IHostedService>()
             .ToArray();
+
         log.LogInformation(
 message: "Registered hosted services: {HostedServices}", args: string.Join(separator: ", ", values: hostedServices.Select(selector: service => service.GetType().FullName)));
 
@@ -72,10 +74,12 @@ message: "Registered hosted services: {HostedServices}", args: string.Join(separ
         app.UseRouting();
         app.UseAuthorization();
         app.UseCoreDefaultCors();
+
         app.UseStaticFiles(options: new StaticFileOptions
         {
             HttpsCompression = HttpsCompressionMode.Compress,
         });
+
         app.Use(middleware: async (context, next) =>
         {
             context.Response.OnStarting(callback: () =>
@@ -92,8 +96,10 @@ message: "Registered hosted services: {HostedServices}", args: string.Join(separ
 
                 return Task.CompletedTask;
             });
+
             await next();
         });
+
         app.MapControllers();
         app.StartLoggingWeb(log: log);
         return app;
@@ -102,8 +108,10 @@ message: "Registered hosted services: {HostedServices}", args: string.Join(separ
     private static void EnsureCoreDatabasesMigrated(this WebApplication app, ILogger log = null)
     {
         using IServiceScope scope = app.Services.CreateScope();
+
         ICoreContextFactory coreContextFactory =
             scope.ServiceProvider.GetRequiredService<ICoreContextFactory>();
+
         ISecurityDbContextFactory securityDbContextFactory =
             scope.ServiceProvider.GetRequiredService<ISecurityDbContextFactory>();
 
@@ -114,9 +122,12 @@ message: "Registered hosted services: {HostedServices}", args: string.Join(separ
         string securityConnectionString = securityContext.Database.GetConnectionString();
 
         log?.LogInformation(
-            "Applying startup database migrations. Core={CoreDatabase}; Security={SecurityDatabase}",
-            ResolveDatabaseName(coreConnectionString),
-            ResolveDatabaseName(securityConnectionString));
+            message: "Applying startup database migrations. Core={CoreDatabase}; Security={SecurityDatabase}",
+            args:
+            [
+                ResolveDatabaseName(connectionString: coreConnectionString),
+                ResolveDatabaseName(connectionString: securityConnectionString)
+            ]);
 
         using IDisposable migrationLock =
             AcquireStartupMigrationLock(coreConnectionString: coreConnectionString, securityConnectionString: securityConnectionString, log: log);
@@ -156,9 +167,12 @@ message: "Recovered abandoned startup migration lock {LockName}. Continuing with
         string securityConnectionString)
     {
         string lockKey = string.Join(
-            "|",
-            ResolveDatabaseName(coreConnectionString),
-            ResolveDatabaseName(securityConnectionString));
+            separator: "|",
+            values:
+            [
+                ResolveDatabaseName(connectionString: coreConnectionString),
+                ResolveDatabaseName(connectionString: securityConnectionString)
+            ]);
 
         byte[] hash = SHA256.HashData(source: Encoding.UTF8.GetBytes(s: lockKey));
         return $"Global\\cCoder.Core.StartupMigrate.{Convert.ToHexString(inArray: hash)}";
@@ -174,6 +188,7 @@ message: "Recovered abandoned startup migration lock {LockName}. Continuing with
         try
         {
             SqlConnectionStringBuilder builder = new(connectionString);
+
             return string.IsNullOrWhiteSpace(value: builder.InitialCatalog)
                 ? "(default)"
                 : builder.InitialCatalog;

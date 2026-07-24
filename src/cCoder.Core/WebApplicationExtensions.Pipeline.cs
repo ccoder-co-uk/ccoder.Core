@@ -24,7 +24,7 @@ public static partial class WebApplicationExtensions
         app.StartMailWeb(log: log);
         app.StartDocumentManagementWeb(log: log);
         app.UsePackagingExposure(log: log);
-        app.StartWorkflowWeb(log);
+        app.StartWorkflowWeb(log: log);
         app.StartAppSecurityWeb(log: log);
         app.StartLoggingWeb(log: log);
         app.UseCoreDefaultCors();

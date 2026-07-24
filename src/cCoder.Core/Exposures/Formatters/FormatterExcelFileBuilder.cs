@@ -51,6 +51,7 @@ oldValue: "'", newValue: "\""
     private static void AddRels(ZipArchive excelFile)
     {
         _ = excelFile.CreateEntry(entryName: "_rels/", compressionLevel: CompressionLevel.Optimal);
+
         excelFile.AddTextFile(
 path: "_rels/.rels", text: @"<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
 <Relationships xmlns='http://schemas.openxmlformats.org/package/2006/relationships'><Relationship Id='rId3' Type='http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties' Target='docProps/app.xml'/><Relationship Id='rId2' Type='http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties' Target='docProps/core.xml'/><Relationship Id='rId1' Type='http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument' Target='xl/workbook.xml'/></Relationships>".Replace(
@@ -62,12 +63,14 @@ oldValue: "'", newValue: "\""
     private static void AddDocProps(ZipArchive excelFile)
     {
         _ = excelFile.CreateEntry(entryName: "docProps/", compressionLevel: CompressionLevel.Optimal);
+
         excelFile.AddTextFile(
 path: "docProps/app.xml", text: @"<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
 <Properties xmlns='http://schemas.openxmlformats.org/officeDocument/2006/extended-properties' xmlns:vt='http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes'><Application>Microsoft Excel</Application><DocSecurity>0</DocSecurity><ScaleCrop>false</ScaleCrop><HeadingPairs><vt:vector size='2' baseType='variant'><vt:variant><vt:lpstr>Worksheets</vt:lpstr></vt:variant><vt:variant><vt:i4>1</vt:i4></vt:variant></vt:vector></HeadingPairs><TitlesOfParts><vt:vector size='1' baseType='lpstr'><vt:lpstr>Sheet1</vt:lpstr></vt:vector></TitlesOfParts><Company></Company><LinksUpToDate>false</LinksUpToDate><SharedDoc>false</SharedDoc><HyperlinksChanged>false</HyperlinksChanged><AppVersion>16.0300</AppVersion></Properties>".Replace(
 oldValue: "'", newValue: "\""
             )
         );
+
         excelFile.AddTextFile(
 path: "docProps/core.xml", text: $@"<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
 <cp:coreProperties xmlns:cp='http://schemas.openxmlformats.org/package/2006/metadata/core-properties' xmlns:dc='http://purl.org/dc/elements/1.1/' xmlns:dcterms='http://purl.org/dc/terms/' xmlns:dcmitype='http://purl.org/dc/dcmitype/' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'><dc:creator>Paul Ward</dc:creator><cp:lastModifiedBy>Paul Ward</cp:lastModifiedBy><dcterms:created xsi:type='dcterms:W3CDTF'>2020-11-01T18:37:26Z</dcterms:created><dcterms:modified xsi:type='dcterms:W3CDTF'>2020-11-01T18:37:34Z</dcterms:modified></cp:coreProperties>".Replace(
@@ -158,6 +161,7 @@ oldValue: "DATA", newValue: $"{BuildSheetHeaderRow(properties: properties)}{Buil
         string dateFormat =
             resources.ForNameAndCulture(name: "dateformat", culture: culture)?.DisplayName
             ?? "yyyy-MM-ddThh:mm:ss";
+
         return $@"<?xml version='1.0' encoding='UTF-8'?>
 <styleSheet xmlns='http://schemas.openxmlformats.org/spreadsheetml/2006/main' xmlns:mc='http://schemas.openxmlformats.org/markup-compatibility/2006' mc:Ignorable='x14ac x16r2 xr' xmlns:x14ac='http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac' xmlns:x16r2='http://schemas.microsoft.com/office/spreadsheetml/2015/02/main' xmlns:xr='http://schemas.microsoft.com/office/spreadsheetml/2014/revision'>
   	<numFmts count='1'>
@@ -218,6 +222,7 @@ oldValue: "DATA", newValue: $"{BuildSheetHeaderRow(properties: properties)}{Buil
     private string BuildSheetHeaderRow(string[] properties)
     {
         StringBuilder result = new();
+
         _ = result.Append(
 handler: $"<row r=\"1\" x14ac:dyDescent=\"0.25\" spans=\"1:{Math.Max(val1: 1, val2: properties.Length)}\">"
         );
@@ -227,12 +232,14 @@ handler: $"<row r=\"1\" x14ac:dyDescent=\"0.25\" spans=\"1:{Math.Max(val1: 1, va
             string displayName =
                 resources.ForNameAndCulture(name: properties[index], culture: culture)?.ShortDisplayName
                 ?? properties[index];
+
             _ = result.Append(
 handler: $"<c r=\"{index.ToExcelColumn()}1\" t=\"inlineStr\"><is><t>{displayName}</t></is></c>"
             );
         }
 
         _ = result.Append(value: "</row>");
+
         return result.ToString()
             .Replace(oldValue: "'", newValue: "\"");
     }
@@ -242,11 +249,14 @@ handler: $"<c r=\"{index.ToExcelColumn()}1\" t=\"inlineStr\"><is><t>{displayName
         string dateFormat =
             resources.ForNameAndCulture(name: "dateformat", culture: culture)?.DisplayName
             ?? "yyyy-MM-ddThh:mm:ss";
+
         string moneyFormat =
             resources.FirstOrDefault(predicate: resource => resource.Name == "moneyformat")?.DisplayName
             ?? "n";
+
         StringBuilder result = new();
         int rowNumber = 2;
+
         PropertyInfo[] objectProperties =
             data.Any() && data.First() is not IDictionary<string, object>
                 ? data.First()
@@ -263,6 +273,7 @@ handler: $"<row r=\"{rowNumber}\" x14ac:dyDescent=\"0.25\" spans=\"1:{properties
             for (int columnIndex = 0; columnIndex < properties.Length; columnIndex++)
             {
                 IDictionary<string, object> dictionary = item as IDictionary<string, object>;
+
                 object propertyValue =
                     dictionary != null
                         ? dictionary[properties[columnIndex]]

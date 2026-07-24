@@ -5,12 +5,13 @@
 using System.Linq.Dynamic.Core;
 using System.Text;
 using cCoder.ContentManagement.Exposures.Caching;
+using cCoder.Core.Exposures.Formatters;
 using cCoder.Data.Models.CMS;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Net.Http.Headers;
 
 
-namespace cCoder.Core.Exposures.Formatters;
+namespace cCoder.Core.Dependencies.Formatters;
 
 public class ExcelFormatter : TextOutputFormatter
 {
@@ -34,10 +35,12 @@ input: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
     {
         string culture = GetCulture(context: context, selectedEncoding: selectedEncoding);
+
         await FormatterODataHelper
             .HandleOData(contextObject: context.Object)
             .ToExcel(resources: GetResources(context: context), culture: culture)
             .CopyToAsync(destination: context.HttpContext.Response.Body);
+
         await context.HttpContext.Response.Body.FlushAsync();
         context.HttpContext.Response.Body.Close();
     }
@@ -62,6 +65,7 @@ input: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     public override void WriteResponseHeaders(OutputFormatterWriteContext context)
     {
         base.WriteResponseHeaders(context: context);
+
         context.HttpContext.Response.Headers["Content-Disposition"] =
             "Content-Disposition: attachment; Data.xlsx;";
     }
@@ -73,6 +77,7 @@ input: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         var commonObjectCache = context.HttpContext.RequestServices.GetRequiredService<ICommonObjectCache>();
         Resource[] cachedResources = commonObjectCache.GetAll<Resource>();
         List<Resource> resources = [];
+
         if (context.HttpContext.Request.Query.ContainsKey(key: "appId"))
         {
             resources.AddRange(
@@ -103,6 +108,7 @@ collection: new Resource[]
                 },
             }
         );
+
         resources.AddRange(collection: cachedResources);
         return resources.ToArray();
     }
