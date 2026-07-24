@@ -9,7 +9,7 @@ using cCoder.Data.Models.CMS;
 
 namespace cCoder.Core.Services.Foundations.AllowedOrigins;
 
-internal sealed class AllowedOriginStoreService(
+internal sealed partial class AllowedOriginStoreService(
     IContentManagementAppBroker appBroker,
     IHttpRequestBroker httpRequestBroker)
     : IAllowedOriginStoreService
@@ -28,29 +28,32 @@ internal sealed class AllowedOriginStoreService(
         "urls"
     ];
 
-    public async ValueTask<string[]> GetAllowedOriginsAsync()
-    {
-        HttpRequest request = httpRequestBroker.GetCurrentRequest();
-        string domain = request?.Host.Host;
-
-        if (!string.IsNullOrWhiteSpace(value: domain))
+    public ValueTask<string[]> GetAllowedOriginsAsync() =>
+        TryCatch(operation: () =>
         {
-            App app = appBroker.GetAppByDomain(
-                domain: domain,
-                ignoreFilters: true);
+            ValidateAllowedOriginsOnGet();
 
-            string[] origins = app is null
-                ? []
-                : GetAllowedOrigins(app: app)
-                    .Where(predicate: origin => !string.IsNullOrWhiteSpace(value: origin))
-                    .Distinct(comparer: StringComparer.OrdinalIgnoreCase)
-                    .ToArray();
+            HttpRequest request = httpRequestBroker.GetCurrentRequest();
+            string domain = request?.Host.Host;
 
-            return await ValueTask.FromResult(result: origins);
-        }
+            if (!string.IsNullOrWhiteSpace(value: domain))
+            {
+                App app = appBroker.GetAppByDomain(
+                    domain: domain,
+                    ignoreFilters: true);
 
-        return await ValueTask.FromResult(result: Array.Empty<string>());
-    }
+                string[] origins = app is null
+                    ? []
+                    : GetAllowedOrigins(app: app)
+                        .Where(predicate: origin => !string.IsNullOrWhiteSpace(value: origin))
+                        .Distinct(comparer: StringComparer.OrdinalIgnoreCase)
+                        .ToArray();
+
+                return ValueTask.FromResult(result: origins);
+            }
+
+            return ValueTask.FromResult(result: Array.Empty<string>());
+        });
 
     private static IEnumerable<string> GetAllowedOrigins(App app)
     {

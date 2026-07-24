@@ -164,7 +164,7 @@ services: securityServices, decryptionKey: decryptionKey ?? string.Empty);
         services.TryAddTransient<IHttpRequestBroker, HttpRequestBroker>();
         services.TryAddTransient<IContentManagementAppService, ContentManagementAppService>();
         services.TryAddTransient<IAllowedOriginStoreService, AllowedOriginStoreService>();
-        services.TryAddTransient<IAllowedOriginProcessingService, AllowedOriginProcessingService>();
+        services.TryAddTransient<IAllowedOriginStoreProcessingService, AllowedOriginStoreProcessingService>();
         services.TryAddTransient<cCoder.Packaging.Brokers.IAppDomainProvider, Brokers.Packaging.AppDomainProvider>();
         services.TryAddTransient<cCoder.Packaging.Brokers.IAppSecurityPackageManagerBroker, Dependencies.Packaging.AppSecurityPackageManagerBroker>();
         services.TryAddTransient<cCoder.Packaging.Brokers.IContentManagementPackageManagerBroker, Dependencies.Packaging.ContentManagementPackageManagerBroker>();

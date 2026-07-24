@@ -62,7 +62,7 @@ public partial class SecurityAccountEmailOrchestrationServiceTests
     private void SetupAppLookup(App app)
     {
         contentManagementAppServiceMock
-            .Setup(expression: service => service.GetAll(ignoreFilters: true))
+            .Setup(expression: service => service.GetAllApps(ignoreFilters: true))
             .Returns(value: new[] { app }.AsQueryable());
     }
 

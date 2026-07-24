@@ -2,14 +2,12 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.Core.Services.Foundations.AllowedOrigins;
 using cCoder.Core.Services.Processings.AllowedOrigins;
 
 namespace cCoder.Core.Exposures.Cors;
 
 internal sealed class CoreAllowedOriginStore(
-    IAllowedOriginStoreService allowedOriginStoreService,
-    IAllowedOriginProcessingService allowedOriginProcessingService,
+    IAllowedOriginStoreProcessingService allowedOriginStoreProcessingService,
     ILogger<CoreAllowedOriginStore> logger)
     : ICoreAllowedOriginStore
 {
@@ -17,11 +15,8 @@ internal sealed class CoreAllowedOriginStore(
     {
         try
         {
-            string[] configuredOrigins =
-                await allowedOriginStoreService.GetAllowedOriginsAsync();
-
-            return allowedOriginProcessingService.IsAllowed(
-origin: origin, snapshot: allowedOriginProcessingService.CreateSnapshot(configuredOrigins: configuredOrigins));
+            return await allowedOriginStoreProcessingService
+                .IsCoreAllowedOriginAllowedAsync(origin: origin);
         }
         catch (Exception exception)
         {
