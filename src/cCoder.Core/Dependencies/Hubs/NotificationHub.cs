@@ -5,7 +5,7 @@
 using Microsoft.AspNetCore.SignalR;
 
 
-namespace cCoder.Core.Exposures.Hubs;
+namespace cCoder.Core.Dependencies.Hubs;
 
 public class NotificationHub : Hub
 {

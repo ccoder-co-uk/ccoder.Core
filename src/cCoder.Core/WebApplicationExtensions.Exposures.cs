@@ -4,7 +4,7 @@
 
 using System.Text.RegularExpressions;
 using cCoder.Core.Exposures;
-using cCoder.Core.Exposures.Hubs;
+using cCoder.Core.Dependencies.Hubs;
 using cCoder.DocumentManagement.Exposures.Middleware;
 using cCoder.Workflow;
 using Microsoft.Extensions.FileProviders;
