@@ -31,6 +31,9 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
             await RunInstanceMaintenanceAsync(cancellationToken: cancellationToken);
             await RunQueueInstanceBackgroundServiceDependencyAsync(cancellationToken: cancellationToken);
         }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+        }
         catch (Exception exception)
         {
             log.LogError(exception: exception,message: exception.Message);
@@ -69,6 +72,9 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
         {
             await DropOldInstancesAsync(cancellationToken: cancellationToken);
         }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+        }
         catch (Exception exception)
         {
             log.LogError(exception: exception,message: exception.Message);
@@ -101,6 +107,9 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
         {
             await ExecuteWaitingQueuedInstancesAsync(cancellationToken: cancellationToken);
             await RequeueHungExecutingInstancesAsync(cancellationToken: cancellationToken);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
         }
         catch (Exception exception)
         {
@@ -203,6 +212,10 @@ message:                 "Requeued {Count} Workflow instances that were still ex
                 await MarkFailedAsync(
 instanceId:                     dbInstance.Id,context:                     $"Workflow host returned {(int)result.StatusCode} ({result.StatusCode}).{Environment.NewLine}{error}",cancellationToken:                     cancellationToken);
             }
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            throw;
         }
         catch (Exception exception)
         {

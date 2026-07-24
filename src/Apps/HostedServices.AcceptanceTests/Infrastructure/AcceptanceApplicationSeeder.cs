@@ -7,9 +7,11 @@ using cCoder.Data;
 using cCoder.Data.Models;
 using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.Security;
+using cCoder.Security.Data.EF.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ContentMetadataCache = cCoder.ContentManagement.Exposures.Caching.IMetadataCache;
+using SsoUser = cCoder.Security.Objects.Entities.SSOUser;
 
 namespace HostedServices.AcceptanceTests.Infrastructure;
 
@@ -41,8 +43,13 @@ internal sealed class AcceptanceApplicationSeeder(IServiceProvider services)
             .GetRequiredService<ICoreContextFactory>()
             .CreateCoreContext();
 
+        using DbContext sso = scope.ServiceProvider
+            .GetRequiredService<ISecurityDbContextFactory>()
+            .CreateDbContext(ignoreAuthInfo: true);
+
         await EnsureAppAsync(core: core);
         await EnsureGuestUserAsync(core: core);
+        await EnsureGuestSsoUserAsync(sso: sso);
         await EnsureGuestAdminAsync(core: core);
         await SeedCapturedAppDataAsync(core: core);
         await SeedCommonObjectsAsync(core: core);
@@ -126,6 +133,29 @@ entity: new User
 });
 
             await core.SaveChangesAsync();
+        }
+    }
+
+    private static async Task EnsureGuestSsoUserAsync(DbContext sso)
+    {
+        bool hasGuestUser = await sso.Set<SsoUser>()
+            .IgnoreQueryFilters()
+            .AnyAsync(predicate: existing => existing.Id == "Guest");
+
+        if (!hasGuestUser)
+        {
+            sso.Add(entity: new SsoUser
+            {
+                Id = "Guest",
+                DisplayName = "Guest",
+                Email = string.Empty,
+                EmailConfirmed = true,
+                LockoutEnabled = false,
+                AccessFailedCount = 0,
+                PhoneNumberConfirmed = false,
+            });
+
+            await sso.SaveChangesAsync();
         }
     }
 

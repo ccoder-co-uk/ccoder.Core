@@ -124,6 +124,7 @@ value: value.GetRawText(), settings: cCoder.Data.Extensions.ObjectExtensions.Get
         Type itemType)
     {
         string trimmed = data.TrimStart();
+
         Type deserializationType = trimmed.StartsWith(
             value: "[",
             comparisonType: StringComparison.Ordinal)
