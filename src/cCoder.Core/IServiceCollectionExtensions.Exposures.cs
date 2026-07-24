@@ -3,6 +3,7 @@
 // ---------------------------------------------------------------
 
 using cCoder.Core.Exposures.Cors;
+using cCoder.Core.Dependencies.Middleware;
 using cCoder.Core.Dependencies.Formatters;
 using cCoder.Core.Dependencies.Sessions;
 using cCoder.Core.Exposures;
@@ -43,6 +44,8 @@ public static partial class IServiceCollectionExtensions
 
         services.AddHttpClient();
         services.AddHttpContextAccessor();
+        services.AddTransient<CoreFormatterMiddleware>();
+        services.AddTransient<CoreExceptionMiddleware>();
         services.AddScoped(serviceType: typeof(HttpContext), implementationFactory: ctx => CreateHttpContext(httpContext: ctx.GetService<IHttpContextAccessor>()?.HttpContext));
         services.AddScoped(serviceType: typeof(HttpRequest), implementationFactory: ctx => ctx.GetRequiredService<HttpContext>().Request);
 
