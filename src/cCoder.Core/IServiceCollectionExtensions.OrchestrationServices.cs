@@ -4,6 +4,7 @@
 
 using cCoder.Core.Services.Orchestrations;
 using cCoder.Core.Services.Aggregations;
+using cCoder.Core.Exposures.Managers;
 using cCoder.Core.Services.Aggregations;
 
 namespace cCoder.Core;
@@ -15,7 +16,8 @@ public static partial class IServiceCollectionExtensions
         services.AddTransient<IAppAggregationService, AppAggregationService>();
         services.AddTransient<IAppOrchestrationService, AppAggregationService>();
         services.AddTransient<ITemplatedEmailOrchestrationService, TemplatedEmailOrchestrationService>();
-        services.AddTransient<IUserRegistrationOrchestrationService, UserRegistrationOrchestrationService>();
+        services.AddTransient<IUserRegistrationOrchestrationService, UserRegistrationManager>();
+        services.AddTransient<IUserRegistrationAggregationService, UserRegistrationAggregationService>();
         services.AddTransient<
             ISecurityAccountEmailAggregationService,
             SecurityAccountEmailAggregationService>();
