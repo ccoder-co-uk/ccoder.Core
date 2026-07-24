@@ -3,9 +3,51 @@
 // ---------------------------------------------------------------
 
 using cCoder.Core.Models;
+using cCoder.Core.Brokers.AppSecurity;
+using cCoder.Core.Brokers.ContentManagement;
+using cCoder.Core.Brokers.DocumentManagement;
+using cCoder.Core.Brokers.Eventing;
+using cCoder.Core.Brokers.Http;
+using cCoder.Core.Brokers.Mail;
+using cCoder.Core.Brokers.Planning;
+using cCoder.Core.Brokers.Workflow;
+using cCoder.Core.Dependencies.Eventing;
+using cCoder.Core.Dependencies.Packaging;
+using cCoder.Core.Exposures.Managers;
+using cCoder.Core.Exposures.Controllers;
+using cCoder.Core.Exposures.Cors;
+using cCoder.Core.Dependencies.Formatters;
+using cCoder.Core.Dependencies.Middleware;
+using cCoder.Core.Dependencies.Sessions;
+using cCoder.Core.Exposures;
+using cCoder.Core.Services.Aggregations;
+using cCoder.Core.Services.Aggregations.Packages;
+using cCoder.Core.Services.Foundations.AllowedOrigins;
+using cCoder.Core.Services.Foundations.AppSecurity;
+using cCoder.Core.Services.Foundations.ContentManagement;
+using cCoder.Core.Services.Foundations.DocumentManagement;
+using cCoder.Core.Services.Foundations.Mail;
+using cCoder.Core.Services.Foundations.Planning;
+using cCoder.Core.Services.Foundations.Workflow;
+using cCoder.Core.Services.Orchestrations;
+using cCoder.Core.Services.Processings.AllowedOrigins;
+using cCoder.Core.Services.Setup;
+using cCoder.Data;
 using cCoder.Eventing;
 using cCoder.Eventing.Models;
+using cCoder.Packaging;
 using cCoder.Security.Objects.Events;
+using cCoder.Security;
+using cCoder.Security.Data.EF;
+using cCoder.Security.Exposures;
+using cCoder.Security.Services.Orchestrations.Interfaces;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.AspNetCore.OData;
+using Microsoft.AspNetCore.OData.Batch;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
 
 namespace cCoder.Core;
@@ -111,6 +153,440 @@ predicate: (documentName, apiDescription) =>
         CoreBuilderOptions config = new(services);
         setupAction(obj: config);
         config.Apply();
+    }
+
+    private static void AddCoreBrokers(IServiceCollection services)
+    {
+        services.AddTransient<ServiceBusEventingDependency>();
+        services.AddTransient<IContentManagementAppBroker, ContentManagementAppBroker>();
+        services.AddTransient<IHttpRequestBroker, HttpRequestBroker>();
+        services.AddTransient<IAppSecurityAppBroker, AppSecurityAppBroker>();
+        services.AddTransient<IPlanningAppBroker, PlanningAppBroker>();
+        services.AddTransient<IDocumentManagementAppBroker, DocumentManagementAppBroker>();
+
+        services.AddTransient<
+            IServiceBusAppDeleteForwardingBroker,
+            ServiceBusAppDeleteForwardingBroker>();
+
+        services.AddTransient<
+            IServiceBusFolderDeleteForwardingBroker,
+            ServiceBusFolderDeleteForwardingBroker>();
+
+        services.AddTransient<IWorkflowAppBroker, WorkflowAppBroker>();
+        services.AddTransient<IMailAppBroker, MailAppBroker>();
+        services.AddTransient<IMailManagerBroker, MailManagerBroker>();
+        services.TryAddTransient<cCoder.Packaging.Brokers.IAppDomainProvider, AppDomainProvider>();
+        services.TryAddTransient<cCoder.Packaging.Brokers.IAppSecurityPackageManagerBroker, AppSecurityPackageManagerBroker>();
+        services.TryAddTransient<
+            cCoder.Packaging.Brokers.IContentManagementPackageManagerBroker,
+            ContentManagementPackageManagerBroker>();
+
+        services.TryAddTransient<
+            cCoder.Packaging.Brokers.IDocumentManagementPackageManagerBroker,
+            DocumentManagementPackageManagerBroker>();
+
+        services.TryAddTransient<cCoder.Packaging.Brokers.ISchedulingPackageManagerBroker, SchedulingPackageManagerBroker>();
+        services.TryAddTransient<cCoder.Packaging.Brokers.IWorkflowPackageManagerBroker, WorkflowPackageManagerBroker>();
+        services.AddPackaging();
+    }
+
+    private static void AddCoreFoundationServices(IServiceCollection services)
+    {
+        services.AddTransient<IContentManagementAppService, ContentManagementAppService>();
+        services.AddTransient<IAllowedOriginStoreService, AllowedOriginStoreService>();
+        services.AddTransient<IAppSecurityAppService, AppSecurityAppService>();
+        services.AddTransient<IPlanningAppService, PlanningAppService>();
+        services.AddTransient<IDocumentManagementAppService, DocumentManagementAppService>();
+        services.AddTransient<IWorkflowAppService, WorkflowAppService>();
+        services.AddTransient<IMailAppService, MailAppService>();
+        services.AddTransient<IMailManagerService, MailManagerService>();
+    }
+
+    private static void AddCoreProcessingServices(IServiceCollection services) =>
+        services.AddTransient<
+            IAllowedOriginStoreProcessingService,
+            AllowedOriginStoreProcessingService>();
+
+    private static void AddCoreOrchestrationServices(IServiceCollection services)
+    {
+        services.AddTransient<IAppAggregationService, AppAggregationService>();
+        services.AddTransient<IAppOrchestrationService, AppAggregationService>();
+        services.AddTransient<ITemplatedEmailOrchestrationService, TemplatedEmailOrchestrationService>();
+        services.AddTransient<IUserRegistrationOrchestrationService, UserRegistrationManager>();
+        services.AddTransient<IUserRegistrationAggregationService, UserRegistrationAggregationService>();
+
+        services.AddTransient<
+            IPackageManagerAggregationService,
+            PackageManagerAggregationService>();
+
+        services.AddTransient<
+            ISecurityAccountEmailAggregationService,
+            SecurityAccountEmailAggregationService>();
+    }
+
+    private static void AddCoreFirstTimeSetup(IServiceCollection services)
+    {
+        EnsureFirstTimeSetupSecurityServices(services: services);
+        EnsureFirstTimeSetupSecurityManagers(services: services);
+        services.AddScoped<IFirstTimeSetupStateService, FirstTimeSetupStateService>();
+        services.AddScoped<FirstTimeSetupAssetService>();
+        services.AddScoped<IFirstTimeSetupUserService, FirstTimeSetupUserService>();
+        services.AddScoped<IFirstTimeSetupTenantService, FirstTimeSetupTenantService>();
+        services.AddScoped<IFirstTimeSetupAppService, FirstTimeSetupAppService>();
+        services.AddScoped<IFirstTimeSetupOrchestrationService, FirstTimeSetupOrchestrationService>();
+
+        IMvcBuilder mvcBuilder = services.AddMvc();
+
+        mvcBuilder.AddApplicationPart(
+            assembly: typeof(SetupController).Assembly);
+    }
+
+    private static void EnsureFirstTimeSetupSecurityServices(IServiceCollection services)
+    {
+        if (HasServiceRegistration(
+                services: services,
+                assemblyQualifiedTypeName:
+                    "cCoder.Security.Services.Orchestrations.Interfaces.IAuthenticationOrchestrationService, cCoder.Security")
+            && HasServiceRegistration(
+                services: services,
+                assemblyQualifiedTypeName:
+                    "cCoder.Security.Services.Foundations.Events.ITenantSetupEventService, cCoder.Security"))
+        {
+            return;
+        }
+
+        CoreConfiguration coreConfiguration = services
+            .Where(predicate: descriptor => descriptor.ServiceType == typeof(CoreConfiguration))
+            .Select(selector: descriptor => descriptor.ImplementationInstance)
+            .OfType<CoreConfiguration>()
+            .LastOrDefault();
+
+        Config runtimeConfiguration = services
+            .Where(predicate: descriptor => descriptor.ServiceType == typeof(Config))
+            .Select(selector: descriptor => descriptor.ImplementationInstance)
+            .OfType<Config>()
+            .LastOrDefault();
+
+        string securityConnectionString =
+            coreConfiguration?.SecurityConnectionString ?? string.Empty;
+
+        string decryptionKey =
+            coreConfiguration?.DecryptionKey ?? string.Empty;
+
+        if (string.IsNullOrWhiteSpace(value: securityConnectionString)
+            && runtimeConfiguration?.ConnectionStrings?.TryGetValue(
+                key: "SSO",
+                value: out string configuredSecurityConnection) == true)
+        {
+            securityConnectionString = configuredSecurityConnection;
+        }
+
+        if (string.IsNullOrWhiteSpace(value: decryptionKey)
+            && runtimeConfiguration?.Settings?.TryGetValue(
+                key: "DecryptionKey",
+                value: out string configuredDecryptionKey) == true)
+        {
+            decryptionKey = configuredDecryptionKey;
+        }
+
+        cCoder.Security.IServiceCollectionExtensions.AddSecurity(
+            services: services,
+            configAction: (securityServices, securityConfig) =>
+            {
+                securityConfig.RootPath = null;
+
+                securityConfig.AddMSSQLModelProvider(
+                    services: securityServices,
+                    connectionString: securityConnectionString ?? string.Empty);
+
+                securityConfig.UseAESHMMACPasswordEncryption(
+                    services: securityServices,
+                    decryptionKey: decryptionKey ?? string.Empty);
+            });
+    }
+
+    private static void EnsureFirstTimeSetupSecurityManagers(
+        IServiceCollection services)
+    {
+        if (!services.Any(predicate: descriptor =>
+                descriptor.ServiceType == typeof(ITokenManager)))
+        {
+            Type tokenManagerType = Type.GetType(
+                typeName:
+                    "cCoder.Security.Exposures.TokenManager, cCoder.Security");
+
+            if (tokenManagerType is not null)
+            {
+                services.AddTransient(
+                    serviceType: typeof(ITokenManager),
+                    implementationType: tokenManagerType);
+            }
+        }
+
+        if (!services.Any(predicate: descriptor =>
+                descriptor.ServiceType == typeof(ITenantManager)))
+        {
+            Type tenantManagerType = Type.GetType(
+                typeName:
+                    "cCoder.Security.Exposures.TenantManager, cCoder.Security");
+
+            if (tenantManagerType is not null)
+            {
+                services.AddTransient(
+                    serviceType: typeof(ITenantManager),
+                    implementationType: tenantManagerType);
+            }
+        }
+    }
+
+    private static bool HasServiceRegistration(
+        IServiceCollection services,
+        string assemblyQualifiedTypeName)
+    {
+        Type serviceType = Type.GetType(
+            typeName: assemblyQualifiedTypeName);
+
+        string fullName =
+            assemblyQualifiedTypeName.Split(separator: ',')[0];
+
+        return services.Any(predicate: descriptor =>
+            descriptor.ServiceType == serviceType
+            || string.Equals(
+                a: descriptor.ServiceType.FullName,
+                b: fullName,
+                comparisonType: StringComparison.Ordinal));
+    }
+
+    private static IServiceCollection AddCoreExposures(
+        IServiceCollection services,
+        IEnumerable<CoreApiRouteDefinition> routeDefinitions = null)
+    {
+        AddCoreAspNetExposures(services: services);
+        AddCoreBrokers(services: services);
+        AddCoreFoundationServices(services: services);
+        AddCoreProcessingServices(services: services);
+        AddCoreOrchestrationServices(services: services);
+        services.AddScoped<ICoreAllowedOriginStore, CoreAllowedOriginStore>();
+
+        AddCoreODataExposures(
+            services: services,
+            routeDefinitions: routeDefinitions);
+
+        AddCoreODataRouteMode(services: services);
+
+        return services;
+    }
+
+    private static void AddCoreAspNetExposures(IServiceCollection services)
+    {
+        CoreConfiguration coreConfiguration =
+            GetRegisteredCoreConfiguration(services: services);
+
+        services.AddRouting();
+        services.AddResponseCompression();
+        services.AddHttpClient();
+        services.AddHttpContextAccessor();
+        services.AddTransient<CoreFormatterMiddleware>();
+        services.AddTransient<CoreExceptionMiddleware>();
+
+        services.AddScoped(
+            serviceType: typeof(HttpContext),
+            implementationFactory: context =>
+                CreateHttpContext(
+                    httpContext: context
+                        .GetService<IHttpContextAccessor>()
+                        ?.HttpContext));
+
+        services.AddScoped(
+            serviceType: typeof(HttpRequest),
+            implementationFactory: context =>
+                context.GetRequiredService<HttpContext>().Request);
+
+        services.AddScoped(
+            serviceType: typeof(ISession),
+            implementationFactory: context =>
+            {
+                HttpContext httpContext =
+                    context.GetRequiredService<HttpContext>();
+
+                return httpContext.Features
+                    .Get<ISessionFeature>()
+                    ?.Session
+                    ?? NoOpSession.Instance;
+            });
+
+        services.AddSession();
+
+        services.AddHsts(configureOptions: options =>
+        {
+            options.Preload = true;
+            options.IncludeSubDomains = true;
+            options.MaxAge = TimeSpan.FromMinutes(minutes: 60);
+        });
+
+        services.AddMvc(setupAction: options =>
+        {
+            options.EnableEndpointRouting = false;
+            options.OutputFormatters.Add(item: new XmlFormatter());
+            options.OutputFormatters.Add(item: new CsvFormatter());
+            options.OutputFormatters.Add(item: new ExcelFormatter());
+
+            if (coreConfiguration?.AggregateDomains != true)
+            {
+                options.Conventions.Add(
+                    actionModelConvention:
+                        new SplitDomainApplicationModelConvention());
+            }
+        });
+
+        services.AddRazorPages();
+
+        services.Configure<KestrelServerOptions>(
+            configureOptions: options =>
+            {
+                options.Limits.MaxRequestBodySize = int.MaxValue;
+            });
+
+        services.AddEndpointsApiExplorer();
+        services.AddSignalR();
+    }
+
+    private static void AddCoreODataExposures(
+        IServiceCollection services,
+        IEnumerable<CoreApiRouteDefinition> routeDefinitions)
+    {
+        DefaultODataBatchHandler batchHandler = new();
+
+        CoreApiRouteDefinition[] definitions = (routeDefinitions ?? [])
+            .Where(predicate: route =>
+                route is not null
+                && (string.Equals(
+                        a: route.Name,
+                        b: "Core",
+                        comparisonType: StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(
+                        a: route.RoutePath,
+                        b: "Api/Core",
+                        comparisonType: StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(
+                        a: route.Name,
+                        b: "Security",
+                        comparisonType: StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(
+                        a: route.RoutePath,
+                        b: "Api/Security",
+                        comparisonType: StringComparison.OrdinalIgnoreCase)))
+            .ToArray();
+
+        IMvcBuilder mvcBuilder = services.AddControllers();
+
+        mvcBuilder.AddOData(setupAction: options =>
+        {
+            options.RouteOptions.EnableQualifiedOperationCall = false;
+            options.EnableAttributeRouting = true;
+            options.RouteOptions.EnableKeyAsSegment = false;
+
+            options.Expand()
+                .Count()
+                .Filter()
+                .Select()
+                .OrderBy()
+                .SetMaxTop(maxTopValue: 1000);
+
+            foreach (CoreApiRouteDefinition routeDefinition in definitions)
+            {
+                _ = options.AddRouteComponents(
+                    routePrefix: routeDefinition.RoutePath,
+                    model: routeDefinition.RouteModel,
+                    batchHandler: batchHandler);
+            }
+        });
+    }
+
+    private static void AddCoreODataRouteMode(
+        IServiceCollection services)
+    {
+        CoreConfiguration coreConfiguration =
+            GetRegisteredCoreConfiguration(services: services);
+
+        services.PostConfigure<ODataOptions>(
+            configureOptions: options =>
+            {
+                if (coreConfiguration?.AggregateDomains != true)
+                {
+                    return;
+                }
+
+                string[] aggregateDomainRoutes =
+                [
+                    "Api/AppSecurity",
+                    "Api/ContentManagement",
+                    "Api/DocumentManagement",
+                    "Api/Logging",
+                    "Api/Mail",
+                    "Api/Workflow",
+                ];
+
+                foreach (string route in aggregateDomainRoutes)
+                {
+                    options.RouteComponents.Remove(key: route);
+                }
+            });
+    }
+
+    private static CoreConfiguration GetRegisteredCoreConfiguration(
+        IServiceCollection services) =>
+        services
+            .Where(predicate: descriptor =>
+                descriptor.ServiceType == typeof(CoreConfiguration))
+            .Select(selector: descriptor =>
+                descriptor.ImplementationInstance)
+            .OfType<CoreConfiguration>()
+            .LastOrDefault();
+
+    private static HttpContext CreateHttpContext(
+        HttpContext httpContext)
+    {
+        if (httpContext is not null)
+        {
+            return httpContext;
+        }
+
+        DefaultHttpContext fallbackContext = new();
+
+        fallbackContext.Features.Set<ISessionFeature>(
+            instance: new NoOpSessionFeature());
+
+        return fallbackContext;
+    }
+
+    private sealed class SplitDomainApplicationModelConvention
+        : IActionModelConvention
+    {
+        public void Apply(ActionModel action)
+        {
+            if (!string.Equals(
+                    a: action.Controller.ControllerName,
+                    b: "App",
+                    comparisonType: StringComparison.Ordinal))
+            {
+                return;
+            }
+
+            for (int index = action.Selectors.Count - 1; index >= 0; index--)
+            {
+                string template =
+                    action.Selectors[index].AttributeRouteModel?.Template;
+
+                if (template?.StartsWith(
+                        value: "Api/Core/App",
+                        comparisonType:
+                            StringComparison.OrdinalIgnoreCase) == true)
+                {
+                    action.Selectors.RemoveAt(index: index);
+                }
+            }
+        }
     }
 
     private static IConfiguration GetRequiredConfiguration(IServiceCollection services)
