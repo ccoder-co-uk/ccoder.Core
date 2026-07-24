@@ -3,6 +3,7 @@
 // ---------------------------------------------------------------
 
 using cCoder.Core.Services.Foundations.AppSecurity;
+using cCoder.Core.Services.Aggregations;
 using cCoder.Core.Services.Foundations.ContentManagement;
 using cCoder.Core.Services.Foundations.DocumentManagement;
 using cCoder.Core.Services.Foundations.Mail;
@@ -14,7 +15,7 @@ using Xunit;
 
 namespace cCoder.Core.Tests;
 
-public sealed class AppOrchestrationServiceTests
+public sealed class AppAggregationServiceTests
 {
     [Fact]
     public async Task DeleteAppAsyncDeletesContentManagementBeforeAppSecurity()
@@ -59,7 +60,7 @@ public sealed class AppOrchestrationServiceTests
             .Setup(expression: service => service.DeleteAppAsync(appId: appId))
             .Returns(value: ValueTask.CompletedTask);
 
-        AppOrchestrationService service = new(
+        AppAggregationService service = new(
             contentManagementAppServiceMock.Object,
             appSecurityAppServiceMock.Object,
             planningAppServiceMock.Object,

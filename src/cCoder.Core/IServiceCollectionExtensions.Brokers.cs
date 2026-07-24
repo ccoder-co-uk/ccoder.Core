@@ -26,12 +26,15 @@ public static partial class IServiceCollectionExtensions
         services.AddTransient<IAppSecurityAppBroker, AppSecurityAppBroker>();
         services.AddTransient<IPlanningAppBroker, PlanningAppBroker>();
         services.AddTransient<IDocumentManagementAppBroker, DocumentManagementAppBroker>();
+
         services.AddTransient<
             IServiceBusAppDeleteForwardingBroker,
             ServiceBusAppDeleteForwardingBroker>();
+
         services.AddTransient<
             IServiceBusFolderDeleteForwardingBroker,
             ServiceBusFolderDeleteForwardingBroker>();
+
         services.AddTransient<IWorkflowAppBroker, WorkflowAppBroker>();
         services.AddTransient<IMailAppBroker, MailAppBroker>();
         services.AddTransient<IMailManagerBroker, MailManagerBroker>();

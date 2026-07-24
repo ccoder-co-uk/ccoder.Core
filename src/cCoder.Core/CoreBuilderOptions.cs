@@ -394,9 +394,11 @@ services: services, ssoConnectionString: sessionCacheConnectionString);
 
         services.TryAddTransient<ServiceBusAppDeleteForwardingService>();
         services.TryAddTransient<ServiceBusFolderDeleteForwardingService>();
+
         services.TryAddTransient<
             IServiceBusAppDeleteForwardingBroker,
             ServiceBusAppDeleteForwardingBroker>();
+
         services.TryAddTransient<
             IServiceBusFolderDeleteForwardingBroker,
             ServiceBusFolderDeleteForwardingBroker>();

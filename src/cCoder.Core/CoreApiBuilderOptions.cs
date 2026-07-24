@@ -498,9 +498,11 @@ services: services, ssoConnectionString: sessionCacheConnectionString);
 
         services.AddTransient<ServiceBusAppDeleteForwardingService>();
         services.AddTransient<ServiceBusFolderDeleteForwardingService>();
+
         services.AddTransient<
             IServiceBusAppDeleteForwardingBroker,
             ServiceBusAppDeleteForwardingBroker>();
+
         services.AddTransient<
             IServiceBusFolderDeleteForwardingBroker,
             ServiceBusFolderDeleteForwardingBroker>();
