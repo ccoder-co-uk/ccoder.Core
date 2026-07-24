@@ -1,0 +1,345 @@
+{
+  "Classes": [
+    {
+      "Name": "Web.Controllers.Api.ApiRootController",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "ExecuteScript",
+          "Inputs": [],
+          "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E"
+        },
+        {
+          "Name": "Get",
+          "Inputs": [],
+          "ReturnType": "IActionResult"
+        },
+        {
+          "Name": "GetMetadata",
+          "Inputs": [
+            {
+              "Name": "culture",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "IActionResult"
+        },
+        {
+          "Name": "Post",
+          "Inputs": [],
+          "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E"
+        },
+        {
+          "Name": "Put",
+          "Inputs": [],
+          "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E"
+        },
+        {
+          "Name": "RebuildCache",
+          "Inputs": [],
+          "ReturnType": "IActionResult"
+        },
+        {
+          "Name": "Time",
+          "Inputs": [],
+          "ReturnType": "IActionResult"
+        }
+      ]
+    },
+    {
+      "Name": "Web.Controllers.HealthController",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "Get",
+          "Inputs": [],
+          "ReturnType": "IActionResult"
+        }
+      ]
+    },
+    {
+      "Name": "Web.Controllers.HomeController",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "Index",
+          "Inputs": [
+            {
+              "Name": "path",
+              "Type": "System.String"
+            },
+            {
+              "Name": "theme",
+              "Type": "System.String"
+            },
+            {
+              "Name": "culture",
+              "Type": "System.String"
+            },
+            {
+              "Name": "edit",
+              "Type": "System.Boolean"
+            },
+            {
+              "Name": "cancellationToken",
+              "Type": "System.Threading.CancellationToken"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E"
+        },
+        {
+          "Name": "OnActionExecutionAsync",
+          "Inputs": [
+            {
+              "Name": "context",
+              "Type": "ActionExecutingContext"
+            },
+            {
+              "Name": "next",
+              "Type": "ActionExecutionDelegate"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task"
+        }
+      ]
+    },
+    {
+      "Name": "Web.CoreAuthInfo",
+      "StandardElementType": "Dependency",
+      "Properties": [
+        {
+          "Name": "SSOUserId",
+          "Type": "System.String"
+        }
+      ],
+      "Methods": []
+    },
+    {
+      "Name": "Web.Models.ErrorViewModel",
+      "StandardElementType": "Model",
+      "Properties": [
+        {
+          "Name": "RequestId",
+          "Type": "System.String"
+        },
+        {
+          "Name": "ShowRequestId",
+          "Type": "System.Boolean"
+        }
+      ],
+      "Methods": []
+    },
+    {
+      "Name": "Web.Program",
+      "StandardElementType": "App",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "Main",
+          "Inputs": [
+            {
+              "Name": "args",
+              "Type": "System.String[]"
+            }
+          ],
+          "ReturnType": "System.Void"
+        }
+      ]
+    }
+  ],
+  "Links": [],
+  "AnalysisItems": [
+    {
+      "Code": "STXAPI001",
+      "Description": "An API controller must have exactly one business dependency.",
+      "Severity": "Warning",
+      "Type": "Web.Controllers.Api.ApiRootController",
+      "LineNumber": 18
+    },
+    {
+      "Code": "STXE004",
+      "Description": "An exposure must not communicate directly with a broker.",
+      "Severity": "Warning",
+      "Type": "Web.Controllers.Api.ApiRootController",
+      "LineNumber": 18
+    },
+    {
+      "Code": "STX0002",
+      "Description": "Properties may only be declared on models.",
+      "Severity": "Warning",
+      "Type": "Web.Controllers.Api.ApiRootController",
+      "LineNumber": 21
+    },
+    {
+      "Code": "STX0002",
+      "Description": "Properties may only be declared on models.",
+      "Severity": "Warning",
+      "Type": "Web.Controllers.Api.ApiRootController",
+      "LineNumber": 22
+    },
+    {
+      "Code": "STX0002",
+      "Description": "Properties may only be declared on models.",
+      "Severity": "Warning",
+      "Type": "Web.Controllers.Api.ApiRootController",
+      "LineNumber": 23
+    },
+    {
+      "Code": "STX0002",
+      "Description": "Properties may only be declared on models.",
+      "Severity": "Warning",
+      "Type": "Web.Controllers.Api.ApiRootController",
+      "LineNumber": 24
+    },
+    {
+      "Code": "STX0002",
+      "Description": "Properties may only be declared on models.",
+      "Severity": "Warning",
+      "Type": "Web.Controllers.Api.ApiRootController",
+      "LineNumber": 25
+    },
+    {
+      "Code": "STXFORMAT005",
+      "Description": "Method call arguments must declare their parameter names.",
+      "Severity": "Warning",
+      "Type": "Web.Controllers.Api.ApiRootController",
+      "LineNumber": 40
+    },
+    {
+      "Code": "STXFORMAT002",
+      "Description": "Expression-bodied method implementations must start on the line after the =\u003E token.",
+      "Severity": "Warning",
+      "Type": "Web.Controllers.Api.ApiRootController",
+      "LineNumber": 65
+    },
+    {
+      "Code": "STXAPI004",
+      "Description": "API controller methods must use HTTP nouns: Get, Post, Put, or Delete.",
+      "Severity": "Warning",
+      "Type": "Web.Controllers.Api.ApiRootController",
+      "LineNumber": 67
+    },
+    {
+      "Code": "STXFORMAT002",
+      "Description": "Expression-bodied method implementations must start on the line after the =\u003E token.",
+      "Severity": "Warning",
+      "Type": "Web.Controllers.Api.ApiRootController",
+      "LineNumber": 68
+    },
+    {
+      "Code": "STXAPI004",
+      "Description": "API controller methods must use HTTP nouns: Get, Post, Put, or Delete.",
+      "Severity": "Warning",
+      "Type": "Web.Controllers.Api.ApiRootController",
+      "LineNumber": 70
+    },
+    {
+      "Code": "STXFORMAT002",
+      "Description": "Expression-bodied method implementations must start on the line after the =\u003E token.",
+      "Severity": "Warning",
+      "Type": "Web.Controllers.Api.ApiRootController",
+      "LineNumber": 88
+    },
+    {
+      "Code": "STXAPI004",
+      "Description": "API controller methods must use HTTP nouns: Get, Post, Put, or Delete.",
+      "Severity": "Warning",
+      "Type": "Web.Controllers.Api.ApiRootController",
+      "LineNumber": 90
+    },
+    {
+      "Code": "STXAPI001",
+      "Description": "An API controller must have exactly one business dependency.",
+      "Severity": "Warning",
+      "Type": "Web.Controllers.HealthController",
+      "LineNumber": 9
+    },
+    {
+      "Code": "STXFORMAT002",
+      "Description": "Expression-bodied method implementations must start on the line after the =\u003E token.",
+      "Severity": "Warning",
+      "Type": "Web.Controllers.HealthController",
+      "LineNumber": 13
+    },
+    {
+      "Code": "STXAPI001",
+      "Description": "An API controller must have exactly one business dependency.",
+      "Severity": "Warning",
+      "Type": "Web.Controllers.HomeController",
+      "LineNumber": 21
+    },
+    {
+      "Code": "STX0002",
+      "Description": "Properties may only be declared on models.",
+      "Severity": "Warning",
+      "Type": "Web.Controllers.HomeController",
+      "LineNumber": 25
+    },
+    {
+      "Code": "STX0002",
+      "Description": "Properties may only be declared on models.",
+      "Severity": "Warning",
+      "Type": "Web.Controllers.HomeController",
+      "LineNumber": 26
+    },
+    {
+      "Code": "STX0002",
+      "Description": "Properties may only be declared on models.",
+      "Severity": "Warning",
+      "Type": "Web.Controllers.HomeController",
+      "LineNumber": 27
+    },
+    {
+      "Code": "STX0002",
+      "Description": "Properties may only be declared on models.",
+      "Severity": "Warning",
+      "Type": "Web.Controllers.HomeController",
+      "LineNumber": 29
+    },
+    {
+      "Code": "STX0002",
+      "Description": "Properties may only be declared on models.",
+      "Severity": "Warning",
+      "Type": "Web.Controllers.HomeController",
+      "LineNumber": 33
+    },
+    {
+      "Code": "STX0002",
+      "Description": "Properties may only be declared on models.",
+      "Severity": "Warning",
+      "Type": "Web.Controllers.HomeController",
+      "LineNumber": 36
+    },
+    {
+      "Code": "STXE002",
+      "Description": "An exposure must not contain loops.",
+      "Severity": "Warning",
+      "Type": "Web.Controllers.HomeController",
+      "LineNumber": 64
+    },
+    {
+      "Code": "STXAPI004",
+      "Description": "API controller methods must use HTTP nouns: Get, Post, Put, or Delete.",
+      "Severity": "Warning",
+      "Type": "Web.Controllers.HomeController",
+      "LineNumber": 92
+    },
+    {
+      "Code": "STXAPI004",
+      "Description": "API controller methods must use HTTP nouns: Get, Post, Put, or Delete.",
+      "Severity": "Warning",
+      "Type": "Web.Controllers.HomeController",
+      "LineNumber": 200
+    },
+    {
+      "Code": "STXAPP005",
+      "Description": "Program.cs must compose the app through IServiceCollection using SDK namespaces and one local composition namespace only.",
+      "Severity": "Warning",
+      "Type": "Web.Program",
+      "LineNumber": 21
+    }
+  ]
+}
