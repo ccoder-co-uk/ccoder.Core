@@ -8,6 +8,7 @@ using cCoder.Core.Services.Foundations.DocumentManagement;
 using cCoder.Core.Services.Foundations.Mail;
 using cCoder.Core.Services.Foundations.Planning;
 using cCoder.Core.Services.Foundations.Workflow;
+using cCoder.Core.Models;
 using cCoder.Data.Models.CMS;
 
 using cCoder.Core.Services.Orchestrations;
@@ -20,7 +21,8 @@ internal sealed partial class AppAggregationService(
     IPlanningAppService planningAppService,
     IDocumentManagementAppService documentManagementAppService,
     IWorkflowAppService workflowAppService,
-    IMailAppService mailAppService
+    IMailAppService mailAppService,
+    CoreConfiguration configuration
 ) : IAppAggregationService, IAppOrchestrationService
 {
     public ValueTask<App> AddAppAsync(App newApp) =>
@@ -81,6 +83,15 @@ internal sealed partial class AppAggregationService(
         TryCatch(operation: async () =>
         {
             ValidateAppOnDelete(appId: appId);
+
+            if (configuration.EnableHttpEventing
+                || configuration.EnableServiceBusEventing)
+            {
+                await contentManagementAppService.DeleteAppAsync(
+                    appId: appId);
+
+                return;
+            }
 
             await planningAppService.DeleteAppAsync(appId: appId);
             await documentManagementAppService.DeleteAppAsync(appId: appId);

@@ -10,6 +10,7 @@ using cCoder.Core.Services.Foundations.Mail;
 using cCoder.Core.Services.Foundations.Planning;
 using cCoder.Core.Services.Foundations.Workflow;
 using cCoder.Core.Services.Orchestrations;
+using cCoder.Core.Models;
 using Moq;
 using Xunit;
 
@@ -29,6 +30,7 @@ public sealed class AppAggregationServiceTests
         Mock<IWorkflowAppService> workflowAppServiceMock = new(MockBehavior.Strict);
         Mock<IMailAppService> mailAppServiceMock = new(MockBehavior.Strict);
         MockSequence sequence = new();
+        CoreConfiguration configuration = new();
 
         planningAppServiceMock
             .InSequence(sequence: sequence)
@@ -66,7 +68,8 @@ public sealed class AppAggregationServiceTests
             planningAppServiceMock.Object,
             documentManagementAppServiceMock.Object,
             workflowAppServiceMock.Object,
-            mailAppServiceMock.Object);
+            mailAppServiceMock.Object,
+            configuration);
 
         // when
         await service.DeleteAppAsync(appId: appId);
