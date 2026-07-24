@@ -7,11 +7,20 @@ using System.Dynamic;
 using Microsoft.AspNetCore.OData.Query.Wrapper;
 
 
-namespace cCoder.Core.Exposures.Formatters;
+namespace cCoder.Core.Services.Processings.Formatters;
 
-public static class FormatterODataHelper
+internal sealed partial class FormatterODataProcessingService
+    : IFormatterODataProcessingService
 {
-    public static object HandleOData(object contextObject)
+    public object HandleOData(object contextObject) =>
+        TryCatch(operation: () =>
+        {
+            ValidateContextObjectOnHandle(contextObject: contextObject);
+
+            return HandleODataObject(contextObject: contextObject);
+        });
+
+    private static object HandleODataObject(object contextObject)
     {
         if (contextObject is IEnumerable enumerable and not string)
         {
@@ -72,7 +81,7 @@ public static class FormatterODataHelper
 
         foreach (string key in keys)
         {
-            dict[key] = HandleOData(contextObject: dict[key]);
+            dict[key] = HandleODataObject(contextObject: dict[key]);
         }
     }
 }

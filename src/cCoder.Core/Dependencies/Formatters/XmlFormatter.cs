@@ -3,7 +3,7 @@
 // ---------------------------------------------------------------
 
 using System.Text;
-using cCoder.Core.Exposures.Formatters;
+using cCoder.Core.Services.Processings.Formatters;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
@@ -13,8 +13,17 @@ namespace cCoder.Core.Dependencies.Formatters;
 
 public class XmlFormatter : TextOutputFormatter
 {
+    private readonly IFormatterODataProcessingService formatterODataProcessingService;
+
     public XmlFormatter()
+        : this(new FormatterODataProcessingService())
     {
+    }
+
+    internal XmlFormatter(
+        IFormatterODataProcessingService formatterODataProcessingService)
+    {
+        this.formatterODataProcessingService = formatterODataProcessingService;
         SupportedMediaTypes.Add(item: MediaTypeHeaderValue.Parse(input: "application/xml"));
         SupportedMediaTypes.Add(item: MediaTypeHeaderValue.Parse(input: "text/xml"));
 
@@ -34,7 +43,7 @@ public class XmlFormatter : TextOutputFormatter
         await context.HttpContext.Response.WriteAsync(text: buffer.ToString());
     }
 
-    private static StringBuilder GetBuffer(
+    private StringBuilder GetBuffer(
         OutputFormatterWriteContext context,
         Encoding selectedEncoding
     )
@@ -45,7 +54,7 @@ public class XmlFormatter : TextOutputFormatter
         }
 
         string json = JsonConvert.SerializeObject(
-value: new { item = FormatterODataHelper.HandleOData(contextObject: context.Object) }
+value: new { item = formatterODataProcessingService.HandleOData(contextObject: context.Object) }
         );
 
         System.Xml.Linq.XDocument xml = JsonConvert.DeserializeXNode(value: json, deserializeRootElementName: "root");

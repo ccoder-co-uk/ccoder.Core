@@ -6,6 +6,7 @@ using System.Linq.Dynamic.Core;
 using System.Text;
 using cCoder.ContentManagement.Exposures.Caching;
 using cCoder.Core.Exposures.Formatters;
+using cCoder.Core.Services.Processings.Formatters;
 using cCoder.Data.Models.CMS;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Net.Http.Headers;
@@ -15,8 +16,17 @@ namespace cCoder.Core.Dependencies.Formatters;
 
 public class CsvFormatter : TextOutputFormatter
 {
+    private readonly IFormatterODataProcessingService formatterODataProcessingService;
+
     public CsvFormatter()
+        : this(new FormatterODataProcessingService())
     {
+    }
+
+    internal CsvFormatter(
+        IFormatterODataProcessingService formatterODataProcessingService)
+    {
+        this.formatterODataProcessingService = formatterODataProcessingService;
         SupportedMediaTypes.Add(item: MediaTypeHeaderValue.Parse(input: "application/csv"));
         SupportedMediaTypes.Add(item: MediaTypeHeaderValue.Parse(input: "text/csv"));
         SupportedEncodings.Add(item: Encoding.UTF8);
@@ -33,7 +43,7 @@ public class CsvFormatter : TextOutputFormatter
         (string delimiter, string quotes, string culture) = ExtractValues(context: context);
 
         await context.HttpContext.Response.WriteAsync(
-text: FormatterODataHelper
+text: formatterODataProcessingService
                 .HandleOData(contextObject: context.Object)
                 .ToCsv(resources: GetResources(context: context, culture: culture), delimiter: delimiter, quotes: quotes, culture: culture)
         );
