@@ -31,12 +31,12 @@ internal sealed partial class AppSecurityAppService(
             await appSecurityAppBroker.UpdateAppAsync(updatedApp: flatApp);
         });
 
-    public ValueTask DeleteAsync(int appId) =>
+    public ValueTask DeleteAppAsync(int appId) =>
         TryCatch(operation: async ValueTask () =>
         {
             ValidateAppOnDelete(appId: appId);
 
-            await appSecurityAppBroker.DeleteAsync(appId: appId);
+            await appSecurityAppBroker.DeleteAppAsync(appId: appId);
         });
 
     private static App CreateFlatApp(App app) =>

@@ -30,12 +30,12 @@ internal sealed partial class WorkflowAppService(IWorkflowAppBroker workflowAppB
             await workflowAppBroker.UpdateAppAsync(updatedApp: flatApp);
         });
 
-    public ValueTask DeleteAsync(int appId) =>
+    public ValueTask DeleteAppAsync(int appId) =>
         TryCatch(operation: async ValueTask () =>
         {
             ValidateAppOnDelete(appId: appId);
 
-            await workflowAppBroker.DeleteAsync(appId: appId);
+            await workflowAppBroker.DeleteAppAsync(appId: appId);
         });
 
     private static App CreateFlatApp(App app) =>

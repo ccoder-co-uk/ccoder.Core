@@ -25,7 +25,7 @@ public class AppController(
             return BadRequest(modelState: ModelState);
         }
 
-        return Ok(value: await service.AddAsync(app: entity));
+        return Ok(value: await service.AddAppAsync(newApp: entity));
     }
 
     [HttpPut]
@@ -37,7 +37,7 @@ public class AppController(
         }
 
         entity.Id = key;
-        return Ok(value: await service.UpdateAsync(app: entity));
+        return Ok(value: await service.UpdateAppAsync(updatedApp: entity));
     }
 
     [ODataIgnored]
@@ -59,12 +59,12 @@ public class AppController(
             return Ok();
         }
 
-        await service.DeleteAsync(appId: key);
+        await service.DeleteAppAsync(appId: key);
         return Ok();
     }
 
     private ValueTask DeleteViaExternalEventingAsync(int key) =>
-        contentManagementAppService.DeleteAsync(appId: key);
+        contentManagementAppService.DeleteAppAsync(appId: key);
 
     private bool IsExternalEventingEnabled() =>
         configuration.EnableHttpEventing || configuration.EnableServiceBusEventing;

@@ -18,6 +18,6 @@ internal class AppSecurityAppBroker(IAppSecurityAppExposure appSecurityAppExposu
     public ValueTask UpdateAppAsync(App updatedApp) =>
         appSecurityAppExposure.UpdateAsync(app: updatedApp);
 
-    public ValueTask DeleteAsync(int appId) =>
+    public ValueTask DeleteAppAsync(int appId) =>
         appSecurityAppExposure.DeleteAsync(appId: appId);
 }

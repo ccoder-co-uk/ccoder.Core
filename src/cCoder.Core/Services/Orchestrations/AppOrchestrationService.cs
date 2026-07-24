@@ -21,12 +21,14 @@ internal class AppOrchestrationService(
     IMailAppService mailAppService
 ) : IAppOrchestrationService
 {
-    public async ValueTask<App> AddAsync(App app)
+    public async ValueTask<App> AddAppAsync(App newApp)
     {
         App createdApp = await contentManagementAppService.AddAppAsync(
-            newApp: app);
+            newApp: newApp);
 
-        App propagatedApp = MergeAppGraph(source: app, target: createdApp);
+        App propagatedApp = MergeAppGraph(
+            source: newApp,
+            target: createdApp);
 
         await appSecurityAppService.AddAppAsync(newApp: propagatedApp);
         await planningAppService.AddAppAsync(newApp: propagatedApp);
@@ -36,12 +38,14 @@ internal class AppOrchestrationService(
         return propagatedApp;
     }
 
-    public async ValueTask<App> UpdateAsync(App app)
+    public async ValueTask<App> UpdateAppAsync(App updatedApp)
     {
-        App updatedApp = await contentManagementAppService.UpdateAppAsync(
-            updatedApp: app);
+        App persistedApp = await contentManagementAppService.UpdateAppAsync(
+            updatedApp: updatedApp);
 
-        App propagatedApp = MergeAppGraph(source: app, target: updatedApp);
+        App propagatedApp = MergeAppGraph(
+            source: updatedApp,
+            target: persistedApp);
 
         await appSecurityAppService.UpdateAppAsync(updatedApp: propagatedApp);
         await planningAppService.UpdateAppAsync(updatedApp: propagatedApp);
@@ -51,14 +55,14 @@ internal class AppOrchestrationService(
         return propagatedApp;
     }
 
-    public async ValueTask DeleteAsync(int appId)
+    public async ValueTask DeleteAppAsync(int appId)
     {
-        await planningAppService.DeleteAsync(appId: appId);
-        await documentManagementAppService.DeleteAsync(appId: appId);
-        await workflowAppService.DeleteAsync(appId: appId);
-        await mailAppService.DeleteAsync(appId: appId);
-        await contentManagementAppService.DeleteAsync(appId: appId);
-        await appSecurityAppService.DeleteAsync(appId: appId);
+        await planningAppService.DeleteAppAsync(appId: appId);
+        await documentManagementAppService.DeleteAppAsync(appId: appId);
+        await workflowAppService.DeleteAppAsync(appId: appId);
+        await mailAppService.DeleteAppAsync(appId: appId);
+        await contentManagementAppService.DeleteAppAsync(appId: appId);
+        await appSecurityAppService.DeleteAppAsync(appId: appId);
     }
 
     private static App MergeAppGraph(App source, App target)

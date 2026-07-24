@@ -18,6 +18,6 @@ internal class WorkflowAppBroker(IWorkflowAppExposure workflowAppExposure) : IWo
     public ValueTask UpdateAppAsync(App updatedApp) =>
         workflowAppExposure.UpdateAsync(updatedApp: updatedApp);
 
-    public ValueTask DeleteAsync(int appId) =>
+    public ValueTask DeleteAppAsync(int appId) =>
         workflowAppExposure.DeleteAsync(appId: appId);
 }

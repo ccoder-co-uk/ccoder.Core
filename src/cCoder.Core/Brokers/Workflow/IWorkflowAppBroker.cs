@@ -13,5 +13,5 @@ public interface IWorkflowAppBroker
 {
     ValueTask AddAppAsync(App newApp);
     ValueTask UpdateAppAsync(App updatedApp);
-    ValueTask DeleteAsync(int appId);
+    ValueTask DeleteAppAsync(int appId);
 }

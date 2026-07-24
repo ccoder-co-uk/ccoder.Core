@@ -19,6 +19,6 @@ internal class DocumentManagementAppBroker(IDocumentManagementAppExposure docume
     public ValueTask UpdateAppAsync(App updatedApp) =>
         documentManagementAppExposure.UpdateAsync(updatedApp: updatedApp);
 
-    public ValueTask DeleteAsync(int appId) =>
+    public ValueTask DeleteAppAsync(int appId) =>
         documentManagementAppExposure.DeleteAsync(appId: appId);
 }

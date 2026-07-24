@@ -30,12 +30,12 @@ internal sealed partial class MailAppService(IMailAppBroker mailAppBroker)
             await mailAppBroker.UpdateAppAsync(updatedApp: flatApp);
         });
 
-    public ValueTask DeleteAsync(int appId) =>
+    public ValueTask DeleteAppAsync(int appId) =>
         TryCatch(operation: async ValueTask () =>
         {
             ValidateAppOnDelete(appId: appId);
 
-            await mailAppBroker.DeleteAsync(appId: appId);
+            await mailAppBroker.DeleteAppAsync(appId: appId);
         });
 
     private static App CreateFlatApp(App app) =>

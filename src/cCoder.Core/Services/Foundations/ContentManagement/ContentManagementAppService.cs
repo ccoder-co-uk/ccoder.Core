@@ -36,7 +36,7 @@ internal sealed partial class ContentManagementAppService(
     public IQueryable<App> GetAllApps(bool ignoreFilters = false) =>
         TryCatch(operation: () =>
         {
-            ValidateAppsOnGet(ignoreFilters: ignoreFilters);
+            ValidateAllAppsOnGet(ignoreFilters: ignoreFilters);
 
             return contentManagementAppBroker.GetAllApps(
                 ignoreFilters: ignoreFilters);
@@ -74,12 +74,12 @@ internal sealed partial class ContentManagementAppService(
             return updatedApp;
         });
 
-    public ValueTask DeleteAsync(int appId) =>
+    public ValueTask DeleteAppAsync(int appId) =>
         TryCatch(operation: async ValueTask () =>
         {
             ValidateAppOnDelete(appId: appId);
 
-            await contentManagementAppBroker.DeleteAsync(appId: appId);
+            await contentManagementAppBroker.DeleteAppAsync(appId: appId);
         });
 
     private static App CreateFlatApp(App app) =>

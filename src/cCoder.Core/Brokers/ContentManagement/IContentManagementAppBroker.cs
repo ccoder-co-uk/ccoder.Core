@@ -13,5 +13,5 @@ public interface IContentManagementAppBroker
     IQueryable<App> GetAllApps(bool ignoreFilters = false);
     ValueTask<App> AddAppAsync(App newApp);
     ValueTask<App> UpdateAppAsync(App updatedApp);
-    ValueTask DeleteAsync(int appId);
+    ValueTask DeleteAppAsync(int appId);
 }

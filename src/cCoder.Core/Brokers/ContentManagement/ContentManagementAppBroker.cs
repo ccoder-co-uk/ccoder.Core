@@ -25,6 +25,6 @@ internal class ContentManagementAppBroker(IAppManager appManager)
     public ValueTask<App> UpdateAppAsync(App updatedApp) =>
         appManager.UpdateAsync(updatedApp: updatedApp);
 
-    public ValueTask DeleteAsync(int appId) =>
+    public ValueTask DeleteAppAsync(int appId) =>
         appManager.DeleteAsync(appId: appId);
 }
