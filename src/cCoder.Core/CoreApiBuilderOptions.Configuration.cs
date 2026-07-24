@@ -2,8 +2,8 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.Core.Exposures;
 using cCoder.Core.Models;
+using cCoder.Core.Exposures;
 using cCoder.Data.Models;
 using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;

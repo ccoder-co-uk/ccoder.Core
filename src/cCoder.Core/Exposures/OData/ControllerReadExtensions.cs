@@ -2,7 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using System.Security;
+using cCoder.Core.Dependencies.OData;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -12,18 +12,8 @@ public static class ControllerReadExtensions
 {
     public static IActionResult ResolveKeyedGet<TEntity>(
         this ControllerBase controller,
-        Func<TEntity> get
-    )
-        where TEntity : class
-    {
-        try
-        {
-            TEntity entity = get();
-            return entity is null ? controller.NotFound() : controller.Ok(value: entity);
-        }
-        catch (SecurityException)
-        {
-            return controller.NotFound();
-        }
-    }
+        Func<TEntity> get)
+        where TEntity : class =>
+        new ControllerReadDependency()
+            .Resolve(controller: controller, get: get);
 }
