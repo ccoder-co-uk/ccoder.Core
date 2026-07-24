@@ -13,11 +13,12 @@ using AppSecurityUserRoleBroker = cCoder.AppSecurity.Brokers.Storages.IUserRoleB
 
 namespace cCoder.Core.Tests;
 
-public sealed class HostedServicesAppSecurityAppAddOrchestrationServiceTests
+public sealed partial class HostedServicesAppSecurityAppAddOrchestrationServiceTests
 {
     [Fact]
     public async Task HandleAsync_ShouldAddAppAndPersistDistinctRoleUsers()
     {
+        // Given
         Mock<AppSecurityAppOrchestrationService> appOrchestrationServiceMock = new();
         Mock<AppSecurityUserRoleBroker> userRoleBrokerMock = new();
 
@@ -62,9 +63,13 @@ public sealed class HostedServicesAppSecurityAppAddOrchestrationServiceTests
             .Setup(expression: broker => broker.AddUserRoleAsync(entity: It.IsAny<UserRole>()))
             .ReturnsAsync(valueFunction: (UserRole userRole) => userRole);
 
+        // When
         await service.HandleAppAsync(app: app);
 
-        appOrchestrationServiceMock.Verify(expression: service => service.AddAppAsync(app: app),times: Times.Once);
+        // Then
+        appOrchestrationServiceMock.Verify(
+            expression: service => service.AddAppAsync(app: app),
+            times: Times.Once);
 
         userRoleBrokerMock.Verify(
 expression:             broker => broker.AddUserRoleAsync(entity: It.Is<UserRole>(match: userRole =>
@@ -83,6 +88,7 @@ expression:             broker => broker.AddUserRoleAsync(entity: It.IsAny<UserR
     [Fact]
     public async Task HandleAsync_ShouldSkipEmptyRoleUsers()
     {
+        // Given
         Mock<AppSecurityAppOrchestrationService> appOrchestrationServiceMock = new();
         Mock<AppSecurityUserRoleBroker> userRoleBrokerMock = new();
 
@@ -113,9 +119,13 @@ expression:             broker => broker.AddUserRoleAsync(entity: It.IsAny<UserR
             .Returns(value: Array.Empty<UserRole>()
             .AsQueryable());
 
+        // When
         await service.HandleAppAsync(app: app);
 
-        appOrchestrationServiceMock.Verify(expression: service => service.AddAppAsync(app: app),times: Times.Once);
+        // Then
+        appOrchestrationServiceMock.Verify(
+            expression: service => service.AddAppAsync(app: app),
+            times: Times.Once);
 
         userRoleBrokerMock.Verify(
 expression:             broker => broker.AddUserRoleAsync(entity: It.IsAny<UserRole>()),times:             Times.Never);

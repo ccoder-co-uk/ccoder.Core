@@ -41,9 +41,6 @@ public class Result<T> : Result
     }
 
     public T Item { get; set; }
-
-    public Result<TNew> ToNew<TNew>(TNew item) =>
-        new() { Success = Success, Message = Message, Item = item };
 }
 
 public class AuditResultsByUser

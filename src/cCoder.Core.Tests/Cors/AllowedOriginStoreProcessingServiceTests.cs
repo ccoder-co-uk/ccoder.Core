@@ -10,12 +10,12 @@ using Xunit;
 
 namespace cCoder.Core.Tests.Cors;
 
-public sealed class AllowedOriginStoreProcessingServiceTests
+public sealed partial class AllowedOriginStoreProcessingServiceTests
 {
     [Fact]
     public async Task IsCoreAllowedOriginAllowedAsyncPermitsLoopbackOrigins()
     {
-        // given
+        // Given
         Mock<IAllowedOriginStoreService> allowedOriginStoreServiceMock = new();
 
         allowedOriginStoreServiceMock
@@ -25,7 +25,7 @@ public sealed class AllowedOriginStoreProcessingServiceTests
         AllowedOriginStoreProcessingService service = new(
             allowedOriginStoreService: allowedOriginStoreServiceMock.Object);
 
-        // when
+        // When
         bool localhostIsAllowed =
             await service.IsCoreAllowedOriginAllowedAsync(
                 origin: "https://localhost:3000");
@@ -34,7 +34,7 @@ public sealed class AllowedOriginStoreProcessingServiceTests
             await service.IsCoreAllowedOriginAllowedAsync(
                 origin: "http://127.0.0.1:5173");
 
-        // then
+        // Then
         localhostIsAllowed.Should()
             .BeTrue();
 
@@ -45,7 +45,7 @@ public sealed class AllowedOriginStoreProcessingServiceTests
     [Fact]
     public async Task IsCoreAllowedOriginAllowedAsyncMatchesConfiguredHost()
     {
-        // given
+        // Given
         Mock<IAllowedOriginStoreService> allowedOriginStoreServiceMock = new();
 
         allowedOriginStoreServiceMock
@@ -55,7 +55,7 @@ public sealed class AllowedOriginStoreProcessingServiceTests
         AllowedOriginStoreProcessingService service = new(
             allowedOriginStoreService: allowedOriginStoreServiceMock.Object);
 
-        // when
+        // When
         bool matchingOriginIsAllowed =
             await service.IsCoreAllowedOriginAllowedAsync(
                 origin: "https://app.example.com");
@@ -64,7 +64,7 @@ public sealed class AllowedOriginStoreProcessingServiceTests
             await service.IsCoreAllowedOriginAllowedAsync(
                 origin: "https://other.example.com");
 
-        // then
+        // Then
         matchingOriginIsAllowed.Should()
             .BeTrue();
 
@@ -75,7 +75,7 @@ public sealed class AllowedOriginStoreProcessingServiceTests
     [Fact]
     public async Task IsCoreAllowedOriginAllowedAsyncMatchesConfiguredAuthority()
     {
-        // given
+        // Given
         Mock<IAllowedOriginStoreService> allowedOriginStoreServiceMock = new();
 
         allowedOriginStoreServiceMock
@@ -85,7 +85,7 @@ public sealed class AllowedOriginStoreProcessingServiceTests
         AllowedOriginStoreProcessingService service = new(
             allowedOriginStoreService: allowedOriginStoreServiceMock.Object);
 
-        // when
+        // When
         bool matchingAuthorityIsAllowed =
             await service.IsCoreAllowedOriginAllowedAsync(
                 origin: "https://app.example.com:8443");
@@ -94,7 +94,7 @@ public sealed class AllowedOriginStoreProcessingServiceTests
             await service.IsCoreAllowedOriginAllowedAsync(
                 origin: "https://app.example.com:9443");
 
-        // then
+        // Then
         matchingAuthorityIsAllowed.Should()
             .BeTrue();
 
@@ -105,7 +105,7 @@ public sealed class AllowedOriginStoreProcessingServiceTests
     [Fact]
     public async Task IsCoreAllowedOriginAllowedAsyncRespectsConfiguredScheme()
     {
-        // given
+        // Given
         Mock<IAllowedOriginStoreService> allowedOriginStoreServiceMock = new();
 
         allowedOriginStoreServiceMock
@@ -115,7 +115,7 @@ public sealed class AllowedOriginStoreProcessingServiceTests
         AllowedOriginStoreProcessingService service = new(
             allowedOriginStoreService: allowedOriginStoreServiceMock.Object);
 
-        // when
+        // When
         bool secureOriginIsAllowed =
             await service.IsCoreAllowedOriginAllowedAsync(
                 origin: "https://secure.example.com");
@@ -124,7 +124,7 @@ public sealed class AllowedOriginStoreProcessingServiceTests
             await service.IsCoreAllowedOriginAllowedAsync(
                 origin: "http://secure.example.com");
 
-        // then
+        // Then
         secureOriginIsAllowed.Should()
             .BeTrue();
 
@@ -135,7 +135,7 @@ public sealed class AllowedOriginStoreProcessingServiceTests
     [Fact]
     public async Task IsCoreAllowedOriginAllowedAsyncRejectsInvalidOrigins()
     {
-        // given
+        // Given
         Mock<IAllowedOriginStoreService> allowedOriginStoreServiceMock = new();
 
         allowedOriginStoreServiceMock
@@ -145,7 +145,7 @@ public sealed class AllowedOriginStoreProcessingServiceTests
         AllowedOriginStoreProcessingService service = new(
             allowedOriginStoreService: allowedOriginStoreServiceMock.Object);
 
-        // when
+        // When
         bool malformedOriginIsAllowed =
             await service.IsCoreAllowedOriginAllowedAsync(
                 origin: "not-an-origin");
@@ -154,7 +154,7 @@ public sealed class AllowedOriginStoreProcessingServiceTests
             await service.IsCoreAllowedOriginAllowedAsync(
                 origin: "ftp://app.example.com");
 
-        // then
+        // Then
         malformedOriginIsAllowed.Should()
             .BeFalse();
 

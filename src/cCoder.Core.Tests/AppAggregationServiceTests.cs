@@ -16,12 +16,12 @@ using Xunit;
 
 namespace cCoder.Core.Tests;
 
-public sealed class AppAggregationServiceTests
+public sealed partial class AppAggregationServiceTests
 {
     [Fact]
     public async Task DeleteAppAsyncDeletesContentManagementBeforeAppSecurity()
     {
-        // given
+        // Given
         const int appId = 42;
         Mock<IContentManagementAppService> contentManagementAppServiceMock = new(MockBehavior.Strict);
         Mock<IAppSecurityAppService> appSecurityAppServiceMock = new(MockBehavior.Strict);
@@ -71,10 +71,10 @@ public sealed class AppAggregationServiceTests
             mailAppServiceMock.Object,
             configuration);
 
-        // when
+        // When
         await service.DeleteAppAsync(appId: appId);
 
-        // then
+        // Then
         contentManagementAppServiceMock.Verify(
             expression: service => service.DeleteAppAsync(appId: appId),
             times: Times.Once);

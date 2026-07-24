@@ -8,25 +8,33 @@ using Xunit;
 
 namespace cCoder.Core.Tests.Api;
 
-public sealed class ODataReadPathPolicyTests
+public sealed partial class ODataReadPathPolicyTests
 {
     [Fact]
     public void EntityControllers_GetById_ShouldQueryThroughFilteredGetAll()
     {
+        // Given
         string[] controllerFiles = GetControllerFiles();
         List<string> violations = [];
 
+        // When
         foreach (string file in controllerFiles)
         {
             string source = File.ReadAllText(path: file);
 
-            if (!source.Contains(value: "[FromRoute]",comparisonType: StringComparison.Ordinal) ||
-                !source.Contains(value: "ODataQueryOptions",comparisonType: StringComparison.Ordinal))
+            if (!source.Contains(
+                    value: "[FromRoute]",
+                    comparisonType: StringComparison.Ordinal)
+                || !source.Contains(
+                    value: "ODataQueryOptions",
+                    comparisonType: StringComparison.Ordinal))
             {
                 continue;
             }
 
-            string routeGetBody = ExtractMethodBody(source: source,signatureStart: "public IActionResult Get([FromRoute]");
+            string routeGetBody = ExtractMethodBody(
+                source: source,
+                signatureStart: "public IActionResult Get([FromRoute]");
 
             if (string.IsNullOrWhiteSpace(value: routeGetBody))
             {
@@ -41,16 +49,20 @@ public sealed class ODataReadPathPolicyTests
             }
         }
 
-        violations.Should()
+        // Then
+        violations
+            .Should()
             .BeEmpty(because: "entity OData Get(id) actions should read through filtered GetAll() so OData applies to the query root");
     }
 
     [Fact]
     public void EntityControllers_CollectionReads_ShouldNotIgnoreFilters()
     {
+        // Given
         string[] controllerFiles = GetControllerFiles();
         List<string> violations = [];
 
+        // When
         foreach (string file in controllerFiles)
         {
             string source = File.ReadAllText(path: file);
@@ -82,7 +94,9 @@ public sealed class ODataReadPathPolicyTests
             }
         }
 
-        violations.Should()
+        // Then
+        violations
+            .Should()
             .BeEmpty(because: "HTTP GET exposure points should remain filtered and must not bypass query filters");
     }
 

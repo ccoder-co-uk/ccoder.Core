@@ -15,29 +15,33 @@ using Xunit;
 
 namespace cCoder.Core.Tests.Api;
 
-public sealed class HostedServicesWorkflowInstanceManagementOrchestrationServiceTests
+public sealed partial class HostedServicesWorkflowInstanceManagementOrchestrationServiceTests
 {
     [Fact]
     public async Task RunAsync_ShouldRequeueHungInstancesAndOnlyClaimDistinctQueuedInstanceIds()
     {
+        // Given
         Guid firstQueuedInstanceId = Guid.NewGuid();
         Guid secondQueuedInstanceId = Guid.NewGuid();
         Mock<IWorkflowInstanceManagementBroker> brokerMock = new();
 
         brokerMock
             .Setup(expression: broker => broker.FlushOldInstancesAsync(
-cutoff:                 It.IsAny<DateTimeOffset>(),cancellationToken:                 It.IsAny<CancellationToken>()))
+                cutoff: It.IsAny<DateTimeOffset>(),
+                cancellationToken: It.IsAny<CancellationToken>()))
             .ReturnsAsync(value: 0);
 
         brokerMock
             .Setup(expression: broker => broker.RequeueHungExecutingInstancesAsync(
-cutoff:                 It.IsAny<DateTimeOffset>(),cancellationToken:                 It.IsAny<CancellationToken>()))
+                cutoff: It.IsAny<DateTimeOffset>(),
+                cancellationToken: It.IsAny<CancellationToken>()))
             .ReturnsAsync(value: 1);
 
         brokerMock
             .Setup(expression: broker => broker.GetQueuedInstances())
             .Returns(
-value:             [
+                value:
+                [
                 new FlowInstanceData { Id = firstQueuedInstanceId, State = "Queued" },
                 new FlowInstanceData { Id = firstQueuedInstanceId, State = "Queued" },
                 new FlowInstanceData { Id = secondQueuedInstanceId, State = "Queued" },
@@ -45,7 +49,8 @@ value:             [
 
         brokerMock
             .Setup(expression: broker => broker.UpdateQueuedInstanceClaimAsync(
-flowInstanceDataId:                 It.IsAny<Guid>(),cancellationToken:                 It.IsAny<CancellationToken>()))
+                flowInstanceDataId: It.IsAny<Guid>(),
+                cancellationToken: It.IsAny<CancellationToken>()))
             .ReturnsAsync(value: 0);
 
         HostedServicesWorkflowInstanceManagementOrchestrationService service = new(
@@ -55,22 +60,33 @@ flowInstanceDataId:                 It.IsAny<Guid>(),cancellationToken:         
             new ConfigurationBuilder().Build(),
             NullLogger<HostedServicesWorkflowInstanceManagementOrchestrationService>.Instance);
 
+        // When
         await service.RunAsync();
 
+        // Then
         brokerMock.Verify(
-expression:             broker => broker.RequeueHungExecutingInstancesAsync(
-cutoff:                 It.Is<DateTimeOffset>(match: cutoff => cutoff < DateTimeOffset.UtcNow.AddMinutes(minutes: -29)),cancellationToken:                 It.IsAny<CancellationToken>()),times:             Times.Once);
+            expression: broker => broker.RequeueHungExecutingInstancesAsync(
+                cutoff: It.Is<DateTimeOffset>(
+                    match: cutoff =>
+                        cutoff < DateTimeOffset.UtcNow.AddMinutes(minutes: -29)),
+                cancellationToken: It.IsAny<CancellationToken>()),
+            times: Times.Once);
 
         brokerMock.Verify(
-expression:             broker => broker.GetQueuedInstances(),times:             Times.Once);
+            expression: broker => broker.GetQueuedInstances(),
+            times: Times.Once);
 
         brokerMock.Verify(
-expression:             broker => broker.UpdateQueuedInstanceClaimAsync(
-flowInstanceDataId:                 firstQueuedInstanceId,cancellationToken:                 It.IsAny<CancellationToken>()),times:             Times.Once);
+            expression: broker => broker.UpdateQueuedInstanceClaimAsync(
+                flowInstanceDataId: firstQueuedInstanceId,
+                cancellationToken: It.IsAny<CancellationToken>()),
+            times: Times.Once);
 
         brokerMock.Verify(
-expression:             broker => broker.UpdateQueuedInstanceClaimAsync(
-flowInstanceDataId:                 secondQueuedInstanceId,cancellationToken:                 It.IsAny<CancellationToken>()),times:             Times.Once);
+            expression: broker => broker.UpdateQueuedInstanceClaimAsync(
+                flowInstanceDataId: secondQueuedInstanceId,
+                cancellationToken: It.IsAny<CancellationToken>()),
+            times: Times.Once);
 
         brokerMock.Invocations
             .Count(predicate: invocation =>

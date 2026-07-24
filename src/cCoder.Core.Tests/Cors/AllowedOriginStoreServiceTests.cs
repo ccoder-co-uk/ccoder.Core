@@ -13,12 +13,12 @@ using Xunit;
 
 namespace cCoder.Core.Tests.Cors;
 
-public sealed class AllowedOriginStoreServiceTests
+public sealed partial class AllowedOriginStoreServiceTests
 {
     [Fact]
     public async Task GetAllowedOriginsAsyncReturnsCurrentAppOrigins()
     {
-        // given
+        // Given
         Mock<IContentManagementAppBroker> appBrokerMock = new();
         DefaultHttpContext httpContext = new();
         httpContext.Request.Host = new HostString("app.example.com");
@@ -47,20 +47,23 @@ public sealed class AllowedOriginStoreServiceTests
             appBroker: appBrokerMock.Object,
             httpRequestBroker: httpRequestBroker);
 
-        // when
+        // When
         string[] actualOrigins = await service.GetAllowedOriginsAsync();
 
-        // then
+        // Then
         actualOrigins.Should()
             .BeEquivalentTo(
-                "app.example.com",
-                "https://admin.example.com");
+                expectation:
+                [
+                    "app.example.com",
+                    "https://admin.example.com"
+                ]);
     }
 
     [Fact]
     public async Task GetAllowedOriginsAsyncReturnsEmptyWithoutRequest()
     {
-        // given
+        // Given
         Mock<IContentManagementAppBroker> appBrokerMock = new();
         TestHttpRequestBroker httpRequestBroker = new(request: null);
 
@@ -68,10 +71,10 @@ public sealed class AllowedOriginStoreServiceTests
             appBroker: appBrokerMock.Object,
             httpRequestBroker: httpRequestBroker);
 
-        // when
+        // When
         string[] actualOrigins = await service.GetAllowedOriginsAsync();
 
-        // then
+        // Then
         actualOrigins.Should()
             .BeEmpty();
 
@@ -85,7 +88,7 @@ public sealed class AllowedOriginStoreServiceTests
     [Fact]
     public async Task GetAllowedOriginsAsyncReturnsEmptyWithoutCurrentApp()
     {
-        // given
+        // Given
         Mock<IContentManagementAppBroker> appBrokerMock = new();
         DefaultHttpContext httpContext = new();
         httpContext.Request.Host = new HostString("missing.example.com");
@@ -104,10 +107,10 @@ public sealed class AllowedOriginStoreServiceTests
             appBroker: appBrokerMock.Object,
             httpRequestBroker: httpRequestBroker);
 
-        // when
+        // When
         string[] actualOrigins = await service.GetAllowedOriginsAsync();
 
-        // then
+        // Then
         actualOrigins.Should()
             .BeEmpty();
     }
@@ -115,6 +118,7 @@ public sealed class AllowedOriginStoreServiceTests
     private sealed class TestHttpRequestBroker(HttpRequest request)
         : IHttpRequestBroker
     {
-        public HttpRequest GetCurrentRequest() => request;
+        public HttpRequest GetCurrentRequest() =>
+            request;
     }
 }

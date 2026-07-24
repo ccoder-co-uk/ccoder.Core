@@ -13,11 +13,12 @@ using Xunit;
 
 namespace cCoder.Core.Tests;
 
-public sealed class HostedServicesRegistrationTests
+public sealed partial class HostedServicesRegistrationTests
 {
     [Fact]
     public void AddCoreHostedServices_ShouldRegisterWorkflowHostedServices()
     {
+        // Given
         IConfiguration configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(initialData: new Dictionary<string, string>
             {
@@ -31,6 +32,7 @@ public sealed class HostedServicesRegistrationTests
         IServiceCollection services = new ServiceCollection();
         services.AddSingleton(implementationInstance: configuration);
 
+        // When
         services.AddCoreHostedServices(configure: coreBuilder =>
         {
             coreBuilder.ConfigureDomainsWith(configure: coreConfig =>
@@ -42,6 +44,7 @@ public sealed class HostedServicesRegistrationTests
             });
         });
 
+        // Then
         services.Count(predicate: descriptor =>
             descriptor.ServiceType == typeof(IHostedService)
             && descriptor.ImplementationFactory is not null)
@@ -52,6 +55,7 @@ public sealed class HostedServicesRegistrationTests
     [Fact]
     public void AddCoreHostedServices_GivenServiceBusEventing_ShouldRegisterServiceBusHubWithConcurrency()
     {
+        // Given
         IConfiguration configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(initialData: new Dictionary<string, string>
             {
@@ -66,6 +70,7 @@ public sealed class HostedServicesRegistrationTests
         IServiceCollection services = new ServiceCollection();
         services.AddSingleton(implementationInstance: configuration);
 
+        // When
         services.AddCoreHostedServices(configure: coreBuilder =>
         {
             coreBuilder.ConfigureDomainsWith(configure: coreConfig =>
@@ -81,6 +86,7 @@ public sealed class HostedServicesRegistrationTests
             });
         });
 
+        // Then
         services.Should()
             .Contain(predicate: descriptor =>
             descriptor.ServiceType == typeof(IAzureServiceBusEventHub));
