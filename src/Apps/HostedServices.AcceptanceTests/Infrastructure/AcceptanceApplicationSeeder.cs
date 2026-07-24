@@ -234,7 +234,7 @@ entity: new User
         }
 
         Role[] roles = AcceptanceSeedData
-            .LoadPackageItems<Role>(packageName: "Roles", itemType: "Core/Role")
+            .LoadRoles()
             .Select(selector: role => new Role
             {
                 Id = Guid.NewGuid(),
@@ -260,7 +260,7 @@ entity: new User
         }
 
         Layout[] layouts = AcceptanceSeedData
-            .LoadPackageItems<Layout>(packageName: "Layouts", itemType: "Core/Layout")
+            .LoadLayouts()
             .Select(selector: layout => new Layout
             {
                 Id = 0,
@@ -292,7 +292,7 @@ entity: new User
         }
 
         Template[] templates = AcceptanceSeedData
-            .LoadPackageItems<Template>(packageName: "Templates", itemType: "Core/Template")
+            .LoadTemplates()
             .Select(selector: template => new Template
             {
                 Id = 0,
@@ -323,7 +323,7 @@ entity: new User
         }
 
         Resource[] resources = AcceptanceSeedData
-            .LoadPackageItems<Resource>(packageName: "Resources", itemType: "Core/Resource")
+            .LoadResources()
             .Select(selector: resource => new Resource
             {
                 Id = 0,
@@ -356,7 +356,7 @@ entity: new User
         }
 
         Component[] components = AcceptanceSeedData
-            .LoadPackageItems<Component>(packageName: "Components", itemType: "Core/Component")
+            .LoadComponents()
             .Select(selector: component => new Component
             {
                 Id = 0,
@@ -389,7 +389,7 @@ entity: new User
         }
 
         Script[] scripts = AcceptanceSeedData
-            .LoadPackageItems<Script>(packageName: "Scripts", itemType: "Core/Script")
+            .LoadScripts()
             .Select(selector: script => new Script
             {
                 Id = 0,

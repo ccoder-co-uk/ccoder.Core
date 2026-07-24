@@ -24,13 +24,14 @@ using DmsFile = cCoder.Data.Models.DMS.File;
 namespace HostedServices.AcceptanceTests.Tests.Api;
 
 [Collection(HostedServicesAcceptanceCollection.Name)]
-public sealed class EventControllerTests(HostedServicesAcceptanceFixture fixture)
+public sealed partial class EventControllerTests(HostedServicesAcceptanceFixture fixture)
 {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
 
     [Fact]
     public async Task Post_GivenFolderDeleteEvent_ShouldRemoveDescendantFoldersFilesAndContents()
     {
+        // Given
         int appId = await CreateAppAsync();
         Guid rootFolderId = Guid.NewGuid();
         Guid childFolderId = Guid.NewGuid();
@@ -41,6 +42,7 @@ public sealed class EventControllerTests(HostedServicesAcceptanceFixture fixture
         {
             await SeedFolderDeleteScenarioAsync(appId: appId, roleId: roleId, rootFolderId: rootFolderId, childFolderId: childFolderId, fileId: fileId);
 
+            // When
             HttpStatusCode statusCode = await PostEventAsync(
 eventName: "folder_delete", data: new Folder
 {
@@ -50,6 +52,7 @@ eventName: "folder_delete", data: new Folder
     Path = "content",
 });
 
+            // Then
             statusCode.Should()
                 .Be(expected: HttpStatusCode.Accepted);
 
@@ -115,6 +118,7 @@ condition: () =>
     [Fact]
     public async Task Post_GivenAppAddEvent_ShouldCreateSuppliedChildrenAcrossDomains()
     {
+        // Given
         int appId = await CreateAppAsync();
         string flowName = Unique(prefix: "Acceptance Flow");
 
@@ -128,6 +132,7 @@ condition: () =>
 
             await EnsureCultureAsync(core: seedCore, cultureId: "en-GB", name: "English (UK)");
 
+            // When
             HttpStatusCode statusCode = await PostEventAsync(
 eventName: "app_add", data: new AppEntity
 {
@@ -189,6 +194,7 @@ eventName: "app_add", data: new AppEntity
                     ]
 });
 
+            // Then
             statusCode.Should()
                 .Be(expected: HttpStatusCode.Accepted);
 
@@ -293,6 +299,7 @@ condition: () =>
     [Fact]
     public async Task Post_GivenAppUpdateEvent_ShouldUpdateChildrenAndRecomputeNestedPaths()
     {
+        // Given
         int appId = await CreateAppAsync();
         Guid roleId = Guid.NewGuid();
         Guid rootFolderId = Guid.NewGuid();
@@ -303,6 +310,7 @@ condition: () =>
         {
             await SeedAppUpdateScenarioAsync(appId: appId, roleId: roleId, rootFolderId: rootFolderId, childFolderId: childFolderId, fileId: fileId);
 
+            // When
             HttpStatusCode statusCode = await PostEventAsync(
 eventName: "app_update", data: new AppEntity
 {
@@ -338,6 +346,7 @@ eventName: "app_update", data: new AppEntity
                     ]
 });
 
+            // Then
             statusCode.Should()
                 .Be(expected: HttpStatusCode.Accepted);
 
@@ -409,6 +418,7 @@ condition: () =>
     [Fact]
     public async Task Post_GivenAppDeleteEvent_ShouldRemoveCrossDomainChildrenButKeepRootApp()
     {
+        // Given
         int appId = await CreateAppAsync();
         Guid roleId = Guid.NewGuid();
         Guid flowId = Guid.NewGuid();
@@ -419,12 +429,14 @@ condition: () =>
         {
             await SeedAppDeleteScenarioAsync(appId: appId, roleId: roleId, flowId: flowId, folderId: folderId, fileId: fileId);
 
+            // When
             HttpStatusCode statusCode = await PostEventAsync(
 eventName: "app_delete", data: new AppEntity
 {
     Id = appId
 });
 
+            // Then
             statusCode.Should()
                 .Be(expected: HttpStatusCode.Accepted);
 
@@ -520,6 +532,7 @@ condition: () =>
     [Fact]
     public async Task Post_GivenFolderDeleteEvent_ShouldCreateWorkflowInstanceAndTriggerExecutionAttempt()
     {
+        // Given
         int appId = await CreateAppAsync();
         Guid roleId = Guid.NewGuid();
         Guid rootFolderId = Guid.NewGuid();
@@ -561,6 +574,7 @@ condition: () =>
                 CreatedOn = DateTimeOffset.UtcNow,
             });
 
+            // When
             HttpStatusCode statusCode = await PostEventAsync(
 eventName: "folder_delete", data: new Folder
 {
@@ -570,6 +584,7 @@ eventName: "folder_delete", data: new Folder
     Path = "content",
 });
 
+            // Then
             using IServiceScope scope = fixture.Factory.Services.CreateScope();
 
             using var core = scope.ServiceProvider
