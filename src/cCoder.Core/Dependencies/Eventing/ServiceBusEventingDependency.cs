@@ -4,6 +4,7 @@
 
 using cCoder.Eventing.AzureServiceBus;
 using cCoder.Eventing.AzureServiceBus.Models;
+using cCoder.Core.Brokers.Eventing;
 using cCoder.Security.Objects;
 
 namespace cCoder.Core.Dependencies.Eventing;
@@ -11,9 +12,10 @@ namespace cCoder.Core.Dependencies.Eventing;
 internal sealed class ServiceBusEventingDependency(
     IAzureServiceBusEventHub serviceBusEventHub,
     ISSOAuthInfo authInfo)
-    : IAzureServiceBusEventHub
+    : IServiceBusEventingBroker,
+      IAzureServiceBusEventHub
 {
-    internal string GetCurrentSsoUserId() =>
+    public string GetCurrentSsoUserId() =>
         authInfo?.SSOUserId ?? string.Empty;
 
     public void ListenToEvent<T>(

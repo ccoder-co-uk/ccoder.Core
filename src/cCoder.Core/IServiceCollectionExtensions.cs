@@ -157,7 +157,9 @@ predicate: (documentName, apiDescription) =>
 
     private static void AddCoreBrokers(IServiceCollection services)
     {
-        services.AddTransient<ServiceBusEventingDependency>();
+        services.AddTransient<
+            IServiceBusEventingBroker,
+            ServiceBusEventingDependency>();
         services.AddTransient<IContentManagementAppBroker, ContentManagementAppBroker>();
         services.AddTransient<IHttpRequestBroker, HttpRequestBroker>();
         services.AddTransient<IAppSecurityAppBroker, AppSecurityAppBroker>();

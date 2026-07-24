@@ -9,7 +9,7 @@ using cCoder.Eventing.AzureServiceBus.Models;
 namespace cCoder.Core.Brokers.Eventing;
 
 internal sealed class ServiceBusFolderDeleteForwardingBroker(
-    ServiceBusEventingDependency serviceBusEventingDependency)
+    IServiceBusEventingBroker serviceBusEventingDependency)
     : IServiceBusFolderDeleteForwardingBroker
 {
     public string GetCurrentSsoUserId() =>

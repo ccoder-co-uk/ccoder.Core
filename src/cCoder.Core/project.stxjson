@@ -767,6 +767,11 @@
       "Properties": [],
       "Methods": [
         {
+          "Name": "GetCurrentSsoUserId",
+          "Inputs": [],
+          "ReturnType": "System.String"
+        },
+        {
           "Name": "ListenToEvent",
           "Inputs": [
             {
@@ -3981,6 +3986,10 @@
       "ToType": "cCoder.Core.Dependencies.Eventing.ServiceBusEventingDependency"
     },
     {
+      "FromType": "cCoder.Core.Dependencies.Eventing.ServiceBusEventingDependency",
+      "ToType": "cCoder.Core.Dependencies.Eventing.ServiceBusEventingDependency"
+    },
+    {
       "FromType": "cCoder.Core.Dependencies.Formatters.CsvFormatter",
       "ToType": "cCoder.Core.Services.Processings.Formatters.FormatterODataProcessingService"
     },
@@ -4160,6 +4169,13 @@
       "LineNumber": 11
     },
     {
+      "Code": "STXD001",
+      "Description": "Dependency elements may only be consumed by brokers.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Dependencies.Eventing.ServiceBusEventingDependency",
+      "LineNumber": 12
+    },
+    {
       "Code": "STX0002",
       "Description": "Properties may only be declared on models.",
       "Severity": "Warning",
@@ -4193,13 +4209,6 @@
       "Severity": "Warning",
       "Type": "cCoder.Core.HttpEventHubUrlResolver",
       "LineNumber": 9
-    },
-    {
-      "Code": "STXAPP001",
-      "Description": "Program.cs, IServiceCollectionExtensions.cs, IHostExtensions.cs, and WebApplicationExtensions.cs must live at the project root.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.IServiceCollectionExtensions",
-      "LineNumber": 20
     },
     {
       "Code": "STXM001",
