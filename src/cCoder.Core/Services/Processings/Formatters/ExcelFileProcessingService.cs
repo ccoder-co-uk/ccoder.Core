@@ -8,16 +8,27 @@ using System.IO.Compression;
 using System.Reflection;
 using System.Text;
 using cCoder.Data.Models.CMS;
+using cCoder.Core.Exposures.Formatters;
 
+namespace cCoder.Core.Services.Processings.Formatters;
 
-namespace cCoder.Core.Exposures.Formatters;
-
-internal class FormatterExcelFileBuilder(string culture, IEnumerable<Resource> resources)
+internal sealed partial class ExcelFileProcessingService(
+    string culture,
+    IEnumerable<Resource> resources)
+    : IExcelFileProcessingService
 {
     private readonly string culture = culture;
     private readonly IEnumerable<Resource> resources = resources ?? [];
 
-    public Stream BuildFor(object data)
+    public Stream BuildExcelFile(object data) =>
+        TryCatch(operation: () =>
+        {
+            ValidateExcelFileOnBuild(data: data);
+
+            return BuildExcelFileInternal(data: data);
+        });
+
+    private Stream BuildExcelFileInternal(object data)
     {
         MemoryStream result = new();
 
@@ -234,7 +245,7 @@ handler: $"<row r=\"1\" x14ac:dyDescent=\"0.25\" spans=\"1:{Math.Max(val1: 1, va
                 ?? properties[index];
 
             _ = result.Append(
-handler: $"<c r=\"{index.ToExcelColumn()}1\" t=\"inlineStr\"><is><t>{displayName}</t></is></c>"
+handler: $"<c r=\"{ToExcelColumn(index: index)}1\" t=\"inlineStr\"><is><t>{displayName}</t></is></c>"
             );
         }
 
@@ -285,11 +296,11 @@ handler: $"<row r=\"{rowNumber}\" x14ac:dyDescent=\"0.25\" spans=\"1:{properties
 value: propertyValue switch
 {
     DateTimeOffset dateTimeOffset =>
-        $"<c r=\"{columnIndex.ToExcelColumn()}{rowNumber}\" t=\"d\" s=\"1\"><v>{dateTimeOffset:s}</v></c>",
+        $"<c r=\"{ToExcelColumn(index: columnIndex)}{rowNumber}\" t=\"d\" s=\"1\"><v>{dateTimeOffset:s}</v></c>",
     decimal decimalValue =>
-        $"<c r=\"{columnIndex.ToExcelColumn()}{rowNumber}\" t=\"n\" s=\"2\"><v>{decimalValue}</v></c>",
+        $"<c r=\"{ToExcelColumn(index: columnIndex)}{rowNumber}\" t=\"n\" s=\"2\"><v>{decimalValue}</v></c>",
     _ =>
-        $"<c r=\"{columnIndex.ToExcelColumn()}{rowNumber}\" t=\"inlineStr\"><is><t>{FormatValue(value: propertyValue, dateFormat: dateFormat, moneyFormat: moneyFormat, culture: culture)}</t></is></c>",
+        $"<c r=\"{ToExcelColumn(index: columnIndex)}{rowNumber}\" t=\"inlineStr\"><is><t>{FormatValue(value: propertyValue, dateFormat: dateFormat, moneyFormat: moneyFormat, culture: culture)}</t></is></c>",
 }
                 );
             }
@@ -322,11 +333,8 @@ format: dateFormat, formatProvider: CultureInfo.CreateSpecificCulture(name: cult
             null => string.Empty,
             _ => value.ToString(),
         };
-}
 
-internal static class FormatterIntExtensions
-{
-    public static string ToExcelColumn(this int index)
+    private static string ToExcelColumn(int index)
     {
         index += 1;
         StringBuilder letters = new();
@@ -341,12 +349,15 @@ internal static class FormatterIntExtensions
                 character -= 26;
             }
 
-            letters.Append(value: char.ConvertFromUtf32(utf32: character));
+            letters.Append(
+                value: char.ConvertFromUtf32(utf32: character));
+
             index = (index - modulo) / 26;
         }
 
-        return new string(letters.ToString()
-            .Reverse()
-            .ToArray());
+        return new string(
+            value: letters.ToString()
+                .Reverse()
+                .ToArray());
     }
 }

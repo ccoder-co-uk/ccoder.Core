@@ -4,6 +4,7 @@
 
 using System.IO.Compression;
 using cCoder.Data.Models.CMS;
+using cCoder.Core.Services.Processings.Formatters;
 
 
 namespace cCoder.Core.Exposures.Formatters;
@@ -17,20 +18,22 @@ internal static class FormatterExportExtensions
         string quotes = "",
         string culture = ""
     ) =>
-        new FormatterCsvFileBuilder
-        {
-            Resources = resources ?? [],
-            Culture = culture,
-            Delimiter = delimiter,
-            Quotes = quotes,
-        }.BuildFor(source: source);
+        new CsvFileProcessingService(
+            resources: resources,
+            delimiter: delimiter,
+            quotes: quotes,
+            culture: culture)
+            .BuildCsvFile(source: source);
 
     public static Stream ToExcel(
         this object source,
         IEnumerable<Resource> resources,
         string culture = ""
     ) =>
-        new FormatterExcelFileBuilder(culture, resources ?? []).BuildFor(data: source);
+        new ExcelFileProcessingService(
+            culture: culture,
+            resources: resources)
+            .BuildExcelFile(data: source);
 
     public static Resource ForNameAndCulture(
         this IEnumerable<Resource> potentials,
