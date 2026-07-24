@@ -6,7 +6,7 @@ using cCoder.ContentManagement.Services.Processings;
 using cCoder.Packaging.Brokers;
 
 
-namespace cCoder.Core.Brokers.Packaging;
+namespace cCoder.Core.Dependencies.Packaging;
 
 internal class AppDomainProvider(IAppProcessingService appProcessingService) : IAppDomainProvider
 {

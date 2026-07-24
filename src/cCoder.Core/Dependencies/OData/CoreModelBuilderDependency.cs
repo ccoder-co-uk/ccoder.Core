@@ -7,7 +7,9 @@ using cCoder.Core.Models.Metadata;
 using cCoder.Core.Exposures.OData;
 using cCoder.Data.Models.CMS;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Microsoft.OData.Edm;
+using Microsoft.OData.ModelBuilder;
 using cCoder.Data.Models.Planning;
 using cCoder.Data.Models;
 using cCoder.Data.Models.DMS;
@@ -20,11 +22,10 @@ using cCoder.ContentManagement.Models;
 
 namespace cCoder.Core.Dependencies.OData;
 
-internal sealed class CoreModelBuilderDependency : ODataModelBuilder
+internal sealed class CoreModelBuilderDependency
+    : cCoder.Core.Exposures.OData.ODataModelBuilder,
+      IConfigureOptions<ODataConventionModelBuilder>
 {
-    public CoreModelBuilderDependency()
-        : base() { }
-
     public override ODataModel Build() =>
         new()
         {
@@ -33,18 +34,18 @@ internal sealed class CoreModelBuilderDependency : ODataModelBuilder
             EDMModel = BuildModel(),
         };
 
-    private IEdmModel BuildModel()
+    public void Configure(ODataConventionModelBuilder options)
     {
         AddCommonComplextypes();
-        _ = Builder.ComplexType<RenderResult>();
+        _ = options.ComplexType<RenderResult>();
 
-        Builder.EntityType<App>()
+        options.EntityType<App>()
             .Ignore(propertyExpression: i => i.Config);
 
-        Builder.EntityType<Submission>()
+        options.EntityType<Submission>()
             .Ignore(propertyExpression: i => i.Data);
 
-        Builder.EntityType<FlowInstanceData>()
+        options.EntityType<FlowInstanceData>()
             .Ignore(propertyExpression: i => i.ContextJson);
 
         _ = AddSet<App, int>(setName: "App");
@@ -92,21 +93,21 @@ internal sealed class CoreModelBuilderDependency : ODataModelBuilder
         _ = AddSet<QueuedEmail, int>();
         _ = AddSet<SentEmail, int>();
 
-        Builder.Namespace = "";
+        options.Namespace = "";
 
-        _ = Builder.EntityType<Package>().Collection.Action(name: "Import");
-        _ = Builder.EntityType<Package>().Collection.Action(name: "ImportThis");
+        _ = options.EntityType<Package>().Collection.Action(name: "Import");
+        _ = options.EntityType<Package>().Collection.Action(name: "ImportThis");
 
-        _ = Builder
+        _ = options
             .EntityType<Folder>()
             .Collection.Action(name: "Copy")
             .ReturnsCollection<ContentManagement.Models.Result<Guid?>>();
 
-        _ = Builder.EntityType<Page>()
+        _ = options.EntityType<Page>()
             .Action(name: "AddContent")
                 .Parameter<Content>(name: "content");
 
-        _ = Builder.EntityType<Page>()
+        _ = options.EntityType<Page>()
             .Function(name: "RootFor")
                 .ReturnsFromEntitySet<Page>(entitySetName: "Page");
 
@@ -114,62 +115,68 @@ internal sealed class CoreModelBuilderDependency : ODataModelBuilder
             .Function(name: "Menu")
             .Returns<ContentManagement.Models.Result<string>>();
 
-        _ = Builder.EntityType<Page>().Collection.Function(name: "Render")
+        _ = options.EntityType<Page>().Collection.Function(name: "Render")
             .Returns<RenderResult>();
 
-        _ = Builder.EntityType<User>().Collection.Function(name: "Me")
+        _ = options.EntityType<User>().Collection.Function(name: "Me")
             .ReturnsFromEntitySet<User>(entitySetName: "User");
 
-        _ = Builder
+        _ = options
             .EntityType<Resource>()
             .Collection.Function(name: "GetAll")
             .ReturnsCollectionFromEntitySet<Resource>(entitySetName: "Resource");
 
-        _ = Builder.EntityType<Component>().Collection.Function(name: "Render")
+        _ = options.EntityType<Component>().Collection.Function(name: "Render")
             .Returns<string>();
 
-        _ = Builder.EntityType<Template>().Collection.Action(name: "Render")
+        _ = options.EntityType<Template>().Collection.Action(name: "Render")
             .Returns<string>();
 
-        _ = Builder
+        _ = options
             .EntityType<Template>()
             .Collection.Action(name: "HtmlToPdf")
             .Returns<FileContentResult>();
 
-        _ = Builder
+        _ = options
             .EntityType<FlowDefinition>()
             .Collection.Function(name: "KnownActivityTypes")
             .Returns<MetadataContainerSet>();
 
-        _ = Builder
+        _ = options
             .EntityType<FlowDefinition>()
             .Collection.Function(name: "KnownSystemTypes")
             .Returns<MetadataContainerSet[]>();
 
-        _ = Builder.EntityType<FlowInstanceData>()
+        _ = options.EntityType<FlowInstanceData>()
             .Action(name: "Raw");
 
-        _ = Builder.EntityType<FlowDefinition>()
+        _ = options.EntityType<FlowDefinition>()
             .Action(name: "Execute")
                 .Returns<Guid>();
 
-        _ = Builder
+        _ = options
             .EntityType<FlowDefinition>()
             .Collection.Action(name: "ExecuteScript")
             .Returns<string>();
 
-        _ = Builder.EntityType<ScheduledTask>()
+        _ = options.EntityType<ScheduledTask>()
             .Action(name: "Execute");
 
-        _ = Builder
+        _ = options
             .EntityType<CommonObject>()
             .Collection.Function(name: "Latest")
             .ReturnsFromEntitySet<CommonObject>(entitySetName: "CommonObject");
 
-        _ = Builder
+        _ = options
             .EntityType<CommonObject>()
             .Collection.Action(name: "Import")
             .ReturnsCollectionFromEntitySet<ContentManagement.Models.Result<CommonObject>>(entitySetName: "ImportCommonObjectResults");
+
+    }
+
+    private IEdmModel BuildModel()
+    {
+        Configure(options: Builder);
 
         return Builder.GetEdmModel();
     }
