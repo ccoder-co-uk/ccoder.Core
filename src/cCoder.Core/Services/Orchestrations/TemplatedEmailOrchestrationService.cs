@@ -25,7 +25,7 @@ internal sealed partial class TemplatedEmailOrchestrationService(
     IAuthorizationBroker authorizationBroker
 ) : ITemplatedEmailOrchestrationService
 {
-    public async ValueTask<QueuedEmail> QueueAsync(
+    public ValueTask<QueuedEmail> QueueAppTemplatedEmailAsync(
         CoreApp app,
         string templateName,
         string culture,
@@ -34,7 +34,39 @@ internal sealed partial class TemplatedEmailOrchestrationService(
         string subject,
         string sentByUserId,
         string mailSenderName = "Default"
-    )
+    ) =>
+        TryCatch(operation: async () =>
+        {
+            ValidateAppTemplatedEmailOnQueue(
+                app: app,
+                templateName: templateName,
+                culture: culture,
+                model: model,
+                toEmail: toEmail,
+                subject: subject,
+                sentByUserId: sentByUserId,
+                mailSenderName: mailSenderName);
+
+            return await QueueAppTemplatedEmailCoreAsync(
+                app: app,
+                templateName: templateName,
+                culture: culture,
+                model: model,
+                toEmail: toEmail,
+                subject: subject,
+                sentByUserId: sentByUserId,
+                mailSenderName: mailSenderName);
+        });
+
+    private async ValueTask<QueuedEmail> QueueAppTemplatedEmailCoreAsync(
+        CoreApp app,
+        string templateName,
+        string culture,
+        object model,
+        string toEmail,
+        string subject,
+        string sentByUserId,
+        string mailSenderName)
     {
         ContentTemplate template = app.Templates.FirstOrDefault(predicate: candidate => candidate.Name == templateName)
             ?? throw new InvalidOperationException($"Template '{templateName}' was not found.");
@@ -71,7 +103,18 @@ appId: app.Id, name: templateName, culture: culture, model: model);
             checkPrivileges: false);
     }
 
-    public ValueTask<QueuedEmail> QueueAsync(TemplatedEmailDetails details)
+    public ValueTask<QueuedEmail> QueueTemplatedEmailDetailsAsync(
+        TemplatedEmailDetails details) =>
+        TryCatch(operation: async () =>
+        {
+            ValidateTemplatedEmailDetailsOnQueue(details: details);
+
+            return await QueueTemplatedEmailDetailsCoreAsync(
+                details: details);
+        });
+
+    private async ValueTask<QueuedEmail> QueueTemplatedEmailDetailsCoreAsync(
+        TemplatedEmailDetails details)
     {
         CoreApp app = contentManagementAppService.GetAppByDomain(
             domain: details.SourceDomain,
@@ -100,8 +143,15 @@ appId: app.Id, name: templateName, culture: culture, model: model);
                 },
         };
 
-        return QueueAsync(
-app: app, templateName: details.TemplateName, culture: culture, model: renderModel, toEmail: details.ToEmail, subject: $"{app.Name}: {details.Subject}", sentByUserId: currentUser?.Id);
+        return await QueueAppTemplatedEmailCoreAsync(
+            app: app,
+            templateName: details.TemplateName,
+            culture: culture,
+            model: renderModel,
+            toEmail: details.ToEmail,
+            subject: $"{app.Name}: {details.Subject}",
+            sentByUserId: currentUser?.Id,
+            mailSenderName: "Default");
     }
 
     private static string ResolveCulture(

@@ -10,7 +10,7 @@ namespace cCoder.Core.Services.Orchestrations;
 
 public interface ITemplatedEmailOrchestrationService
 {
-    ValueTask<QueuedEmail> QueueAsync(
+    ValueTask<QueuedEmail> QueueAppTemplatedEmailAsync(
         CoreApp app,
         string templateName,
         string culture,
@@ -21,5 +21,28 @@ public interface ITemplatedEmailOrchestrationService
         string mailSenderName = "Default"
     );
 
-    ValueTask<QueuedEmail> QueueAsync(TemplatedEmailDetails details);
+    ValueTask<QueuedEmail> QueueTemplatedEmailDetailsAsync(
+        TemplatedEmailDetails details);
+
+    ValueTask<QueuedEmail> QueueAsync(
+        CoreApp app,
+        string templateName,
+        string culture,
+        object model,
+        string toEmail,
+        string subject,
+        string sentByUserId,
+        string mailSenderName = "Default") =>
+        QueueAppTemplatedEmailAsync(
+            app: app,
+            templateName: templateName,
+            culture: culture,
+            model: model,
+            toEmail: toEmail,
+            subject: subject,
+            sentByUserId: sentByUserId,
+            mailSenderName: mailSenderName);
+
+    ValueTask<QueuedEmail> QueueAsync(TemplatedEmailDetails details) =>
+        QueueTemplatedEmailDetailsAsync(details: details);
 }
