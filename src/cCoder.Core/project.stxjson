@@ -264,23 +264,6 @@
       ]
     },
     {
-      "Name": "cCoder.Core.Brokers.Packaging.AppDomainProvider",
-      "StandardElementType": "Dependency",
-      "Properties": [],
-      "Methods": [
-        {
-          "Name": "GetDomain",
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            }
-          ],
-          "ReturnType": "System.String"
-        }
-      ]
-    },
-    {
       "Name": "cCoder.Core.Brokers.Planning.PlanningAppBroker",
       "StandardElementType": "Broker",
       "Properties": [],
@@ -779,6 +762,55 @@
       "Methods": []
     },
     {
+      "Name": "cCoder.Core.Dependencies.Eventing.ServiceBusEventingDependency",
+      "StandardElementType": "Dependency",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "ListenToEvent",
+          "Inputs": [
+            {
+              "Name": "name",
+              "Type": "System.String"
+            },
+            {
+              "Name": "handler",
+              "Type": "System.Func\u003CSystem.IServiceProvider, T, System.Threading.Tasks.ValueTask\u003E"
+            }
+          ],
+          "ReturnType": "System.Void"
+        },
+        {
+          "Name": "RaiseEventAsync",
+          "Inputs": [
+            {
+              "Name": "name",
+              "Type": "System.String"
+            },
+            {
+              "Name": "message",
+              "Type": "ServiceBusEventMessage\u003CT\u003E"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        },
+        {
+          "Name": "RaiseEventsAsync",
+          "Inputs": [
+            {
+              "Name": "name",
+              "Type": "System.String"
+            },
+            {
+              "Name": "messages",
+              "Type": "ServiceBusEventMessage\u003CT\u003E[]"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        }
+      ]
+    },
+    {
       "Name": "cCoder.Core.Dependencies.Formatters.CsvFormatter",
       "StandardElementType": "Dependency",
       "Properties": [],
@@ -986,10 +1018,38 @@
       ]
     },
     {
+      "Name": "cCoder.Core.Dependencies.OData.ControllerReadDependency",
+      "StandardElementType": "Dependency",
+      "Properties": [],
+      "Methods": []
+    },
+    {
       "Name": "cCoder.Core.Dependencies.OData.CoreAggregateApiModelDependency",
       "StandardElementType": "Dependency",
       "Properties": [],
       "Methods": [
+        {
+          "Name": "Configure",
+          "Inputs": [
+            {
+              "Name": "options",
+              "Type": "ODataConventionModelBuilder"
+            }
+          ],
+          "ReturnType": "System.Void"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Dependencies.OData.CoreModelBuilderDependency",
+      "StandardElementType": "Dependency",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "Build",
+          "Inputs": [],
+          "ReturnType": "cCoder.Core.Exposures.OData.ODataModel"
+        },
         {
           "Name": "Configure",
           "Inputs": [
@@ -1016,6 +1076,23 @@
             }
           ],
           "ReturnType": "System.Void"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Dependencies.Packaging.AppDomainProvider",
+      "StandardElementType": "Dependency",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "GetDomain",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            }
+          ],
+          "ReturnType": "System.String"
         }
       ]
     },
@@ -3886,6 +3963,14 @@
   ],
   "Links": [
     {
+      "FromType": "cCoder.Core.Brokers.Eventing.ServiceBusAppDeleteForwardingBroker",
+      "ToType": "cCoder.Core.Dependencies.Eventing.ServiceBusEventingDependency"
+    },
+    {
+      "FromType": "cCoder.Core.Brokers.Eventing.ServiceBusFolderDeleteForwardingBroker",
+      "ToType": "cCoder.Core.Dependencies.Eventing.ServiceBusEventingDependency"
+    },
+    {
       "FromType": "cCoder.Core.Dependencies.Formatters.CsvFormatter",
       "ToType": "cCoder.Core.Services.Processings.Formatters.FormatterODataProcessingService"
     },
@@ -4048,20 +4133,6 @@
   ],
   "AnalysisItems": [
     {
-      "Code": "STXB001",
-      "Description": "A broker may have at most one external or exposure dependency.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.Brokers.Eventing.ServiceBusAppDeleteForwardingBroker",
-      "LineNumber": 12
-    },
-    {
-      "Code": "STXB001",
-      "Description": "A broker may have at most one external or exposure dependency.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.Brokers.Eventing.ServiceBusFolderDeleteForwardingBroker",
-      "LineNumber": 12
-    },
-    {
       "Code": "STX0001",
       "Description": "The type is not a valid Standard element type.",
       "Severity": "Warning",
@@ -4088,20 +4159,6 @@
       "Severity": "Warning",
       "Type": "cCoder.Core.Exposures.Controllers.SetupController",
       "LineNumber": 12
-    },
-    {
-      "Code": "STXE001",
-      "Description": "An exposure must not contain branching logic.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.Exposures.OData.ControllerReadExtensions",
-      "LineNumber": 22
-    },
-    {
-      "Code": "STXE005",
-      "Description": "An exposure must not sequence multiple routine calls.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.Exposures.OData.CoreModelBuilder",
-      "LineNumber": 35
     },
     {
       "Code": "STX0002",
