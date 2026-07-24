@@ -65,7 +65,15 @@ public class MetadataContainer
     public MetadataContainer(Type type)
     {
         IsValueType = type.IsValueType || type == typeof(string);
-        Type = GetTypeName(type: type);
+
+        Type = type == typeof(string)
+            ? "string"
+            : typeof(IEnumerable).IsAssignableFrom(c: type)
+                ? "array"
+                : TypeLookup.TryGetValue(key: type, value: out string typeName)
+                    ? typeName
+                    : "object";
+
         Name = type.Name;
         DisplayName = type.Name;
         Description = type.Name;
@@ -82,22 +90,6 @@ public class MetadataContainer
         HasEndpoint = hasEndpoint;
     }
 
-    private static string GetTypeName(Type type)
-    {
-        if (type == typeof(string))
-        {
-            return "string";
-        }
-
-        if (typeof(IEnumerable).IsAssignableFrom(c: type))
-        {
-            return "array";
-        }
-
-        return TypeLookup.TryGetValue(key: type, value: out string name)
-            ? name
-            : "object";
-    }
 }
 
 public class ExtendedMetadataContainer : MetadataContainer

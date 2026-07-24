@@ -6,7 +6,13 @@ namespace cCoder.Core.Models;
 
 public sealed class FirstTimeSetupViewModel
 {
-    public string Domain { get; set; } = string.Empty;
+    public FirstTimeSetupViewModel()
+    {
+        Domain = string.Empty;
+        Setup = new FirstTimeSetupRequest();
+    }
 
-    public FirstTimeSetupRequest Setup { get; set; } = new();
+    public string Domain { get; set; }
+
+    public FirstTimeSetupRequest Setup { get; set; }
 }

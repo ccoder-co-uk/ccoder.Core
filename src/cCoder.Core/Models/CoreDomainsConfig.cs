@@ -6,8 +6,15 @@ namespace cCoder.Core.Models;
 
 public class CoreDomainsConfig
 {
-    public string RootPath { get; set; } = "Api";
+    public CoreDomainsConfig()
+    {
+        RootPath = "Api";
+        IncludeLegacyCoreContext = true;
+        Connection = string.Empty;
+    }
+
+    public string RootPath { get; set; }
     public bool SplitDomains { get; set; }
-    public bool IncludeLegacyCoreContext { get; set; } = true;
-    public string Connection { get; set; } = string.Empty;
+    public bool IncludeLegacyCoreContext { get; set; }
+    public string Connection { get; set; }
 }

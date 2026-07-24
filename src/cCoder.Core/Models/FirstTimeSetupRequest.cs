@@ -2,34 +2,29 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using System.ComponentModel.DataAnnotations;
-
 namespace cCoder.Core.Models;
 
 public sealed class FirstTimeSetupRequest
 {
-    public string Domain { get; set; } = string.Empty;
+    public FirstTimeSetupRequest()
+    {
+        Domain = string.Empty;
+        TenantName = string.Empty;
+        DisplayName = string.Empty;
+        Email = string.Empty;
+        Password = string.Empty;
+        ConfirmPassword = string.Empty;
+    }
 
-    [Required]
-    [Display(Name = "Tenant name")]
-    public string TenantName { get; set; } = string.Empty;
+    public string Domain { get; set; }
 
-    [Required]
-    [Display(Name = "Display name")]
-    public string DisplayName { get; set; } = string.Empty;
+    public string TenantName { get; set; }
 
-    [Required]
-    [EmailAddress]
-    [Display(Name = "Email address")]
-    public string Email { get; set; } = string.Empty;
+    public string DisplayName { get; set; }
 
-    [Required]
-    [DataType(DataType.Password)]
-    public string Password { get; set; } = string.Empty;
+    public string Email { get; set; }
 
-    [Required]
-    [DataType(DataType.Password)]
-    [Compare(nameof(Password))]
-    [Display(Name = "Confirm password")]
-    public string ConfirmPassword { get; set; } = string.Empty;
+    public string Password { get; set; }
+
+    public string ConfirmPassword { get; set; }
 }
