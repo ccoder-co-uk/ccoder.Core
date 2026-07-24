@@ -11,6 +11,7 @@ using cCoder.Core.Brokers.Mail;
 using cCoder.Core.Brokers.Planning;
 using cCoder.Core.Brokers.Workflow;
 using cCoder.Core.Dependencies.Packaging;
+using cCoder.Core.Dependencies.Eventing;
 using cCoder.Packaging;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -20,6 +21,7 @@ public static partial class IServiceCollectionExtensions
 {
     private static void AddCoreBrokers(IServiceCollection services)
     {
+        services.AddTransient<ServiceBusEventingDependency>();
         services.AddTransient<IContentManagementAppBroker, ContentManagementAppBroker>();
         services.AddTransient<IHttpRequestBroker, HttpRequestBroker>();
         services.AddTransient<IAppSecurityAppBroker, AppSecurityAppBroker>();

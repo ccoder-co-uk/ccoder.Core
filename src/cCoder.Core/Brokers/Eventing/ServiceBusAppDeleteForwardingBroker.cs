@@ -3,23 +3,21 @@
 // ---------------------------------------------------------------
 
 using cCoder.Data.Models.CMS;
-using cCoder.Eventing.AzureServiceBus;
+using cCoder.Core.Dependencies.Eventing;
 using cCoder.Eventing.AzureServiceBus.Models;
-using cCoder.Security.Objects;
 
 namespace cCoder.Core.Brokers.Eventing;
 
 internal sealed class ServiceBusAppDeleteForwardingBroker(
-    IAzureServiceBusEventHub serviceBusEventHub,
-    ISSOAuthInfo authInfo)
+    ServiceBusEventingDependency serviceBusEventingDependency)
     : IServiceBusAppDeleteForwardingBroker
 {
     public string GetCurrentSsoUserId() =>
-        authInfo?.SSOUserId ?? string.Empty;
+        serviceBusEventingDependency.GetCurrentSsoUserId();
 
     public ValueTask RaiseAppDeleteEventAsync(
         ServiceBusEventMessage<App> message) =>
-        serviceBusEventHub.RaiseEventAsync(
+        serviceBusEventingDependency.RaiseEventAsync(
             name: "app_delete",
             message: message);
 }
