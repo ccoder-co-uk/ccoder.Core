@@ -12,11 +12,11 @@ namespace cCoder.Core.Brokers.Mail;
 
 internal class MailAppBroker(IMailAppExposure mailAppExposure) : IMailAppBroker
 {
-    public ValueTask AddAsync(App app) =>
-        mailAppExposure.AddAsync(newApp: app);
+    public ValueTask AddAppAsync(App newApp) =>
+        mailAppExposure.AddAsync(newApp: newApp);
 
-    public ValueTask UpdateAsync(App app) =>
-        mailAppExposure.UpdateAsync(updatedApp: app);
+    public ValueTask UpdateAppAsync(App updatedApp) =>
+        mailAppExposure.UpdateAsync(updatedApp: updatedApp);
 
     public ValueTask DeleteAsync(int appId) =>
         mailAppExposure.DeleteAsync(appId: appId);

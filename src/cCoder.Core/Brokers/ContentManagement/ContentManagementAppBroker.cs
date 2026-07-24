@@ -10,20 +10,20 @@ namespace cCoder.Core.Brokers.ContentManagement;
 internal class ContentManagementAppBroker(IAppManager appManager)
     : IContentManagementAppBroker
 {
-    public App Get(int id, bool ignoreFilters = false) =>
-        appManager.Get(appManagerId: id, ignoreFilters: ignoreFilters);
+    public App GetApp(int appId, bool ignoreFilters = false) =>
+        appManager.Get(appManagerId: appId, ignoreFilters: ignoreFilters);
 
-    public App GetByDomain(string domain, bool ignoreFilters = false) =>
+    public App GetAppByDomain(string domain, bool ignoreFilters = false) =>
         appManager.GetByDomain(domain: domain, ignoreFilters: ignoreFilters);
 
-    public IQueryable<App> GetAll(bool ignoreFilters = false) =>
+    public IQueryable<App> GetAllApps(bool ignoreFilters = false) =>
         appManager.GetAll(ignoreFilters: ignoreFilters);
 
-    public ValueTask<App> AddAsync(App app) =>
-        appManager.AddAsync(newApp: app);
+    public ValueTask<App> AddAppAsync(App newApp) =>
+        appManager.AddAsync(newApp: newApp);
 
-    public ValueTask<App> UpdateAsync(App app) =>
-        appManager.UpdateAsync(updatedApp: app);
+    public ValueTask<App> UpdateAppAsync(App updatedApp) =>
+        appManager.UpdateAsync(updatedApp: updatedApp);
 
     public ValueTask DeleteAsync(int appId) =>
         appManager.DeleteAsync(appId: appId);

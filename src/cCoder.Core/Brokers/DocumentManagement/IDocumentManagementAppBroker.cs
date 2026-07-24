@@ -11,7 +11,7 @@ namespace cCoder.Core.Brokers.DocumentManagement;
 
 public interface IDocumentManagementAppBroker
 {
-    ValueTask AddAsync(App app);
-    ValueTask UpdateAsync(App app);
+    ValueTask AddAppAsync(App newApp);
+    ValueTask UpdateAppAsync(App updatedApp);
     ValueTask DeleteAsync(int appId);
 }

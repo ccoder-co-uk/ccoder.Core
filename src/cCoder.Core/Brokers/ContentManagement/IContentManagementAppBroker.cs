@@ -8,10 +8,10 @@ namespace cCoder.Core.Brokers.ContentManagement;
 
 public interface IContentManagementAppBroker
 {
-    App Get(int id, bool ignoreFilters = false);
-    App GetByDomain(string domain, bool ignoreFilters = false);
-    IQueryable<App> GetAll(bool ignoreFilters = false);
-    ValueTask<App> AddAsync(App app);
-    ValueTask<App> UpdateAsync(App app);
+    App GetApp(int appId, bool ignoreFilters = false);
+    App GetAppByDomain(string domain, bool ignoreFilters = false);
+    IQueryable<App> GetAllApps(bool ignoreFilters = false);
+    ValueTask<App> AddAppAsync(App newApp);
+    ValueTask<App> UpdateAppAsync(App updatedApp);
     ValueTask DeleteAsync(int appId);
 }

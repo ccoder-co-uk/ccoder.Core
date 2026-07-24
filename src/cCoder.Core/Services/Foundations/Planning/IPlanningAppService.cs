@@ -8,7 +8,7 @@ namespace cCoder.Core.Services.Foundations.Planning;
 
 public interface IPlanningAppService
 {
-    ValueTask AddAsync(App app);
-    ValueTask UpdateAsync(App app);
+    ValueTask AddAppAsync(App newApp);
+    ValueTask UpdateAppAsync(App updatedApp);
     ValueTask DeleteAsync(int appId);
 }

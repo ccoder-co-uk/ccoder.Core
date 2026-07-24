@@ -23,27 +23,31 @@ internal class AppOrchestrationService(
 {
     public async ValueTask<App> AddAsync(App app)
     {
-        App createdApp = await contentManagementAppService.AddAsync(app: app);
+        App createdApp = await contentManagementAppService.AddAppAsync(
+            newApp: app);
+
         App propagatedApp = MergeAppGraph(source: app, target: createdApp);
 
-        await appSecurityAppService.AddAsync(app: propagatedApp);
-        await planningAppService.AddAsync(app: propagatedApp);
-        await documentManagementAppService.AddAsync(app: propagatedApp);
-        await workflowAppService.AddAsync(app: propagatedApp);
-        await mailAppService.AddAsync(app: propagatedApp);
+        await appSecurityAppService.AddAppAsync(newApp: propagatedApp);
+        await planningAppService.AddAppAsync(newApp: propagatedApp);
+        await documentManagementAppService.AddAppAsync(newApp: propagatedApp);
+        await workflowAppService.AddAppAsync(newApp: propagatedApp);
+        await mailAppService.AddAppAsync(newApp: propagatedApp);
         return propagatedApp;
     }
 
     public async ValueTask<App> UpdateAsync(App app)
     {
-        App updatedApp = await contentManagementAppService.UpdateAsync(app: app);
+        App updatedApp = await contentManagementAppService.UpdateAppAsync(
+            updatedApp: app);
+
         App propagatedApp = MergeAppGraph(source: app, target: updatedApp);
 
-        await appSecurityAppService.UpdateAsync(app: propagatedApp);
-        await planningAppService.UpdateAsync(app: propagatedApp);
-        await documentManagementAppService.UpdateAsync(app: propagatedApp);
-        await workflowAppService.UpdateAsync(app: propagatedApp);
-        await mailAppService.UpdateAsync(app: propagatedApp);
+        await appSecurityAppService.UpdateAppAsync(updatedApp: propagatedApp);
+        await planningAppService.UpdateAppAsync(updatedApp: propagatedApp);
+        await documentManagementAppService.UpdateAppAsync(updatedApp: propagatedApp);
+        await workflowAppService.UpdateAppAsync(updatedApp: propagatedApp);
+        await mailAppService.UpdateAppAsync(updatedApp: propagatedApp);
         return propagatedApp;
     }
 

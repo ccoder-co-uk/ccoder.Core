@@ -90,10 +90,10 @@ app: app, templateName: template.Name, culture: culture, model: renderModel, toE
     {
         string normalizedDomain = NormalizeDomain(domain: requestDomain);
 
-        App app = contentManagementAppService.GetAll(ignoreFilters: true)
+        App app = contentManagementAppService.GetAllApps(ignoreFilters: true)
             .Include(navigationPropertyPath: candidate => candidate.Templates)
             .FirstOrDefault(predicate: candidate => candidate.Domain == normalizedDomain)
-            ?? contentManagementAppService.GetAll(ignoreFilters: true)
+            ?? contentManagementAppService.GetAllApps(ignoreFilters: true)
                 .Include(navigationPropertyPath: candidate => candidate.Templates)
                 .AsEnumerable()
                 .FirstOrDefault(predicate: candidate =>

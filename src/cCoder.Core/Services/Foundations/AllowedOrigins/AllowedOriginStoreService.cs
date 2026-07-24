@@ -35,7 +35,9 @@ internal sealed class AllowedOriginStoreService(
 
         if (!string.IsNullOrWhiteSpace(value: domain))
         {
-            App app = appBroker.GetByDomain(domain: domain, ignoreFilters: true);
+            App app = appBroker.GetAppByDomain(
+                domain: domain,
+                ignoreFilters: true);
 
             string[] origins = app is null
                 ? []

@@ -71,7 +71,9 @@ appId: app.Id, name: templateName, culture: culture, model: model);
 
     public ValueTask<QueuedEmail> QueueAsync(TemplatedEmailDetails details)
     {
-        CoreApp app = contentManagementAppService.GetByDomain(domain: details.SourceDomain, ignoreFilters: true);
+        CoreApp app = contentManagementAppService.GetAppByDomain(
+            domain: details.SourceDomain,
+            ignoreFilters: true);
 
         if (app is null)
         {

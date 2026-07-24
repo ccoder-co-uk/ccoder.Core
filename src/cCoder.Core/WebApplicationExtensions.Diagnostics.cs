@@ -91,7 +91,9 @@ text: "{ \"error\": \"" + exception.Message.Replace(oldValue: "\"", newValue: "\
                 if (config.ConnectionStrings?.TryGetValue(key: "Core", value: out string coreConnectionString) == true
                     && await SqlTableExistsAsync(connectionString: coreConnectionString, schema: "CMS", table: "Apps", cancellationToken: context.RequestAborted))
                 {
-                    tenantId = appService.GetByDomain(domain: request.Host.Host, ignoreFilters: true)?.TenantId;
+                    tenantId = appService.GetAppByDomain(
+                        domain: request.Host.Host,
+                        ignoreFilters: true)?.TenantId;
                 }
 
                 using SecurityDbContext sso = new MSSQLSecurityDbContextFactory(ssoConnectionString)

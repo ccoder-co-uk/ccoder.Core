@@ -7,14 +7,46 @@ using cCoder.Data.Models.CMS;
 
 namespace cCoder.Core.Services.Foundations.Planning;
 
-internal class PlanningAppService(IPlanningAppBroker planningAppBroker) : IPlanningAppService
+internal sealed partial class PlanningAppService(IPlanningAppBroker planningAppBroker)
+    : IPlanningAppService
 {
-    public ValueTask AddAsync(App app) =>
-        planningAppBroker.AddAsync(app: app);
+    public ValueTask AddAppAsync(App newApp) =>
+        TryCatch(operation: async ValueTask () =>
+        {
+            ValidateAppOnAdd(newApp: newApp);
 
-    public ValueTask UpdateAsync(App app) =>
-        planningAppBroker.UpdateAsync(app: app);
+            App flatApp = CreateFlatApp(app: newApp);
+
+            await planningAppBroker.AddAppAsync(newApp: flatApp);
+        });
+
+    public ValueTask UpdateAppAsync(App updatedApp) =>
+        TryCatch(operation: async ValueTask () =>
+        {
+            ValidateAppOnUpdate(updatedApp: updatedApp);
+
+            App flatApp = CreateFlatApp(app: updatedApp);
+
+            await planningAppBroker.UpdateAppAsync(updatedApp: flatApp);
+        });
 
     public ValueTask DeleteAsync(int appId) =>
-        planningAppBroker.DeleteAsync(appId: appId);
+        TryCatch(operation: async ValueTask () =>
+        {
+            ValidateAppOnDelete(appId: appId);
+
+            await planningAppBroker.DeleteAsync(appId: appId);
+        });
+
+    private static App CreateFlatApp(App app) =>
+        new()
+        {
+            Id = app.Id,
+            DefaultCultureId = app.DefaultCultureId,
+            TenantId = app.TenantId,
+            Name = app.Name,
+            Domain = app.Domain,
+            DefaultTheme = app.DefaultTheme,
+            ConfigJson = app.ConfigJson,
+        };
 }

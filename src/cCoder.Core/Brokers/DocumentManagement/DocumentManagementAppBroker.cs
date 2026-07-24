@@ -13,11 +13,11 @@ namespace cCoder.Core.Brokers.DocumentManagement;
 internal class DocumentManagementAppBroker(IDocumentManagementAppExposure documentManagementAppExposure)
     : IDocumentManagementAppBroker
 {
-    public ValueTask AddAsync(App app) =>
-        documentManagementAppExposure.AddAsync(newApp: app);
+    public ValueTask AddAppAsync(App newApp) =>
+        documentManagementAppExposure.AddAsync(newApp: newApp);
 
-    public ValueTask UpdateAsync(App app) =>
-        documentManagementAppExposure.UpdateAsync(updatedApp: app);
+    public ValueTask UpdateAppAsync(App updatedApp) =>
+        documentManagementAppExposure.UpdateAsync(updatedApp: updatedApp);
 
     public ValueTask DeleteAsync(int appId) =>
         documentManagementAppExposure.DeleteAsync(appId: appId);

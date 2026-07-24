@@ -8,7 +8,7 @@ namespace cCoder.Core.Services.Foundations.Mail;
 
 public interface IMailAppService
 {
-    ValueTask AddAsync(App app);
-    ValueTask UpdateAsync(App app);
+    ValueTask AddAppAsync(App newApp);
+    ValueTask UpdateAppAsync(App updatedApp);
     ValueTask DeleteAsync(int appId);
 }

@@ -7,15 +7,47 @@ using cCoder.Data.Models.CMS;
 
 namespace cCoder.Core.Services.Foundations.AppSecurity;
 
-internal class AppSecurityAppService(IAppSecurityAppBroker appSecurityAppBroker)
+internal sealed partial class AppSecurityAppService(
+    IAppSecurityAppBroker appSecurityAppBroker)
     : IAppSecurityAppService
 {
-    public ValueTask AddAsync(App app) =>
-        appSecurityAppBroker.AddAsync(app: app);
+    public ValueTask AddAppAsync(App newApp) =>
+        TryCatch(operation: async ValueTask () =>
+        {
+            ValidateAppOnAdd(newApp: newApp);
 
-    public ValueTask UpdateAsync(App app) =>
-        appSecurityAppBroker.UpdateAsync(app: app);
+            App flatApp = CreateFlatApp(app: newApp);
+
+            await appSecurityAppBroker.AddAppAsync(newApp: flatApp);
+        });
+
+    public ValueTask UpdateAppAsync(App updatedApp) =>
+        TryCatch(operation: async ValueTask () =>
+        {
+            ValidateAppOnUpdate(updatedApp: updatedApp);
+
+            App flatApp = CreateFlatApp(app: updatedApp);
+
+            await appSecurityAppBroker.UpdateAppAsync(updatedApp: flatApp);
+        });
 
     public ValueTask DeleteAsync(int appId) =>
-        appSecurityAppBroker.DeleteAsync(appId: appId);
+        TryCatch(operation: async ValueTask () =>
+        {
+            ValidateAppOnDelete(appId: appId);
+
+            await appSecurityAppBroker.DeleteAsync(appId: appId);
+        });
+
+    private static App CreateFlatApp(App app) =>
+        new()
+        {
+            Id = app.Id,
+            DefaultCultureId = app.DefaultCultureId,
+            TenantId = app.TenantId,
+            Name = app.Name,
+            Domain = app.Domain,
+            DefaultTheme = app.DefaultTheme,
+            ConfigJson = app.ConfigJson,
+        };
 }
