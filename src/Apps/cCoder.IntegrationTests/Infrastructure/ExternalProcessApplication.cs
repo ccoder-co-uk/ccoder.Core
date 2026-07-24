@@ -49,8 +49,8 @@ internal sealed class ExternalProcessApplication : IAsyncDisposable
             process.StartInfo.Environment[key] = value;
         }
 
-        process.OutputDataReceived += (_, args) => Append(args.Data);
-        process.ErrorDataReceived += (_, args) => Append(args.Data);
+        process.OutputDataReceived += (_, args) => Append(line: args.Data);
+        process.ErrorDataReceived += (_, args) => Append(line: args.Data);
 
         if (!process.Start())
         {
@@ -74,11 +74,13 @@ internal sealed class ExternalProcessApplication : IAsyncDisposable
                 return;
             }
 
-            await Task.Delay(500, cancellationTokenSource.Token).ContinueWith(_ => { }, TaskScheduler.Default);
+            await Task.Delay(millisecondsDelay: 500,cancellationToken: cancellationTokenSource.Token)
+                .ContinueWith(continuationAction: _ => { },scheduler: TaskScheduler.Default);
         }
 
         string diagnostics = readinessDiagnostics?.Invoke();
-        string readinessDetails = string.IsNullOrWhiteSpace(diagnostics)
+
+        string readinessDetails = string.IsNullOrWhiteSpace(value: diagnostics)
             ? string.Empty
             : $"{Environment.NewLine}Readiness diagnostics:{Environment.NewLine}{diagnostics}";
 
@@ -100,7 +102,7 @@ internal sealed class ExternalProcessApplication : IAsyncDisposable
                 process.Kill(entireProcessTree: true);
 
                 Task waitForExitTask = process.WaitForExitAsync();
-                Task completedTask = await Task.WhenAny(waitForExitTask, Task.Delay(TimeSpan.FromSeconds(15)));
+                Task completedTask = await Task.WhenAny(task1: waitForExitTask,task2: Task.Delay(delay: TimeSpan.FromSeconds(seconds: 15)));
 
                 if (completedTask == waitForExitTask)
                 {
@@ -127,7 +129,7 @@ internal sealed class ExternalProcessApplication : IAsyncDisposable
 
         lock (output)
         {
-            output.AppendLine(line);
+            output.AppendLine(value: line);
         }
     }
 }

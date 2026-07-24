@@ -100,7 +100,8 @@ public static partial class IServiceCollectionExtensions
                     || string.Equals(a: route.RoutePath, b: "Api/Security", comparisonType: StringComparison.OrdinalIgnoreCase)))
             .ToArray();
 
-        services.AddControllers().AddOData(setupAction: opt =>
+        services.AddControllers()
+            .AddOData(setupAction: opt =>
         {
             opt.RouteOptions.EnableQualifiedOperationCall = false;
             opt.EnableAttributeRouting = true;

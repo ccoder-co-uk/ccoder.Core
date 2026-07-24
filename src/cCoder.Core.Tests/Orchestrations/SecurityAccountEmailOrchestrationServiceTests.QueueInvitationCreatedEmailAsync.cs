@@ -12,17 +12,16 @@ public partial class SecurityAccountEmailOrchestrationServiceTests
     [Fact]
     public async Task QueueInvitationCreatedEmailAsync_ShouldQueueInvitationEmail()
     {
-        App app = CreateApp("UserInvite");
-        SecurityAccountEvent accountEvent = CreateAccountEvent(SecurityAccountEventKind.InvitationCreated);
-        SetupAppLookup(app);
-        SetupQueuedEmailExpectation(
-            "UserInvite",
-            "Core Portal: Confirm Invitation");
+        App app = CreateApp(templateName: "UserInvite");
+        SecurityAccountEvent accountEvent = CreateAccountEvent(kind: SecurityAccountEventKind.InvitationCreated);
+        SetupAppLookup(app: app);
 
-        await orchestrationService.QueueInvitationCreatedEmailAsync(accountEvent);
+        SetupQueuedEmailExpectation(
+templateName:             "UserInvite",subject:             "Core Portal: Confirm Invitation");
+
+        await orchestrationService.QueueInvitationCreatedEmailAsync(accountEvent: accountEvent);
 
         VerifyQueuedEmail(
-            "UserInvite",
-            "Core Portal: Confirm Invitation");
+templateName:             "UserInvite",subject:             "Core Portal: Confirm Invitation");
     }
 }

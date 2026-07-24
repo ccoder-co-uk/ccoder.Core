@@ -62,39 +62,25 @@ public partial class SecurityAccountEmailOrchestrationServiceTests
     private void SetupAppLookup(App app)
     {
         contentManagementAppServiceMock
-            .Setup(service => service.GetAll(true))
-            .Returns(new[] { app }.AsQueryable());
+            .Setup(expression: service => service.GetAll(ignoreFilters: true))
+            .Returns(value: new[] { app }.AsQueryable());
     }
 
     private void SetupQueuedEmailExpectation(string templateName, string subject)
     {
         templatedEmailOrchestrationServiceMock
-            .Setup(service => service.QueueAsync(
-                It.Is<App>(app => app.Id == 17),
-                templateName,
-                "cy-GB",
-                It.Is<object>(model =>
-                    ReadModelValue<string>(model, "Token") == "token-123"
-                    && ReadModelValue<SSOUser>(model, "SSOUser").Id == "user-123"),
-                "user@example.com",
-                subject,
-                "user-123",
-                "Default"))
-            .ReturnsAsync(new QueuedEmail());
+            .Setup(expression: service => service.QueueAsync(
+app:                 It.Is<App>(match: app => app.Id == 17),templateName:                 templateName,culture:                 "cy-GB",model:                 It.Is<object>(match: model =>
+                    ReadModelValue<string>(model: model,propertyName: "Token") == "token-123"
+                    && ReadModelValue<SSOUser>(model: model,propertyName: "SSOUser").Id == "user-123"),toEmail:                 "user@example.com",subject:                 subject,sentByUserId:                 "user-123",mailSenderName:                 "Default"))
+            .ReturnsAsync(value: new QueuedEmail());
     }
 
     private static TValue ReadModelValue<TValue>(object model, string propertyName) =>
-        (TValue)model.GetType().GetProperty(propertyName)!.GetValue(model);
+        (TValue)model.GetType()
+            .GetProperty(name: propertyName)!.GetValue(obj: model);
 
     private void VerifyQueuedEmail(string templateName, string subject) =>
-        templatedEmailOrchestrationServiceMock.Verify(service => service.QueueAsync(
-                It.Is<App>(app => app.Id == 17),
-                templateName,
-                "cy-GB",
-                It.IsAny<object>(),
-                "user@example.com",
-                subject,
-                "user-123",
-                "Default"),
-            Times.Once);
+        templatedEmailOrchestrationServiceMock.Verify(expression: service => service.QueueAsync(
+app:                 It.Is<App>(match: app => app.Id == 17),templateName:                 templateName,culture:                 "cy-GB",model:                 It.IsAny<object>(),toEmail:                 "user@example.com",subject:                 subject,sentByUserId:                 "user-123",mailSenderName:                 "Default"),times:             Times.Once);
 }

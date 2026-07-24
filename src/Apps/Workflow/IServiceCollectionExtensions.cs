@@ -30,10 +30,13 @@ internal static class IServiceCollectionExtensions
         services.AddLogging(configure: loggingBuilder =>
         {
             loggingBuilder.ClearProviders();
+
             loggingBuilder.AddSimpleConsole(
                 configure: options => options.SingleLine = true);
+
             loggingBuilder.AddFilter(
                 levelFilter: level => level >= LogLevel.Debug);
+
             loggingBuilder.AddConfiguration(
                 configuration: configuration.GetSection(key: "logging"));
         });

@@ -23,21 +23,24 @@ public sealed class HostedServicesAcceptanceFixture : IAsyncLifetime
     {
         AcceptanceSettings settings = new()
         {
-            CoreConnectionString = AddDatabaseSuffix("CCODER_ACCEPTANCE_CORE_CONNECTION_STRING"),
-            SsoConnectionString = AddDatabaseSuffix("CCODER_ACCEPTANCE_SSO_CONNECTION_STRING"),
+            CoreConnectionString = AddDatabaseSuffix(variableName: "CCODER_ACCEPTANCE_CORE_CONNECTION_STRING"),
+            SsoConnectionString = AddDatabaseSuffix(variableName: "CCODER_ACCEPTANCE_SSO_CONNECTION_STRING"),
             DecryptionKey = "000000000000000000000000000000000000000000000000",
         };
 
-        ApplyEnvironment(settings);
-        databaseServices = AcceptanceServiceProviderFactory.Create(settings);
+        ApplyEnvironment(settings: settings);
+        databaseServices = AcceptanceServiceProviderFactory.Create(settings: settings);
         Factory = new HostedServicesAcceptanceFactory(settings);
+
         databaseManager = new AcceptanceDatabaseManager(
             databaseServices,
             settings.CoreConnectionString,
             settings.SsoConnectionString);
+
         await databaseManager.ResetDatabasesAsync();
         await new AcceptanceApplicationSeeder(Factory.Services).SeedAsync();
-        Client = Factory.CreateClient(new WebApplicationFactoryClientOptions
+
+        Client = Factory.CreateClient(options: new WebApplicationFactoryClientOptions
         {
             AllowAutoRedirect = false,
             BaseAddress = new Uri("https://localhost"),
@@ -80,16 +83,16 @@ public sealed class HostedServicesAcceptanceFixture : IAsyncLifetime
     {
         previousEnvironmentValues = new Dictionary<string, string>
         {
-            ["ConnectionStrings__Core"] = Environment.GetEnvironmentVariable("ConnectionStrings__Core"),
-            ["ConnectionStrings__SSO"] = Environment.GetEnvironmentVariable("ConnectionStrings__SSO"),
-            ["Settings__DecryptionKey"] = Environment.GetEnvironmentVariable("Settings__DecryptionKey"),
-            ["Eventing__Http__HubUrl"] = Environment.GetEnvironmentVariable("Eventing__Http__HubUrl"),
+            ["ConnectionStrings__Core"] = Environment.GetEnvironmentVariable(variable: "ConnectionStrings__Core"),
+            ["ConnectionStrings__SSO"] = Environment.GetEnvironmentVariable(variable: "ConnectionStrings__SSO"),
+            ["Settings__DecryptionKey"] = Environment.GetEnvironmentVariable(variable: "Settings__DecryptionKey"),
+            ["Eventing__Http__HubUrl"] = Environment.GetEnvironmentVariable(variable: "Eventing__Http__HubUrl"),
         };
 
-        Environment.SetEnvironmentVariable("ConnectionStrings__Core", settings.CoreConnectionString);
-        Environment.SetEnvironmentVariable("ConnectionStrings__SSO", settings.SsoConnectionString);
-        Environment.SetEnvironmentVariable("Settings__DecryptionKey", settings.DecryptionKey);
-        Environment.SetEnvironmentVariable("Eventing__Http__HubUrl", string.Empty);
+        Environment.SetEnvironmentVariable(variable: "ConnectionStrings__Core",value: settings.CoreConnectionString);
+        Environment.SetEnvironmentVariable(variable: "ConnectionStrings__SSO",value: settings.SsoConnectionString);
+        Environment.SetEnvironmentVariable(variable: "Settings__DecryptionKey",value: settings.DecryptionKey);
+        Environment.SetEnvironmentVariable(variable: "Eventing__Http__HubUrl",value: string.Empty);
     }
 
     private void RestoreEnvironment()
@@ -101,28 +104,29 @@ public sealed class HostedServicesAcceptanceFixture : IAsyncLifetime
 
         foreach ((string name, string value) in previousEnvironmentValues)
         {
-            Environment.SetEnvironmentVariable(name, value);
+            Environment.SetEnvironmentVariable(variable: name,value: value);
         }
     }
 
     private static string AddDatabaseSuffix(string variableName)
     {
-        string connectionString = ReadRequiredConnectionString(variableName);
+        string connectionString = ReadRequiredConnectionString(variableName: variableName);
 
         SqlConnectionStringBuilder builder = new(connectionString)
         {
             Encrypt = true,
             TrustServerCertificate = true,
         };
+
         string databaseName = builder.InitialCatalog ?? string.Empty;
 
-        if (string.IsNullOrWhiteSpace(databaseName))
+        if (string.IsNullOrWhiteSpace(value: databaseName))
         {
             return connectionString;
         }
 
         string suffix = typeof(HostedServicesAcceptanceFixture).Assembly.GetName().Name!
-            .Replace(".AcceptanceTests", string.Empty, StringComparison.Ordinal)
+            .Replace(oldValue: ".AcceptanceTests",newValue: string.Empty,comparisonType: StringComparison.Ordinal)
             .ToLowerInvariant();
 
         builder.InitialCatalog = $"{databaseName}-{suffix}";
@@ -132,11 +136,11 @@ public sealed class HostedServicesAcceptanceFixture : IAsyncLifetime
     private static string ReadRequiredConnectionString(string variableName)
     {
         string connectionString =
-            Environment.GetEnvironmentVariable(variableName)
-            ?? Environment.GetEnvironmentVariable(variableName, EnvironmentVariableTarget.User)
-            ?? Environment.GetEnvironmentVariable(variableName, EnvironmentVariableTarget.Machine);
+            Environment.GetEnvironmentVariable(variable: variableName)
+            ?? Environment.GetEnvironmentVariable(variable: variableName,target: EnvironmentVariableTarget.User)
+            ?? Environment.GetEnvironmentVariable(variable: variableName,target: EnvironmentVariableTarget.Machine);
 
-        if (!string.IsNullOrWhiteSpace(connectionString))
+        if (!string.IsNullOrWhiteSpace(value: connectionString))
         {
             return connectionString;
         }

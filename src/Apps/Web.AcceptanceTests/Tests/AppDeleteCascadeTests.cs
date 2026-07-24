@@ -57,7 +57,7 @@ public sealed class AppDeleteCascadeTests(WebAcceptanceFixture fixture)
                     .GetRequiredService<cCoder.Data.ICoreContextFactory>()
                     .CreateCoreContext();
 
-                await core.AddAppFlowDefinitionAsync(new AppFlowDefinition
+                await core.AddAppFlowDefinitionAsync(flowDefinition: new AppFlowDefinition
                 {
                     Id = flowId,
                     AppId = seededApp.AppId,
@@ -71,14 +71,14 @@ public sealed class AppDeleteCascadeTests(WebAcceptanceFixture fixture)
                     LastUpdated = DateTimeOffset.UtcNow
                 });
 
-                await core.AddScheduledTaskAsync(new ScheduledTask
+                await core.AddScheduledTaskAsync(scheduledTask: new ScheduledTask
                 {
                     AppId = seededApp.AppId,
                     FlowId = flowId,
                     Name = "Acceptance Task",
                     Description = "Task",
                     ExecutionArgs = "{}",
-                    ScheduleInTicks = TimeSpan.FromMinutes(5).Ticks,
+                    ScheduleInTicks = TimeSpan.FromMinutes(minutes: 5).Ticks,
                     CreatedBy = "Guest",
                     UpdatedBy = "Guest",
                     ExecuteAs = "Guest",
@@ -86,7 +86,7 @@ public sealed class AppDeleteCascadeTests(WebAcceptanceFixture fixture)
                     LastUpdated = DateTimeOffset.UtcNow
                 });
 
-                await core.AddMailServerAsync(new MailServer
+                await core.AddMailServerAsync(mailServer: new MailServer
                 {
                     AppId = seededApp.AppId,
                     Name = "Acceptance Server",
@@ -98,7 +98,7 @@ public sealed class AppDeleteCascadeTests(WebAcceptanceFixture fixture)
                     EnableSSL = false
                 });
 
-                await core.AddQueuedEmailAsync(new QueuedEmail
+                await core.AddQueuedEmailAsync(queuedEmail: new QueuedEmail
                 {
                     AppId = seededApp.AppId,
                     SentByUserId = "Guest",
@@ -109,7 +109,7 @@ public sealed class AppDeleteCascadeTests(WebAcceptanceFixture fixture)
                     MailServerName = "Acceptance Server"
                 });
 
-                await core.AddSentEmailAsync(new SentEmail
+                await core.AddSentEmailAsync(sentEmail: new SentEmail
                 {
                     AppId = seededApp.AppId,
                     SentByUserId = "Guest",
@@ -121,7 +121,7 @@ public sealed class AppDeleteCascadeTests(WebAcceptanceFixture fixture)
                     From = "noreply@example.com"
                 });
 
-                await core.AddFolderAsync(new Folder
+                await core.AddFolderAsync(folder: new Folder
                 {
                     Id = rootFolderId,
                     AppId = seededApp.AppId,
@@ -129,7 +129,7 @@ public sealed class AppDeleteCascadeTests(WebAcceptanceFixture fixture)
                     Path = "root"
                 });
 
-                await core.AddFolderAsync(new Folder
+                await core.AddFolderAsync(folder: new Folder
                 {
                     Id = childFolderId,
                     AppId = seededApp.AppId,
@@ -138,10 +138,10 @@ public sealed class AppDeleteCascadeTests(WebAcceptanceFixture fixture)
                     Path = "root/child"
                 });
 
-                await core.AddFolderRoleAsync(new FolderRole { FolderId = rootFolderId, RoleId = seededApp.RoleId });
-                await core.AddFolderRoleAsync(new FolderRole { FolderId = childFolderId, RoleId = seededApp.RoleId });
+                await core.AddFolderRoleAsync(folderRole: new FolderRole { FolderId = rootFolderId, RoleId = seededApp.RoleId });
+                await core.AddFolderRoleAsync(folderRole: new FolderRole { FolderId = childFolderId, RoleId = seededApp.RoleId });
 
-                await core.AddDmsFileAsync(new DmsFile
+                await core.AddDmsFileAsync(file: new DmsFile
                 {
                     Id = fileId,
                     FolderId = childFolderId,
@@ -153,7 +153,7 @@ public sealed class AppDeleteCascadeTests(WebAcceptanceFixture fixture)
                     Size = "1 B"
                 });
 
-                await core.AddFileContentAsync(new FileContent
+                await core.AddFileContentAsync(fileContent: new FileContent
                 {
                     Id = Guid.NewGuid(),
                     FileId = fileId,
@@ -166,30 +166,92 @@ public sealed class AppDeleteCascadeTests(WebAcceptanceFixture fixture)
                 });
             }
 
-            int actualStatusCode = await DeleteAppAsync(seededApp.Domain, seededApp.AppId);
+            int actualStatusCode = await DeleteAppAsync(host: seededApp.Domain,id: seededApp.AppId);
 
             using IServiceScope verificationScope = fixture.Factory.Services.CreateScope();
+
             using var verifyCore = verificationScope.ServiceProvider
                 .GetRequiredService<cCoder.Data.ICoreContextFactory>()
                 .CreateCoreContext();
 
-            actualStatusCode.Should().Be(200);
-            verifyCore.Set<App>().IgnoreQueryFilters().Any(app => app.Id == seededApp.AppId).Should().BeFalse();
-            verifyCore.Set<Role>().IgnoreQueryFilters().Any(role => role.AppId == seededApp.AppId).Should().BeFalse();
-            verifyCore.Set<UserRole>().IgnoreQueryFilters().Any(userRole => userRole.RoleId == seededApp.RoleId).Should().BeFalse();
-            verifyCore.Set<FolderRole>().IgnoreQueryFilters().Any(folderRole => folderRole.RoleId == seededApp.RoleId).Should().BeFalse();
-            verifyCore.Set<Folder>().IgnoreQueryFilters().Any(folder => folder.AppId == seededApp.AppId).Should().BeFalse();
-            verifyCore.Set<DmsFile>().IgnoreQueryFilters().Any(file => file.FolderId == childFolderId).Should().BeFalse();
-            verifyCore.Set<FileContent>().IgnoreQueryFilters().Any(content => content.FileId == fileId).Should().BeFalse();
-            verifyCore.Set<MailServer>().IgnoreQueryFilters().Any(server => server.AppId == seededApp.AppId).Should().BeFalse();
-            verifyCore.Set<QueuedEmail>().IgnoreQueryFilters().Any(email => email.AppId == seededApp.AppId).Should().BeFalse();
-            verifyCore.Set<SentEmail>().IgnoreQueryFilters().Any(email => email.AppId == seededApp.AppId).Should().BeFalse();
-            verifyCore.Set<ScheduledTask>().IgnoreQueryFilters().Any(task => task.AppId == seededApp.AppId).Should().BeFalse();
-            verifyCore.Set<AppFlowDefinition>().IgnoreQueryFilters().Any(flow => flow.AppId == seededApp.AppId).Should().BeFalse();
+            actualStatusCode.Should()
+                .Be(expected: 200);
+
+            verifyCore.Set<App>()
+                .IgnoreQueryFilters()
+                .Any(predicate: app => app.Id == seededApp.AppId)
+                .Should()
+                .BeFalse();
+
+            verifyCore.Set<Role>()
+                .IgnoreQueryFilters()
+                .Any(predicate: role => role.AppId == seededApp.AppId)
+                .Should()
+                .BeFalse();
+
+            verifyCore.Set<UserRole>()
+                .IgnoreQueryFilters()
+                .Any(predicate: userRole => userRole.RoleId == seededApp.RoleId)
+                .Should()
+                .BeFalse();
+
+            verifyCore.Set<FolderRole>()
+                .IgnoreQueryFilters()
+                .Any(predicate: folderRole => folderRole.RoleId == seededApp.RoleId)
+                .Should()
+                .BeFalse();
+
+            verifyCore.Set<Folder>()
+                .IgnoreQueryFilters()
+                .Any(predicate: folder => folder.AppId == seededApp.AppId)
+                .Should()
+                .BeFalse();
+
+            verifyCore.Set<DmsFile>()
+                .IgnoreQueryFilters()
+                .Any(predicate: file => file.FolderId == childFolderId)
+                .Should()
+                .BeFalse();
+
+            verifyCore.Set<FileContent>()
+                .IgnoreQueryFilters()
+                .Any(predicate: content => content.FileId == fileId)
+                .Should()
+                .BeFalse();
+
+            verifyCore.Set<MailServer>()
+                .IgnoreQueryFilters()
+                .Any(predicate: server => server.AppId == seededApp.AppId)
+                .Should()
+                .BeFalse();
+
+            verifyCore.Set<QueuedEmail>()
+                .IgnoreQueryFilters()
+                .Any(predicate: email => email.AppId == seededApp.AppId)
+                .Should()
+                .BeFalse();
+
+            verifyCore.Set<SentEmail>()
+                .IgnoreQueryFilters()
+                .Any(predicate: email => email.AppId == seededApp.AppId)
+                .Should()
+                .BeFalse();
+
+            verifyCore.Set<ScheduledTask>()
+                .IgnoreQueryFilters()
+                .Any(predicate: task => task.AppId == seededApp.AppId)
+                .Should()
+                .BeFalse();
+
+            verifyCore.Set<AppFlowDefinition>()
+                .IgnoreQueryFilters()
+                .Any(predicate: flow => flow.AppId == seededApp.AppId)
+                .Should()
+                .BeFalse();
         }
         finally
         {
-            await Teardown(seededApp);
+            await Teardown(seededApp: seededApp);
         }
     }
 
@@ -198,30 +260,31 @@ public sealed class AppDeleteCascadeTests(WebAcceptanceFixture fixture)
     private async Task<SeededApp> SeedDatabase(params string[] privileges)
     {
         using IServiceScope scope = fixture.Factory.Services.CreateScope();
+
         using var core = scope.ServiceProvider
             .GetRequiredService<cCoder.Data.ICoreContextFactory>()
             .CreateCoreContext();
 
-        App app = await core.AddAppAsync(new App
+        App app = await core.AddAppAsync(app: new App
         {
-            Name = Unique("AcceptanceApp"),
-            Domain = $"{Unique("acceptance")}.local",
+            Name = Unique(prefix: "AcceptanceApp"),
+            Domain = $"{Unique(prefix: "acceptance")}.local",
             DefaultTheme = "Default",
             DefaultCultureId = string.Empty,
-            TenantId = Unique("tenant"),
+            TenantId = Unique(prefix: "tenant"),
             ConfigJson = "{}",
         });
 
-        Role role = await core.AddRoleAsync(new Role
+        Role role = await core.AddRoleAsync(role: new Role
         {
             Id = Guid.NewGuid(),
             AppId = app.Id,
-            Name = Unique("AcceptanceRole"),
+            Name = Unique(prefix: "AcceptanceRole"),
             Description = "Acceptance role",
-            Privs = string.Join(',', privileges),
+            Privs = string.Join(separator: ',',value: privileges),
         });
 
-        await core.AddUserRoleAsync(new UserRole { RoleId = role.Id, UserId = "Guest" });
+        await core.AddUserRoleAsync(userRole: new UserRole { RoleId = role.Id, UserId = "Guest" });
 
         return new SeededApp(app.Id, role.Id, app.Domain);
     }
@@ -235,75 +298,96 @@ public sealed class AppDeleteCascadeTests(WebAcceptanceFixture fixture)
             DecryptionKey = fixture.Settings.DecryptionKey,
             AggregateDomains = true,
         });
-        using HttpClient client = factory.CreateClient(new WebApplicationFactoryClientOptions
+
+        using HttpClient client = factory.CreateClient(options: new WebApplicationFactoryClientOptions
         {
             AllowAutoRedirect = false,
             BaseAddress = new Uri("https://localhost"),
         });
+
         using HttpRequestMessage request = new(HttpMethod.Delete, $"{BaseUrl}({id})");
         request.Headers.Host = host;
 
-        using HttpResponseMessage response = await client.SendAsync(request);
+        using HttpResponseMessage response = await client.SendAsync(request: request);
         string content = await response.Content.ReadAsStringAsync();
-        response.StatusCode.Should().Be(HttpStatusCode.OK, content);
+
+        response.StatusCode.Should()
+            .Be(expected: HttpStatusCode.OK,because: content);
+
         return (int)response.StatusCode;
     }
 
     private async Task Teardown(SeededApp seededApp)
     {
         using IServiceScope scope = fixture.Factory.Services.CreateScope();
+
         using var core = scope.ServiceProvider
             .GetRequiredService<cCoder.Data.ICoreContextFactory>()
             .CreateCoreContext();
 
-        await DeleteAllAsync(core, core.Set<FileContent>().IgnoreQueryFilters()
-            .Where(content => core.Set<DmsFile>().IgnoreQueryFilters()
-                .Any(file => file.Id == content.FileId
-                    && core.Set<Folder>().IgnoreQueryFilters()
-                        .Any(folder => folder.Id == file.FolderId && folder.AppId == seededApp.AppId))));
+        await DeleteAllAsync(core: core,query: core.Set<FileContent>()
+            .IgnoreQueryFilters()
+            .Where(predicate: content => core.Set<DmsFile>()
+            .IgnoreQueryFilters()
+                .Any(predicate: file => file.Id == content.FileId
+                    && core.Set<Folder>()
+            .IgnoreQueryFilters()
+                        .Any(predicate: folder => folder.Id == file.FolderId && folder.AppId == seededApp.AppId))));
 
-        await DeleteAllAsync(core, core.Set<DmsFile>().IgnoreQueryFilters()
-            .Where(file => core.Set<Folder>().IgnoreQueryFilters()
-                .Any(folder => folder.Id == file.FolderId && folder.AppId == seededApp.AppId)));
+        await DeleteAllAsync(core: core,query: core.Set<DmsFile>()
+            .IgnoreQueryFilters()
+            .Where(predicate: file => core.Set<Folder>()
+            .IgnoreQueryFilters()
+                .Any(predicate: folder => folder.Id == file.FolderId && folder.AppId == seededApp.AppId)));
 
-        await DeleteAllAsync(core, core.Set<FolderRole>().IgnoreQueryFilters()
-            .Where(folderRole => folderRole.RoleId == seededApp.RoleId));
+        await DeleteAllAsync(core: core,query: core.Set<FolderRole>()
+            .IgnoreQueryFilters()
+            .Where(predicate: folderRole => folderRole.RoleId == seededApp.RoleId));
 
-        await DeleteAllAsync(core, core.Set<Folder>().IgnoreQueryFilters()
-            .Where(folder => folder.AppId == seededApp.AppId));
+        await DeleteAllAsync(core: core,query: core.Set<Folder>()
+            .IgnoreQueryFilters()
+            .Where(predicate: folder => folder.AppId == seededApp.AppId));
 
-        await DeleteAllAsync(core, core.Set<ScheduledTask>().IgnoreQueryFilters()
-            .Where(task => task.AppId == seededApp.AppId));
+        await DeleteAllAsync(core: core,query: core.Set<ScheduledTask>()
+            .IgnoreQueryFilters()
+            .Where(predicate: task => task.AppId == seededApp.AppId));
 
-        await DeleteAllAsync(core, core.Set<MailServer>().IgnoreQueryFilters()
-            .Where(server => server.AppId == seededApp.AppId));
+        await DeleteAllAsync(core: core,query: core.Set<MailServer>()
+            .IgnoreQueryFilters()
+            .Where(predicate: server => server.AppId == seededApp.AppId));
 
-        await DeleteAllAsync(core, core.Set<QueuedEmail>().IgnoreQueryFilters()
-            .Where(email => email.AppId == seededApp.AppId));
+        await DeleteAllAsync(core: core,query: core.Set<QueuedEmail>()
+            .IgnoreQueryFilters()
+            .Where(predicate: email => email.AppId == seededApp.AppId));
 
-        await DeleteAllAsync(core, core.Set<SentEmail>().IgnoreQueryFilters()
-            .Where(email => email.AppId == seededApp.AppId));
+        await DeleteAllAsync(core: core,query: core.Set<SentEmail>()
+            .IgnoreQueryFilters()
+            .Where(predicate: email => email.AppId == seededApp.AppId));
 
-        await DeleteAllAsync(core, core.Set<AppFlowDefinition>().IgnoreQueryFilters()
-            .Where(flow => flow.AppId == seededApp.AppId));
+        await DeleteAllAsync(core: core,query: core.Set<AppFlowDefinition>()
+            .IgnoreQueryFilters()
+            .Where(predicate: flow => flow.AppId == seededApp.AppId));
 
-        await DeleteAllAsync(core, core.Set<UserRole>().IgnoreQueryFilters()
-            .Where(userRole => userRole.RoleId == seededApp.RoleId));
+        await DeleteAllAsync(core: core,query: core.Set<UserRole>()
+            .IgnoreQueryFilters()
+            .Where(predicate: userRole => userRole.RoleId == seededApp.RoleId));
 
-        Role role = core.Set<Role>().IgnoreQueryFilters()
-            .FirstOrDefault(foundRole => foundRole.Id == seededApp.RoleId);
+        Role role = core.Set<Role>()
+            .IgnoreQueryFilters()
+            .FirstOrDefault(predicate: foundRole => foundRole.Id == seededApp.RoleId);
 
         if (role is not null)
         {
-            await core.DeleteAsync(role);
+            await core.DeleteAsync(role: role);
         }
 
-        App app = core.Set<App>().IgnoreQueryFilters()
-            .FirstOrDefault(foundApp => foundApp.Id == seededApp.AppId);
+        App app = core.Set<App>()
+            .IgnoreQueryFilters()
+            .FirstOrDefault(predicate: foundApp => foundApp.Id == seededApp.AppId);
 
         if (app is not null)
         {
-            await core.DeleteAsync(app);
+            await core.DeleteAsync(app: app);
         }
     }
 
@@ -318,7 +402,9 @@ public sealed class AppDeleteCascadeTests(WebAcceptanceFixture fixture)
             return;
         }
 
-        core.Set<T>().RemoveRange(items);
+        core.Set<T>()
+            .RemoveRange(entities: items);
+
         await core.SaveChangesAsync();
     }
 }

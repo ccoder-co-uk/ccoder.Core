@@ -81,7 +81,8 @@ predicate: (documentName, apiDescription) =>
         services.AddEventing(configure: configuration =>
         {
             configuration.EventProviders =
-                (eventProviders ?? []).Where(predicate: provider => provider is not null).ToArray();
+                (eventProviders ?? []).Where(predicate: provider => provider is not null)
+                .ToArray();
         });
 
         services.AddEventingForType<SecurityAccountEvent>();

@@ -107,7 +107,8 @@ public partial class CoreApiBuilderOptions
             return $"Api/{defaultContext}";
         }
 
-        return routePath.Trim().Trim(trimChar: '/');
+        return routePath.Trim()
+            .Trim(trimChar: '/');
     }
 
     private void ConfigureDomainRouting<TDomainConfiguration>(
@@ -116,7 +117,9 @@ public partial class CoreApiBuilderOptions
         CoreDomainsConfig defaults)
     {
         Type configType = typeof(TDomainConfiguration);
-        string rootPath = defaults.RootPath.Trim().TrimEnd(trimChar: '/');
+
+        string rootPath = defaults.RootPath.Trim()
+            .TrimEnd(trimChar: '/');
 
         string routePath = coreConfiguration?.AggregateDomains == true
             ? $"{rootPath}/Core"

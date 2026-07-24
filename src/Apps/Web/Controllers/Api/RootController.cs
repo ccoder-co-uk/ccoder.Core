@@ -37,8 +37,8 @@ namespace Web.Controllers.Api
             Config = config;
             AuthorizationBroker = authorizationBroker;
             ApiContexts = apiContexts
-                .Where(context => string.Equals(context.Kind, "Context", StringComparison.OrdinalIgnoreCase))
-                .OrderBy(context => context.Name, StringComparer.OrdinalIgnoreCase)
+                .Where(predicate: context => string.Equals(context.Kind, "Context", StringComparison.OrdinalIgnoreCase))
+                .OrderBy(keySelector: context => context.Name,comparer: StringComparer.OrdinalIgnoreCase)
                 .ToArray();
         }
 
@@ -50,7 +50,7 @@ namespace Web.Controllers.Api
                 value = ApiContexts
             };
 
-            return Ok(result);
+            return Ok(value: result);
         }
 
         [HttpPost]
@@ -65,27 +65,27 @@ namespace Web.Controllers.Api
         public Task<IActionResult> Put() => Post();
 
         [HttpGet("Time")]
-        public IActionResult Time() => Ok(new { DateTimeOffset.UtcNow });
+        public IActionResult Time() => Ok(value: new { DateTimeOffset.UtcNow });
 
         [HttpPost("ExecuteScript")]
         public async Task<IActionResult> ExecuteScript()
         {
-            AuthorizationBroker.Authorize((int?)null, "script_execute");
+            AuthorizationBroker.Authorize(appId: (int?)null,privilege: "script_execute");
 
             using HttpClient api = new(new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate })
             {
                 BaseAddress = new Uri(Config.Services["Workflow"]),
-                Timeout = TimeSpan.FromMinutes(10)
+                Timeout = TimeSpan.FromMinutes(minutes: 10)
             };
 
             string script = await new StreamReader(Request.Body).ReadToEndAsync();
-            HttpResponseMessage response = await api.PostAsync("ExecuteScript", new StringContent(script, Encoding.UTF8, "text/plain"));
-            return Ok(await response.Content.ReadAsStringAsync());
+            HttpResponseMessage response = await api.PostAsync(requestUri: "ExecuteScript",content: new StringContent(script, Encoding.UTF8, "text/plain"));
+            return Ok(value: await response.Content.ReadAsStringAsync());
         }
 
         [HttpGet("GetMetadata")]
         public IActionResult GetMetadata(string culture = "")
-            => Content(MetadataCache.GetAll(culture), "application/json");
+            => Content(content: MetadataCache.GetAll(culture: culture),contentType: "application/json");
 
         [HttpGet("RefreshCache")]
         public IActionResult RebuildCache()

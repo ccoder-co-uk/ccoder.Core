@@ -198,7 +198,8 @@ predicate: userRole => userRole.RoleId == role.Id && userRole.UserId == userId, 
                 continue;
             }
 
-            await core.Set<UserRole>().AddAsync(
+            await core.Set<UserRole>()
+                .AddAsync(
 entity: new UserRole
 {
     RoleId = role.Id,
@@ -273,7 +274,8 @@ predicate: found => found.AppId == appId && found.Name == name, cancellationToke
                 Privs = string.Empty
             };
 
-            await core.Set<Role>().AddAsync(entity: role, cancellationToken: cancellationToken);
+            await core.Set<Role>()
+                .AddAsync(entity: role, cancellationToken: cancellationToken);
         }
 
         role.Privs = JoinPrivileges(existingPrivileges: role.Privs, requiredPrivileges: privileges);
@@ -296,7 +298,8 @@ predicate: userRole => userRole.RoleId == roleId && userRole.UserId == userId, c
             return;
         }
 
-        await core.Set<UserRole>().AddAsync(
+        await core.Set<UserRole>()
+            .AddAsync(
 entity: new UserRole
 {
     RoleId = roleId,
@@ -437,7 +440,8 @@ core: core, appId: appId, templates: UnpackPackageItem<Template>(data: item.Data
 
             if (existingLayout is null)
             {
-                await core.Set<Layout>().AddAsync(entity: new Layout
+                await core.Set<Layout>()
+                    .AddAsync(entity: new Layout
                 {
                     AppId = appId,
                     Name = item.Name,
@@ -488,7 +492,8 @@ core: core, appId: appId, templates: UnpackPackageItem<Template>(data: item.Data
 
             if (existingTemplate is null)
             {
-                await core.Set<Template>().AddAsync(entity: new Template
+                await core.Set<Template>()
+                    .AddAsync(entity: new Template
                 {
                     AppId = appId,
                     Name = item.Name,
@@ -537,7 +542,8 @@ core: core, appId: appId, templates: UnpackPackageItem<Template>(data: item.Data
 
             if (existingComponent is null)
             {
-                await core.Set<Component>().AddAsync(entity: new Component
+                await core.Set<Component>()
+                    .AddAsync(entity: new Component
                 {
                     AppId = appId,
                     Name = item.Name,
@@ -637,7 +643,9 @@ core: core, appId: appId, templates: UnpackPackageItem<Template>(data: item.Data
                         .ToList(),
                 };
 
-                await core.Set<Page>().AddAsync(entity: newPage);
+                await core.Set<Page>()
+                    .AddAsync(entity: newPage);
+
                 await core.SaveChangesAsync();
                 continue;
             }
@@ -654,8 +662,11 @@ core: core, appId: appId, templates: UnpackPackageItem<Template>(data: item.Data
             existingPage.ResourceKey = item.ResourceKey;
             existingPage.Layout = item.Layout;
 
-            core.Set<PageInfo>().RemoveRange(entities: existingPage.PageInfo ?? []);
-            core.Set<cCoder.Data.Models.CMS.Content>().RemoveRange(entities: existingPage.Contents ?? []);
+            core.Set<PageInfo>()
+                .RemoveRange(entities: existingPage.PageInfo ?? []);
+
+            core.Set<cCoder.Data.Models.CMS.Content>()
+                .RemoveRange(entities: existingPage.Contents ?? []);
 
             existingPage.PageInfo = (item.PageInfo ?? [])
                 .Select(selector: info => new PageInfo
@@ -734,7 +745,8 @@ core: core, appId: appId, templates: UnpackPackageItem<Template>(data: item.Data
                 continue;
             }
 
-            await core.Set<PageRole>().AddAsync(entity: new PageRole
+            await core.Set<PageRole>()
+                .AddAsync(entity: new PageRole
             {
                 PageId = pageId,
                 RoleId = roleId,
@@ -757,7 +769,8 @@ core: core, appId: appId, templates: UnpackPackageItem<Template>(data: item.Data
             return;
         }
 
-        await core.Set<User>().AddAsync(
+        await core.Set<User>()
+            .AddAsync(
 entity: new User
 {
     Id = "Guest",
@@ -797,7 +810,9 @@ entity: new User
 
             if (existingPackage is null)
             {
-                await core.Set<Package>().AddAsync(entity: package, cancellationToken: cancellationToken);
+                await core.Set<Package>()
+                    .AddAsync(entity: package, cancellationToken: cancellationToken);
+
                 continue;
             }
 
@@ -805,7 +820,8 @@ entity: new User
             existingPackage.Category = package.Category;
             existingPackage.SourceApi = package.SourceApi;
 
-            core.Set<PackageItem>().RemoveRange(entities: existingPackage.Items ?? []);
+            core.Set<PackageItem>()
+                .RemoveRange(entities: existingPackage.Items ?? []);
 
             existingPackage.Items = (package.Items ?? [])
                 .Select(selector: item => new PackageItem
@@ -874,7 +890,9 @@ entity: new User
             };
 
             foldersByPath[path] = folder;
-            await core.Set<Folder>().AddAsync(entity: folder, cancellationToken: cancellationToken);
+
+            await core.Set<Folder>()
+                .AddAsync(entity: folder, cancellationToken: cancellationToken);
         }
 
         await core.SaveChangesAsync(cancellationToken: cancellationToken);
@@ -951,7 +969,9 @@ entity: new User
                 };
 
                 filesByPath[filePath] = file;
-                await core.Set<cCoder.Data.Models.DMS.File>().AddAsync(entity: file, cancellationToken: cancellationToken);
+
+                await core.Set<cCoder.Data.Models.DMS.File>()
+                    .AddAsync(entity: file, cancellationToken: cancellationToken);
             }
             else
             {
@@ -1002,7 +1022,9 @@ item: new FileContent
         string path,
         CancellationToken cancellationToken)
     {
-        string normalizedPath = path.Trim().Trim(trimChar: '/').ToLowerInvariant();
+        string normalizedPath = path.Trim()
+            .Trim(trimChar: '/')
+            .ToLowerInvariant();
 
         if (foldersByPath.TryGetValue(key: normalizedPath, value: out Folder existingFolder))
         {
@@ -1026,7 +1048,9 @@ item: new FileContent
         };
 
         foldersByPath[normalizedPath] = folder;
-        await core.Set<Folder>().AddAsync(entity: folder, cancellationToken: cancellationToken);
+
+        await core.Set<Folder>()
+            .AddAsync(entity: folder, cancellationToken: cancellationToken);
 
         return folder;
     }
@@ -1034,7 +1058,9 @@ item: new FileContent
     private static string GetBaselineDmsPath(string assetPath)
     {
         const string prefix = "Baseline/DMS/";
-        string normalizedPath = assetPath.Replace(oldChar: '\\', newChar: '/').Trim(trimChar: '/');
+
+        string normalizedPath = assetPath.Replace(oldChar: '\\', newChar: '/')
+            .Trim(trimChar: '/');
 
         if (!normalizedPath.StartsWith(value: prefix, comparisonType: StringComparison.OrdinalIgnoreCase))
         {
@@ -1128,7 +1154,9 @@ item: new FileContent
 
             if (existingItem is null)
             {
-                await core.Set<CommonObject>().AddAsync(entity: item, cancellationToken: cancellationToken);
+                await core.Set<CommonObject>()
+                    .AddAsync(entity: item, cancellationToken: cancellationToken);
+
                 continue;
             }
 
@@ -1153,7 +1181,8 @@ item: new FileContent
     private static int GetPageDepth(string path) =>
         string.IsNullOrWhiteSpace(value: path)
             ? 0
-            : path.Trim(trimChar: '/').Split(separator: '/', options: StringSplitOptions.RemoveEmptyEntries).Length;
+            : path.Trim(trimChar: '/')
+            .Split(separator: '/', options: StringSplitOptions.RemoveEmptyEntries).Length;
 
     private static string GetParentPagePath(string path)
     {
@@ -1174,7 +1203,8 @@ item: new FileContent
 
         foreach (JObject role in roles)
         {
-            string path = role.Value<string>(key: "Path")?.Trim().Trim(trimChar: '/') ?? string.Empty;
+            string path = role.Value<string>(key: "Path")?.Trim()
+                .Trim(trimChar: '/') ?? string.Empty;
 
             if (!string.IsNullOrWhiteSpace(value: path))
             {
@@ -1203,7 +1233,8 @@ item: new FileContent
     }
 
     private static string NormalizePagePath(string path) =>
-        (path ?? string.Empty).Trim().TrimStart(trimChar: '/');
+        (path ?? string.Empty).Trim()
+            .TrimStart(trimChar: '/');
 
     private static string GetParentFolderPath(string path)
     {
@@ -1356,7 +1387,8 @@ item: new FileContent
             yield break;
         }
 
-        foreach (JObject descendant in container.Descendants().OfType<JObject>())
+        foreach (JObject descendant in container.Descendants()
+            .OfType<JObject>())
         {
             yield return descendant;
         }

@@ -29,29 +29,34 @@ public sealed class AppOrchestrationServiceTests
         MockSequence sequence = new();
 
         planningAppServiceMock
-            .InSequence(sequence)
-            .Setup(service => service.DeleteAsync(appId))
-            .Returns(ValueTask.CompletedTask);
+            .InSequence(sequence: sequence)
+            .Setup(expression: service => service.DeleteAsync(appId: appId))
+            .Returns(value: ValueTask.CompletedTask);
+
         documentManagementAppServiceMock
-            .InSequence(sequence)
-            .Setup(service => service.DeleteAsync(appId))
-            .Returns(ValueTask.CompletedTask);
+            .InSequence(sequence: sequence)
+            .Setup(expression: service => service.DeleteAsync(appId: appId))
+            .Returns(value: ValueTask.CompletedTask);
+
         workflowAppServiceMock
-            .InSequence(sequence)
-            .Setup(service => service.DeleteAsync(appId))
-            .Returns(ValueTask.CompletedTask);
+            .InSequence(sequence: sequence)
+            .Setup(expression: service => service.DeleteAsync(appId: appId))
+            .Returns(value: ValueTask.CompletedTask);
+
         mailAppServiceMock
-            .InSequence(sequence)
-            .Setup(service => service.DeleteAsync(appId))
-            .Returns(ValueTask.CompletedTask);
+            .InSequence(sequence: sequence)
+            .Setup(expression: service => service.DeleteAsync(appId: appId))
+            .Returns(value: ValueTask.CompletedTask);
+
         contentManagementAppServiceMock
-            .InSequence(sequence)
-            .Setup(service => service.DeleteAsync(appId))
-            .Returns(ValueTask.CompletedTask);
+            .InSequence(sequence: sequence)
+            .Setup(expression: service => service.DeleteAsync(appId: appId))
+            .Returns(value: ValueTask.CompletedTask);
+
         appSecurityAppServiceMock
-            .InSequence(sequence)
-            .Setup(service => service.DeleteAsync(appId))
-            .Returns(ValueTask.CompletedTask);
+            .InSequence(sequence: sequence)
+            .Setup(expression: service => service.DeleteAsync(appId: appId))
+            .Returns(value: ValueTask.CompletedTask);
 
         AppOrchestrationService service = new(
             contentManagementAppServiceMock.Object,
@@ -61,9 +66,9 @@ public sealed class AppOrchestrationServiceTests
             workflowAppServiceMock.Object,
             mailAppServiceMock.Object);
 
-        await service.DeleteAsync(appId);
+        await service.DeleteAsync(appId: appId);
 
-        contentManagementAppServiceMock.Verify(service => service.DeleteAsync(appId), Times.Once);
-        appSecurityAppServiceMock.Verify(service => service.DeleteAsync(appId), Times.Once);
+        contentManagementAppServiceMock.Verify(expression: service => service.DeleteAsync(appId: appId),times: Times.Once);
+        appSecurityAppServiceMock.Verify(expression: service => service.DeleteAsync(appId: appId),times: Times.Once);
     }
 }

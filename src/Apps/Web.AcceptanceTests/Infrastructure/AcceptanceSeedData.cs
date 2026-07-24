@@ -15,22 +15,23 @@ internal static class AcceptanceSeedData
 {
     public static Package[] LoadExportPackages()
     {
-        using JsonDocument json = AcceptanceAssetLoader.LoadJson("App.1.Export.json");
-        JsonElement value = json.RootElement.GetProperty("value");
+        using JsonDocument json = AcceptanceAssetLoader.LoadJson(fileName: "App.1.Export.json");
+        JsonElement value = json.RootElement.GetProperty(propertyName: "value");
+
         return JsonConvert.DeserializeObject<Package[]>(
-            value.GetRawText(),
-            cCoder.Data.Extensions.ObjectExtensions.GetJSONSettings());
+value:             value.GetRawText(),settings:             cCoder.Data.Extensions.ObjectExtensions.GetJSONSettings());
     }
 
     public static T[] LoadPackageItems<T>(string packageName, string itemType)
     {
-        Package package = LoadExportPackages().First(found =>
-            string.Equals(found.Name, packageName, StringComparison.OrdinalIgnoreCase)
+        Package package = LoadExportPackages()
+            .First(predicate: found =>
+            string.Equals(a: found.Name,b: packageName,comparisonType: StringComparison.OrdinalIgnoreCase)
         );
 
         return package.Items
-            .Where(item => string.Equals(item.Type, itemType, StringComparison.OrdinalIgnoreCase))
-            .SelectMany(item => UnpackItems<T>(item.Data))
+            .Where(predicate: item => string.Equals(a: item.Type,b: itemType,comparisonType: StringComparison.OrdinalIgnoreCase))
+            .SelectMany(selector: item => UnpackItems<T>(data: item.Data))
             .ToArray();
     }
 
@@ -38,38 +39,36 @@ internal static class AcceptanceSeedData
     {
         List<CommonObject> result = [];
 
-        result.AddRange(LoadCommonObjects("Core.Resource.latest.json"));
-        result.AddRange(LoadCommonObjects("Core.Component.latest.json"));
-        result.AddRange(LoadCommonObjects("Core.Script.latest.json"));
+        result.AddRange(collection: LoadCommonObjects(fileName: "Core.Resource.latest.json"));
+        result.AddRange(collection: LoadCommonObjects(fileName: "Core.Component.latest.json"));
+        result.AddRange(collection: LoadCommonObjects(fileName: "Core.Script.latest.json"));
 
         return result.ToArray();
     }
 
     private static CommonObject[] LoadCommonObjects(string fileName)
     {
-        using JsonDocument json = AcceptanceAssetLoader.LoadJson(fileName);
+        using JsonDocument json = AcceptanceAssetLoader.LoadJson(fileName: fileName);
+
         JsonElement value =
             json.RootElement.ValueKind == JsonValueKind.Object
-                ? json.RootElement.GetProperty("value")
+                ? json.RootElement.GetProperty(propertyName: "value")
                 : json.RootElement;
 
         return JsonConvert.DeserializeObject<CommonObject[]>(
-            value.GetRawText(),
-            cCoder.Data.Extensions.ObjectExtensions.GetJSONSettings());
+value:             value.GetRawText(),settings:             cCoder.Data.Extensions.ObjectExtensions.GetJSONSettings());
     }
 
     private static IEnumerable<T> UnpackItems<T>(string data)
     {
         string trimmed = data.TrimStart();
 
-        return trimmed.StartsWith("[", StringComparison.Ordinal)
+        return trimmed.StartsWith(value: "[",comparisonType: StringComparison.Ordinal)
             ? JsonConvert.DeserializeObject<T[]>(
-                trimmed,
-                cCoder.Data.Extensions.ObjectExtensions.GetJSONSettings())
+value:                 trimmed,settings:                 cCoder.Data.Extensions.ObjectExtensions.GetJSONSettings())
             : [
                 JsonConvert.DeserializeObject<T>(
-                    trimmed,
-                    cCoder.Data.Extensions.ObjectExtensions.GetJSONSettings())
+value:                     trimmed,settings:                     cCoder.Data.Extensions.ObjectExtensions.GetJSONSettings())
             ];
     }
 }

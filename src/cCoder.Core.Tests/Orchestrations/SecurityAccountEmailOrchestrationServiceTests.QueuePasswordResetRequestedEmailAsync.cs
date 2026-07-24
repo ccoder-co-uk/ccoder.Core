@@ -12,17 +12,16 @@ public partial class SecurityAccountEmailOrchestrationServiceTests
     [Fact]
     public async Task QueuePasswordResetRequestedEmailAsync_ShouldQueueForgotPasswordEmail()
     {
-        App app = CreateApp("ForgotPassword");
-        SecurityAccountEvent accountEvent = CreateAccountEvent(SecurityAccountEventKind.PasswordResetRequested);
-        SetupAppLookup(app);
-        SetupQueuedEmailExpectation(
-            "ForgotPassword",
-            "Core Portal: Password Reset");
+        App app = CreateApp(templateName: "ForgotPassword");
+        SecurityAccountEvent accountEvent = CreateAccountEvent(kind: SecurityAccountEventKind.PasswordResetRequested);
+        SetupAppLookup(app: app);
 
-        await orchestrationService.QueuePasswordResetRequestedEmailAsync(accountEvent);
+        SetupQueuedEmailExpectation(
+templateName:             "ForgotPassword",subject:             "Core Portal: Password Reset");
+
+        await orchestrationService.QueuePasswordResetRequestedEmailAsync(accountEvent: accountEvent);
 
         VerifyQueuedEmail(
-            "ForgotPassword",
-            "Core Portal: Password Reset");
+templateName:             "ForgotPassword",subject:             "Core Portal: Password Reset");
     }
 }

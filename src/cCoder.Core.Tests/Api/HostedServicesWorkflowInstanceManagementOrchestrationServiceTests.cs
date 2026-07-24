@@ -25,31 +25,28 @@ public sealed class HostedServicesWorkflowInstanceManagementOrchestrationService
         Mock<IWorkflowInstanceManagementBroker> brokerMock = new();
 
         brokerMock
-            .Setup(broker => broker.FlushOldInstancesAsync(
-                It.IsAny<DateTimeOffset>(),
-                It.IsAny<CancellationToken>()))
-            .ReturnsAsync(0);
+            .Setup(expression: broker => broker.FlushOldInstancesAsync(
+cutoff:                 It.IsAny<DateTimeOffset>(),cancellationToken:                 It.IsAny<CancellationToken>()))
+            .ReturnsAsync(value: 0);
 
         brokerMock
-            .Setup(broker => broker.RequeueHungExecutingInstancesAsync(
-                It.IsAny<DateTimeOffset>(),
-                It.IsAny<CancellationToken>()))
-            .ReturnsAsync(1);
+            .Setup(expression: broker => broker.RequeueHungExecutingInstancesAsync(
+cutoff:                 It.IsAny<DateTimeOffset>(),cancellationToken:                 It.IsAny<CancellationToken>()))
+            .ReturnsAsync(value: 1);
 
         brokerMock
-            .Setup(broker => broker.GetQueuedInstances())
+            .Setup(expression: broker => broker.GetQueuedInstances())
             .Returns(
-            [
+value:             [
                 new FlowInstanceData { Id = firstQueuedInstanceId, State = "Queued" },
                 new FlowInstanceData { Id = firstQueuedInstanceId, State = "Queued" },
                 new FlowInstanceData { Id = secondQueuedInstanceId, State = "Queued" },
             ]);
 
         brokerMock
-            .Setup(broker => broker.ClaimQueuedInstanceAsync(
-                It.IsAny<Guid>(),
-                It.IsAny<CancellationToken>()))
-            .ReturnsAsync((FlowInstanceData)null);
+            .Setup(expression: broker => broker.UpdateQueuedInstanceClaimAsync(
+flowInstanceDataId:                 It.IsAny<Guid>(),cancellationToken:                 It.IsAny<CancellationToken>()))
+            .ReturnsAsync(value: 0);
 
         HostedServicesWorkflowInstanceManagementOrchestrationService service = new(
             brokerMock.Object,
@@ -61,26 +58,25 @@ public sealed class HostedServicesWorkflowInstanceManagementOrchestrationService
         await service.RunAsync();
 
         brokerMock.Verify(
-            broker => broker.RequeueHungExecutingInstancesAsync(
-                It.Is<DateTimeOffset>(cutoff => cutoff < DateTimeOffset.UtcNow.AddMinutes(-29)),
-                It.IsAny<CancellationToken>()),
-            Times.Once);
+expression:             broker => broker.RequeueHungExecutingInstancesAsync(
+cutoff:                 It.Is<DateTimeOffset>(match: cutoff => cutoff < DateTimeOffset.UtcNow.AddMinutes(minutes: -29)),cancellationToken:                 It.IsAny<CancellationToken>()),times:             Times.Once);
 
         brokerMock.Verify(
-            broker => broker.GetQueuedInstances(),
-            Times.Once);
+expression:             broker => broker.GetQueuedInstances(),times:             Times.Once);
 
         brokerMock.Verify(
-            broker => broker.ClaimQueuedInstanceAsync(firstQueuedInstanceId, It.IsAny<CancellationToken>()),
-            Times.Once);
+expression:             broker => broker.UpdateQueuedInstanceClaimAsync(
+flowInstanceDataId:                 firstQueuedInstanceId,cancellationToken:                 It.IsAny<CancellationToken>()),times:             Times.Once);
 
         brokerMock.Verify(
-            broker => broker.ClaimQueuedInstanceAsync(secondQueuedInstanceId, It.IsAny<CancellationToken>()),
-            Times.Once);
+expression:             broker => broker.UpdateQueuedInstanceClaimAsync(
+flowInstanceDataId:                 secondQueuedInstanceId,cancellationToken:                 It.IsAny<CancellationToken>()),times:             Times.Once);
 
         brokerMock.Invocations
-            .Count(invocation => invocation.Method.Name == nameof(IWorkflowInstanceManagementBroker.ClaimQueuedInstanceAsync))
+            .Count(predicate: invocation =>
+                invocation.Method.Name == nameof(
+                    IWorkflowInstanceManagementBroker.UpdateQueuedInstanceClaimAsync))
             .Should()
-            .Be(2);
+            .Be(expected: 2);
     }
 }

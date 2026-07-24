@@ -25,7 +25,9 @@ public static partial class IServiceCollectionExtensions
         services.AddScoped<IFirstTimeSetupTenantService, FirstTimeSetupTenantService>();
         services.AddScoped<IFirstTimeSetupAppService, FirstTimeSetupAppService>();
         services.AddScoped<IFirstTimeSetupOrchestrationService, FirstTimeSetupOrchestrationService>();
-        services.AddMvc().AddApplicationPart(assembly: typeof(SetupController).Assembly);
+
+        services.AddMvc()
+            .AddApplicationPart(assembly: typeof(SetupController).Assembly);
     }
 
     private static void EnsureFirstTimeSetupSecurityServices(IServiceCollection services)

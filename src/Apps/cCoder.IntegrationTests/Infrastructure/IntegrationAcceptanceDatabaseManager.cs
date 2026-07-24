@@ -17,15 +17,17 @@ internal sealed class IntegrationAcceptanceDatabaseManager(
 {
     public Task ResetDatabasesAsync()
     {
-        EnsureSafeAcceptanceDatabase(ssoConnectionString, "dev-Members");
-        EnsureSafeAcceptanceDatabase(coreConnectionString, "dev-Core");
+        EnsureSafeAcceptanceDatabase(connectionString: ssoConnectionString,protectedDatabaseName: "dev-Members");
+        EnsureSafeAcceptanceDatabase(connectionString: coreConnectionString,protectedDatabaseName: "dev-Core");
 
-        ForceDropDatabase(ssoConnectionString);
-        ForceDropDatabase(coreConnectionString);
+        ForceDropDatabase(connectionString: ssoConnectionString);
+        ForceDropDatabase(connectionString: coreConnectionString);
 
         using IServiceScope scope = services.CreateScope();
+
         using var sso = scope.ServiceProvider.GetRequiredService<ISecurityDbContextFactory>()
-            .CreateDbContext(true);
+            .CreateDbContext(ignoreAuthInfo: true);
+
         using var core = scope.ServiceProvider.GetRequiredService<ICoreContextFactory>()
             .CreateCoreContext();
 
@@ -37,26 +39,26 @@ internal sealed class IntegrationAcceptanceDatabaseManager(
 
     public Task DropDatabasesAsync()
     {
-        EnsureSafeAcceptanceDatabase(ssoConnectionString, "dev-Members");
-        EnsureSafeAcceptanceDatabase(coreConnectionString, "dev-Core");
+        EnsureSafeAcceptanceDatabase(connectionString: ssoConnectionString,protectedDatabaseName: "dev-Members");
+        EnsureSafeAcceptanceDatabase(connectionString: coreConnectionString,protectedDatabaseName: "dev-Core");
 
-        ForceDropDatabase(ssoConnectionString);
-        ForceDropDatabase(coreConnectionString);
+        ForceDropDatabase(connectionString: ssoConnectionString);
+        ForceDropDatabase(connectionString: coreConnectionString);
 
         return Task.CompletedTask;
     }
 
     private void ForceDropDatabase(string connectionString)
     {
-        if (string.IsNullOrWhiteSpace(connectionString))
+        if (string.IsNullOrWhiteSpace(value: connectionString))
         {
             return;
         }
 
-        SqlConnectionStringBuilder builder = CreateAcceptanceConnectionStringBuilder(connectionString);
+        SqlConnectionStringBuilder builder = CreateAcceptanceConnectionStringBuilder(connectionString: connectionString);
         string databaseName = builder.InitialCatalog ?? string.Empty;
 
-        if (string.IsNullOrWhiteSpace(databaseName))
+        if (string.IsNullOrWhiteSpace(value: databaseName))
         {
             return;
         }
@@ -67,6 +69,7 @@ internal sealed class IntegrationAcceptanceDatabaseManager(
         connection.Open();
 
         using SqlCommand command = connection.CreateCommand();
+
         command.CommandText = @"
 IF DB_ID(@databaseName) IS NOT NULL
 BEGIN
@@ -75,32 +78,33 @@ BEGIN
         + N'DROP DATABASE [' + REPLACE(@databaseName, ']', ']]') + N']';
     EXEC(@sql);
 END";
-        _ = command.Parameters.AddWithValue("@databaseName", databaseName);
+
+        _ = command.Parameters.AddWithValue(parameterName: "@databaseName",value: databaseName);
         command.ExecuteNonQuery();
     }
 
     private static void EnsureSafeAcceptanceDatabase(string connectionString, string protectedDatabaseName)
     {
-        if (string.IsNullOrWhiteSpace(connectionString))
+        if (string.IsNullOrWhiteSpace(value: connectionString))
         {
             throw new InvalidOperationException("Acceptance database connection string is empty.");
         }
 
-        SqlConnectionStringBuilder builder = CreateAcceptanceConnectionStringBuilder(connectionString);
+        SqlConnectionStringBuilder builder = CreateAcceptanceConnectionStringBuilder(connectionString: connectionString);
         string databaseName = builder.InitialCatalog ?? string.Empty;
 
-        if (string.IsNullOrWhiteSpace(databaseName))
+        if (string.IsNullOrWhiteSpace(value: databaseName))
         {
             throw new InvalidOperationException("Acceptance database name is empty.");
         }
 
-        if (databaseName.Equals(protectedDatabaseName, StringComparison.OrdinalIgnoreCase))
+        if (databaseName.Equals(value: protectedDatabaseName,comparisonType: StringComparison.OrdinalIgnoreCase))
         {
             throw new InvalidOperationException(
                 $"Refusing to run acceptance database operations against protected database '{protectedDatabaseName}'.");
         }
 
-        if (!databaseName.Contains("accept", StringComparison.OrdinalIgnoreCase))
+        if (!databaseName.Contains(value: "accept",comparisonType: StringComparison.OrdinalIgnoreCase))
         {
             throw new InvalidOperationException(
                 $"Refusing to run acceptance database operations against non-acceptance database '{databaseName}'.");

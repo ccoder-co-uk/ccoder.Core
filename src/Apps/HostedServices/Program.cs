@@ -11,9 +11,10 @@ using cCoder.Data.Models.Workflow;
 using cCoder.Eventing;
 using cCoder.Eventing.Models;
 using cCoder.Security.Data.EF;
+using cCoder.Security.Data.EF.Dependencies;
 using cCoder.Security.Data.EF.Interfaces;
 using cCoder.Security.Objects;
-using cCoder.Workflow.Services.Orchestrations;
+using cCoder.Workflow.Services.Processings;
 
 namespace HostedServices;
 
@@ -21,12 +22,12 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-        IConfiguration config = ConfigureApplication(builder.Configuration, builder.Environment);
+        WebApplicationBuilder builder = WebApplication.CreateBuilder(args: args);
+        IConfiguration config = ConfigureApplication(configuration: builder.Configuration,environment: builder.Environment);
 
-        builder.Services.AddCoreHostedServices(coreBuilder =>
+        builder.Services.AddCoreHostedServices(configure: coreBuilder =>
         {
-            coreBuilder.ConfigureDomainsWith(coreConfig =>
+            coreBuilder.ConfigureDomainsWith(configure: coreConfig =>
             {
                 coreConfig.CoreConnectionString = config.GetValue<string>("ConnectionStrings:Core");
                 coreConfig.SecurityConnectionString = config.GetValue<string>("ConnectionStrings:SSO");
@@ -41,11 +42,14 @@ public class Program
                 coreConfig.HttpEventHubUrl = HttpEventHubUrlResolver.Resolve(config);
                 coreConfig.ServiceBusConnectionString = config.GetConnectionString("ServiceBus");
                 coreConfig.EnableHttpEventing = IsHttpEventProvider(coreConfig.EventProviderType);
+
                 coreConfig.EnableServiceBusEventing = IsServiceBusEventProvider(coreConfig.EventProviderType)
                     && !string.IsNullOrWhiteSpace(coreConfig.ServiceBusConnectionString);
+
                 coreConfig.MaxConcurrency = ResolveMaxConcurrency(config, coreConfig.EventProviderType);
                 coreConfig.DebugInfo = config.GetValue<bool>("DebugInfo");
                 coreConfig.LogSQL = config.GetValue<bool>("LogSQL");
+
                 coreConfig.EventProviders =
                 [
                     CreateExternalReceiveProvider<App>(["app_add", "app_update", "app_delete"]),
@@ -55,14 +59,20 @@ public class Program
                 ];
             });
         });
+
         builder.Services.RemoveAll<ISecurityDbContextFactory>();
+
         builder.Services.AddSingleton<ISecurityDbContextFactory>(
-            new MSSQLSecurityDbContextFactory(config.GetValue<string>("ConnectionStrings:SSO"))
+implementationInstance:             new MSSQLSecurityDbContextFactory(config.GetValue<string>(key: "ConnectionStrings:SSO"))
             {
                 GetAuthInfo = _ => new SSOAuthInfo { SSOUserId = "Guest" },
             });
-        builder.Services.RemoveAll<IWorkflowInstanceManagementOrchestrationService>();
-        builder.Services.AddTransient<IWorkflowInstanceManagementOrchestrationService, HostedServicesWorkflowInstanceManagementOrchestrationService>();
+
+        builder.Services.RemoveAll<IWorkflowInstanceProcessingService>();
+
+        builder.Services.AddTransient<
+            IWorkflowInstanceProcessingService,
+            HostedServicesWorkflowInstanceManagementOrchestrationService>();
 
         WebApplication app = builder.Build();
         app.StartCoreHostedServices();
@@ -73,28 +83,28 @@ public class Program
     {
         configuration
             .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .AddJsonFile($"appsettings.{environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+            .AddJsonFile(path: "appsettings.json",optional: false,reloadOnChange: true)
+            .AddJsonFile(path: $"appsettings.{environment.EnvironmentName}.json",optional: true,reloadOnChange: true)
             .AddEnvironmentVariables();
 
         return configuration;
     }
 
     private static string ResolveEventProviderType(IConfiguration config) =>
-        config.GetValue<string>("Eventing:ProviderType")
-        ?? config.GetValue<string>("Eventing:Provider")
+        config.GetValue<string>(key: "Eventing:ProviderType")
+        ?? config.GetValue<string>(key: "Eventing:Provider")
         ?? "Http";
 
     private static int ResolveMaxConcurrency(IConfiguration config, string eventProviderType) =>
-        IsServiceBusEventProvider(eventProviderType)
-            ? config.GetValue<int?>("Eventing:ServiceBus:MaxConcurrency") ?? 1
-            : config.GetValue<int?>("Eventing:Http:MaxConcurrency") ?? 1;
+        IsServiceBusEventProvider(eventProviderType: eventProviderType)
+            ? config.GetValue<int?>(key: "Eventing:ServiceBus:MaxConcurrency") ?? 1
+            : config.GetValue<int?>(key: "Eventing:Http:MaxConcurrency") ?? 1;
 
     private static bool IsServiceBusEventProvider(string eventProviderType) =>
-        string.Equals(eventProviderType, "ServiceBus", StringComparison.OrdinalIgnoreCase);
+        string.Equals(a: eventProviderType,b: "ServiceBus",comparisonType: StringComparison.OrdinalIgnoreCase);
 
     private static bool IsHttpEventProvider(string eventProviderType) =>
-        string.Equals(eventProviderType, "Http", StringComparison.OrdinalIgnoreCase);
+        string.Equals(a: eventProviderType,b: "Http",comparisonType: StringComparison.OrdinalIgnoreCase);
 
     private static EventProvider<T> CreateExternalReceiveProvider<T>(string[] eventNames) =>
         new()
@@ -105,8 +115,7 @@ public class Program
                 IEventHub eventHub = serviceProvider.GetRequiredService<IEventHub>();
 
                 await eventHub.RaiseEventAsync(
-                    eventName,
-                    new EventMessage<T>
+name:                     eventName,message:                     new EventMessage<T>
                     {
                         AuthInfo = new EventAuthInfo
                         {
@@ -129,16 +138,16 @@ public class Program
                         "You must provide a workflow instance payload with a valid id.");
                 }
 
-                if (!string.Equals(message.Data?.State, "Queued", StringComparison.OrdinalIgnoreCase))
+                if (!string.Equals(a: message.Data?.State,b: "Queued",comparisonType: StringComparison.OrdinalIgnoreCase))
                 {
                     return;
                 }
 
-                IWorkflowInstanceManagementOrchestrationService workflowInstanceManagementService =
-                    serviceProvider.GetRequiredService<IWorkflowInstanceManagementOrchestrationService>();
+                IWorkflowInstanceProcessingService workflowInstanceProcessingService =
+                    serviceProvider.GetRequiredService<IWorkflowInstanceProcessingService>();
 
-                await workflowInstanceManagementService.ExecuteWaitingQueuedInstanceByIdAsync(
-                    message.Data.Id);
+                await workflowInstanceProcessingService.ExecuteWaitingQueuedInstanceByIdAsync(
+                    flowInstanceDataId: message.Data.Id);
             }
         };
 
@@ -150,32 +159,39 @@ public class Program
             config,
             "Mail:MicrosoftGraph:TenantId",
             "CCODER_MAIL_GRAPH_TENANT_ID");
+
         coreConfig.MailGraphClientId = ResolveSetting(
             config,
             "Mail:MicrosoftGraph:ClientId",
             "CCODER_MAIL_GRAPH_CLIENT_ID");
+
         coreConfig.MailGraphClientSecret = ResolveSetting(
             config,
             "Mail:MicrosoftGraph:ClientSecret",
             "CCODER_MAIL_GRAPH_CLIENT_SECRET");
+
         coreConfig.MailGraphBaseUrl = ResolveSetting(
             config,
             "Mail:MicrosoftGraph:GraphBaseUrl",
             "CCODER_MAIL_GRAPH_BASE_URL");
+
         coreConfig.MailGraphLoginBaseUrl = ResolveSetting(
             config,
             "Mail:MicrosoftGraph:LoginBaseUrl",
             "CCODER_MAIL_GRAPH_LOGIN_BASE_URL");
+
         coreConfig.MailGraphReceiveUser = ResolveSetting(
             config,
             "Mail:MicrosoftGraph:ReceiveUser",
             "CCODER_MAIL_INTEGRATION_RECEIVE_USER",
             "CCODER_MAIL_INTEGRATION_SEND_USER",
             "CCODER_MAIL_INTEGRATION_SMTP_USER");
+
         coreConfig.MailDefaultSenderProviderName = ResolveSetting(
             config,
             "Mail:DefaultSenderProviderName",
             "CCODER_MAIL_DEFAULT_SENDER_PROVIDER");
+
         coreConfig.MailDefaultReceiverProviderName = ResolveSetting(
             config,
             "Mail:DefaultReceiverProviderName",
@@ -186,9 +202,9 @@ public class Program
     {
         foreach (string key in keys)
         {
-            string value = config.GetValue<string>(key);
+            string value = config.GetValue<string>(key: key);
 
-            if (!string.IsNullOrWhiteSpace(value))
+            if (!string.IsNullOrWhiteSpace(value: value))
             {
                 return value;
             }

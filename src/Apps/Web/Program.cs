@@ -22,12 +22,12 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-        IConfiguration config = ConfigureApplication(builder.Configuration, builder.Environment);
+        WebApplicationBuilder builder = WebApplication.CreateBuilder(args: args);
+        IConfiguration config = ConfigureApplication(configuration: builder.Configuration,environment: builder.Environment);
 
-        builder.Services.AddCoreWeb(coreBuilder =>
+        builder.Services.AddCoreWeb(configure: coreBuilder =>
         {
-            coreBuilder.ConfigureDomainsWith(coreConfig =>
+            coreBuilder.ConfigureDomainsWith(configure: coreConfig =>
             {
                 coreConfig.CoreConnectionString = config.GetValue<string>("ConnectionStrings:Core");
                 coreConfig.SecurityConnectionString = config.GetValue<string>("ConnectionStrings:SSO");
@@ -42,10 +42,13 @@ public class Program
                 coreConfig.EventProviderType = ResolveEventProviderType(config);
                 coreConfig.HttpEventHubUrl = HttpEventHubUrlResolver.Resolve(config);
                 coreConfig.ServiceBusConnectionString = config.GetConnectionString("ServiceBus");
+
                 coreConfig.EnableHttpEventing = IsHttpEventProvider(coreConfig.EventProviderType)
                     && !string.IsNullOrWhiteSpace(coreConfig.HttpEventHubUrl);
+
                 coreConfig.EnableServiceBusEventing = IsServiceBusEventProvider(coreConfig.EventProviderType)
                     && !string.IsNullOrWhiteSpace(coreConfig.ServiceBusConnectionString);
+
                 coreConfig.MaxConcurrency = ResolveMaxConcurrency(config, coreConfig.EventProviderType);
                 coreConfig.DebugInfo = config.GetValue<bool>("DebugInfo");
                 coreConfig.LogSQL = config.GetValue<bool>("LogSQL");
@@ -89,8 +92,8 @@ public class Program
     {
         configuration
             .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .AddJsonFile($"appsettings.{environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+            .AddJsonFile(path: "appsettings.json",optional: false,reloadOnChange: true)
+            .AddJsonFile(path: $"appsettings.{environment.EnvironmentName}.json",optional: true,reloadOnChange: true)
             .AddEnvironmentVariables();
 
         return configuration;
@@ -103,7 +106,7 @@ public class Program
         {
             Events = eventNames,
             SendHandler = async (serviceProvider, eventName, message) =>
-                await SendExternalEventAsync(serviceProvider, eventProviderType, eventName, message),
+                await SendExternalEventAsync(serviceProvider: serviceProvider,eventProviderType: eventProviderType,eventName: eventName,message: message),
         };
 
     private static EventProvider<App> CreateAppDeleteExternalSendProvider() =>
@@ -112,7 +115,7 @@ public class Program
             Events = ["app_delete"],
             SendHandler = async (serviceProvider, eventName, message) =>
             {
-                await SendExternalEventAsync(serviceProvider, "Http", eventName, message);
+                await SendExternalEventAsync(serviceProvider: serviceProvider,eventProviderType: "Http",eventName: eventName,message: message);
 
                 if (message.Data is null)
                 {
@@ -120,8 +123,7 @@ public class Program
                 }
 
                 await WaitForHostedServicesAppDeleteAsync(
-                    serviceProvider,
-                    message.Data.Id);
+serviceProvider:                     serviceProvider,appId:                     message.Data.Id);
             }
         };
 
@@ -131,14 +133,13 @@ public class Program
         string eventName,
         EventMessage<T> message)
     {
-        if (IsServiceBusEventProvider(eventProviderType))
+        if (IsServiceBusEventProvider(eventProviderType: eventProviderType))
         {
             IAzureServiceBusEventHub serviceBusEventHub =
                 serviceProvider.GetRequiredService<IAzureServiceBusEventHub>();
 
             await serviceBusEventHub.RaiseEventAsync(
-                eventName,
-                new ServiceBusEventMessage<T>
+name:                 eventName,message:                 new ServiceBusEventMessage<T>
                 {
                     AuthInfo = new ServiceBusEventAuthInfo
                     {
@@ -151,7 +152,7 @@ public class Program
         }
 
         IHttpEventHub httpEventHub = serviceProvider.GetRequiredService<IHttpEventHub>();
-        await httpEventHub.RaiseEventAsync(eventName, message);
+        await httpEventHub.RaiseEventAsync(name: eventName,message: message);
     }
 
     private static async ValueTask WaitForHostedServicesAppDeleteAsync(
@@ -165,12 +166,12 @@ public class Program
         {
             await using CoreDataContext core = contextFactory.CreateCoreContext();
 
-            if (!await HasAppChildrenAsync(core, appId))
+            if (!await HasAppChildrenAsync(core: core,appId: appId))
             {
                 return;
             }
 
-            await Task.Delay(500);
+            await Task.Delay(millisecondsDelay: 500);
         }
 
         throw new TimeoutException(
@@ -180,28 +181,40 @@ public class Program
     private static async ValueTask<bool> HasAppChildrenAsync(
         CoreDataContext core,
         int appId) =>
-        await core.Set<Role>().IgnoreQueryFilters().AnyAsync(role => role.AppId == appId)
-        || await core.Set<AppCulture>().IgnoreQueryFilters().AnyAsync(culture => culture.AppId == appId)
-        || await core.Set<Folder>().IgnoreQueryFilters().AnyAsync(folder => folder.AppId == appId)
-        || await core.Set<MailServer>().IgnoreQueryFilters().AnyAsync(server => server.AppId == appId)
-        || await core.Set<Calendar>().IgnoreQueryFilters().AnyAsync(calendar => calendar.AppId == appId)
-        || await core.Set<FlowDefinition>().IgnoreQueryFilters().AnyAsync(flow => flow.AppId == appId);
+        await core.Set<Role>()
+            .IgnoreQueryFilters()
+            .AnyAsync(predicate: role => role.AppId == appId)
+        || await core.Set<AppCulture>()
+            .IgnoreQueryFilters()
+            .AnyAsync(predicate: culture => culture.AppId == appId)
+        || await core.Set<Folder>()
+            .IgnoreQueryFilters()
+            .AnyAsync(predicate: folder => folder.AppId == appId)
+        || await core.Set<MailServer>()
+            .IgnoreQueryFilters()
+            .AnyAsync(predicate: server => server.AppId == appId)
+        || await core.Set<Calendar>()
+            .IgnoreQueryFilters()
+            .AnyAsync(predicate: calendar => calendar.AppId == appId)
+        || await core.Set<FlowDefinition>()
+            .IgnoreQueryFilters()
+            .AnyAsync(predicate: flow => flow.AppId == appId);
 
     private static string ResolveEventProviderType(IConfiguration config) =>
-        config.GetValue<string>("Eventing:ProviderType")
-        ?? config.GetValue<string>("Eventing:Provider")
+        config.GetValue<string>(key: "Eventing:ProviderType")
+        ?? config.GetValue<string>(key: "Eventing:Provider")
         ?? "Http";
 
     private static int ResolveMaxConcurrency(IConfiguration config, string eventProviderType) =>
-        IsServiceBusEventProvider(eventProviderType)
-            ? config.GetValue<int?>("Eventing:ServiceBus:MaxConcurrency") ?? 1
-            : config.GetValue<int?>("Eventing:Http:MaxConcurrency") ?? 1;
+        IsServiceBusEventProvider(eventProviderType: eventProviderType)
+            ? config.GetValue<int?>(key: "Eventing:ServiceBus:MaxConcurrency") ?? 1
+            : config.GetValue<int?>(key: "Eventing:Http:MaxConcurrency") ?? 1;
 
     private static bool IsServiceBusEventProvider(string eventProviderType) =>
-        string.Equals(eventProviderType, "ServiceBus", StringComparison.OrdinalIgnoreCase);
+        string.Equals(a: eventProviderType,b: "ServiceBus",comparisonType: StringComparison.OrdinalIgnoreCase);
 
     private static bool IsHttpEventProvider(string eventProviderType) =>
-        string.Equals(eventProviderType, "Http", StringComparison.OrdinalIgnoreCase);
+        string.Equals(a: eventProviderType,b: "Http",comparisonType: StringComparison.OrdinalIgnoreCase);
 
     private static void ApplyMailConfiguration(
         IConfiguration config,
@@ -211,32 +224,39 @@ public class Program
             config,
             "Mail:MicrosoftGraph:TenantId",
             "CCODER_MAIL_GRAPH_TENANT_ID");
+
         coreConfig.MailGraphClientId = ResolveSetting(
             config,
             "Mail:MicrosoftGraph:ClientId",
             "CCODER_MAIL_GRAPH_CLIENT_ID");
+
         coreConfig.MailGraphClientSecret = ResolveSetting(
             config,
             "Mail:MicrosoftGraph:ClientSecret",
             "CCODER_MAIL_GRAPH_CLIENT_SECRET");
+
         coreConfig.MailGraphBaseUrl = ResolveSetting(
             config,
             "Mail:MicrosoftGraph:GraphBaseUrl",
             "CCODER_MAIL_GRAPH_BASE_URL");
+
         coreConfig.MailGraphLoginBaseUrl = ResolveSetting(
             config,
             "Mail:MicrosoftGraph:LoginBaseUrl",
             "CCODER_MAIL_GRAPH_LOGIN_BASE_URL");
+
         coreConfig.MailGraphReceiveUser = ResolveSetting(
             config,
             "Mail:MicrosoftGraph:ReceiveUser",
             "CCODER_MAIL_INTEGRATION_RECEIVE_USER",
             "CCODER_MAIL_INTEGRATION_SEND_USER",
             "CCODER_MAIL_INTEGRATION_SMTP_USER");
+
         coreConfig.MailDefaultSenderProviderName = ResolveSetting(
             config,
             "Mail:DefaultSenderProviderName",
             "CCODER_MAIL_DEFAULT_SENDER_PROVIDER");
+
         coreConfig.MailDefaultReceiverProviderName = ResolveSetting(
             config,
             "Mail:DefaultReceiverProviderName",
@@ -247,9 +267,9 @@ public class Program
     {
         foreach (string key in keys)
         {
-            string value = config.GetValue<string>(key);
+            string value = config.GetValue<string>(key: key);
 
-            if (!string.IsNullOrWhiteSpace(value))
+            if (!string.IsNullOrWhiteSpace(value: value))
             {
                 return value;
             }

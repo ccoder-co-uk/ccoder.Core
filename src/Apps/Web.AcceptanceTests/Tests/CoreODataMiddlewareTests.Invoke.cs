@@ -15,25 +15,33 @@ public sealed partial class CoreODataMiddlewareTests
     public async Task Invoke_ReturnsServiceDocument()
     {
         // When
-        using HttpResponseMessage response = await Client.GetAsync(BaseUrl);
+        using HttpResponseMessage response = await Client.GetAsync(requestUri: BaseUrl);
         string content = await response.Content.ReadAsStringAsync();
-        response.StatusCode.Should().Be(HttpStatusCode.OK, content);
+
+        response.StatusCode.Should()
+            .Be(expected: HttpStatusCode.OK,because: content);
+
         int actualStatusCode = (int)response.StatusCode;
 
         // Then
-        actualStatusCode.Should().Be((int)HttpStatusCode.OK);
+        actualStatusCode.Should()
+            .Be(expected: (int)HttpStatusCode.OK);
     }
 
     [Fact]
     public async Task Invoke_ReturnsMetadataDocument()
     {
         // When
-        using HttpResponseMessage response = await Client.GetAsync($"{BaseUrl}/$metadata");
+        using HttpResponseMessage response = await Client.GetAsync(requestUri: $"{BaseUrl}/$metadata");
         string content = await response.Content.ReadAsStringAsync();
-        response.StatusCode.Should().Be(HttpStatusCode.OK, content);
+
+        response.StatusCode.Should()
+            .Be(expected: HttpStatusCode.OK,because: content);
+
         int actualStatusCode = (int)response.StatusCode;
 
         // Then
-        actualStatusCode.Should().Be((int)HttpStatusCode.OK);
+        actualStatusCode.Should()
+            .Be(expected: (int)HttpStatusCode.OK);
     }
 }

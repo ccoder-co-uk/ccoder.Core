@@ -25,19 +25,22 @@ public sealed class WebAcceptanceFixture : IAsyncLifetime
     {
         Settings = new()
         {
-            CoreConnectionString = AddDatabaseSuffix("CCODER_ACCEPTANCE_CORE_CONNECTION_STRING"),
-            SsoConnectionString = AddDatabaseSuffix("CCODER_ACCEPTANCE_SSO_CONNECTION_STRING"),
+            CoreConnectionString = AddDatabaseSuffix(variableName: "CCODER_ACCEPTANCE_CORE_CONNECTION_STRING"),
+            SsoConnectionString = AddDatabaseSuffix(variableName: "CCODER_ACCEPTANCE_SSO_CONNECTION_STRING"),
             DecryptionKey = "000000000000000000000000000000000000000000000000",
         };
 
         Factory = new WebAcceptanceFactory(Settings);
+
         databaseManager = new AcceptanceDatabaseManager(
             Factory.Services,
             Settings.CoreConnectionString,
             Settings.SsoConnectionString);
+
         await databaseManager.ResetDatabasesAsync();
         await SeedAsync();
-        Client = Factory.CreateClient(new WebApplicationFactoryClientOptions
+
+        Client = Factory.CreateClient(options: new WebApplicationFactoryClientOptions
         {
             AllowAutoRedirect = false,
             BaseAddress = new Uri("https://localhost"),
@@ -70,12 +73,12 @@ public sealed class WebAcceptanceFixture : IAsyncLifetime
     private static string AddDatabaseSuffix(string variableName)
     {
         string connectionString =
-            Environment.GetEnvironmentVariable(variableName)
-            ?? Environment.GetEnvironmentVariable(variableName, EnvironmentVariableTarget.User)
-            ?? Environment.GetEnvironmentVariable(variableName, EnvironmentVariableTarget.Machine)
-            ?? ReadConfiguredConnectionString(variableName);
+            Environment.GetEnvironmentVariable(variable: variableName)
+            ?? Environment.GetEnvironmentVariable(variable: variableName,target: EnvironmentVariableTarget.User)
+            ?? Environment.GetEnvironmentVariable(variable: variableName,target: EnvironmentVariableTarget.Machine)
+            ?? ReadConfiguredConnectionString(variableName: variableName);
 
-        if (string.IsNullOrWhiteSpace(connectionString))
+        if (string.IsNullOrWhiteSpace(value: connectionString))
         {
             return string.Empty;
         }
@@ -85,15 +88,16 @@ public sealed class WebAcceptanceFixture : IAsyncLifetime
             Encrypt = true,
             TrustServerCertificate = true,
         };
+
         string databaseName = builder.InitialCatalog ?? string.Empty;
 
-        if (string.IsNullOrWhiteSpace(databaseName))
+        if (string.IsNullOrWhiteSpace(value: databaseName))
         {
             return connectionString;
         }
 
         string suffix = typeof(WebAcceptanceFixture).Assembly.GetName().Name!
-            .Replace(".AcceptanceTests", string.Empty, StringComparison.Ordinal)
+            .Replace(oldValue: ".AcceptanceTests",newValue: string.Empty,comparisonType: StringComparison.Ordinal)
             .ToLowerInvariant();
 
         builder.InitialCatalog = $"{databaseName}-{suffix}";
@@ -102,16 +106,16 @@ public sealed class WebAcceptanceFixture : IAsyncLifetime
 
     private static string ReadConfiguredConnectionString(string variableName)
     {
-        string connectionName = variableName.Contains("CORE", StringComparison.OrdinalIgnoreCase)
+        string connectionName = variableName.Contains(value: "CORE",comparisonType: StringComparison.OrdinalIgnoreCase)
             ? "Core"
             : "SSO";
 
         IConfigurationRoot configuration = new ConfigurationBuilder()
-            .SetBasePath(AppContext.BaseDirectory)
-            .AddJsonFile("appsettings.testing.json", optional: true)
+            .SetBasePath(basePath: AppContext.BaseDirectory)
+            .AddJsonFile(path: "appsettings.testing.json",optional: true)
             .Build();
 
-        return configuration.GetConnectionString(connectionName) ?? string.Empty;
+        return configuration.GetConnectionString(name: connectionName) ?? string.Empty;
     }
 }
 

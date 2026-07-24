@@ -50,11 +50,13 @@ public sealed partial class SecurityAccountEventIntegrationTests
         string sendUser = ReadMailSetting(
             "CCODER_MAIL_INTEGRATION_SEND_USER",
             "CCODER_MAIL_INTEGRATION_SMTP_USER");
-        string from = TryReadMailSetting("CCODER_MAIL_INTEGRATION_SMTP_FROM") ?? sendUser;
-        string sendHost = TryReadMailSetting("CCODER_MAIL_INTEGRATION_SEND_HOST") ?? "graph.microsoft.com";
 
-        bool hasMailSender = await core.Set<MailSender>().IgnoreQueryFilters()
-            .AnyAsync(mailSender =>
+        string from = TryReadMailSetting(names: "CCODER_MAIL_INTEGRATION_SMTP_FROM") ?? sendUser;
+        string sendHost = TryReadMailSetting(names: "CCODER_MAIL_INTEGRATION_SEND_HOST") ?? "graph.microsoft.com";
+
+        bool hasMailSender = await core.Set<MailSender>()
+            .IgnoreQueryFilters()
+            .AnyAsync(predicate: mailSender =>
                 mailSender.AppId == BaselineAppId
                 && mailSender.Name == "Default");
 
@@ -63,7 +65,8 @@ public sealed partial class SecurityAccountEventIntegrationTests
             return;
         }
 
-        await core.Set<MailSender>().AddAsync(new MailSender
+        await core.Set<MailSender>()
+            .AddAsync(entity: new MailSender
         {
             AppId = BaselineAppId,
             Name = "Default",
@@ -80,53 +83,50 @@ public sealed partial class SecurityAccountEventIntegrationTests
     }
 
     private async Task<(SSOUser User, string Token)> RegisterAsync(RegisterUser user, string authToken) =>
-        await PostUserTokenResultAsync("/Api/Account/Register", user, authToken);
+        await PostUserTokenResultAsync(relativeUrl: "/Api/Account/Register",user: user,authToken: authToken);
 
     private async Task<(SSOUser User, string Token)> InviteAsync(RegisterUser user, string authToken) =>
-        await PostUserTokenResultAsync("/Api/Account/Invite", user, authToken);
+        await PostUserTokenResultAsync(relativeUrl: "/Api/Account/Invite",user: user,authToken: authToken);
 
     private async Task AcceptInviteAsync(string userId, string token, RegisterUser user)
     {
         using HttpResponseMessage response = await fixture.WebClient.PostAsJsonAsync(
-            $"/Api/Account/AcceptInvite?userId={WebUtility.UrlEncode(userId)}&inviteToken={WebUtility.UrlEncode(token)}&t={WebUtility.UrlEncode(token)}",
-            user,
-            JsonOptions);
+requestUri:             $"/Api/Account/AcceptInvite?userId={WebUtility.UrlEncode(value: userId)}&inviteToken={WebUtility.UrlEncode(value: token)}&t={WebUtility.UrlEncode(value: token)}",value:             user,options:             JsonOptions);
 
         string content = await response.Content.ReadAsStringAsync();
-        response.StatusCode.Should().Be(
-            HttpStatusCode.OK,
-            "{0}",
-            BuildFailureMessage(content));
+
+        response.StatusCode.Should()
+            .Be(
+expected:             HttpStatusCode.OK,because:             "{0}",becauseArgs:             BuildFailureMessage(content: content));
     }
 
     private async Task ConfirmRegistrationAsync(string token)
     {
         using HttpResponseMessage response = await fixture.WebClient.PostAsync(
-            $"/Api/Account/ConfirmRegistration?confirmationToken={WebUtility.UrlEncode(token)}&t={WebUtility.UrlEncode(token)}",
-            content: null);
+requestUri:             $"/Api/Account/ConfirmRegistration?confirmationToken={WebUtility.UrlEncode(value: token)}&t={WebUtility.UrlEncode(value: token)}",            content: null);
 
         string content = await response.Content.ReadAsStringAsync();
-        response.StatusCode.Should().Be(
-            HttpStatusCode.OK,
-            "{0}",
-            BuildFailureMessage(content));
+
+        response.StatusCode.Should()
+            .Be(
+expected:             HttpStatusCode.OK,because:             "{0}",becauseArgs:             BuildFailureMessage(content: content));
     }
 
     private async Task<Token> LoginAsync(RegisterUser user)
     {
         using HttpResponseMessage response = await fixture.WebClient.PostAsJsonAsync(
-            "/Api/Account/Login",
-            new Auth
+requestUri:             "/Api/Account/Login",value:             new Auth
             {
                 User = user.Email,
                 Pass = user.Password
-            },
-            JsonOptions);
+            },options:             JsonOptions);
 
         string content = await response.Content.ReadAsStringAsync();
-        response.StatusCode.Should().Be(HttpStatusCode.OK, content);
 
-        return JsonSerializer.Deserialize<Token>(content, JsonOptions)
+        response.StatusCode.Should()
+            .Be(expected: HttpStatusCode.OK,because: content);
+
+        return JsonSerializer.Deserialize<Token>(json: content,options: JsonOptions)
             ?? throw new InvalidOperationException("Expected login token.");
     }
 
@@ -135,59 +135,61 @@ public sealed partial class SecurityAccountEventIntegrationTests
         RegisterUser user,
         string authToken = null)
     {
-        using HttpRequestMessage request = new(HttpMethod.Post, WithAuthToken(relativeUrl, authToken))
+        using HttpRequestMessage request = new(HttpMethod.Post, WithAuthToken(relativeUrl: relativeUrl,authToken: authToken))
         {
-            Content = JsonContent.Create(user, options: JsonOptions)
+            Content = JsonContent.Create(inputValue: user,options: JsonOptions)
         };
 
-        if (!string.IsNullOrWhiteSpace(authToken))
+        if (!string.IsNullOrWhiteSpace(value: authToken))
         {
             request.Headers.Authorization = new AuthenticationHeaderValue("bearer", authToken);
         }
 
-        using HttpResponseMessage response = await fixture.WebClient.SendAsync(request);
+        using HttpResponseMessage response = await fixture.WebClient.SendAsync(request: request);
 
         string content = await response.Content.ReadAsStringAsync();
 
         if (response.StatusCode != HttpStatusCode.OK)
         {
-            throw new XunitException(BuildFailureMessage(content));
+            throw new XunitException(BuildFailureMessage(content: content));
         }
 
-        using JsonDocument document = JsonDocument.Parse(content);
+        using JsonDocument document = JsonDocument.Parse(json: content);
 
         SSOUser ssoUser = JsonSerializer.Deserialize<SSOUser>(
-            document.RootElement.GetProperty("user").GetRawText(),
-            JsonOptions)
+json:             document.RootElement.GetProperty(propertyName: "user")
+            .GetRawText(),options:             JsonOptions)
             ?? throw new InvalidOperationException("Expected SSO user.");
 
-        string token = document.RootElement.GetProperty("token").GetString();
+        string token = document.RootElement.GetProperty(propertyName: "token")
+            .GetString();
 
         return (ssoUser, token);
     }
 
     private static string WithAuthToken(string relativeUrl, string authToken)
     {
-        if (string.IsNullOrWhiteSpace(authToken))
+        if (string.IsNullOrWhiteSpace(value: authToken))
         {
             return relativeUrl;
         }
 
-        string separator = relativeUrl.Contains('?')
+        string separator = relativeUrl.Contains(value: '?')
             ? "&"
             : "?";
 
-        return $"{relativeUrl}{separator}t={WebUtility.UrlEncode(authToken)}";
+        return $"{relativeUrl}{separator}t={WebUtility.UrlEncode(value: authToken)}";
     }
 
     private async Task AssertAppSecurityUserCreatedAsync(RegisterUser user, bool expectedIsActive = true)
     {
-        await WaitUntilAsync(async () =>
+        await WaitUntilAsync(predicate: async () =>
         {
             await using CoreDataContext core = CreateCoreContext();
 
-            return await core.Set<CoreUser>().IgnoreQueryFilters()
-                .AnyAsync(coreUser =>
+            return await core.Set<CoreUser>()
+                .IgnoreQueryFilters()
+                .AnyAsync(predicate: coreUser =>
                     coreUser.Email == user.Email
                     && coreUser.DisplayName == user.DisplayName
                     && coreUser.DefaultCultureId == user.Culture);
@@ -195,22 +197,26 @@ public sealed partial class SecurityAccountEventIntegrationTests
 
         await using CoreDataContext verification = CreateCoreContext();
 
-        CoreUser createdUser = await verification.Set<CoreUser>().IgnoreQueryFilters()
-            .SingleAsync(coreUser => coreUser.Email == user.Email);
+        CoreUser createdUser = await verification.Set<CoreUser>()
+            .IgnoreQueryFilters()
+            .SingleAsync(predicate: coreUser => coreUser.Email == user.Email);
 
-        createdUser.IsActive.Should().Be(expectedIsActive);
+        createdUser.IsActive.Should()
+            .Be(expected: expectedIsActive);
 
         try
         {
-            await WaitUntilAsync(async () =>
+            await WaitUntilAsync(predicate: async () =>
             {
                 await using CoreDataContext core = CreateCoreContext();
 
-                return await core.Set<UserRole>().IgnoreQueryFilters()
-                    .AnyAsync(userRole =>
+                return await core.Set<UserRole>()
+                    .IgnoreQueryFilters()
+                    .AnyAsync(predicate: userRole =>
                         userRole.UserId == createdUser.Id
-                        && core.Set<Role>().IgnoreQueryFilters()
-                            .Any(role =>
+                        && core.Set<Role>()
+                    .IgnoreQueryFilters()
+                            .Any(predicate: role =>
                                 role.Id == userRole.RoleId
                                 && role.AppId == BaselineAppId
                                 && role.Name == "Users"));
@@ -219,22 +225,24 @@ public sealed partial class SecurityAccountEventIntegrationTests
         catch (TimeoutException exception)
         {
             await using CoreDataContext diagnosticContext = CreateCoreContext();
+
             string roleState = string.Join(
-                Environment.NewLine,
-                await diagnosticContext.Set<Role>().IgnoreQueryFilters()
-                    .Where(role => role.Name == "Users")
-                    .Select(role => $"Users role: {role.Id}, AppId={role.AppId}")
+separator:                 Environment.NewLine,value:                 await diagnosticContext.Set<Role>()
+                .IgnoreQueryFilters()
+                    .Where(predicate: role => role.Name == "Users")
+                    .Select(selector: role => $"Users role: {role.Id}, AppId={role.AppId}")
                     .ToArrayAsync());
+
             string assignmentState = string.Join(
-                Environment.NewLine,
-                await diagnosticContext.Set<UserRole>().IgnoreQueryFilters()
-                    .Where(userRole => userRole.UserId == createdUser.Id)
-                    .Select(userRole => $"User role assignment: UserId={userRole.UserId}, RoleId={userRole.RoleId}")
+separator:                 Environment.NewLine,value:                 await diagnosticContext.Set<UserRole>()
+                .IgnoreQueryFilters()
+                    .Where(predicate: userRole => userRole.UserId == createdUser.Id)
+                    .Select(selector: userRole => $"User role assignment: UserId={userRole.UserId}, RoleId={userRole.RoleId}")
                     .ToArrayAsync());
 
             throw new TimeoutException(
                 BuildFailureMessage(
-                    $"Timed out waiting for the default Users role assignment.{Environment.NewLine}" +
+content:                     $"Timed out waiting for the default Users role assignment.{Environment.NewLine}" +
                     $"{roleState}{Environment.NewLine}{assignmentState}"),
                 exception);
         }
@@ -242,48 +250,52 @@ public sealed partial class SecurityAccountEventIntegrationTests
 
     private async Task<QueuedEmail> AssertQueuedEmailAsync(RegisterUser user, string subjectFragment)
     {
-        await WaitUntilAsync(async () =>
+        await WaitUntilAsync(predicate: async () =>
         {
             await using CoreDataContext core = CreateCoreContext();
 
-            return await core.Set<QueuedEmail>().IgnoreQueryFilters()
-                .AnyAsync(email =>
+            return await core.Set<QueuedEmail>()
+                .IgnoreQueryFilters()
+                .AnyAsync(predicate: email =>
                     email.AppId == BaselineAppId
                     && email.To == user.Email
-                    && email.Subject.Contains(subjectFragment));
+                    && email.Subject.Contains(value: subjectFragment));
         });
 
         await using CoreDataContext verification = CreateCoreContext();
 
-        return await verification.Set<QueuedEmail>().IgnoreQueryFilters()
-            .OrderByDescending(email => email.Id)
-            .FirstAsync(email =>
+        return await verification.Set<QueuedEmail>()
+            .IgnoreQueryFilters()
+            .OrderByDescending(keySelector: email => email.Id)
+            .FirstAsync(predicate: email =>
                 email.AppId == BaselineAppId
                 && email.To == user.Email
-                && email.Subject.Contains(subjectFragment));
+                && email.Subject.Contains(value: subjectFragment));
     }
 
     private async Task<SentEmail> AssertSentEmailAsync(RegisterUser user, string subjectFragment)
     {
-        await WaitUntilAsync(async () =>
+        await WaitUntilAsync(predicate: async () =>
         {
             await using CoreDataContext core = CreateCoreContext();
 
-            return await core.Set<SentEmail>().IgnoreQueryFilters()
-                .AnyAsync(email =>
+            return await core.Set<SentEmail>()
+                .IgnoreQueryFilters()
+                .AnyAsync(predicate: email =>
                     email.AppId == BaselineAppId
                     && email.To == user.Email
-                    && email.Subject.Contains(subjectFragment));
-        }, attempts: 240, delayMilliseconds: 1000);
+                    && email.Subject.Contains(value: subjectFragment));
+        },attempts: 240,delayMilliseconds: 1000);
 
         await using CoreDataContext verification = CreateCoreContext();
 
-        return await verification.Set<SentEmail>().IgnoreQueryFilters()
-            .OrderByDescending(email => email.Id)
-            .FirstAsync(email =>
+        return await verification.Set<SentEmail>()
+            .IgnoreQueryFilters()
+            .OrderByDescending(keySelector: email => email.Id)
+            .FirstAsync(predicate: email =>
                 email.AppId == BaselineAppId
                 && email.To == user.Email
-                && email.Subject.Contains(subjectFragment));
+                && email.Subject.Contains(value: subjectFragment));
     }
 
     private async Task<ReceivedEmail> ReceiveEmailAsync(
@@ -291,7 +303,8 @@ public sealed partial class SecurityAccountEventIntegrationTests
         string subjectFragment,
         DateTimeOffset from)
     {
-        DateTimeOffset deadline = DateTimeOffset.UtcNow.AddMinutes(3);
+        DateTimeOffset deadline = DateTimeOffset.UtcNow.AddMinutes(minutes: 3);
+
         string receiveUser = ReadMailSetting(
             "CCODER_MAIL_INTEGRATION_RECEIVE_USER",
             "CCODER_MAIL_INTEGRATION_SEND_USER",
@@ -300,32 +313,32 @@ public sealed partial class SecurityAccountEventIntegrationTests
         while (DateTimeOffset.UtcNow < deadline)
         {
             using HttpResponseMessage response = await fixture.WebClient.PostAsJsonAsync(
-                "/Api/Mail/ReceivedEmail/Receive",
-                new MailboxReceiveRequest
+requestUri:                 "/Api/Mail/ReceivedEmail/Receive",value:                 new MailboxReceiveRequest
                 {
                     User = receiveUser,
-                    From = from.AddMinutes(-1),
-                    To = DateTimeOffset.UtcNow.AddMinutes(5),
+                    From = from.AddMinutes(minutes: -1),
+                    To = DateTimeOffset.UtcNow.AddMinutes(minutes: 5),
                     MaximumMessages = 50,
-                },
-                JsonOptions);
+                },options:                 JsonOptions);
 
             string content = await response.Content.ReadAsStringAsync();
-            response.StatusCode.Should().Be(HttpStatusCode.OK, BuildFailureMessage(content));
 
-            ReceivedEmail[] receivedEmails = JsonSerializer.Deserialize<ReceivedEmail[]>(content, JsonOptions)
+            response.StatusCode.Should()
+                .Be(expected: HttpStatusCode.OK,because: BuildFailureMessage(content: content));
+
+            ReceivedEmail[] receivedEmails = JsonSerializer.Deserialize<ReceivedEmail[]>(json: content,options: JsonOptions)
                 ?? throw new InvalidOperationException("Expected received email payload.");
 
-            ReceivedEmail receivedEmail = receivedEmails.FirstOrDefault(email =>
-                email.Subject?.Contains(subjectFragment, StringComparison.OrdinalIgnoreCase) == true
-                && email.ReceivedOn >= from.AddMinutes(-1));
+            ReceivedEmail receivedEmail = receivedEmails.FirstOrDefault(predicate: email =>
+                email.Subject?.Contains(value: subjectFragment,comparisonType: StringComparison.OrdinalIgnoreCase) == true
+                && email.ReceivedOn >= from.AddMinutes(minutes: -1));
 
             if (receivedEmail is not null)
             {
                 return receivedEmail;
             }
 
-            await Task.Delay(5000);
+            await Task.Delay(millisecondsDelay: 5000);
         }
 
         throw new TimeoutException($"Timed out waiting to receive '{subjectFragment}' email for {user.Email}.");
@@ -333,75 +346,94 @@ public sealed partial class SecurityAccountEventIntegrationTests
 
     private static string ExtractTokenFromEmail(ReceivedEmail email)
     {
-        string content = WebUtility.HtmlDecode(email.Content ?? string.Empty);
+        string content = WebUtility.HtmlDecode(value: email.Content ?? string.Empty);
+
         Match match = Regex.Match(
-            content,
-            @"(?:[?&])t=([^""'<&\s]+)",
-            RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+input:             content,pattern:             @"(?:[?&])t=([^""'<&\s]+)",options:             RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         if (!match.Success)
         {
             throw new InvalidOperationException($"Could not find a token link in email '{email.Subject}'.");
         }
 
-        return WebUtility.UrlDecode(match.Groups[1].Value);
+        return WebUtility.UrlDecode(encodedValue: match.Groups[1].Value);
     }
 
     private async Task CleanupAccountAsync(string email)
     {
         await using CoreDataContext core = CreateCoreContext();
 
-        int[] queuedEmailIds = await core.Set<QueuedEmail>().IgnoreQueryFilters()
-            .Where(queuedEmail => queuedEmail.To == email)
-            .Select(queuedEmail => queuedEmail.Id)
+        int[] queuedEmailIds = await core.Set<QueuedEmail>()
+            .IgnoreQueryFilters()
+            .Where(predicate: queuedEmail => queuedEmail.To == email)
+            .Select(selector: queuedEmail => queuedEmail.Id)
             .ToArrayAsync();
 
         if (queuedEmailIds.Length > 0)
         {
-            EmailSendFailure[] failures = await core.Set<EmailSendFailure>().IgnoreQueryFilters()
-                .Where(failure => queuedEmailIds.Contains(failure.EmailId))
+            EmailSendFailure[] failures = await core.Set<EmailSendFailure>()
+                .IgnoreQueryFilters()
+                .Where(predicate: failure => queuedEmailIds.Contains(value: failure.EmailId))
                 .ToArrayAsync();
 
-            core.Set<EmailSendFailure>().RemoveRange(failures);
-            core.Set<QueuedEmail>().RemoveRange(
-                await core.Set<QueuedEmail>().IgnoreQueryFilters()
-                    .Where(queuedEmail => queuedEmailIds.Contains(queuedEmail.Id))
+            core.Set<EmailSendFailure>()
+                .RemoveRange(entities: failures);
+
+            core.Set<QueuedEmail>()
+                .RemoveRange(
+entities:                 await core.Set<QueuedEmail>()
+                .IgnoreQueryFilters()
+                    .Where(predicate: queuedEmail => queuedEmailIds.Contains(value: queuedEmail.Id))
                     .ToArrayAsync());
         }
 
-        core.Set<SentEmail>().RemoveRange(
-            await core.Set<SentEmail>().IgnoreQueryFilters()
-                .Where(sentEmail => sentEmail.To == email)
+        core.Set<SentEmail>()
+            .RemoveRange(
+entities:             await core.Set<SentEmail>()
+            .IgnoreQueryFilters()
+                .Where(predicate: sentEmail => sentEmail.To == email)
                 .ToArrayAsync());
-        core.Set<ReceivedEmail>().RemoveRange(
-            await core.Set<ReceivedEmail>().IgnoreQueryFilters()
-                .Where(receivedEmail => receivedEmail.To == email)
+
+        core.Set<ReceivedEmail>()
+            .RemoveRange(
+entities:             await core.Set<ReceivedEmail>()
+            .IgnoreQueryFilters()
+                .Where(predicate: receivedEmail => receivedEmail.To == email)
                 .ToArrayAsync());
 
         await core.SaveChangesAsync();
 
-        CoreUser[] coreUsers = await core.Set<CoreUser>().IgnoreQueryFilters()
-            .Where(user => user.Email == email)
+        CoreUser[] coreUsers = await core.Set<CoreUser>()
+            .IgnoreQueryFilters()
+            .Where(predicate: user => user.Email == email)
             .ToArrayAsync();
 
         if (coreUsers.Length > 0)
         {
-            string[] coreUserIds = coreUsers.Select(user => user.Id).ToArray();
-            UserRole[] userRoles = await core.Set<UserRole>().IgnoreQueryFilters()
-                .Where(userRole => coreUserIds.Contains(userRole.UserId))
+            string[] coreUserIds = coreUsers.Select(selector: user => user.Id)
+                .ToArray();
+
+            UserRole[] userRoles = await core.Set<UserRole>()
+                .IgnoreQueryFilters()
+                .Where(predicate: userRole => coreUserIds.Contains(value: userRole.UserId))
                 .ToArrayAsync();
 
-            core.Set<UserRole>().RemoveRange(userRoles);
-            core.Set<CoreUser>().RemoveRange(coreUsers);
+            core.Set<UserRole>()
+                .RemoveRange(entities: userRoles);
+
+            core.Set<CoreUser>()
+                .RemoveRange(entities: coreUsers);
+
             await core.SaveChangesAsync();
         }
 
         await using DbContext sso = fixture.DatabaseServices
             .GetRequiredService<ISecurityDbContextFactory>()
-            .CreateDbContext(true);
+            .CreateDbContext(ignoreAuthInfo: true);
 
-        SSOUser[] ssoUsers = await sso.Set<SSOUser>().IgnoreQueryFilters()
-            .Where(user => user.Email == email)
+        SSOUser[] ssoUsers = await sso.Set<SSOUser>()
+            .IgnoreQueryFilters()
+            .Where(predicate: user => user.Email == email)
             .ToArrayAsync();
 
         if (ssoUsers.Length == 0)
@@ -409,41 +441,57 @@ public sealed partial class SecurityAccountEventIntegrationTests
             return;
         }
 
-        string[] ssoUserIds = ssoUsers.Select(user => user.Id).ToArray();
-        SsoToken[] tokens = await sso.Set<SsoToken>().IgnoreQueryFilters()
-            .Where(token => ssoUserIds.Contains(token.UserName))
-            .ToArrayAsync();
-        SSOUserRole[] ssoUserRoles = await sso.Set<SSOUserRole>().IgnoreQueryFilters()
-            .Where(userRole => ssoUserIds.Contains(userRole.UserId))
-            .ToArrayAsync();
-        UserEvent[] userEvents = await sso.Set<UserEvent>().IgnoreQueryFilters()
-            .Where(userEvent => ssoUserIds.Contains(userEvent.CreatedBy))
+        string[] ssoUserIds = ssoUsers.Select(selector: user => user.Id)
+            .ToArray();
+
+        SsoToken[] tokens = await sso.Set<SsoToken>()
+            .IgnoreQueryFilters()
+            .Where(predicate: token => ssoUserIds.Contains(value: token.UserName))
             .ToArrayAsync();
 
-        sso.Set<SsoToken>().RemoveRange(tokens);
-        sso.Set<SSOUserRole>().RemoveRange(ssoUserRoles);
-        sso.Set<UserEvent>().RemoveRange(userEvents);
-        sso.Set<SSOUser>().RemoveRange(ssoUsers);
+        SSOUserRole[] ssoUserRoles = await sso.Set<SSOUserRole>()
+            .IgnoreQueryFilters()
+            .Where(predicate: userRole => ssoUserIds.Contains(value: userRole.UserId))
+            .ToArrayAsync();
+
+        UserEvent[] userEvents = await sso.Set<UserEvent>()
+            .IgnoreQueryFilters()
+            .Where(predicate: userEvent => ssoUserIds.Contains(value: userEvent.CreatedBy))
+            .ToArrayAsync();
+
+        sso.Set<SsoToken>()
+            .RemoveRange(entities: tokens);
+
+        sso.Set<SSOUserRole>()
+            .RemoveRange(entities: ssoUserRoles);
+
+        sso.Set<UserEvent>()
+            .RemoveRange(entities: userEvents);
+
+        sso.Set<SSOUser>()
+            .RemoveRange(entities: ssoUsers);
+
         await sso.SaveChangesAsync();
     }
 
     private CoreDataContext CreateCoreContext() =>
-        fixture.DatabaseServices.GetRequiredService<ICoreContextFactory>().CreateCoreContext();
+        fixture.DatabaseServices.GetRequiredService<ICoreContextFactory>()
+            .CreateCoreContext();
 
     private string BuildFailureMessage(string content) =>
         $"""
         {content}
 
         Web output:
-        {Tail(fixture.WebOutput)}
+        {Tail(value: fixture.WebOutput)}
 
         HostedServices output:
-        {Tail(fixture.HostedServicesOutput)}
+        {Tail(value: fixture.HostedServicesOutput)}
         """;
 
     private static string Tail(string value, int length = 6000)
     {
-        if (string.IsNullOrWhiteSpace(value) || value.Length <= length)
+        if (string.IsNullOrWhiteSpace(value: value) || value.Length <= length)
         {
             return value ?? string.Empty;
         }
@@ -455,15 +503,16 @@ public sealed partial class SecurityAccountEventIntegrationTests
     {
         await using DbContext sso = fixture.DatabaseServices
             .GetRequiredService<ISecurityDbContextFactory>()
-            .CreateDbContext(true);
+            .CreateDbContext(ignoreAuthInfo: true);
 
-        string tokenId = Guid.NewGuid().ToString("N");
+        string tokenId = Guid.NewGuid()
+            .ToString(format: "N");
 
-        sso.Add(new SsoToken
+        sso.Add(entity: new SsoToken
         {
             Id = tokenId,
             Reason = (int)TokenUse.Auth,
-            Expires = DateTimeOffset.UtcNow.AddHours(1),
+            Expires = DateTimeOffset.UtcNow.AddHours(hours: 1),
             UserName = userId
         });
 
@@ -489,15 +538,15 @@ public sealed partial class SecurityAccountEventIntegrationTests
 
     private static string ReadMailSetting(params string[] names)
     {
-        string value = TryReadMailSetting(names);
+        string value = TryReadMailSetting(names: names);
 
-        if (!string.IsNullOrWhiteSpace(value))
+        if (!string.IsNullOrWhiteSpace(value: value))
         {
             return value;
         }
 
         throw new InvalidOperationException(
-            $"Missing mail integration environment variable. Checked: {string.Join(", ", names)}.");
+            $"Missing mail integration environment variable. Checked: {string.Join(separator: ", ",value: names)}.");
     }
 
     private static string TryReadMailSetting(params string[] names)
@@ -505,11 +554,11 @@ public sealed partial class SecurityAccountEventIntegrationTests
         foreach (string name in names)
         {
             string value =
-                Environment.GetEnvironmentVariable(name)
-                ?? Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.User)
-                ?? Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.Machine);
+                Environment.GetEnvironmentVariable(variable: name)
+                ?? Environment.GetEnvironmentVariable(variable: name,target: EnvironmentVariableTarget.User)
+                ?? Environment.GetEnvironmentVariable(variable: name,target: EnvironmentVariableTarget.Machine);
 
-            if (!string.IsNullOrWhiteSpace(value))
+            if (!string.IsNullOrWhiteSpace(value: value))
             {
                 return value;
             }
@@ -530,7 +579,7 @@ public sealed partial class SecurityAccountEventIntegrationTests
                 return;
             }
 
-            await Task.Delay(delayMilliseconds);
+            await Task.Delay(millisecondsDelay: delayMilliseconds);
         }
 
         throw new TimeoutException("Timed out waiting for the expected condition.");

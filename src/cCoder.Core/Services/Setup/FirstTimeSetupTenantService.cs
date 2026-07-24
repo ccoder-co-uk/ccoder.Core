@@ -171,7 +171,8 @@ predicate: role => role.TenantId == null
                 TenantId = null
             };
 
-            await sso.Set<SSORole>().AddAsync(entity: portalAdministratorRole, cancellationToken: cancellationToken);
+            await sso.Set<SSORole>()
+                .AddAsync(entity: portalAdministratorRole, cancellationToken: cancellationToken);
         }
         else
         {
@@ -199,7 +200,8 @@ predicate: userRole => userRole.UserId == userId && userRole.RoleId == roleId, c
             return;
         }
 
-        await sso.Set<SSOUserRole>().AddAsync(
+        await sso.Set<SSOUserRole>()
+            .AddAsync(
 entity: new SSOUserRole
 {
     UserId = userId,

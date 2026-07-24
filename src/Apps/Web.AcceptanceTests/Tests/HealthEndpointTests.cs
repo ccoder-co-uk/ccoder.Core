@@ -14,8 +14,9 @@ public sealed class HealthEndpointTests(WebAcceptanceFixture fixture)
     [Fact]
     public async Task ShouldReturnOk()
     {
-        string content = await fixture.Client.GetStringAsync("Health");
+        string content = await fixture.Client.GetStringAsync(requestUri: "Health");
 
-        content.Should().Be("OK");
+        content.Should()
+            .Be(expected: "OK");
     }
 }

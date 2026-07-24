@@ -20,11 +20,14 @@ public sealed class HostedServicesAppSecurityAppAddOrchestrationServiceTests
     {
         Mock<AppSecurityAppOrchestrationService> appOrchestrationServiceMock = new();
         Mock<AppSecurityUserRoleBroker> userRoleBrokerMock = new();
+
         var service = new HostedServicesAppSecurityAppAddOrchestrationService(
             appOrchestrationServiceMock.Object,
             userRoleBrokerMock.Object);
+
         Guid administratorRoleId = Guid.NewGuid();
         Guid guestRoleId = Guid.NewGuid();
+
         App app = new()
         {
             Id = 42,
@@ -51,28 +54,30 @@ public sealed class HostedServicesAppSecurityAppAddOrchestrationServiceTests
         };
 
         userRoleBrokerMock
-            .Setup(broker => broker.GetAllUserRoles(true))
-            .Returns(Array.Empty<UserRole>().AsQueryable());
+            .Setup(expression: broker => broker.GetAllUserRoles(ignoreFilters: true))
+            .Returns(value: Array.Empty<UserRole>()
+            .AsQueryable());
+
         userRoleBrokerMock
-            .Setup(broker => broker.AddUserRoleAsync(It.IsAny<UserRole>()))
-            .ReturnsAsync((UserRole userRole) => userRole);
+            .Setup(expression: broker => broker.AddUserRoleAsync(entity: It.IsAny<UserRole>()))
+            .ReturnsAsync(valueFunction: (UserRole userRole) => userRole);
 
-        await service.HandleAsync(app);
+        await service.HandleAsync(app: app);
 
-        appOrchestrationServiceMock.Verify(service => service.AddAsync(app), Times.Once);
+        appOrchestrationServiceMock.Verify(expression: service => service.AddAppAsync(app: app),times: Times.Once);
+
         userRoleBrokerMock.Verify(
-            broker => broker.AddUserRoleAsync(It.Is<UserRole>(userRole =>
+expression:             broker => broker.AddUserRoleAsync(entity: It.Is<UserRole>(match: userRole =>
                 userRole.RoleId == administratorRoleId &&
-                userRole.UserId == "Paul")),
-            Times.Once);
+                userRole.UserId == "Paul")),times:             Times.Once);
+
         userRoleBrokerMock.Verify(
-            broker => broker.AddUserRoleAsync(It.Is<UserRole>(userRole =>
+expression:             broker => broker.AddUserRoleAsync(entity: It.Is<UserRole>(match: userRole =>
                 userRole.RoleId == guestRoleId &&
-                userRole.UserId == "Guest")),
-            Times.Once);
+                userRole.UserId == "Guest")),times:             Times.Once);
+
         userRoleBrokerMock.Verify(
-            broker => broker.AddUserRoleAsync(It.IsAny<UserRole>()),
-            Times.Exactly(2));
+expression:             broker => broker.AddUserRoleAsync(entity: It.IsAny<UserRole>()),times:             Times.Exactly(callCount: 2));
     }
 
     [Fact]
@@ -80,9 +85,11 @@ public sealed class HostedServicesAppSecurityAppAddOrchestrationServiceTests
     {
         Mock<AppSecurityAppOrchestrationService> appOrchestrationServiceMock = new();
         Mock<AppSecurityUserRoleBroker> userRoleBrokerMock = new();
+
         var service = new HostedServicesAppSecurityAppAddOrchestrationService(
             appOrchestrationServiceMock.Object,
             userRoleBrokerMock.Object);
+
         App app = new()
         {
             Id = 42,
@@ -102,14 +109,15 @@ public sealed class HostedServicesAppSecurityAppAddOrchestrationServiceTests
         };
 
         userRoleBrokerMock
-            .Setup(broker => broker.GetAllUserRoles(true))
-            .Returns(Array.Empty<UserRole>().AsQueryable());
+            .Setup(expression: broker => broker.GetAllUserRoles(ignoreFilters: true))
+            .Returns(value: Array.Empty<UserRole>()
+            .AsQueryable());
 
-        await service.HandleAsync(app);
+        await service.HandleAsync(app: app);
 
-        appOrchestrationServiceMock.Verify(service => service.AddAsync(app), Times.Once);
+        appOrchestrationServiceMock.Verify(expression: service => service.AddAppAsync(app: app),times: Times.Once);
+
         userRoleBrokerMock.Verify(
-            broker => broker.AddUserRoleAsync(It.IsAny<UserRole>()),
-            Times.Never);
+expression:             broker => broker.AddUserRoleAsync(entity: It.IsAny<UserRole>()),times:             Times.Never);
     }
 }

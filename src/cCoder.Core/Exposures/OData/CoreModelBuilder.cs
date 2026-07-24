@@ -110,7 +110,8 @@ public class CoreModelBuilder : ODataModelBuilder
                 .ReturnsFromEntitySet<Page>(entitySetName: "Page");
 
         _ = Builder.EntityType<Page>()
-            .Function(name: "Menu").Returns<ContentManagement.Models.Result<string>>();
+            .Function(name: "Menu")
+            .Returns<ContentManagement.Models.Result<string>>();
 
         _ = Builder.EntityType<Page>().Collection.Function(name: "Render")
             .Returns<RenderResult>();

@@ -22,7 +22,7 @@ public sealed partial class FirstTimeSetupTests
         ITenantManager tenantManager = harness.Factory.Services.GetRequiredService<ITenantManager>();
 
         await tenantManager.SetupAsync(
-            new SetupDetails
+setupDetails:             new SetupDetails
             {
                 Tenant = new Tenant
                 {
@@ -43,11 +43,14 @@ public sealed partial class FirstTimeSetupTests
                 }
             });
 
-        await SubmitSetupAsync(harness);
+        await SubmitSetupAsync(harness: harness);
 
-        using HttpResponseMessage response = await harness.Client.GetAsync("/Setup");
+        using HttpResponseMessage response = await harness.Client.GetAsync(requestUri: "/Setup");
 
-        response.StatusCode.Should().Be(HttpStatusCode.Redirect);
-        response.Headers.Location!.OriginalString.Should().Be("/");
+        response.StatusCode.Should()
+            .Be(expected: HttpStatusCode.Redirect);
+
+        response.Headers.Location!.OriginalString.Should()
+            .Be(expected: "/");
     }
 }

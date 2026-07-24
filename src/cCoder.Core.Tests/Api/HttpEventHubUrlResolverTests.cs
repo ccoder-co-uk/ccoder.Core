@@ -17,20 +17,22 @@ public sealed class HttpEventHubUrlResolverTests
             ("Settings:enableExternalEventing", "true"),
             ("Services:HostedServices", "https://hosted.local"));
 
-        string result = HttpEventHubUrlResolver.Resolve(configuration);
+        string result = HttpEventHubUrlResolver.Resolve(configuration: configuration);
 
-        result.Should().Be("https://hosted.local/Api/Eventing");
+        result.Should()
+            .Be(expected: "https://hosted.local/Api/Eventing");
     }
 
     [Fact]
     public void Resolve_ShouldPreserveExplicitHubUrl()
     {
         IConfiguration configuration = BuildConfiguration(
-            ("Eventing:Http:HubUrl", "https://hosted.local/Api/Eventing"));
+values:             ("Eventing:Http:HubUrl", "https://hosted.local/Api/Eventing"));
 
-        string result = HttpEventHubUrlResolver.Resolve(configuration);
+        string result = HttpEventHubUrlResolver.Resolve(configuration: configuration);
 
-        result.Should().Be("https://hosted.local/Api/Eventing");
+        result.Should()
+            .Be(expected: "https://hosted.local/Api/Eventing");
     }
 
     [Fact]
@@ -40,21 +42,23 @@ public sealed class HttpEventHubUrlResolverTests
             ("Settings:enableExternalEventing", "false"),
             ("Services:HostedServices", "https://hosted.local"));
 
-        string result = HttpEventHubUrlResolver.Resolve(configuration);
+        string result = HttpEventHubUrlResolver.Resolve(configuration: configuration);
 
-        result.Should().BeEmpty();
+        result.Should()
+            .BeEmpty();
     }
 
     [Fact]
     public void Normalize_ShouldLeaveNonRootAbsolutePathsUntouched()
     {
-        string result = HttpEventHubUrlResolver.Normalize("https://hosted.local/internal/event-hub");
+        string result = HttpEventHubUrlResolver.Normalize(value: "https://hosted.local/internal/event-hub");
 
-        result.Should().Be("https://hosted.local/internal/event-hub");
+        result.Should()
+            .Be(expected: "https://hosted.local/internal/event-hub");
     }
 
     private static IConfiguration BuildConfiguration(params (string Key, string Value)[] values) =>
         new ConfigurationBuilder()
-            .AddInMemoryCollection(values.ToDictionary(item => item.Key, item => item.Value))
+            .AddInMemoryCollection(initialData: values.ToDictionary(keySelector: item => item.Key,elementSelector: item => item.Value))
             .Build();
 }

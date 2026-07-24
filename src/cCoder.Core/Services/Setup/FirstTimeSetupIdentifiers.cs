@@ -10,7 +10,8 @@ internal static partial class FirstTimeSetupIdentifiers
 {
     public static string BuildTenantId(string tenantName)
     {
-        string slug = UnsafeTenantSlug().Replace(input: tenantName?.Trim() ?? string.Empty, replacement: "-")
+        string slug = UnsafeTenantSlug()
+            .Replace(input: tenantName?.Trim() ?? string.Empty, replacement: "-")
             .Trim(trimChar: '-')
             .ToLowerInvariant();
 

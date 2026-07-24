@@ -106,5 +106,6 @@ message: "First-time setup is available because one or more platform databases a
         };
 
     private static bool IsDatabaseUnavailable(SqlException ex) =>
-        ex.Errors.OfType<SqlError>().Any(predicate: error => error.Number is 208 or 4060 or 911);
+        ex.Errors.OfType<SqlError>()
+            .Any(predicate: error => error.Number is 208 or 4060 or 911);
 }

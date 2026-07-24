@@ -16,37 +16,45 @@ public sealed partial class SecurityAccountEventIntegrationTests
     public async Task Invitation_CreatesAppUserQueuesInvitationEmailAndAllowsAcceptedLogin()
     {
         await EnsureMailSenderAsync();
-        RegisterUser user = CreateRegisterUser("invitation");
-        await CleanupAccountAsync(user.Email);
+        RegisterUser user = CreateRegisterUser(purpose: "invitation");
+        await CleanupAccountAsync(email: user.Email);
 
         DateTimeOffset requestedAt = DateTimeOffset.UtcNow;
-        string authToken = await CreateAuthTokenAsync(AdminUserId);
+        string authToken = await CreateAuthTokenAsync(userId: AdminUserId);
 
-        (SSOUser invitedUser, string inviteToken) = await InviteAsync(user, authToken);
+        (SSOUser invitedUser, string inviteToken) = await InviteAsync(user: user,authToken: authToken);
 
-        invitedUser.Email.Should().Be(user.Email);
-        inviteToken.Should().NotBeNullOrWhiteSpace();
+        invitedUser.Email.Should()
+            .Be(expected: user.Email);
 
-        await AssertAppSecurityUserCreatedAsync(user, expectedIsActive: false);
-        QueuedEmail queuedEmail = await AssertQueuedEmailAsync(user, "Confirm Invitation");
+        inviteToken.Should()
+            .NotBeNullOrWhiteSpace();
 
-        queuedEmail.To.Should().Be(user.Email);
-        queuedEmail.Content.Should().Contain(inviteToken);
+        await AssertAppSecurityUserCreatedAsync(user: user,expectedIsActive: false);
+        QueuedEmail queuedEmail = await AssertQueuedEmailAsync(user: user,subjectFragment: "Confirm Invitation");
 
-        await AssertSentEmailAsync(user, "Confirm Invitation");
+        queuedEmail.To.Should()
+            .Be(expected: user.Email);
+
+        queuedEmail.Content.Should()
+            .Contain(expected: inviteToken);
+
+        await AssertSentEmailAsync(user: user,subjectFragment: "Confirm Invitation");
+
         ReceivedEmail receivedEmail = await ReceiveEmailAsync(
-            user,
-            "Confirm Invitation",
-            requestedAt);
-        string emailToken = ExtractTokenFromEmail(receivedEmail);
+user:             user,subjectFragment:             "Confirm Invitation",from:             requestedAt);
 
-        emailToken.Should().Be(inviteToken);
+        string emailToken = ExtractTokenFromEmail(email: receivedEmail);
 
-        await AcceptInviteAsync(invitedUser.Id, emailToken, user);
-        await AssertAppSecurityUserCreatedAsync(user);
+        emailToken.Should()
+            .Be(expected: inviteToken);
 
-        Token loginToken = await LoginAsync(user);
+        await AcceptInviteAsync(userId: invitedUser.Id,token: emailToken,user: user);
+        await AssertAppSecurityUserCreatedAsync(user: user);
 
-        loginToken.Id.Should().NotBeNullOrWhiteSpace();
+        Token loginToken = await LoginAsync(user: user);
+
+        loginToken.Id.Should()
+            .NotBeNullOrWhiteSpace();
     }
 }

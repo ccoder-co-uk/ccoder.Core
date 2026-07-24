@@ -20,7 +20,10 @@ public sealed partial class NotificationHubTests
         int actualStatusCode = await NegotiateAsync();
 
         // Then
-        actualStatusCode.Should().NotBe((int)HttpStatusCode.NotFound);
-        actualStatusCode.Should().NotBe((int)HttpStatusCode.InternalServerError);
+        actualStatusCode.Should()
+            .NotBe(unexpected: (int)HttpStatusCode.NotFound);
+
+        actualStatusCode.Should()
+            .NotBe(unexpected: (int)HttpStatusCode.InternalServerError);
     }
 }

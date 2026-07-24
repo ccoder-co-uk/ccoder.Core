@@ -11,7 +11,7 @@ using cCoder.Security.Exposures;
 using cCoder.Security.Objects.Entities;
 using cCoder.Workflow.Activities.Models;
 using cCoder.Workflow.Brokers;
-using cCoder.Workflow.Services.Orchestrations;
+using cCoder.Workflow.Services.Processings;
 using Microsoft.EntityFrameworkCore;
 
 namespace HostedServices;
@@ -22,22 +22,22 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
     IServiceProvider serviceProvider,
     IConfiguration configuration,
     ILogger<HostedServicesWorkflowInstanceManagementOrchestrationService> log)
-    : IWorkflowInstanceManagementOrchestrationService
+    : IWorkflowInstanceProcessingService
 {
     public async Task RunAsync(CancellationToken cancellationToken = default)
     {
         try
         {
-            await RunInstanceMaintenanceAsync(cancellationToken);
-            await RunQueueInstanceManagementAsync(cancellationToken);
+            await RunInstanceMaintenanceAsync(cancellationToken: cancellationToken);
+            await RunQueueInstanceBackgroundServiceDependencyAsync(cancellationToken: cancellationToken);
         }
         catch (Exception exception)
         {
-            log.LogError(exception, exception.Message);
+            log.LogError(exception: exception,message: exception.Message);
 
             if (exception.InnerException is not null)
             {
-                log.LogError(exception.InnerException, exception.InnerException.Message);
+                log.LogError(exception: exception.InnerException,message: exception.InnerException.Message);
             }
         }
     }
@@ -47,19 +47,19 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
 
     public async ValueTask ExecuteWaitingQueuedInstanceByIdAsync(Guid id)
     {
-        await ExecuteInstanceAsync(id);
+        await ExecuteInstanceAsync(instanceId: id);
     }
 
     public async Task RunInstanceMaintenanceContinuouslyAsync(CancellationToken cancellationToken = default)
     {
-        await RunInstanceMaintenanceAsync(cancellationToken);
+        await RunInstanceMaintenanceAsync(cancellationToken: cancellationToken);
 
-        using PeriodicTimer timer = new(TimeSpan.FromMinutes(1));
+        using PeriodicTimer timer = new(TimeSpan.FromMinutes(minutes: 1));
 
         while (!cancellationToken.IsCancellationRequested
-            && await timer.WaitForNextTickAsync(cancellationToken))
+            && await timer.WaitForNextTickAsync(cancellationToken: cancellationToken))
         {
-            await RunInstanceMaintenanceAsync(cancellationToken);
+            await RunInstanceMaintenanceAsync(cancellationToken: cancellationToken);
         }
     }
 
@@ -67,46 +67,48 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
     {
         try
         {
-            await DropOldInstancesAsync(cancellationToken);
+            await DropOldInstancesAsync(cancellationToken: cancellationToken);
         }
         catch (Exception exception)
         {
-            log.LogError(exception, exception.Message);
+            log.LogError(exception: exception,message: exception.Message);
 
             if (exception.InnerException is not null)
             {
-                log.LogError(exception.InnerException, exception.InnerException.Message);
+                log.LogError(exception: exception.InnerException,message: exception.InnerException.Message);
             }
         }
     }
 
-    public async Task RunQueueInstanceManagementContinuouslyAsync(CancellationToken cancellationToken = default)
+    public async Task RunQueueInstanceBackgroundServiceDependencyContinuouslyAsync(
+        CancellationToken cancellationToken = default)
     {
-        await RunQueueInstanceManagementAsync(cancellationToken);
+        await RunQueueInstanceBackgroundServiceDependencyAsync(cancellationToken: cancellationToken);
 
-        using PeriodicTimer timer = new(TimeSpan.FromMinutes(1));
+        using PeriodicTimer timer = new(TimeSpan.FromMinutes(minutes: 1));
 
         while (!cancellationToken.IsCancellationRequested
-            && await timer.WaitForNextTickAsync(cancellationToken))
+            && await timer.WaitForNextTickAsync(cancellationToken: cancellationToken))
         {
-            await RunQueueInstanceManagementAsync(cancellationToken);
+            await RunQueueInstanceBackgroundServiceDependencyAsync(cancellationToken: cancellationToken);
         }
     }
 
-    public async Task RunQueueInstanceManagementAsync(CancellationToken cancellationToken = default)
+    public async Task RunQueueInstanceBackgroundServiceDependencyAsync(
+        CancellationToken cancellationToken = default)
     {
         try
         {
-            await ExecuteWaitingQueuedInstancesAsync(cancellationToken);
-            await RequeueHungExecutingInstancesAsync(cancellationToken);
+            await ExecuteWaitingQueuedInstancesAsync(cancellationToken: cancellationToken);
+            await RequeueHungExecutingInstancesAsync(cancellationToken: cancellationToken);
         }
         catch (Exception exception)
         {
-            log.LogError(exception, exception.Message);
+            log.LogError(exception: exception,message: exception.Message);
 
             if (exception.InnerException is not null)
             {
-                log.LogError(exception.InnerException, exception.InnerException.Message);
+                log.LogError(exception: exception.InnerException,message: exception.InnerException.Message);
             }
         }
     }
@@ -114,24 +116,23 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
     private async ValueTask DropOldInstancesAsync(CancellationToken cancellationToken)
     {
         int dropCount = await workflowInstanceManagementBroker
-            .FlushOldInstancesAsync(DateTimeOffset.UtcNow.AddDays(-7), cancellationToken);
+            .FlushOldInstancesAsync(cutoff: DateTimeOffset.UtcNow.AddDays(days: -7),cancellationToken: cancellationToken);
 
         if (dropCount > 0)
         {
-            log.LogInformation("Dropped {Count} Workflow instances older than 7 days.", dropCount);
+            log.LogInformation(message: "Dropped {Count} Workflow instances older than 7 days.",args: dropCount);
         }
     }
 
     private async ValueTask RequeueHungExecutingInstancesAsync(CancellationToken cancellationToken)
     {
         int requeueCount = await workflowInstanceManagementBroker
-            .RequeueHungExecutingInstancesAsync(DateTimeOffset.UtcNow.AddMinutes(-30), cancellationToken);
+            .RequeueHungExecutingInstancesAsync(cutoff: DateTimeOffset.UtcNow.AddMinutes(minutes: -30),cancellationToken: cancellationToken);
 
         if (requeueCount > 0)
         {
             log.LogWarning(
-                "Requeued {Count} Workflow instances that were still executing after 30 minutes.",
-                requeueCount);
+message:                 "Requeued {Count} Workflow instances that were still executing after 30 minutes.",args:                 requeueCount);
         }
     }
 
@@ -140,22 +141,34 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
         List<Task> executions = [];
 
         foreach (Guid instanceId in workflowInstanceManagementBroker.GetQueuedInstances()
-            .Select(instance => instance.Id)
+            .Select(selector: instance => instance.Id)
             .Distinct())
         {
             cancellationToken.ThrowIfCancellationRequested();
-            executions.Add(ExecuteInstanceAsync(instanceId, cancellationToken));
+            executions.Add(item: ExecuteInstanceAsync(instanceId: instanceId,cancellationToken: cancellationToken));
         }
 
-        await Task.WhenAll(executions);
+        await Task.WhenAll(tasks: executions);
     }
 
     private async Task ExecuteInstanceAsync(
         Guid instanceId,
         CancellationToken cancellationToken = default)
     {
+        int claimedCount = await workflowInstanceManagementBroker
+            .UpdateQueuedInstanceClaimAsync(
+                flowInstanceDataId: instanceId,
+                cancellationToken: cancellationToken);
+
+        if (claimedCount == 0)
+        {
+            return;
+        }
+
         FlowInstanceData dbInstance = await workflowInstanceManagementBroker
-            .ClaimQueuedInstanceAsync(instanceId, cancellationToken);
+            .SelectClaimedInstanceAsync(
+                flowInstanceDataId: instanceId,
+                cancellationToken: cancellationToken);
 
         if (dbInstance is null)
         {
@@ -165,7 +178,7 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
         try
         {
             ITokenManager tokenManager = serviceProvider.GetRequiredService<ITokenManager>();
-            Token token = await tokenManager.IssueTokenAsync(dbInstance.Caller, TokenUse.WorkflowExecution);
+            Token token = await tokenManager.IssueTokenAsync(userId: dbInstance.Caller,tokenUse: TokenUse.WorkflowExecution);
 
             WorkflowRequest request = new()
             {
@@ -175,11 +188,11 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
                 InstanceId = dbInstance.Id
             };
 
-            HttpResponseMessage result = await SendToWorkflowAsync(request, cancellationToken);
+            HttpResponseMessage result = await SendToWorkflowAsync(request: request,cancellationToken: cancellationToken);
 
             if (!result.IsSuccessStatusCode)
             {
-                string error = await result.Content.ReadAsStringAsync(cancellationToken);
+                string error = await result.Content.ReadAsStringAsync(cancellationToken: cancellationToken);
 
                 log.LogError(
                     "Flow instance {InstanceId} execution failed.{NewLine}{ErrorDetails}",
@@ -188,18 +201,16 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
                     error);
 
                 await MarkFailedAsync(
-                    dbInstance.Id,
-                    $"Workflow host returned {(int)result.StatusCode} ({result.StatusCode}).{Environment.NewLine}{error}",
-                    cancellationToken);
+instanceId:                     dbInstance.Id,context:                     $"Workflow host returned {(int)result.StatusCode} ({result.StatusCode}).{Environment.NewLine}{error}",cancellationToken:                     cancellationToken);
             }
         }
         catch (Exception exception)
         {
-            log.LogError(exception, "Flow instance {InstanceId} execution threw an exception.", dbInstance.Id);
+            log.LogError(exception: exception,message: "Flow instance {InstanceId} execution threw an exception.",args: dbInstance.Id);
+
             await MarkFailedAsync(
-                dbInstance.Id,
-                $"Workflow execution failed.{Environment.NewLine}{exception.Message}",
-                cancellationToken);
+instanceId:                 dbInstance.Id,context:                 $"Workflow execution failed.{Environment.NewLine}{exception.Message}",cancellationToken:                 cancellationToken);
+
             throw;
         }
     }
@@ -217,12 +228,10 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
         };
 
         return await api.PostAsync(
-            "Execute",
-            new StringContent(
-                JsonSerializer.Serialize(request),
+requestUri:             "Execute",content:             new StringContent(
+                JsonSerializer.Serialize(value: request),
                 Encoding.UTF8,
-                "application/json"),
-            cancellationToken);
+                "application/json"),cancellationToken:             cancellationToken);
     }
 
     private async Task MarkFailedAsync(
@@ -234,7 +243,7 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
 
         FlowInstanceData instance = await core.FlowInstances
             .IgnoreQueryFilters()
-            .FirstOrDefaultAsync(found => found.Id == instanceId, cancellationToken);
+            .FirstOrDefaultAsync(predicate: found => found.Id == instanceId,cancellationToken: cancellationToken);
 
         if (instance is null)
         {
@@ -245,6 +254,6 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
         instance.End = DateTimeOffset.UtcNow;
         instance.ContextString = context;
 
-        _ = await core.SaveChangesAsync(cancellationToken);
+        _ = await core.SaveChangesAsync(cancellationToken: cancellationToken);
     }
 }

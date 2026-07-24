@@ -45,7 +45,8 @@ internal sealed class FirstTimeSetupUserService(
             return;
         }
 
-        await core.Set<User>().AddAsync(
+        await core.Set<User>()
+            .AddAsync(
 entity: new User
 {
     Id = bootstrapUser.UserId,
@@ -125,7 +126,8 @@ predicate: userRole => userRole.RoleId == role.Id && userRole.UserId == userId, 
                 continue;
             }
 
-            await core.Set<UserRole>().AddAsync(
+            await core.Set<UserRole>()
+                .AddAsync(
 entity: new UserRole
 {
     RoleId = role.Id,

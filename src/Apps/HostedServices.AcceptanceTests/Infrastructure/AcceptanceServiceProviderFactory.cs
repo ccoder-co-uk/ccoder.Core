@@ -4,6 +4,7 @@
 
 using cCoder.Data;
 using cCoder.Security.Data.EF;
+using cCoder.Security.Data.EF.Dependencies;
 using cCoder.Security.Data.EF.Interfaces;
 using cCoder.Security.Objects;
 using HostedServices.AcceptanceTests.Models;
@@ -19,7 +20,7 @@ internal static class AcceptanceServiceProviderFactory
         services.AddLogging();
 
         services.AddSingleton(
-            new Config
+implementationInstance:             new Config
             {
                 ConnectionStrings = new Dictionary<string, string>
                 {
@@ -34,14 +35,14 @@ internal static class AcceptanceServiceProviderFactory
             });
 
         services.AddScoped<ISecurityDbContextFactory>(
-            provider => new MSSQLSecurityDbContextFactory(settings.SsoConnectionString)
+implementationFactory:             provider => new MSSQLSecurityDbContextFactory(settings.SsoConnectionString)
             {
                 GetAuthInfo = ignoreAuthInfo => ignoreAuthInfo
                     ? new SSOAuthInfo { SSOUserId = "Guest" }
                     : provider.GetService<ISSOAuthInfo>()
             });
 
-        cCoder.Data.IServiceCollectionExtensions.AddCoreData(services, settings.CoreConnectionString);
+        cCoder.Data.IServiceCollectionExtensions.AddCoreData(services: services,connectionString: settings.CoreConnectionString);
 
         return services.BuildServiceProvider(validateScopes: false);
     }

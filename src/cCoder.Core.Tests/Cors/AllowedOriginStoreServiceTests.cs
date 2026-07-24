@@ -27,9 +27,9 @@ public sealed class AllowedOriginStoreServiceTests
         DefaultHttpContext httpContext = new();
         httpContext.Request.Host = new HostString("app.example.com");
 
-        appBrokerMock.Setup(broker => broker.GetByDomain("app.example.com", true))
+        appBrokerMock.Setup(expression: broker => broker.GetByDomain(domain: "app.example.com",ignoreFilters: true))
             .Returns(
-                new App
+value:                 new App
                 {
                     Domain = "app.example.com",
                     ConfigJson = """
@@ -46,12 +46,13 @@ public sealed class AllowedOriginStoreServiceTests
 
         string[] origins = await service.GetAllowedOriginsAsync();
 
-        origins.Should().BeEquivalentTo(
+        origins.Should()
+            .BeEquivalentTo(
             "app.example.com",
             "https://admin.example.com");
 
-        appBrokerMock.Verify(broker => broker.GetByDomain("app.example.com", true), Times.Once);
-        appBrokerMock.Verify(broker => broker.GetAll(It.IsAny<bool>()), Times.Never);
+        appBrokerMock.Verify(expression: broker => broker.GetByDomain(domain: "app.example.com",ignoreFilters: true),times: Times.Once);
+        appBrokerMock.Verify(expression: broker => broker.GetAll(ignoreFilters: It.IsAny<bool>()),times: Times.Never);
     }
 
     [Fact]
@@ -65,11 +66,13 @@ public sealed class AllowedOriginStoreServiceTests
 
         string[] origins = await service.GetAllowedOriginsAsync();
 
-        origins.Should().BeEmpty();
-        appBrokerMock.Verify(broker => broker.GetAll(It.IsAny<bool>()), Times.Never);
+        origins.Should()
+            .BeEmpty();
+
+        appBrokerMock.Verify(expression: broker => broker.GetAll(ignoreFilters: It.IsAny<bool>()),times: Times.Never);
+
         appBrokerMock.Verify(
-            broker => broker.GetByDomain(It.IsAny<string>(), It.IsAny<bool>()),
-            Times.Never);
+expression:             broker => broker.GetByDomain(domain: It.IsAny<string>(),ignoreFilters: It.IsAny<bool>()),times:             Times.Never);
     }
 
     [Fact]
@@ -80,8 +83,8 @@ public sealed class AllowedOriginStoreServiceTests
         DefaultHttpContext httpContext = new();
         httpContext.Request.Host = new HostString("missing.example.com");
 
-        appBrokerMock.Setup(broker => broker.GetByDomain("missing.example.com", true))
-            .Returns((App)null);
+        appBrokerMock.Setup(expression: broker => broker.GetByDomain(domain: "missing.example.com",ignoreFilters: true))
+            .Returns(value: (App)null);
 
         AllowedOriginStoreService service = new(
             appBrokerMock.Object,
@@ -89,8 +92,10 @@ public sealed class AllowedOriginStoreServiceTests
 
         string[] origins = await service.GetAllowedOriginsAsync();
 
-        origins.Should().BeEmpty();
-        appBrokerMock.Verify(broker => broker.GetAll(It.IsAny<bool>()), Times.Never);
+        origins.Should()
+            .BeEmpty();
+
+        appBrokerMock.Verify(expression: broker => broker.GetAll(ignoreFilters: It.IsAny<bool>()),times: Times.Never);
     }
 
     [Fact]
@@ -101,9 +106,9 @@ public sealed class AllowedOriginStoreServiceTests
         DefaultHttpContext httpContext = new();
         httpContext.Request.Host = new HostString("app.example.com");
 
-        appBrokerMock.Setup(broker => broker.GetByDomain("app.example.com", true))
+        appBrokerMock.Setup(expression: broker => broker.GetByDomain(domain: "app.example.com",ignoreFilters: true))
             .Returns(
-                new App
+value:                 new App
                 {
                     Domain = "app.example.com",
                     ConfigJson = """
@@ -114,8 +119,8 @@ public sealed class AllowedOriginStoreServiceTests
                 });
 
         using ServiceProvider serviceProvider = new ServiceCollection()
-            .AddTransient(_ => appBrokerMock.Object)
-            .AddTransient<IHttpRequestBroker>(_ => new TestHttpRequestBroker(httpContext.Request))
+            .AddTransient(implementationFactory: _ => appBrokerMock.Object)
+            .AddTransient<IHttpRequestBroker>(implementationFactory: _ => new TestHttpRequestBroker(httpContext.Request))
             .AddTransient<IAllowedOriginStoreService, AllowedOriginStoreService>()
             .AddTransient<IAllowedOriginProcessingService, AllowedOriginProcessingService>()
             .AddLogging()
@@ -126,10 +131,13 @@ public sealed class AllowedOriginStoreServiceTests
             serviceProvider.GetRequiredService<IAllowedOriginProcessingService>(),
             serviceProvider.GetRequiredService<ILogger<CoreAllowedOriginStore>>());
 
-        (await store.IsAllowedAsync("https://admin.example.com")).Should().BeTrue();
-        (await store.IsAllowedAsync("https://other.example.com")).Should().BeFalse();
+        (await store.IsAllowedAsync(origin: "https://admin.example.com")).Should()
+            .BeTrue();
 
-        appBrokerMock.Verify(broker => broker.GetByDomain("app.example.com", true), Times.Exactly(2));
+        (await store.IsAllowedAsync(origin: "https://other.example.com")).Should()
+            .BeFalse();
+
+        appBrokerMock.Verify(expression: broker => broker.GetByDomain(domain: "app.example.com",ignoreFilters: true),times: Times.Exactly(callCount: 2));
     }
 
     [Fact]
@@ -140,9 +148,9 @@ public sealed class AllowedOriginStoreServiceTests
         DefaultHttpContext httpContext = new();
         httpContext.Request.Host = new HostString("app.example.com");
 
-        appBrokerMock.Setup(broker => broker.GetByDomain("app.example.com", true))
+        appBrokerMock.Setup(expression: broker => broker.GetByDomain(domain: "app.example.com",ignoreFilters: true))
             .Returns(
-                new App
+value:                 new App
                 {
                     Domain = "app.example.com",
                     ConfigJson = """
@@ -158,8 +166,11 @@ public sealed class AllowedOriginStoreServiceTests
 
         string[] origins = await service.GetAllowedOriginsAsync();
 
-        origins.Should().NotContain("other.example.com");
-        origins.Should().NotContain("https://other-admin.example.com");
+        origins.Should()
+            .NotContain(unexpected: "other.example.com");
+
+        origins.Should()
+            .NotContain(unexpected: "https://other-admin.example.com");
     }
 
     [Fact]
@@ -179,10 +190,11 @@ public sealed class AllowedOriginStoreServiceTests
         """;
 
         string[] origins = AllowedOriginStoreService
-            .ExtractOriginsFromConfigJson(configJson)
+            .ExtractOriginsFromConfigJson(configJson: configJson)
             .ToArray();
 
-        origins.Should().BeEquivalentTo(
+        origins.Should()
+            .BeEquivalentTo(
             "https://admin.example.com",
             "portal.example.com:8443",
             "https://api.example.com/v1",
@@ -193,10 +205,11 @@ public sealed class AllowedOriginStoreServiceTests
     public void ExtractOriginsFromConfigJson_ShouldIgnoreMalformedJson()
     {
         string[] origins = AllowedOriginStoreService
-            .ExtractOriginsFromConfigJson("{not json")
+            .ExtractOriginsFromConfigJson(configJson: "{not json")
             .ToArray();
 
-        origins.Should().BeEmpty();
+        origins.Should()
+            .BeEmpty();
     }
 
     private sealed class TestHttpRequestBroker(HttpRequest request) : IHttpRequestBroker

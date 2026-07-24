@@ -12,17 +12,16 @@ public partial class SecurityAccountEmailOrchestrationServiceTests
     [Fact]
     public async Task QueueRegistrationCreatedEmailAsync_ShouldQueueConfirmRegistrationEmail()
     {
-        App app = CreateApp("ConfirmRegistration");
-        SecurityAccountEvent accountEvent = CreateAccountEvent(SecurityAccountEventKind.RegistrationCreated);
-        SetupAppLookup(app);
-        SetupQueuedEmailExpectation(
-            "ConfirmRegistration",
-            "Core Portal: Confirm Registration");
+        App app = CreateApp(templateName: "ConfirmRegistration");
+        SecurityAccountEvent accountEvent = CreateAccountEvent(kind: SecurityAccountEventKind.RegistrationCreated);
+        SetupAppLookup(app: app);
 
-        await orchestrationService.QueueRegistrationCreatedEmailAsync(accountEvent);
+        SetupQueuedEmailExpectation(
+templateName:             "ConfirmRegistration",subject:             "Core Portal: Confirm Registration");
+
+        await orchestrationService.QueueRegistrationCreatedEmailAsync(accountEvent: accountEvent);
 
         VerifyQueuedEmail(
-            "ConfirmRegistration",
-            "Core Portal: Confirm Registration");
+templateName:             "ConfirmRegistration",subject:             "Core Portal: Confirm Registration");
     }
 }

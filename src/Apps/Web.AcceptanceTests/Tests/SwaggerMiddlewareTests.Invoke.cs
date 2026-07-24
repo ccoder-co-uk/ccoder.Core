@@ -27,9 +27,10 @@ public sealed partial class SwaggerMiddlewareTests
         int actualStatusCode;
 
         // When
-        actualStatusCode = await InvokeAsync(baseUrl);
+        actualStatusCode = await InvokeAsync(baseUrl: baseUrl);
 
         // Then
-        actualStatusCode.Should().Be((int)HttpStatusCode.OK);
+        actualStatusCode.Should()
+            .Be(expected: (int)HttpStatusCode.OK);
     }
 }

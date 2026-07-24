@@ -19,21 +19,52 @@ public sealed partial class ApiRootControllerTests
         string actualContent = await GetAsync();
 
         // Then
-        actualContent.Should().Contain("\"name\":\"AppSecurity\"");
-        actualContent.Should().Contain("\"name\":\"ContentManagement\"");
-        actualContent.Should().Contain("\"name\":\"Core\"");
-        actualContent.Should().Contain("\"name\":\"DocumentManagement\"");
-        actualContent.Should().Contain("\"name\":\"Logging\"");
-        actualContent.Should().Contain("\"name\":\"Mail\"");
-        actualContent.Should().Contain("\"name\":\"Security\"");
-        actualContent.Should().Contain("\"swaggerDef\":\"/swagger/Core/swagger.json\"");
-        actualContent.Should().Contain("\"swaggerDef\":\"/swagger/AppSecurity/swagger.json\"");
-        actualContent.Should().Contain("\"swaggerDef\":\"/swagger/ContentManagement/swagger.json\"");
-        actualContent.Should().Contain("\"swaggerDef\":\"/swagger/DocumentManagement/swagger.json\"");
-        actualContent.Should().Contain("\"swaggerDef\":\"/swagger/Logging/swagger.json\"");
-        actualContent.Should().Contain("\"swaggerDef\":\"/swagger/Mail/swagger.json\"");
-        actualContent.Should().Contain("\"swaggerDef\":\"/swagger/Security/swagger.json\"");
-        actualContent.Should().Contain("\"swaggerDef\":\"/swagger/Workflow/swagger.json\"");
-        actualContent.Should().Contain("\"name\":\"Workflow\"");
+        actualContent.Should()
+            .Contain(expected: "\"name\":\"AppSecurity\"");
+
+        actualContent.Should()
+            .Contain(expected: "\"name\":\"ContentManagement\"");
+
+        actualContent.Should()
+            .Contain(expected: "\"name\":\"Core\"");
+
+        actualContent.Should()
+            .Contain(expected: "\"name\":\"DocumentManagement\"");
+
+        actualContent.Should()
+            .Contain(expected: "\"name\":\"Logging\"");
+
+        actualContent.Should()
+            .Contain(expected: "\"name\":\"Mail\"");
+
+        actualContent.Should()
+            .Contain(expected: "\"name\":\"Security\"");
+
+        actualContent.Should()
+            .Contain(expected: "\"swaggerDef\":\"/swagger/Core/swagger.json\"");
+
+        actualContent.Should()
+            .Contain(expected: "\"swaggerDef\":\"/swagger/AppSecurity/swagger.json\"");
+
+        actualContent.Should()
+            .Contain(expected: "\"swaggerDef\":\"/swagger/ContentManagement/swagger.json\"");
+
+        actualContent.Should()
+            .Contain(expected: "\"swaggerDef\":\"/swagger/DocumentManagement/swagger.json\"");
+
+        actualContent.Should()
+            .Contain(expected: "\"swaggerDef\":\"/swagger/Logging/swagger.json\"");
+
+        actualContent.Should()
+            .Contain(expected: "\"swaggerDef\":\"/swagger/Mail/swagger.json\"");
+
+        actualContent.Should()
+            .Contain(expected: "\"swaggerDef\":\"/swagger/Security/swagger.json\"");
+
+        actualContent.Should()
+            .Contain(expected: "\"swaggerDef\":\"/swagger/Workflow/swagger.json\"");
+
+        actualContent.Should()
+            .Contain(expected: "\"name\":\"Workflow\"");
     }
 }

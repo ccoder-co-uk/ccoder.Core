@@ -48,13 +48,14 @@ public sealed partial class AppEventIntegrationTests
     private async Task<int> CreateStandaloneAppAsync(string domain)
     {
         await using CoreDataContext core = CreateCoreContext();
-        AppEntity app = await core.AddAppAsync(new AppEntity
+
+        AppEntity app = await core.AddAppAsync(app: new AppEntity
         {
-            Name = Unique("IntegrationApp"),
+            Name = Unique(prefix: "IntegrationApp"),
             Domain = domain,
             DefaultTheme = "Default",
             DefaultCultureId = string.Empty,
-            TenantId = Unique("tenant"),
+            TenantId = Unique(prefix: "tenant"),
             ConfigJson = "{}"
         });
 
@@ -65,15 +66,17 @@ public sealed partial class AppEventIntegrationTests
     {
         await using CoreDataContext core = CreateCoreContext();
 
-        Role templateRole = await core.Set<Role>().IgnoreQueryFilters()
-            .SingleAsync(role => role.AppId == BaselineAppId && role.Name == "Acceptance Administrators");
+        Role templateRole = await core.Set<Role>()
+            .IgnoreQueryFilters()
+            .SingleAsync(predicate: role => role.AppId == BaselineAppId && role.Name == "Acceptance Administrators");
 
-        Role role = await core.Set<Role>().IgnoreQueryFilters()
-            .SingleOrDefaultAsync(found => found.AppId == appId && found.Name == templateRole.Name);
+        Role role = await core.Set<Role>()
+            .IgnoreQueryFilters()
+            .SingleOrDefaultAsync(predicate: found => found.AppId == appId && found.Name == templateRole.Name);
 
         if (role is null)
         {
-            role = await core.AddRoleAsync(new Role
+            role = await core.AddRoleAsync(role: new Role
             {
                 Id = Guid.NewGuid(),
                 AppId = appId,
@@ -83,12 +86,13 @@ public sealed partial class AppEventIntegrationTests
             });
         }
 
-        bool hasGuestRole = await core.Set<UserRole>().IgnoreQueryFilters()
-            .AnyAsync(userRole => userRole.RoleId == role.Id && userRole.UserId == "Guest");
+        bool hasGuestRole = await core.Set<UserRole>()
+            .IgnoreQueryFilters()
+            .AnyAsync(predicate: userRole => userRole.RoleId == role.Id && userRole.UserId == "Guest");
 
         if (!hasGuestRole)
         {
-            await core.AddUserRoleAsync(new UserRole { RoleId = role.Id, UserId = "Guest" });
+            await core.AddUserRoleAsync(userRole: new UserRole { RoleId = role.Id, UserId = "Guest" });
         }
     }
 
@@ -101,10 +105,10 @@ public sealed partial class AppEventIntegrationTests
     {
         await using CoreDataContext core = CreateCoreContext();
 
-        await EnsureCultureAsync("en-GB", "English (UK)");
-        await EnsureCultureAsync("fr-FR", "French");
+        await EnsureCultureAsync(cultureId: "en-GB",name: "English (UK)");
+        await EnsureCultureAsync(cultureId: "fr-FR",name: "French");
 
-        await core.AddRoleAsync(new Role
+        await core.AddRoleAsync(role: new Role
         {
             Id = roleId,
             AppId = appId,
@@ -113,11 +117,12 @@ public sealed partial class AppEventIntegrationTests
             Privs = "app_admin,app_read,folder_update"
         });
 
-        await core.AddUserRoleAsync(new UserRole { RoleId = roleId, UserId = "Guest" });
-        await core.AddAppCultureAsync(new AppCulture { AppId = appId, CultureId = "en-GB" });
-        await core.AddFolderAsync(new Folder { Id = rootFolderId, AppId = appId, Name = "content", Path = "content" });
-        await core.AddFolderAsync(new Folder { Id = childFolderId, AppId = appId, ParentId = rootFolderId, Name = "child", Path = "content/child" });
-        await core.AddDmsFileAsync(new DmsFile
+        await core.AddUserRoleAsync(userRole: new UserRole { RoleId = roleId, UserId = "Guest" });
+        await core.AddAppCultureAsync(appCulture: new AppCulture { AppId = appId, CultureId = "en-GB" });
+        await core.AddFolderAsync(folder: new Folder { Id = rootFolderId, AppId = appId, Name = "content", Path = "content" });
+        await core.AddFolderAsync(folder: new Folder { Id = childFolderId, AppId = appId, ParentId = rootFolderId, Name = "child", Path = "content/child" });
+
+        await core.AddDmsFileAsync(file: new DmsFile
         {
             Id = fileId,
             FolderId = childFolderId,
@@ -139,21 +144,23 @@ public sealed partial class AppEventIntegrationTests
     {
         await using CoreDataContext core = CreateCoreContext();
 
-        await EnsureCultureAsync("en-GB", "English (UK)");
-        await core.AddRoleAsync(new Role
+        await EnsureCultureAsync(cultureId: "en-GB",name: "English (UK)");
+
+        await core.AddRoleAsync(role: new Role
         {
             Id = roleId,
             AppId = appId,
-            Name = Unique("DeleteRole"),
+            Name = Unique(prefix: "DeleteRole"),
             Description = "Delete role",
             Privs = "app_admin,app_delete,AppCulture_delete,folder_delete,file_delete"
         });
 
-        await core.AddUserRoleAsync(new UserRole { RoleId = roleId, UserId = "Guest" });
-        await core.AddAppCultureAsync(new AppCulture { AppId = appId, CultureId = "en-GB" });
-        await core.AddFolderAsync(new Folder { Id = folderId, AppId = appId, Name = "content", Path = "content" });
-        await core.AddFolderRoleAsync(new FolderRole { FolderId = folderId, RoleId = roleId });
-        await core.AddDmsFileAsync(new DmsFile
+        await core.AddUserRoleAsync(userRole: new UserRole { RoleId = roleId, UserId = "Guest" });
+        await core.AddAppCultureAsync(appCulture: new AppCulture { AppId = appId, CultureId = "en-GB" });
+        await core.AddFolderAsync(folder: new Folder { Id = folderId, AppId = appId, Name = "content", Path = "content" });
+        await core.AddFolderRoleAsync(folderRole: new FolderRole { FolderId = folderId, RoleId = roleId });
+
+        await core.AddDmsFileAsync(file: new DmsFile
         {
             Id = fileId,
             FolderId = folderId,
@@ -164,7 +171,8 @@ public sealed partial class AppEventIntegrationTests
             CreatedOn = DateTimeOffset.UtcNow,
             Size = "1 B"
         });
-        await core.AddFileContentAsync(new FileContent
+
+        await core.AddFileContentAsync(fileContent: new FileContent
         {
             Id = Guid.NewGuid(),
             FileId = fileId,
@@ -175,7 +183,8 @@ public sealed partial class AppEventIntegrationTests
             Version = 1,
             RawData = [1]
         });
-        await core.AddMailServerAsync(new MailServer
+
+        await core.AddMailServerAsync(mailServer: new MailServer
         {
             AppId = appId,
             Name = "Delete SMTP",
@@ -186,8 +195,10 @@ public sealed partial class AppEventIntegrationTests
             Port = 25,
             EnableSSL = false
         });
-        await core.AddCalendarAsync(new Calendar { AppId = appId, Name = "Delete Calendar", Description = "Calendar" });
-        await core.AddAppFlowDefinitionAsync(new FlowDefinition
+
+        await core.AddCalendarAsync(calendar: new Calendar { AppId = appId, Name = "Delete Calendar", Description = "Calendar" });
+
+        await core.AddAppFlowDefinitionAsync(flowDefinition: new FlowDefinition
         {
             Id = flowId,
             AppId = appId,
@@ -207,123 +218,145 @@ public sealed partial class AppEventIntegrationTests
         await using CoreDataContext core = CreateCoreContext();
 
         Guid[] roleIds =
-            [.. await core.Set<Role>().IgnoreQueryFilters()
-                .Where(role => role.AppId == appId)
-                .Select(role => role.Id)
+            [.. await core.Set<Role>()
+            .IgnoreQueryFilters()
+                .Where(predicate: role => role.AppId == appId)
+                .Select(selector: role => role.Id)
                 .ToArrayAsync()];
 
         await core.DeleteAllAsync(
-            core.Set<UserRole>().IgnoreQueryFilters()
-                .Where(userRole => roleIds.Contains(userRole.RoleId))
+userRoles:             core.Set<UserRole>()
+            .IgnoreQueryFilters()
+                .Where(predicate: userRole => roleIds.Contains(value: userRole.RoleId))
                 .ToArray());
 
         await core.DeleteAllAsync(
-            core.Set<FolderRole>().IgnoreQueryFilters()
-                .Where(folderRole => roleIds.Contains(folderRole.RoleId))
+folderRoles:             core.Set<FolderRole>()
+            .IgnoreQueryFilters()
+                .Where(predicate: folderRole => roleIds.Contains(value: folderRole.RoleId))
                 .ToArray());
 
         Guid[] folderIds =
-            [.. await core.Set<Folder>().IgnoreQueryFilters()
-                .Where(folder => folder.AppId == appId)
-                .Select(folder => folder.Id)
+            [.. await core.Set<Folder>()
+            .IgnoreQueryFilters()
+                .Where(predicate: folder => folder.AppId == appId)
+                .Select(selector: folder => folder.Id)
                 .ToArrayAsync()];
 
         Guid[] fileIds =
-            [.. await core.Set<DmsFile>().IgnoreQueryFilters()
-                .Where(file => folderIds.Contains(file.FolderId))
-                .Select(file => file.Id)
+            [.. await core.Set<DmsFile>()
+            .IgnoreQueryFilters()
+                .Where(predicate: file => folderIds.Contains(value: file.FolderId))
+                .Select(selector: file => file.Id)
                 .ToArrayAsync()];
 
         await core.DeleteAllAsync(
-            core.Set<FileContent>().IgnoreQueryFilters()
-                .Where(content => fileIds.Contains(content.FileId))
+fileContents:             core.Set<FileContent>()
+            .IgnoreQueryFilters()
+                .Where(predicate: content => fileIds.Contains(value: content.FileId))
                 .ToArray());
 
         await core.DeleteAllAsync(
-            core.Set<DmsFile>().IgnoreQueryFilters()
-                .Where(file => fileIds.Contains(file.Id))
+files:             core.Set<DmsFile>()
+            .IgnoreQueryFilters()
+                .Where(predicate: file => fileIds.Contains(value: file.Id))
                 .ToArray());
 
         await core.DeleteAllAsync(
-            core.Set<Folder>().IgnoreQueryFilters()
-                .Where(folder => folderIds.Contains(folder.Id))
-                .OrderByDescending(folder => folder.Path.Length)
+folders:             core.Set<Folder>()
+            .IgnoreQueryFilters()
+                .Where(predicate: folder => folderIds.Contains(value: folder.Id))
+                .OrderByDescending(keySelector: folder => folder.Path.Length)
                 .ToArray());
 
         await core.DeleteAllAsync(
-            core.Set<MailServer>().IgnoreQueryFilters()
-                .Where(server => server.AppId == appId)
+mailServers:             core.Set<MailServer>()
+            .IgnoreQueryFilters()
+                .Where(predicate: server => server.AppId == appId)
                 .ToArray());
 
         await core.DeleteAllAsync(
-            core.Set<Calendar>().IgnoreQueryFilters()
-                .Where(calendar => calendar.AppId == appId)
+calendars:             core.Set<Calendar>()
+            .IgnoreQueryFilters()
+                .Where(predicate: calendar => calendar.AppId == appId)
                 .ToArray());
 
         await core.DeleteAllAsync(
-            core.Set<QueuedEmail>().IgnoreQueryFilters()
-                .Where(email => email.AppId == appId)
+queuedEmails:             core.Set<QueuedEmail>()
+            .IgnoreQueryFilters()
+                .Where(predicate: email => email.AppId == appId)
                 .ToArray());
 
         await core.DeleteAllAsync(
-            core.Set<SentEmail>().IgnoreQueryFilters()
-                .Where(email => email.AppId == appId)
+sentEmails:             core.Set<SentEmail>()
+            .IgnoreQueryFilters()
+                .Where(predicate: email => email.AppId == appId)
                 .ToArray());
 
         await core.DeleteAllAsync(
-            core.Set<ScheduledTask>().IgnoreQueryFilters()
-                .Where(task => task.AppId == appId)
+scheduledTasks:             core.Set<ScheduledTask>()
+            .IgnoreQueryFilters()
+                .Where(predicate: task => task.AppId == appId)
                 .ToArray());
 
         Guid[] flowIds =
-            [.. await core.Set<FlowDefinition>().IgnoreQueryFilters()
-                .Where(flow => flow.AppId == appId)
-                .Select(flow => flow.Id)
+            [.. await core.Set<FlowDefinition>()
+            .IgnoreQueryFilters()
+                .Where(predicate: flow => flow.AppId == appId)
+                .Select(selector: flow => flow.Id)
                 .ToArrayAsync()];
 
         await core.DeleteAllAsync(
-            core.Set<WorkflowEvent>().IgnoreQueryFilters()
-                .Where(workflowEvent => flowIds.Contains(workflowEvent.FlowId))
+workflowEvents:             core.Set<WorkflowEvent>()
+            .IgnoreQueryFilters()
+                .Where(predicate: workflowEvent => flowIds.Contains(value: workflowEvent.FlowId))
                 .ToArray());
 
         await core.DeleteAllAsync(
-            core.Set<FlowInstanceData>().IgnoreQueryFilters()
-                .Where(instance => flowIds.Contains(instance.FlowDefinitionId))
+flowInstances:             core.Set<FlowInstanceData>()
+            .IgnoreQueryFilters()
+                .Where(predicate: instance => flowIds.Contains(value: instance.FlowDefinitionId))
                 .ToArray());
 
         await core.DeleteAllAsync(
-            core.Set<FlowDefinition>().IgnoreQueryFilters()
-                .Where(flow => flow.AppId == appId)
+flowDefinitions:             core.Set<FlowDefinition>()
+            .IgnoreQueryFilters()
+                .Where(predicate: flow => flow.AppId == appId)
                 .ToArray());
 
         await core.DeleteAllAsync(
-            core.Set<AppCulture>().IgnoreQueryFilters()
-                .Where(culture => culture.AppId == appId)
+appCultures:             core.Set<AppCulture>()
+            .IgnoreQueryFilters()
+                .Where(predicate: culture => culture.AppId == appId)
                 .ToArray());
 
         await core.DeleteAllAsync(
-            core.Set<Role>().IgnoreQueryFilters()
-                .Where(role => role.AppId == appId)
+roles:             core.Set<Role>()
+            .IgnoreQueryFilters()
+                .Where(predicate: role => role.AppId == appId)
                 .ToArray());
 
-        AppEntity app = await core.Set<AppEntity>().IgnoreQueryFilters()
-            .FirstOrDefaultAsync(found => found.Id == appId);
+        AppEntity app = await core.Set<AppEntity>()
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(predicate: found => found.Id == appId);
 
         if (app is not null)
         {
-            await core.DeleteAsync(app);
+            await core.DeleteAsync(app: app);
         }
     }
 
     private async Task EnsureCultureAsync(string cultureId, string name)
     {
         await using CoreDataContext core = CreateCoreContext();
-        bool exists = await core.Set<Culture>().IgnoreQueryFilters()
-            .AnyAsync(culture => culture.Id == cultureId);
+
+        bool exists = await core.Set<Culture>()
+            .IgnoreQueryFilters()
+            .AnyAsync(predicate: culture => culture.Id == cultureId);
 
         if (!exists)
         {
-            await core.AddCultureAsync(new Culture { Id = cultureId, Name = name });
+            await core.AddCultureAsync(culture: new Culture { Id = cultureId, Name = name });
         }
     }
 
@@ -334,19 +367,22 @@ public sealed partial class AppEventIntegrationTests
     {
         using HttpRequestMessage request = new(HttpMethod.Post, relativeUrl)
         {
-            Content = JsonContent.Create(payload, options: RequestJsonOptions)
+            Content = JsonContent.Create(inputValue: payload,options: RequestJsonOptions)
         };
 
-        if (!string.IsNullOrWhiteSpace(authToken))
+        if (!string.IsNullOrWhiteSpace(value: authToken))
         {
             request.Headers.Authorization =
                 new System.Net.Http.Headers.AuthenticationHeaderValue("bearer", authToken);
         }
 
-        using HttpResponseMessage response = await fixture.WebClient.SendAsync(request);
+        using HttpResponseMessage response = await fixture.WebClient.SendAsync(request: request);
         string content = await response.Content.ReadAsStringAsync();
-        response.StatusCode.Should().Be(HttpStatusCode.OK, content);
-        return JsonSerializer.Deserialize<T>(content, JsonOptions)
+
+        response.StatusCode.Should()
+            .Be(expected: HttpStatusCode.OK,because: content);
+
+        return JsonSerializer.Deserialize<T>(json: content,options: JsonOptions)
             ?? throw new InvalidOperationException($"Expected payload for {relativeUrl}.");
     }
 
@@ -354,31 +390,35 @@ public sealed partial class AppEventIntegrationTests
     {
         using HttpRequestMessage request = new(method, relativeUrl)
         {
-            Content = JsonContent.Create(payload, options: RequestJsonOptions)
+            Content = JsonContent.Create(inputValue: payload,options: RequestJsonOptions)
         };
 
-        if (!string.IsNullOrWhiteSpace(host))
+        if (!string.IsNullOrWhiteSpace(value: host))
         {
             request.Headers.Host = host;
         }
 
-        using HttpResponseMessage response = await fixture.WebClient.SendAsync(request);
+        using HttpResponseMessage response = await fixture.WebClient.SendAsync(request: request);
         string content = await response.Content.ReadAsStringAsync();
-        response.StatusCode.Should().Be(HttpStatusCode.OK, content);
+
+        response.StatusCode.Should()
+            .Be(expected: HttpStatusCode.OK,because: content);
     }
 
     private async Task SendWithOptionalHostAsync(HttpMethod method, string relativeUrl, string host = null)
     {
         using HttpRequestMessage request = new(method, relativeUrl);
 
-        if (!string.IsNullOrWhiteSpace(host))
+        if (!string.IsNullOrWhiteSpace(value: host))
         {
             request.Headers.Host = host;
         }
 
-        using HttpResponseMessage response = await fixture.WebClient.SendAsync(request);
+        using HttpResponseMessage response = await fixture.WebClient.SendAsync(request: request);
         string content = await response.Content.ReadAsStringAsync();
-        response.StatusCode.Should().Be(HttpStatusCode.OK, BuildFailureMessage(content));
+
+        response.StatusCode.Should()
+            .Be(expected: HttpStatusCode.OK,because: BuildFailureMessage(content: content));
     }
 
     private string BuildFailureMessage(string content) =>
@@ -386,12 +426,12 @@ public sealed partial class AppEventIntegrationTests
         {content}
 
         Web output:
-        {Tail(fixture.WebOutput)}
+        {Tail(value: fixture.WebOutput)}
         """;
 
     private static string Tail(string value, int length = 6000)
     {
-        if (string.IsNullOrWhiteSpace(value) || value.Length <= length)
+        if (string.IsNullOrWhiteSpace(value: value) || value.Length <= length)
         {
             return value ?? string.Empty;
         }
@@ -411,28 +451,30 @@ public sealed partial class AppEventIntegrationTests
                 return;
             }
 
-            await Task.Delay(delayMilliseconds);
+            await Task.Delay(millisecondsDelay: delayMilliseconds);
         }
 
         throw new TimeoutException("Timed out waiting for the expected condition.");
     }
 
     private CoreDataContext CreateCoreContext() =>
-        fixture.DatabaseServices.GetRequiredService<ICoreContextFactory>().CreateCoreContext();
+        fixture.DatabaseServices.GetRequiredService<ICoreContextFactory>()
+            .CreateCoreContext();
 
     private async Task<string> CreateAuthTokenAsync(string userId)
     {
         await using DbContext sso = fixture.DatabaseServices
             .GetRequiredService<ISecurityDbContextFactory>()
-            .CreateDbContext(true);
+            .CreateDbContext(ignoreAuthInfo: true);
 
-        string tokenId = Guid.NewGuid().ToString("N");
+        string tokenId = Guid.NewGuid()
+            .ToString(format: "N");
 
-        sso.Add(new SsoToken
+        sso.Add(entity: new SsoToken
         {
             Id = tokenId,
             Reason = (int)TokenUse.Auth,
-            Expires = DateTimeOffset.UtcNow.AddHours(1),
+            Expires = DateTimeOffset.UtcNow.AddHours(hours: 1),
             UserName = userId
         });
 
