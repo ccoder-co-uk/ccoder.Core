@@ -8,6 +8,7 @@ using cCoder.Security.Exposures;
 using cCoder.Security.Objects.Entities;
 using Microsoft.EntityFrameworkCore;
 using cCoder.Core.Models;
+using System.Text.RegularExpressions;
 
 namespace cCoder.Core.Services.Setup;
 
@@ -36,7 +37,7 @@ internal sealed class FirstTimeSetupTenantService(
         CancellationToken cancellationToken = default)
     {
         string tenantName = request.TenantName.Trim();
-        string tenantId = FirstTimeSetupIdentifiers.BuildTenantId(tenantName: tenantName);
+        string tenantId = BuildTenantId(tenantName: tenantName);
         DateTimeOffset now = DateTimeOffset.UtcNow;
         string email = request.Email.Trim();
 
@@ -241,5 +242,19 @@ entity: new SSOUserRole
             .IgnoreQueryFilters()
             .AnyAsync(
 predicate: found => found.Id == userId || found.Email == email, cancellationToken: cancellationToken);
+    }
+
+    private static string BuildTenantId(string tenantName)
+    {
+        string slug = Regex.Replace(
+                input: tenantName?.Trim() ?? string.Empty,
+                pattern: "[^a-zA-Z0-9]+",
+                replacement: "-")
+            .Trim(trimChar: '-')
+            .ToLowerInvariant();
+
+        return string.IsNullOrWhiteSpace(value: slug)
+            ? "default"
+            : slug;
     }
 }

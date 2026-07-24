@@ -16,6 +16,7 @@ using cCoder.Core.Dependencies.Packaging;
 using cCoder.Core.Exposures.Managers;
 using cCoder.Core.Exposures.Controllers;
 using cCoder.Core.Exposures.Cors;
+using cCoder.Core.Exposures.Setup;
 using cCoder.Core.Dependencies.Formatters;
 using cCoder.Core.Dependencies.Middleware;
 using cCoder.Core.Dependencies.Sessions;
@@ -231,7 +232,7 @@ predicate: (documentName, apiDescription) =>
         EnsureFirstTimeSetupSecurityServices(services: services);
         EnsureFirstTimeSetupSecurityManagers(services: services);
         services.AddScoped<IFirstTimeSetupStateService, FirstTimeSetupStateService>();
-        services.AddScoped<FirstTimeSetupAssetService>();
+        services.AddScoped<BaselineAssetCatalog>();
         services.AddScoped<IFirstTimeSetupUserService, FirstTimeSetupUserService>();
         services.AddScoped<IFirstTimeSetupTenantService, FirstTimeSetupTenantService>();
         services.AddScoped<IFirstTimeSetupAppService, FirstTimeSetupAppService>();

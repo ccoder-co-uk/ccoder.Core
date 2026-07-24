@@ -15,11 +15,12 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Reflection;
 using cCoder.Core.Models;
+using cCoder.Core.Exposures.Setup;
 
 namespace cCoder.Core.Services.Setup;
 
 internal sealed class FirstTimeSetupAppService(
-    FirstTimeSetupAssetService assetService,
+    BaselineAssetCatalog assetService,
     ICoreContextFactory coreContextFactory,
     IServiceProvider serviceProvider)
     : IFirstTimeSetupAppService
@@ -71,7 +72,7 @@ internal sealed class FirstTimeSetupAppService(
         string tenantId,
         CancellationToken cancellationToken = default)
     {
-        string firstAdminUserId = FirstTimeSetupIdentifiers.BuildUserId(email: request.Email);
+        string firstAdminUserId = BuildUserId(email: request.Email);
         Package[] packages = assetService.LoadPackages();
         CommonObject[] commonObjects = assetService.LoadCommonObjects();
         NormalizeBaselinePackages(packages: packages, createdBy: firstAdminUserId);
@@ -1434,4 +1435,11 @@ item: new FileContent
         property.SetValue(obj: commonObject, value: fallbackValue);
     }
 
+    private static string BuildUserId(string email) =>
+        (email ?? string.Empty)
+            .Split(
+                separator: '@',
+                count: 2,
+                options: StringSplitOptions.TrimEntries)[0]
+            .Trim();
 }

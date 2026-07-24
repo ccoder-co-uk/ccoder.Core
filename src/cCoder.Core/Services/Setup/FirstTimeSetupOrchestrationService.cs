@@ -7,6 +7,7 @@ using cCoder.Data;
 using cCoder.Data.Models.CMS;
 using Microsoft.EntityFrameworkCore;
 using cCoder.Security.Data.EF.Interfaces;
+using System.Text.RegularExpressions;
 
 namespace cCoder.Core.Services.Setup;
 
@@ -42,7 +43,7 @@ internal sealed class FirstTimeSetupOrchestrationService(
             throw new InvalidOperationException("The platform has already been initialised.");
         }
 
-        string bootstrapUserId = FirstTimeSetupIdentifiers.BuildUserId(email: request.Email);
+        string bootstrapUserId = BuildUserId(email: request.Email);
 
         FirstTimeSetupBootstrapUser bootstrapUser = new(
             bootstrapUserId,
@@ -50,7 +51,8 @@ internal sealed class FirstTimeSetupOrchestrationService(
             request.DisplayName.Trim(),
             null);
 
-        string tenantId = FirstTimeSetupIdentifiers.BuildTenantId(tenantName: request.TenantName.Trim());
+        string tenantId = BuildTenantId(
+            tenantName: request.TenantName.Trim());
 
         try
         {
@@ -137,5 +139,27 @@ bootstrapUserId: bootstrapUser.UserId, tenantId: tenantId, cancellationToken: ca
         {
             throw new InvalidOperationException("The setup request is missing the normalized domain.");
         }
+    }
+
+    private static string BuildUserId(string email) =>
+        (email ?? string.Empty)
+            .Split(
+                separator: '@',
+                count: 2,
+                options: StringSplitOptions.TrimEntries)[0]
+            .Trim();
+
+    private static string BuildTenantId(string tenantName)
+    {
+        string slug = Regex.Replace(
+                input: tenantName?.Trim() ?? string.Empty,
+                pattern: "[^a-zA-Z0-9]+",
+                replacement: "-")
+            .Trim(trimChar: '-')
+            .ToLowerInvariant();
+
+        return string.IsNullOrWhiteSpace(value: slug)
+            ? "default"
+            : slug;
     }
 }
