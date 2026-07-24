@@ -5,7 +5,6 @@
 using cCoder.Workflow.Services.Processings;
 using Microsoft.AspNetCore.Mvc;
 
-
 namespace HostedServices.Controllers;
 
 [Route("Workflow")]
@@ -15,10 +14,11 @@ public sealed class WorkflowController(
     : Controller
 {
     [HttpGet("")]
-    public IActionResult Index() => View();
+    public IActionResult Get() =>
+        View(viewName: "Index");
 
     [HttpPost("ExecuteNextFlowInstanceInQueue")]
-    public async Task<IActionResult> ExecuteNextFlowInstanceInQueue(Guid flowId)
+    public async Task<IActionResult> Post(Guid flowId)
     {
         try
         {
@@ -39,5 +39,6 @@ public sealed class WorkflowController(
     }
 
     [HttpGet("GetStats")]
-    public IActionResult GetStats() => Json(data: workflowInstanceProcessingService.GetStats());
+    public IActionResult GetStats() =>
+        Json(data: workflowInstanceProcessingService.GetStats());
 }
