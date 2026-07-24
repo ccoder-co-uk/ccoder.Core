@@ -15,9 +15,15 @@ internal sealed class FirstTimeSetupOrchestrationService(
     IFirstTimeSetupUserService userService,
     ICoreContextFactory coreContextFactory,
     ISecurityDbContextFactory securityDbContextFactory,
-    IServiceScopeFactory serviceScopeFactory)
+    IServiceScopeFactory serviceScopeFactory,
+    cCoder.Core.Services.Orchestrations.IUserRegistrationOrchestrationService userRegistrationOrchestrationService)
     : IFirstTimeSetupOrchestrationService
 {
+    public Task<bool> IsInitializedAsync(
+        CancellationToken cancellationToken = default) =>
+        setupStateService.IsInitializedAsync(
+            cancellationToken: cancellationToken);
+
     public async Task<FirstTimeSetupResult> SetupAsync(
         FirstTimeSetupRequest request,
         CancellationToken cancellationToken = default)
@@ -75,6 +81,10 @@ bootstrapUser: bootstrapUser, cancellationToken: cancellationToken);
 
             await bootstrapUserService.CompleteFirstUserRegistrationAsync(
 request: request, bootstrapUser: bootstrapUser, appId: app.Id, cancellationToken: cancellationToken);
+
+            await userRegistrationOrchestrationService.LoginAsync(
+                username: bootstrapUser.UserId,
+                password: request.Password);
 
             return new FirstTimeSetupResult(tenantId, app.Id, bootstrapUser.UserId);
         }

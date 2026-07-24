@@ -11,16 +11,14 @@ namespace cCoder.Core.Exposures.Controllers;
 
 [Route("Setup")]
 public sealed class SetupController(
-    IFirstTimeSetupStateService setupStateService,
     IFirstTimeSetupOrchestrationService setupOrchestrationService,
-    cCoder.Core.Services.Orchestrations.IUserRegistrationOrchestrationService userRegistrationOrchestrationService,
     ILogger<SetupController> log)
     : Controller
 {
     [HttpGet("")]
     public async Task<IActionResult> Get(CancellationToken cancellationToken)
     {
-        if (await setupStateService.IsInitializedAsync(cancellationToken: cancellationToken))
+        if (await setupOrchestrationService.IsInitializedAsync(cancellationToken: cancellationToken))
         {
             return Redirect(url: "/");
         }
@@ -37,7 +35,7 @@ public sealed class SetupController(
     {
         try
         {
-            if (await setupStateService.IsInitializedAsync(cancellationToken: cancellationToken))
+            if (await setupOrchestrationService.IsInitializedAsync(cancellationToken: cancellationToken))
             {
                 return Redirect(url: "/");
             }
@@ -54,13 +52,9 @@ public sealed class SetupController(
                 SetupRequestHostNormalizer.Normalize(
                     host: Request.Host.Host);
 
-            FirstTimeSetupResult result = await setupOrchestrationService.SetupAsync(
+            await setupOrchestrationService.SetupAsync(
                 request: newFirstTimeSetupRequest,
                 cancellationToken: cancellationToken);
-
-            await userRegistrationOrchestrationService.LoginAsync(
-                username: result.UserId,
-                password: newFirstTimeSetupRequest.Password);
 
             return Redirect(url: "/");
         }
