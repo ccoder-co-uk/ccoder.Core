@@ -18,19 +18,21 @@ public sealed class SetupController(
     : Controller
 {
     [HttpGet("")]
-    public async Task<IActionResult> Index(CancellationToken cancellationToken)
+    public async Task<IActionResult> Get(CancellationToken cancellationToken)
     {
         if (await setupStateService.IsInitializedAsync(cancellationToken: cancellationToken))
         {
             return Redirect(url: "/");
         }
 
-        return View(model: CreateViewModel());
+        return View(
+            viewName: "Index",
+            model: CreateFirstTimeSetupViewModel());
     }
 
     [HttpPost("")]
-    public async Task<IActionResult> Index(
-        [Bind(Prefix = "Setup")] FirstTimeSetupRequest setup,
+    public async Task<IActionResult> Post(
+        [Bind(Prefix = "Setup")] FirstTimeSetupRequest newFirstTimeSetupRequest,
         CancellationToken cancellationToken)
     {
         try
@@ -42,15 +44,23 @@ public sealed class SetupController(
 
             if (!ModelState.IsValid)
             {
-                return View(model: CreateViewModel(setup: setup));
+                return View(
+                    viewName: "Index",
+                    model: CreateFirstTimeSetupViewModel(
+                        setup: newFirstTimeSetupRequest));
             }
 
-            setup.Domain = SetupRequestHostNormalizer.Normalize(host: Request.Host.Host);
+            newFirstTimeSetupRequest.Domain =
+                SetupRequestHostNormalizer.Normalize(
+                    host: Request.Host.Host);
 
             FirstTimeSetupResult result = await setupOrchestrationService.SetupAsync(
-request: setup, cancellationToken: cancellationToken);
+                request: newFirstTimeSetupRequest,
+                cancellationToken: cancellationToken);
 
-            await userRegistrationOrchestrationService.LoginAsync(username: result.UserId, password: setup.Password);
+            await userRegistrationOrchestrationService.LoginAsync(
+                username: result.UserId,
+                password: newFirstTimeSetupRequest.Password);
 
             return Redirect(url: "/");
         }
@@ -58,11 +68,16 @@ request: setup, cancellationToken: cancellationToken);
         {
             log.LogError(exception: ex, message: "First-time setup failed.");
             ModelState.AddModelError(key: string.Empty, errorMessage: ex.Message);
-            return View(model: CreateViewModel(setup: setup));
+
+            return View(
+                viewName: "Index",
+                model: CreateFirstTimeSetupViewModel(
+                    setup: newFirstTimeSetupRequest));
         }
     }
 
-    private FirstTimeSetupViewModel CreateViewModel(FirstTimeSetupRequest setup = null) =>
+    private FirstTimeSetupViewModel CreateFirstTimeSetupViewModel(
+        FirstTimeSetupRequest setup = null) =>
         new()
         {
             Domain = SetupRequestHostNormalizer.Normalize(host: Request.Host.Host),

@@ -16,13 +16,16 @@ public class TemplatedEmailController(
     ITemplatedEmailOrchestrationService templatedEmailOrchestrationService) : ControllerBase
 {
     [HttpPost("Api/Core/QueuedEmail/AddTemplatedEmail()")]
-    public async Task<IActionResult> AddTemplatedEmail([FromBody] TemplatedEmailDetails details)
+    public async Task<IActionResult> Post(
+        [FromBody] TemplatedEmailDetails newTemplatedEmailDetails)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(modelState: ModelState);
         }
 
-        return Ok(value: await templatedEmailOrchestrationService.QueueAsync(details: details));
+        return Ok(
+            value: await templatedEmailOrchestrationService.QueueAsync(
+                details: newTemplatedEmailDetails));
     }
 }

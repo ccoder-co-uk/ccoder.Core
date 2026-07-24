@@ -18,32 +18,36 @@ public class AppController(
     CoreConfiguration configuration) : ODataController
 {
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody] App entity)
+    public async Task<IActionResult> Post([FromBody] App newApp)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(modelState: ModelState);
         }
 
-        return Ok(value: await service.AddAppAsync(newApp: entity));
+        return Ok(value: await service.AddAppAsync(newApp: newApp));
     }
 
     [HttpPut]
-    public async Task<IActionResult> Put([FromRoute] int key, [FromBody] App entity)
+    public async Task<IActionResult> Put(
+        [FromRoute] int key,
+        [FromBody] App updatedApp)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(modelState: ModelState);
         }
 
-        entity.Id = key;
-        return Ok(value: await service.UpdateAppAsync(updatedApp: entity));
+        updatedApp.Id = key;
+        return Ok(value: await service.UpdateAppAsync(updatedApp: updatedApp));
     }
 
     [ODataIgnored]
     [HttpPut("Api/Core/App({key})", Order = -1)]
-    public Task<IActionResult> PutAggregateRoute([FromRoute] int key, [FromBody] App entity) =>
-        Put(key: key, entity: entity);
+    public Task<IActionResult> PutAggregateRoute(
+        [FromRoute] int key,
+        [FromBody] App updatedApp) =>
+        Put(key: key, updatedApp: updatedApp);
 
     [ODataIgnored]
     [HttpDelete("Api/Core/App({key})", Order = -1)]
