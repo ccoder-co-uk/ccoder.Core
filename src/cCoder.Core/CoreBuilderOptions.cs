@@ -231,7 +231,9 @@ services: securityServices, decryptionKey: decryptionKey ?? string.Empty);
         });
 
         services.AddScoped<ICoreAllowedOriginStore, CoreAllowedOriginStore>();
-        services.TryAddTransient<HostedServicesAppSecurityAppAddOrchestrationService>();
+        services.TryAddTransient<
+            IHostedServicesAppSecurityAppAddOrchestrationService,
+            HostedServicesAppSecurityAppAddOrchestrationService>();
         return this;
     }
 

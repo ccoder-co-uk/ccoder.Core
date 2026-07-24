@@ -96,8 +96,12 @@ name: "folder_delete", handler: static (service, entity) => service.ForwardFolde
         using IServiceScope scope = app.Services.CreateScope();
         IEventHub eventHub = scope.ServiceProvider.GetRequiredService<IEventHub>();
 
-        eventHub.ListenToEvent<CmsApp, HostedServicesAppSecurityAppAddOrchestrationService>(
-name: "app_add", handler: static (service, entity) => service.HandleAsync(app: entity));
+        eventHub.ListenToEvent<
+            CmsApp,
+            IHostedServicesAppSecurityAppAddOrchestrationService>(
+            name: "app_add",
+            handler: static (service, entity) =>
+                service.HandleAppAsync(app: entity));
 
         return app;
     }

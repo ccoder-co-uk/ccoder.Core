@@ -9,17 +9,19 @@ using AppSecurityUserRoleBroker = cCoder.AppSecurity.Brokers.Storages.IUserRoleB
 
 namespace cCoder.Core.Services.Orchestrations;
 
-internal sealed class HostedServicesAppSecurityAppAddOrchestrationService(
+internal sealed partial class HostedServicesAppSecurityAppAddOrchestrationService(
     AppSecurityAppOrchestrationService appOrchestrationService,
     AppSecurityUserRoleBroker userRoleBroker)
+    : IHostedServicesAppSecurityAppAddOrchestrationService
 {
-    public async ValueTask HandleAsync(App app)
-    {
-        ArgumentNullException.ThrowIfNull(argument: app);
+    public ValueTask HandleAppAsync(App app) =>
+        TryCatch(operation: async () =>
+        {
+            ValidateAppOnHandle(app: app);
 
-        await appOrchestrationService.AddAppAsync(app: app);
-        await SaveRoleUsersAsync(app: app);
-    }
+            await appOrchestrationService.AddAppAsync(app: app);
+            await SaveRoleUsersAsync(app: app);
+        });
 
     private async ValueTask SaveRoleUsersAsync(App app)
     {

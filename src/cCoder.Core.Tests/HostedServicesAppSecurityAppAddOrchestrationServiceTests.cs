@@ -62,7 +62,7 @@ public sealed class HostedServicesAppSecurityAppAddOrchestrationServiceTests
             .Setup(expression: broker => broker.AddUserRoleAsync(entity: It.IsAny<UserRole>()))
             .ReturnsAsync(valueFunction: (UserRole userRole) => userRole);
 
-        await service.HandleAsync(app: app);
+        await service.HandleAppAsync(app: app);
 
         appOrchestrationServiceMock.Verify(expression: service => service.AddAppAsync(app: app),times: Times.Once);
 
@@ -113,7 +113,7 @@ expression:             broker => broker.AddUserRoleAsync(entity: It.IsAny<UserR
             .Returns(value: Array.Empty<UserRole>()
             .AsQueryable());
 
-        await service.HandleAsync(app: app);
+        await service.HandleAppAsync(app: app);
 
         appOrchestrationServiceMock.Verify(expression: service => service.AddAppAsync(app: app),times: Times.Once);
 
