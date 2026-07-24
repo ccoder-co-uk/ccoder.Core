@@ -35,6 +35,9 @@ using cCoder.Eventing.Http;
 using cCoder.Eventing.Http.Models;
 using Microsoft.OData.Edm;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Memory;
 using System.Text.Json.Serialization;
 using ContentManagementRuntimeConfig = cCoder.ContentManagement.Models.Config;
 using MailRuntimeConfig = cCoder.Mail.Models.Config;
@@ -365,8 +368,50 @@ defaults: coreConfiguration, connectionStrings: connectionStrings, settings: set
             return;
         }
 
-        SqlSessionCacheFallback.UseInMemorySessionCacheUntilSqlSessionStoreExists(
-services: services, ssoConnectionString: sessionCacheConnectionString);
+        if (SqlSessionTableExists(
+            connectionString: sessionCacheConnectionString))
+        {
+            return;
+        }
+
+        services.AddOptions();
+
+        services.Replace(
+            descriptor: ServiceDescriptor.Singleton<
+                IDistributedCache,
+                MemoryDistributedCache>());
+    }
+
+    private static bool SqlSessionTableExists(string connectionString)
+    {
+        try
+        {
+            SqlConnectionStringBuilder builder = new(connectionString)
+            {
+                ConnectTimeout = 2,
+            };
+
+            using SqlConnection connection =
+                new(builder.ConnectionString);
+
+            connection.Open();
+
+            using SqlCommand command = connection.CreateCommand();
+            command.CommandTimeout = 2;
+            command.CommandText = "SELECT OBJECT_ID(@tableName, 'U')";
+
+            command.Parameters.AddWithValue(
+                parameterName: "@tableName",
+                value: "dbo.Sessions");
+
+            object result = command.ExecuteScalar();
+
+            return result is not null and not DBNull;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     private void ApplyCoreData() =>
