@@ -36,25 +36,23 @@ public abstract class ODataModelBuilder
 
     protected virtual EntitySetConfiguration<T> AddJoinSet<T, TKey>(Expression<Func<T, TKey>> key)
         where T : class
-    {
-        string setName = typeof(T).Name;
-        EntitySetConfiguration<T> setConfig = Builder.EntitySet<T>(name: setName);
+        =>
+        (
+            Set: Builder.EntitySet<T>(name: typeof(T).Name),
+            Key: Builder.EntityType<T>()
+                .HasKey(keyDefinitionExpression: key)
+        )
+            .Set;
 
-        _ = Builder.EntityType<T>()
-            .HasKey(keyDefinitionExpression: key);
-
-        return setConfig;
-    }
-
-    /// <summary>
-    /// Used by shared metadata and lookup support
-    /// </summary>
     protected virtual void AddCommonComplextypes()
     {
-        _ = Builder.ComplexType<MetadataContainerSet>();
-        _ = Builder.ComplexType<MetadataContainer>();
-        _ = Builder.ComplexType<PropertyContainer>();
-        _ = Builder.ComplexType<AuditResultsByUser>();
-        _ = Builder.ComplexType<AuditResultByProperty>();
+        _ = new object[]
+        {
+            Builder.ComplexType<MetadataContainerSet>(),
+            Builder.ComplexType<MetadataContainer>(),
+            Builder.ComplexType<PropertyContainer>(),
+            Builder.ComplexType<AuditResultsByUser>(),
+            Builder.ComplexType<AuditResultByProperty>()
+        };
     }
 }
