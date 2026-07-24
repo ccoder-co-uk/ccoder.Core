@@ -14,7 +14,14 @@ public static partial class IServiceCollectionExtensions
 {
     public static void AddCoreWeb(
         this IServiceCollection services,
-        Action<CoreApiBuilderOptions> configure = null)
+        Action<CoreApiBuilderOptions> configure = null) =>
+        AddCoreWebExposures(
+            services: services,
+            configure: configure);
+
+    private static void AddCoreWebExposures(
+        IServiceCollection services,
+        Action<CoreApiBuilderOptions> configure)
     {
         ConfigureDefaultLogging(services: services, configuration: GetRequiredConfiguration(services: services));
         AddCoreApi(services: services, setupAction: configure ?? (_ => { }));

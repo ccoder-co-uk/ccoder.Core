@@ -3699,6 +3699,16 @@
       "Properties": [],
       "Methods": [
         {
+          "Name": "IsInitializedAsync",
+          "Inputs": [
+            {
+              "Name": "cancellationToken",
+              "Type": "System.Threading.CancellationToken"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task\u003CSystem.Boolean\u003E"
+        },
+        {
           "Name": "SetupAsync",
           "Inputs": [
             {
@@ -3992,15 +4002,7 @@
     },
     {
       "FromType": "cCoder.Core.Exposures.Controllers.SetupController",
-      "ToType": "cCoder.Core.Exposures.Managers.UserRegistrationManager"
-    },
-    {
-      "FromType": "cCoder.Core.Exposures.Controllers.SetupController",
       "ToType": "cCoder.Core.Services.Setup.FirstTimeSetupOrchestrationService"
-    },
-    {
-      "FromType": "cCoder.Core.Exposures.Controllers.SetupController",
-      "ToType": "cCoder.Core.Services.Setup.FirstTimeSetupStateService"
     },
     {
       "FromType": "cCoder.Core.Exposures.Controllers.TemplatedEmailController",
@@ -4124,6 +4126,10 @@
     },
     {
       "FromType": "cCoder.Core.Services.Setup.FirstTimeSetupOrchestrationService",
+      "ToType": "cCoder.Core.Exposures.Managers.UserRegistrationManager"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Setup.FirstTimeSetupOrchestrationService",
       "ToType": "cCoder.Core.Services.Setup.FirstTimeSetupStateService"
     },
     {
@@ -4152,13 +4158,6 @@
       "Severity": "Warning",
       "Type": "cCoder.Core.CoreConfigurationMapper",
       "LineNumber": 11
-    },
-    {
-      "Code": "STXAPI001",
-      "Description": "An API controller must have exactly one business dependency.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.Exposures.Controllers.SetupController",
-      "LineNumber": 12
     },
     {
       "Code": "STX0002",
@@ -4196,25 +4195,11 @@
       "LineNumber": 9
     },
     {
-      "Code": "STXAPP009",
-      "Description": "Add{Domain} must delegate service registration to Add{Domain}{Layer} initializers.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.IServiceCollectionExtensions",
-      "LineNumber": 15
-    },
-    {
       "Code": "STXAPP001",
       "Description": "Program.cs, IServiceCollectionExtensions.cs, IHostExtensions.cs, and WebApplicationExtensions.cs must live at the project root.",
       "Severity": "Warning",
       "Type": "cCoder.Core.IServiceCollectionExtensions",
       "LineNumber": 20
-    },
-    {
-      "Code": "STXAPP008",
-      "Description": "IServiceCollection registrations must be declared as individual statements rather than fluent chains.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.IServiceCollectionExtensions",
-      "LineNumber": 106
     },
     {
       "Code": "STXM001",
