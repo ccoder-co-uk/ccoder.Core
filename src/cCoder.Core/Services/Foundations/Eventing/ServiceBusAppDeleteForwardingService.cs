@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Data.Models.CMS;
 using cCoder.Eventing;
 using cCoder.Eventing.AzureServiceBus;
@@ -15,19 +19,18 @@ internal class ServiceBusAppDeleteForwardingService(
     public async ValueTask ForwardAsync(App app)
     {
         await serviceBusEventHub.RaiseEventAsync(
-            "app_delete",
-            new ServiceBusEventMessage<App>
-            {
-                AuthInfo = new ServiceBusEventAuthInfo
-                {
-                    SSOUserId = authInfo?.SSOUserId ?? string.Empty
-                },
-                Data = new App
-                {
-                    Id = app.Id,
-                    Domain = app.Domain,
-                    TenantId = app.TenantId
-                }
-            });
+name: "app_delete", message: new ServiceBusEventMessage<App>
+{
+    AuthInfo = new ServiceBusEventAuthInfo
+    {
+        SSOUserId = authInfo?.SSOUserId ?? string.Empty
+    },
+    Data = new App
+    {
+        Id = app.Id,
+        Domain = app.Domain,
+        TenantId = app.TenantId
+    }
+});
     }
 }

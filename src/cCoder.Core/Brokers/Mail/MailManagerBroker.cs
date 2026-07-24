@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Mail.Exposures;
 using cCoder.Mail.Models;
 using cCoder.Data.Models.CMS;
@@ -9,6 +13,5 @@ namespace cCoder.Core.Brokers.Mail;
 internal class MailManagerBroker(IMailManagerExposure mailManagerExposure) : IMailManagerBroker
 {
     public ValueTask<QueuedEmail> AddAsync(QueuedEmail email, bool checkPrivileges = false) =>
-        mailManagerExposure.AddAsync(email, checkPrivileges);
+        mailManagerExposure.AddAsync(newQueuedEmail: email, checkPrivileges: checkPrivileges);
 }
-

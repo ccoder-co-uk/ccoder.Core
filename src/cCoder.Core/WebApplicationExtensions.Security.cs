@@ -1,4 +1,10 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Text.Json;
+using cCoder.AppSecurity.Api.OData;
+using cCoder.AppSecurity.Brokers.Metadata;
 using cCoder.ContentManagement.Api.OData;
 using cCoder.Data.Exposures;
 using cCoder.Security.Objects.Entities;
@@ -13,16 +19,15 @@ public static partial class WebApplicationExtensions
         this WebApplication app,
         ILogger log = null)
     {
-        log?.LogInformation("Initialising Security");
+        log?.LogInformation(message: "Initialising Security");
 
         IMetadataTypeCache metadataTypeCache = app.Services.GetRequiredService<IMetadataTypeCache>();
 
-        if (!metadataTypeCache.Contains(SecurityMetadataScope))
+        if (!metadataTypeCache.Contains(scope: SecurityMetadataScope))
         {
             metadataTypeCache.Set(
-                SecurityMetadataScope,
-                [
-                    JsonSerializer.Serialize(new MetadataContainerSet
+scope: SecurityMetadataScope, typeSetPayloads: [
+                    JsonSerializer.Serialize(value: new MetadataContainerSet
                     {
                         Name = SecurityMetadataScope,
                         UriBase = SecurityMetadataScope,
@@ -44,8 +49,18 @@ public static partial class WebApplicationExtensions
     }
 
     private static ExtendedMetadataContainer SecurityEntity<T>() =>
-        new(typeof(T), isEntity: true, hasEndpoint: true)
-        {
-            Category = SecurityMetadataScope,
-        };
+        CreateSecurityEntity(type: typeof(T));
+
+    private static ExtendedMetadataContainer CreateSecurityEntity(Type type)
+    {
+        ExtendedMetadataContainer metadata =
+            MetadataBroker.CreateExtendedMetadataContainer(
+                type: type,
+                isEntity: true,
+                hasEndpoint: true);
+
+        metadata.Category = SecurityMetadataScope;
+
+        return metadata;
+    }
 }

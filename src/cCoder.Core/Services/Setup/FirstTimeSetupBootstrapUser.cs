@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 namespace cCoder.Core.Services.Setup;
 
 internal sealed record FirstTimeSetupBootstrapUser(

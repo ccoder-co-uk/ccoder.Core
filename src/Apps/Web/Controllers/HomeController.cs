@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Dynamic;
 using cCoder.ContentManagement.Exposures;
 using cCoder.ContentManagement.Services.Processings;
@@ -46,17 +50,25 @@ namespace Web.Controllers
 
                 string token = Request.Query["t"].ToString();
                 if (!string.IsNullOrWhiteSpace(token))
+                {
                     values["token"] = token;
+                }
 
                 if (!CanUseSession())
+                {
                     return result;
+                }
 
                 foreach (string i in HttpContext.Session.Keys)
                 {
                     if (i == "ssoUser")
+                    {
                         values["user"] = AuthInfo.SSOUserId;
+                    }
                     else
+                    {
                         values[i] = GetSessionValue(i);
+                    }
                 }
 
                 return result;
@@ -102,7 +114,9 @@ namespace Web.Controllers
                 }
 
                 if (path?.ToLower() == "robots.txt")
+                {
                     return Content("User-agent: * Allow: *", "text/plain");
+                }
 
                 path ??= string.Empty;
 
@@ -111,14 +125,22 @@ namespace Web.Controllers
                     : null;
 
                 if (culture != null)
+                {
                     SetSessionValue("culture", culture);
+                }
                 else
+                {
                     culture = GetSessionValue("culture") ?? string.Empty;
+                }
 
                 if (theme != null)
+                {
                     SetSessionValue("theme", theme);
+                }
                 else
+                {
                     theme = GetSessionValue("theme") ?? string.Empty;
+                }
 
                 PageRenderResponse response = PageRenderer.Render(
                     new PageRenderRequest
@@ -191,10 +213,14 @@ namespace Web.Controllers
                     .FirstOrDefault();
 
                 if (app != null && GetSessionValue("theme") == null)
+                {
                     SetSessionValue("theme", app.DefaultTheme ?? "Default");
+                }
 
                 if (app != null && GetSessionValue("culture") == null)
+                {
                     SetSessionValue("culture", app.DefaultCultureId ?? string.Empty);
+                }
             }
             catch (Exception ex)
             {
@@ -238,12 +264,18 @@ namespace Web.Controllers
         void SetSessionValue(string key, string value)
         {
             if (!CanUseSession())
+            {
                 return;
+            }
 
             if (value != null)
+            {
                 HttpContext.Session.SetString(key.ToLowerInvariant(), value);
+            }
             else if (HttpContext.Session.Keys.Contains(key.ToLowerInvariant()))
+            {
                 HttpContext.Session.Remove(key.ToLowerInvariant());
+            }
         }
 
         bool CanUseSession()

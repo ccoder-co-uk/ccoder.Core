@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Core.Exposures;
 using cCoder.Core.Models;
 using cCoder.Data.Models;
@@ -10,26 +14,26 @@ public partial class CoreApiBuilderOptions
 {
     private IEnumerable<CoreApiRouteDefinition> BuildRouteDefinitions() =>
         routeContributors
-            .Select(route => new CoreApiRouteDefinition(
-                Name: GetContextName(route.Key),
+            .Select(selector: route => new CoreApiRouteDefinition(
+                Name: GetContextName(routePath: route.Key),
                 RoutePath: route.Key,
-                RouteModel: BuildRouteModel(route.Value)))
-            .OrderBy(route => route.Name, StringComparer.OrdinalIgnoreCase)
+                RouteModel: BuildRouteModel(contributors: route.Value)))
+            .OrderBy(keySelector: route => route.Name, comparer: StringComparer.OrdinalIgnoreCase)
             .ToArray();
 
     private void RegisterContext(
         string routePath,
         Action<ODataConventionModelBuilder> configureModel)
     {
-        string normalizedRoutePath = EnsureRoutePath(routePath, "Core");
+        string normalizedRoutePath = EnsureRoutePath(routePath: routePath, defaultContext: "Core");
 
-        if (!routeContributors.TryGetValue(normalizedRoutePath, out List<Action<ODataConventionModelBuilder>> contributors))
+        if (!routeContributors.TryGetValue(key: normalizedRoutePath, value: out List<Action<ODataConventionModelBuilder>> contributors))
         {
             contributors = [];
             routeContributors[normalizedRoutePath] = contributors;
         }
 
-        contributors.Add(configureModel);
+        contributors.Add(item: configureModel);
     }
 
     private void RegisterDomainContext(
@@ -39,16 +43,16 @@ public partial class CoreApiBuilderOptions
     {
         if (coreConfiguration?.AggregateDomains == true)
         {
-            RegisterContext("Api/Core", configureModel);
+            RegisterContext(routePath: "Api/Core", configureModel: configureModel);
             return;
         }
 
-        RegisterContext(routePath, configureModel);
+        RegisterContext(routePath: routePath, configureModel: configureModel);
     }
 
     private void RegisterApiInfos(IEnumerable<CoreApiRouteDefinition> routes)
     {
-        services.AddSingleton(new ApiInfo
+        services.AddSingleton(implementationInstance: new ApiInfo
         {
             Kind = "Context",
             Name = "Core",
@@ -58,10 +62,12 @@ public partial class CoreApiBuilderOptions
 
         foreach (CoreApiRouteDefinition route in routes)
         {
-            if (string.Equals(route.Name, "Core", StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(a: route.Name, b: "Core", comparisonType: StringComparison.OrdinalIgnoreCase))
+            {
                 continue;
+            }
 
-            services.AddSingleton(new ApiInfo
+            services.AddSingleton(implementationInstance: new ApiInfo
             {
                 Kind = "Context",
                 Name = route.Name,
@@ -77,15 +83,17 @@ public partial class CoreApiBuilderOptions
         ODataConventionModelBuilder builder = new();
 
         foreach (Action<ODataConventionModelBuilder> contributor in contributors)
-            contributor(builder);
+        {
+            contributor(obj: builder);
+        }
 
         return builder.GetEdmModel();
     }
 
     private static string GetContextName(string routePath)
     {
-        string normalizedRoutePath = EnsureRoutePath(routePath, "Core");
-        int lastSlashIndex = normalizedRoutePath.LastIndexOf('/');
+        string normalizedRoutePath = EnsureRoutePath(routePath: routePath, defaultContext: "Core");
+        int lastSlashIndex = normalizedRoutePath.LastIndexOf(value: '/');
         return lastSlashIndex < 0
             ? normalizedRoutePath
             : normalizedRoutePath[(lastSlashIndex + 1)..];
@@ -93,10 +101,12 @@ public partial class CoreApiBuilderOptions
 
     private static string EnsureRoutePath(string routePath, string defaultContext)
     {
-        if (string.IsNullOrWhiteSpace(routePath))
+        if (string.IsNullOrWhiteSpace(value: routePath))
+        {
             return $"Api/{defaultContext}";
+        }
 
-        return routePath.Trim().Trim('/');
+        return routePath.Trim().Trim(trimChar: '/');
     }
 
     private void ConfigureDomainRouting<TDomainConfiguration>(
@@ -105,13 +115,13 @@ public partial class CoreApiBuilderOptions
         CoreDomainsConfig defaults)
     {
         Type configType = typeof(TDomainConfiguration);
-        string rootPath = defaults.RootPath.Trim().TrimEnd('/');
+        string rootPath = defaults.RootPath.Trim().TrimEnd(trimChar: '/');
         string routePath = coreConfiguration?.AggregateDomains == true
             ? $"{rootPath}/Core"
             : $"{rootPath}/{domainName}";
 
-        configType.GetProperty("RootPath")?.SetValue(configuration, routePath);
-        configType.GetProperty("IncludeLegacyCoreContext")?.SetValue(configuration, false);
+        configType.GetProperty(name: "RootPath")?.SetValue(obj: configuration, value: routePath);
+        configType.GetProperty(name: "IncludeLegacyCoreContext")?.SetValue(obj: configuration, value: false);
     }
 
     private void ApplyDomainRouteMode<TDomainConfiguration>(
@@ -120,19 +130,21 @@ public partial class CoreApiBuilderOptions
     {
         Type configType = typeof(TDomainConfiguration);
 
-        configType.GetProperty("RootPath")?.SetValue(configuration, $"Api/{domainName}");
-        configType.GetProperty("IncludeLegacyCoreContext")?.SetValue(configuration, false);
+        configType.GetProperty(name: "RootPath")?.SetValue(obj: configuration, value: $"Api/{domainName}");
+        configType.GetProperty(name: "IncludeLegacyCoreContext")?.SetValue(obj: configuration, value: false);
     }
 
     private static CoreApiRouteDefinition[] EnsureRequiredRoutes(
         IEnumerable<CoreApiRouteDefinition> routes)
     {
         CoreApiRouteDefinition[] definitions = (routes ?? [])
-            .Where(route => route is not null)
+            .Where(predicate: route => route is not null)
             .ToArray();
 
-        if (definitions.Any(route => string.Equals(route.Name, "Security", StringComparison.OrdinalIgnoreCase)))
+        if (definitions.Any(predicate: route => string.Equals(a: route.Name, b: "Security", comparisonType: StringComparison.OrdinalIgnoreCase)))
+        {
             return definitions;
+        }
 
         return
         [
@@ -140,7 +152,7 @@ public partial class CoreApiBuilderOptions
             new CoreApiRouteDefinition(
                 "Security",
                 "Api/Security",
-                BuildRouteModel([static builder => builder.ConfigureCoreSecurityApiModel()]))
+                BuildRouteModel(contributors: [static builder => builder.ConfigureCoreSecurityApiModel()]))
         ];
     }
 

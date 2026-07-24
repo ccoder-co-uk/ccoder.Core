@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Data;
 using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.DMS;
@@ -108,7 +112,9 @@ public sealed partial class AppEventIntegrationTests
         finally
         {
             if (appId != 0)
+            {
                 await DeleteAppGraphAsync(appId);
+            }
         }
     }
 }

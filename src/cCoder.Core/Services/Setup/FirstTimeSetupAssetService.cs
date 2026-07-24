@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Core.Exposures.Setup;
 using cCoder.Data.Models;
 using cCoder.Data.Models.Packaging;
@@ -12,7 +16,7 @@ internal sealed class FirstTimeSetupAssetService
         => catalog.LoadDefaultAppConfig();
 
     public byte[] LoadAssetBytes(string relativePath)
-        => catalog.LoadAssetBytes(relativePath);
+        => catalog.LoadAssetBytes(relativePath: relativePath);
 
     public string[] LoadDmsAssetPaths()
         => catalog.LoadDmsAssetPaths();
@@ -21,7 +25,7 @@ internal sealed class FirstTimeSetupAssetService
         catalog.LoadPackages();
 
     public T[] LoadPackageItems<T>(string packageName, string itemType)
-        => catalog.LoadPackageItems<T>(packageName, itemType);
+        => catalog.LoadPackageItems<T>(packageName: packageName, itemType: itemType);
 
     public CommonObject[] LoadCommonObjects() =>
         catalog.LoadCommonObjects();

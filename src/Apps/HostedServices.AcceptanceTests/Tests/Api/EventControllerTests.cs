@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -488,7 +492,9 @@ public sealed class EventControllerTests(HostedServicesAcceptanceFixture fixture
             try
             {
                 if (condition())
+                {
                     return;
+                }
             }
             catch (Exception exception)
             {
@@ -499,7 +505,9 @@ public sealed class EventControllerTests(HostedServicesAcceptanceFixture fixture
         }
 
         if (lastException is not null)
+        {
             throw new TimeoutException($"Timed out waiting because {because}.", lastException);
+        }
 
         throw new TimeoutException($"Timed out waiting because {because}.");
     }
@@ -844,7 +852,9 @@ public sealed class EventControllerTests(HostedServicesAcceptanceFixture fixture
             .FirstOrDefault(foundApp => foundApp.Id == appId);
 
         if (app is not null)
+        {
             await core.DeleteAsync(app);
+        }
     }
 
     private static async Task EnsureCultureAsync(

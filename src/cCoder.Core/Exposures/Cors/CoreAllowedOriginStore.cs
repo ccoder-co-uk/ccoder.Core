@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Core.Services.Foundations.AllowedOrigins;
 using cCoder.Core.Services.Processings.AllowedOrigins;
 
@@ -17,14 +21,12 @@ internal sealed class CoreAllowedOriginStore(
                 await allowedOriginStoreService.GetAllowedOriginsAsync();
 
             return allowedOriginProcessingService.IsAllowed(
-                origin,
-                allowedOriginProcessingService.CreateSnapshot(configuredOrigins));
+origin: origin, snapshot: allowedOriginProcessingService.CreateSnapshot(configuredOrigins: configuredOrigins));
         }
         catch (Exception exception)
         {
             logger.LogWarning(
-                "Unable to resolve the request allowed origins. {Message}",
-                exception.Message);
+message: "Unable to resolve the request allowed origins. {Message}", args: exception.Message);
 
             return false;
         }

@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Net;
 using FluentAssertions;
 using Xunit;
@@ -29,6 +33,3 @@ public sealed partial class SwaggerMiddlewareTests
         actualStatusCode.Should().Be((int)HttpStatusCode.OK);
     }
 }
-
-
-

@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 namespace cCoder.Core.Exposures;
 
 public class ModelStateError
@@ -6,6 +10,3 @@ public class ModelStateError
     public object Value { get; set; }
     public string[] Errors { get; set; }
 }
-
-
-

@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Workflow.Models;
 using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.Security;
@@ -11,4 +15,3 @@ public interface IWorkflowAppBroker
     ValueTask UpdateAsync(App app);
     ValueTask DeleteAsync(int appId);
 }
-

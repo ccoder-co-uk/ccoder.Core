@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Core.Brokers.ContentManagement;
 using cCoder.Core.Brokers.Http;
 using cCoder.Core.Exposures.Cors;

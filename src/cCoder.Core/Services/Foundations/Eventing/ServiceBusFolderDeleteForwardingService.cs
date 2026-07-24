@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Data.Models.DMS;
 using cCoder.Eventing;
 using cCoder.Eventing.AzureServiceBus;
@@ -15,14 +19,13 @@ internal class ServiceBusFolderDeleteForwardingService(
     public async ValueTask ForwardAsync(Folder folder)
     {
         await serviceBusEventHub.RaiseEventAsync(
-            "folder_delete",
-            new ServiceBusEventMessage<Folder>
-            {
-                AuthInfo = new ServiceBusEventAuthInfo
-                {
-                    SSOUserId = authInfo?.SSOUserId ?? string.Empty
-                },
-                Data = folder
-            });
+name: "folder_delete", message: new ServiceBusEventMessage<Folder>
+{
+    AuthInfo = new ServiceBusEventAuthInfo
+    {
+        SSOUserId = authInfo?.SSOUserId ?? string.Empty
+    },
+    Data = folder
+});
     }
 }

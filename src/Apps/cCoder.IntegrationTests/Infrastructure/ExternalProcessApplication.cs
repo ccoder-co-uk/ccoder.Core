@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Headers;
@@ -41,13 +45,17 @@ internal sealed class ExternalProcessApplication : IAsyncDisposable
         };
 
         foreach ((string key, string value) in environmentVariables)
+        {
             process.StartInfo.Environment[key] = value;
+        }
 
         process.OutputDataReceived += (_, args) => Append(args.Data);
         process.ErrorDataReceived += (_, args) => Append(args.Data);
 
         if (!process.Start())
+        {
             throw new InvalidOperationException($"Failed to start process '{Name}'.");
+        }
 
         process.BeginOutputReadLine();
         process.BeginErrorReadLine();
@@ -57,10 +65,14 @@ internal sealed class ExternalProcessApplication : IAsyncDisposable
         while (!cancellationTokenSource.IsCancellationRequested)
         {
             if (process.HasExited)
+            {
                 throw new InvalidOperationException($"Process '{Name}' exited before it became ready.{Environment.NewLine}{Output}");
+            }
 
             if (await readinessProbe())
+            {
                 return;
+            }
 
             await Task.Delay(500, cancellationTokenSource.Token).ContinueWith(_ => { }, TaskScheduler.Default);
         }
@@ -77,7 +89,9 @@ internal sealed class ExternalProcessApplication : IAsyncDisposable
     public async ValueTask DisposeAsync()
     {
         if (process is null)
+        {
             return;
+        }
 
         try
         {
@@ -89,7 +103,9 @@ internal sealed class ExternalProcessApplication : IAsyncDisposable
                 Task completedTask = await Task.WhenAny(waitForExitTask, Task.Delay(TimeSpan.FromSeconds(15)));
 
                 if (completedTask == waitForExitTask)
+                {
                     await waitForExitTask;
+                }
             }
         }
         catch
@@ -105,9 +121,13 @@ internal sealed class ExternalProcessApplication : IAsyncDisposable
     private void Append(string line)
     {
         if (line is null)
+        {
             return;
+        }
 
         lock (output)
+        {
             output.AppendLine(line);
+        }
     }
 }

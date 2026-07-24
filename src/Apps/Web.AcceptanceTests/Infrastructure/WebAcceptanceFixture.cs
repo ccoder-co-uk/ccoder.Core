@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -47,12 +51,16 @@ public sealed class WebAcceptanceFixture : IAsyncLifetime
         try
         {
             if (Factory is not null)
+            {
                 await Factory.DisposeAsync();
+            }
         }
         finally
         {
             if (databaseManager is not null)
+            {
                 await databaseManager.DropDatabasesAsync();
+            }
         }
     }
 
@@ -68,7 +76,9 @@ public sealed class WebAcceptanceFixture : IAsyncLifetime
             ?? ReadConfiguredConnectionString(variableName);
 
         if (string.IsNullOrWhiteSpace(connectionString))
+        {
             return string.Empty;
+        }
 
         SqlConnectionStringBuilder builder = new(connectionString)
         {
@@ -78,7 +88,9 @@ public sealed class WebAcceptanceFixture : IAsyncLifetime
         string databaseName = builder.InitialCatalog ?? string.Empty;
 
         if (string.IsNullOrWhiteSpace(databaseName))
+        {
             return connectionString;
+        }
 
         string suffix = typeof(WebAcceptanceFixture).Assembly.GetName().Name!
             .Replace(".AcceptanceTests", string.Empty, StringComparison.Ordinal)
@@ -108,4 +120,3 @@ public sealed class WebAcceptanceCollection : ICollectionFixture<WebAcceptanceFi
 {
     public const string Name = "Web acceptance";
 }
-

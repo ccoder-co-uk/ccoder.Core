@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Security.Objects.Entities;
 using Microsoft.OData.ModelBuilder;
 
@@ -9,25 +13,26 @@ internal static class CoreSecurityApiModelBuilderExtensions
     {
         EntityTypeConfiguration<SSOUser> userType = builder.EntityType<SSOUser>();
 
-        userType.Ignore(u => u.PasswordHash);
-        userType.Ignore(u => u.AccessFailedCount);
-        userType.Ignore(u => u.Tokens);
-        userType.Ignore(u => u.LockoutEnabled);
-        userType.Ignore(u => u.LockoutEndDateUtc);
+        userType.Ignore(propertyExpression: u => u.PasswordHash);
+        userType.Ignore(propertyExpression: u => u.AccessFailedCount);
+        userType.Ignore(propertyExpression: u => u.Tokens);
+        userType.Ignore(propertyExpression: u => u.LockoutEnabled);
+        userType.Ignore(propertyExpression: u => u.LockoutEndDateUtc);
 
-        userType.Collection.Function("Me").ReturnsFromEntitySet<SSOUser>("SSOUser");
-        userType.Collection.Action("AcceptInvite");
+        userType.Collection.Function(name: "Me").ReturnsFromEntitySet<SSOUser>(entitySetName: "SSOUser");
+        userType.Collection.Action(name: "AcceptInvite");
 
         EntityTypeConfiguration<UserEvent> userEventType = builder.EntityType<UserEvent>();
-        userEventType.Ignore(u => u.Session);
+        userEventType.Ignore(propertyExpression: u => u.Session);
 
-        builder.EntitySet<SSOUser>("SSOUser");
-        builder.EntitySet<SSORole>("SSORole");
-        builder.EntitySet<SSOPrivilege>("SSOPrivilege");
-        builder.EntitySet<Tenant>("Tenant");
-        builder.EntitySet<TenantAnalysis>("TenantAnalysis");
-        builder.EntitySet<UserEvent>("UserEvent");
-        builder.EntitySet<SSOUserRole>("SSOUserRole");
-        builder.EntityType<SSOUserRole>().HasKey(ur => new { ur.UserId, ur.RoleId });
+        builder.EntitySet<SSOUser>(name: "SSOUser");
+        builder.EntitySet<SSORole>(name: "SSORole");
+        builder.EntitySet<SSOPrivilege>(name: "SSOPrivilege");
+        builder.EntitySet<Tenant>(name: "Tenant");
+        builder.EntitySet<TenantAnalysis>(name: "TenantAnalysis");
+        builder.EntitySet<UserEvent>(name: "UserEvent");
+        builder.EntitySet<SSOUserRole>(name: "SSOUserRole");
+        builder.EntityType<SSOUserRole>()
+            .HasKey(keyDefinitionExpression: ur => new { ur.UserId, ur.RoleId });
     }
 }

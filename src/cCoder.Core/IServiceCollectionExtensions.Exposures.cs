@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Core.Exposures.Cors;
 using cCoder.Core.Exposures.Formatters;
 using cCoder.Core.Exposures;
@@ -17,56 +21,58 @@ public static partial class IServiceCollectionExtensions
         IServiceCollection services,
         IEnumerable<CoreApiRouteDefinition> routeDefinitions = null)
     {
-        AddCoreAspNetExposures(services);
-        AddCoreBrokers(services);
-        AddCoreFoundationServices(services);
-        AddCoreProcessingServices(services);
-        AddCoreOrchestrationServices(services);
+        AddCoreAspNetExposures(services: services);
+        AddCoreBrokers(services: services);
+        AddCoreFoundationServices(services: services);
+        AddCoreProcessingServices(services: services);
+        AddCoreOrchestrationServices(services: services);
         services.AddScoped<ICoreAllowedOriginStore, CoreAllowedOriginStore>();
-        AddCoreODataExposures(services, routeDefinitions);
-        AddCoreODataRouteMode(services);
+        AddCoreODataExposures(services: services, routeDefinitions: routeDefinitions);
+        AddCoreODataRouteMode(services: services);
 
         return services;
     }
 
     private static void AddCoreAspNetExposures(IServiceCollection services)
     {
-        CoreConfiguration coreConfiguration = GetRegisteredCoreConfiguration(services);
+        CoreConfiguration coreConfiguration = GetRegisteredCoreConfiguration(services: services);
 
         services.AddRouting();
         services.AddResponseCompression();
 
         services.AddHttpClient();
         services.AddHttpContextAccessor();
-        services.AddScoped(typeof(HttpContext), ctx => CreateHttpContext(ctx.GetService<IHttpContextAccessor>()?.HttpContext));
-        services.AddScoped(typeof(HttpRequest), ctx => ctx.GetRequiredService<HttpContext>().Request);
-        services.AddScoped(typeof(ISession), ctx =>
+        services.AddScoped(serviceType: typeof(HttpContext), implementationFactory: ctx => CreateHttpContext(httpContext: ctx.GetService<IHttpContextAccessor>()?.HttpContext));
+        services.AddScoped(serviceType: typeof(HttpRequest), implementationFactory: ctx => ctx.GetRequiredService<HttpContext>().Request);
+        services.AddScoped(serviceType: typeof(ISession), implementationFactory: ctx =>
         {
             HttpContext httpContext = ctx.GetRequiredService<HttpContext>();
             return httpContext.Features.Get<ISessionFeature>()?.Session ?? NoOpSession.Instance;
         });
 
         services.AddSession();
-        services.AddHsts(options =>
+        services.AddHsts(configureOptions: options =>
         {
             options.Preload = true;
             options.IncludeSubDomains = true;
-            options.MaxAge = TimeSpan.FromMinutes(60);
+            options.MaxAge = TimeSpan.FromMinutes(minutes: 60);
         });
 
-        services.AddMvc(options =>
+        services.AddMvc(setupAction: options =>
         {
             options.EnableEndpointRouting = false;
-            options.OutputFormatters.Add(new XmlFormatter());
-            options.OutputFormatters.Add(new CsvFormatter());
-            options.OutputFormatters.Add(new ExcelFormatter());
+            options.OutputFormatters.Add(item: new XmlFormatter());
+            options.OutputFormatters.Add(item: new CsvFormatter());
+            options.OutputFormatters.Add(item: new ExcelFormatter());
 
             if (coreConfiguration?.AggregateDomains != true)
-                options.Conventions.Add(new SplitDomainApplicationModelConvention());
+            {
+                options.Conventions.Add(actionModelConvention: new SplitDomainApplicationModelConvention());
+            }
         });
         services.AddRazorPages();
 
-        services.Configure<KestrelServerOptions>(options =>
+        services.Configure<KestrelServerOptions>(configureOptions: options =>
         {
             options.Limits.MaxRequestBodySize = int.MaxValue;
         });
@@ -81,15 +87,15 @@ public static partial class IServiceCollectionExtensions
     {
         DefaultODataBatchHandler batchHandler = new();
         CoreApiRouteDefinition[] definitions = (routeDefinitions ?? [])
-            .Where(route =>
+            .Where(predicate: route =>
                 route is not null
-                && (string.Equals(route.Name, "Core", StringComparison.OrdinalIgnoreCase)
-                    || string.Equals(route.RoutePath, "Api/Core", StringComparison.OrdinalIgnoreCase)
-                    || string.Equals(route.Name, "Security", StringComparison.OrdinalIgnoreCase)
-                    || string.Equals(route.RoutePath, "Api/Security", StringComparison.OrdinalIgnoreCase)))
+                && (string.Equals(a: route.Name, b: "Core", comparisonType: StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(a: route.RoutePath, b: "Api/Core", comparisonType: StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(a: route.Name, b: "Security", comparisonType: StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(a: route.RoutePath, b: "Api/Security", comparisonType: StringComparison.OrdinalIgnoreCase)))
             .ToArray();
 
-        services.AddControllers().AddOData(opt =>
+        services.AddControllers().AddOData(setupAction: opt =>
         {
             opt.RouteOptions.EnableQualifiedOperationCall = false;
             opt.EnableAttributeRouting = true;
@@ -99,26 +105,26 @@ public static partial class IServiceCollectionExtensions
                 .Filter()
                 .Select()
                 .OrderBy()
-                .SetMaxTop(1000);
+                .SetMaxTop(maxTopValue: 1000);
 
             foreach (CoreApiRouteDefinition routeDefinition in definitions)
             {
                 _ = opt.AddRouteComponents(
-                    routeDefinition.RoutePath,
-                    routeDefinition.RouteModel,
-                    batchHandler);
+routePrefix: routeDefinition.RoutePath, model: routeDefinition.RouteModel, batchHandler: batchHandler);
             }
         });
     }
 
     private static void AddCoreODataRouteMode(IServiceCollection services)
     {
-        CoreConfiguration coreConfiguration = GetRegisteredCoreConfiguration(services);
+        CoreConfiguration coreConfiguration = GetRegisteredCoreConfiguration(services: services);
 
-        services.PostConfigure<ODataOptions>(options =>
+        services.PostConfigure<ODataOptions>(configureOptions: options =>
         {
             if (coreConfiguration?.AggregateDomains != true)
+            {
                 return;
+            }
 
             string[] aggregateDomainRoutes =
             [
@@ -131,24 +137,28 @@ public static partial class IServiceCollectionExtensions
             ];
 
             foreach (string route in aggregateDomainRoutes)
-                options.RouteComponents.Remove(route);
+            {
+                options.RouteComponents.Remove(key: route);
+            }
         });
     }
 
     private static CoreConfiguration GetRegisteredCoreConfiguration(IServiceCollection services) =>
         services
-            .Where(descriptor => descriptor.ServiceType == typeof(CoreConfiguration))
-            .Select(descriptor => descriptor.ImplementationInstance)
+            .Where(predicate: descriptor => descriptor.ServiceType == typeof(CoreConfiguration))
+            .Select(selector: descriptor => descriptor.ImplementationInstance)
             .OfType<CoreConfiguration>()
             .LastOrDefault();
 
     private static HttpContext CreateHttpContext(HttpContext httpContext)
     {
         if (httpContext is not null)
+        {
             return httpContext;
+        }
 
         DefaultHttpContext fallbackContext = new();
-        fallbackContext.Features.Set<ISessionFeature>(new NoOpSessionFeature());
+        fallbackContext.Features.Set<ISessionFeature>(instance: new NoOpSessionFeature());
         return fallbackContext;
     }
 
@@ -156,15 +166,19 @@ public static partial class IServiceCollectionExtensions
     {
         public void Apply(ActionModel action)
         {
-            if (!string.Equals(action.Controller.ControllerName, "App", StringComparison.Ordinal))
+            if (!string.Equals(a: action.Controller.ControllerName, b: "App", comparisonType: StringComparison.Ordinal))
+            {
                 return;
+            }
 
             for (int index = action.Selectors.Count - 1; index >= 0; index--)
             {
                 string template = action.Selectors[index].AttributeRouteModel?.Template;
 
-                if (template?.StartsWith("Api/Core/App", StringComparison.OrdinalIgnoreCase) == true)
-                    action.Selectors.RemoveAt(index);
+                if (template?.StartsWith(value: "Api/Core/App", comparisonType: StringComparison.OrdinalIgnoreCase) == true)
+                {
+                    action.Selectors.RemoveAt(index: index);
+                }
             }
         }
     }

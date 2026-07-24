@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Reflection;
 using cCoder.Data.Extensions;
 using cCoder.Data.Models;
@@ -29,54 +33,56 @@ public sealed class BaselineAssetCatalog
         this.assembly = assembly;
 
     public string LoadDefaultAppConfig() =>
-        LoadText("DefaultAppConfig.json");
+        LoadText(relativePath: "DefaultAppConfig.json");
 
     public byte[] LoadAssetBytes(string relativePath) =>
-        LoadBytes(relativePath);
+        LoadBytes(relativePath: relativePath);
 
     public string[] LoadDmsAssetPaths() =>
         JsonConvert.DeserializeObject<string[]>(
-            LoadText(Path.Combine("Baseline", "DMS", "BaselineDmsAssets.json")),
-            settings) ?? [];
+value: LoadText(relativePath: Path.Combine(path1: "Baseline", path2: "DMS", path3: "BaselineDmsAssets.json")), settings: settings) ?? [];
 
     public Package[] LoadCoreReviewPackages() =>
         UIBaseline.Packages
-            .Select(ClonePackage)
-            .Where(package => package.Items?.Count > 0)
+            .Select(selector: ClonePackage)
+            .Where(predicate: package => package.Items?.Count > 0)
             .ToArray();
 
     public Package[] LoadPackages() =>
         LoadBaselinePackages()
-            .Select(ClonePackage)
-            .Where(package => package.Items?.Count > 0)
+            .Select(selector: ClonePackage)
+            .Where(predicate: package => package.Items?.Count > 0)
             .ToArray();
 
     public T[] LoadPackageItems<T>(string packageName, string itemType)
     {
-        Package package = LoadBaselinePackages().First(found =>
-            string.Equals(found.Name, packageName, StringComparison.OrdinalIgnoreCase));
+        Package package = LoadBaselinePackages()
+            .First(predicate: found =>
+            string.Equals(a: found.Name, b: packageName, comparisonType: StringComparison.OrdinalIgnoreCase));
 
         return (package.Items ?? [])
-            .Where(item => string.Equals(item.Type, itemType, StringComparison.OrdinalIgnoreCase))
-            .SelectMany(item => UnpackItems<T>(item.Data))
+            .Where(predicate: item => string.Equals(a: item.Type, b: itemType, comparisonType: StringComparison.OrdinalIgnoreCase))
+            .SelectMany(selector: item => UnpackItems<T>(data: item.Data))
             .ToArray();
     }
 
     public CommonObject[] LoadCommonObjects() =>
-        LoadPackageItems<Resource>("Core/Resource")
-            .Select(ToCommonObject)
-            .Concat(LoadPackageItems<Component>("Core/Component").Select(ToCommonObject))
-            .Concat(LoadPackageItems<Script>("Core/Script").Select(ToCommonObject))
-            .GroupBy(item => $"{item.Type}\u001f{item.Key}\u001f{item.Culture}\u001f{item.Name}", StringComparer.OrdinalIgnoreCase)
-            .Select(group => group.First())
-            .Select(CloneCommonObject)
+        LoadPackageItems<Resource>(itemType: "Core/Resource")
+            .Select(selector: ToCommonObject)
+            .Concat(second: LoadPackageItems<Component>(itemType: "Core/Component")
+                .Select(selector: ToCommonObject))
+            .Concat(second: LoadPackageItems<Script>(itemType: "Core/Script")
+                .Select(selector: ToCommonObject))
+            .GroupBy(keySelector: item => $"{item.Type}\u001f{item.Key}\u001f{item.Culture}\u001f{item.Name}", comparer: StringComparer.OrdinalIgnoreCase)
+            .Select(selector: group => group.First())
+            .Select(selector: CloneCommonObject)
             .ToArray();
 
     private T[] LoadPackageItems<T>(string itemType) =>
         LoadBaselinePackages()
-            .SelectMany(package => package.Items ?? [])
-            .Where(item => string.Equals(item.Type, itemType, StringComparison.OrdinalIgnoreCase))
-            .SelectMany(item => UnpackItems<T>(item.Data))
+            .SelectMany(selector: package => package.Items ?? [])
+            .Where(predicate: item => string.Equals(a: item.Type, b: itemType, comparisonType: StringComparison.OrdinalIgnoreCase))
+            .SelectMany(selector: item => UnpackItems<T>(data: item.Data))
             .ToArray();
 
     private static IEnumerable<Package> LoadBaselinePackages() =>
@@ -90,26 +96,27 @@ public sealed class BaselineAssetCatalog
 
     private string LoadText(string relativePath)
     {
-        using Stream stream = LoadResourceStream(relativePath);
+        using Stream stream = LoadResourceStream(relativePath: relativePath);
         using StreamReader reader = new(stream);
         return reader.ReadToEnd();
     }
 
     private byte[] LoadBytes(string relativePath)
     {
-        using Stream stream = LoadResourceStream(relativePath);
+        using Stream stream = LoadResourceStream(relativePath: relativePath);
         using MemoryStream memoryStream = new();
-        stream.CopyTo(memoryStream);
+        stream.CopyTo(destination: memoryStream);
         return memoryStream.ToArray();
     }
 
     private Stream LoadResourceStream(string relativePath)
     {
-        string resourceName = $"{ResourcePrefix}{relativePath.Replace('\\', '.').Replace('/', '.')}";
-        string normalizedResourceName = resourceName.Replace(' ', '_');
+        string resourceName = $"{ResourcePrefix}{relativePath.Replace(oldChar: '\\', newChar: '.')
+            .Replace(oldChar: '/', newChar: '.')}";
+        string normalizedResourceName = resourceName.Replace(oldChar: ' ', newChar: '_');
 
-        return assembly.GetManifestResourceStream(resourceName)
-            ?? assembly.GetManifestResourceStream(normalizedResourceName)
+        return assembly.GetManifestResourceStream(name: resourceName)
+            ?? assembly.GetManifestResourceStream(name: normalizedResourceName)
             ?? throw new FileNotFoundException($"Baseline asset was not found: {resourceName}", resourceName);
     }
 
@@ -117,7 +124,7 @@ public sealed class BaselineAssetCatalog
     {
         Guid packageId = Guid.NewGuid();
         PackageItem[] items = (package.Items ?? [])
-            .Select(item => ClonePackageItem(item, packageId))
+            .Select(selector: item => ClonePackageItem(item: item, packageId: packageId))
             .ToArray();
 
         return new Package
@@ -142,59 +149,19 @@ public sealed class BaselineAssetCatalog
 
     private static CommonObject CloneCommonObject(CommonObject commonObject) =>
         CreateCommonObject(
-            commonObject.Name,
-            commonObject.Description,
-            commonObject.LastUpdated,
-            commonObject.LastUpdatedBy,
-            commonObject.CreatedOn,
-            commonObject.CreatedBy,
-            commonObject.Version,
-            commonObject.Key,
-            commonObject.Type,
-            commonObject.Json,
-            commonObject.Culture);
+name: commonObject.Name, description: commonObject.Description, lastUpdated: commonObject.LastUpdated, lastUpdatedBy: commonObject.LastUpdatedBy, createdOn: commonObject.CreatedOn, createdBy: commonObject.CreatedBy, version: commonObject.Version, key: commonObject.Key, type: commonObject.Type, json: commonObject.Json, culture: commonObject.Culture);
 
     private static CommonObject ToCommonObject(Resource resource) =>
         CreateCommonObject(
-            resource.Name,
-            resource.Description,
-            resource.LastUpdated,
-            resource.LastUpdatedBy,
-            resource.CreatedOn,
-            resource.CreatedBy,
-            1,
-            resource.Key,
-            "Core/Resource",
-            JsonConvert.SerializeObject(resource, ObjectExtensions.GetJSONSettings()),
-            resource.Culture);
+name: resource.Name, description: resource.Description, lastUpdated: resource.LastUpdated, lastUpdatedBy: resource.LastUpdatedBy, createdOn: resource.CreatedOn, createdBy: resource.CreatedBy, version: 1, key: resource.Key, type: "Core/Resource", json: JsonConvert.SerializeObject(value: resource, settings: ObjectExtensions.GetJSONSettings()), culture: resource.Culture);
 
     private static CommonObject ToCommonObject(Component component) =>
         CreateCommonObject(
-            component.Name,
-            component.Description,
-            component.LastUpdated,
-            component.LastUpdatedBy,
-            component.CreatedOn,
-            component.CreatedBy,
-            1,
-            component.Key,
-            "Core/Component",
-            JsonConvert.SerializeObject(component, ObjectExtensions.GetJSONSettings()),
-            string.Empty);
+name: component.Name, description: component.Description, lastUpdated: component.LastUpdated, lastUpdatedBy: component.LastUpdatedBy, createdOn: component.CreatedOn, createdBy: component.CreatedBy, version: 1, key: component.Key, type: "Core/Component", json: JsonConvert.SerializeObject(value: component, settings: ObjectExtensions.GetJSONSettings()), culture: string.Empty);
 
     private static CommonObject ToCommonObject(Script script) =>
         CreateCommonObject(
-            script.Name,
-            script.Description,
-            script.LastUpdated,
-            script.LastUpdatedBy,
-            script.CreatedOn,
-            script.CreatedBy,
-            1,
-            script.Key,
-            "Core/Script",
-            JsonConvert.SerializeObject(script, ObjectExtensions.GetJSONSettings()),
-            string.Empty);
+name: script.Name, description: script.Description, lastUpdated: script.LastUpdated, lastUpdatedBy: script.LastUpdatedBy, createdOn: script.CreatedOn, createdBy: script.CreatedBy, version: 1, key: script.Key, type: "Core/Script", json: JsonConvert.SerializeObject(value: script, settings: ObjectExtensions.GetJSONSettings()), culture: string.Empty);
 
     private static CommonObject CreateCommonObject(
         string name,
@@ -211,8 +178,8 @@ public sealed class BaselineAssetCatalog
     {
         DateTimeOffset normalizedCreatedOn = createdOn ?? lastUpdated ?? DateTimeOffset.UtcNow;
         DateTimeOffset normalizedLastUpdated = lastUpdated ?? normalizedCreatedOn;
-        string normalizedCreatedBy = string.IsNullOrWhiteSpace(createdBy) ? "setup" : createdBy;
-        string normalizedLastUpdatedBy = string.IsNullOrWhiteSpace(lastUpdatedBy) ? normalizedCreatedBy : lastUpdatedBy;
+        string normalizedCreatedBy = string.IsNullOrWhiteSpace(value: createdBy) ? "setup" : createdBy;
+        string normalizedLastUpdatedBy = string.IsNullOrWhiteSpace(value: lastUpdatedBy) ? normalizedCreatedBy : lastUpdatedBy;
 
         return new CommonObject
         {
@@ -235,9 +202,9 @@ public sealed class BaselineAssetCatalog
     {
         string trimmed = data.TrimStart();
 
-        return trimmed.StartsWith("[", StringComparison.Ordinal)
-            ? JsonConvert.DeserializeObject<T[]>(trimmed, settings) ?? []
-            : JsonConvert.DeserializeObject<T>(trimmed, settings) is T item
+        return trimmed.StartsWith(value: "[", comparisonType: StringComparison.Ordinal)
+            ? JsonConvert.DeserializeObject<T[]>(value: trimmed, settings: settings) ?? []
+            : JsonConvert.DeserializeObject<T>(value: trimmed, settings: settings) is T item
                 ? [item]
                 : [];
     }

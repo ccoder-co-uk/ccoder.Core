@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.ContentManagement.Exposures;
 using cCoder.Packaging.Models;
 using cCoder.Data.Models.Packaging;
@@ -13,10 +17,10 @@ internal class ContentManagementPackageManagerBroker(
 ) : PackagingBroker
 {
     public ValueTask ImportPackageAsync(int appId, Package package) =>
-        contentManagementPackageManager.ImportPackageAsync(appId, ToExternalPackage(package));
+        contentManagementPackageManager.ImportPackageAsync(appId: appId, package: ToExternalPackage(package: package));
 
     public Package ExportPackage(int appId, string packageName) =>
-        ToLocalPackage(contentManagementPackageManager.ExportPackage(appId, packageName));
+        ToLocalPackage(package: contentManagementPackageManager.ExportPackage(appId: appId, packageName: packageName));
 
     private static DataPackage ToExternalPackage(Package package) =>
         package == null ? null : new DataPackage(package.Name)
@@ -26,7 +30,8 @@ internal class ContentManagementPackageManagerBroker(
             Description = package.Description,
             Category = package.Category,
             SourceApi = package.SourceApi,
-            Items = package.Items?.Select(ToExternalPackageItem).ToArray(),
+            Items = package.Items?.Select(selector: ToExternalPackageItem)
+                .ToArray(),
         };
 
     private static DataPackageItem ToExternalPackageItem(PackageItem packageItem) =>
@@ -46,7 +51,8 @@ internal class ContentManagementPackageManagerBroker(
             Description = package.Description,
             Category = package.Category,
             SourceApi = package.SourceApi,
-            Items = package.Items?.Select(ToLocalPackageItem).ToArray(),
+            Items = package.Items?.Select(selector: ToLocalPackageItem)
+                .ToArray(),
         };
 
     private static PackageItem ToLocalPackageItem(DataPackageItem packageItem) =>
@@ -58,5 +64,3 @@ internal class ContentManagementPackageManagerBroker(
             Data = packageItem.Data,
         };
 }
-
-

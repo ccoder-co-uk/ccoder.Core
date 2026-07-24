@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Reflection;
 using cCoder.Data;
 using cCoder.Data.Models;
@@ -173,7 +177,9 @@ internal sealed class IntegrationAcceptanceSeeder(IServiceProvider services)
             .AnyAsync(existing => existing.Id == AcceptanceTenantId);
 
         if (hasTenant)
+        {
             return;
+        }
 
         DateTimeOffset now = DateTimeOffset.UtcNow;
 
@@ -249,7 +255,9 @@ internal sealed class IntegrationAcceptanceSeeder(IServiceProvider services)
     private static async Task SeedCommonObjectsAsync(DbContext core)
     {
         if (await core.Set<CommonObject>().AnyAsync())
+        {
             return;
+        }
 
         CommonObject[] commonObjects = AcceptanceSeedData
             .LoadCommonObjects()
@@ -304,7 +312,9 @@ internal sealed class IntegrationAcceptanceSeeder(IServiceProvider services)
         }
 
         if (value is DateTimeOffset dateTimeOffset && dateTimeOffset == default)
+        {
             property.SetValue(commonObject, fallbackValue);
+        }
     }
 
     private static void NormalizeStringProperty(CommonObject commonObject, string propertyName, string fallbackValue)
@@ -312,7 +322,9 @@ internal sealed class IntegrationAcceptanceSeeder(IServiceProvider services)
         PropertyInfo property = typeof(CommonObject).GetProperty(propertyName)!;
 
         if (property.GetValue(commonObject) is not string value || string.IsNullOrWhiteSpace(value))
+        {
             property.SetValue(commonObject, fallbackValue);
+        }
     }
 
     private static async Task SeedRolesAsync(DbContext core)
@@ -336,7 +348,9 @@ internal sealed class IntegrationAcceptanceSeeder(IServiceProvider services)
             .ToArray();
 
         if (roles.Length == 0)
+        {
             return;
+        }
 
         await core.Set<Role>().AddRangeAsync(roles);
         await core.SaveChangesAsync();
@@ -345,7 +359,9 @@ internal sealed class IntegrationAcceptanceSeeder(IServiceProvider services)
     private static string NormalizeRolePrivileges(Role role)
     {
         if (role.Name != "Users" || role.Privs?.Split(',').Contains("user_update") == true)
+        {
             return role.Privs;
+        }
 
         return string.IsNullOrWhiteSpace(role.Privs)
             ? "user_update"
@@ -355,7 +371,9 @@ internal sealed class IntegrationAcceptanceSeeder(IServiceProvider services)
     private static async Task SeedLayoutsAsync(DbContext core)
     {
         if (await core.Set<Layout>().AnyAsync(layout => layout.AppId == AppId))
+        {
             return;
+        }
 
         Layout[] layouts = AcceptanceSeedData
             .LoadPackageItems<Layout>("Layouts", "Core/Layout")
@@ -382,7 +400,9 @@ internal sealed class IntegrationAcceptanceSeeder(IServiceProvider services)
     private static async Task SeedTemplatesAsync(DbContext core)
     {
         if (await core.Set<Template>().AnyAsync(template => template.AppId == AppId))
+        {
             return;
+        }
 
         Template[] templates = AcceptanceSeedData
             .LoadPackageItems<Template>("Templates", "Core/Template")
@@ -408,7 +428,9 @@ internal sealed class IntegrationAcceptanceSeeder(IServiceProvider services)
     private static string NormalizeTemplate(Template template)
     {
         if (!string.Equals(template.Name, "UserInvite", StringComparison.OrdinalIgnoreCase))
+        {
             return template.RawString;
+        }
 
         return """
         <html style="font-family: [theme[font.family]]; width:800px; margin:0 auto; padding:0;">
@@ -440,7 +462,9 @@ internal sealed class IntegrationAcceptanceSeeder(IServiceProvider services)
     private static async Task SeedResourcesAsync(DbContext core)
     {
         if (await core.Set<Resource>().AnyAsync(resource => resource.AppId == AppId))
+        {
             return;
+        }
 
         Resource[] resources = AcceptanceSeedData
             .LoadPackageItems<Resource>("Resources", "Core/Resource")
@@ -468,7 +492,9 @@ internal sealed class IntegrationAcceptanceSeeder(IServiceProvider services)
     private static async Task SeedComponentsAsync(DbContext core)
     {
         if (await core.Set<Component>().AnyAsync(component => component.AppId == AppId))
+        {
             return;
+        }
 
         Component[] components = AcceptanceSeedData
             .LoadPackageItems<Component>("Components", "Core/Component")
@@ -496,7 +522,9 @@ internal sealed class IntegrationAcceptanceSeeder(IServiceProvider services)
     private static async Task SeedScriptsAsync(DbContext core)
     {
         if (await core.Set<Script>().AnyAsync(script => script.AppId == AppId))
+        {
             return;
+        }
 
         Script[] scripts = AcceptanceSeedData
             .LoadPackageItems<Script>("Scripts", "Core/Script")

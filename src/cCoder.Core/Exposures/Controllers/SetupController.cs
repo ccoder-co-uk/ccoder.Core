@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using cCoder.Core.Models;
@@ -16,10 +20,12 @@ public sealed class SetupController(
     [HttpGet("")]
     public async Task<IActionResult> Index(CancellationToken cancellationToken)
     {
-        if (await setupStateService.IsInitializedAsync(cancellationToken))
-            return Redirect("/");
+        if (await setupStateService.IsInitializedAsync(cancellationToken: cancellationToken))
+        {
+            return Redirect(url: "/");
+        }
 
-        return View(CreateViewModel());
+        return View(model: CreateViewModel());
     }
 
     [HttpPost("")]
@@ -29,34 +35,37 @@ public sealed class SetupController(
     {
         try
         {
-            if (await setupStateService.IsInitializedAsync(cancellationToken))
-                return Redirect("/");
+            if (await setupStateService.IsInitializedAsync(cancellationToken: cancellationToken))
+            {
+                return Redirect(url: "/");
+            }
 
             if (!ModelState.IsValid)
-                return View(CreateViewModel(setup));
+            {
+                return View(model: CreateViewModel(setup: setup));
+            }
 
-            setup.Domain = SetupRequestHostNormalizer.Normalize(Request.Host.Host);
+            setup.Domain = SetupRequestHostNormalizer.Normalize(host: Request.Host.Host);
 
             FirstTimeSetupResult result = await setupOrchestrationService.SetupAsync(
-                setup,
-                cancellationToken);
+request: setup, cancellationToken: cancellationToken);
 
-            await userRegistrationOrchestrationService.LoginAsync(result.UserId, setup.Password);
+            await userRegistrationOrchestrationService.LoginAsync(username: result.UserId, password: setup.Password);
 
-            return Redirect("/");
+            return Redirect(url: "/");
         }
         catch (Exception ex)
         {
-            log.LogError(ex, "First-time setup failed.");
-            ModelState.AddModelError(string.Empty, ex.Message);
-            return View(CreateViewModel(setup));
+            log.LogError(exception: ex, message: "First-time setup failed.");
+            ModelState.AddModelError(key: string.Empty, errorMessage: ex.Message);
+            return View(model: CreateViewModel(setup: setup));
         }
     }
 
     private FirstTimeSetupViewModel CreateViewModel(FirstTimeSetupRequest setup = null) =>
         new()
         {
-            Domain = SetupRequestHostNormalizer.Normalize(Request.Host.Host),
+            Domain = SetupRequestHostNormalizer.Normalize(host: Request.Host.Host),
             Setup = setup ?? new FirstTimeSetupRequest(),
         };
 }

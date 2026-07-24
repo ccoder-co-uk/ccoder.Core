@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.IO.Compression;
 using cCoder.Data.Models.CMS;
 
@@ -19,13 +23,14 @@ internal static class FormatterExportExtensions
             Culture = culture,
             Delimiter = delimiter,
             Quotes = quotes,
-        }.BuildFor(source);
+        }.BuildFor(source: source);
 
     public static Stream ToExcel(
         this object source,
         IEnumerable<Resource> resources,
         string culture = ""
-    ) => new FormatterExcelFileBuilder(culture, resources ?? []).BuildFor(source);
+    ) =>
+        new FormatterExcelFileBuilder(culture, resources ?? []).BuildFor(data: source);
 
     public static Resource ForNameAndCulture(
         this IEnumerable<Resource> potentials,
@@ -37,21 +42,19 @@ internal static class FormatterExportExtensions
 
         foreach (
             IEnumerable<Resource> resourceGroup in potentials
-                .Where(resource =>
+                .Where(predicate: resource =>
                     string.Equals(
-                        resource.Name,
-                        name,
-                        StringComparison.OrdinalIgnoreCase
+a: resource.Name, b: name, comparisonType: StringComparison.OrdinalIgnoreCase
                     )
                 )
-                .GroupBy(resource => resource.Name, StringComparer.OrdinalIgnoreCase)
+                .GroupBy(keySelector: resource => resource.Name, comparer: StringComparer.OrdinalIgnoreCase)
         )
         {
-            Resource resource = resourceGroup.GetClosestCulturalMatch(culture);
+            Resource resource = resourceGroup.GetClosestCulturalMatch(culture: culture);
 
             if (resource != null)
             {
-                results.Add(resource);
+                results.Add(item: resource);
             }
         }
 
@@ -66,19 +69,17 @@ internal static class FormatterExportExtensions
         Resource result = null;
         List<string> cultureParts = (culture ?? string.Empty)
             .ToLowerInvariant()
-            .Split('-', StringSplitOptions.RemoveEmptyEntries)
+            .Split(separator: '-', options: StringSplitOptions.RemoveEmptyEntries)
             .ToList();
         int take = cultureParts.Count;
         string resultCulture = string.Empty;
 
         while (result == null && resultCulture != null)
         {
-            resultCulture = string.Join("-", cultureParts.Take(take));
-            result = potentials?.FirstOrDefault(resource =>
+            resultCulture = string.Join(separator: "-", values: cultureParts.Take(count: take));
+            result = potentials?.FirstOrDefault(predicate: resource =>
                 string.Equals(
-                    resource.Culture,
-                    resultCulture,
-                    StringComparison.OrdinalIgnoreCase
+a: resource.Culture, b: resultCulture, comparisonType: StringComparison.OrdinalIgnoreCase
                 )
             );
             take--;
@@ -91,8 +92,8 @@ internal static class FormatterExportExtensions
 
         if (result == null)
         {
-            result = potentials?.FirstOrDefault(resource =>
-                string.IsNullOrEmpty(resource.Culture)
+            result = potentials?.FirstOrDefault(predicate: resource =>
+                string.IsNullOrEmpty(value: resource.Culture)
             );
         }
 
@@ -101,11 +102,10 @@ internal static class FormatterExportExtensions
 
     public static void AddTextFile(this ZipArchive zip, string path, string text)
     {
-        ZipArchiveEntry entry = zip.CreateEntry(path, CompressionLevel.Optimal);
+        ZipArchiveEntry entry = zip.CreateEntry(entryName: path, compressionLevel: CompressionLevel.Optimal);
 
         using Stream stream = entry.Open();
         using StreamWriter writer = new(stream);
-        writer.Write(text);
+        writer.Write(value: text);
     }
 }
-

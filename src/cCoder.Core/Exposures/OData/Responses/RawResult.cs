@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -14,14 +18,10 @@ public class RawResult : IActionResult
 
     public Task ExecuteResultAsync(ActionContext context) =>
         Task.FromResult(
-            new HttpResponseMessage
-            {
-                Content = new StringContent(response),
-                StatusCode = System.Net.HttpStatusCode.OK,
-            }
+result: new HttpResponseMessage
+{
+    Content = new StringContent(response),
+    StatusCode = System.Net.HttpStatusCode.OK,
+}
         );
 }
-
-
-
-

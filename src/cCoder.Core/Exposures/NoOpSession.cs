@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 
 namespace cCoder.Core.Exposures;
 
@@ -9,8 +13,10 @@ public sealed class NoOpSession : ISession
     public string Id => string.Empty;
     public bool IsAvailable => true;
 
-    public Task LoadAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
-    public Task CommitAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
+    public Task LoadAsync(CancellationToken cancellationToken = default) =>
+        Task.CompletedTask;
+    public Task CommitAsync(CancellationToken cancellationToken = default) =>
+        Task.CompletedTask;
 
     public bool TryGetValue(string key, out byte[] value)
     {
@@ -22,4 +28,3 @@ public sealed class NoOpSession : ISession
     public void Remove(string key) { }
     public void Clear() { }
 }
-

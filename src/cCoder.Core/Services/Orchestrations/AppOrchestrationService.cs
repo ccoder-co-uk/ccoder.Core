@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Core.Services.Foundations.AppSecurity;
 using cCoder.Core.Services.Foundations.ContentManagement;
 using cCoder.Core.Services.Foundations.DocumentManagement;
@@ -19,47 +23,51 @@ internal class AppOrchestrationService(
 {
     public async ValueTask<App> AddAsync(App app)
     {
-        App createdApp = await contentManagementAppService.AddAsync(app);
-        App propagatedApp = MergeAppGraph(app, createdApp);
+        App createdApp = await contentManagementAppService.AddAsync(app: app);
+        App propagatedApp = MergeAppGraph(source: app, target: createdApp);
 
-        await appSecurityAppService.AddAsync(propagatedApp);
-        await planningAppService.AddAsync(propagatedApp);
-        await documentManagementAppService.AddAsync(propagatedApp);
-        await workflowAppService.AddAsync(propagatedApp);
-        await mailAppService.AddAsync(propagatedApp);
+        await appSecurityAppService.AddAsync(app: propagatedApp);
+        await planningAppService.AddAsync(app: propagatedApp);
+        await documentManagementAppService.AddAsync(app: propagatedApp);
+        await workflowAppService.AddAsync(app: propagatedApp);
+        await mailAppService.AddAsync(app: propagatedApp);
         return propagatedApp;
     }
 
     public async ValueTask<App> UpdateAsync(App app)
     {
-        App updatedApp = await contentManagementAppService.UpdateAsync(app);
-        App propagatedApp = MergeAppGraph(app, updatedApp);
+        App updatedApp = await contentManagementAppService.UpdateAsync(app: app);
+        App propagatedApp = MergeAppGraph(source: app, target: updatedApp);
 
-        await appSecurityAppService.UpdateAsync(propagatedApp);
-        await planningAppService.UpdateAsync(propagatedApp);
-        await documentManagementAppService.UpdateAsync(propagatedApp);
-        await workflowAppService.UpdateAsync(propagatedApp);
-        await mailAppService.UpdateAsync(propagatedApp);
+        await appSecurityAppService.UpdateAsync(app: propagatedApp);
+        await planningAppService.UpdateAsync(app: propagatedApp);
+        await documentManagementAppService.UpdateAsync(app: propagatedApp);
+        await workflowAppService.UpdateAsync(app: propagatedApp);
+        await mailAppService.UpdateAsync(app: propagatedApp);
         return propagatedApp;
     }
 
     public async ValueTask DeleteAsync(int appId)
     {
-        await planningAppService.DeleteAsync(appId);
-        await documentManagementAppService.DeleteAsync(appId);
-        await workflowAppService.DeleteAsync(appId);
-        await mailAppService.DeleteAsync(appId);
-        await contentManagementAppService.DeleteAsync(appId);
-        await appSecurityAppService.DeleteAsync(appId);
+        await planningAppService.DeleteAsync(appId: appId);
+        await documentManagementAppService.DeleteAsync(appId: appId);
+        await workflowAppService.DeleteAsync(appId: appId);
+        await mailAppService.DeleteAsync(appId: appId);
+        await contentManagementAppService.DeleteAsync(appId: appId);
+        await appSecurityAppService.DeleteAsync(appId: appId);
     }
 
     private static App MergeAppGraph(App source, App target)
     {
         if (target == null)
+        {
             return source;
+        }
 
         if (source == null)
+        {
             return target;
+        }
 
         target.DefaultCultureId = source.DefaultCultureId ?? target.DefaultCultureId;
         target.TenantId = source.TenantId ?? target.TenantId;

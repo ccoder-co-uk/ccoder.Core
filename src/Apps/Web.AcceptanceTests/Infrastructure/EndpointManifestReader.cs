@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Reflection;
 
 
@@ -23,5 +27,3 @@ internal static class EndpointManifestReader
             .ToArray();
     }
 }
-
-

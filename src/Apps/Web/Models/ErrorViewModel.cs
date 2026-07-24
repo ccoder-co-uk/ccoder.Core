@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 namespace Web.Models
 {
     public class ErrorViewModel
@@ -7,5 +11,3 @@ namespace Web.Models
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
     }
 }
-
-

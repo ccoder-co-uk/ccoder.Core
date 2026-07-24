@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Collections;
 using System.Dynamic;
 using Microsoft.AspNetCore.OData.Query.Wrapper;
@@ -11,14 +15,14 @@ public static class FormatterODataHelper
     {
         if (contextObject is IEnumerable enumerable and not string)
         {
-            return ProcessIEumerable(enumerable);
+            return ProcessIEumerable(enumerable: enumerable);
         }
         else
         {
-            object result = UnpackSelectExpandWrapper(contextObject);
+            object result = UnpackSelectExpandWrapper(contextObject: contextObject);
             if (result is IDictionary<string, object> dict)
             {
-                ProcessDictionary(dict);
+                ProcessDictionary(dict: dict);
             }
 
             return result;
@@ -29,14 +33,14 @@ public static class FormatterODataHelper
     {
         dynamic[] rawDataItems = enumerable
             .Cast<object>()
-            .Select(i => UnpackSelectExpandWrapper(i))
+            .Select(selector: i => UnpackSelectExpandWrapper(contextObject: i))
             .ToArray();
 
         foreach (dynamic item in rawDataItems)
         {
             if (item is IDictionary<string, object> dict)
             {
-                ProcessDictionary(dict);
+                ProcessDictionary(dict: dict);
             }
         }
 
@@ -45,7 +49,7 @@ public static class FormatterODataHelper
 
     private static object UnpackSelectExpandWrapper(object contextObject) =>
         (contextObject is ISelectExpandWrapper wrapper)
-            ? ToExpandoObject(wrapper.ToDictionary())
+            ? ToExpandoObject(source: wrapper.ToDictionary())
             : contextObject;
 
     private static ExpandoObject ToExpandoObject(IDictionary<string, object> source)
@@ -66,11 +70,7 @@ public static class FormatterODataHelper
         string[] keys = dict.Keys.ToArray();
         foreach (string key in keys)
         {
-            dict[key] = HandleOData(dict[key]);
+            dict[key] = HandleOData(contextObject: dict[key]);
         }
     }
 }
-
-
-
-

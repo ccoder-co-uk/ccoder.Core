@@ -1,4 +1,7 @@
-using cCoder.Core.Exposures.Logging;
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Core.Models;
 using cCoder.Eventing;
 using cCoder.Eventing.Models;
@@ -13,51 +16,49 @@ public static partial class IServiceCollectionExtensions
         this IServiceCollection services,
         Action<CoreApiBuilderOptions> configure = null)
     {
-        ConfigureDefaultLogging(services, GetRequiredConfiguration(services));
-        services.AddSingleton<ILoggerProvider, CoreWebSignalRLoggingProvider>();
-        AddCoreApi(services, configure ?? (_ => { }));
-        AddCoreFirstTimeSetup(services);
+        ConfigureDefaultLogging(services: services, configuration: GetRequiredConfiguration(services: services));
+        AddCoreApi(services: services, setupAction: configure ?? (_ => { }));
+        AddCoreFirstTimeSetup(services: services);
     }
 
     public static void AddCoreHostedServices(
         this IServiceCollection services,
         Action<CoreBuilderOptions> configure = null)
     {
-        ConfigureDefaultLogging(services, GetRequiredConfiguration(services));
-        services.AddSingleton<ILoggerProvider, CoreHostedSignalRLoggingProvider>();
-        AddCore(services, configure ?? (_ => { }));
-        AddCoreAspNetExposures(services);
+        ConfigureDefaultLogging(services: services, configuration: GetRequiredConfiguration(services: services));
+        AddCore(services: services, setupAction: configure ?? (_ => { }));
+        AddCoreAspNetExposures(services: services);
     }
 
     internal static IServiceCollection AddCoreApi(
         this IServiceCollection services,
         IEnumerable<CoreApiRouteDefinition> routeDefinitions = null) =>
-        AddCoreExposures(services, routeDefinitions);
+        AddCoreExposures(services: services, routeDefinitions: routeDefinitions);
 
     internal static IServiceCollection AddCoreApiDocumentation(
         this IServiceCollection services,
         params string[] apiContexts)
     {
-        CoreApiRouteDefinition[] routes = GetRouteDefinitions(apiContexts);
-        return services.AddCoreApiDocumentation(routes);
+        CoreApiRouteDefinition[] routes = GetRouteDefinitions(apiContexts: apiContexts);
+        return services.AddCoreApiDocumentation(routes: routes);
     }
 
     internal static IServiceCollection AddCoreApiDocumentation(
         this IServiceCollection services,
         IEnumerable<CoreApiRouteDefinition> routes)
     {
-        CoreApiRouteDefinition[] definitions = GetRouteDefinitions(routes);
+        CoreApiRouteDefinition[] definitions = GetRouteDefinitions(routes: routes);
 
-        services.AddSwaggerGen(c =>
+        services.AddSwaggerGen(setupAction: c =>
         {
-            c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
-            c.CustomSchemaIds(type => type.FullName?.Replace('+', '.') ?? type.Name);
-            AddSwaggerDocuments(c, definitions);
+            c.ResolveConflictingActions(resolver: apiDescriptions => apiDescriptions.First());
+            c.CustomSchemaIds(schemaIdSelector: type => type.FullName?.Replace(oldChar: '+', newChar: '.') ?? type.Name);
+            AddSwaggerDocuments(options: c, routes: definitions);
             c.DocInclusionPredicate(
-                (documentName, apiDescription) =>
-                    ShouldIncludeInDocument(documentName, apiDescription.RelativePath, definitions));
+predicate: (documentName, apiDescription) =>
+                    ShouldIncludeInDocument(documentName: documentName, relativePath: apiDescription.RelativePath, routes: definitions));
 
-            c.AddSecurityDefinition("bearer", new OpenApiSecurityScheme
+            c.AddSecurityDefinition(name: "bearer", securityScheme: new OpenApiSecurityScheme
             {
                 Description = @"Authorization header using the Bearer scheme. \r\n\r\n 
                         Enter 'Bearer' [space] and then your token in the text input below.
@@ -76,10 +77,10 @@ public static partial class IServiceCollectionExtensions
         this IServiceCollection services,
         IEnumerable<EventProvider> eventProviders)
     {
-        services.AddEventing(configuration =>
+        services.AddEventing(configure: configuration =>
         {
             configuration.EventProviders =
-                (eventProviders ?? []).Where(provider => provider is not null).ToArray();
+                (eventProviders ?? []).Where(predicate: provider => provider is not null).ToArray();
         });
         services.AddEventingForType<SecurityAccountEvent>();
     }
@@ -89,7 +90,7 @@ public static partial class IServiceCollectionExtensions
         Action<CoreApiBuilderOptions> setupAction)
     {
         CoreApiBuilderOptions config = new(services);
-        setupAction(config);
+        setupAction(obj: config);
         config.Apply();
     }
 
@@ -98,20 +99,22 @@ public static partial class IServiceCollectionExtensions
         Action<CoreBuilderOptions> setupAction)
     {
         CoreBuilderOptions config = new(services);
-        setupAction(config);
+        setupAction(obj: config);
         config.Apply();
     }
 
     private static IConfiguration GetRequiredConfiguration(IServiceCollection services)
     {
         IConfiguration configuration = services
-            .Where(descriptor => typeof(IConfiguration).IsAssignableFrom(descriptor.ServiceType))
-            .Select(descriptor => descriptor.ImplementationInstance)
+            .Where(predicate: descriptor => typeof(IConfiguration).IsAssignableFrom(c: descriptor.ServiceType))
+            .Select(selector: descriptor => descriptor.ImplementationInstance)
             .OfType<IConfiguration>()
             .LastOrDefault();
 
         if (configuration is not null)
+        {
             return configuration;
+        }
 
         ServiceProvider serviceProvider = services.BuildServiceProvider();
 
@@ -123,22 +126,22 @@ public static partial class IServiceCollectionExtensions
     private static void ConfigureDefaultLogging(
         IServiceCollection services,
         IConfiguration configuration) =>
-        services.AddLogging(logBuilder =>
+        services.AddLogging(configure: logBuilder =>
         {
             logBuilder.ClearProviders();
-            logBuilder.AddFilter(level => level >= LogLevel.Debug);
-            logBuilder.AddSimpleConsole(options =>
+            logBuilder.AddFilter(levelFilter: level => level >= LogLevel.Debug);
+            logBuilder.AddSimpleConsole(configure: options =>
             {
                 options.TimestampFormat = "yyyy-MM-ddTHH:mm:ss ";
                 options.SingleLine = true;
             });
-            logBuilder.AddConfiguration(configuration.GetSection("Logging"));
+            logBuilder.AddConfiguration(configuration: configuration.GetSection(key: "Logging"));
         });
 
     private static CoreApiRouteDefinition[] GetRouteDefinitions(IEnumerable<string> apiContexts) =>
-        GetRouteDefinitions((apiContexts ?? [])
-            .Where(context => !string.IsNullOrWhiteSpace(context))
-            .Select(context => new CoreApiRouteDefinition(
+        GetRouteDefinitions(routes: (apiContexts ?? [])
+            .Where(predicate: context => !string.IsNullOrWhiteSpace(value: context))
+            .Select(selector: context => new CoreApiRouteDefinition(
                 context,
                 $"Api/{context}",
                 null)));
@@ -149,10 +152,10 @@ public static partial class IServiceCollectionExtensions
         CoreApiRouteDefinition coreRoute = new("Core", "Api/Core", null);
 
         return [coreRoute, .. (routes ?? [])
-            .Where(route => route is not null && !string.IsNullOrWhiteSpace(route.Name))
-            .GroupBy(route => route.Name, StringComparer.OrdinalIgnoreCase)
-            .Select(group => group.First())
-            .Where(route => !string.Equals(route.Name, "Core", StringComparison.OrdinalIgnoreCase))];
+            .Where(predicate: route => route is not null && !string.IsNullOrWhiteSpace(value: route.Name))
+            .GroupBy(keySelector: route => route.Name,comparer: StringComparer.OrdinalIgnoreCase)
+            .Select(selector: group => group.First())
+            .Where(predicate: route => !string.Equals(a: route.Name,b: "Core",comparisonType: StringComparison.OrdinalIgnoreCase))];
     }
 
     private static void AddSwaggerDocuments(
@@ -161,14 +164,14 @@ public static partial class IServiceCollectionExtensions
     {
         foreach (CoreApiRouteDefinition route in routes)
         {
-            options.SwaggerDoc(route.Name, new OpenApiInfo
+            options.SwaggerDoc(name: route.Name, info: new OpenApiInfo
             {
                 Title = $"{route.Name} API definition",
                 Version = route.Name,
             });
         }
 
-        options.SwaggerDoc("v1", new OpenApiInfo
+        options.SwaggerDoc(name: "v1", info: new OpenApiInfo
         {
             Title = "Corporate LinX V7 API definition",
             Version = "v1",
@@ -180,38 +183,50 @@ public static partial class IServiceCollectionExtensions
         string relativePath,
         IEnumerable<CoreApiRouteDefinition> routes)
     {
-        if (string.IsNullOrWhiteSpace(relativePath))
+        if (string.IsNullOrWhiteSpace(value: relativePath))
+        {
             return false;
+        }
 
-        if (string.Equals(documentName, "v1", StringComparison.OrdinalIgnoreCase))
+        if (string.Equals(a: documentName, b: "v1", comparisonType: StringComparison.OrdinalIgnoreCase))
+        {
             documentName = "Core";
+        }
 
-        string path = NormalizePath(relativePath);
+        string path = NormalizePath(relativePath: relativePath);
 
-        if (string.Equals(documentName, "Core", StringComparison.OrdinalIgnoreCase))
-            return IsCoreRoute(path, routes);
+        if (string.Equals(a: documentName, b: "Core", comparisonType: StringComparison.OrdinalIgnoreCase))
+        {
+            return IsCoreRoute(path: path, routes: routes);
+        }
 
-        CoreApiRouteDefinition route = routes.FirstOrDefault(candidate =>
-            string.Equals(candidate.Name, documentName, StringComparison.OrdinalIgnoreCase));
+        CoreApiRouteDefinition route = routes.FirstOrDefault(predicate: candidate =>
+            string.Equals(a: candidate.Name, b: documentName, comparisonType: StringComparison.OrdinalIgnoreCase));
 
-        return route is not null && MatchesRoutePath(path, route.RoutePath);
+        return route is not null && MatchesRoutePath(path: path, routePath: route.RoutePath);
     }
 
     private static bool IsCoreRoute(string path, IEnumerable<CoreApiRouteDefinition> routes)
     {
-        if (MatchesContextRoute(path, "Core"))
-            return true;
-
-        if (!path.Equals("/Api", StringComparison.OrdinalIgnoreCase)
-            && !path.StartsWith("/Api/", StringComparison.OrdinalIgnoreCase))
-            return false;
-
-        foreach (CoreApiRouteDefinition route in routes.Where(route =>
-                     !string.Equals(route.Name, "Core", StringComparison.OrdinalIgnoreCase)
-                     && !string.Equals(route.Name, "v1", StringComparison.OrdinalIgnoreCase)))
+        if (MatchesContextRoute(path: path, context: "Core"))
         {
-            if (MatchesRoutePath(path, route.RoutePath))
+            return true;
+        }
+
+        if (!path.Equals(value: "/Api", comparisonType: StringComparison.OrdinalIgnoreCase)
+            && !path.StartsWith(value: "/Api/", comparisonType: StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        foreach (CoreApiRouteDefinition route in routes.Where(predicate: route =>
+                     !string.Equals(a: route.Name, b: "Core", comparisonType: StringComparison.OrdinalIgnoreCase)
+                     && !string.Equals(a: route.Name, b: "v1", comparisonType: StringComparison.OrdinalIgnoreCase)))
+        {
+            if (MatchesRoutePath(path: path, routePath: route.RoutePath))
+            {
                 return false;
+            }
         }
 
         return true;
@@ -219,18 +234,18 @@ public static partial class IServiceCollectionExtensions
 
     private static bool MatchesRoutePath(string path, string routePath)
     {
-        string prefix = NormalizePath(routePath);
-        return path.Equals(prefix, StringComparison.OrdinalIgnoreCase)
-            || path.StartsWith($"{prefix}/", StringComparison.OrdinalIgnoreCase);
+        string prefix = NormalizePath(relativePath: routePath);
+        return path.Equals(value: prefix, comparisonType: StringComparison.OrdinalIgnoreCase)
+            || path.StartsWith(value: $"{prefix}/", comparisonType: StringComparison.OrdinalIgnoreCase);
     }
 
     private static bool MatchesContextRoute(string path, string context)
     {
         string prefix = $"/Api/{context}";
-        return path.Equals(prefix, StringComparison.OrdinalIgnoreCase)
-            || path.StartsWith($"{prefix}/", StringComparison.OrdinalIgnoreCase);
+        return path.Equals(value: prefix, comparisonType: StringComparison.OrdinalIgnoreCase)
+            || path.StartsWith(value: $"{prefix}/", comparisonType: StringComparison.OrdinalIgnoreCase);
     }
 
     private static string NormalizePath(string relativePath) =>
-        relativePath.StartsWith('/') ? relativePath : $"/{relativePath}";
+        relativePath.StartsWith(value: '/') ? relativePath : $"/{relativePath}";
 }

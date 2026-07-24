@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Net;
 using System.Text;
 using cCoder.AppSecurity.Brokers;
@@ -92,9 +96,3 @@ namespace Web.Controllers.Api
         }
     }
 }
-
-
-
-
-
-

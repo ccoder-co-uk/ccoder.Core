@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
@@ -11,17 +15,21 @@ internal static class SqlSessionCacheFallback
         IServiceCollection services,
         string ssoConnectionString)
     {
-        if (SqlTableExists(ssoConnectionString, "dbo", "Sessions"))
+        if (SqlTableExists(connectionString: ssoConnectionString, schema: "dbo", table: "Sessions"))
+        {
             return;
+        }
 
         services.AddOptions();
-        services.Replace(ServiceDescriptor.Singleton<IDistributedCache, MemoryDistributedCache>());
+        services.Replace(descriptor: ServiceDescriptor.Singleton<IDistributedCache, MemoryDistributedCache>());
     }
 
     private static bool SqlTableExists(string connectionString, string schema, string table)
     {
-        if (string.IsNullOrWhiteSpace(connectionString))
+        if (string.IsNullOrWhiteSpace(value: connectionString))
+        {
             return false;
+        }
 
         try
         {
@@ -35,7 +43,7 @@ internal static class SqlSessionCacheFallback
             using SqlCommand command = connection.CreateCommand();
             command.CommandTimeout = 2;
             command.CommandText = "SELECT OBJECT_ID(@tableName, 'U')";
-            command.Parameters.AddWithValue("@tableName", $"{schema}.{table}");
+            command.Parameters.AddWithValue(parameterName: "@tableName", value: $"{schema}.{table}");
 
             object result = command.ExecuteScalar();
             return result is not null and not DBNull;

@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -83,7 +87,9 @@ public sealed partial class AppEventIntegrationTests
             .AnyAsync(userRole => userRole.RoleId == role.Id && userRole.UserId == "Guest");
 
         if (!hasGuestRole)
+        {
             await core.AddUserRoleAsync(new UserRole { RoleId = role.Id, UserId = "Guest" });
+        }
     }
 
     private async Task SeedAppUpdateScenarioAsync(
@@ -304,7 +310,9 @@ public sealed partial class AppEventIntegrationTests
             .FirstOrDefaultAsync(found => found.Id == appId);
 
         if (app is not null)
+        {
             await core.DeleteAsync(app);
+        }
     }
 
     private async Task EnsureCultureAsync(string cultureId, string name)
@@ -314,7 +322,9 @@ public sealed partial class AppEventIntegrationTests
             .AnyAsync(culture => culture.Id == cultureId);
 
         if (!exists)
+        {
             await core.AddCultureAsync(new Culture { Id = cultureId, Name = name });
+        }
     }
 
     private async Task<T> PostAsJsonAsync<T>(
@@ -348,7 +358,9 @@ public sealed partial class AppEventIntegrationTests
         };
 
         if (!string.IsNullOrWhiteSpace(host))
+        {
             request.Headers.Host = host;
+        }
 
         using HttpResponseMessage response = await fixture.WebClient.SendAsync(request);
         string content = await response.Content.ReadAsStringAsync();
@@ -360,7 +372,9 @@ public sealed partial class AppEventIntegrationTests
         using HttpRequestMessage request = new(method, relativeUrl);
 
         if (!string.IsNullOrWhiteSpace(host))
+        {
             request.Headers.Host = host;
+        }
 
         using HttpResponseMessage response = await fixture.WebClient.SendAsync(request);
         string content = await response.Content.ReadAsStringAsync();
@@ -378,7 +392,9 @@ public sealed partial class AppEventIntegrationTests
     private static string Tail(string value, int length = 6000)
     {
         if (string.IsNullOrWhiteSpace(value) || value.Length <= length)
+        {
             return value ?? string.Empty;
+        }
 
         return value[^length..];
     }
@@ -391,7 +407,9 @@ public sealed partial class AppEventIntegrationTests
         for (int attempt = 0; attempt < attempts; attempt++)
         {
             if (await predicate())
+            {
                 return;
+            }
 
             await Task.Delay(delayMilliseconds);
         }

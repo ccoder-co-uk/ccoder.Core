@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Collections;
 using System.Globalization;
 using System.Reflection;
@@ -17,15 +21,16 @@ internal class FormatterCsvFileBuilder
     public string BuildFor(object source)
     {
         string dateFormat =
-            Resources.FirstOrDefault(resource => resource.Name == "dateformat")?.DisplayName
+            Resources.FirstOrDefault(predicate: resource => resource.Name == "dateformat")?.DisplayName
             ?? "yyyy-MM-ddThh:mm:ssZ";
         string moneyFormat =
-            Resources.FirstOrDefault(resource => resource.Name == "moneyformat")?.DisplayName
+            Resources.FirstOrDefault(predicate: resource => resource.Name == "moneyformat")?.DisplayName
             ?? "n";
 
         if (source is IEnumerable enumerable)
         {
-            object[] items = enumerable.Cast<object>().ToArray();
+            object[] items = enumerable.Cast<object>()
+                .ToArray();
 
             if (!items.Any())
             {
@@ -35,46 +40,42 @@ internal class FormatterCsvFileBuilder
             PropertyInfo[] properties = items[0]
                 .GetType()
                 .GetProperties()
-                .Where(property =>
+                .Where(predicate: property =>
                     property.PropertyType.IsValueType || property.PropertyType == typeof(string)
                 )
                 .ToArray();
 
             string header = items[0] is IDictionary<string, object> dictionary
                 ? string.Join(
-                        Delimiter,
-                        dictionary.Keys.Select(key => $"{Quotes}{key}{Quotes}")
+separator: Delimiter, values: dictionary.Keys.Select(selector: key => $"{Quotes}{key}{Quotes}")
                     )
                     + "\n"
                 : string.Join(
-                        Delimiter,
-                        properties.Select(property =>
-                            Resources.FirstOrDefault(resource => resource.Name == property.Name)
+separator: Delimiter, values: properties.Select(selector: property =>
+                            Resources.FirstOrDefault(predicate: resource => resource.Name == property.Name)
                                 ?.ShortDisplayName ?? property.Name
                         )
                     )
                     + "\n";
 
-            return BuildFinalOutput(dateFormat, moneyFormat, items, properties, header);
+            return BuildFinalOutput(dateFormat: dateFormat, moneyFormat: moneyFormat, items: items, properties: properties, header: header);
         }
 
         IEnumerable<PropertyInfo> sourceProperties = source
             .GetType()
             .GetProperties()
-            .Where(property =>
+            .Where(predicate: property =>
                 property.PropertyType.IsValueType || property.PropertyType == typeof(string)
             );
         string sourceHeader = string.Join(
-            Delimiter,
-            sourceProperties.Select(property => $"{Quotes}{property.Name}{Quotes}")
+separator: Delimiter, values: sourceProperties.Select(selector: property => $"{Quotes}{property.Name}{Quotes}")
         );
 
         return sourceHeader
             + "\n"
             + string.Join(
-                Delimiter,
-                sourceProperties.Select(property =>
-                    FormatCsvValue(property.GetValue(source), dateFormat, moneyFormat)
+separator: Delimiter, values: sourceProperties.Select(selector: property =>
+                    FormatCsvValue(value: property.GetValue(obj: source), dateFormat: dateFormat, moneyFormat: moneyFormat)
                 )
             );
     }
@@ -92,7 +93,7 @@ internal class FormatterCsvFileBuilder
         foreach (object item in items)
         {
             _ = builder.Append(
-                BuildObjectCsvString(item, properties, dateFormat, moneyFormat)
+value: BuildObjectCsvString(source: item, properties: properties, dateFormat: dateFormat, moneyFormat: moneyFormat)
             );
         }
 
@@ -114,13 +115,11 @@ internal class FormatterCsvFileBuilder
             for (int index = 0; index < keys.Length; index++)
             {
                 values[index] = FormatCsvValue(
-                    dictionary[keys[index]],
-                    dateFormat,
-                    moneyFormat
+value: dictionary[keys[index]], dateFormat: dateFormat, moneyFormat: moneyFormat
                 );
             }
 
-            return $"{string.Join(Delimiter, values)}\n";
+            return $"{string.Join(separator: Delimiter, value: values)}\n";
         }
 
         string[] propertyValues = new string[properties.Length];
@@ -128,30 +127,26 @@ internal class FormatterCsvFileBuilder
         for (int index = 0; index < properties.Length; index++)
         {
             propertyValues[index] = FormatCsvValue(
-                properties[index].GetValue(source),
-                dateFormat,
-                moneyFormat
+value: properties[index].GetValue(obj: source), dateFormat: dateFormat, moneyFormat: moneyFormat
             );
         }
 
-        return $"{string.Join(Delimiter, propertyValues)}\n";
+        return $"{string.Join(separator: Delimiter, value: propertyValues)}\n";
     }
 
     private string FormatCsvValue(object value, string dateFormat, string moneyFormat) =>
         value switch
         {
             DateTime dateTime =>
-                $"{Quotes}{dateTime.ToString(dateFormat, CultureInfo.CreateSpecificCulture(Culture))}{Quotes}",
+                $"{Quotes}{dateTime.ToString(format: dateFormat, provider: CultureInfo.CreateSpecificCulture(name: Culture))}{Quotes}",
             DateTimeOffset dateTimeOffset =>
                 dateTimeOffset.ToString(
-                    dateFormat,
-                    CultureInfo.CreateSpecificCulture(Culture)
+format: dateFormat, formatProvider: CultureInfo.CreateSpecificCulture(name: Culture)
                 ),
             decimal decimalValue =>
-                decimalValue.ToString(moneyFormat, CultureInfo.CreateSpecificCulture(Culture)),
+                decimalValue.ToString(format: moneyFormat, provider: CultureInfo.CreateSpecificCulture(name: Culture)),
             Guid guid => $"{Quotes}{guid}{Quotes}",
             null => string.Empty,
             _ => $"{Quotes}{value}{Quotes}",
         };
 }
-

@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Diagnostics;
 using System.Net;
 using System.Security.Cryptography;
@@ -81,7 +85,9 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
         };
 
         if (Settings.UseServiceBusEventing)
+        {
             await EnsureServiceBusQueuesAreCleanAsync();
+        }
 
         int webHttpsPort = FindFreePort();
         int hostedServicesHttpPort = FindFreePort();
@@ -177,7 +183,9 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
     public async Task RestartHostedServicesAsync()
     {
         if (hostedServicesApplication is not null)
+        {
             await hostedServicesApplication.DisposeAsync();
+        }
 
         await StartHostedServicesAsync();
     }
@@ -188,29 +196,43 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
         HostedServicesClient?.Dispose();
 
         if (webApplication is not null)
+        {
             await webApplication.DisposeAsync();
+        }
 
         if (hostedServicesApplication is not null)
+        {
             await hostedServicesApplication.DisposeAsync();
+        }
 
         if (workflowApplication is not null)
+        {
             await workflowApplication.DisposeAsync();
+        }
 
         if (databaseServices is not null)
+        {
             await databaseServices.DisposeAsync();
+        }
 
         if (databaseManager is not null)
+        {
             await databaseManager.DropDatabasesAsync();
+        }
 
         try
         {
             if (Settings?.UseServiceBusEventing == true)
+            {
                 await DrainServiceBusQueuesAsync();
+            }
 
             if (!ShouldKeepArtifacts()
                 && !string.IsNullOrWhiteSpace(acceptanceArtifactsRoot)
                 && Directory.Exists(acceptanceArtifactsRoot))
+            {
                 Directory.Delete(acceptanceArtifactsRoot, recursive: true);
+            }
         }
         catch
         {
@@ -332,21 +354,31 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
             && !useLocalSecurity
             && !useLocalAppSecurity
             && !useLocalData)
+        {
             return string.Empty;
+        }
 
         List<string> properties = [];
 
         if (useLocalAppSecurity && File.Exists(localAppSecurityProject))
+        {
             properties.Add("-p:UseLocalAppSecurity=true");
+        }
 
         if (useLocalData && File.Exists(localDataProject))
+        {
             properties.Add("-p:UseLocalData=true");
+        }
 
         if (useLocalSecurity && File.Exists(localSecurityProject))
+        {
             properties.Add("-p:UseLocalSecurity=true");
+        }
 
         if (useLocalWorkflow && File.Exists(localWorkflowProject))
+        {
             properties.Add("-p:UseLocalWorkflow=true");
+        }
 
         if (useLocalSecurity && !string.IsNullOrWhiteSpace(localSecurityAssemblyVersion))
         {
@@ -366,7 +398,9 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
         string formattedPath = path.Replace('\\', '/');
 
         if (trailingSlash && !formattedPath.EndsWith('/'))
+        {
             formattedPath += '/';
+        }
 
         return formattedPath;
     }
@@ -396,25 +430,33 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
         process.OutputDataReceived += (_, args) =>
         {
             if (args.Data is not null)
+            {
                 output.AppendLine(args.Data);
+            }
         };
 
         process.ErrorDataReceived += (_, args) =>
         {
             if (args.Data is not null)
+            {
                 output.AppendLine(args.Data);
+            }
         };
 
         if (!process.Start())
+        {
             throw new InvalidOperationException($"Failed to start command '{fileName} {arguments}'.");
+        }
 
         process.BeginOutputReadLine();
         process.BeginErrorReadLine();
         await process.WaitForExitAsync();
 
         if (process.ExitCode != 0)
+        {
             throw new InvalidOperationException(
                 $"Command '{fileName} {arguments}' failed with exit code {process.ExitCode}.{Environment.NewLine}{output}");
+        }
     }
 
     private static string AddDatabaseSuffix(string variableName)
@@ -429,7 +471,9 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
 
         string databaseName = builder.InitialCatalog ?? string.Empty;
         if (string.IsNullOrWhiteSpace(databaseName))
+        {
             return connectionString;
+        }
 
         builder.InitialCatalog = $"{databaseName}-ccoder-integrationtests";
         return builder.ConnectionString;
@@ -443,7 +487,9 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
             ?? Environment.GetEnvironmentVariable(variableName, EnvironmentVariableTarget.Machine);
 
         if (!string.IsNullOrWhiteSpace(connectionString))
+        {
             return connectionString;
+        }
 
         throw new InvalidOperationException(
             $"Acceptance connection string environment variable '{variableName}' was not found.");
@@ -456,7 +502,9 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
         while (directory is not null)
         {
             if (File.Exists(Path.Combine(directory.FullName, "src", "cCoder.Core.sln")))
+            {
                 return directory.FullName;
+            }
 
             directory = directory.Parent;
         }
@@ -517,7 +565,9 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
         List<string> messages = [];
 
         for (Exception current = exception; current is not null; current = current.InnerException)
+        {
             messages.Add($"{current.GetType().FullName}: {current.Message}");
+        }
 
         return string.Join(" ---> ", messages);
     }
@@ -567,7 +617,9 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
         string value = ResolveOptionalSetting(variableName);
 
         if (!string.IsNullOrWhiteSpace(value))
+        {
             environment[variableName] = value;
+        }
     }
 
     private void AddHttpsCertificateEnvironment(Dictionary<string, string> environment)
@@ -626,7 +678,9 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
         foreach (string queueName in ServiceBusEventQueues)
         {
             if (!await administrationClient.QueueExistsAsync(queueName))
+            {
                 await administrationClient.CreateQueueAsync(queueName);
+            }
         }
 
         await DrainServiceBusQueuesAsync();
@@ -635,7 +689,9 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
     private async Task DrainServiceBusQueuesAsync()
     {
         if (string.IsNullOrWhiteSpace(Settings?.ServiceBusConnectionString))
+        {
             return;
+        }
 
         await using ServiceBusClient client = new(Settings.ServiceBusConnectionString);
 
@@ -649,10 +705,14 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
                     await receiver.ReceiveMessagesAsync(100, TimeSpan.FromSeconds(1));
 
                 if (messages.Count == 0)
+                {
                     break;
+                }
 
                 foreach (ServiceBusReceivedMessage message in messages)
+                {
                     await receiver.CompleteMessageAsync(message);
+                }
             }
 
             await receiver.DisposeAsync();
@@ -691,7 +751,9 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
                 ?? Environment.GetEnvironmentVariable(variableName, EnvironmentVariableTarget.Machine);
 
             if (!string.IsNullOrWhiteSpace(value))
+            {
                 return value;
+            }
         }
 
         return null;
@@ -709,7 +771,9 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
             "func.exe");
 
         if (File.Exists(bundledFuncExe))
+        {
             return bundledFuncExe;
+        }
 
         string fallbackFuncExe = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -720,7 +784,9 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
             "func.exe");
 
         if (File.Exists(fallbackFuncExe))
+        {
             return fallbackFuncExe;
+        }
 
         string roamingNpmFunc = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -728,7 +794,9 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
             "func.cmd");
 
         if (File.Exists(roamingNpmFunc))
+        {
             return roamingNpmFunc;
+        }
 
         return "func";
     }

@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using CoreApp = cCoder.Data.Models.CMS.App;
 using QueuedEmail = cCoder.Data.Models.Mail.QueuedEmail;
 using TemplatedEmailDetails = cCoder.Mail.Models.TemplatedEmailDetails;
@@ -19,4 +23,3 @@ public interface ITemplatedEmailOrchestrationService
 
     ValueTask<QueuedEmail> QueueAsync(TemplatedEmailDetails details);
 }
-

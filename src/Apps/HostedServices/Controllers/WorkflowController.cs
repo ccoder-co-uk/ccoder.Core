@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Workflow.Services.Orchestrations;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,7 +27,9 @@ public sealed class WorkflowController(IWorkflowInstanceManagementOrchestrationS
             log.LogError(ex, ex.Message);
 
             if (ex.InnerException is not null)
+            {
                 log.LogError(ex.InnerException, ex.InnerException.Message);
+            }
         }
 
         return Ok();
@@ -32,7 +38,3 @@ public sealed class WorkflowController(IWorkflowInstanceManagementOrchestrationS
     [HttpGet("GetStats")]
     public IActionResult GetStats() => Json(workflowInstanceManagementService.GetStats());
 }
-
-
-
-

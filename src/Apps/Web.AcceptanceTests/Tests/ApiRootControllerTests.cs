@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Net;
 using FluentAssertions;
 using Microsoft.AspNetCore.Routing;
@@ -55,7 +59,9 @@ public sealed partial class ApiRootControllerTests(WebAcceptanceFixture fixture)
             );
 
         if (string.IsNullOrWhiteSpace(methods))
+        {
             methods = "ANY";
+        }
 
         return $"{methods} {endpoint.RoutePattern.RawText ?? string.Empty}";
     }
@@ -70,6 +76,3 @@ public sealed partial class ApiRootControllerTests(WebAcceptanceFixture fixture)
             || string.Equals(route, "{*path}", StringComparison.Ordinal);
     }
 }
-
-
-

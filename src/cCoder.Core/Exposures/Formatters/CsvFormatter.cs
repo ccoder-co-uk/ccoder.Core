@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Linq.Dynamic.Core;
 using System.Text;
 using cCoder.ContentManagement.Exposures.Caching;
@@ -12,23 +16,24 @@ public class CsvFormatter : TextOutputFormatter
 {
     public CsvFormatter()
     {
-        SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse("application/csv"));
-        SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse("text/csv"));
-        SupportedEncodings.Add(Encoding.UTF8);
+        SupportedMediaTypes.Add(item: MediaTypeHeaderValue.Parse(input: "application/csv"));
+        SupportedMediaTypes.Add(item: MediaTypeHeaderValue.Parse(input: "text/csv"));
+        SupportedEncodings.Add(item: Encoding.UTF8);
     }
 
-    protected override bool CanWriteType(Type type) => true;
+    protected override bool CanWriteType(Type type) =>
+        true;
 
     public override async Task WriteResponseBodyAsync(
         OutputFormatterWriteContext context,
         Encoding selectedEncoding
     )
     {
-        (string delimiter, string quotes, string culture) = ExtractValues(context);
+        (string delimiter, string quotes, string culture) = ExtractValues(context: context);
         await context.HttpContext.Response.WriteAsync(
-            FormatterODataHelper
-                .HandleOData(context.Object)
-                .ToCsv(GetResources(context, culture), delimiter, quotes, culture)
+text: FormatterODataHelper
+                .HandleOData(contextObject: context.Object)
+                .ToCsv(resources: GetResources(context: context, culture: culture), delimiter: delimiter, quotes: quotes, culture: culture)
         );
     }
 
@@ -37,16 +42,18 @@ public class CsvFormatter : TextOutputFormatter
     )
     {
         if (context == null)
+        {
             throw new ArgumentNullException(nameof(context));
+        }
 
         return (
-            context.HttpContext.Request.Query.ContainsKey("delimiter")
+            context.HttpContext.Request.Query.ContainsKey(key: "delimiter")
                 ? context.HttpContext.Request.Query["delimiter"].ToString()
                 : ", ",
-            context.HttpContext.Request.Query.ContainsKey("quotes")
+            context.HttpContext.Request.Query.ContainsKey(key: "quotes")
                 ? context.HttpContext.Request.Query["quotes"].ToString()
                 : "",
-            context.HttpContext.Request.Query.ContainsKey("culture")
+            context.HttpContext.Request.Query.ContainsKey(key: "culture")
                 ? context.HttpContext.Request.Query["culture"].ToString()
                 : "en-GB"
         );
@@ -60,12 +67,12 @@ public class CsvFormatter : TextOutputFormatter
         var commonObjectCache = context.HttpContext.RequestServices.GetRequiredService<ICommonObjectCache>();
         Resource[] cachedResources = commonObjectCache.GetAll<Resource>();
         List<Resource> resources = [];
-        if (context.HttpContext.Request.Query.ContainsKey("appId"))
+        if (context.HttpContext.Request.Query.ContainsKey(key: "appId"))
         {
             resources.AddRange(
-                cachedResources
-                    .Where(r =>
-                        r.AppId == int.Parse(context.HttpContext.Request.Query["appId"].ToString())
+collection: cachedResources
+                    .Where(predicate: r =>
+                        r.AppId == int.Parse(s: context.HttpContext.Request.Query["appId"].ToString())
                         && r.Key == "Default"
                         && r.Culture == culture
                     )
@@ -73,31 +80,25 @@ public class CsvFormatter : TextOutputFormatter
         }
 
         resources.AddRange(
-            new Resource[]
+collection: new Resource[]
             {
                 new()
                 {
                     Name = "dateformat",
-                    DisplayName = context.HttpContext.Request.Query.ContainsKey("dateFormat")
+                    DisplayName = context.HttpContext.Request.Query.ContainsKey(key: "dateFormat")
                         ? context.HttpContext.Request.Query["dateFormat"].ToString()
                         : "yyyy-MM-dd",
                 },
                 new()
                 {
                     Name = "moneyformat",
-                    DisplayName = context.HttpContext.Request.Query.ContainsKey("moneyFormat")
+                    DisplayName = context.HttpContext.Request.Query.ContainsKey(key: "moneyFormat")
                         ? context.HttpContext.Request.Query["moneyFormat"].ToString()
                         : "n",
                 },
             }
         );
-        resources.AddRange(cachedResources);
+        resources.AddRange(collection: cachedResources);
         return resources.ToArray();
     }
 }
-
-
-
-
-
-

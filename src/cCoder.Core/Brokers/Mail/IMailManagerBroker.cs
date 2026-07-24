@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Mail.Models;
 using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.Mail;
@@ -9,4 +13,3 @@ public interface IMailManagerBroker
 {
     ValueTask<QueuedEmail> AddAsync(QueuedEmail email, bool checkPrivileges = false);
 }
-

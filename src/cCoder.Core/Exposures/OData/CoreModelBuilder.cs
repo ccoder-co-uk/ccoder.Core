@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Core.Models;
 using cCoder.Core.Models.Metadata;
 using cCoder.Data.Models.CMS;
@@ -33,9 +37,12 @@ public class CoreModelBuilder : ODataModelBuilder
         // Common stuff
         AddCommonComplextypes();
         _ = Builder.ComplexType<RenderResult>();
-        Builder.EntityType<App>().Ignore(i => i.Config);
-        Builder.EntityType<Submission>().Ignore(i => i.Data);
-        Builder.EntityType<FlowInstanceData>().Ignore(i => i.ContextJson);
+        Builder.EntityType<App>()
+            .Ignore(propertyExpression: i => i.Config);
+        Builder.EntityType<Submission>()
+            .Ignore(propertyExpression: i => i.Data);
+        Builder.EntityType<FlowInstanceData>()
+            .Ignore(propertyExpression: i => i.ContextJson);
 
         // Register CRUD Supporting object sets
         // CMS stuff
@@ -58,10 +65,10 @@ public class CoreModelBuilder : ODataModelBuilder
         _ = AddSet<Role, Guid>();
         _ = AddSet<Privilege, string>();
 
-        _ = AddJoinSet<AppCulture, object>(i => new { i.AppId, i.CultureId });
-        _ = AddJoinSet<UserRole, object>(i => new { i.UserId, i.RoleId });
-        _ = AddJoinSet<PageRole, object>(i => new { i.PageId, i.RoleId });
-        _ = AddJoinSet<FolderRole, object>(i => new { i.FolderId, i.RoleId });
+        _ = AddJoinSet<AppCulture, object>(key: i => new { i.AppId, i.CultureId });
+        _ = AddJoinSet<UserRole, object>(key: i => new { i.UserId, i.RoleId });
+        _ = AddJoinSet<PageRole, object>(key: i => new { i.PageId, i.RoleId });
+        _ = AddJoinSet<FolderRole, object>(key: i => new { i.FolderId, i.RoleId });
 
         // Packaging
         _ = AddSet<Package, Guid>();
@@ -94,75 +101,73 @@ public class CoreModelBuilder : ODataModelBuilder
         Builder.Namespace = "";
 
         // packaging
-        _ = Builder.EntityType<Package>().Collection.Action("Import");
-        _ = Builder.EntityType<Package>().Collection.Action("ImportThis");
+        _ = Builder.EntityType<Package>().Collection.Action(name: "Import");
+        _ = Builder.EntityType<Package>().Collection.Action(name: "ImportThis");
 
         _ = Builder
             .EntityType<Folder>()
-            .Collection.Action("Copy")
+            .Collection.Action(name: "Copy")
             .ReturnsCollection<ContentManagement.Models.Result<Guid?>>();
         // Page management
-        _ = Builder.EntityType<Page>().Action("AddContent").Parameter<Content>("content");
-        _ = Builder.EntityType<Page>().Function("RootFor").ReturnsFromEntitySet<Page>("Page");
-        _ = Builder.EntityType<Page>().Function("Menu").Returns<ContentManagement.Models.Result<string>>();
-        _ = Builder.EntityType<Page>().Collection.Function("Render").Returns<RenderResult>();
+        _ = Builder.EntityType<Page>()
+            .Action(name: "AddContent").Parameter<Content>(name: "content");
+        _ = Builder.EntityType<Page>()
+            .Function(name: "RootFor").ReturnsFromEntitySet<Page>(entitySetName: "Page");
+        _ = Builder.EntityType<Page>()
+            .Function(name: "Menu").Returns<ContentManagement.Models.Result<string>>();
+        _ = Builder.EntityType<Page>().Collection.Function(name: "Render").Returns<RenderResult>();
 
         // User and Role Functions
-        _ = Builder.EntityType<User>().Collection.Function("Me").ReturnsFromEntitySet<User>("User");
+        _ = Builder.EntityType<User>().Collection.Function(name: "Me").ReturnsFromEntitySet<User>(entitySetName: "User");
 
         // Resourcing
         _ = Builder
             .EntityType<Resource>()
-            .Collection.Function("GetAll")
-            .ReturnsCollectionFromEntitySet<Resource>("Resource");
+            .Collection.Function(name: "GetAll")
+            .ReturnsCollectionFromEntitySet<Resource>(entitySetName: "Resource");
 
         // Component Actions
-        _ = Builder.EntityType<Component>().Collection.Function("Render").Returns<string>();
+        _ = Builder.EntityType<Component>().Collection.Function(name: "Render").Returns<string>();
 
         // Templating
-        _ = Builder.EntityType<Template>().Collection.Action("Render").Returns<string>();
+        _ = Builder.EntityType<Template>().Collection.Action(name: "Render").Returns<string>();
         _ = Builder
             .EntityType<Template>()
-            .Collection.Action("HtmlToPdf")
+            .Collection.Action(name: "HtmlToPdf")
             .Returns<FileContentResult>();
 
         // Workflow
         _ = Builder
             .EntityType<FlowDefinition>()
-            .Collection.Function("KnownActivityTypes")
+            .Collection.Function(name: "KnownActivityTypes")
             .Returns<MetadataContainerSet>();
         _ = Builder
             .EntityType<FlowDefinition>()
-            .Collection.Function("KnownSystemTypes")
+            .Collection.Function(name: "KnownSystemTypes")
             .Returns<MetadataContainerSet[]>();
-        _ = Builder.EntityType<FlowInstanceData>().Action("Raw");
-        _ = Builder.EntityType<FlowDefinition>().Action("Execute").Returns<Guid>();
+        _ = Builder.EntityType<FlowInstanceData>()
+            .Action(name: "Raw");
+        _ = Builder.EntityType<FlowDefinition>()
+            .Action(name: "Execute").Returns<Guid>();
         _ = Builder
             .EntityType<FlowDefinition>()
-            .Collection.Action("ExecuteScript")
+            .Collection.Action(name: "ExecuteScript")
             .Returns<string>();
 
         //Planning
-        _ = Builder.EntityType<ScheduledTask>().Action("Execute");
+        _ = Builder.EntityType<ScheduledTask>()
+            .Action(name: "Execute");
 
         //CommonObject
         _ = Builder
             .EntityType<CommonObject>()
-            .Collection.Function("Latest")
-            .ReturnsFromEntitySet<CommonObject>("CommonObject");
+            .Collection.Function(name: "Latest")
+            .ReturnsFromEntitySet<CommonObject>(entitySetName: "CommonObject");
         _ = Builder
             .EntityType<CommonObject>()
-            .Collection.Action("Import")
-            .ReturnsCollectionFromEntitySet<ContentManagement.Models.Result<CommonObject>>("ImportCommonObjectResults");
+            .Collection.Action(name: "Import")
+            .ReturnsCollectionFromEntitySet<ContentManagement.Models.Result<CommonObject>>(entitySetName: "ImportCommonObjectResults");
 
         return Builder.GetEdmModel();
     }
 }
-
-
-
-
-
-
-
-

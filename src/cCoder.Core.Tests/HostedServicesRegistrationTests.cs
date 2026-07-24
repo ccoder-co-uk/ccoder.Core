@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Core;
 using cCoder.Eventing.AzureServiceBus;
 using cCoder.Eventing.AzureServiceBus.Models;

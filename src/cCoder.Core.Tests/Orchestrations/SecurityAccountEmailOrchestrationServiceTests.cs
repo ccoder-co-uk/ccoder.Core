@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Core.Services.Foundations.ContentManagement;
 using cCoder.Core.Services.Orchestrations;
 using cCoder.Data.Models.CMS;

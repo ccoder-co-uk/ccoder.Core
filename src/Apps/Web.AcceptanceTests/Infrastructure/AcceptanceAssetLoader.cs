@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Text.Json;
 
 
@@ -13,7 +17,9 @@ internal static class AcceptanceAssetLoader
         string path = Path.Combine(AssetsDirectory, fileName);
 
         if (!File.Exists(path))
+        {
             throw new FileNotFoundException($"Acceptance asset was not found: {path}", path);
+        }
 
         return File.ReadAllText(path);
     }
@@ -23,6 +29,3 @@ internal static class AcceptanceAssetLoader
         return JsonDocument.Parse(LoadText(fileName));
     }
 }
-
-
-

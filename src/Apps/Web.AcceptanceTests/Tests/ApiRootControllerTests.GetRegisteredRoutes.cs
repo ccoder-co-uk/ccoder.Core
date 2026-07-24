@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using FluentAssertions;
 using Web.AcceptanceTests.Infrastructure;
 using Xunit;
@@ -25,5 +29,3 @@ public sealed partial class ApiRootControllerTests
         actual.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
     }
 }
-
-

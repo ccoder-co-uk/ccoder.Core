@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using Web.AcceptanceTests.Infrastructure;
 using Xunit;
 
@@ -10,6 +14,3 @@ public sealed partial class CoreODataMiddlewareTests(WebAcceptanceFixture fixtur
     private HttpClient Client { get; } = fixture.Client;
     private string BaseUrl { get; } = "/Api/Core";
 }
-
-
-

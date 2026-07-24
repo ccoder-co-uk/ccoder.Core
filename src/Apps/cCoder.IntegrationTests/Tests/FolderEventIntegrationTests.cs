@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -85,20 +89,26 @@ public sealed partial class FolderEventIntegrationTests
     private async Task DeleteWorkflowEventAsync(Guid workflowEventId)
     {
         if (workflowEventId == Guid.Empty)
+        {
             return;
+        }
 
         await using CoreDataContext core = CreateCoreContext();
         WorkflowEvent workflowEvent = await core.Set<WorkflowEvent>().IgnoreQueryFilters()
             .FirstOrDefaultAsync(found => found.Id == workflowEventId);
 
         if (workflowEvent is not null)
+        {
             await core.DeleteAllAsync([workflowEvent]);
+        }
     }
 
     private async Task DeleteFlowArtifactsAsync(Guid flowId, int taskId = 0)
     {
         if (flowId == Guid.Empty && taskId == 0)
+        {
             return;
+        }
 
         await using CoreDataContext core = CreateCoreContext();
 
@@ -118,7 +128,9 @@ public sealed partial class FolderEventIntegrationTests
                 .FirstOrDefaultAsync(found => found.Id == flowId);
 
             if (flow is not null)
+            {
                 await core.DeleteAsync(flow);
+            }
         }
     }
 
@@ -177,7 +189,9 @@ public sealed partial class FolderEventIntegrationTests
         using HttpRequestMessage request = new(method, WithAuthToken(relativeUrl, authToken));
 
         if (!string.IsNullOrWhiteSpace(host))
+        {
             request.Headers.Host = host;
+        }
 
         if (!string.IsNullOrWhiteSpace(authToken))
         {
@@ -213,7 +227,9 @@ public sealed partial class FolderEventIntegrationTests
     private static string WithAuthToken(string relativeUrl, string authToken)
     {
         if (string.IsNullOrWhiteSpace(authToken))
+        {
             return relativeUrl;
+        }
 
         string separator = relativeUrl.Contains('?')
             ? "&"
@@ -255,7 +271,9 @@ public sealed partial class FolderEventIntegrationTests
     private static string TakeLastLines(string content, int maxLines)
     {
         if (string.IsNullOrWhiteSpace(content))
+        {
             return "<no output>";
+        }
 
         string[] lines = content
             .Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
@@ -272,7 +290,9 @@ public sealed partial class FolderEventIntegrationTests
         for (int attempt = 0; attempt < attempts; attempt++)
         {
             if (await predicate())
+            {
                 return;
+            }
 
             await Task.Delay(delayMilliseconds);
         }

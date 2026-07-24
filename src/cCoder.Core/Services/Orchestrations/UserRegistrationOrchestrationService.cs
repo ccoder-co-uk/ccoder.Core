@@ -1,26 +1,34 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Security.Objects.DTOs;
 using cCoder.Security.Objects.Entities;
-using cCoder.Security.Services.Orchestrations.Interfaces;
+using cCoder.Security.Services.Aggregations.Interfaces;
 
 namespace cCoder.Core.Services.Orchestrations;
 
 public class UserRegistrationOrchestrationService(
-    IAuthenticationOrchestrationService authenticationOrchestrationService,
-    ISSOUserOrchestrationService ssoUserOrchestrationService)
+    IAuthenticationAggregationService authenticationAggregationService,
+    IRegistrationAggregationService registrationAggregationService,
+    ICurrentUserAggregationService currentUserAggregationService)
     : IUserRegistrationOrchestrationService
 {
     public ValueTask ConfirmRegistrationAsync(string token) =>
-        ssoUserOrchestrationService.ConfirmRegistration(token);
+        registrationAggregationService.ConfirmRegistration(tokenId: token);
 
     public ValueTask<Token> LoginAsync(string username, string password) =>
-        authenticationOrchestrationService.LoginAsync(username, password);
+        authenticationAggregationService.LoginAsync(
+            username: username,
+            password: password);
 
     public ValueTask LogoutAsync() =>
-        authenticationOrchestrationService.LogoutAsync();
+        authenticationAggregationService.LogoutAsync();
 
     public SSOUser Me() =>
-        authenticationOrchestrationService.Me();
+        currentUserAggregationService.GetCurrentUser();
 
     public async ValueTask<SSOUser> RegisterAsync(RegisterUser registerForm) =>
-        (await ssoUserOrchestrationService.Register(registerForm)).Item1;
+        (await registrationAggregationService.RegisterUserAsync(
+            registerForm: registerForm)).User;
 }

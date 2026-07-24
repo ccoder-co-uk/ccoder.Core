@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Text.Json;
 using FluentAssertions;
 using Xunit;
@@ -76,6 +80,3 @@ public sealed partial class ApiRootControllerTests
         ]);
     }
 }
-
-
-

@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Data.Models.Packaging;
 using FluentAssertions;
 using FluentAssertions.Execution;
@@ -72,4 +76,3 @@ public sealed partial class PackageManagerControllerTests
         document.RootElement.GetProperty("TenantId").GetString().Should().Be(expectedApp.TenantId);
     }
 }
-

@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Net;
 using System.Net.Http.Json;
 using System.Text;
@@ -79,7 +83,9 @@ public sealed partial class PackageManagerControllerTests(WebAcceptanceFixture f
     private async Task ImportPackagesAsync(int appId, IEnumerable<Package> packages)
     {
         foreach (Package package in packages)
+        {
             await ImportPackageAsync(appId, package);
+        }
     }
 
     private async Task<CoreApp> GetStoredAppAsync(int appId)
@@ -158,7 +164,9 @@ public sealed partial class PackageManagerControllerTests(WebAcceptanceFixture f
     private static int CountSerializedEntities(string data)
     {
         if (string.IsNullOrWhiteSpace(data))
+        {
             return 0;
+        }
 
         using JsonDocument document = JsonDocument.Parse(data);
 
@@ -173,7 +181,9 @@ public sealed partial class PackageManagerControllerTests(WebAcceptanceFixture f
     private static int CountSerializedObjectsExcluding(string data, string propertyName, string excludedValue)
     {
         if (string.IsNullOrWhiteSpace(data))
+        {
             return 0;
+        }
 
         using JsonDocument document = JsonDocument.Parse(data);
 
@@ -189,7 +199,9 @@ public sealed partial class PackageManagerControllerTests(WebAcceptanceFixture f
     private static int CountValidPageRoleEntities(string data)
     {
         if (string.IsNullOrWhiteSpace(data))
+        {
             return 0;
+        }
 
         using JsonDocument document = JsonDocument.Parse(data);
 
@@ -246,10 +258,10 @@ public sealed partial class PackageManagerControllerTests(WebAcceptanceFixture f
             .AnyAsync(found => found.RoleId == role.Id && found.UserId == "Guest");
 
         if (!hasGuestRole)
+        {
             await core.Set<UserRole>().AddAsync(new UserRole { RoleId = role.Id, UserId = "Guest" });
+        }
 
         await core.SaveChangesAsync();
     }
 }
-
-

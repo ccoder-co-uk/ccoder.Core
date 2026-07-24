@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Text;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Net.Http.Headers;
@@ -10,22 +14,23 @@ public class XmlFormatter : TextOutputFormatter
 {
     public XmlFormatter()
     {
-        SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse("application/xml"));
-        SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse("text/xml"));
+        SupportedMediaTypes.Add(item: MediaTypeHeaderValue.Parse(input: "application/xml"));
+        SupportedMediaTypes.Add(item: MediaTypeHeaderValue.Parse(input: "text/xml"));
 
-        SupportedEncodings.Add(Encoding.UTF8);
-        SupportedEncodings.Add(Encoding.Unicode);
+        SupportedEncodings.Add(item: Encoding.UTF8);
+        SupportedEncodings.Add(item: Encoding.Unicode);
     }
 
-    protected override bool CanWriteType(Type type) => true;
+    protected override bool CanWriteType(Type type) =>
+        true;
 
     public override async Task WriteResponseBodyAsync(
         OutputFormatterWriteContext context,
         Encoding selectedEncoding
     )
     {
-        StringBuilder buffer = GetBuffer(context, selectedEncoding);
-        await context.HttpContext.Response.WriteAsync(buffer.ToString());
+        StringBuilder buffer = GetBuffer(context: context, selectedEncoding: selectedEncoding);
+        await context.HttpContext.Response.WriteAsync(text: buffer.ToString());
     }
 
     private static StringBuilder GetBuffer(
@@ -39,13 +44,9 @@ public class XmlFormatter : TextOutputFormatter
         }
 
         string json = JsonConvert.SerializeObject(
-            new { item = FormatterODataHelper.HandleOData(context.Object) }
+value: new { item = FormatterODataHelper.HandleOData(contextObject: context.Object) }
         );
-        System.Xml.Linq.XDocument xml = JsonConvert.DeserializeXNode(json, "root");
+        System.Xml.Linq.XDocument xml = JsonConvert.DeserializeXNode(value: json, deserializeRootElementName: "root");
         return new StringBuilder(xml.ToString());
     }
 }
-
-
-
-

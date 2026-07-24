@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Net;
 using System.Text;
 using System.Text.Json;
@@ -32,7 +36,9 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
             log.LogError(exception, exception.Message);
 
             if (exception.InnerException is not null)
+            {
                 log.LogError(exception.InnerException, exception.InnerException.Message);
+            }
         }
     }
 
@@ -68,7 +74,9 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
             log.LogError(exception, exception.Message);
 
             if (exception.InnerException is not null)
+            {
                 log.LogError(exception.InnerException, exception.InnerException.Message);
+            }
         }
     }
 
@@ -97,7 +105,9 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
             log.LogError(exception, exception.Message);
 
             if (exception.InnerException is not null)
+            {
                 log.LogError(exception.InnerException, exception.InnerException.Message);
+            }
         }
     }
 
@@ -107,7 +117,9 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
             .FlushOldInstancesAsync(DateTimeOffset.UtcNow.AddDays(-7), cancellationToken);
 
         if (dropCount > 0)
+        {
             log.LogInformation("Dropped {Count} Workflow instances older than 7 days.", dropCount);
+        }
     }
 
     private async ValueTask RequeueHungExecutingInstancesAsync(CancellationToken cancellationToken)
@@ -146,7 +158,9 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
             .ClaimQueuedInstanceAsync(instanceId, cancellationToken);
 
         if (dbInstance is null)
+        {
             return;
+        }
 
         try
         {
@@ -223,7 +237,9 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
             .FirstOrDefaultAsync(found => found.Id == instanceId, cancellationToken);
 
         if (instance is null)
+        {
             return;
+        }
 
         instance.State = "Failed";
         instance.End = DateTimeOffset.UtcNow;

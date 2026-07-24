@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.SqlClient;
 using HostedServices.AcceptanceTests.Models;
@@ -47,17 +51,23 @@ public sealed class HostedServicesAcceptanceFixture : IAsyncLifetime
         try
         {
             if (Factory is not null)
+            {
                 await Factory.DisposeAsync();
+            }
 
             if (databaseServices is not null)
+            {
                 await databaseServices.DisposeAsync();
+            }
         }
         finally
         {
             try
             {
                 if (databaseManager is not null)
+                {
                     await databaseManager.DropDatabasesAsync();
+                }
             }
             finally
             {
@@ -85,10 +95,14 @@ public sealed class HostedServicesAcceptanceFixture : IAsyncLifetime
     private void RestoreEnvironment()
     {
         if (previousEnvironmentValues is null)
+        {
             return;
+        }
 
         foreach ((string name, string value) in previousEnvironmentValues)
+        {
             Environment.SetEnvironmentVariable(name, value);
+        }
     }
 
     private static string AddDatabaseSuffix(string variableName)
@@ -103,7 +117,9 @@ public sealed class HostedServicesAcceptanceFixture : IAsyncLifetime
         string databaseName = builder.InitialCatalog ?? string.Empty;
 
         if (string.IsNullOrWhiteSpace(databaseName))
+        {
             return connectionString;
+        }
 
         string suffix = typeof(HostedServicesAcceptanceFixture).Assembly.GetName().Name!
             .Replace(".AcceptanceTests", string.Empty, StringComparison.Ordinal)
@@ -121,7 +137,9 @@ public sealed class HostedServicesAcceptanceFixture : IAsyncLifetime
             ?? Environment.GetEnvironmentVariable(variableName, EnvironmentVariableTarget.Machine);
 
         if (!string.IsNullOrWhiteSpace(connectionString))
+        {
             return connectionString;
+        }
 
         throw new InvalidOperationException(
             $"Acceptance connection string environment variable '{variableName}' was not found.");

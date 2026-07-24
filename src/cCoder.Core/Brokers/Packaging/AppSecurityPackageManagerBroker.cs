@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.AppSecurity.Exposures;
 using cCoder.AppSecurity.Models;
 using cCoder.Data.Models.CMS;
@@ -16,22 +20,23 @@ internal class AppSecurityPackageManagerBroker(
     public ValueTask ImportPackageAsync(int appId, Package package) =>
         appSecurityPackageManager == null
             ? ValueTask.CompletedTask
-            : appSecurityPackageManager.ImportPackageAsync(appId, ToExternalPackage(package));
+            : appSecurityPackageManager.ImportPackageAsync(appId: appId, package: ToExternalPackage(package: package));
 
     public Package ExportPackage(int appId, string packageName) =>
         appSecurityPackageManager == null
             ? null
-            : ToLocalPackage(appSecurityPackageManager.ExportPackage(appId, packageName));
+            : ToLocalPackage(package: appSecurityPackageManager.ExportPackage(appId: appId, packageName: packageName));
 
     private static AppSecurityPackage ToExternalPackage(Package package) =>
-        package == null ? null : new AppSecurityPackage(package.Name)
+        package == null ? null : new AppSecurityPackage
         {
             Id = package.Id,
             Name = package.Name,
             Description = package.Description,
             Category = package.Category,
             SourceApi = package.SourceApi,
-            Items = package.Items?.Select(ToExternalPackageItem).ToArray(),
+            Items = package.Items?.Select(selector: ToExternalPackageItem)
+                .ToArray(),
         };
 
     private static AppSecurityPackageItem ToExternalPackageItem(PackageItem packageItem) =>
@@ -51,7 +56,8 @@ internal class AppSecurityPackageManagerBroker(
             Description = package.Description,
             Category = package.Category,
             SourceApi = package.SourceApi,
-            Items = package.Items?.Select(ToLocalPackageItem).ToArray(),
+            Items = package.Items?.Select(selector: ToLocalPackageItem)
+                .ToArray(),
         };
 
     private static PackageItem ToLocalPackageItem(AppSecurityPackageItem packageItem) =>
@@ -63,5 +69,3 @@ internal class AppSecurityPackageManagerBroker(
             Data = packageItem.Data,
         };
 }
-
-

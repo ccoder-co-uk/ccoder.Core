@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using cCoder.Data;
@@ -6,7 +10,7 @@ using cCoder.Data.Models.DMS;
 using cCoder.Data.Models.Security;
 using cCoder.Packaging.Models;
 using cCoder.Data.Models.Packaging;
-using cCoder.Packaging.Services.Orchestrations;
+using cCoder.Packaging.Services.Aggregations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Routing.Attributes;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +21,7 @@ namespace cCoder.Core.Exposures.Controllers;
 [ApiController]
 [Route("Api/Core/Package")]
 public class PackageManagerController(
-    IPackageManagerOrchestrationService packageManagerOrchestrationService,
+    IPackageManagerAggregationService packageManagerAggregationService,
     ICoreContextFactory coreContextFactory
 ) : ControllerBase
 {
@@ -50,47 +54,52 @@ public class PackageManagerController(
     public async Task<IActionResult> Export([FromQuery] int appId, [FromQuery] string[] packageNames = null)
     {
         string[] requestedPackages =
-            packageNames?.Where(packageName => !string.IsNullOrWhiteSpace(packageName)).ToArray()
+            packageNames?.Where(predicate: packageName => !string.IsNullOrWhiteSpace(value: packageName))
+                .ToArray()
             ?? [];
 
         if (requestedPackages.Length == 0)
+        {
             requestedPackages = DefaultPackageNames;
+        }
 
         List<Package> exportedPackages = [];
 
         foreach (string packageName in requestedPackages)
         {
-            if (string.Equals(packageName, AppConfigurationPackageName, StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(a: packageName, b: AppConfigurationPackageName, comparisonType: StringComparison.OrdinalIgnoreCase))
             {
-                exportedPackages.Add(await ExportAppConfigurationPackageAsync(appId));
+                exportedPackages.Add(item: await ExportAppConfigurationPackageAsync(appId: appId));
                 continue;
             }
 
-            if (string.Equals(packageName, "PageRoles", StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(a: packageName, b: "PageRoles", comparisonType: StringComparison.OrdinalIgnoreCase))
             {
-                exportedPackages.Add(await ExportPageRolesPackageAsync(appId));
+                exportedPackages.Add(item: await ExportPageRolesPackageAsync(appId: appId));
                 continue;
             }
 
-            if (string.Equals(packageName, "FolderRoles", StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(a: packageName, b: "FolderRoles", comparisonType: StringComparison.OrdinalIgnoreCase))
             {
-                exportedPackages.Add(await ExportFolderRolesPackageAsync(appId));
+                exportedPackages.Add(item: await ExportFolderRolesPackageAsync(appId: appId));
                 continue;
             }
 
-            exportedPackages.Add(packageManagerOrchestrationService.ExportPackage(appId, packageName));
+            exportedPackages.Add(item: packageManagerAggregationService.ExportPackage(appId: appId, packageName: packageName));
         }
 
-        return Ok(exportedPackages);
+        return Ok(value: exportedPackages);
     }
 
     [HttpPost("Import")]
     public async Task<IActionResult> ImportAsync([FromQuery] int appId, [FromBody] Package package)
     {
         if (!ModelState.IsValid)
-            return BadRequest(ModelState);
+        {
+            return BadRequest(modelState: ModelState);
+        }
 
-        await ImportPackagesAsync(appId, [package]);
+        await ImportPackagesAsync(appId: appId, packages: [package]);
         return Ok();
     }
 
@@ -98,23 +107,27 @@ public class PackageManagerController(
     public async Task<IActionResult> ImportThisAsync([FromQuery] int appId)
     {
         if (!ModelState.IsValid)
-            return BadRequest(ModelState);
+        {
+            return BadRequest(modelState: ModelState);
+        }
 
-        using JsonDocument document = await JsonDocument.ParseAsync(Request.Body);
+        using JsonDocument document = await JsonDocument.ParseAsync(utf8Json: Request.Body);
         JsonElement body = document.RootElement;
 
         if (body.ValueKind == JsonValueKind.Array)
         {
-            Package[] packages = body.Deserialize<Package[]>(JsonOptions);
+            Package[] packages = body.Deserialize<Package[]>(options: JsonOptions);
 
-            await ImportPackagesAsync(appId, packages);
+            await ImportPackagesAsync(appId: appId, packages: packages);
 
             return Ok();
         }
 
-        Package entity = body.Deserialize<Package>(JsonOptions);
+        Package entity = body.Deserialize<Package>(options: JsonOptions);
         if (entity is not null)
-            await ImportPackagesAsync(appId, [entity]);
+        {
+            await ImportPackagesAsync(appId: appId, packages: [entity]);
+        }
 
         return Ok();
     }
@@ -123,107 +136,117 @@ public class PackageManagerController(
     {
         foreach (Package package in packages ?? [])
         {
-            Package sanitizedPackage = SanitizePackage(package);
+            Package sanitizedPackage = SanitizePackage(package: package);
 
             PackageItem[] appItems = (sanitizedPackage.Items ?? [])
-                .Where(item => string.Equals(item.Type, AppConfigurationItemType, StringComparison.OrdinalIgnoreCase))
+                .Where(predicate: item => string.Equals(a: item.Type, b: AppConfigurationItemType, comparisonType: StringComparison.OrdinalIgnoreCase))
                 .ToArray();
 
             if (appItems.Length > 0)
             {
                 foreach (PackageItem appItem in appItems)
-                    await ImportAppConfigurationAsync(appId, appItem);
+                {
+                    await ImportAppConfigurationAsync(appId: appId, packageItem: appItem);
+                }
             }
 
             PackageItem[] remainingItems = (sanitizedPackage.Items ?? [])
-                .Where(item =>
-                    !string.Equals(item.Type, AppConfigurationItemType, StringComparison.OrdinalIgnoreCase)
-                    && !string.Equals(item.Type, "Core/Page", StringComparison.OrdinalIgnoreCase)
-                    && !string.Equals(item.Type, "Core/PageRole", StringComparison.OrdinalIgnoreCase)
-                    && !string.Equals(item.Type, "Core/FolderRole", StringComparison.OrdinalIgnoreCase))
+                .Where(predicate: item =>
+                    !string.Equals(a: item.Type, b: AppConfigurationItemType, comparisonType: StringComparison.OrdinalIgnoreCase)
+                    && !string.Equals(a: item.Type, b: "Core/Page", comparisonType: StringComparison.OrdinalIgnoreCase)
+                    && !string.Equals(a: item.Type, b: "Core/PageRole", comparisonType: StringComparison.OrdinalIgnoreCase)
+                    && !string.Equals(a: item.Type, b: "Core/FolderRole", comparisonType: StringComparison.OrdinalIgnoreCase))
                 .ToArray();
 
             if (remainingItems.Length > 0)
             {
-                await packageManagerOrchestrationService.ImportPackageAsync(
-                    appId,
-                    new Package(sanitizedPackage.Name)
-                    {
-                        Id = sanitizedPackage.Id,
-                        Description = sanitizedPackage.Description,
-                        Category = sanitizedPackage.Category,
-                        SourceApi = sanitizedPackage.SourceApi,
-                        Items = remainingItems,
-                    });
+                await packageManagerAggregationService.ImportPackageAsync(
+appId: appId, package: new Package(sanitizedPackage.Name)
+{
+    Id = sanitizedPackage.Id,
+    Description = sanitizedPackage.Description,
+    Category = sanitizedPackage.Category,
+    SourceApi = sanitizedPackage.SourceApi,
+    Items = remainingItems,
+});
             }
 
             PackageItem[] pageItems = (sanitizedPackage.Items ?? [])
-                .Where(item => string.Equals(item.Type, "Core/Page", StringComparison.OrdinalIgnoreCase))
+                .Where(predicate: item => string.Equals(a: item.Type, b: "Core/Page", comparisonType: StringComparison.OrdinalIgnoreCase))
                 .ToArray();
 
             if (pageItems.Length > 0)
-                await ImportPagesAsync(appId, pageItems);
+            {
+                await ImportPagesAsync(appId: appId, pageItems: pageItems);
+            }
 
             PackageItem[] pageRoleItems = (sanitizedPackage.Items ?? [])
-                .Where(item => string.Equals(item.Type, "Core/PageRole", StringComparison.OrdinalIgnoreCase))
+                .Where(predicate: item => string.Equals(a: item.Type, b: "Core/PageRole", comparisonType: StringComparison.OrdinalIgnoreCase))
                 .ToArray();
 
             if (pageRoleItems.Length > 0)
-                await ImportPageRolesAsync(appId, pageRoleItems);
+            {
+                await ImportPageRolesAsync(appId: appId, pageRoleItems: pageRoleItems);
+            }
 
             PackageItem[] folderRoleItems = (sanitizedPackage.Items ?? [])
-                .Where(item => string.Equals(item.Type, "Core/FolderRole", StringComparison.OrdinalIgnoreCase))
+                .Where(predicate: item => string.Equals(a: item.Type, b: "Core/FolderRole", comparisonType: StringComparison.OrdinalIgnoreCase))
                 .ToArray();
 
             if (folderRoleItems.Length > 0)
-                await ImportFolderRolesAsync(appId, folderRoleItems);
+            {
+                await ImportFolderRolesAsync(appId: appId, folderRoleItems: folderRoleItems);
+            }
         }
     }
 
     private async Task ImportPagesAsync(int appId, IEnumerable<PackageItem> pageItems)
     {
         Page[] items = pageItems
-            .SelectMany(item => DeserializePackageItems<Page>(item.Data))
-            .OrderBy(item => GetPageDepth(item.Path))
-            .ThenBy(item => item.Order)
+            .SelectMany(selector: item => DeserializePackageItems<Page>(data: item.Data))
+            .OrderBy(keySelector: item => GetPageDepth(path: item.Path))
+            .ThenBy(keySelector: item => item.Order)
             .ToArray();
 
         if (items.Length == 0)
+        {
             return;
+        }
 
         await using DbContext core = coreContextFactory.CreateCoreContext();
 
         foreach (Page item in items)
         {
-            string normalizedPath = NormalizePagePath(item.Path);
-            string parentPath = GetParentPagePath(normalizedPath);
+            string normalizedPath = NormalizePagePath(path: item.Path);
+            string parentPath = GetParentPagePath(path: normalizedPath);
 
-            Page parent = string.IsNullOrWhiteSpace(parentPath)
+            Page parent = string.IsNullOrWhiteSpace(value: parentPath)
                 ? null
                 : await core.Set<Page>()
                     .IgnoreQueryFilters()
-                    .FirstOrDefaultAsync(found => found.AppId == appId && found.Path == parentPath);
+                    .FirstOrDefaultAsync(predicate: found => found.AppId == appId && found.Path == parentPath);
 
             int? parentId = parent?.Id;
 
             Page existingPage = await core.Set<Page>()
                 .IgnoreQueryFilters()
-                .Include(found => found.PageInfo)
-                .Include(found => found.Contents)
-                .FirstOrDefaultAsync(found => found.AppId == appId && found.Path == normalizedPath);
+                .Include(navigationPropertyPath: found => found.PageInfo)
+                .Include(navigationPropertyPath: found => found.Contents)
+                .FirstOrDefaultAsync(predicate: found => found.AppId == appId && found.Path == normalizedPath);
 
             existingPage ??= await core.Set<Page>()
                 .IgnoreQueryFilters()
-                .Include(found => found.PageInfo)
-                .Include(found => found.Contents)
-                .FirstOrDefaultAsync(found =>
+                .Include(navigationPropertyPath: found => found.PageInfo)
+                .Include(navigationPropertyPath: found => found.Contents)
+                .FirstOrDefaultAsync(predicate: found =>
                     found.AppId == appId
                     && found.Name == item.Name
                     && found.ParentId == parentId);
 
             if (existingPage is null)
             {
-                await core.Set<Page>().AddAsync(new Page
+                await core.Set<Page>()
+                    .AddAsync(entity: new Page
                 {
                     AppId = appId,
                     ParentId = parentId,
@@ -238,7 +261,7 @@ public class PackageManagerController(
                     ResourceKey = item.ResourceKey,
                     Layout = item.Layout,
                     PageInfo = (item.PageInfo ?? [])
-                        .Select(info => new PageInfo
+                        .Select(selector: info => new PageInfo
                         {
                             CultureId = info.CultureId,
                             Title = info.Title,
@@ -247,7 +270,7 @@ public class PackageManagerController(
                         })
                         .ToList(),
                     Contents = (item.Contents ?? [])
-                        .Select(content => new cCoder.Data.Models.CMS.Content
+                        .Select(selector: content => new cCoder.Data.Models.CMS.Content
                         {
                             CultureId = content.CultureId,
                             Name = content.Name,
@@ -272,11 +295,13 @@ public class PackageManagerController(
             existingPage.ResourceKey = item.ResourceKey;
             existingPage.Layout = item.Layout;
 
-            core.Set<PageInfo>().RemoveRange(existingPage.PageInfo ?? []);
-            core.Set<cCoder.Data.Models.CMS.Content>().RemoveRange(existingPage.Contents ?? []);
+            core.Set<PageInfo>()
+                .RemoveRange(entities: existingPage.PageInfo ?? []);
+            core.Set<cCoder.Data.Models.CMS.Content>()
+                .RemoveRange(entities: existingPage.Contents ?? []);
 
             existingPage.PageInfo = (item.PageInfo ?? [])
-                .Select(info => new PageInfo
+                .Select(selector: info => new PageInfo
                 {
                     PageId = existingPage.Id,
                     CultureId = info.CultureId,
@@ -286,7 +311,7 @@ public class PackageManagerController(
                 })
                 .ToList();
             existingPage.Contents = (item.Contents ?? [])
-                .Select(content => new cCoder.Data.Models.CMS.Content
+                .Select(selector: content => new cCoder.Data.Models.CMS.Content
                 {
                     PageId = existingPage.Id,
                     CultureId = content.CultureId,
@@ -302,29 +327,31 @@ public class PackageManagerController(
     private async Task ImportPageRolesAsync(int appId, IEnumerable<PackageItem> pageRoleItems)
     {
         PageRolePackageItem[] items = pageRoleItems
-            .SelectMany(item => DeserializePackageItems<PageRolePackageItem>(item.Data))
-            .Where(item => !string.IsNullOrWhiteSpace(item.Path) && !string.IsNullOrWhiteSpace(item.Role))
+            .SelectMany(selector: item => DeserializePackageItems<PageRolePackageItem>(data: item.Data))
+            .Where(predicate: item => !string.IsNullOrWhiteSpace(value: item.Path) && !string.IsNullOrWhiteSpace(value: item.Role))
             .ToArray();
 
         if (items.Length == 0)
+        {
             return;
+        }
 
         await using DbContext core = coreContextFactory.CreateCoreContext();
 
         Page[] existingPages = await core.Set<Page>()
             .IgnoreQueryFilters()
-            .Where(found => found.AppId == appId)
+            .Where(predicate: found => found.AppId == appId)
             .ToArrayAsync();
 
         Dictionary<string, int> pageIdsByPath = existingPages
-            .Where(found => !string.IsNullOrWhiteSpace(found.Path))
-            .GroupBy(found => NormalizePagePath(found.Path), StringComparer.OrdinalIgnoreCase)
-            .ToDictionary(group => group.Key, group => group.First().Id, StringComparer.OrdinalIgnoreCase);
+            .Where(predicate: found => !string.IsNullOrWhiteSpace(value: found.Path))
+            .GroupBy(keySelector: found => NormalizePagePath(path: found.Path), comparer: StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(keySelector: group => group.Key, elementSelector: group => group.First().Id, comparer: StringComparer.OrdinalIgnoreCase);
 
         Dictionary<string, Guid> roleIdsByName = await core.Set<Role>()
             .IgnoreQueryFilters()
-            .Where(found => found.AppId == appId)
-            .ToDictionaryAsync(found => found.Name, found => found.Id, StringComparer.OrdinalIgnoreCase);
+            .Where(predicate: found => found.AppId == appId)
+            .ToDictionaryAsync(keySelector: found => found.Name, elementSelector: found => found.Id, comparer: StringComparer.OrdinalIgnoreCase);
 
         int[] pageIds = pageIdsByPath.Values
             .Distinct()
@@ -334,38 +361,45 @@ public class PackageManagerController(
         [
             .. await core.Set<PageRole>()
                 .IgnoreQueryFilters()
-                .Where(found => pageIds.Contains(found.PageId))
-                .Select(found => found.PageId + "|" + found.RoleId)
+                .Where(predicate: found => pageIds.Contains(value: found.PageId))
+                .Select(selector: found => found.PageId + "|" + found.RoleId)
                 .ToArrayAsync()
         ];
 
         foreach (PageRolePackageItem item in items)
         {
-            string normalizedPath = NormalizePagePath(item.Path);
+            string normalizedPath = NormalizePagePath(path: item.Path);
 
-            if (!pageIdsByPath.TryGetValue(normalizedPath, out int pageId))
+            if (!pageIdsByPath.TryGetValue(key: normalizedPath, value: out int pageId))
+            {
                 throw new InvalidOperationException($"Page role target page was not found for path '{normalizedPath}'.");
+            }
 
-            if (!roleIdsByName.TryGetValue(item.Role, out Guid roleId))
+            if (!roleIdsByName.TryGetValue(key: item.Role, value: out Guid roleId))
+            {
                 throw new InvalidOperationException($"Page role target role was not found for role '{item.Role}'.");
+            }
 
             string key = pageId + "|" + roleId;
-            if (existingPairs.Contains(key))
-                continue;
-
-            bool alreadyExists = await core.Set<PageRole>()
-                .IgnoreQueryFilters()
-                .AnyAsync(found => found.PageId == pageId && found.RoleId == roleId);
-
-            if (alreadyExists)
+            if (existingPairs.Contains(item: key))
             {
-                existingPairs.Add(key);
                 continue;
             }
 
-            existingPairs.Add(key);
+            bool alreadyExists = await core.Set<PageRole>()
+                .IgnoreQueryFilters()
+                .AnyAsync(predicate: found => found.PageId == pageId && found.RoleId == roleId);
 
-            await core.Set<PageRole>().AddAsync(new PageRole
+            if (alreadyExists)
+            {
+                existingPairs.Add(item: key);
+                continue;
+            }
+
+            existingPairs.Add(item: key);
+
+            await core.Set<PageRole>()
+                .AddAsync(entity: new PageRole
             {
                 PageId = pageId,
                 RoleId = roleId,
@@ -378,63 +412,68 @@ public class PackageManagerController(
     private async Task ImportFolderRolesAsync(int appId, IEnumerable<PackageItem> folderRoleItems)
     {
         FolderRolePackageItem[] items = folderRoleItems
-            .SelectMany(item => DeserializePackageItems<FolderRolePackageItem>(item.Data))
-            .Where(item => !string.IsNullOrWhiteSpace(item.Path) && !string.IsNullOrWhiteSpace(item.Name))
+            .SelectMany(selector: item => DeserializePackageItems<FolderRolePackageItem>(data: item.Data))
+            .Where(predicate: item => !string.IsNullOrWhiteSpace(value: item.Path) && !string.IsNullOrWhiteSpace(value: item.Name))
             .ToArray();
 
         if (items.Length == 0)
+        {
             return;
+        }
 
         await using DbContext core = coreContextFactory.CreateCoreContext();
 
         Folder[] existingFolders = await core.Set<Folder>()
             .IgnoreQueryFilters()
-            .Where(found => found.AppId == appId)
+            .Where(predicate: found => found.AppId == appId)
             .ToArrayAsync();
 
         Dictionary<string, Folder> foldersByPath = existingFolders
-            .Where(found => !string.IsNullOrWhiteSpace(found.Path))
-            .GroupBy(found => NormalizeFolderPath(found.Path), StringComparer.OrdinalIgnoreCase)
-            .ToDictionary(group => group.Key, group => group.First(), StringComparer.OrdinalIgnoreCase);
+            .Where(predicate: found => !string.IsNullOrWhiteSpace(value: found.Path))
+            .GroupBy(keySelector: found => NormalizeFolderPath(path: found.Path), comparer: StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(keySelector: group => group.Key, elementSelector: group => group.First(), comparer: StringComparer.OrdinalIgnoreCase);
 
         string[] paths = items
-            .Select(item => NormalizeFolderPath(item.Path))
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .OrderBy(path => path.Count(character => character == '/'))
-            .ThenBy(path => path, StringComparer.OrdinalIgnoreCase)
+            .Select(selector: item => NormalizeFolderPath(path: item.Path))
+            .Distinct(comparer: StringComparer.OrdinalIgnoreCase)
+            .OrderBy(keySelector: path => path.Count(predicate: character => character == '/'))
+            .ThenBy(keySelector: path => path, comparer: StringComparer.OrdinalIgnoreCase)
             .ToArray();
 
         foreach (string path in paths)
         {
-            if (foldersByPath.ContainsKey(path))
+            if (foldersByPath.ContainsKey(key: path))
+            {
                 continue;
+            }
 
-            string parentPath = GetParentFolderPath(path);
+            string parentPath = GetParentFolderPath(path: path);
             Folder folder = new()
             {
                 Id = Guid.NewGuid(),
                 AppId = appId,
-                ParentId = !string.IsNullOrWhiteSpace(parentPath)
-                    && foldersByPath.TryGetValue(parentPath, out Folder parent)
+                ParentId = !string.IsNullOrWhiteSpace(value: parentPath)
+                    && foldersByPath.TryGetValue(key: parentPath, value: out Folder parent)
                         ? parent.Id
                         : null,
-                Name = GetFolderName(path),
+                Name = GetFolderName(path: path),
                 Path = path,
             };
 
             foldersByPath[path] = folder;
-            await core.Set<Folder>().AddAsync(folder);
+            await core.Set<Folder>()
+                .AddAsync(entity: folder);
         }
 
         await core.SaveChangesAsync();
 
         Dictionary<string, Guid> roleIdsByName = await core.Set<Role>()
             .IgnoreQueryFilters()
-            .Where(found => found.AppId == appId)
-            .ToDictionaryAsync(found => found.Name, found => found.Id, StringComparer.OrdinalIgnoreCase);
+            .Where(predicate: found => found.AppId == appId)
+            .ToDictionaryAsync(keySelector: found => found.Name, elementSelector: found => found.Id, comparer: StringComparer.OrdinalIgnoreCase);
 
         Guid[] folderIds = foldersByPath.Values
-            .Select(folder => folder.Id)
+            .Select(selector: folder => folder.Id)
             .Distinct()
             .ToArray();
 
@@ -442,26 +481,33 @@ public class PackageManagerController(
         [
             .. await core.Set<FolderRole>()
                 .IgnoreQueryFilters()
-                .Where(found => folderIds.Contains(found.FolderId))
-                .Select(found => found.FolderId + "|" + found.RoleId)
+                .Where(predicate: found => folderIds.Contains(value: found.FolderId))
+                .Select(selector: found => found.FolderId + "|" + found.RoleId)
                 .ToArrayAsync()
         ];
 
         foreach (FolderRolePackageItem item in items)
         {
-            string normalizedPath = NormalizeFolderPath(item.Path);
+            string normalizedPath = NormalizeFolderPath(path: item.Path);
 
-            if (!foldersByPath.TryGetValue(normalizedPath, out Folder folder))
+            if (!foldersByPath.TryGetValue(key: normalizedPath, value: out Folder folder))
+            {
                 continue;
+            }
 
-            if (!roleIdsByName.TryGetValue(item.Name, out Guid roleId))
+            if (!roleIdsByName.TryGetValue(key: item.Name, value: out Guid roleId))
+            {
                 continue;
+            }
 
             string key = folder.Id + "|" + roleId;
-            if (!existingPairs.Add(key))
+            if (!existingPairs.Add(item: key))
+            {
                 continue;
+            }
 
-            await core.Set<FolderRole>().AddAsync(new FolderRole
+            await core.Set<FolderRole>()
+                .AddAsync(entity: new FolderRole
             {
                 FolderId = folder.Id,
                 RoleId = roleId,
@@ -477,10 +523,12 @@ public class PackageManagerController(
 
         App app = await core.Set<App>()
             .IgnoreQueryFilters()
-            .SingleOrDefaultAsync(found => found.Id == appId);
+            .SingleOrDefaultAsync(predicate: found => found.Id == appId);
 
         if (app is null)
+        {
             throw new InvalidOperationException($"App '{appId}' was not found.");
+        }
 
         return new Package(AppConfigurationPackageName)
         {
@@ -492,7 +540,7 @@ public class PackageManagerController(
                 new PackageItem
                 {
                     Type = AppConfigurationItemType,
-                    Data = JsonSerializer.Serialize(new AppConfigurationPackageItem
+                    Data = JsonSerializer.Serialize(value: new AppConfigurationPackageItem
                     {
                         Id = app.Id,
                         DefaultCultureId = app.DefaultCultureId,
@@ -514,29 +562,27 @@ public class PackageManagerController(
         var rows = await core.Set<PageRole>()
             .IgnoreQueryFilters()
             .Join(
-                core.Set<Page>().IgnoreQueryFilters().Where(found => found.AppId == appId),
-                pageRole => pageRole.PageId,
-                page => page.Id,
-                (pageRole, page) => new { pageRole, page })
+inner: core.Set<Page>()
+    .IgnoreQueryFilters()
+    .Where(predicate: found => found.AppId == appId), outerKeySelector: pageRole => pageRole.PageId, innerKeySelector: page => page.Id, resultSelector: (pageRole, page) => new { pageRole, page })
             .Join(
-                core.Set<Role>().IgnoreQueryFilters().Where(found => found.AppId == appId),
-                joined => joined.pageRole.RoleId,
-                role => role.Id,
-                (joined, role) => new PageRolePackageItem
-                {
-                    Path = joined.page.Path,
-                    Role = role.Name,
-                })
+inner: core.Set<Role>()
+    .IgnoreQueryFilters()
+    .Where(predicate: found => found.AppId == appId), outerKeySelector: joined => joined.pageRole.RoleId, innerKeySelector: role => role.Id, resultSelector: (joined, role) => new PageRolePackageItem
+{
+    Path = joined.page.Path,
+    Role = role.Name,
+})
             .ToArrayAsync();
 
         PageRolePackageItem[] items = rows
-            .Select(item => new PageRolePackageItem
+            .Select(selector: item => new PageRolePackageItem
             {
-                Path = NormalizePagePath(item.Path),
+                Path = NormalizePagePath(path: item.Path),
                 Role = item.Role,
             })
-            .OrderBy(item => item.Path, StringComparer.OrdinalIgnoreCase)
-            .ThenBy(item => item.Role, StringComparer.OrdinalIgnoreCase)
+            .OrderBy(keySelector: item => item.Path, comparer: StringComparer.OrdinalIgnoreCase)
+            .ThenBy(keySelector: item => item.Role, comparer: StringComparer.OrdinalIgnoreCase)
             .ToArray();
 
         return new Package("PageRoles")
@@ -549,7 +595,7 @@ public class PackageManagerController(
                 new PackageItem
                 {
                     Type = "Core/PageRole",
-                    Data = JsonSerializer.Serialize(items),
+                    Data = JsonSerializer.Serialize(value: items),
                 },
             ],
         };
@@ -562,29 +608,27 @@ public class PackageManagerController(
         var rows = await core.Set<FolderRole>()
             .IgnoreQueryFilters()
             .Join(
-                core.Set<Folder>().IgnoreQueryFilters().Where(found => found.AppId == appId),
-                folderRole => folderRole.FolderId,
-                folder => folder.Id,
-                (folderRole, folder) => new { folderRole, folder })
+inner: core.Set<Folder>()
+    .IgnoreQueryFilters()
+    .Where(predicate: found => found.AppId == appId), outerKeySelector: folderRole => folderRole.FolderId, innerKeySelector: folder => folder.Id, resultSelector: (folderRole, folder) => new { folderRole, folder })
             .Join(
-                core.Set<Role>().IgnoreQueryFilters().Where(found => found.AppId == appId),
-                joined => joined.folderRole.RoleId,
-                role => role.Id,
-                (joined, role) => new FolderRolePackageItem
-                {
-                    Path = joined.folder.Path,
-                    Name = role.Name,
-                })
+inner: core.Set<Role>()
+    .IgnoreQueryFilters()
+    .Where(predicate: found => found.AppId == appId), outerKeySelector: joined => joined.folderRole.RoleId, innerKeySelector: role => role.Id, resultSelector: (joined, role) => new FolderRolePackageItem
+{
+    Path = joined.folder.Path,
+    Name = role.Name,
+})
             .ToArrayAsync();
 
         FolderRolePackageItem[] items = rows
-            .Select(item => new FolderRolePackageItem
+            .Select(selector: item => new FolderRolePackageItem
             {
-                Path = NormalizeFolderPath(item.Path),
+                Path = NormalizeFolderPath(path: item.Path),
                 Name = item.Name,
             })
-            .OrderBy(item => item.Path, StringComparer.OrdinalIgnoreCase)
-            .ThenBy(item => item.Name, StringComparer.OrdinalIgnoreCase)
+            .OrderBy(keySelector: item => item.Path, comparer: StringComparer.OrdinalIgnoreCase)
+            .ThenBy(keySelector: item => item.Name, comparer: StringComparer.OrdinalIgnoreCase)
             .ToArray();
 
         return new Package("FolderRoles")
@@ -597,7 +641,7 @@ public class PackageManagerController(
                 new PackageItem
                 {
                     Type = "Core/FolderRole",
-                    Data = JsonSerializer.Serialize(items),
+                    Data = JsonSerializer.Serialize(value: items),
                 },
             ],
         };
@@ -605,18 +649,22 @@ public class PackageManagerController(
 
     private async Task ImportAppConfigurationAsync(int appId, PackageItem packageItem)
     {
-        AppConfigurationPackageItem imported = DeserializeAppConfiguration(packageItem.Data);
+        AppConfigurationPackageItem imported = DeserializeAppConfiguration(data: packageItem.Data);
         if (imported is null)
+        {
             return;
+        }
 
         await using DbContext core = coreContextFactory.CreateCoreContext();
 
         App app = await core.Set<App>()
             .IgnoreQueryFilters()
-            .SingleOrDefaultAsync(found => found.Id == appId);
+            .SingleOrDefaultAsync(predicate: found => found.Id == appId);
 
         if (app is null)
+        {
             throw new InvalidOperationException($"App '{appId}' was not found.");
+        }
 
         app.DefaultCultureId = imported.DefaultCultureId ?? string.Empty;
         app.Name = imported.Name ?? app.Name;
@@ -628,33 +676,37 @@ public class PackageManagerController(
 
     private static AppConfigurationPackageItem DeserializeAppConfiguration(string data)
     {
-        if (string.IsNullOrWhiteSpace(data))
+        if (string.IsNullOrWhiteSpace(value: data))
+        {
             return null;
+        }
 
-        using JsonDocument document = JsonDocument.Parse(data);
+        using JsonDocument document = JsonDocument.Parse(json: data);
         JsonElement value = document.RootElement;
 
         return value.ValueKind switch
         {
             JsonValueKind.Array => value.Deserialize<AppConfigurationPackageItem[]>()
                 ?.FirstOrDefault(),
-            JsonValueKind.Object => value.Deserialize<AppConfigurationPackageItem>(JsonOptions),
+            JsonValueKind.Object => value.Deserialize<AppConfigurationPackageItem>(options: JsonOptions),
             _ => null,
         };
     }
 
     private static T[] DeserializePackageItems<T>(string data)
     {
-        if (string.IsNullOrWhiteSpace(data))
+        if (string.IsNullOrWhiteSpace(value: data))
+        {
             return [];
+        }
 
-        using JsonDocument document = JsonDocument.Parse(data);
+        using JsonDocument document = JsonDocument.Parse(json: data);
         JsonElement value = document.RootElement;
 
         return value.ValueKind switch
         {
-            JsonValueKind.Array => value.Deserialize<T[]>(JsonOptions) ?? [],
-            JsonValueKind.Object => value.Deserialize<T>(JsonOptions) is T item ? [item] : [],
+            JsonValueKind.Array => value.Deserialize<T[]>(options: JsonOptions) ?? [],
+            JsonValueKind.Object => value.Deserialize<T>(options: JsonOptions) is T item ? [item] : [],
             _ => [],
         };
     }
@@ -667,32 +719,38 @@ public class PackageManagerController(
             Category = package.Category,
             SourceApi = package.SourceApi,
             Items = (package.Items ?? [])
-                .Select(item => new PackageItem
+                .Select(selector: item => new PackageItem
                 {
                     Id = item.Id,
                     PackageId = item.PackageId,
                     Type = item.Type,
-                    Data = StripTypeMetadata(item.Data),
+                    Data = StripTypeMetadata(data: item.Data),
                 })
                 .ToArray(),
         };
 
     private static string StripTypeMetadata(string data)
     {
-        if (string.IsNullOrWhiteSpace(data))
+        if (string.IsNullOrWhiteSpace(value: data))
+        {
             return data;
+        }
 
         string trimmed = data.TrimStart();
-        if (!trimmed.StartsWith("{", StringComparison.Ordinal) && !trimmed.StartsWith("[", StringComparison.Ordinal))
+        if (!trimmed.StartsWith(value: "{", comparisonType: StringComparison.Ordinal) && !trimmed.StartsWith(value: "[", comparisonType: StringComparison.Ordinal))
+        {
             return data;
+        }
 
         try
         {
-            JsonNode node = JsonNode.Parse(data);
+            JsonNode node = JsonNode.Parse(json: data);
             if (node is null)
+            {
                 return data;
+            }
 
-            RemoveTypeMetadata(node);
+            RemoveTypeMetadata(node: node);
             return node.ToJsonString();
         }
         catch (JsonException)
@@ -706,12 +764,14 @@ public class PackageManagerController(
         switch (node)
         {
             case JsonObject jsonObject:
-                jsonObject.Remove("$type");
+                jsonObject.Remove(propertyName: "$type");
 
                 foreach (KeyValuePair<string, JsonNode> property in jsonObject.ToArray())
                 {
                     if (property.Value is not null)
-                        RemoveTypeMetadata(property.Value);
+                    {
+                        RemoveTypeMetadata(node: property.Value);
+                    }
                 }
 
                 break;
@@ -720,7 +780,9 @@ public class PackageManagerController(
                 foreach (JsonNode child in jsonArray)
                 {
                     if (child is not null)
-                        RemoveTypeMetadata(child);
+                    {
+                        RemoveTypeMetadata(node: child);
+                    }
                 }
 
                 break;
@@ -728,38 +790,44 @@ public class PackageManagerController(
     }
 
     private static string NormalizePagePath(string path) =>
-        string.IsNullOrWhiteSpace(path)
+        string.IsNullOrWhiteSpace(value: path)
             ? string.Empty
-            : path.Trim().Trim('/').Replace('\\', '/');
+            : path.Trim()
+                .Trim(trimChar: '/')
+                .Replace(oldChar: '\\', newChar: '/');
 
     private static int GetPageDepth(string path) =>
-        string.IsNullOrWhiteSpace(path)
+        string.IsNullOrWhiteSpace(value: path)
             ? 0
-            : path.Trim('/').Split('/', StringSplitOptions.RemoveEmptyEntries).Length;
+            : path.Trim(trimChar: '/')
+                .Split(separator: '/', options: StringSplitOptions.RemoveEmptyEntries).Length;
 
     private static string GetParentPagePath(string path)
     {
-        string normalizedPath = NormalizePagePath(path);
-        int separatorIndex = normalizedPath.LastIndexOf('/');
+        string normalizedPath = NormalizePagePath(path: path);
+        int separatorIndex = normalizedPath.LastIndexOf(value: '/');
         return separatorIndex <= 0 ? string.Empty : normalizedPath[..separatorIndex];
     }
 
     private static string NormalizeFolderPath(string path) =>
-        string.IsNullOrWhiteSpace(path)
+        string.IsNullOrWhiteSpace(value: path)
             ? string.Empty
-            : path.Trim().Trim('/').Replace('\\', '/').ToLowerInvariant();
+            : path.Trim()
+                .Trim(trimChar: '/')
+                .Replace(oldChar: '\\', newChar: '/')
+                .ToLowerInvariant();
 
     private static string GetParentFolderPath(string path)
     {
-        string normalizedPath = NormalizeFolderPath(path);
-        int separatorIndex = normalizedPath.LastIndexOf('/');
+        string normalizedPath = NormalizeFolderPath(path: path);
+        int separatorIndex = normalizedPath.LastIndexOf(value: '/');
         return separatorIndex <= 0 ? string.Empty : normalizedPath[..separatorIndex];
     }
 
     private static string GetFolderName(string path)
     {
-        string normalizedPath = NormalizeFolderPath(path);
-        int separatorIndex = normalizedPath.LastIndexOf('/');
+        string normalizedPath = NormalizeFolderPath(path: path);
+        int separatorIndex = normalizedPath.LastIndexOf(value: '/');
         return separatorIndex < 0 ? normalizedPath : normalizedPath[(separatorIndex + 1)..];
     }
 }

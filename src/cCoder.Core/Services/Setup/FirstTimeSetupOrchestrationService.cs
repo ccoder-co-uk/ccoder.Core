@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Core.Models;
 using cCoder.Data;
 using cCoder.Data.Models.CMS;
@@ -18,24 +22,28 @@ internal sealed class FirstTimeSetupOrchestrationService(
         FirstTimeSetupRequest request,
         CancellationToken cancellationToken = default)
     {
-        ValidateRequest(request);
+        ValidateRequest(request: request);
 
-        if (await setupStateService.IsInitializedAsync(cancellationToken))
+        if (await setupStateService.IsInitializedAsync(cancellationToken: cancellationToken))
+        {
             throw new InvalidOperationException("The platform has already been initialised.");
+        }
 
-        await MigrateDatabasesAsync(cancellationToken);
+        await MigrateDatabasesAsync(cancellationToken: cancellationToken);
 
-        if (await setupStateService.IsInitializedAsync(cancellationToken))
+        if (await setupStateService.IsInitializedAsync(cancellationToken: cancellationToken))
+        {
             throw new InvalidOperationException("The platform has already been initialised.");
+        }
 
-        string bootstrapUserId = FirstTimeSetupIdentifiers.BuildUserId(request.Email);
+        string bootstrapUserId = FirstTimeSetupIdentifiers.BuildUserId(email: request.Email);
         FirstTimeSetupBootstrapUser bootstrapUser = new(
             bootstrapUserId,
             request.Email.Trim(),
             request.DisplayName.Trim(),
             null);
 
-        string tenantId = FirstTimeSetupIdentifiers.BuildTenantId(request.TenantName.Trim());
+        string tenantId = FirstTimeSetupIdentifiers.BuildTenantId(tenantName: request.TenantName.Trim());
 
         try
         {
@@ -45,15 +53,11 @@ internal sealed class FirstTimeSetupOrchestrationService(
                     tenantScope.ServiceProvider.GetRequiredService<IFirstTimeSetupTenantService>();
 
                 tenantId = await tenantService.SetupSecurityAsync(
-                    request,
-                    bootstrapUserId,
-                    cancellationToken);
+request: request, userId: bootstrapUserId, cancellationToken: cancellationToken);
             }
 
             await userService.AuthenticateBootstrapUserAsync(
-                bootstrapUser.UserId,
-                request.Password,
-                cancellationToken);
+userId: bootstrapUser.UserId, password: request.Password, cancellationToken: cancellationToken);
 
             using IServiceScope bootstrapScope = serviceScopeFactory.CreateScope();
 
@@ -63,24 +67,19 @@ internal sealed class FirstTimeSetupOrchestrationService(
                 bootstrapScope.ServiceProvider.GetRequiredService<IFirstTimeSetupAppService>();
 
             await bootstrapUserService.EnsureBootstrapCoreUserAsync(
-                bootstrapUser,
-                cancellationToken);
+bootstrapUser: bootstrapUser, cancellationToken: cancellationToken);
 
-            App app = await appService.CreateFirstAppAsync(request, tenantId, cancellationToken);
+            App app = await appService.CreateFirstAppAsync(request: request, tenantId: tenantId, cancellationToken: cancellationToken);
 
             await bootstrapUserService.CompleteFirstUserRegistrationAsync(
-                request,
-                bootstrapUser,
-                app.Id,
-                cancellationToken);
+request: request, bootstrapUser: bootstrapUser, appId: app.Id, cancellationToken: cancellationToken);
 
             return new FirstTimeSetupResult(tenantId, app.Id, bootstrapUser.UserId);
         }
         catch (Exception ex)
         {
             await userService.RollbackAsync(
-                bootstrapUser.UserId,
-                cancellationToken);
+bootstrapUserId: bootstrapUser.UserId, cancellationToken: cancellationToken);
 
             using (IServiceScope tenantScope = serviceScopeFactory.CreateScope())
             {
@@ -88,9 +87,7 @@ internal sealed class FirstTimeSetupOrchestrationService(
                     tenantScope.ServiceProvider.GetRequiredService<IFirstTimeSetupTenantService>();
 
                 await tenantService.RollbackAsync(
-                    bootstrapUser.UserId,
-                    tenantId,
-                    cancellationToken);
+bootstrapUserId: bootstrapUser.UserId, tenantId: tenantId, cancellationToken: cancellationToken);
             }
 
             using (IServiceScope appScope = serviceScopeFactory.CreateScope())
@@ -99,9 +96,7 @@ internal sealed class FirstTimeSetupOrchestrationService(
                     appScope.ServiceProvider.GetRequiredService<IFirstTimeSetupAppService>();
 
                 await appService.RollbackAsync(
-                    bootstrapUser.UserId,
-                    tenantId,
-                    cancellationToken);
+bootstrapUserId: bootstrapUser.UserId, tenantId: tenantId, cancellationToken: cancellationToken);
             }
 
             throw new InvalidOperationException(
@@ -112,19 +107,23 @@ internal sealed class FirstTimeSetupOrchestrationService(
 
     private async Task MigrateDatabasesAsync(CancellationToken cancellationToken)
     {
-        await using DbContext sso = securityDbContextFactory.CreateDbContext(true);
+        await using DbContext sso = securityDbContextFactory.CreateDbContext(ignoreAuthInfo: true);
         await using DbContext core = coreContextFactory.CreateCoreContext();
 
-        await sso.Database.MigrateAsync(cancellationToken);
-        await core.Database.MigrateAsync(cancellationToken);
+        await sso.Database.MigrateAsync(cancellationToken: cancellationToken);
+        await core.Database.MigrateAsync(cancellationToken: cancellationToken);
     }
 
     private static void ValidateRequest(FirstTimeSetupRequest request)
     {
         if (request is null)
+        {
             throw new ArgumentNullException(nameof(request));
+        }
 
-        if (string.IsNullOrWhiteSpace(request.Domain))
+        if (string.IsNullOrWhiteSpace(value: request.Domain))
+        {
             throw new InvalidOperationException("The setup request is missing the normalized domain.");
+        }
     }
 }

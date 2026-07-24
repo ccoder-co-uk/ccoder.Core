@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Collections;
 using cCoder.Data.Extensions;
 
@@ -61,7 +65,7 @@ public class MetadataContainer
     public MetadataContainer(Type type)
     {
         IsValueType = type.IsValueType || type == typeof(string);
-        Type = GetTypeName(type);
+        Type = GetTypeName(type: type);
         Name = type.Name;
         DisplayName = type.Name;
         Description = type.Name;
@@ -81,12 +85,16 @@ public class MetadataContainer
     private static string GetTypeName(Type type)
     {
         if (type == typeof(string))
+        {
             return "string";
+        }
 
-        if (typeof(IEnumerable).IsAssignableFrom(type))
+        if (typeof(IEnumerable).IsAssignableFrom(c: type))
+        {
             return "array";
+        }
 
-        return TypeLookup.TryGetValue(type, out string name)
+        return TypeLookup.TryGetValue(key: type, value: out string name)
             ? name
             : "object";
     }

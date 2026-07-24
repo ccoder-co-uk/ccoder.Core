@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Core.Models;
 using cCoder.Core.Services.Processings.AllowedOrigins;
 using FluentAssertions;

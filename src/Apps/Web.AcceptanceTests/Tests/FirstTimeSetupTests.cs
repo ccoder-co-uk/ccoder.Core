@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Net;
 using System.Net.Http.Headers;
 using cCoder.Data;
@@ -634,7 +638,9 @@ public sealed partial class FirstTimeSetupTests
                 ?? string.Empty;
 
             if (string.IsNullOrWhiteSpace(connectionString))
+            {
                 return string.Empty;
+            }
 
             SqlConnectionStringBuilder builder = new(connectionString)
             {
@@ -644,11 +650,12 @@ public sealed partial class FirstTimeSetupTests
 
             string databaseName = builder.InitialCatalog ?? string.Empty;
             if (string.IsNullOrWhiteSpace(databaseName))
+            {
                 return connectionString;
+            }
 
             builder.InitialCatalog = $"{databaseName}-setup-{suffix}";
             return builder.ConnectionString;
         }
     }
 }
-

@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Security;
 using Microsoft.AspNetCore.Diagnostics;
 
@@ -8,20 +12,21 @@ internal static class IAppBuilderExtensions
 {
     internal static IApplicationBuilder UseCoreFormatters(this IApplicationBuilder app) =>
         app.Use(
-            (context, next) =>
+middleware: (context, next) =>
             {
                 Dictionary<string, Microsoft.Extensions.Primitives.StringValues> query =
                     Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(
-                        context.Request.QueryString.Value
+queryString: context.Request.QueryString.Value
                     );
 
-                if (query.ContainsKey("t"))
+                if (query.ContainsKey(key: "t"))
+                {
                     context.Request.Headers["Authorization"] = $"bearer {query["t"][0]}";
+                }
 
                 if (
                     query.TryGetValue(
-                        "$format",
-                        out Microsoft.Extensions.Primitives.StringValues value
+key: "$format", value: out Microsoft.Extensions.Primitives.StringValues value
                     )
                 )
                 {
@@ -48,9 +53,9 @@ internal static class IAppBuilderExtensions
         );
 
     internal static IApplicationBuilder HandleExceptions(this IApplicationBuilder app) =>
-        app.UseExceptionHandler(errorApp =>
+        app.UseExceptionHandler(configure: errorApp =>
             errorApp.Run(
-                async (context) =>
+handler: async (context) =>
                 {
                     ILogger<IApplicationBuilder> log = context.RequestServices.GetService<
                         ILogger<IApplicationBuilder>
@@ -66,7 +71,7 @@ internal static class IAppBuilderExtensions
                     {
                         log.LogError(message: ex.Message + "\n" + ex.StackTrace);
                         await context.Response.WriteAsync(
-                            "{ \"error\": \"" + ex.Message.Replace("\"", "\'") + "\" }"
+text: "{ \"error\": \"" + ex.Message.Replace(oldValue: "\"", newValue: "\'") + "\" }"
                         );
 
                         Exception innerEx = ex.InnerException;
@@ -81,7 +86,3 @@ internal static class IAppBuilderExtensions
             )
         );
 }
-
-
-
-

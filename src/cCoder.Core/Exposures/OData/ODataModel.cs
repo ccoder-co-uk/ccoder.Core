@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using Microsoft.OData.Edm;
 
 
@@ -25,7 +29,3 @@ public class ODataModel
     /// </summary>
     public IEdmModel EDMModel { get; set; }
 }
-
-
-
-

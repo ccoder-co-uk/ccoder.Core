@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using App = cCoder.Data.Models.CMS.App;
 
 namespace cCoder.Core.Brokers.ContentManagement;
@@ -11,4 +15,3 @@ public interface IContentManagementAppBroker
     ValueTask<App> UpdateAsync(App app);
     ValueTask DeleteAsync(int appId);
 }
-

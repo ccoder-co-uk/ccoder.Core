@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Net;
 using System.Net.Http.Json;
 using cCoder.Data;
@@ -199,23 +203,23 @@ public sealed class AppDeleteCascadeTests(WebAcceptanceFixture fixture)
             .CreateCoreContext();
 
         App app = await core.AddAppAsync(new App
-            {
-                Name = Unique("AcceptanceApp"),
-                Domain = $"{Unique("acceptance")}.local",
-                DefaultTheme = "Default",
-                DefaultCultureId = string.Empty,
-                TenantId = Unique("tenant"),
-                ConfigJson = "{}",
-            });
+        {
+            Name = Unique("AcceptanceApp"),
+            Domain = $"{Unique("acceptance")}.local",
+            DefaultTheme = "Default",
+            DefaultCultureId = string.Empty,
+            TenantId = Unique("tenant"),
+            ConfigJson = "{}",
+        });
 
         Role role = await core.AddRoleAsync(new Role
-            {
-                Id = Guid.NewGuid(),
-                AppId = app.Id,
-                Name = Unique("AcceptanceRole"),
-                Description = "Acceptance role",
-                Privs = string.Join(',', privileges),
-            });
+        {
+            Id = Guid.NewGuid(),
+            AppId = app.Id,
+            Name = Unique("AcceptanceRole"),
+            Description = "Acceptance role",
+            Privs = string.Join(',', privileges),
+        });
 
         await core.AddUserRoleAsync(new UserRole { RoleId = role.Id, UserId = "Guest" });
 
@@ -310,12 +314,11 @@ public sealed class AppDeleteCascadeTests(WebAcceptanceFixture fixture)
         T[] items = query.ToArray();
 
         if (items.Length == 0)
+        {
             return;
+        }
 
         core.Set<T>().RemoveRange(items);
         await core.SaveChangesAsync();
     }
 }
-
-
-

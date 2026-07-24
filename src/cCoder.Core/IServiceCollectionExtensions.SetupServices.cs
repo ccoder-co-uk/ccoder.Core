@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Core.Exposures.Controllers;
 using cCoder.Core.Models;
 using cCoder.Core.Services.Setup;
@@ -13,93 +17,93 @@ public static partial class IServiceCollectionExtensions
 {
     private static void AddCoreFirstTimeSetup(IServiceCollection services)
     {
-        EnsureFirstTimeSetupSecurityServices(services);
-        EnsureFirstTimeSetupSecurityManagers(services);
+        EnsureFirstTimeSetupSecurityServices(services: services);
+        EnsureFirstTimeSetupSecurityManagers(services: services);
         services.AddScoped<IFirstTimeSetupStateService, FirstTimeSetupStateService>();
         services.AddScoped<FirstTimeSetupAssetService>();
         services.AddScoped<IFirstTimeSetupUserService, FirstTimeSetupUserService>();
         services.AddScoped<IFirstTimeSetupTenantService, FirstTimeSetupTenantService>();
         services.AddScoped<IFirstTimeSetupAppService, FirstTimeSetupAppService>();
         services.AddScoped<IFirstTimeSetupOrchestrationService, FirstTimeSetupOrchestrationService>();
-        services.AddMvc().AddApplicationPart(typeof(SetupController).Assembly);
+        services.AddMvc().AddApplicationPart(assembly: typeof(SetupController).Assembly);
     }
 
     private static void EnsureFirstTimeSetupSecurityServices(IServiceCollection services)
     {
         if (HasServiceRegistration(
-                services,
-                "cCoder.Security.Services.Orchestrations.Interfaces.IAuthenticationOrchestrationService, cCoder.Security")
+services: services, assemblyQualifiedTypeName: "cCoder.Security.Services.Orchestrations.Interfaces.IAuthenticationOrchestrationService, cCoder.Security")
             && HasServiceRegistration(
-                services,
-                "cCoder.Security.Services.Foundations.Events.ITenantSetupEventService, cCoder.Security"))
+services: services, assemblyQualifiedTypeName: "cCoder.Security.Services.Foundations.Events.ITenantSetupEventService, cCoder.Security"))
         {
             return;
         }
 
         CoreConfiguration coreConfiguration = services
-            .Where(descriptor => descriptor.ServiceType == typeof(CoreConfiguration))
-            .Select(descriptor => descriptor.ImplementationInstance)
+            .Where(predicate: descriptor => descriptor.ServiceType == typeof(CoreConfiguration))
+            .Select(selector: descriptor => descriptor.ImplementationInstance)
             .OfType<CoreConfiguration>()
             .LastOrDefault();
         Config runtimeConfiguration = services
-            .Where(descriptor => descriptor.ServiceType == typeof(Config))
-            .Select(descriptor => descriptor.ImplementationInstance)
+            .Where(predicate: descriptor => descriptor.ServiceType == typeof(Config))
+            .Select(selector: descriptor => descriptor.ImplementationInstance)
             .OfType<Config>()
             .LastOrDefault();
 
         string securityConnectionString = coreConfiguration?.SecurityConnectionString ?? string.Empty;
         string decryptionKey = coreConfiguration?.DecryptionKey ?? string.Empty;
 
-        if (string.IsNullOrWhiteSpace(securityConnectionString)
-            && runtimeConfiguration?.ConnectionStrings?.TryGetValue("SSO", out string configuredSecurityConnection) == true)
+        if (string.IsNullOrWhiteSpace(value: securityConnectionString)
+            && runtimeConfiguration?.ConnectionStrings?.TryGetValue(key: "SSO", value: out string configuredSecurityConnection) == true)
         {
             securityConnectionString = configuredSecurityConnection;
         }
 
-        if (string.IsNullOrWhiteSpace(decryptionKey)
-            && runtimeConfiguration?.Settings?.TryGetValue("DecryptionKey", out string configuredDecryptionKey) == true)
+        if (string.IsNullOrWhiteSpace(value: decryptionKey)
+            && runtimeConfiguration?.Settings?.TryGetValue(key: "DecryptionKey", value: out string configuredDecryptionKey) == true)
         {
             decryptionKey = configuredDecryptionKey;
         }
 
-        cCoder.Security.IServiceCollectionExtensions.AddSecurity(services, (securityServices, securityConfig) =>
+        cCoder.Security.IServiceCollectionExtensions.AddSecurity(services: services, configAction: (securityServices, securityConfig) =>
         {
             securityConfig.RootPath = null;
             securityConfig.AddMSSQLModelProvider(
-                securityServices,
-                securityConnectionString ?? string.Empty);
+services: securityServices, connectionString: securityConnectionString ?? string.Empty);
             securityConfig.UseAESHMMACPasswordEncryption(
-                securityServices,
-                decryptionKey ?? string.Empty);
+services: securityServices, decryptionKey: decryptionKey ?? string.Empty);
         });
     }
 
     private static void EnsureFirstTimeSetupSecurityManagers(IServiceCollection services)
     {
-        if (!services.Any(descriptor => descriptor.ServiceType == typeof(ITokenManager)))
+        if (!services.Any(predicate: descriptor => descriptor.ServiceType == typeof(ITokenManager)))
         {
-            Type tokenManagerType = Type.GetType("cCoder.Security.Exposures.TokenManager, cCoder.Security");
+            Type tokenManagerType = Type.GetType(typeName: "cCoder.Security.Exposures.TokenManager, cCoder.Security");
 
             if (tokenManagerType is not null)
-                services.AddTransient(typeof(ITokenManager), tokenManagerType);
+            {
+                services.AddTransient(serviceType: typeof(ITokenManager), implementationType: tokenManagerType);
+            }
         }
 
-        if (!services.Any(descriptor => descriptor.ServiceType == typeof(ITenantManager)))
+        if (!services.Any(predicate: descriptor => descriptor.ServiceType == typeof(ITenantManager)))
         {
-            Type tenantManagerType = Type.GetType("cCoder.Security.Exposures.TenantManager, cCoder.Security");
+            Type tenantManagerType = Type.GetType(typeName: "cCoder.Security.Exposures.TenantManager, cCoder.Security");
 
             if (tenantManagerType is not null)
-                services.AddTransient(typeof(ITenantManager), tenantManagerType);
+            {
+                services.AddTransient(serviceType: typeof(ITenantManager), implementationType: tenantManagerType);
+            }
         }
     }
 
     private static bool HasServiceRegistration(IServiceCollection services, string assemblyQualifiedTypeName)
     {
-        Type serviceType = Type.GetType(assemblyQualifiedTypeName);
-        string fullName = assemblyQualifiedTypeName.Split(',')[0];
+        Type serviceType = Type.GetType(typeName: assemblyQualifiedTypeName);
+        string fullName = assemblyQualifiedTypeName.Split(separator: ',')[0];
 
-        return services.Any(descriptor =>
+        return services.Any(predicate: descriptor =>
             descriptor.ServiceType == serviceType
-            || string.Equals(descriptor.ServiceType.FullName, fullName, StringComparison.Ordinal));
+            || string.Equals(a: descriptor.ServiceType.FullName, b: fullName, comparisonType: StringComparison.Ordinal));
     }
 }

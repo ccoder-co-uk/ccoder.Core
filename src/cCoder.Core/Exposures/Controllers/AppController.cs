@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Core.Models;
 using cCoder.Core.Services.Foundations.ContentManagement;
 using cCoder.Core.Services.Orchestrations;
@@ -17,48 +21,51 @@ public class AppController(
     public async Task<IActionResult> Post([FromBody] App entity)
     {
         if (!ModelState.IsValid)
-            return BadRequest(ModelState);
+        {
+            return BadRequest(modelState: ModelState);
+        }
 
-        return Ok(await service.AddAsync(entity));
+        return Ok(value: await service.AddAsync(app: entity));
     }
 
     [HttpPut]
     public async Task<IActionResult> Put([FromRoute] int key, [FromBody] App entity)
     {
         if (!ModelState.IsValid)
-            return BadRequest(ModelState);
+        {
+            return BadRequest(modelState: ModelState);
+        }
 
         entity.Id = key;
-        return Ok(await service.UpdateAsync(entity));
+        return Ok(value: await service.UpdateAsync(app: entity));
     }
 
     [ODataIgnored]
     [HttpPut("Api/Core/App({key})", Order = -1)]
     public Task<IActionResult> PutAggregateRoute([FromRoute] int key, [FromBody] App entity) =>
-        Put(key, entity);
+        Put(key: key, entity: entity);
 
     [ODataIgnored]
     [HttpDelete("Api/Core/App({key})", Order = -1)]
     public Task<IActionResult> DeleteAggregateRoute([FromRoute] int key) =>
-        Delete(key);
+        Delete(key: key);
 
     [HttpDelete]
     public async Task<IActionResult> Delete([FromRoute] int key)
     {
         if (IsExternalEventingEnabled())
         {
-            await DeleteViaExternalEventingAsync(key);
+            await DeleteViaExternalEventingAsync(key: key);
             return Ok();
         }
 
-        await service.DeleteAsync(key);
+        await service.DeleteAsync(appId: key);
         return Ok();
     }
 
     private ValueTask DeleteViaExternalEventingAsync(int key) =>
-        contentManagementAppService.DeleteAsync(key);
+        contentManagementAppService.DeleteAsync(appId: key);
 
     private bool IsExternalEventingEnabled() =>
         configuration.EnableHttpEventing || configuration.EnableServiceBusEventing;
 }
-

@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Core;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using cCoder.Data.Models.CMS;
@@ -120,11 +124,15 @@ public class Program
             ReceiveHandler = async (serviceProvider, _, message) =>
             {
                 if (message.Data?.Id == Guid.Empty)
+                {
                     throw new InvalidOperationException(
                         "You must provide a workflow instance payload with a valid id.");
+                }
 
                 if (!string.Equals(message.Data?.State, "Queued", StringComparison.OrdinalIgnoreCase))
+                {
                     return;
+                }
 
                 IWorkflowInstanceManagementOrchestrationService workflowInstanceManagementService =
                     serviceProvider.GetRequiredService<IWorkflowInstanceManagementOrchestrationService>();
@@ -181,7 +189,9 @@ public class Program
             string value = config.GetValue<string>(key);
 
             if (!string.IsNullOrWhiteSpace(value))
+            {
                 return value;
+            }
         }
 
         return null;

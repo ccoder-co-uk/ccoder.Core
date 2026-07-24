@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Reflection;
 using cCoder.Data;
 using cCoder.Data.Models;
@@ -133,7 +137,9 @@ internal sealed class AcceptanceApplicationSeeder(IServiceProvider services)
     private static async Task SeedCommonObjectsAsync(DbContext core)
     {
         if (await core.Set<CommonObject>().AnyAsync())
+        {
             return;
+        }
 
         CommonObject[] commonObjects = AcceptanceSeedData
             .LoadCommonObjects()
@@ -185,7 +191,9 @@ internal sealed class AcceptanceApplicationSeeder(IServiceProvider services)
         }
 
         if (value is DateTimeOffset dateTimeOffset && dateTimeOffset == default)
+        {
             property.SetValue(commonObject, fallbackValue);
+        }
     }
 
     private static void NormalizeStringProperty(CommonObject commonObject, string propertyName, string fallbackValue)
@@ -193,7 +201,9 @@ internal sealed class AcceptanceApplicationSeeder(IServiceProvider services)
         PropertyInfo property = typeof(CommonObject).GetProperty(propertyName)!;
 
         if (property.GetValue(commonObject) is not string value || string.IsNullOrWhiteSpace(value))
+        {
             property.SetValue(commonObject, fallbackValue);
+        }
     }
 
     private static void RefreshCaches(IServiceProvider services)
@@ -209,7 +219,9 @@ internal sealed class AcceptanceApplicationSeeder(IServiceProvider services)
     private static async Task SeedRolesAsync(DbContext core)
     {
         if (await core.Set<Role>().AnyAsync(role => role.AppId == AppId && role.Name != AcceptanceAdminRoleName))
+        {
             return;
+        }
 
         Role[] roles = AcceptanceSeedData
             .LoadPackageItems<Role>("Roles", "Core/Role")
@@ -230,7 +242,9 @@ internal sealed class AcceptanceApplicationSeeder(IServiceProvider services)
     private static async Task SeedLayoutsAsync(DbContext core)
     {
         if (await core.Set<Layout>().AnyAsync(layout => layout.AppId == AppId))
+        {
             return;
+        }
 
         Layout[] layouts = AcceptanceSeedData
             .LoadPackageItems<Layout>("Layouts", "Core/Layout")
@@ -257,7 +271,9 @@ internal sealed class AcceptanceApplicationSeeder(IServiceProvider services)
     private static async Task SeedTemplatesAsync(DbContext core)
     {
         if (await core.Set<Template>().AnyAsync(template => template.AppId == AppId))
+        {
             return;
+        }
 
         Template[] templates = AcceptanceSeedData
             .LoadPackageItems<Template>("Templates", "Core/Template")
@@ -283,7 +299,9 @@ internal sealed class AcceptanceApplicationSeeder(IServiceProvider services)
     private static async Task SeedResourcesAsync(DbContext core)
     {
         if (await core.Set<Resource>().AnyAsync(resource => resource.AppId == AppId))
+        {
             return;
+        }
 
         Resource[] resources = AcceptanceSeedData
             .LoadPackageItems<Resource>("Resources", "Core/Resource")
@@ -311,7 +329,9 @@ internal sealed class AcceptanceApplicationSeeder(IServiceProvider services)
     private static async Task SeedComponentsAsync(DbContext core)
     {
         if (await core.Set<Component>().AnyAsync(component => component.AppId == AppId))
+        {
             return;
+        }
 
         Component[] components = AcceptanceSeedData
             .LoadPackageItems<Component>("Components", "Core/Component")
@@ -339,7 +359,9 @@ internal sealed class AcceptanceApplicationSeeder(IServiceProvider services)
     private static async Task SeedScriptsAsync(DbContext core)
     {
         if (await core.Set<Script>().AnyAsync(script => script.AppId == AppId))
+        {
             return;
+        }
 
         Script[] scripts = AcceptanceSeedData
             .LoadPackageItems<Script>("Scripts", "Core/Script")

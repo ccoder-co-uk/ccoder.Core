@@ -1,8 +1,13 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Security;
 using System.Web;
 using cCoder.Core.Services.Foundations.ContentManagement;
 using cCoder.Data;
 using cCoder.Security.Data.EF;
+using cCoder.Security.Data.EF.Dependencies;
 using cCoder.Security.Objects.Entities;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http.Extensions;
@@ -17,7 +22,7 @@ public static partial class WebApplicationExtensions
     {
         ILogger logger = context.RequestServices
             .GetService<ILoggerFactory>()?
-            .CreateLogger("cCoder.Core.Web")
+            .CreateLogger(categoryName: "cCoder.Core.Web")
             ?? Microsoft.Extensions.Logging.Abstractions.NullLogger.Instance;
 
         Exception exception = context.Features.Get<IExceptionHandlerPathFeature>()?.Error;
@@ -28,11 +33,13 @@ public static partial class WebApplicationExtensions
         context.Response.ContentType = "application/json";
 
         if (exception is null)
+        {
             return;
+        }
 
         logger.LogError("{Message}\n{StackTrace}", exception.Message, exception.StackTrace);
         await context.Response.WriteAsync(
-            "{ \"error\": \"" + exception.Message.Replace("\"", "\'") + "\" }");
+text: "{ \"error\": \"" + exception.Message.Replace(oldValue: "\"", newValue: "\'") + "\" }");
 
         Exception innerException = exception.InnerException;
 
@@ -48,20 +55,22 @@ public static partial class WebApplicationExtensions
         HttpRequest request = context.RequestServices.GetService<HttpRequest>();
 
         if (request is null
-            || request.Path.StartsWithSegments("/Api/Hubs", StringComparison.OrdinalIgnoreCase))
+            || request.Path.StartsWithSegments(other: "/Api/Hubs", comparisonType: StringComparison.OrdinalIgnoreCase))
+        {
             return;
+        }
 
         Config config = context.RequestServices.GetRequiredService<Config>();
         string ssoUserId = "Guest";
 
-        string url = HttpUtility.UrlDecode(request.GetDisplayUrl());
+        string url = HttpUtility.UrlDecode(str: request.GetDisplayUrl());
         string logEntry =
             $"{context.Connection.RemoteIpAddress} as {ssoUserId}: {request.Method} - {url}";
 
-        if (config.ConnectionStrings?.TryGetValue("SSO", out string ssoConnectionString) == true
-            && !string.IsNullOrWhiteSpace(ssoConnectionString)
-            && await SqlTableExistsAsync(ssoConnectionString, "dbo", "Sessions", context.RequestAborted)
-            && await SqlTableExistsAsync(ssoConnectionString, "dbo", "UserEvents", context.RequestAborted))
+        if (config.ConnectionStrings?.TryGetValue(key: "SSO", value: out string ssoConnectionString) == true
+            && !string.IsNullOrWhiteSpace(value: ssoConnectionString)
+            && await SqlTableExistsAsync(connectionString: ssoConnectionString, schema: "dbo", table: "Sessions", cancellationToken: context.RequestAborted)
+            && await SqlTableExistsAsync(connectionString: ssoConnectionString, schema: "dbo", table: "UserEvents", cancellationToken: context.RequestAborted))
         {
             try
             {
@@ -75,10 +84,10 @@ public static partial class WebApplicationExtensions
 
                 string tenantId = null;
 
-                if (config.ConnectionStrings?.TryGetValue("Core", out string coreConnectionString) == true
-                    && await SqlTableExistsAsync(coreConnectionString, "CMS", "Apps", context.RequestAborted))
+                if (config.ConnectionStrings?.TryGetValue(key: "Core", value: out string coreConnectionString) == true
+                    && await SqlTableExistsAsync(connectionString: coreConnectionString, schema: "CMS", table: "Apps", cancellationToken: context.RequestAborted))
                 {
-                    tenantId = appService.GetByDomain(request.Host.Host, ignoreFilters: true)?.TenantId;
+                    tenantId = appService.GetByDomain(domain: request.Host.Host, ignoreFilters: true)?.TenantId;
                 }
 
                 using SecurityDbContext sso = new MSSQLSecurityDbContextFactory(ssoConnectionString)
@@ -86,20 +95,20 @@ public static partial class WebApplicationExtensions
 
                 string existingUserId = await sso.Set<SSOUser>()
                     .IgnoreQueryFilters()
-                    .Where(user => user.Id == ssoUserId)
-                    .Select(user => user.Id)
-                    .FirstOrDefaultAsync(context.RequestAborted);
+                    .Where(predicate: user => user.Id == ssoUserId)
+                    .Select(selector: user => user.Id)
+                    .FirstOrDefaultAsync(cancellationToken: context.RequestAborted);
 
-                string existingTenantId = string.IsNullOrWhiteSpace(tenantId)
+                string existingTenantId = string.IsNullOrWhiteSpace(value: tenantId)
                     ? null
                     : await sso.Set<Tenant>()
                         .IgnoreQueryFilters()
-                        .Where(tenant => tenant.Id == tenantId)
-                        .Select(tenant => tenant.Id)
-                        .FirstOrDefaultAsync(context.RequestAborted);
+                        .Where(predicate: tenant => tenant.Id == tenantId)
+                        .Select(selector: tenant => tenant.Id)
+                        .FirstOrDefaultAsync(cancellationToken: context.RequestAborted);
 
                 string requestType =
-                    request.Path.Value?.StartsWith("/api/", StringComparison.InvariantCultureIgnoreCase) == true
+                    request.Path.Value?.StartsWith(value: "/api/", comparisonType: StringComparison.InvariantCultureIgnoreCase) == true
                         ? "Api_"
                         : "Page_";
 
@@ -112,18 +121,17 @@ public static partial class WebApplicationExtensions
                     Value = url,
                 };
 
-                await sso.AddAsync(userEvent);
+                await sso.AddAsync(entity: userEvent);
                 await sso.SaveChangesAsync();
             }
             catch (Exception ex)
             {
                 logger.LogWarning(
-                    "Unable to persist request log entry to SSO. {Message}",
-                    ex.Message);
+message: "Unable to persist request log entry to SSO. {Message}", args: ex.Message);
             }
         }
 
-        logger.LogDebug(logEntry);
+        logger.LogDebug(message: logEntry);
     }
 
     private static async Task<bool> SqlTableExistsAsync(
@@ -140,13 +148,13 @@ public static partial class WebApplicationExtensions
             };
 
             await using SqlConnection connection = new(builder.ConnectionString);
-            await connection.OpenAsync(cancellationToken);
+            await connection.OpenAsync(cancellationToken: cancellationToken);
             await using SqlCommand command = connection.CreateCommand();
             command.CommandTimeout = 2;
             command.CommandText = "SELECT OBJECT_ID(@tableName, 'U')";
-            command.Parameters.AddWithValue("@tableName", $"{schema}.{table}");
+            command.Parameters.AddWithValue(parameterName: "@tableName", value: $"{schema}.{table}");
 
-            object result = await command.ExecuteScalarAsync(cancellationToken);
+            object result = await command.ExecuteScalarAsync(cancellationToken: cancellationToken);
             return result is not null and not DBNull;
         }
         catch (Exception)

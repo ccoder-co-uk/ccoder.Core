@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.DocumentManagement.Models;
 using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.DMS;
@@ -11,4 +15,3 @@ public interface IDocumentManagementAppBroker
     ValueTask UpdateAsync(App app);
     ValueTask DeleteAsync(int appId);
 }
-

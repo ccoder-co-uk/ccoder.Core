@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Security;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,7 +19,7 @@ public static class ControllerReadExtensions
         try
         {
             TEntity entity = get();
-            return entity is null ? controller.NotFound() : controller.Ok(entity);
+            return entity is null ? controller.NotFound() : controller.Ok(value: entity);
         }
         catch (SecurityException)
         {
@@ -23,6 +27,3 @@ public static class ControllerReadExtensions
         }
     }
 }
-
-
-

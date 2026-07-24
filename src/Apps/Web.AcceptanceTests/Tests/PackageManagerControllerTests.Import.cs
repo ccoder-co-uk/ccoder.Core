@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Net;
 using System.Text;
 using System.Text.Json;
@@ -230,5 +234,3 @@ public sealed partial class PackageManagerControllerTests
         updated.TenantId.Should().Be(originalTenantId);
     }
 }
-
-

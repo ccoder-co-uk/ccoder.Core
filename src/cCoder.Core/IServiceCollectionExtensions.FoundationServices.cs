@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Core.Services.Foundations.AllowedOrigins;
 using cCoder.Core.Services.Foundations.AppSecurity;
 using cCoder.Core.Services.Foundations.ContentManagement;

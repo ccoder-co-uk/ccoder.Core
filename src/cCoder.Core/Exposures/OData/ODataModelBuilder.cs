@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Linq.Expressions;
 using cCoder.Core.Models;
 using cCoder.Data.Extensions;
@@ -27,15 +31,16 @@ public abstract class ODataModelBuilder
         where T : class
     {
         setName ??= typeof(T).Name;
-        return Builder.EntitySet<T>(setName);
+        return Builder.EntitySet<T>(name: setName);
     }
 
     protected virtual EntitySetConfiguration<T> AddJoinSet<T, TKey>(Expression<Func<T, TKey>> key)
         where T : class
     {
         string setName = typeof(T).Name;
-        EntitySetConfiguration<T> setConfig = Builder.EntitySet<T>(setName);
-        _ = Builder.EntityType<T>().HasKey(key);
+        EntitySetConfiguration<T> setConfig = Builder.EntitySet<T>(name: setName);
+        _ = Builder.EntityType<T>()
+            .HasKey(keyDefinitionExpression: key);
 
         return setConfig;
     }

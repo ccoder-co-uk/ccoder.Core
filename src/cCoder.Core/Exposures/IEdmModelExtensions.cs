@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Core.Models.Metadata;
 using cCoder.Data.Extensions;
 using Microsoft.OData.Edm;
@@ -17,27 +21,29 @@ public static class IEdmModelExtensions
 
         foreach (var entitySet in model.EntityContainer.EntitySets())
         {
-            var clr = GetClrType(model, entitySet.EntityType);
+            var clr = GetClrType(model: model, edmType: entitySet.EntityType);
 
             if (clr != null)
-                types.Add(GetExtendedMetadataForType(model, contextName, clr, hasEndpoint: true));
+            {
+                types.Add(item: GetExtendedMetadataForType(model: model, context: contextName, type: clr, hasEndpoint: true));
+            }
         }
 
         foreach (var schemaType in model.SchemaElements.OfType<IEdmSchemaType>())
         {
             if (schemaType is IEdmComplexType || schemaType is IEdmEntityType)
             {
-                var clr = GetClrType(model, schemaType);
+                var clr = GetClrType(model: model, edmType: schemaType);
 
                 if (clr != null)
                 {
-                    bool hasEndpoint = model.EntityContainer.FindEntitySet(clr.Name) != null;
-                    types.Add(GetExtendedMetadataForType(model, contextName, clr, hasEndpoint));
+                    bool hasEndpoint = model.EntityContainer.FindEntitySet(setName: clr.Name) != null;
+                    types.Add(item: GetExtendedMetadataForType(model: model, context: contextName, type: clr, hasEndpoint: hasEndpoint));
                 }
             }
         }
 
-        return types.DistinctBy(t => t.ServerTypeName);
+        return types.DistinctBy(keySelector: t => t.ServerTypeName);
     }
 
     public static ExtendedMetadataContainer GetExtendedMetadataForType(
@@ -49,46 +55,50 @@ public static class IEdmModelExtensions
     {
         ExtendedMetadataContainer result = new(type, true, hasEndpoint) { Category = context };
 
-        IEdmEntitySet set = model.EntityContainer.FindEntitySet(type.Name);
+        IEdmEntitySet set = model.EntityContainer.FindEntitySet(setName: type.Name);
 
         if (set != null)
         {
             IEnumerable<OperationContainer> customOperations = model
-                .FindDeclaredBoundOperations(set.Type)
-                .Select(o => new OperationContainer
+                .FindDeclaredBoundOperations(bindingType: set.Type)
+                .Select(selector: o => new OperationContainer
                 {
                     Name = o.Name,
                     Url = $"{result.Category}/{type.Name}/{o.Name}()",
                     Queryable = o.IsFunction(),
                     HttpVerb = o.IsFunction() ? "GET" : "POST",
-                    ReturnType = BuildMetaFor(o.GetReturn()?.Type?.Definition),
+                    ReturnType = BuildMetaFor(definition: o.GetReturn()?.Type?.Definition),
                     Parameters = o
-                        .Parameters?.Where(p => p.Name != "bindingParameter")
-                        .Select(p => new { k = p.Name, v = p.Type.FullName() })
-                        .ToDictionary(i => i.k, i => i.v),
+                        .Parameters?.Where(predicate: p => p.Name != "bindingParameter")
+                        .Select(selector: p => new { k = p.Name, v = p.Type.FullName() })
+                        .ToDictionary(keySelector: i => i.k, elementSelector: i => i.v),
                 });
 
-            result.Operations = GetBaseCRUDOperations(result)
-                .Union(customOperations)
+            result.Operations = GetBaseCRUDOperations(type: result)
+                .Union(second: customOperations)
                 .ToList();
         }
         else
+        {
             result.HasEndpoint = false;
+        }
 
         return result;
     }
 
     static Type GetClrType(IEdmModel model, IEdmSchemaType edmType) =>
-        model.GetAnnotationValue<ClrTypeAnnotation>(edmType)?.ClrType;
+        model.GetAnnotationValue<ClrTypeAnnotation>(element: edmType)?.ClrType;
 
     private static MetadataContainer BuildMetaFor(IEdmType definition)
     {
         if (definition != null && definition.TypeKind == EdmTypeKind.Collection)
         {
-            Type cSharpType = Type.GetType(definition.FullTypeName(), false);
+            Type cSharpType = Type.GetType(typeName: definition.FullTypeName(), throwOnError: false);
 
             if (cSharpType != null)
+            {
                 return new MetadataContainer(cSharpType, true, true);
+            }
         }
 
         return null;
@@ -96,8 +106,8 @@ public static class IEdmModelExtensions
 
     private static IEnumerable<OperationContainer> GetBaseCRUDOperations(MetadataContainer type) =>
         type.IsJoinEntity
-            ? GetBaseCRUDOperationsForJoinEntity(type)
-            : GetBaseCRUDOperationsForEntity(type);
+            ? GetBaseCRUDOperationsForJoinEntity(type: type)
+            : GetBaseCRUDOperationsForEntity(type: type);
 
     private static IEnumerable<OperationContainer> GetBaseCRUDOperationsForJoinEntity(
         MetadataContainer type
@@ -123,7 +133,9 @@ public static class IEdmModelExtensions
                 {
                     {
                         "odata:key",
-                        Type.GetType(type.ServerType).GetIdProperty().GetType().FullName
+                        Type.GetType(typeName: type.ServerType)
+                            .GetIdProperty()
+                            .GetType().FullName
                     },
                 },
             },
@@ -169,7 +181,8 @@ public static class IEdmModelExtensions
                 {
                     {
                         "odata:key",
-                        Type.GetType(type.ServerType).GetIdProperty()?.GetType().FullName
+                        Type.GetType(typeName: type.ServerType)
+                            .GetIdProperty()?.GetType().FullName
                     },
                     { "body:entity", type.ServerType },
                 },
@@ -185,7 +198,8 @@ public static class IEdmModelExtensions
                 {
                     {
                         "odata:key",
-                        Type.GetType(type.ServerType).GetIdProperty()?.GetType().FullName
+                        Type.GetType(typeName: type.ServerType)
+                            .GetIdProperty()?.GetType().FullName
                     },
                 },
             },

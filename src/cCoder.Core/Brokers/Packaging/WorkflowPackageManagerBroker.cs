@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Packaging.Models;
 using cCoder.Data.Models.Packaging;
 using cCoder.Workflow.Exposures;
@@ -32,7 +36,8 @@ internal class WorkflowPackageManagerBroker(
             Description = package.Description,
             Category = package.Category,
             SourceApi = package.SourceApi,
-            Items = package.Items?.Select(ToExternalPackageItem).ToArray(),
+            Items = package.Items?.Select(selector: ToExternalPackageItem)
+                .ToArray(),
         };
 
     private static WorkflowPackageItem ToExternalPackageItem(PackageItem packageItem) =>
@@ -52,7 +57,8 @@ internal class WorkflowPackageManagerBroker(
             Description = package.Description,
             Category = package.Category,
             SourceApi = package.SourceApi,
-            Items = package.Items?.Select(ToLocalPackageItem).ToArray(),
+            Items = package.Items?.Select(ToLocalPackageItem)
+                .ToArray(),
         };
 
     private static PackageItem ToLocalPackageItem(WorkflowPackageItem packageItem) =>
@@ -64,5 +70,3 @@ internal class WorkflowPackageManagerBroker(
             Data = packageItem.Data,
         };
 }
-
-

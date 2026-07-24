@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -81,7 +85,9 @@ public sealed partial class WorkflowEventIntegrationTests
     private async Task DeleteFlowArtifactsAsync(Guid flowId, int taskId = 0)
     {
         if (flowId == Guid.Empty && taskId == 0)
+        {
             return;
+        }
 
         await using CoreDataContext core = CreateCoreContext();
 
@@ -91,7 +97,9 @@ public sealed partial class WorkflowEventIntegrationTests
                 .FirstOrDefaultAsync(found => found.Id == taskId);
 
             if (task is not null)
+            {
                 await core.DeleteAllAsync([task]);
+            }
         }
 
         if (flowId != Guid.Empty)
@@ -110,7 +118,9 @@ public sealed partial class WorkflowEventIntegrationTests
                 .FirstOrDefaultAsync(found => found.Id == flowId);
 
             if (flow is not null)
+            {
                 await core.DeleteAsync(flow);
+            }
         }
     }
 
@@ -165,7 +175,9 @@ public sealed partial class WorkflowEventIntegrationTests
     private async Task DeleteExecuteOnlyUserAsync(string userId, Guid roleId)
     {
         if (string.IsNullOrWhiteSpace(userId) && roleId == Guid.Empty)
+        {
             return;
+        }
 
         await using CoreDataContext core = CreateCoreContext();
 
@@ -177,14 +189,18 @@ public sealed partial class WorkflowEventIntegrationTests
                 .ToArrayAsync();
 
             if (userRoles.Length > 0)
+            {
                 await core.DeleteAllAsync(userRoles);
+            }
 
             cCoder.Data.Models.Security.Role role = await core.Set<cCoder.Data.Models.Security.Role>()
                 .IgnoreQueryFilters()
                 .FirstOrDefaultAsync(found => found.Id == roleId);
 
             if (role is not null)
+            {
                 await core.DeleteAsync(role);
+            }
         }
 
         if (!string.IsNullOrWhiteSpace(userId))
@@ -194,7 +210,9 @@ public sealed partial class WorkflowEventIntegrationTests
                 .FirstOrDefaultAsync(found => found.Id == userId);
 
             if (user is not null)
+            {
                 await core.DeleteAsync(user);
+            }
         }
 
         if (!string.IsNullOrWhiteSpace(userId))
@@ -296,7 +314,9 @@ public sealed partial class WorkflowEventIntegrationTests
         };
 
         if (!string.IsNullOrWhiteSpace(host))
+        {
             request.Headers.Host = host;
+        }
 
         using HttpResponseMessage response = await fixture.WebClient.SendAsync(request);
         string content = await response.Content.ReadAsStringAsync();
@@ -331,7 +351,9 @@ public sealed partial class WorkflowEventIntegrationTests
         using HttpRequestMessage request = new(method, relativeUrl);
 
         if (!string.IsNullOrWhiteSpace(host))
+        {
             request.Headers.Host = host;
+        }
 
         using HttpResponseMessage response = await fixture.WebClient.SendAsync(request);
         string content = await response.Content.ReadAsStringAsync();
@@ -371,7 +393,9 @@ public sealed partial class WorkflowEventIntegrationTests
     private static string TakeLastLines(string content, int maxLines)
     {
         if (string.IsNullOrWhiteSpace(content))
+        {
             return "<no output>";
+        }
 
         string[] lines = content
             .Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
@@ -388,7 +412,9 @@ public sealed partial class WorkflowEventIntegrationTests
         for (int attempt = 0; attempt < attempts; attempt++)
         {
             if (await predicate())
+            {
                 return;
+            }
 
             await Task.Delay(delayMilliseconds);
         }

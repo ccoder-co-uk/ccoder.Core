@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.AppSecurity.Brokers;
 using cCoder.ContentManagement.Exposures;
 using cCoder.Core.Services.Foundations.ContentManagement;
@@ -6,7 +10,7 @@ using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.Mail;
 using cCoder.Data.Models.Security;
 using cCoder.Mail.Models;
-using cCoder.Mail.Services.Orchestrations;
+using cCoder.Mail.Services.Processings;
 using CoreApp = cCoder.Data.Models.CMS.App;
 using ContentTemplate = cCoder.Data.Models.CMS.Template;
 using TemplatedEmailDetails = cCoder.Mail.Models.TemplatedEmailDetails;
@@ -16,7 +20,7 @@ namespace cCoder.Core.Services.Orchestrations;
 public partial class TemplatedEmailOrchestrationService(
     IContentManagementAppService contentManagementAppService,
     ITemplateRenderer templateRenderer,
-    IMailSenderConfigurationOrchestrationService mailSenderOrchestrationService,
+    IMailSenderProcessingService mailSenderProcessingService,
     IMailManagerService mailManagerService,
     IAuthorizationBroker authorizationBroker
 ) : ITemplatedEmailOrchestrationService
@@ -32,23 +36,20 @@ public partial class TemplatedEmailOrchestrationService(
         string mailSenderName = "Default"
     )
     {
-        ContentTemplate template = app.Templates.FirstOrDefault(candidate => candidate.Name == templateName)
+        ContentTemplate template = app.Templates.FirstOrDefault(predicate: candidate => candidate.Name == templateName)
             ?? throw new InvalidOperationException($"Template '{templateName}' was not found.");
 
-        MailSender mailSender = mailSenderOrchestrationService
-            .GetAll(true)
-            .Where(sender => sender.AppId == app.Id)
-            .FirstOrDefault(sender => sender.Name == mailSenderName)
-            ?? mailSenderOrchestrationService
-                .GetAll(true)
-                .FirstOrDefault(sender => sender.AppId == app.Id)
+        MailSender mailSender = mailSenderProcessingService
+            .GetAllMailSender(ignoreFilters: true)
+            .Where(predicate: sender => sender.AppId == app.Id)
+            .FirstOrDefault(predicate: sender => sender.Name == mailSenderName)
+            ?? mailSenderProcessingService
+                .GetAllMailSender(ignoreFilters: true)
+                .FirstOrDefault(predicate: sender => sender.AppId == app.Id)
             ?? throw new InvalidOperationException("Mail Sender configuration could not be found.");
 
         string content = templateRenderer.Render(
-            app.Id,
-            templateName,
-            culture,
-            model);
+appId: app.Id, name: templateName, culture: culture, model: model);
 
         QueuedEmail email = new()
         {
@@ -58,25 +59,27 @@ public partial class TemplatedEmailOrchestrationService(
             To = toEmail,
             Subject = subject,
             Content = content
-                .Replace("[email[subject]]", subject)
-                .Replace("[email[from]]", mailSender.FromEmail ?? mailSender.User)
-                .Replace("[email[to]]", toEmail),
+                .Replace(oldValue: "[email[subject]]", newValue: subject)
+                .Replace(oldValue: "[email[from]]", newValue: mailSender.FromEmail ?? mailSender.User)
+                .Replace(oldValue: "[email[to]]", newValue: toEmail),
             IsBodyHtml = true,
             SentByUserId = sentByUserId,
         };
 
-        return await mailManagerService.AddAsync(email, false);
+        return await mailManagerService.AddAsync(email: email, checkPrivileges: false);
     }
 
     public ValueTask<QueuedEmail> QueueAsync(TemplatedEmailDetails details)
     {
-        CoreApp app = contentManagementAppService.GetByDomain(details.SourceDomain, true);
+        CoreApp app = contentManagementAppService.GetByDomain(domain: details.SourceDomain, ignoreFilters: true);
 
         if (app is null)
+        {
             throw new InvalidOperationException($"No app found for domain '{details.SourceDomain}'");
+        }
 
         var currentUser = authorizationBroker.GetCurrentUser();
-        string culture = ResolveCulture(details, currentUser?.DefaultCultureId, app.DefaultCultureId);
+        string culture = ResolveCulture(details: details, currentUserCulture: currentUser?.DefaultCultureId, appCulture: app.DefaultCultureId);
 
         var renderModel = new
         {
@@ -94,13 +97,7 @@ public partial class TemplatedEmailOrchestrationService(
         };
 
         return QueueAsync(
-            app,
-            details.TemplateName,
-            culture,
-            renderModel,
-            details.ToEmail,
-            $"{app.Name}: {details.Subject}",
-            currentUser?.Id);
+app: app, templateName: details.TemplateName, culture: culture, model: renderModel, toEmail: details.ToEmail, subject: $"{app.Name}: {details.Subject}", sentByUserId: currentUser?.Id);
     }
 
     private static string ResolveCulture(
@@ -108,10 +105,9 @@ public partial class TemplatedEmailOrchestrationService(
         string currentUserCulture,
         string appCulture
     ) =>
-        !string.IsNullOrWhiteSpace(details.Culture)
+        !string.IsNullOrWhiteSpace(value: details.Culture)
             ? details.Culture
-            : !string.IsNullOrWhiteSpace(currentUserCulture)
+            : !string.IsNullOrWhiteSpace(value: currentUserCulture)
                 ? currentUserCulture
                 : appCulture;
 }
-

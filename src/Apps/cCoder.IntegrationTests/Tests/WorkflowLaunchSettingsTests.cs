@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Text.Json;
 using FluentAssertions;
 using Xunit;
@@ -35,7 +39,9 @@ public sealed class WorkflowLaunchSettingsTests
         while (directory is not null)
         {
             if (File.Exists(Path.Combine(directory.FullName, "src", "cCoder.Core.sln")))
+            {
                 return directory.FullName;
+            }
 
             directory = directory.Parent;
         }

@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Core;
 using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.DMS;
@@ -67,7 +71,9 @@ public class Program
                     ];
 
                     if (IsHttpEventProvider(coreConfig.EventProviderType))
+                    {
                         providers.Add(CreateAppDeleteExternalSendProvider());
+                    }
 
                     coreConfig.EventProviders = [.. providers];
                 }
@@ -109,7 +115,9 @@ public class Program
                 await SendExternalEventAsync(serviceProvider, "Http", eventName, message);
 
                 if (message.Data is null)
+                {
                     return;
+                }
 
                 await WaitForHostedServicesAppDeleteAsync(
                     serviceProvider,
@@ -158,7 +166,9 @@ public class Program
             await using CoreDataContext core = contextFactory.CreateCoreContext();
 
             if (!await HasAppChildrenAsync(core, appId))
+            {
                 return;
+            }
 
             await Task.Delay(500);
         }
@@ -240,7 +250,9 @@ public class Program
             string value = config.GetValue<string>(key);
 
             if (!string.IsNullOrWhiteSpace(value))
+            {
                 return value;
+            }
         }
 
         return null;

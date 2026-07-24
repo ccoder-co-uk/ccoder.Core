@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Core.Services.Orchestrations;
 using cCoder.Mail.Models;
 using cCoder.Data.Models.CMS;
@@ -15,9 +19,10 @@ public class TemplatedEmailController(
     public async Task<IActionResult> AddTemplatedEmail([FromBody] TemplatedEmailDetails details)
     {
         if (!ModelState.IsValid)
-            return BadRequest(ModelState);
+        {
+            return BadRequest(modelState: ModelState);
+        }
 
-        return Ok(await templatedEmailOrchestrationService.QueueAsync(details));
+        return Ok(value: await templatedEmailOrchestrationService.QueueAsync(details: details));
     }
 }
-

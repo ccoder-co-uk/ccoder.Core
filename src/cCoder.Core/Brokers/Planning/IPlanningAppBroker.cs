@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Data.Models.CMS;
 
 namespace cCoder.Core.Brokers.Planning;
@@ -8,4 +12,3 @@ public interface IPlanningAppBroker
     ValueTask UpdateAsync(App app);
     ValueTask DeleteAsync(int appId);
 }
-

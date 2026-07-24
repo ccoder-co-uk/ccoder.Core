@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using FluentAssertions;
 using Xunit;
 
@@ -33,6 +37,3 @@ public sealed partial class ApiRootControllerTests
         actualContent.Should().Contain("\"name\":\"Workflow\"");
     }
 }
-
-
-

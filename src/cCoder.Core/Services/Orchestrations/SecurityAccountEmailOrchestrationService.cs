@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.ComponentModel.DataAnnotations;
 using System.Web;
 using cCoder.Core.Services.Foundations.ContentManagement;
@@ -15,44 +19,44 @@ public class SecurityAccountEmailOrchestrationService(
 {
     public ValueTask QueueRegistrationCreatedEmailAsync(SecurityAccountEvent accountEvent) =>
         QueueAccountEmailAsync(
-            accountEvent,
-            "ConfirmRegistration",
-            "Confirm Registration");
+accountEvent: accountEvent, templateName: "ConfirmRegistration", subject: "Confirm Registration");
 
     public ValueTask QueueInvitationCreatedEmailAsync(SecurityAccountEvent accountEvent) =>
         QueueAccountEmailAsync(
-            accountEvent,
-            "UserInvite",
-            "Confirm Invitation");
+accountEvent: accountEvent, templateName: "UserInvite", subject: "Confirm Invitation");
 
     public ValueTask QueuePasswordResetRequestedEmailAsync(SecurityAccountEvent accountEvent) =>
         QueueAccountEmailAsync(
-            accountEvent,
-            "ForgotPassword",
-            "Password Reset");
+accountEvent: accountEvent, templateName: "ForgotPassword", subject: "Password Reset");
 
     private async ValueTask QueueAccountEmailAsync(
         SecurityAccountEvent accountEvent,
         string templateName,
         string subject)
     {
-        if (string.IsNullOrWhiteSpace(accountEvent?.RequestDomain))
+        if (string.IsNullOrWhiteSpace(value: accountEvent?.RequestDomain))
+        {
             return;
+        }
 
-        ValidateAccountEvent(accountEvent);
+        ValidateAccountEvent(accountEvent: accountEvent);
 
-        App app = ResolveApp(accountEvent.RequestDomain);
+        App app = ResolveApp(requestDomain: accountEvent.RequestDomain);
 
         if (app is null)
+        {
             return;
+        }
 
-        Template template = app.Templates?.FirstOrDefault(candidate =>
+        Template template = app.Templates?.FirstOrDefault(predicate: candidate =>
             candidate.Name == templateName);
 
         if (template is null)
+        {
             return;
+        }
 
-        string culture = string.IsNullOrWhiteSpace(accountEvent.Culture)
+        string culture = string.IsNullOrWhiteSpace(value: accountEvent.Culture)
             ? app.DefaultCultureId
             : accountEvent.Culture;
 
@@ -68,7 +72,7 @@ public class SecurityAccountEmailOrchestrationService(
         var renderModel = new
         {
             accountEvent.Token,
-            EncodedToken = HttpUtility.UrlEncode(accountEvent.Token),
+            EncodedToken = HttpUtility.UrlEncode(str: accountEvent.Token),
             SSOUser = user,
             CoreUser = coreUser,
             accountEvent.Tenant,
@@ -77,30 +81,22 @@ public class SecurityAccountEmailOrchestrationService(
         };
 
         await templatedEmailOrchestrationService.QueueAsync(
-            app,
-            template.Name,
-            culture,
-            renderModel,
-            user.Email,
-            $"{app.Name}: {subject}",
-            user.Id);
+app: app, templateName: template.Name, culture: culture, model: renderModel, toEmail: user.Email, subject: $"{app.Name}: {subject}", sentByUserId: user.Id);
     }
 
     private App ResolveApp(string requestDomain)
     {
-        string normalizedDomain = NormalizeDomain(requestDomain);
+        string normalizedDomain = NormalizeDomain(domain: requestDomain);
 
-        App app = contentManagementAppService.GetAll(true)
-            .Include(candidate => candidate.Templates)
-            .FirstOrDefault(candidate => candidate.Domain == normalizedDomain)
-            ?? contentManagementAppService.GetAll(true)
-                .Include(candidate => candidate.Templates)
+        App app = contentManagementAppService.GetAll(ignoreFilters: true)
+            .Include(navigationPropertyPath: candidate => candidate.Templates)
+            .FirstOrDefault(predicate: candidate => candidate.Domain == normalizedDomain)
+            ?? contentManagementAppService.GetAll(ignoreFilters: true)
+                .Include(navigationPropertyPath: candidate => candidate.Templates)
                 .AsEnumerable()
-                .FirstOrDefault(candidate =>
+                .FirstOrDefault(predicate: candidate =>
                     string.Equals(
-                        NormalizeDomain(candidate.Domain),
-                        normalizedDomain,
-                        StringComparison.OrdinalIgnoreCase));
+a: NormalizeDomain(domain: candidate.Domain), b: normalizedDomain, comparisonType: StringComparison.OrdinalIgnoreCase));
 
         return app;
     }
@@ -108,28 +104,39 @@ public class SecurityAccountEmailOrchestrationService(
     private static void ValidateAccountEvent(SecurityAccountEvent accountEvent)
     {
         if (accountEvent?.User is null)
+        {
             throw new ValidationException("Security account event user is required.");
+        }
 
-        if (string.IsNullOrWhiteSpace(accountEvent.User.Email))
+        if (string.IsNullOrWhiteSpace(value: accountEvent.User.Email))
+        {
             throw new ValidationException("Security account event user email is required.");
-
+        }
     }
 
     private static string NormalizeDomain(string domain)
     {
-        if (string.IsNullOrWhiteSpace(domain))
+        if (string.IsNullOrWhiteSpace(value: domain))
+        {
             return string.Empty;
+        }
 
         string candidate = domain.Trim();
 
-        if (Uri.TryCreate(candidate, UriKind.Absolute, out Uri uri))
+        if (Uri.TryCreate(uriString: candidate, uriKind: UriKind.Absolute, result: out Uri uri))
+        {
             candidate = uri.Host;
+        }
 
-        int portIndex = candidate.IndexOf(':');
+        int portIndex = candidate.IndexOf(value: ':');
 
         if (portIndex >= 0)
+        {
             candidate = candidate[..portIndex];
+        }
 
-        return candidate.Trim().TrimEnd('/').ToLowerInvariant();
+        return candidate.Trim()
+            .TrimEnd(trimChar: '/')
+            .ToLowerInvariant();
     }
 }

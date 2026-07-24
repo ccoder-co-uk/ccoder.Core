@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Mail.Exposures;
 using cCoder.Mail.Models;
 using cCoder.Data.Models.CMS;
@@ -8,8 +12,10 @@ namespace cCoder.Core.Brokers.Mail;
 
 internal class MailAppBroker(IMailAppExposure mailAppExposure) : IMailAppBroker
 {
-    public ValueTask AddAsync(App app) => mailAppExposure.AddAsync(app);
-    public ValueTask UpdateAsync(App app) => mailAppExposure.UpdateAsync(app);
-    public ValueTask DeleteAsync(int appId) => mailAppExposure.DeleteAsync(appId);
+    public ValueTask AddAsync(App app) =>
+        mailAppExposure.AddAsync(newApp: app);
+    public ValueTask UpdateAsync(App app) =>
+        mailAppExposure.UpdateAsync(updatedApp: app);
+    public ValueTask DeleteAsync(int appId) =>
+        mailAppExposure.DeleteAsync(appId: appId);
 }
-

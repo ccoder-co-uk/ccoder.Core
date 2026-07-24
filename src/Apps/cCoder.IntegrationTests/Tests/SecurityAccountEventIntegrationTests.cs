@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -55,7 +59,9 @@ public sealed partial class SecurityAccountEventIntegrationTests
                 && mailSender.Name == "Default");
 
         if (hasMailSender)
+        {
             return;
+        }
 
         await core.Set<MailSender>().AddAsync(new MailSender
         {
@@ -135,14 +141,18 @@ public sealed partial class SecurityAccountEventIntegrationTests
         };
 
         if (!string.IsNullOrWhiteSpace(authToken))
+        {
             request.Headers.Authorization = new AuthenticationHeaderValue("bearer", authToken);
+        }
 
         using HttpResponseMessage response = await fixture.WebClient.SendAsync(request);
 
         string content = await response.Content.ReadAsStringAsync();
 
         if (response.StatusCode != HttpStatusCode.OK)
+        {
             throw new XunitException(BuildFailureMessage(content));
+        }
 
         using JsonDocument document = JsonDocument.Parse(content);
 
@@ -159,7 +169,9 @@ public sealed partial class SecurityAccountEventIntegrationTests
     private static string WithAuthToken(string relativeUrl, string authToken)
     {
         if (string.IsNullOrWhiteSpace(authToken))
+        {
             return relativeUrl;
+        }
 
         string separator = relativeUrl.Contains('?')
             ? "&"
@@ -309,7 +321,9 @@ public sealed partial class SecurityAccountEventIntegrationTests
                 && email.ReceivedOn >= from.AddMinutes(-1));
 
             if (receivedEmail is not null)
+            {
                 return receivedEmail;
+            }
 
             await Task.Delay(5000);
         }
@@ -326,7 +340,9 @@ public sealed partial class SecurityAccountEventIntegrationTests
             RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         if (!match.Success)
+        {
             throw new InvalidOperationException($"Could not find a token link in email '{email.Subject}'.");
+        }
 
         return WebUtility.UrlDecode(match.Groups[1].Value);
     }
@@ -389,7 +405,9 @@ public sealed partial class SecurityAccountEventIntegrationTests
             .ToArrayAsync();
 
         if (ssoUsers.Length == 0)
+        {
             return;
+        }
 
         string[] ssoUserIds = ssoUsers.Select(user => user.Id).ToArray();
         SsoToken[] tokens = await sso.Set<SsoToken>().IgnoreQueryFilters()
@@ -426,7 +444,9 @@ public sealed partial class SecurityAccountEventIntegrationTests
     private static string Tail(string value, int length = 6000)
     {
         if (string.IsNullOrWhiteSpace(value) || value.Length <= length)
+        {
             return value ?? string.Empty;
+        }
 
         return value[^length..];
     }
@@ -472,7 +492,9 @@ public sealed partial class SecurityAccountEventIntegrationTests
         string value = TryReadMailSetting(names);
 
         if (!string.IsNullOrWhiteSpace(value))
+        {
             return value;
+        }
 
         throw new InvalidOperationException(
             $"Missing mail integration environment variable. Checked: {string.Join(", ", names)}.");
@@ -488,7 +510,9 @@ public sealed partial class SecurityAccountEventIntegrationTests
                 ?? Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.Machine);
 
             if (!string.IsNullOrWhiteSpace(value))
+            {
                 return value;
+            }
         }
 
         return null;
@@ -502,7 +526,9 @@ public sealed partial class SecurityAccountEventIntegrationTests
         for (int attempt = 0; attempt < attempts; attempt++)
         {
             if (await predicate())
+            {
                 return;
+            }
 
             await Task.Delay(delayMilliseconds);
         }
