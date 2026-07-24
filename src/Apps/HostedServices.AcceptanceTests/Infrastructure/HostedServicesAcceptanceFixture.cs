@@ -89,10 +89,10 @@ public sealed class HostedServicesAcceptanceFixture : IAsyncLifetime
             ["Eventing__Http__HubUrl"] = Environment.GetEnvironmentVariable(variable: "Eventing__Http__HubUrl"),
         };
 
-        Environment.SetEnvironmentVariable(variable: "ConnectionStrings__Core",value: settings.CoreConnectionString);
-        Environment.SetEnvironmentVariable(variable: "ConnectionStrings__SSO",value: settings.SsoConnectionString);
-        Environment.SetEnvironmentVariable(variable: "Settings__DecryptionKey",value: settings.DecryptionKey);
-        Environment.SetEnvironmentVariable(variable: "Eventing__Http__HubUrl",value: string.Empty);
+        Environment.SetEnvironmentVariable(variable: "ConnectionStrings__Core", value: settings.CoreConnectionString);
+        Environment.SetEnvironmentVariable(variable: "ConnectionStrings__SSO", value: settings.SsoConnectionString);
+        Environment.SetEnvironmentVariable(variable: "Settings__DecryptionKey", value: settings.DecryptionKey);
+        Environment.SetEnvironmentVariable(variable: "Eventing__Http__HubUrl", value: string.Empty);
     }
 
     private void RestoreEnvironment()
@@ -104,7 +104,7 @@ public sealed class HostedServicesAcceptanceFixture : IAsyncLifetime
 
         foreach ((string name, string value) in previousEnvironmentValues)
         {
-            Environment.SetEnvironmentVariable(variable: name,value: value);
+            Environment.SetEnvironmentVariable(variable: name, value: value);
         }
     }
 
@@ -126,7 +126,7 @@ public sealed class HostedServicesAcceptanceFixture : IAsyncLifetime
         }
 
         string suffix = typeof(HostedServicesAcceptanceFixture).Assembly.GetName().Name!
-            .Replace(oldValue: ".AcceptanceTests",newValue: string.Empty,comparisonType: StringComparison.Ordinal)
+            .Replace(oldValue: ".AcceptanceTests", newValue: string.Empty, comparisonType: StringComparison.Ordinal)
             .ToLowerInvariant();
 
         builder.InitialCatalog = $"{databaseName}-{suffix}";
@@ -137,8 +137,8 @@ public sealed class HostedServicesAcceptanceFixture : IAsyncLifetime
     {
         string connectionString =
             Environment.GetEnvironmentVariable(variable: variableName)
-            ?? Environment.GetEnvironmentVariable(variable: variableName,target: EnvironmentVariableTarget.User)
-            ?? Environment.GetEnvironmentVariable(variable: variableName,target: EnvironmentVariableTarget.Machine);
+            ?? Environment.GetEnvironmentVariable(variable: variableName, target: EnvironmentVariableTarget.User)
+            ?? Environment.GetEnvironmentVariable(variable: variableName, target: EnvironmentVariableTarget.Machine);
 
         if (!string.IsNullOrWhiteSpace(value: connectionString))
         {

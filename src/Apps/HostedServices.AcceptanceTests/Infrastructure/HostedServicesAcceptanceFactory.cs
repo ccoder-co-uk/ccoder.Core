@@ -32,7 +32,7 @@ internal sealed class HostedServicesAcceptanceFactory
         builder.ConfigureAppConfiguration(configureDelegate: (_, config) =>
         {
             config.AddInMemoryCollection(
-initialData:             [
+initialData: [
                 new KeyValuePair<string, string>("ConnectionStrings:Core", settings.CoreConnectionString),
                 new KeyValuePair<string, string>("ConnectionStrings:SSO", settings.SsoConnectionString),
                 new KeyValuePair<string, string>("Settings:DecryptionKey", settings.DecryptionKey),
@@ -47,28 +47,28 @@ initialData:             [
             services.RemoveAll<ISecurityDbContextFactory>();
 
             services.AddSingleton(
-implementationInstance:                 new Config
-                {
-                    ConnectionStrings = new Dictionary<string, string>
-                    {
-                        ["Core"] = settings.CoreConnectionString,
-                        ["SSO"] = settings.SsoConnectionString,
-                    },
-                    Settings = new Dictionary<string, string>
-                    {
-                        ["DecryptionKey"] = settings.DecryptionKey,
-                    },
-                    Services = new Dictionary<string, string>(),
-                });
+implementationInstance: new Config
+{
+    ConnectionStrings = new Dictionary<string, string>
+    {
+        ["Core"] = settings.CoreConnectionString,
+        ["SSO"] = settings.SsoConnectionString,
+    },
+    Settings = new Dictionary<string, string>
+    {
+        ["DecryptionKey"] = settings.DecryptionKey,
+    },
+    Services = new Dictionary<string, string>(),
+});
 
             services.AddScoped<ISecurityDbContextFactory>(
-implementationFactory:                 _ => new MSSQLSecurityDbContextFactory(settings.SsoConnectionString)
-                {
-                    GetAuthInfo = _ => new SSOAuthInfo { SSOUserId = "Guest" },
-                });
+implementationFactory: _ => new MSSQLSecurityDbContextFactory(settings.SsoConnectionString)
+{
+    GetAuthInfo = _ => new SSOAuthInfo { SSOUserId = "Guest" },
+});
 
             cCoder.Data.IServiceCollectionExtensions.AddCoreData(
-services:                 services,connectionString:                 settings.CoreConnectionString);
+services: services, connectionString: settings.CoreConnectionString);
         });
     }
 }

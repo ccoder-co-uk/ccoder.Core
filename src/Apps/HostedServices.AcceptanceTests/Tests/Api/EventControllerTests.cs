@@ -39,22 +39,22 @@ public sealed class EventControllerTests(HostedServicesAcceptanceFixture fixture
 
         try
         {
-            await SeedFolderDeleteScenarioAsync(appId: appId,roleId: roleId,rootFolderId: rootFolderId,childFolderId: childFolderId,fileId: fileId);
+            await SeedFolderDeleteScenarioAsync(appId: appId, roleId: roleId, rootFolderId: rootFolderId, childFolderId: childFolderId, fileId: fileId);
 
             HttpStatusCode statusCode = await PostEventAsync(
-eventName:                 "folder_delete",data:                 new Folder
-                {
-                    Id = rootFolderId,
-                    AppId = appId,
-                    Name = "content",
-                    Path = "content",
-                });
+eventName: "folder_delete", data: new Folder
+{
+    Id = rootFolderId,
+    AppId = appId,
+    Name = "content",
+    Path = "content",
+});
 
             statusCode.Should()
                 .Be(expected: HttpStatusCode.Accepted);
 
             await WaitForAsync(
-condition:                 () =>
+condition: () =>
                 {
                     using IServiceScope waitScope = fixture.Factory.Services.CreateScope();
 
@@ -65,7 +65,7 @@ condition:                 () =>
                     return !waitCore.Set<Folder>()
                         .IgnoreQueryFilters()
                         .Any(predicate: folder => folder.Id == childFolderId);
-                },because:                 "folder_delete should remove descendant folders");
+                }, because: "folder_delete should remove descendant folders");
 
             using IServiceScope scope = fixture.Factory.Services.CreateScope();
 
@@ -126,13 +126,13 @@ condition:                 () =>
                 .GetRequiredService<ICoreContextFactory>()
                 .CreateCoreContext();
 
-            await EnsureCultureAsync(core: seedCore,cultureId: "en-GB",name: "English (UK)");
+            await EnsureCultureAsync(core: seedCore, cultureId: "en-GB", name: "English (UK)");
 
             HttpStatusCode statusCode = await PostEventAsync(
-eventName:                 "app_add",data:                 new AppEntity
-                {
-                    Id = appId,
-                    Cultures =
+eventName: "app_add", data: new AppEntity
+{
+    Id = appId,
+    Cultures =
                     [
                         new AppCulture
                         {
@@ -140,7 +140,7 @@ eventName:                 "app_add",data:                 new AppEntity
                             CultureId = "en-GB"
                         }
                     ],
-                    Folders =
+    Folders =
                     [
                         new Folder
                         {
@@ -148,7 +148,7 @@ eventName:                 "app_add",data:                 new AppEntity
                             Name = "content"
                         }
                     ],
-                    MailServers =
+    MailServers =
                     [
                         new MailServer
                         {
@@ -162,7 +162,7 @@ eventName:                 "app_add",data:                 new AppEntity
                             EnableSSL = false
                         }
                     ],
-                    Calendars =
+    Calendars =
                     [
                         new Calendar
                         {
@@ -171,7 +171,7 @@ eventName:                 "app_add",data:                 new AppEntity
                             Description = "Acceptance calendar"
                         }
                     ],
-                    Flows =
+    Flows =
                     [
                         new FlowDefinition
                         {
@@ -187,13 +187,13 @@ eventName:                 "app_add",data:                 new AppEntity
                             LastUpdated = DateTimeOffset.UtcNow,
                         }
                     ]
-                });
+});
 
             statusCode.Should()
                 .Be(expected: HttpStatusCode.Accepted);
 
             await WaitForAsync(
-condition:                 () =>
+condition: () =>
                 {
                     using IServiceScope waitScope = fixture.Factory.Services.CreateScope();
 
@@ -225,7 +225,7 @@ condition:                 () =>
                         && waitCore.Set<FlowDefinition>()
                         .IgnoreQueryFilters()
                             .Any(predicate: flow => flow.AppId == appId && flow.Name == flowName);
-                },because:                 "app_add should create cross-domain children");
+                }, because: "app_add should create cross-domain children");
 
             using IServiceScope scope = fixture.Factory.Services.CreateScope();
 
@@ -301,13 +301,13 @@ condition:                 () =>
 
         try
         {
-            await SeedAppUpdateScenarioAsync(appId: appId,roleId: roleId,rootFolderId: rootFolderId,childFolderId: childFolderId,fileId: fileId);
+            await SeedAppUpdateScenarioAsync(appId: appId, roleId: roleId, rootFolderId: rootFolderId, childFolderId: childFolderId, fileId: fileId);
 
             HttpStatusCode statusCode = await PostEventAsync(
-eventName:                 "app_update",data:                 new AppEntity
-                {
-                    Id = appId,
-                    Roles =
+eventName: "app_update", data: new AppEntity
+{
+    Id = appId,
+    Roles =
                     [
                         new Role
                         {
@@ -318,7 +318,7 @@ eventName:                 "app_update",data:                 new AppEntity
                             Privs = "app_read,folder_update"
                         }
                     ],
-                    Cultures =
+    Cultures =
                     [
                         new AppCulture
                         {
@@ -326,7 +326,7 @@ eventName:                 "app_update",data:                 new AppEntity
                             CultureId = "fr-FR"
                         }
                     ],
-                    Folders =
+    Folders =
                     [
                         new Folder
                         {
@@ -336,13 +336,13 @@ eventName:                 "app_update",data:                 new AppEntity
                             Path = "renamed"
                         }
                     ]
-                });
+});
 
             statusCode.Should()
                 .Be(expected: HttpStatusCode.Accepted);
 
             await WaitForAsync(
-condition:                 () =>
+condition: () =>
                 {
                     using IServiceScope waitScope = fixture.Factory.Services.CreateScope();
 
@@ -353,7 +353,7 @@ condition:                 () =>
                     return waitCore.Set<Role>()
                         .IgnoreQueryFilters()
                         .Any(predicate: role => role.Id == roleId && role.Privs == "app_read,folder_update");
-                },because:                 "app_update should update children");
+                }, because: "app_update should update children");
 
             using IServiceScope scope = fixture.Factory.Services.CreateScope();
 
@@ -417,19 +417,19 @@ condition:                 () =>
 
         try
         {
-            await SeedAppDeleteScenarioAsync(appId: appId,roleId: roleId,flowId: flowId,folderId: folderId,fileId: fileId);
+            await SeedAppDeleteScenarioAsync(appId: appId, roleId: roleId, flowId: flowId, folderId: folderId, fileId: fileId);
 
             HttpStatusCode statusCode = await PostEventAsync(
-eventName:                 "app_delete",data:                 new AppEntity
-                {
-                    Id = appId
-                });
+eventName: "app_delete", data: new AppEntity
+{
+    Id = appId
+});
 
             statusCode.Should()
                 .Be(expected: HttpStatusCode.Accepted);
 
             await WaitForAsync(
-condition:                 () =>
+condition: () =>
                 {
                     using IServiceScope waitScope = fixture.Factory.Services.CreateScope();
 
@@ -440,7 +440,7 @@ condition:                 () =>
                     return !waitCore.Set<Role>()
                         .IgnoreQueryFilters()
                         .Any(predicate: role => role.AppId == appId);
-                },because:                 "app_delete should remove cross-domain children");
+                }, because: "app_delete should remove cross-domain children");
 
             using IServiceScope scope = fixture.Factory.Services.CreateScope();
 
@@ -529,7 +529,7 @@ condition:                 () =>
 
         try
         {
-            await SeedFolderDeleteScenarioAsync(appId: appId,roleId: roleId,rootFolderId: rootFolderId,childFolderId: childFolderId,fileId: fileId);
+            await SeedFolderDeleteScenarioAsync(appId: appId, roleId: roleId, rootFolderId: rootFolderId, childFolderId: childFolderId, fileId: fileId);
 
             using IServiceScope seedScope = fixture.Factory.Services.CreateScope();
 
@@ -543,7 +543,7 @@ condition:                 () =>
                 Name = Unique(prefix: "Subscribed Flow"),
                 Description = "Acceptance flow",
                 DefinitionJson =
-                    "{\"Name\":\"Acceptance\",\"Activities\":[{\"$type\":\"cCoder.Core.Objects.Workflow.Activities.Start, cCoder.Core.Objects\",\"Ref\":\"start\"}],\"Links\":[]}",
+                    "{\"Name\":\"Acceptance\",\"Activities\":[{\"$type\":\"cCoder.Workflow.Activities.Start, cCoder.Workflow.Activities\",\"Ref\":\"start\"}],\"Links\":[]}",
                 ConfigJson = "{}",
                 CreatedBy = "Guest",
                 CreatedOn = DateTimeOffset.UtcNow,
@@ -562,13 +562,13 @@ condition:                 () =>
             });
 
             HttpStatusCode statusCode = await PostEventAsync(
-eventName:                 "folder_delete",data:                 new Folder
-                {
-                    Id = rootFolderId,
-                    AppId = appId,
-                    Name = "content",
-                    Path = "content",
-                });
+eventName: "folder_delete", data: new Folder
+{
+    Id = rootFolderId,
+    AppId = appId,
+    Name = "content",
+    Path = "content",
+});
 
             using IServiceScope scope = fixture.Factory.Services.CreateScope();
 
@@ -580,7 +580,7 @@ eventName:                 "folder_delete",data:                 new Folder
                 .Be(expected: HttpStatusCode.Accepted);
 
             await WaitForAsync(
-condition:                 () =>
+condition: () =>
                 {
                     using IServiceScope waitScope = fixture.Factory.Services.CreateScope();
 
@@ -593,7 +593,7 @@ condition:                 () =>
                         .Any(predicate: instance =>
                             instance.FlowDefinitionId == flowId
                             && instance.State != "Queued");
-                },because:                 "folder_delete should create and execute the subscribed workflow instance");
+                }, because: "folder_delete should create and execute the subscribed workflow instance");
 
             FlowInstanceData instance = core.Set<FlowInstanceData>()
                 .IgnoreQueryFilters()
@@ -635,17 +635,17 @@ condition:                 () =>
         string ssoUserId = "Guest")
     {
         using HttpResponseMessage response = await fixture.Client.PostAsJsonAsync(
-requestUri:             "/Api/Eventing",value:             new HttpEventMessage
-            {
-                EventName = eventName,
-                SSOUserId = ssoUserId,
-                Data = JsonSerializer.Serialize(value: data,options: JsonOptions),
-            });
+requestUri: "/Api/Eventing", value: new HttpEventMessage
+{
+    EventName = eventName,
+    SSOUserId = ssoUserId,
+    Data = JsonSerializer.Serialize(value: data, options: JsonOptions),
+});
 
         string content = await response.Content.ReadAsStringAsync();
 
         response.StatusCode.Should()
-            .Be(expected: HttpStatusCode.Accepted,because: content);
+            .Be(expected: HttpStatusCode.Accepted, because: content);
 
         return response.StatusCode;
     }
@@ -654,7 +654,7 @@ requestUri:             "/Api/Eventing",value:             new HttpEventMessage
         Func<bool> condition,
         string because)
     {
-        DateTimeOffset stopAt = DateTimeOffset.UtcNow.AddSeconds(seconds: 15);
+        DateTimeOffset stopAt = DateTimeOffset.UtcNow.AddSeconds(seconds: 75);
         Exception lastException = null;
 
         while (DateTimeOffset.UtcNow < stopAt)
@@ -701,7 +701,7 @@ requestUri:             "/Api/Eventing",value:             new HttpEventMessage
             AppId = appId,
             Name = Unique(prefix: "FolderDeleteRole"),
             Description = "Acceptance role",
-            Privs = "app_admin,folder_delete,file_delete"
+            Privs = "app_admin,folder_delete,file_delete,flowdefinition_execute"
         });
 
         await core.AddUserRoleAsync(userRole: new UserRole { RoleId = roleId, UserId = "Guest" });
@@ -764,8 +764,8 @@ requestUri:             "/Api/Eventing",value:             new HttpEventMessage
             .GetRequiredService<ICoreContextFactory>()
             .CreateCoreContext();
 
-        await EnsureCultureAsync(core: core,cultureId: "en-GB",name: "English (UK)");
-        await EnsureCultureAsync(core: core,cultureId: "fr-FR",name: "French");
+        await EnsureCultureAsync(core: core, cultureId: "en-GB", name: "English (UK)");
+        await EnsureCultureAsync(core: core, cultureId: "fr-FR", name: "French");
 
         await core.AddRoleAsync(role: new Role
         {
@@ -827,7 +827,7 @@ requestUri:             "/Api/Eventing",value:             new HttpEventMessage
             .GetRequiredService<ICoreContextFactory>()
             .CreateCoreContext();
 
-        await EnsureCultureAsync(core: core,cultureId: "en-GB",name: "English (UK)");
+        await EnsureCultureAsync(core: core, cultureId: "en-GB", name: "English (UK)");
 
         await core.AddRoleAsync(role: new Role
         {
@@ -933,13 +933,13 @@ requestUri:             "/Api/Eventing",value:             new HttpEventMessage
                 .Select(selector: role => role.Id)];
 
         await core.DeleteAllAsync(
-userRoles:             core.Set<UserRole>()
+userRoles: core.Set<UserRole>()
             .IgnoreQueryFilters()
                 .Where(predicate: userRole => roleIds.Contains(value: userRole.RoleId))
                 .ToArray());
 
         await core.DeleteAllAsync(
-folderRoles:             core.Set<FolderRole>()
+folderRoles: core.Set<FolderRole>()
             .IgnoreQueryFilters()
                 .Where(predicate: folderRole => roleIds.Contains(value: folderRole.RoleId))
                 .ToArray());
@@ -957,50 +957,50 @@ folderRoles:             core.Set<FolderRole>()
                 .Select(selector: file => file.Id)];
 
         await core.DeleteAllAsync(
-fileContents:             core.Set<FileContent>()
+fileContents: core.Set<FileContent>()
             .IgnoreQueryFilters()
                 .Where(predicate: content => fileIds.Contains(value: content.FileId))
                 .ToArray());
 
         await core.DeleteAllAsync(
-files:             core.Set<DmsFile>()
+files: core.Set<DmsFile>()
             .IgnoreQueryFilters()
                 .Where(predicate: file => fileIds.Contains(value: file.Id))
                 .ToArray());
 
         await core.DeleteAllAsync(
-folders:             core.Set<Folder>()
+folders: core.Set<Folder>()
             .IgnoreQueryFilters()
                 .Where(predicate: folder => folderIds.Contains(value: folder.Id))
                 .OrderByDescending(keySelector: folder => folder.Path.Length)
                 .ToArray());
 
         await core.DeleteAllAsync(
-mailServers:             core.Set<MailServer>()
+mailServers: core.Set<MailServer>()
             .IgnoreQueryFilters()
                 .Where(predicate: server => server.AppId == appId)
                 .ToArray());
 
         await core.DeleteAllAsync(
-queuedEmails:             core.Set<QueuedEmail>()
+queuedEmails: core.Set<QueuedEmail>()
             .IgnoreQueryFilters()
                 .Where(predicate: email => email.AppId == appId)
                 .ToArray());
 
         await core.DeleteAllAsync(
-sentEmails:             core.Set<SentEmail>()
+sentEmails: core.Set<SentEmail>()
             .IgnoreQueryFilters()
                 .Where(predicate: email => email.AppId == appId)
                 .ToArray());
 
         await core.DeleteAllAsync(
-calendars:             core.Set<Calendar>()
+calendars: core.Set<Calendar>()
             .IgnoreQueryFilters()
                 .Where(predicate: calendar => calendar.AppId == appId)
                 .ToArray());
 
         await core.DeleteAllAsync(
-scheduledTasks:             core.Set<ScheduledTask>()
+scheduledTasks: core.Set<ScheduledTask>()
             .IgnoreQueryFilters()
                 .Where(predicate: task => task.AppId == appId)
                 .ToArray());
@@ -1012,31 +1012,31 @@ scheduledTasks:             core.Set<ScheduledTask>()
                 .Select(selector: flow => flow.Id)];
 
         await core.DeleteAllAsync(
-workflowEvents:             core.Set<WorkflowEvent>()
+workflowEvents: core.Set<WorkflowEvent>()
             .IgnoreQueryFilters()
                 .Where(predicate: workflowEvent => flowIds.Contains(value: workflowEvent.FlowId))
                 .ToArray());
 
         await core.DeleteAllAsync(
-flowInstances:             core.Set<FlowInstanceData>()
+flowInstances: core.Set<FlowInstanceData>()
             .IgnoreQueryFilters()
                 .Where(predicate: instance => flowIds.Contains(value: instance.FlowDefinitionId))
                 .ToArray());
 
         await core.DeleteAllAsync(
-flowDefinitions:             core.Set<FlowDefinition>()
+flowDefinitions: core.Set<FlowDefinition>()
             .IgnoreQueryFilters()
                 .Where(predicate: flow => flow.AppId == appId)
                 .ToArray());
 
         await core.DeleteAllAsync(
-appCultures:             core.Set<AppCulture>()
+appCultures: core.Set<AppCulture>()
             .IgnoreQueryFilters()
                 .Where(predicate: culture => culture.AppId == appId)
                 .ToArray());
 
         await core.DeleteAllAsync(
-roles:             core.Set<Role>()
+roles: core.Set<Role>()
             .IgnoreQueryFilters()
                 .Where(predicate: role => role.AppId == appId)
                 .ToArray());

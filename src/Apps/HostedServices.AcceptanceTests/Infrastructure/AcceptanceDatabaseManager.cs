@@ -17,8 +17,8 @@ internal sealed class AcceptanceDatabaseManager(
 {
     public Task ResetDatabasesAsync()
     {
-        EnsureSafeAcceptanceDatabase(connectionString: ssoConnectionString,protectedDatabaseName: "dev-Members");
-        EnsureSafeAcceptanceDatabase(connectionString: coreConnectionString,protectedDatabaseName: "dev-Core");
+        EnsureSafeAcceptanceDatabase(connectionString: ssoConnectionString, protectedDatabaseName: "dev-Members");
+        EnsureSafeAcceptanceDatabase(connectionString: coreConnectionString, protectedDatabaseName: "dev-Core");
 
         ForceDropDatabase(connectionString: ssoConnectionString);
         ForceDropDatabase(connectionString: coreConnectionString);
@@ -39,8 +39,8 @@ internal sealed class AcceptanceDatabaseManager(
 
     public Task MigrateDatabasesAsync()
     {
-        EnsureSafeAcceptanceDatabase(connectionString: ssoConnectionString,protectedDatabaseName: "dev-Members");
-        EnsureSafeAcceptanceDatabase(connectionString: coreConnectionString,protectedDatabaseName: "dev-Core");
+        EnsureSafeAcceptanceDatabase(connectionString: ssoConnectionString, protectedDatabaseName: "dev-Members");
+        EnsureSafeAcceptanceDatabase(connectionString: coreConnectionString, protectedDatabaseName: "dev-Core");
 
         using IServiceScope scope = services.CreateScope();
 
@@ -58,8 +58,8 @@ internal sealed class AcceptanceDatabaseManager(
 
     public Task DropDatabasesAsync()
     {
-        EnsureSafeAcceptanceDatabase(connectionString: ssoConnectionString,protectedDatabaseName: "dev-Members");
-        EnsureSafeAcceptanceDatabase(connectionString: coreConnectionString,protectedDatabaseName: "dev-Core");
+        EnsureSafeAcceptanceDatabase(connectionString: ssoConnectionString, protectedDatabaseName: "dev-Members");
+        EnsureSafeAcceptanceDatabase(connectionString: coreConnectionString, protectedDatabaseName: "dev-Core");
 
         ForceDropDatabase(connectionString: ssoConnectionString);
         ForceDropDatabase(connectionString: coreConnectionString);
@@ -98,7 +98,7 @@ BEGIN
     EXEC(@sql);
 END";
 
-        _ = command.Parameters.AddWithValue(parameterName: "@databaseName",value: databaseName);
+        _ = command.Parameters.AddWithValue(parameterName: "@databaseName", value: databaseName);
         command.ExecuteNonQuery();
     }
 
@@ -117,13 +117,13 @@ END";
             throw new InvalidOperationException("Acceptance database name is empty.");
         }
 
-        if (databaseName.Equals(value: protectedDatabaseName,comparisonType: StringComparison.OrdinalIgnoreCase))
+        if (databaseName.Equals(value: protectedDatabaseName, comparisonType: StringComparison.OrdinalIgnoreCase))
         {
             throw new InvalidOperationException(
                 $"Refusing to run acceptance database operations against protected database '{protectedDatabaseName}'.");
         }
 
-        if (!databaseName.Contains(value: "accept",comparisonType: StringComparison.OrdinalIgnoreCase))
+        if (!databaseName.Contains(value: "accept", comparisonType: StringComparison.OrdinalIgnoreCase))
         {
             throw new InvalidOperationException(
                 $"Refusing to run acceptance database operations against non-acceptance database '{databaseName}'.");

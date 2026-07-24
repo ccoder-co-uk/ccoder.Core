@@ -9,11 +9,11 @@ namespace HostedServices.AcceptanceTests.Infrastructure;
 internal static class AcceptanceAssetLoader
 {
     public static string AssetsDirectory =>
-        Path.Combine(path1: AppContext.BaseDirectory,path2: "Assets");
+        Path.Combine(path1: AppContext.BaseDirectory, path2: "Assets");
 
     public static string LoadText(string fileName)
     {
-        string path = Path.Combine(path1: AssetsDirectory,path2: fileName);
+        string path = Path.Combine(path1: AssetsDirectory, path2: fileName);
 
         if (!File.Exists(path: path))
         {

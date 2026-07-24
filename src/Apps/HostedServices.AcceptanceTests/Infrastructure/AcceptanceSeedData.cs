@@ -17,17 +17,17 @@ internal static class AcceptanceSeedData
         JsonElement value = json.RootElement.GetProperty(propertyName: "value");
 
         return JsonConvert.DeserializeObject<Package[]>(
-value:             value.GetRawText(),settings:             cCoder.Data.Extensions.ObjectExtensions.GetJSONSettings());
+value: value.GetRawText(), settings: cCoder.Data.Extensions.ObjectExtensions.GetJSONSettings());
     }
 
     public static T[] LoadPackageItems<T>(string packageName, string itemType)
     {
         Package package = LoadExportPackages()
             .First(predicate: found =>
-            string.Equals(a: found.Name,b: packageName,comparisonType: StringComparison.OrdinalIgnoreCase));
+            string.Equals(a: found.Name, b: packageName, comparisonType: StringComparison.OrdinalIgnoreCase));
 
         return package.Items
-            .Where(predicate: item => string.Equals(a: item.Type,b: itemType,comparisonType: StringComparison.OrdinalIgnoreCase))
+            .Where(predicate: item => string.Equals(a: item.Type, b: itemType, comparisonType: StringComparison.OrdinalIgnoreCase))
             .SelectMany(selector: item => UnpackItems<T>(data: item.Data))
             .ToArray();
     }
@@ -53,16 +53,16 @@ value:             value.GetRawText(),settings:             cCoder.Data.Extensio
                 : json.RootElement;
 
         return JsonConvert.DeserializeObject<CommonObject[]>(
-value:             value.GetRawText(),settings:             cCoder.Data.Extensions.ObjectExtensions.GetJSONSettings());
+value: value.GetRawText(), settings: cCoder.Data.Extensions.ObjectExtensions.GetJSONSettings());
     }
 
     private static IEnumerable<T> UnpackItems<T>(string data)
     {
         string trimmed = data.TrimStart();
 
-        return trimmed.StartsWith(value: "[",comparisonType: StringComparison.Ordinal)
+        return trimmed.StartsWith(value: "[", comparisonType: StringComparison.Ordinal)
             ? JsonConvert.DeserializeObject<T[]>(
-value:                 trimmed,settings:                 cCoder.Data.Extensions.ObjectExtensions.GetJSONSettings())
+value: trimmed, settings: cCoder.Data.Extensions.ObjectExtensions.GetJSONSettings())
             : [
                 JsonConvert.DeserializeObject<T>(
 value:                     trimmed,settings:                     cCoder.Data.Extensions.ObjectExtensions.GetJSONSettings())

@@ -57,15 +57,15 @@ internal sealed class AcceptanceApplicationSeeder(IServiceProvider services)
         if (!hasApp)
         {
             core.Add(
-entity:                 new App
-                {
-                    Name = "Acceptance",
-                    Domain = AppDomain,
-                    DefaultTheme = "Default",
-                    DefaultCultureId = string.Empty,
-                    TenantId = "acceptance",
-                    ConfigJson = AcceptanceAssetLoader.LoadText(fileName: "DefaultAppConfig.json"),
-                });
+entity: new App
+{
+    Name = "Acceptance",
+    Domain = AppDomain,
+    DefaultTheme = "Default",
+    DefaultCultureId = string.Empty,
+    TenantId = "acceptance",
+    ConfigJson = AcceptanceAssetLoader.LoadText(fileName: "DefaultAppConfig.json"),
+});
 
             await core.SaveChangesAsync();
         }
@@ -116,14 +116,14 @@ entity:                 new App
         if (!hasGuestUser)
         {
             core.Add(
-entity:                 new User
-                {
-                    Id = "Guest",
-                    DefaultCultureId = string.Empty,
-                    DisplayName = "Guest",
-                    Email = string.Empty,
-                    IsActive = true,
-                });
+entity: new User
+{
+    Id = "Guest",
+    DefaultCultureId = string.Empty,
+    DisplayName = "Guest",
+    Email = string.Empty,
+    IsActive = true,
+});
 
             await core.SaveChangesAsync();
         }
@@ -180,10 +180,10 @@ entity:                 new User
 
         foreach (CommonObject commonObject in commonObjects)
         {
-            NormalizeDateTimeOffsetProperty(commonObject: commonObject,propertyName: nameof(CommonObject.CreatedOn),fallbackValue: now);
-            NormalizeDateTimeOffsetProperty(commonObject: commonObject,propertyName: nameof(CommonObject.LastUpdated),fallbackValue: now);
-            NormalizeStringProperty(commonObject: commonObject,propertyName: nameof(CommonObject.CreatedBy),fallbackValue: "acceptance");
-            NormalizeStringProperty(commonObject: commonObject,propertyName: nameof(CommonObject.LastUpdatedBy),fallbackValue: "acceptance");
+            NormalizeDateTimeOffsetProperty(commonObject: commonObject, propertyName: nameof(CommonObject.CreatedOn), fallbackValue: now);
+            NormalizeDateTimeOffsetProperty(commonObject: commonObject, propertyName: nameof(CommonObject.LastUpdated), fallbackValue: now);
+            NormalizeStringProperty(commonObject: commonObject, propertyName: nameof(CommonObject.CreatedBy), fallbackValue: "acceptance");
+            NormalizeStringProperty(commonObject: commonObject, propertyName: nameof(CommonObject.LastUpdatedBy), fallbackValue: "acceptance");
         }
     }
 
@@ -194,13 +194,13 @@ entity:                 new User
 
         if (value is null)
         {
-            property.SetValue(obj: commonObject,value: fallbackValue);
+            property.SetValue(obj: commonObject, value: fallbackValue);
             return;
         }
 
         if (value is DateTimeOffset dateTimeOffset && dateTimeOffset == default)
         {
-            property.SetValue(obj: commonObject,value: fallbackValue);
+            property.SetValue(obj: commonObject, value: fallbackValue);
         }
     }
 
@@ -210,7 +210,7 @@ entity:                 new User
 
         if (property.GetValue(obj: commonObject) is not string value || string.IsNullOrWhiteSpace(value: value))
         {
-            property.SetValue(obj: commonObject,value: fallbackValue);
+            property.SetValue(obj: commonObject, value: fallbackValue);
         }
     }
 
@@ -234,7 +234,7 @@ entity:                 new User
         }
 
         Role[] roles = AcceptanceSeedData
-            .LoadPackageItems<Role>(packageName: "Roles",itemType: "Core/Role")
+            .LoadPackageItems<Role>(packageName: "Roles", itemType: "Core/Role")
             .Select(selector: role => new Role
             {
                 Id = Guid.NewGuid(),
@@ -260,7 +260,7 @@ entity:                 new User
         }
 
         Layout[] layouts = AcceptanceSeedData
-            .LoadPackageItems<Layout>(packageName: "Layouts",itemType: "Core/Layout")
+            .LoadPackageItems<Layout>(packageName: "Layouts", itemType: "Core/Layout")
             .Select(selector: layout => new Layout
             {
                 Id = 0,
@@ -292,7 +292,7 @@ entity:                 new User
         }
 
         Template[] templates = AcceptanceSeedData
-            .LoadPackageItems<Template>(packageName: "Templates",itemType: "Core/Template")
+            .LoadPackageItems<Template>(packageName: "Templates", itemType: "Core/Template")
             .Select(selector: template => new Template
             {
                 Id = 0,
@@ -323,7 +323,7 @@ entity:                 new User
         }
 
         Resource[] resources = AcceptanceSeedData
-            .LoadPackageItems<Resource>(packageName: "Resources",itemType: "Core/Resource")
+            .LoadPackageItems<Resource>(packageName: "Resources", itemType: "Core/Resource")
             .Select(selector: resource => new Resource
             {
                 Id = 0,
@@ -356,7 +356,7 @@ entity:                 new User
         }
 
         Component[] components = AcceptanceSeedData
-            .LoadPackageItems<Component>(packageName: "Components",itemType: "Core/Component")
+            .LoadPackageItems<Component>(packageName: "Components", itemType: "Core/Component")
             .Select(selector: component => new Component
             {
                 Id = 0,
@@ -389,7 +389,7 @@ entity:                 new User
         }
 
         Script[] scripts = AcceptanceSeedData
-            .LoadPackageItems<Script>(packageName: "Scripts",itemType: "Core/Script")
+            .LoadPackageItems<Script>(packageName: "Scripts", itemType: "Core/Script")
             .Select(selector: script => new Script
             {
                 Id = 0,
