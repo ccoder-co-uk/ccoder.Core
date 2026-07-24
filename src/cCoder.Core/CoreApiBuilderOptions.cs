@@ -20,6 +20,7 @@ using cCoder.Security.Exposures;
 using cCoder.Security.Objects;
 using cCoder.Core.Exposures;
 using cCoder.Core.Services.Foundations.Eventing;
+using cCoder.Core.Brokers.Eventing;
 using cCoder.Workflow;
 using cCoder.Workflow.Models;
 using cCoder.Eventing.Models;
@@ -497,6 +498,12 @@ services: services, ssoConnectionString: sessionCacheConnectionString);
 
         services.AddTransient<ServiceBusAppDeleteForwardingService>();
         services.AddTransient<ServiceBusFolderDeleteForwardingService>();
+        services.AddTransient<
+            IServiceBusAppDeleteForwardingBroker,
+            ServiceBusAppDeleteForwardingBroker>();
+        services.AddTransient<
+            IServiceBusFolderDeleteForwardingBroker,
+            ServiceBusFolderDeleteForwardingBroker>();
 
         services.AddAzureServiceBusEventing(configure: options =>
         {

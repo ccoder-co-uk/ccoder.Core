@@ -5,6 +5,7 @@
 using cCoder.Core.Brokers.AppSecurity;
 using cCoder.Core.Brokers.ContentManagement;
 using cCoder.Core.Brokers.DocumentManagement;
+using cCoder.Core.Brokers.Eventing;
 using cCoder.Core.Brokers.Http;
 using cCoder.Core.Brokers.Mail;
 using cCoder.Core.Brokers.Packaging;
@@ -25,6 +26,12 @@ public static partial class IServiceCollectionExtensions
         services.AddTransient<IAppSecurityAppBroker, AppSecurityAppBroker>();
         services.AddTransient<IPlanningAppBroker, PlanningAppBroker>();
         services.AddTransient<IDocumentManagementAppBroker, DocumentManagementAppBroker>();
+        services.AddTransient<
+            IServiceBusAppDeleteForwardingBroker,
+            ServiceBusAppDeleteForwardingBroker>();
+        services.AddTransient<
+            IServiceBusFolderDeleteForwardingBroker,
+            ServiceBusFolderDeleteForwardingBroker>();
         services.AddTransient<IWorkflowAppBroker, WorkflowAppBroker>();
         services.AddTransient<IMailAppBroker, MailAppBroker>();
         services.AddTransient<IMailManagerBroker, MailManagerBroker>();

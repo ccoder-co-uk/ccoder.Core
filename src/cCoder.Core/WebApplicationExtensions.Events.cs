@@ -82,10 +82,10 @@ name: SecurityAccountEventNames.PasswordResetRequested, handler: static (service
         }
 
         eventHub.ListenToEvent<CmsApp, ServiceBusAppDeleteForwardingService>(
-name: "app_delete", handler: static (service, entity) => service.ForwardAsync(app: entity));
+name: "app_delete", handler: static (service, entity) => service.ForwardAppDeleteAsync(app: entity));
 
         eventHub.ListenToEvent<Folder, ServiceBusFolderDeleteForwardingService>(
-name: "folder_delete", handler: static (service, entity) => service.ForwardAsync(folder: entity));
+name: "folder_delete", handler: static (service, entity) => service.ForwardFolderDeleteAsync(folder: entity));
 
         return app;
     }

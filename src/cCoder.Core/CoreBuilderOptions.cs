@@ -11,6 +11,7 @@ using cCoder.Core.Exposures.Cors;
 using cCoder.Core.Models;
 using cCoder.Core.Services.Foundations.Eventing;
 using cCoder.Core.Services.Foundations.AllowedOrigins;
+using cCoder.Core.Brokers.Eventing;
 using cCoder.Core.Services.Foundations.ContentManagement;
 using cCoder.Core.Services.Orchestrations;
 using cCoder.Core.Services.Processings.AllowedOrigins;
@@ -393,6 +394,12 @@ services: services, ssoConnectionString: sessionCacheConnectionString);
 
         services.TryAddTransient<ServiceBusAppDeleteForwardingService>();
         services.TryAddTransient<ServiceBusFolderDeleteForwardingService>();
+        services.TryAddTransient<
+            IServiceBusAppDeleteForwardingBroker,
+            ServiceBusAppDeleteForwardingBroker>();
+        services.TryAddTransient<
+            IServiceBusFolderDeleteForwardingBroker,
+            ServiceBusFolderDeleteForwardingBroker>();
 
         services.AddAzureServiceBusEventing(configure: options =>
         {

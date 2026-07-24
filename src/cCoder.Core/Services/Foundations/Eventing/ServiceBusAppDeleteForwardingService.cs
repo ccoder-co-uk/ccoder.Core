@@ -3,34 +3,37 @@
 // ---------------------------------------------------------------
 
 using cCoder.Data.Models.CMS;
-using cCoder.Eventing;
-using cCoder.Eventing.AzureServiceBus;
 using cCoder.Eventing.AzureServiceBus.Models;
 using cCoder.Eventing.Models;
-using cCoder.Security.Objects;
-using Microsoft.Extensions.DependencyInjection;
+using cCoder.Core.Brokers.Eventing;
 
 namespace cCoder.Core.Services.Foundations.Eventing;
 
-internal class ServiceBusAppDeleteForwardingService(
-    IAzureServiceBusEventHub serviceBusEventHub,
-    ISSOAuthInfo authInfo)
+internal sealed partial class ServiceBusAppDeleteForwardingService(
+    IServiceBusAppDeleteForwardingBroker forwardingBroker)
+    : IServiceBusAppDeleteForwardingService
 {
-    public async ValueTask ForwardAsync(App app)
-    {
-        await serviceBusEventHub.RaiseEventAsync(
-name: "app_delete", message: new ServiceBusEventMessage<App>
-{
-    AuthInfo = new ServiceBusEventAuthInfo
-    {
-        SSOUserId = authInfo?.SSOUserId ?? string.Empty
-    },
-    Data = new App
-    {
-        Id = app.Id,
-        Domain = app.Domain,
-        TenantId = app.TenantId
-    }
-});
-    }
+    public ValueTask ForwardAppDeleteAsync(App app) =>
+        TryCatch(operation: async () =>
+        {
+            ValidateAppDeleteOnForward(app: app);
+
+            ServiceBusEventMessage<App> message = new()
+            {
+                AuthInfo = new ServiceBusEventAuthInfo
+                {
+                    SSOUserId =
+                        forwardingBroker.GetCurrentSsoUserId(),
+                },
+                Data = new App
+                {
+                    Id = app.Id,
+                    Domain = app.Domain,
+                    TenantId = app.TenantId,
+                },
+            };
+
+            await forwardingBroker.RaiseAppDeleteEventAsync(
+                message: message);
+        });
 }

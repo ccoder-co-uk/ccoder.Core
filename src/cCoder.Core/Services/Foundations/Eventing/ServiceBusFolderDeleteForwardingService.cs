@@ -3,29 +3,32 @@
 // ---------------------------------------------------------------
 
 using cCoder.Data.Models.DMS;
-using cCoder.Eventing;
-using cCoder.Eventing.AzureServiceBus;
 using cCoder.Eventing.AzureServiceBus.Models;
 using cCoder.Eventing.Models;
-using cCoder.Security.Objects;
-using Microsoft.Extensions.DependencyInjection;
+using cCoder.Core.Brokers.Eventing;
 
 namespace cCoder.Core.Services.Foundations.Eventing;
 
-internal class ServiceBusFolderDeleteForwardingService(
-    IAzureServiceBusEventHub serviceBusEventHub,
-    ISSOAuthInfo authInfo)
+internal sealed partial class ServiceBusFolderDeleteForwardingService(
+    IServiceBusFolderDeleteForwardingBroker forwardingBroker)
+    : IServiceBusFolderDeleteForwardingService
 {
-    public async ValueTask ForwardAsync(Folder folder)
-    {
-        await serviceBusEventHub.RaiseEventAsync(
-name: "folder_delete", message: new ServiceBusEventMessage<Folder>
-{
-    AuthInfo = new ServiceBusEventAuthInfo
-    {
-        SSOUserId = authInfo?.SSOUserId ?? string.Empty
-    },
-    Data = folder
-});
-    }
+    public ValueTask ForwardFolderDeleteAsync(Folder folder) =>
+        TryCatch(operation: async () =>
+        {
+            ValidateFolderDeleteOnForward(folder: folder);
+
+            ServiceBusEventMessage<Folder> message = new()
+            {
+                AuthInfo = new ServiceBusEventAuthInfo
+                {
+                    SSOUserId =
+                        forwardingBroker.GetCurrentSsoUserId(),
+                },
+                Data = folder,
+            };
+
+            await forwardingBroker.RaiseFolderDeleteEventAsync(
+                message: message);
+        });
 }
