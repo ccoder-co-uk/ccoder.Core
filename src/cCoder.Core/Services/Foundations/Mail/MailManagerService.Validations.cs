@@ -2,14 +2,16 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.Mail.Models;
+using cCoder.Core.Dependencies;
 using cCoder.Data.Models.Mail;
 
 namespace cCoder.Core.Services.Foundations.Mail;
 
-internal interface IMailManagerService
+internal sealed partial class MailManagerService
 {
-    ValueTask<QueuedEmail> AddQueuedEmailAsync(
+    private static void ValidateQueuedEmailOnAdd(
         QueuedEmail newQueuedEmail,
-        bool checkPrivileges = false);
+        bool checkPrivileges) =>
+        ValidationRulesEngine.Validate(
+            inputs: [newQueuedEmail, checkPrivileges]);
 }

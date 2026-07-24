@@ -17,7 +17,7 @@ using TemplatedEmailDetails = cCoder.Mail.Models.TemplatedEmailDetails;
 
 namespace cCoder.Core.Services.Orchestrations;
 
-public partial class TemplatedEmailOrchestrationService(
+internal sealed partial class TemplatedEmailOrchestrationService(
     IContentManagementAppService contentManagementAppService,
     ITemplateRenderer templateRenderer,
     IMailSenderProcessingService mailSenderProcessingService,
@@ -66,7 +66,9 @@ appId: app.Id, name: templateName, culture: culture, model: model);
             SentByUserId = sentByUserId,
         };
 
-        return await mailManagerService.AddAsync(email: email, checkPrivileges: false);
+        return await mailManagerService.AddQueuedEmailAsync(
+            newQueuedEmail: email,
+            checkPrivileges: false);
     }
 
     public ValueTask<QueuedEmail> QueueAsync(TemplatedEmailDetails details)
