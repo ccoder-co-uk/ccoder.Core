@@ -11,6 +11,7 @@ using cCoder.Eventing.AzureServiceBus.Models;
 using cCoder.Eventing.Models;
 using cCoder.Logging;
 using cCoder.Mail;
+using cCoder.Core.Services.Aggregations;
 using cCoder.Security;
 using cCoder.Security.Objects.Events;
 using cCoder.Workflow;
@@ -55,14 +56,14 @@ public static partial class WebApplicationExtensions
         using IServiceScope scope = app.Services.CreateScope();
         IEventHub eventHub = scope.ServiceProvider.GetRequiredService<IEventHub>();
 
-        eventHub.ListenToEvent<SecurityAccountEvent, ISecurityAccountEmailOrchestrationService>(
-name: SecurityAccountEventNames.RegistrationCreated, handler: static (service, accountEvent) => service.QueueRegistrationCreatedEmailAsync(accountEvent: accountEvent));
+        eventHub.ListenToEvent<SecurityAccountEvent, ISecurityAccountEmailAggregationService>(
+name: SecurityAccountEventNames.RegistrationCreated, handler: static (service, accountEvent) => service.QueueRegistrationCreatedSecurityAccountEventEmailAsync(accountEvent: accountEvent));
 
-        eventHub.ListenToEvent<SecurityAccountEvent, ISecurityAccountEmailOrchestrationService>(
-name: SecurityAccountEventNames.InvitationCreated, handler: static (service, accountEvent) => service.QueueInvitationCreatedEmailAsync(accountEvent: accountEvent));
+        eventHub.ListenToEvent<SecurityAccountEvent, ISecurityAccountEmailAggregationService>(
+name: SecurityAccountEventNames.InvitationCreated, handler: static (service, accountEvent) => service.QueueInvitationCreatedSecurityAccountEventEmailAsync(accountEvent: accountEvent));
 
-        eventHub.ListenToEvent<SecurityAccountEvent, ISecurityAccountEmailOrchestrationService>(
-name: SecurityAccountEventNames.PasswordResetRequested, handler: static (service, accountEvent) => service.QueuePasswordResetRequestedEmailAsync(accountEvent: accountEvent));
+        eventHub.ListenToEvent<SecurityAccountEvent, ISecurityAccountEmailAggregationService>(
+name: SecurityAccountEventNames.PasswordResetRequested, handler: static (service, accountEvent) => service.QueuePasswordResetRequestedSecurityAccountEventEmailAsync(accountEvent: accountEvent));
 
         return app;
     }

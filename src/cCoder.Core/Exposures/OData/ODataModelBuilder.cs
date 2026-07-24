@@ -49,7 +49,6 @@ public abstract class ODataModelBuilder
     /// <summary>
     /// Used by shared metadata and lookup support
     /// </summary>
-
     protected virtual void AddCommonComplextypes()
     {
         _ = Builder.ComplexType<MetadataContainerSet>();

@@ -10,7 +10,7 @@ namespace cCoder.Core.Tests.Orchestrations;
 public partial class SecurityAccountEmailOrchestrationServiceTests
 {
     [Fact]
-    public async Task QueueInvitationCreatedEmailAsync_ShouldQueueInvitationEmail()
+    public async Task QueueInvitationCreatedSecurityAccountEventEmailAsync_ShouldQueueInvitationEmail()
     {
         App app = CreateApp(templateName: "UserInvite");
         SecurityAccountEvent accountEvent = CreateAccountEvent(kind: SecurityAccountEventKind.InvitationCreated);
@@ -19,7 +19,7 @@ public partial class SecurityAccountEmailOrchestrationServiceTests
         SetupQueuedEmailExpectation(
 templateName:             "UserInvite",subject:             "Core Portal: Confirm Invitation");
 
-        await orchestrationService.QueueInvitationCreatedEmailAsync(accountEvent: accountEvent);
+        await orchestrationService.QueueInvitationCreatedSecurityAccountEventEmailAsync(accountEvent: accountEvent);
 
         VerifyQueuedEmail(
 templateName:             "UserInvite",subject:             "Core Portal: Confirm Invitation");

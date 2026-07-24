@@ -10,7 +10,7 @@ namespace cCoder.Core.Tests.Orchestrations;
 public partial class SecurityAccountEmailOrchestrationServiceTests
 {
     [Fact]
-    public async Task QueuePasswordResetRequestedEmailAsync_ShouldQueueForgotPasswordEmail()
+    public async Task QueuePasswordResetRequestedSecurityAccountEventEmailAsync_ShouldQueueForgotPasswordEmail()
     {
         App app = CreateApp(templateName: "ForgotPassword");
         SecurityAccountEvent accountEvent = CreateAccountEvent(kind: SecurityAccountEventKind.PasswordResetRequested);
@@ -19,7 +19,7 @@ public partial class SecurityAccountEmailOrchestrationServiceTests
         SetupQueuedEmailExpectation(
 templateName:             "ForgotPassword",subject:             "Core Portal: Password Reset");
 
-        await orchestrationService.QueuePasswordResetRequestedEmailAsync(accountEvent: accountEvent);
+        await orchestrationService.QueuePasswordResetRequestedSecurityAccountEventEmailAsync(accountEvent: accountEvent);
 
         VerifyQueuedEmail(
 templateName:             "ForgotPassword",subject:             "Core Portal: Password Reset");

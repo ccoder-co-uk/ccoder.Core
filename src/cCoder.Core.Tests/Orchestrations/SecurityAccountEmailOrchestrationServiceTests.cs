@@ -3,6 +3,7 @@
 // ---------------------------------------------------------------
 
 using cCoder.Core.Services.Foundations.ContentManagement;
+using cCoder.Core.Services.Aggregations;
 using cCoder.Core.Services.Orchestrations;
 using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.Mail;
@@ -17,13 +18,13 @@ public partial class SecurityAccountEmailOrchestrationServiceTests
 {
     private readonly Mock<IContentManagementAppService> contentManagementAppServiceMock;
     private readonly Mock<ITemplatedEmailOrchestrationService> templatedEmailOrchestrationServiceMock;
-    private readonly SecurityAccountEmailOrchestrationService orchestrationService;
+    private readonly SecurityAccountEmailAggregationService orchestrationService;
 
     public SecurityAccountEmailOrchestrationServiceTests()
     {
         contentManagementAppServiceMock = new Mock<IContentManagementAppService>(MockBehavior.Strict);
         templatedEmailOrchestrationServiceMock = new Mock<ITemplatedEmailOrchestrationService>(MockBehavior.Strict);
-        orchestrationService = new SecurityAccountEmailOrchestrationService(
+        orchestrationService = new SecurityAccountEmailAggregationService(
             contentManagementAppServiceMock.Object,
             templatedEmailOrchestrationServiceMock.Object);
     }

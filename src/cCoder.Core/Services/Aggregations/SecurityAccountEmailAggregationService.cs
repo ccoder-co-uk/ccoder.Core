@@ -5,29 +5,54 @@
 using System.ComponentModel.DataAnnotations;
 using System.Web;
 using cCoder.Core.Services.Foundations.ContentManagement;
+using cCoder.Core.Services.Orchestrations;
 using cCoder.Data.Models.CMS;
 using cCoder.Security.Objects.Entities;
 using cCoder.Security.Objects.Events;
 using Microsoft.EntityFrameworkCore;
 
-namespace cCoder.Core.Services.Orchestrations;
+namespace cCoder.Core.Services.Aggregations;
 
-public class SecurityAccountEmailOrchestrationService(
+internal sealed partial class SecurityAccountEmailAggregationService(
     IContentManagementAppService contentManagementAppService,
     ITemplatedEmailOrchestrationService templatedEmailOrchestrationService)
-    : ISecurityAccountEmailOrchestrationService
+    : ISecurityAccountEmailAggregationService
 {
-    public ValueTask QueueRegistrationCreatedEmailAsync(SecurityAccountEvent accountEvent) =>
-        QueueAccountEmailAsync(
-accountEvent: accountEvent, templateName: "ConfirmRegistration", subject: "Confirm Registration");
+    public ValueTask QueueRegistrationCreatedSecurityAccountEventEmailAsync(
+        SecurityAccountEvent accountEvent) =>
+        TryCatch(operation: async () =>
+        {
+            ValidateSecurityAccountEventOnQueue(accountEvent: accountEvent);
 
-    public ValueTask QueueInvitationCreatedEmailAsync(SecurityAccountEvent accountEvent) =>
-        QueueAccountEmailAsync(
-accountEvent: accountEvent, templateName: "UserInvite", subject: "Confirm Invitation");
+            await QueueAccountEmailAsync(
+                accountEvent: accountEvent,
+                templateName: "ConfirmRegistration",
+                subject: "Confirm Registration");
+        });
 
-    public ValueTask QueuePasswordResetRequestedEmailAsync(SecurityAccountEvent accountEvent) =>
-        QueueAccountEmailAsync(
-accountEvent: accountEvent, templateName: "ForgotPassword", subject: "Password Reset");
+    public ValueTask QueueInvitationCreatedSecurityAccountEventEmailAsync(
+        SecurityAccountEvent accountEvent) =>
+        TryCatch(operation: async () =>
+        {
+            ValidateSecurityAccountEventOnQueue(accountEvent: accountEvent);
+
+            await QueueAccountEmailAsync(
+                accountEvent: accountEvent,
+                templateName: "UserInvite",
+                subject: "Confirm Invitation");
+        });
+
+    public ValueTask QueuePasswordResetRequestedSecurityAccountEventEmailAsync(
+        SecurityAccountEvent accountEvent) =>
+        TryCatch(operation: async () =>
+        {
+            ValidateSecurityAccountEventOnQueue(accountEvent: accountEvent);
+
+            await QueueAccountEmailAsync(
+                accountEvent: accountEvent,
+                templateName: "ForgotPassword",
+                subject: "Password Reset");
+        });
 
     private async ValueTask QueueAccountEmailAsync(
         SecurityAccountEvent accountEvent,
@@ -38,8 +63,6 @@ accountEvent: accountEvent, templateName: "ForgotPassword", subject: "Password R
         {
             return;
         }
-
-        ValidateAccountEvent(accountEvent: accountEvent);
 
         App app = ResolveApp(requestDomain: accountEvent.RequestDomain);
 
@@ -101,19 +124,6 @@ app: app, templateName: template.Name, culture: culture, model: renderModel, toE
 a: NormalizeDomain(domain: candidate.Domain), b: normalizedDomain, comparisonType: StringComparison.OrdinalIgnoreCase));
 
         return app;
-    }
-
-    private static void ValidateAccountEvent(SecurityAccountEvent accountEvent)
-    {
-        if (accountEvent?.User is null)
-        {
-            throw new ValidationException("Security account event user is required.");
-        }
-
-        if (string.IsNullOrWhiteSpace(value: accountEvent.User.Email))
-        {
-            throw new ValidationException("Security account event user email is required.");
-        }
     }
 
     private static string NormalizeDomain(string domain)

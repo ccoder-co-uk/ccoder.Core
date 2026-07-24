@@ -10,7 +10,7 @@ namespace cCoder.Core.Tests.Orchestrations;
 public partial class SecurityAccountEmailOrchestrationServiceTests
 {
     [Fact]
-    public async Task QueueRegistrationCreatedEmailAsync_ShouldQueueConfirmRegistrationEmail()
+    public async Task QueueRegistrationCreatedSecurityAccountEventEmailAsync_ShouldQueueConfirmRegistrationEmail()
     {
         App app = CreateApp(templateName: "ConfirmRegistration");
         SecurityAccountEvent accountEvent = CreateAccountEvent(kind: SecurityAccountEventKind.RegistrationCreated);
@@ -19,7 +19,7 @@ public partial class SecurityAccountEmailOrchestrationServiceTests
         SetupQueuedEmailExpectation(
 templateName:             "ConfirmRegistration",subject:             "Core Portal: Confirm Registration");
 
-        await orchestrationService.QueueRegistrationCreatedEmailAsync(accountEvent: accountEvent);
+        await orchestrationService.QueueRegistrationCreatedSecurityAccountEventEmailAsync(accountEvent: accountEvent);
 
         VerifyQueuedEmail(
 templateName:             "ConfirmRegistration",subject:             "Core Portal: Confirm Registration");
