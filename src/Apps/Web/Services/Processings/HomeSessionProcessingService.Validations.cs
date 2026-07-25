@@ -11,6 +11,11 @@ internal sealed partial class HomeSessionProcessingService
         ArgumentNullException.ThrowIfNull(
             argument: context);
 
+    private static void ValidateContextOnCreate(
+        HttpContext context) =>
+        ArgumentNullException.ThrowIfNull(
+            argument: context);
+
     private static void ValidateSessionOnGet(
         HttpContext context,
         string key)

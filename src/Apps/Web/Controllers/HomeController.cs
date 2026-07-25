@@ -2,7 +2,6 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using System.Dynamic;
 using cCoder.ContentManagement.Exposures;
 using cCoder.ContentManagement.Models;
 using cCoder.Data;
@@ -28,61 +27,9 @@ namespace Web.Controllers
         private readonly ISetupRequestHostManager setupRequestHostManager;
         private readonly IHomeSessionManager homeSessionManager;
 
-        private ICoreAuthInfo GetAuthInfo() =>
-            HttpContext?.RequestServices.GetService<ICoreAuthInfo>()
-            ?? new CoreAuthInfo { SSOUserId = "Guest" };
-
         private string GetHost() =>
             Request.Host.Host.Replace(oldValue: "www.",newValue: "")
                 .ToLowerInvariant();
-
-        private ExpandoObject CreateExpandoObject()
-        {
-            dynamic result = new ExpandoObject();
-            IDictionary<string, object> values = (IDictionary<string, object>)result;
-
-            result.apiRoot = (Request.Host.Port is not 443 and not 80)
-                ? $"{Request.Scheme}://{GetHost()}:{Request.Host.Port}/Api/"
-                : $"{Request.Scheme}://{GetHost()}/Api/";
-
-            ICoreAuthInfo authInfo = GetAuthInfo();
-
-            if (!string.IsNullOrWhiteSpace(value: authInfo.SSOUserId)
-                && !string.Equals(a: authInfo.SSOUserId,b: "Guest",comparisonType: StringComparison.OrdinalIgnoreCase))
-            {
-                values["user"] = authInfo.SSOUserId;
-            }
-
-            string token = Request.Query["t"].ToString();
-
-            if (!string.IsNullOrWhiteSpace(value: token))
-            {
-                values["token"] = token;
-            }
-
-            if (!homeSessionManager.CanUseSession(
-                context: HttpContext))
-            {
-                return result;
-            }
-
-            foreach (string key in HttpContext.Session.Keys)
-            {
-                if (key == "ssoUser")
-                {
-                    values["user"] = authInfo.SSOUserId;
-                }
-                else
-                {
-                    values[key] =
-                        homeSessionManager.GetSessionValue(
-                            context: HttpContext,
-                            key: key);
-                }
-            }
-
-            return (ExpandoObject)result;
-        }
 
         public HomeController(
             IPageRenderer pageRenderer,
@@ -206,7 +153,9 @@ request:                     new PageRenderRequest
 
         private void SetupViewBag(bool edit, App app, RenderResult page)
         {
-            dynamic session = CreateExpandoObject();
+            dynamic session =
+                homeSessionManager.CreateExpandoObject(
+                    context: HttpContext);
 
             session.app = new
             {

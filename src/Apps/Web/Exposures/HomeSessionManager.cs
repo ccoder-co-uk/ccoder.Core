@@ -2,6 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System.Dynamic;
 using Web.Services.Processings;
 
 namespace Web.Exposures;
@@ -13,6 +14,11 @@ internal sealed class HomeSessionManager(
     public bool CanUseSession(
         HttpContext context) =>
         homeSessionProcessingService.CanUseSession(
+            context: context);
+
+    public ExpandoObject CreateExpandoObject(
+        HttpContext context) =>
+        homeSessionProcessingService.CreateExpandoObject(
             context: context);
 
     public string GetSessionValue(
