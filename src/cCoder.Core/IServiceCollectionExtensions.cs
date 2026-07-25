@@ -34,6 +34,7 @@ using cCoder.Core.Services.Orchestrations;
 using cCoder.Core.Services.Processings.AllowedOrigins;
 using cCoder.Core.Services.Processings.Setup;
 using cCoder.Core.Services.Foundations.Setup;
+using cCoder.Core.Services.Foundations.AppSecurity;
 using cCoder.Core.Brokers.Setup;
 using cCoder.Core.Services.Setup;
 using cCoder.Data;
@@ -238,6 +239,8 @@ predicate: (documentName, apiDescription) =>
         services.AddScoped<ISecuritySetupContextBroker, SecuritySetupContextBroker>();
         services.AddScoped<ICoreSetupStateService, CoreSetupStateService>();
         services.AddScoped<ISecuritySetupStateService, SecuritySetupStateService>();
+        services.AddScoped<IAppSecurityAppService, AppSecurityAppService>();
+        services.AddScoped<IAppSecurityUserRoleService, AppSecurityUserRoleService>();
         services.AddScoped<
             IFirstTimeSetupStateOrchestrationService,
             FirstTimeSetupStateOrchestrationService>();

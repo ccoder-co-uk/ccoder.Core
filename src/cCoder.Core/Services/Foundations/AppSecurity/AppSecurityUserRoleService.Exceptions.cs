@@ -6,7 +6,7 @@ using cCoder.Core.Models.Exceptions;
 
 namespace cCoder.Core.Services.Foundations.AppSecurity;
 
-internal sealed partial class AppSecurityAppService
+internal sealed partial class AppSecurityUserRoleService
 {
     private static async ValueTask TryCatch(
         Func<ValueTask> operation)

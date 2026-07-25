@@ -6,11 +6,9 @@ using cCoder.Data.Models.CMS;
 
 namespace cCoder.Core.Services.Foundations.AppSecurity;
 
-internal interface IAppSecurityAppService
+internal sealed partial class AppSecurityUserRoleService
 {
-    ValueTask AddAppAsync(App newApp);
-
-    ValueTask UpdateAppAsync(App updatedApp);
-
-    ValueTask DeleteAppAsync(int appId);
+    private static void ValidateAppOnSave(App app) =>
+        ArgumentNullException.ThrowIfNull(
+            argument: app);
 }

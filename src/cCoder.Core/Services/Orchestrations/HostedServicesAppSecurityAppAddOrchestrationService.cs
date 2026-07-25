@@ -3,15 +3,13 @@
 // ---------------------------------------------------------------
 
 using cCoder.Data.Models.CMS;
-using cCoder.Data.Models.Security;
-using AppSecurityAppOrchestrationService = cCoder.AppSecurity.Services.Orchestrations.IAppOrchestrationService;
-using AppSecurityUserRoleBroker = cCoder.AppSecurity.Brokers.Storages.IUserRoleBroker;
+using cCoder.Core.Services.Foundations.AppSecurity;
 
 namespace cCoder.Core.Services.Orchestrations;
 
 internal sealed partial class HostedServicesAppSecurityAppAddOrchestrationService(
-    AppSecurityAppOrchestrationService appOrchestrationService,
-    AppSecurityUserRoleBroker userRoleBroker)
+    IAppSecurityAppService appSecurityAppService,
+    IAppSecurityUserRoleService appSecurityUserRoleService)
     : IHostedServicesAppSecurityAppAddOrchestrationService
 {
     public ValueTask HandleAppAsync(App app) =>
@@ -19,38 +17,10 @@ internal sealed partial class HostedServicesAppSecurityAppAddOrchestrationServic
         {
             ValidateAppOnHandle(app: app);
 
-            await appOrchestrationService.AddAppAsync(app: app);
-            await SaveRoleUsersAsync(app: app);
+            await appSecurityAppService.AddAppAsync(
+                newApp: app);
+
+            await appSecurityUserRoleService.SaveAppUserRolesAsync(
+                app: app);
         });
-
-    private async ValueTask SaveRoleUsersAsync(App app)
-    {
-        UserRole[] userRoles =
-            [.. (app.Roles ?? [])
-                .SelectMany(selector: role => role.Users ?? [])
-                .Where(predicate: userRole =>
-                    userRole is not null &&
-                    userRole.RoleId != Guid.Empty &&
-                    !string.IsNullOrWhiteSpace(value: userRole.UserId))
-                .GroupBy(keySelector: userRole => $"{userRole.RoleId:N}:{userRole.UserId}",comparer: StringComparer.OrdinalIgnoreCase)
-                .Select(selector: group => new UserRole
-                {
-                    RoleId = group.First().RoleId,
-                    UserId = group.First().UserId
-                })];
-
-        foreach (UserRole userRole in userRoles)
-        {
-            bool exists = userRoleBroker
-                .GetAllUserRoles(ignoreFilters: true)
-                .Any(predicate: existing =>
-                    existing.RoleId == userRole.RoleId &&
-                    existing.UserId == userRole.UserId);
-
-            if (!exists)
-            {
-                await userRoleBroker.AddUserRoleAsync(entity: userRole);
-            }
-        }
-    }
 }
