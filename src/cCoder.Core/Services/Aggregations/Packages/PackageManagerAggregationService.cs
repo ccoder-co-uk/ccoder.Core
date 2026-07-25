@@ -11,14 +11,13 @@ using cCoder.Data.Models.DMS;
 using cCoder.Data.Models.Security;
 using cCoder.Packaging.Models;
 using cCoder.Data.Models.Packaging;
-using ExternalPackageManagerAggregationService =
-    cCoder.Packaging.Services.Aggregations.IPackageManagerAggregationService;
+using cCoder.Core.Brokers.Packaging;
 using Microsoft.EntityFrameworkCore;
 
 namespace cCoder.Core.Services.Aggregations.Packages;
 
 internal sealed partial class PackageManagerAggregationService(
-    ExternalPackageManagerAggregationService packageManagerAggregationService,
+    IPackageBroker packageBroker,
     ICoreContextFactory coreContextFactory
 ) : IPackageManagerAggregationService
 {
@@ -113,7 +112,10 @@ internal sealed partial class PackageManagerAggregationService(
                 continue;
             }
 
-            exportedPackages.Add(item: packageManagerAggregationService.ExportPackage(appId: appId, packageName: packageName));
+            exportedPackages.Add(
+                item: packageBroker.ExportPackage(
+                    appId: appId,
+                    packageName: packageName));
         }
 
         return exportedPackages.ToArray();
@@ -163,15 +165,18 @@ internal sealed partial class PackageManagerAggregationService(
 
             if (remainingItems.Length > 0)
             {
-                await packageManagerAggregationService.ImportPackageAsync(
-appId: appId, package: new Package(sanitizedPackage.Name)
-{
-    Id = sanitizedPackage.Id,
-    Description = sanitizedPackage.Description,
-    Category = sanitizedPackage.Category,
-    SourceApi = sanitizedPackage.SourceApi,
-    Items = remainingItems,
-});
+                Package remainingPackage = new(sanitizedPackage.Name)
+                {
+                    Id = sanitizedPackage.Id,
+                    Description = sanitizedPackage.Description,
+                    Category = sanitizedPackage.Category,
+                    SourceApi = sanitizedPackage.SourceApi,
+                    Items = remainingItems,
+                };
+
+                await packageBroker.ImportPackageAsync(
+                    appId: appId,
+                    package: remainingPackage);
             }
 
             PackageItem[] pageItems = (sanitizedPackage.Items ?? [])

@@ -10,6 +10,7 @@ using cCoder.Core.Brokers.Eventing;
 using cCoder.Core.Brokers.Http;
 using cCoder.Core.Brokers.Mail;
 using cCoder.Core.Brokers.Planning;
+using cCoder.Core.Brokers.Packaging;
 using cCoder.Core.Brokers.Workflow;
 using cCoder.Core.Dependencies.Eventing;
 using cCoder.Core.Dependencies.Packaging;
@@ -34,7 +35,6 @@ using cCoder.Core.Services.Orchestrations;
 using cCoder.Core.Services.Processings.AllowedOrigins;
 using cCoder.Core.Services.Processings.Setup;
 using cCoder.Core.Services.Foundations.Setup;
-using cCoder.Core.Services.Foundations.AppSecurity;
 using cCoder.Core.Brokers.Setup;
 using cCoder.Core.Services.Setup;
 using cCoder.Data;
@@ -207,6 +207,8 @@ predicate: (documentName, apiDescription) =>
         services.AddTransient<IWorkflowAppService, WorkflowAppService>();
         services.AddTransient<IMailAppService, MailAppService>();
         services.AddTransient<IMailManagerService, MailManagerService>();
+        services.AddTransient<IPackageManagerDependency, PackageManagerDependency>();
+        services.AddTransient<IPackageBroker, PackageBroker>();
     }
 
     private static void AddCoreProcessingServices(IServiceCollection services) =>
