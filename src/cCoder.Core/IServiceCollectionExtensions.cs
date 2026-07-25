@@ -163,22 +163,11 @@ predicate: (documentName, apiDescription) =>
 
     private static void AddCoreBrokers(IServiceCollection services)
     {
-        services.AddTransient<
-            IServiceBusEventingBroker,
-            ServiceBusEventingDependency>();
         services.AddTransient<IContentManagementAppBroker, ContentManagementAppBroker>();
         services.AddTransient<IHttpRequestBroker, HttpRequestBroker>();
         services.AddTransient<IAppSecurityAppBroker, AppSecurityAppBroker>();
         services.AddTransient<IPlanningAppBroker, PlanningAppBroker>();
         services.AddTransient<IDocumentManagementAppBroker, DocumentManagementAppBroker>();
-
-        services.AddTransient<
-            IServiceBusAppDeleteForwardingBroker,
-            ServiceBusAppDeleteForwardingBroker>();
-
-        services.AddTransient<
-            IServiceBusFolderDeleteForwardingBroker,
-            ServiceBusFolderDeleteForwardingBroker>();
 
         services.AddTransient<IWorkflowAppBroker, WorkflowAppBroker>();
         services.AddTransient<IMailAppBroker, MailAppBroker>();

@@ -7,6 +7,7 @@ using cCoder.AppSecurity.Models;
 using cCoder.ContentManagement;
 using cCoder.ContentManagement.Models;
 using cCoder.Core.Models;
+using cCoder.Core.Dependencies.Eventing;
 using cCoder.Data;
 using cCoder.DocumentManagement;
 using cCoder.DocumentManagement.Models;
@@ -544,6 +545,10 @@ defaults: coreConfiguration, connectionStrings: connectionStrings, settings: set
 
         services.AddTransient<ServiceBusAppDeleteForwardingService>();
         services.AddTransient<ServiceBusFolderDeleteForwardingService>();
+
+        services.AddTransient<
+            IServiceBusEventingBroker,
+            ServiceBusEventingDependency>();
 
         services.AddTransient<
             IServiceBusAppDeleteForwardingBroker,

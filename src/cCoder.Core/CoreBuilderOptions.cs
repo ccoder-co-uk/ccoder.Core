@@ -5,6 +5,7 @@
 using cCoder.AppSecurity;
 using cCoder.ContentManagement;
 using cCoder.Core.Exposures;
+using cCoder.Core.Dependencies.Eventing;
 using cCoder.Core.Brokers.ContentManagement;
 using cCoder.Core.Brokers.Http;
 using cCoder.Core.Exposures.Cors;
@@ -444,6 +445,10 @@ defaults: coreConfiguration, connectionStrings: connectionStrings, settings: set
 
         services.TryAddTransient<ServiceBusAppDeleteForwardingService>();
         services.TryAddTransient<ServiceBusFolderDeleteForwardingService>();
+
+        services.TryAddTransient<
+            IServiceBusEventingBroker,
+            ServiceBusEventingDependency>();
 
         services.TryAddTransient<
             IServiceBusAppDeleteForwardingBroker,
