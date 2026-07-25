@@ -105,7 +105,7 @@
   <ItemGroup>
     <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
     <PackageReference Include="cCoder.AppSecurity" Version="2026.7.24.38" Condition="'$(UseLocalAppSecurity)' != 'true'" />
-    <PackageReference Include="cCoder.CodeAnalysis" Version="2026.7.25.159" />
+    <PackageReference Include="cCoder.CodeAnalysis" Version="2026.7.25.314" />
     <PackageReference Include="cCoder.ContentManagement" Version="2026.7.24.1154" Condition="'$(UseLocalContentManagement)' != 'true'" />
     <PackageReference Include="cCoder.Data" Version="2026.7.23.1914" Condition="'$(UseLocalData)' != 'true'" />
     <PackageReference Include="cCoder.DocumentManagement" Version="2026.7.24.325" Condition="'$(UseLocalDocumentManagement)' != 'true'" />
