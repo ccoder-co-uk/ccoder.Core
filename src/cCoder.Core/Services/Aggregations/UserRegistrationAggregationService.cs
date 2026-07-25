@@ -2,8 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.Security.Objects.DTOs;
-using cCoder.Security.Objects.Entities;
+using cCoder.Core.Models;
 using cCoder.Security.Services.Aggregations.Interfaces;
 
 namespace cCoder.Core.Services.Aggregations;
@@ -11,46 +10,68 @@ namespace cCoder.Core.Services.Aggregations;
 internal sealed partial class UserRegistrationAggregationService(
     IAuthenticationAggregationService authenticationAggregationService,
     IRegistrationAggregationService registrationAggregationService,
-    ICurrentUserAggregationService currentUserAggregationService)
-    : IUserRegistrationAggregationService
+    ICurrentUserAggregationService currentUserAggregationService
+) : IUserRegistrationAggregationService
 {
-    public ValueTask ConfirmRegistrationAsync(string token) =>
+    public ValueTask<UserRegistrationOperation>
+        ExecuteUserRegistrationOperationAsync(
+            UserRegistrationOperation userRegistrationOperation) =>
         TryCatch(operation: async () =>
         {
-            ValidateTokenOnConfirmRegistration(token: token);
+            ValidateUserRegistrationOperationOnExecute(
+                userRegistrationOperation: userRegistrationOperation);
 
-            await registrationAggregationService.ConfirmRegistration(
-                tokenId: token);
+            switch (userRegistrationOperation.Type)
+            {
+                case UserRegistrationOperationType.ConfirmRegistration:
+                    await registrationAggregationService
+                        .ConfirmRegistration(
+                            tokenId:
+                                userRegistrationOperation
+                                    .RegistrationToken);
+                    break;
+
+                case UserRegistrationOperationType.Login:
+                    userRegistrationOperation.AuthenticationToken =
+                        await authenticationAggregationService.LoginAsync(
+                            username:
+                                userRegistrationOperation.Username,
+                            password:
+                                userRegistrationOperation.Password);
+                    break;
+
+                case UserRegistrationOperationType.Logout:
+                    await authenticationAggregationService.LogoutAsync();
+                    break;
+
+                case UserRegistrationOperationType.RegisterUser:
+                    userRegistrationOperation.User =
+                        (await registrationAggregationService
+                            .RegisterUserAsync(
+                                registerForm:
+                                    userRegistrationOperation
+                                        .Registration))
+                        .User;
+                    break;
+
+                default:
+                    throw new InvalidOperationException(
+                        "The user registration operation is not asynchronous.");
+            }
+
+            return userRegistrationOperation;
         });
 
-    public ValueTask<Token> LoginAsync(
-        string username,
-        string password) =>
-        TryCatch(operation: async () =>
-        {
-            ValidateCredentialsOnLogin(
-                username: username,
-                password: password);
-
-            return await authenticationAggregationService.LoginAsync(
-                username: username,
-                password: password);
-        });
-
-    public ValueTask LogoutAsync() =>
-        TryCatch(operation: async () =>
-            await authenticationAggregationService.LogoutAsync());
-
-    public SSOUser Me() =>
+    public UserRegistrationOperation GetUserRegistrationOperation(
+        UserRegistrationOperation userRegistrationOperation) =>
         TryCatch(operation: () =>
-            currentUserAggregationService.GetCurrentUser());
-
-    public ValueTask<SSOUser> RegisterUserAsync(RegisterUser registerUser) =>
-        TryCatch(operation: async () =>
         {
-            ValidateRegisterUserOnRegister(registerUser: registerUser);
+            ValidateUserRegistrationOperationOnGet(
+                userRegistrationOperation: userRegistrationOperation);
 
-            return (await registrationAggregationService.RegisterUserAsync(
-                registerForm: registerUser)).User;
+            userRegistrationOperation.User =
+                currentUserAggregationService.GetCurrentUser();
+
+            return userRegistrationOperation;
         });
 }

@@ -3,21 +3,38 @@
 // ---------------------------------------------------------------
 
 using cCoder.Core.Dependencies;
-using cCoder.Security.Objects.DTOs;
+using cCoder.Core.Models;
 
 namespace cCoder.Core.Services.Aggregations;
 
 internal sealed partial class UserRegistrationAggregationService
 {
-    private static void ValidateTokenOnConfirmRegistration(string token) =>
-        ValidationRulesEngine.Validate(inputs: [token]);
+    private static void ValidateUserRegistrationOperationOnExecute(
+        UserRegistrationOperation userRegistrationOperation)
+    {
+        ValidationRulesEngine.Validate(
+            inputs: [userRegistrationOperation]);
 
-    private static void ValidateCredentialsOnLogin(
-        string username,
-        string password) =>
-        ValidationRulesEngine.Validate(inputs: [username, password]);
+        object[] operationInputs =
+            userRegistrationOperation.Type switch
+            {
+                UserRegistrationOperationType.ConfirmRegistration =>
+                    [userRegistrationOperation.RegistrationToken],
+                UserRegistrationOperationType.Login =>
+                    [
+                        userRegistrationOperation.Username,
+                        userRegistrationOperation.Password,
+                    ],
+                UserRegistrationOperationType.RegisterUser =>
+                    [userRegistrationOperation.Registration],
+                _ => [],
+            };
 
-    private static void ValidateRegisterUserOnRegister(
-        RegisterUser registerUser) =>
-        ValidationRulesEngine.Validate(inputs: [registerUser]);
+        ValidationRulesEngine.Validate(inputs: operationInputs);
+    }
+
+    private static void ValidateUserRegistrationOperationOnGet(
+        UserRegistrationOperation userRegistrationOperation) =>
+        ValidationRulesEngine.Validate(
+            inputs: [userRegistrationOperation]);
 }

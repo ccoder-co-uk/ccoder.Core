@@ -2,20 +2,16 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.Security.Objects.DTOs;
-using cCoder.Security.Objects.Entities;
+using cCoder.Core.Models;
 
 namespace cCoder.Core.Services.Aggregations;
 
 internal interface IUserRegistrationAggregationService
 {
-    ValueTask ConfirmRegistrationAsync(string token);
+    ValueTask<UserRegistrationOperation>
+        ExecuteUserRegistrationOperationAsync(
+            UserRegistrationOperation userRegistrationOperation);
 
-    ValueTask<Token> LoginAsync(string username, string password);
-
-    ValueTask LogoutAsync();
-
-    SSOUser Me();
-
-    ValueTask<SSOUser> RegisterUserAsync(RegisterUser registerUser);
+    UserRegistrationOperation GetUserRegistrationOperation(
+        UserRegistrationOperation userRegistrationOperation);
 }
