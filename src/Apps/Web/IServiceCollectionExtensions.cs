@@ -20,6 +20,9 @@ using Web.Dependencies.Filters;
 using Web.Services.Processings;
 using Web.Exposures;
 using Web.Services.Aggregations;
+using Web.Brokers.Api;
+using Web.Services.Foundations.Api;
+using Web.Services.Orchestrations.Api;
 
 namespace Web;
 
@@ -98,6 +101,14 @@ internal static class IServiceCollectionExtensions
         services.AddScoped<IHomeSessionManager, HomeSessionManager>();
         services.AddScoped<IApiCacheAggregationService, ApiCacheAggregationService>();
         services.AddScoped<IApiCacheManager, ApiCacheManager>();
+        services.AddScoped<IApiScriptExecutionBroker, ApiScriptExecutionBroker>();
+        services.AddScoped<IApiScriptAuthorizationService, ApiScriptAuthorizationService>();
+        services.AddScoped<IApiScriptExecutionService, ApiScriptExecutionService>();
+        services.AddScoped<IApiScriptOrchestrationService, ApiScriptOrchestrationService>();
+        services.AddScoped<IApiScriptManager, ApiScriptManager>();
+        services.AddScoped<IApiContextBroker, ApiContextBroker>();
+        services.AddScoped<IApiContextService, ApiContextService>();
+        services.AddScoped<IApiContextManager, ApiContextManager>();
 
         return services;
     }
