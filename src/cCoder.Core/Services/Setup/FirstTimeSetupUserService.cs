@@ -7,9 +7,11 @@ using cCoder.Data.Models.Security;
 using cCoder.Security.Services.Aggregations.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using cCoder.Core.Models;
+using System.CodeDom.Compiler;
 
 namespace cCoder.Core.Services.Setup;
 
+[GeneratedCode("decompilation-recovery", "1.0")]
 internal sealed class FirstTimeSetupUserService(
     IAuthenticationAggregationService authenticationAggregationService,
     ICoreContextFactory coreContextFactory)

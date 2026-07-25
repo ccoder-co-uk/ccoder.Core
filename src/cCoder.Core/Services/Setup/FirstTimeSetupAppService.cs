@@ -15,10 +15,12 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Reflection;
 using cCoder.Core.Models;
+using System.CodeDom.Compiler;
 using cCoder.Core.Exposures.Setup;
 
 namespace cCoder.Core.Services.Setup;
 
+[GeneratedCode("decompilation-recovery", "1.0")]
 internal sealed class FirstTimeSetupAppService(
     BaselineAssetCatalog assetService,
     ICoreContextFactory coreContextFactory,

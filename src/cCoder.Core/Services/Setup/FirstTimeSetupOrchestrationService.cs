@@ -3,6 +3,7 @@
 // ---------------------------------------------------------------
 
 using cCoder.Core.Models;
+using System.CodeDom.Compiler;
 using cCoder.Data;
 using cCoder.Data.Models.CMS;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ using System.Text.RegularExpressions;
 
 namespace cCoder.Core.Services.Setup;
 
+[GeneratedCode("decompilation-recovery", "1.0")]
 internal sealed class FirstTimeSetupOrchestrationService(
     IFirstTimeSetupStateService setupStateService,
     IFirstTimeSetupUserService userService,

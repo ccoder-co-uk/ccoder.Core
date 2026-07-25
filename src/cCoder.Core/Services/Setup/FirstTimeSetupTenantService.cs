@@ -8,10 +8,12 @@ using cCoder.Security.Exposures;
 using cCoder.Security.Objects.Entities;
 using Microsoft.EntityFrameworkCore;
 using cCoder.Core.Models;
+using System.CodeDom.Compiler;
 using System.Text.RegularExpressions;
 
 namespace cCoder.Core.Services.Setup;
 
+[GeneratedCode("decompilation-recovery", "1.0")]
 internal sealed class FirstTimeSetupTenantService(
     ITenantManager tenantManager,
     ISecurityDbContextFactory securityDbContextFactory)
