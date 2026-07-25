@@ -3,7 +3,6 @@
 // ---------------------------------------------------------------
 
 using cCoder.ContentManagement.Exposures.Caching;
-using cCoder.Core.Services.Orchestrations;
 using cCoder.Data;
 using cCoder.Data.Models;
 using cCoder.Data.Models.CMS;
@@ -81,11 +80,10 @@ internal sealed class FirstTimeSetupAppService(
 
         await EnsureGuestUserAsync(cancellationToken: cancellationToken);
 
-        IAppOrchestrationService appOrchestrationService =
-            serviceProvider.GetRequiredService<IAppOrchestrationService>();
-
         App app = await ResolveFirstAppAsync(
-request: request, tenantId: tenantId, appOrchestrationService: appOrchestrationService, cancellationToken: cancellationToken);
+            request: request,
+            tenantId: tenantId,
+            cancellationToken: cancellationToken);
 
         await EnsureDefaultAppRolesAsync(appId: app.Id, firstAdminUserId: firstAdminUserId, cancellationToken: cancellationToken);
         await EnsureBootstrapAdminMembershipsAsync(appId: app.Id, userId: firstAdminUserId, cancellationToken: cancellationToken);
@@ -139,7 +137,6 @@ request: request, tenantId: tenantId, appOrchestrationService: appOrchestrationS
     private async Task<App> ResolveFirstAppAsync(
         FirstTimeSetupRequest request,
         string tenantId,
-        IAppOrchestrationService appOrchestrationService,
         CancellationToken cancellationToken)
     {
         await using DbContext core = coreContextFactory.CreateCoreContext();
@@ -152,16 +149,25 @@ request: request, tenantId: tenantId, appOrchestrationService: appOrchestrationS
 
         if (existingApp is null)
         {
-            return await appOrchestrationService.AddAsync(
-app: new App
-{
-    Name = request.TenantName.Trim(),
-    Domain = request.Domain,
-    DefaultTheme = "Default",
-    DefaultCultureId = string.Empty,
-    TenantId = tenantId,
-    ConfigJson = assetService.LoadDefaultAppConfig()
-});
+            existingApp = new App
+            {
+                Name = request.TenantName.Trim(),
+                Domain = request.Domain,
+                DefaultTheme = "Default",
+                DefaultCultureId = string.Empty,
+                TenantId = tenantId,
+                ConfigJson = assetService.LoadDefaultAppConfig()
+            };
+
+            await core.Set<App>()
+                .AddAsync(
+                    entity: existingApp,
+                    cancellationToken: cancellationToken);
+
+            await core.SaveChangesAsync(
+                cancellationToken: cancellationToken);
+
+            return existingApp;
         }
 
         existingApp.Name = request.TenantName.Trim();
@@ -227,7 +233,6 @@ entity: new UserRole
         string[] administratorPrivileges =
         [
             .. privileges
-                .Where(predicate: privilege => privilege.Id != "app_create")
                 .Select(selector: privilege => privilege.Id)
         ];
 
@@ -713,10 +718,19 @@ core: core, appId: appId, templates: UnpackPackageItem<Template>(data: item.Data
             .Where(predicate: found => found.AppId == appId)
             .ToDictionaryAsync(keySelector: found => found.Path, elementSelector: found => found.Id, comparer: StringComparer.OrdinalIgnoreCase);
 
-        Dictionary<string, Guid> roleIdsByName = await core.Set<Role>()
+        Role[] roles = await core.Set<Role>()
             .IgnoreQueryFilters()
             .Where(predicate: found => found.AppId == appId)
-            .ToDictionaryAsync(keySelector: found => found.Name, elementSelector: found => found.Id, comparer: StringComparer.OrdinalIgnoreCase);
+            .ToArrayAsync();
+
+        Dictionary<string, Guid> roleIdsByName = roles
+            .GroupBy(
+                keySelector: found => found.Name,
+                comparer: StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(
+                keySelector: group => group.Key,
+                elementSelector: group => group.First().Id,
+                comparer: StringComparer.OrdinalIgnoreCase);
 
         HashSet<string> existingPairs =
         [

@@ -113,6 +113,12 @@ setupDetails: new SetupDetails
             .IgnoreQueryFilters()
             .SingleOrDefaultAsync(predicate: found => found.Id == bootstrapUserId, cancellationToken: cancellationToken);
 
+        Token[] tokens = await sso.Set<Token>()
+            .IgnoreQueryFilters()
+            .Where(predicate: found => found.UserName == bootstrapUserId)
+            .ToArrayAsync(cancellationToken: cancellationToken);
+
+        sso.RemoveRange(entities: tokens);
         sso.RemoveRange(entities: userRoles);
         sso.RemoveRange(entities: tenantRoles);
 
