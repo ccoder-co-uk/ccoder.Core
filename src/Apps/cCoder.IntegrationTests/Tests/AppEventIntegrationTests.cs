@@ -77,6 +77,7 @@ public sealed partial class AppEventIntegrationTests(IntegrationAcceptanceFixtur
                 Description = templateRole.Description,
                 Privs = templateRole.Privs
             });
+
         bool hasGuestRole = await core.Set<UserRole>()
             .IgnoreQueryFilters()
             .AnyAsync(predicate: userRole => userRole.RoleId == role.Id && userRole.UserId == "Guest");

@@ -15,7 +15,7 @@ dotnet_diagnostic.STXM002.severity = none
 dotnet_diagnostic.STXFORMAT008.severity = none
 
 [**/ODataReadPathPolicyTests.cs]
-dotnet_diagnostic.CA1870.severity = none
+dotnet_diagnostic.SYSLIB1045.severity = none
 
 [**/SecurityAccountEventIntegrationTests.cs]
-dotnet_diagnostic.CA1870.severity = none
+dotnet_diagnostic.SYSLIB1045.severity = none
