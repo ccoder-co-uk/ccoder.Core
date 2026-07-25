@@ -4436,13 +4436,6 @@
   ],
   "AnalysisItems": [
     {
-      "Code": "STXAPP001",
-      "Description": "Program.cs, IServiceCollectionExtensions.cs, IHostExtensions.cs, and WebApplicationExtensions.cs must live at the project root.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.CoreApiBuilderOptions",
-      "LineNumber": 13
-    },
-    {
       "Code": "STXAPI001",
       "Description": "An API controller must have exactly one business dependency.",
       "Severity": "Warning",
@@ -4489,21 +4482,21 @@
       "Description": "The type is not a valid Standard element type.",
       "Severity": "Warning",
       "Type": "cCoder.Core.Services.Setup.FirstTimeSetupOrchestrationService",
-      "LineNumber": 14
-    },
-    {
-      "Code": "STX0001",
-      "Description": "The type is not a valid Standard element type.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.Services.Setup.FirstTimeSetupTenantService",
       "LineNumber": 15
     },
     {
       "Code": "STX0001",
       "Description": "The type is not a valid Standard element type.",
       "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Setup.FirstTimeSetupTenantService",
+      "LineNumber": 16
+    },
+    {
+      "Code": "STX0001",
+      "Description": "The type is not a valid Standard element type.",
+      "Severity": "Warning",
       "Type": "cCoder.Core.Services.Setup.FirstTimeSetupUserService",
-      "LineNumber": 13
+      "LineNumber": 14
     }
   ]
 }
