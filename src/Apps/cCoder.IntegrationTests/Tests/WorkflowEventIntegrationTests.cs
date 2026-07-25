@@ -253,15 +253,6 @@ workflowEvents:                 core.Set<WorkflowEvent>()
                 await sso.SaveChangesAsync();
             }
 
-            cCoder.Security.Objects.Entities.SSOUser ssoUser = await sso.Set<cCoder.Security.Objects.Entities.SSOUser>()
-                .IgnoreQueryFilters()
-                .FirstOrDefaultAsync(predicate: found => found.Id == userId);
-
-            if (ssoUser is not null)
-            {
-                sso.Remove(entity: ssoUser);
-                await sso.SaveChangesAsync();
-            }
         }
     }
 
