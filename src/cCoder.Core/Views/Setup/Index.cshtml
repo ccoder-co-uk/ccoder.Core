@@ -170,6 +170,43 @@
             background: linear-gradient(135deg, #163a53, #25597b);
         }
 
+        button:disabled {
+            cursor: wait;
+            opacity: 0.65;
+        }
+
+        dialog {
+            width: min(90vw, 46rem);
+            border: 1px solid var(--border);
+            padding: 0;
+            color: var(--ink);
+            background: var(--panel);
+        }
+
+        dialog::backdrop {
+            background: rgba(15, 23, 42, 0.62);
+        }
+
+        .setup-progress {
+            padding: 1.5rem;
+        }
+
+        .setup-progress h2 {
+            margin-top: 0;
+        }
+
+        .setup-log {
+            min-height: 16rem;
+            max-height: 55vh;
+            overflow: auto;
+            margin: 1rem 0 0;
+            padding: 1rem;
+            background: #111827;
+            color: #d1fae5;
+            font: 0.9rem/1.6 Consolas, "Courier New", monospace;
+            white-space: pre-wrap;
+        }
+
         @@media (max-width: 900px) {
             .shell {
                 grid-template-columns: 1fr;
@@ -209,42 +246,202 @@
 
             @Html.ValidationSummary(false)
 
-            <form method="post" asp-controller="Setup" asp-action="Index">
-                @Html.AntiForgeryToken()
-
+            <form id="setup-form">
                 <div>
                     <label asp-for="Setup.TenantName"></label>
-                    <input asp-for="Setup.TenantName" autocomplete="organization" />
+                    <input asp-for="Setup.TenantName" autocomplete="organization" required />
                     <span asp-validation-for="Setup.TenantName"></span>
                 </div>
 
                 <div>
                     <label asp-for="Setup.DisplayName"></label>
-                    <input asp-for="Setup.DisplayName" autocomplete="name" />
+                    <input asp-for="Setup.DisplayName" autocomplete="name" required />
                     <span asp-validation-for="Setup.DisplayName"></span>
                 </div>
 
                 <div>
                     <label asp-for="Setup.Email"></label>
-                    <input asp-for="Setup.Email" autocomplete="email" />
+                    <input asp-for="Setup.Email" autocomplete="email" type="email" required />
                     <span asp-validation-for="Setup.Email"></span>
                 </div>
 
                 <div>
                     <label asp-for="Setup.Password"></label>
-                    <input asp-for="Setup.Password" autocomplete="new-password" />
+                    <input asp-for="Setup.Password" autocomplete="new-password" type="password" required />
                     <span asp-validation-for="Setup.Password"></span>
                 </div>
 
                 <div>
                     <label asp-for="Setup.ConfirmPassword"></label>
-                    <input asp-for="Setup.ConfirmPassword" autocomplete="new-password" />
+                    <input asp-for="Setup.ConfirmPassword" autocomplete="new-password" type="password" required />
                     <span asp-validation-for="Setup.ConfirmPassword"></span>
                 </div>
 
-                <button type="submit">Create the first environment</button>
+                <button id="setup-button" type="submit">
+                    Create the first environment
+                </button>
             </form>
         </section>
     </main>
+
+    <dialog id="setup-dialog">
+        <section class="setup-progress">
+            <h2>Setting up your platform</h2>
+            <p>Please keep this window open while the initial environment is prepared.</p>
+            <pre id="setup-log" class="setup-log" aria-live="polite"></pre>
+        </section>
+    </dialog>
+
+    <script>
+        (() => {
+            const form = document.getElementById("setup-form");
+            const button = document.getElementById("setup-button");
+            const dialog = document.getElementById("setup-dialog");
+            const log = document.getElementById("setup-log");
+            const domain = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Domain));
+            const assetsRoot =
+                "https://raw.githubusercontent.com/ccoder-co-uk/cCoder.Assets/main/" +
+                "Packages/First%20Time%20Setup/";
+
+            const appendLog = (message) => {
+                const timestamp = new Date().toLocaleTimeString();
+                log.textContent += `[${timestamp}] ${message}\n`;
+                log.scrollTop = log.scrollHeight;
+            };
+
+            const readError = async (response) => {
+                const message = await response.text();
+
+                return message || `${response.status} ${response.statusText}`;
+            };
+
+            const sendJson = async (url, body) => {
+                const response = await fetch(url, {
+                    method: "POST",
+                    credentials: "same-origin",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(body),
+                });
+
+                if (!response.ok) {
+                    throw new Error(await readError(response));
+                }
+
+                const contentType = response.headers.get("content-type") || "";
+
+                return contentType.includes("application/json")
+                    ? response.json()
+                    : null;
+            };
+
+            const downloadPackage = async (name) => {
+                appendLog(`Downloading ${name}...`);
+                const response = await fetch(`${assetsRoot}${name}.json`);
+
+                if (!response.ok) {
+                    throw new Error(await readError(response));
+                }
+
+                appendLog(`Downloaded ${name}.`);
+
+                return response.json();
+            };
+
+            form.addEventListener("submit", async (event) => {
+                event.preventDefault();
+
+                if (!form.reportValidity()) {
+                    return;
+                }
+
+                const tenantName =
+                    document.getElementById("Setup_TenantName").value.trim();
+
+                const displayName =
+                    document.getElementById("Setup_DisplayName").value.trim();
+
+                const email =
+                    document.getElementById("Setup_Email").value.trim();
+
+                const password =
+                    document.getElementById("Setup_Password").value;
+
+                const confirmation =
+                    document.getElementById("Setup_ConfirmPassword").value;
+
+                if (password !== confirmation) {
+                    window.alert("The password confirmation does not match.");
+
+                    return;
+                }
+
+                button.disabled = true;
+                dialog.showModal();
+                appendLog("Starting first-time setup.");
+
+                try {
+                    appendLog("Creating the Default tenant and administrator.");
+
+                    await sendJson("/Api/Setup", {
+                        Tenant: {
+                            Id: "Default",
+                            Name: tenantName,
+                        },
+                        User: {
+                            DisplayName: displayName,
+                            Email: email,
+                            PasswordHash: password,
+                            PhoneNumber: "",
+                        },
+                    });
+
+                    appendLog("Security bootstrap completed.");
+                    appendLog("Signing in the initial administrator.");
+
+                    await sendJson("/Api/Account/Login", {
+                        User: email.split("\x40")[0],
+                        Pass: password,
+                    });
+
+                    appendLog("Administrator signed in.");
+                    appendLog("Creating the first application.");
+
+                    const app = await sendJson("/Api/ContentManagement/App", {
+                        Name: tenantName,
+                        Domain: domain,
+                        DefaultTheme: "Default",
+                        DefaultCultureId: "",
+                        TenantId: "Default",
+                        ConfigJson: "{}",
+                    });
+
+                    const appId = app.Id ?? app.id;
+                    appendLog(`Application created with ID ${appId}.`);
+
+                    const packages = await Promise.all([
+                        downloadPackage("common-cache"),
+                        downloadPackage("app-baseline"),
+                    ]);
+
+                    appendLog("Importing common cache and application baselines.");
+
+                    await Promise.all(packages.map((setupPackage) =>
+                        sendJson(
+                            `/Api/Core/Package/Import?appId=${appId}`,
+                            setupPackage)));
+
+                    appendLog("Baseline imports completed.");
+                    appendLog("Setup complete. Opening your new platform...");
+                    window.location.assign("/");
+                } catch (error) {
+                    appendLog(`ERROR: ${error.message}`);
+                    appendLog("Setup stopped. Review the error before retrying.");
+                    button.disabled = false;
+                }
+            });
+        })();
+    </script>
 </body>
 </html>

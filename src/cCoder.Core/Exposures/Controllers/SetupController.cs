@@ -3,7 +3,6 @@
 // ---------------------------------------------------------------
 
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using cCoder.Core.Models;
 using cCoder.Core.Services.Setup;
 using cCoder.Core.Exposures.Setup;
@@ -12,15 +11,15 @@ namespace cCoder.Core.Exposures.Controllers;
 
 [Route("Setup")]
 public sealed class SetupController(
-    IFirstTimeSetupOrchestrationService setupOrchestrationService,
-    ISetupRequestHostManager setupRequestHostManager,
-    ILogger<SetupController> log)
+    IFirstTimeSetupStateService setupStateService,
+    ISetupRequestHostManager setupRequestHostManager)
     : Controller
 {
     [HttpGet("")]
     public async Task<IActionResult> Get(CancellationToken cancellationToken)
     {
-        if (await setupOrchestrationService.IsInitializedAsync(cancellationToken: cancellationToken))
+        if (await setupStateService.IsInitializedAsync(
+            cancellationToken: cancellationToken))
         {
             return Redirect(url: "/");
         }
@@ -30,54 +29,11 @@ public sealed class SetupController(
             model: CreateFirstTimeSetupViewModel());
     }
 
-    [HttpPost("")]
-    public async Task<IActionResult> Post(
-        [Bind(Prefix = "Setup")] FirstTimeSetupRequest newFirstTimeSetupRequest,
-        CancellationToken cancellationToken)
-    {
-        try
-        {
-            if (await setupOrchestrationService.IsInitializedAsync(cancellationToken: cancellationToken))
-            {
-                return Redirect(url: "/");
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return View(
-                    viewName: "Index",
-                    model: CreateFirstTimeSetupViewModel(
-                        setup: newFirstTimeSetupRequest));
-            }
-
-            newFirstTimeSetupRequest.Domain =
-                setupRequestHostManager.NormalizeHost(
-                    host: Request.Host.Host);
-
-            await setupOrchestrationService.SetupAsync(
-                request: newFirstTimeSetupRequest,
-                cancellationToken: cancellationToken);
-
-            return Redirect(url: "/");
-        }
-        catch (Exception ex)
-        {
-            log.LogError(exception: ex, message: "First-time setup failed.");
-            ModelState.AddModelError(key: string.Empty, errorMessage: ex.Message);
-
-            return View(
-                viewName: "Index",
-                model: CreateFirstTimeSetupViewModel(
-                    setup: newFirstTimeSetupRequest));
-        }
-    }
-
-    private FirstTimeSetupViewModel CreateFirstTimeSetupViewModel(
-        FirstTimeSetupRequest setup = null) =>
+    private FirstTimeSetupViewModel CreateFirstTimeSetupViewModel() =>
         new()
         {
             Domain = setupRequestHostManager.NormalizeHost(
                 host: Request.Host.Host),
-            Setup = setup ?? new FirstTimeSetupRequest(),
+            Setup = new FirstTimeSetupRequest(),
         };
 }

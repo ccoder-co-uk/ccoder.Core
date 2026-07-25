@@ -258,12 +258,6 @@ predicate: (documentName, apiDescription) =>
         services.AddScoped<IFirstTimeSetupStateService, FirstTimeSetupStateManager>();
         services.AddScoped<ISetupRequestHostProcessingService, SetupRequestHostProcessingService>();
         services.AddScoped<ISetupRequestHostManager, SetupRequestHostManager>();
-        services.AddScoped<BaselineAssetCatalog>();
-        services.AddScoped<IFirstTimeSetupUserService, FirstTimeSetupUserService>();
-        services.AddScoped<IFirstTimeSetupTenantService, FirstTimeSetupTenantService>();
-        services.AddScoped<IFirstTimeSetupAppService, FirstTimeSetupAppService>();
-        services.AddScoped<IFirstTimeSetupOrchestrationService, FirstTimeSetupOrchestrationService>();
-
         IMvcBuilder mvcBuilder = services.AddMvc();
 
         mvcBuilder.AddApplicationPart(

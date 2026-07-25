@@ -324,7 +324,7 @@ POST Api/Workflow/FlowInstanceData
 POST Api/Workflow/ScheduledTask
 POST Api/Workflow/ScheduledTask({key})/Execute
 POST Api/Workflow/WorkflowEvent
-POST Setup
+POST Api/Setup
 PUT Api
 PUT Api/AppSecurity/App({key})
 PUT Api/AppSecurity/Privilege({key})
