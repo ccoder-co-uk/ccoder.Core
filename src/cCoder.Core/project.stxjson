@@ -1637,20 +1637,6 @@
             }
           ],
           "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E"
-        },
-        {
-          "Name": "Post",
-          "Inputs": [
-            {
-              "Name": "newFirstTimeSetupRequest",
-              "Type": "cCoder.Core.Models.FirstTimeSetupRequest"
-            },
-            {
-              "Name": "cancellationToken",
-              "Type": "System.Threading.CancellationToken"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E"
         }
       ]
     },
@@ -4313,11 +4299,11 @@
     },
     {
       "FromType": "cCoder.Core.Exposures.Controllers.SetupController",
-      "ToType": "cCoder.Core.Exposures.Setup.SetupRequestHostManager"
+      "ToType": "cCoder.Core.Exposures.Setup.FirstTimeSetupStateManager"
     },
     {
       "FromType": "cCoder.Core.Exposures.Controllers.SetupController",
-      "ToType": "cCoder.Core.Services.Setup.FirstTimeSetupOrchestrationService"
+      "ToType": "cCoder.Core.Exposures.Setup.SetupRequestHostManager"
     },
     {
       "FromType": "cCoder.Core.Exposures.Controllers.TemplatedEmailController",
@@ -4518,7 +4504,7 @@
       "Description": "An API controller must have exactly one business dependency.",
       "Severity": "Warning",
       "Type": "cCoder.Core.Exposures.Controllers.SetupController",
-      "LineNumber": 13
+      "LineNumber": 12
     },
     {
       "Code": "STXF002",
