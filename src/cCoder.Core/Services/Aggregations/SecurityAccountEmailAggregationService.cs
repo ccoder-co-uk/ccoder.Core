@@ -5,7 +5,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Web;
 using cCoder.Core.Services.Foundations.ContentManagement;
-using cCoder.Core.Services.Orchestrations;
+using cCoder.Core.Exposures.Managers;
 using cCoder.Data.Models.CMS;
 using cCoder.Security.Objects.Entities;
 using cCoder.Security.Objects.Events;
@@ -15,7 +15,7 @@ namespace cCoder.Core.Services.Aggregations;
 
 internal sealed partial class SecurityAccountEmailAggregationService(
     IContentManagementAppService contentManagementAppService,
-    ITemplatedEmailOrchestrationService templatedEmailOrchestrationService)
+    ITemplatedEmailManager templatedEmailManager)
     : ISecurityAccountEmailAggregationService
 {
     public ValueTask QueueRegistrationCreatedSecurityAccountEventEmailAsync(
@@ -105,8 +105,14 @@ internal sealed partial class SecurityAccountEmailAggregationService(
             accountEvent.Kind,
         };
 
-        await templatedEmailOrchestrationService.QueueAsync(
-app: app, templateName: template.Name, culture: culture, model: renderModel, toEmail: user.Email, subject: $"{app.Name}: {subject}", sentByUserId: user.Id);
+        await templatedEmailManager.QueueAppTemplatedEmailAsync(
+            app: app,
+            templateName: template.Name,
+            culture: culture,
+            model: renderModel,
+            toEmail: user.Email,
+            subject: $"{app.Name}: {subject}",
+            sentByUserId: user.Id);
     }
 
     private App ResolveApp(string requestDomain)

@@ -220,7 +220,9 @@ predicate: (documentName, apiDescription) =>
     {
         services.AddTransient<IAppAggregationService, AppAggregationService>();
         services.AddTransient<IAppOrchestrationService, AppAggregationService>();
-        services.AddTransient<ITemplatedEmailOrchestrationService, TemplatedEmailOrchestrationService>();
+        services.AddTransient<TemplatedEmailOrchestrationService>();
+        services.AddTransient<ITemplatedEmailManager, TemplatedEmailManager>();
+        services.AddTransient<ITemplatedEmailOrchestrationService, TemplatedEmailManager>();
         services.AddTransient<IUserRegistrationOrchestrationService, UserRegistrationManager>();
         services.AddTransient<IUserRegistrationAggregationService, UserRegistrationAggregationService>();
 
