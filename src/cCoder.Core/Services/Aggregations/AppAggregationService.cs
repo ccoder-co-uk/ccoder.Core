@@ -5,6 +5,7 @@
 using cCoder.Core.Services.Foundations.AppSecurity;
 using cCoder.Core.Services.Foundations.ContentManagement;
 using cCoder.Core.Services.Foundations.DocumentManagement;
+using cCoder.Core.Services.Foundations.Eventing;
 using cCoder.Core.Services.Foundations.Mail;
 using cCoder.Core.Services.Foundations.Planning;
 using cCoder.Core.Services.Foundations.Workflow;
@@ -22,6 +23,7 @@ internal sealed partial class AppAggregationService(
     IDocumentManagementAppService documentManagementAppService,
     IWorkflowAppService workflowAppService,
     IMailAppService mailAppService,
+    IAppGraphEventService appGraphEventService,
     CoreConfiguration configuration
 ) : IAppAggregationService, IAppOrchestrationService
 {
@@ -36,6 +38,9 @@ internal sealed partial class AppAggregationService(
             App propagatedApp = MergeAppGraph(
                 source: newApp,
                 target: createdApp);
+
+            await appGraphEventService.RaiseAppAddEventAsync(
+                app: propagatedApp);
 
             await appSecurityAppService.AddAppAsync(newApp: propagatedApp);
             await planningAppService.AddAppAsync(newApp: propagatedApp);
@@ -61,6 +66,9 @@ internal sealed partial class AppAggregationService(
             App propagatedApp = MergeAppGraph(
                 source: updatedApp,
                 target: persistedApp);
+
+            await appGraphEventService.RaiseAppUpdateEventAsync(
+                app: propagatedApp);
 
             await appSecurityAppService.UpdateAppAsync(
                 updatedApp: propagatedApp);

@@ -428,9 +428,52 @@ roles:             core.Set<Role>()
 
         Web output:
         {Tail(value: fixture.WebOutput)}
+
+        HostedServices output:
+        {Tail(value: fixture.HostedServicesOutput)}
         """;
 
-    private static string Tail(string value, int length = 6000)
+    private async Task<string> BuildEventDiagnosticsAsync(
+        int appId,
+        Guid rootFolderId,
+        Guid childFolderId,
+        Guid fileId)
+    {
+        await using CoreDataContext core = CreateCoreContext();
+
+        string[] folders = await core.Set<Folder>()
+            .IgnoreQueryFilters()
+            .Where(predicate: folder =>
+                folder.AppId == appId
+                || folder.Id == rootFolderId
+                || folder.Id == childFolderId)
+            .Select(selector: folder =>
+                $"{folder.Id}: Parent={folder.ParentId}, Name={folder.Name}, Path={folder.Path}")
+            .ToArrayAsync();
+
+        string[] files = await core.Set<DmsFile>()
+            .IgnoreQueryFilters()
+            .Where(predicate: file => file.Id == fileId)
+            .Select(selector: file =>
+                $"{file.Id}: Folder={file.FolderId}, Name={file.Name}, Path={file.Path}")
+            .ToArrayAsync();
+
+        return $"""
+            App event state:
+            Folders:
+            {string.Join(separator: Environment.NewLine, values: folders)}
+            Files:
+            {string.Join(separator: Environment.NewLine, values: files)}
+
+            Web output:
+            {Tail(value: fixture.WebOutput)}
+
+            HostedServices output:
+            {Tail(value: fixture.HostedServicesOutput)}
+            """;
+    }
+
+    private static string Tail(string value, int length = 30000)
     {
         if (string.IsNullOrWhiteSpace(value: value) || value.Length <= length)
         {
@@ -443,7 +486,8 @@ roles:             core.Set<Role>()
     private static async Task WaitUntilAsync(
         Func<Task<bool>> predicate,
         int attempts = 60,
-        int delayMilliseconds = 500)
+        int delayMilliseconds = 500,
+        Func<Task<string>> diagnosticsFactory = null)
     {
         for (int attempt = 0; attempt < attempts; attempt++)
         {
@@ -455,7 +499,12 @@ roles:             core.Set<Role>()
             await Task.Delay(millisecondsDelay: delayMilliseconds);
         }
 
-        throw new TimeoutException("Timed out waiting for the expected condition.");
+        string diagnostics = diagnosticsFactory is null
+            ? string.Empty
+            : await diagnosticsFactory();
+
+        throw new TimeoutException(
+            $"Timed out waiting for the expected condition.{Environment.NewLine}{diagnostics}");
     }
 
     private CoreDataContext CreateCoreContext() =>

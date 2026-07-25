@@ -74,14 +74,23 @@ method:                 HttpMethod.Put,relativeUrl:                 $"/Api/Conte
                     }
                 },                host: appDomain);
 
-            await WaitUntilAsync(predicate: async () =>
-            {
-                await using CoreDataContext core = CreateCoreContext();
+            await WaitUntilAsync(
+                predicate: async () =>
+                {
+                    await using CoreDataContext core = CreateCoreContext();
 
-                return await core.Set<Folder>()
-                    .IgnoreQueryFilters()
-                    .AnyAsync(predicate: folder => folder.Id == childFolderId && folder.Path == "renamed/child");
-            });
+                    return await core.Set<Folder>()
+                        .IgnoreQueryFilters()
+                        .AnyAsync(
+                            predicate: folder =>
+                                folder.Id == childFolderId
+                                && folder.Path == "renamed/child");
+                },
+                diagnosticsFactory: () => BuildEventDiagnosticsAsync(
+                    appId: appId,
+                    rootFolderId: rootFolderId,
+                    childFolderId: childFolderId,
+                    fileId: fileId));
 
             await using CoreDataContext verification = CreateCoreContext();
 
