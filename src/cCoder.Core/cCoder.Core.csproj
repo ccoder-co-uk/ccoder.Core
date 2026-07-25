@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <OutputType>Library</OutputType>
     <IsPackable>true</IsPackable>
-    <NoWarn>1591</NoWarn>
+    <NoWarn>1591;STX0001</NoWarn>
     <Features>experimental-data-section-string-literals</Features>
   </PropertyGroup>
   <PropertyGroup>
@@ -61,6 +61,11 @@
     <UseLocalWorkflow Condition="'$(UseLocalWorkflow)' == 'true' and !(Exists('$(LocalWorkflowProject)') and Exists('$(LocalWorkflowActivitiesProject)') and Exists('$(LocalWorkflowEngineProject)'))">false</UseLocalWorkflow>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference
+      Include="..\cCoder.Core.FrontEnd\cCoder.Core.FrontEnd.esproj"
+      ReferenceOutputAssembly="false" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="..\..\LICENSE.txt" Pack="true" PackagePath="\" />
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
@@ -103,7 +108,6 @@
     <ProjectReference Include="$(LocalWorkflowEngineProject)" AdditionalProperties="UseLocalData=$(UseLocalData);UseLocalSecurity=$(UseLocalSecurity)" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
     <PackageReference Include="cCoder.AppSecurity" Version="2026.7.24.38" Condition="'$(UseLocalAppSecurity)' != 'true'" />
     <PackageReference Include="cCoder.CodeAnalysis" Version="2026.7.25.357" />
     <PackageReference Include="cCoder.ContentManagement" Version="2026.7.24.1154" Condition="'$(UseLocalContentManagement)' != 'true'" />
@@ -131,5 +135,17 @@
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.2.3" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.2.3" />
   </ItemGroup>
+  <Target
+    Name="CopyFrontEndAssets"
+    AfterTargets="ResolveProjectReferences"
+    BeforeTargets="DefineStaticWebAssets">
+    <ItemGroup>
+      <FrontEndAsset Include="..\cCoder.Core.FrontEnd\stage\**\*" />
+    </ItemGroup>
+    <Copy
+      SourceFiles="@(FrontEndAsset)"
+      DestinationFiles="@(FrontEndAsset->'wwwroot\%(RecursiveDir)%(Filename)%(Extension)')"
+      SkipUnchangedFiles="true" />
+  </Target>
 </Project>
 

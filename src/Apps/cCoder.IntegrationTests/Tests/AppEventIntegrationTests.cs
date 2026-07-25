@@ -27,7 +27,7 @@ using SsoToken = cCoder.Security.Objects.Entities.Token;
 namespace cCoder.IntegrationTests.Tests;
 
 [Collection(IntegrationAcceptanceCollection.Name)]
-public sealed partial class AppEventIntegrationTests
+public sealed partial class AppEventIntegrationTests(IntegrationAcceptanceFixture fixture)
 {
     private const int BaselineAppId = 1;
     private const string AdminUserId = "admin";
@@ -40,10 +40,7 @@ public sealed partial class AppEventIntegrationTests
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
     };
 
-    private readonly IntegrationAcceptanceFixture fixture;
-
-    public AppEventIntegrationTests(IntegrationAcceptanceFixture fixture) =>
-        this.fixture = fixture;
+    private readonly IntegrationAcceptanceFixture fixture = fixture;
 
     private async Task<int> CreateStandaloneAppAsync(string domain)
     {
@@ -72,11 +69,7 @@ public sealed partial class AppEventIntegrationTests
 
         Role role = await core.Set<Role>()
             .IgnoreQueryFilters()
-            .SingleOrDefaultAsync(predicate: found => found.AppId == appId && found.Name == templateRole.Name);
-
-        if (role is null)
-        {
-            role = await core.AddRoleAsync(role: new Role
+            .SingleOrDefaultAsync(predicate: found => found.AppId == appId && found.Name == templateRole.Name) ?? await core.AddRoleAsync(role: new Role
             {
                 Id = Guid.NewGuid(),
                 AppId = appId,
@@ -84,7 +77,6 @@ public sealed partial class AppEventIntegrationTests
                 Description = templateRole.Description,
                 Privs = templateRole.Privs
             });
-        }
 
         bool hasGuestRole = await core.Set<UserRole>()
             .IgnoreQueryFilters()
@@ -225,16 +217,14 @@ public sealed partial class AppEventIntegrationTests
                 .ToArrayAsync()];
 
         await core.DeleteAllAsync(
-userRoles:             core.Set<UserRole>()
+userRoles: [.. core.Set<UserRole>()
             .IgnoreQueryFilters()
-                .Where(predicate: userRole => roleIds.Contains(value: userRole.RoleId))
-                .ToArray());
+                .Where(predicate: userRole => roleIds.Contains(value: userRole.RoleId))]);
 
         await core.DeleteAllAsync(
-folderRoles:             core.Set<FolderRole>()
+folderRoles: [.. core.Set<FolderRole>()
             .IgnoreQueryFilters()
-                .Where(predicate: folderRole => roleIds.Contains(value: folderRole.RoleId))
-                .ToArray());
+                .Where(predicate: folderRole => roleIds.Contains(value: folderRole.RoleId))]);
 
         Guid[] folderIds =
             [.. await core.Set<Folder>()
@@ -251,53 +241,45 @@ folderRoles:             core.Set<FolderRole>()
                 .ToArrayAsync()];
 
         await core.DeleteAllAsync(
-fileContents:             core.Set<FileContent>()
+fileContents: [.. core.Set<FileContent>()
             .IgnoreQueryFilters()
-                .Where(predicate: content => fileIds.Contains(value: content.FileId))
-                .ToArray());
+                .Where(predicate: content => fileIds.Contains(value: content.FileId))]);
 
         await core.DeleteAllAsync(
-files:             core.Set<DmsFile>()
+files: [.. core.Set<DmsFile>()
             .IgnoreQueryFilters()
-                .Where(predicate: file => fileIds.Contains(value: file.Id))
-                .ToArray());
+                .Where(predicate: file => fileIds.Contains(value: file.Id))]);
 
         await core.DeleteAllAsync(
-folders:             core.Set<Folder>()
+folders: [.. core.Set<Folder>()
             .IgnoreQueryFilters()
                 .Where(predicate: folder => folderIds.Contains(value: folder.Id))
-                .OrderByDescending(keySelector: folder => folder.Path.Length)
-                .ToArray());
+                .OrderByDescending(keySelector: folder => folder.Path.Length)]);
 
         await core.DeleteAllAsync(
-mailServers:             core.Set<MailServer>()
+mailServers: [.. core.Set<MailServer>()
             .IgnoreQueryFilters()
-                .Where(predicate: server => server.AppId == appId)
-                .ToArray());
+                .Where(predicate: server => server.AppId == appId)]);
 
         await core.DeleteAllAsync(
-calendars:             core.Set<Calendar>()
+calendars: [.. core.Set<Calendar>()
             .IgnoreQueryFilters()
-                .Where(predicate: calendar => calendar.AppId == appId)
-                .ToArray());
+                .Where(predicate: calendar => calendar.AppId == appId)]);
 
         await core.DeleteAllAsync(
-queuedEmails:             core.Set<QueuedEmail>()
+queuedEmails: [.. core.Set<QueuedEmail>()
             .IgnoreQueryFilters()
-                .Where(predicate: email => email.AppId == appId)
-                .ToArray());
+                .Where(predicate: email => email.AppId == appId)]);
 
         await core.DeleteAllAsync(
-sentEmails:             core.Set<SentEmail>()
+sentEmails: [.. core.Set<SentEmail>()
             .IgnoreQueryFilters()
-                .Where(predicate: email => email.AppId == appId)
-                .ToArray());
+                .Where(predicate: email => email.AppId == appId)]);
 
         await core.DeleteAllAsync(
-scheduledTasks:             core.Set<ScheduledTask>()
+scheduledTasks: [.. core.Set<ScheduledTask>()
             .IgnoreQueryFilters()
-                .Where(predicate: task => task.AppId == appId)
-                .ToArray());
+                .Where(predicate: task => task.AppId == appId)]);
 
         Guid[] flowIds =
             [.. await core.Set<FlowDefinition>()
@@ -307,34 +289,29 @@ scheduledTasks:             core.Set<ScheduledTask>()
                 .ToArrayAsync()];
 
         await core.DeleteAllAsync(
-workflowEvents:             core.Set<WorkflowEvent>()
+workflowEvents: [.. core.Set<WorkflowEvent>()
             .IgnoreQueryFilters()
-                .Where(predicate: workflowEvent => flowIds.Contains(value: workflowEvent.FlowId))
-                .ToArray());
+                .Where(predicate: workflowEvent => flowIds.Contains(value: workflowEvent.FlowId))]);
 
         await core.DeleteAllAsync(
-flowInstances:             core.Set<FlowInstanceData>()
+flowInstances: [.. core.Set<FlowInstanceData>()
             .IgnoreQueryFilters()
-                .Where(predicate: instance => flowIds.Contains(value: instance.FlowDefinitionId))
-                .ToArray());
+                .Where(predicate: instance => flowIds.Contains(value: instance.FlowDefinitionId))]);
 
         await core.DeleteAllAsync(
-flowDefinitions:             core.Set<FlowDefinition>()
+flowDefinitions: [.. core.Set<FlowDefinition>()
             .IgnoreQueryFilters()
-                .Where(predicate: flow => flow.AppId == appId)
-                .ToArray());
+                .Where(predicate: flow => flow.AppId == appId)]);
 
         await core.DeleteAllAsync(
-appCultures:             core.Set<AppCulture>()
+appCultures: [.. core.Set<AppCulture>()
             .IgnoreQueryFilters()
-                .Where(predicate: culture => culture.AppId == appId)
-                .ToArray());
+                .Where(predicate: culture => culture.AppId == appId)]);
 
         await core.DeleteAllAsync(
-roles:             core.Set<Role>()
+roles: [.. core.Set<Role>()
             .IgnoreQueryFilters()
-                .Where(predicate: role => role.AppId == appId)
-                .ToArray());
+                .Where(predicate: role => role.AppId == appId)]);
 
         AppEntity app = await core.Set<AppEntity>()
             .IgnoreQueryFilters()
@@ -428,9 +405,52 @@ roles:             core.Set<Role>()
 
         Web output:
         {Tail(value: fixture.WebOutput)}
+
+        HostedServices output:
+        {Tail(value: fixture.HostedServicesOutput)}
         """;
 
-    private static string Tail(string value, int length = 6000)
+    private async Task<string> BuildEventDiagnosticsAsync(
+        int appId,
+        Guid rootFolderId,
+        Guid childFolderId,
+        Guid fileId)
+    {
+        await using CoreDataContext core = CreateCoreContext();
+
+        string[] folders = await core.Set<Folder>()
+            .IgnoreQueryFilters()
+            .Where(predicate: folder =>
+                folder.AppId == appId
+                || folder.Id == rootFolderId
+                || folder.Id == childFolderId)
+            .Select(selector: folder =>
+                $"{folder.Id}: Parent={folder.ParentId}, Name={folder.Name}, Path={folder.Path}")
+            .ToArrayAsync();
+
+        string[] files = await core.Set<DmsFile>()
+            .IgnoreQueryFilters()
+            .Where(predicate: file => file.Id == fileId)
+            .Select(selector: file =>
+                $"{file.Id}: Folder={file.FolderId}, Name={file.Name}, Path={file.Path}")
+            .ToArrayAsync();
+
+        return $"""
+            App event state:
+            Folders:
+            {string.Join(separator: Environment.NewLine, values: folders)}
+            Files:
+            {string.Join(separator: Environment.NewLine, values: files)}
+
+            Web output:
+            {Tail(value: fixture.WebOutput)}
+
+            HostedServices output:
+            {Tail(value: fixture.HostedServicesOutput)}
+            """;
+    }
+
+    private static string Tail(string value, int length = 30000)
     {
         if (string.IsNullOrWhiteSpace(value: value) || value.Length <= length)
         {
@@ -443,7 +463,8 @@ roles:             core.Set<Role>()
     private static async Task WaitUntilAsync(
         Func<Task<bool>> predicate,
         int attempts = 60,
-        int delayMilliseconds = 500)
+        int delayMilliseconds = 500,
+        Func<Task<string>> diagnosticsFactory = null)
     {
         for (int attempt = 0; attempt < attempts; attempt++)
         {
@@ -455,7 +476,12 @@ roles:             core.Set<Role>()
             await Task.Delay(millisecondsDelay: delayMilliseconds);
         }
 
-        throw new TimeoutException("Timed out waiting for the expected condition.");
+        string diagnostics = diagnosticsFactory is null
+            ? string.Empty
+            : await diagnosticsFactory();
+
+        throw new TimeoutException(
+            $"Timed out waiting for the expected condition.{Environment.NewLine}{diagnostics}");
     }
 
     private CoreDataContext CreateCoreContext() =>

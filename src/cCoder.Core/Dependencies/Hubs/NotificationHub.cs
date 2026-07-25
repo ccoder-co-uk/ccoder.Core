@@ -7,14 +7,12 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace cCoder.Core.Dependencies.Hubs;
 
-public class NotificationHub : Hub
+public class NotificationHub(ILogger<NotificationHub> log) : Hub
 {
-    private readonly ILogger<NotificationHub> log;
+    private readonly ILogger<NotificationHub> log = log;
     private static readonly IDictionary<string, ICollection<HistoryItem>> History =
         new Dictionary<string, ICollection<HistoryItem>>();
     private static readonly IDictionary<string, int> UserCounts = new Dictionary<string, int>();
-
-    public NotificationHub(ILogger<NotificationHub> log) => this.log = log;
 
     public struct HistoryItem
     {
@@ -24,19 +22,37 @@ public class NotificationHub : Hub
 
     public override Task OnConnectedAsync()
     {
-        log.LogDebug(message: $"New Client connected to {GetType().Name}");
+        if (log.IsEnabled(logLevel: LogLevel.Debug))
+        {
+            log.LogDebug(
+                message: "New client connected to {HubName}",
+                args: typeof(NotificationHub).Name);
+        }
+
         return base.OnConnectedAsync();
     }
 
     public override Task OnDisconnectedAsync(Exception exception)
     {
-        log.LogDebug(message: $"Client disconnected from {GetType().Name}");
+        if (log.IsEnabled(logLevel: LogLevel.Debug))
+        {
+            log.LogDebug(
+                message: "Client disconnected from {HubName}",
+                args: typeof(NotificationHub).Name);
+        }
+
         return base.OnDisconnectedAsync(exception: exception);
     }
 
     public async Task Join(string thread)
     {
-        log.LogDebug(message: $"User joining {thread}");
+        if (log.IsEnabled(logLevel: LogLevel.Debug))
+        {
+            log.LogDebug(
+                message: "User joining {Thread}",
+                args: thread);
+        }
+
         await Groups.AddToGroupAsync(connectionId: Context.ConnectionId, groupName: thread);
 
         await Clients.Caller.SendAsync(
@@ -46,21 +62,22 @@ method: "ConsoleReceive", arg1: "info", arg2: "Connected to instance " + thread,
         await Clients.Group(groupName: thread)
             .SendAsync(method: "ConsoleReceive", arg1: "info", arg2: "User Joined", arg3: thread);
 
-        if (!History.ContainsKey(key: thread))
+        if (!History.TryGetValue(key: thread, value: out ICollection<HistoryItem> history))
         {
-            History.Add(key: thread, value: new List<HistoryItem>());
+            history = [];
+            History.Add(key: thread, value: history);
         }
 
-        if (!UserCounts.ContainsKey(key: thread))
+        if (!UserCounts.TryGetValue(key: thread, value: out int userCount))
         {
             UserCounts.Add(key: thread, value: 1);
         }
         else
         {
-            UserCounts[thread]++;
+            UserCounts[thread] = userCount + 1;
         }
 
-        foreach (HistoryItem item in History[thread])
+        foreach (HistoryItem item in history)
         {
             await Clients.Caller.SendAsync(method: "ConsoleReceive", arg1: item.Level, arg2: item.Message, arg3: thread);
         }
@@ -68,7 +85,12 @@ method: "ConsoleReceive", arg1: "info", arg2: "Connected to instance " + thread,
 
     public async Task Leave(string thread)
     {
-        log.LogDebug(message: $"User leaving {thread}");
+        if (log.IsEnabled(logLevel: LogLevel.Debug))
+        {
+            log.LogDebug(
+                message: "User leaving {Thread}",
+                args: thread);
+        }
 
         await Groups.RemoveFromGroupAsync(connectionId: Context.ConnectionId, groupName: thread);
 
@@ -93,12 +115,13 @@ method: "info", arg1: "Stopped listening to messages for " + thread, arg2: threa
 
     public async Task ConsoleSend(string level, string message, string thread)
     {
-        if (!History.ContainsKey(key: thread))
+        if (!History.TryGetValue(key: thread, value: out ICollection<HistoryItem> history))
         {
-            History.Add(key: thread, value: new List<HistoryItem>());
+            history = [];
+            History.Add(key: thread, value: history);
         }
 
-        History[thread].Add(item: new HistoryItem { Message = message, Level = level });
+        history.Add(item: new HistoryItem { Message = message, Level = level });
 
         await Clients.Group(groupName: thread)
             .SendAsync(method: "ConsoleReceive", arg1: level, arg2: message, arg3: thread);

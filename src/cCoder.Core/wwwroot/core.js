@@ -1,4 +1,4 @@
-/* Api Management */
+﻿/* Api Management */
 class Api
 {
     constructor(args) {
@@ -243,7 +243,7 @@ window.api = new Api({
     baseUrl: session.apiRoot,
     token: session.token
 });
-const html = {
+﻿const html = {
     encode: function (value) { return $('<div />').text(value).html(); },
     decode: function (value) { return $('<div/>').html(value).text(); }
 };
@@ -526,7 +526,7 @@ function getMonthlyDateRange(start, end, format) {
     return months;
 }
 
-const model = {
+﻿const model = {
     clone: (obj) => JSON.parse(JSON.stringify(obj)),
 
     prepareItem: function (item, meta) {

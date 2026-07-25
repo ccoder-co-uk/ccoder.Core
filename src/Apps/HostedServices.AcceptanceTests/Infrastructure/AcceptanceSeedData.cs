@@ -23,52 +23,46 @@ value: value.GetRawText(), settings: cCoder.Data.Extensions.ObjectExtensions.Get
     }
 
     public static Role[] LoadRoles() =>
-        LoadPackageItems(
+        [.. LoadPackageItems(
             packageName: "Roles",
             itemTypeName: "Core/Role",
             itemType: typeof(Role))
-        .Cast<Role>()
-        .ToArray();
+        .Cast<Role>()];
 
     public static Layout[] LoadLayouts() =>
-        LoadPackageItems(
+        [.. LoadPackageItems(
             packageName: "Layouts",
             itemTypeName: "Core/Layout",
             itemType: typeof(Layout))
-        .Cast<Layout>()
-        .ToArray();
+        .Cast<Layout>()];
 
     public static Template[] LoadTemplates() =>
-        LoadPackageItems(
+        [.. LoadPackageItems(
             packageName: "Templates",
             itemTypeName: "Core/Template",
             itemType: typeof(Template))
-        .Cast<Template>()
-        .ToArray();
+        .Cast<Template>()];
 
     public static Resource[] LoadResources() =>
-        LoadPackageItems(
+        [.. LoadPackageItems(
             packageName: "Resources",
             itemTypeName: "Core/Resource",
             itemType: typeof(Resource))
-        .Cast<Resource>()
-        .ToArray();
+        .Cast<Resource>()];
 
     public static Component[] LoadComponents() =>
-        LoadPackageItems(
+        [.. LoadPackageItems(
             packageName: "Components",
             itemTypeName: "Core/Component",
             itemType: typeof(Component))
-        .Cast<Component>()
-        .ToArray();
+        .Cast<Component>()];
 
     public static Script[] LoadScripts() =>
-        LoadPackageItems(
+        [.. LoadPackageItems(
             packageName: "Scripts",
             itemTypeName: "Core/Script",
             itemType: typeof(Script))
-        .Cast<Script>()
-        .ToArray();
+        .Cast<Script>()];
 
     public static CommonObject[] LoadCommonObjects()
     {
@@ -78,7 +72,7 @@ value: value.GetRawText(), settings: cCoder.Data.Extensions.ObjectExtensions.Get
         result.AddRange(collection: LoadCommonObjects(fileName: "Core.Component.latest.json"));
         result.AddRange(collection: LoadCommonObjects(fileName: "Core.Script.latest.json"));
 
-        return result.ToArray();
+        return [.. result];
     }
 
     private static CommonObject[] LoadCommonObjects(string fileName)
@@ -106,7 +100,7 @@ value: value.GetRawText(), settings: cCoder.Data.Extensions.ObjectExtensions.Get
                     b: packageName,
                     comparisonType: StringComparison.OrdinalIgnoreCase));
 
-        return package.Items
+        return [.. package.Items
             .Where(predicate: item =>
                 string.Equals(
                     a: item.Type,
@@ -115,8 +109,7 @@ value: value.GetRawText(), settings: cCoder.Data.Extensions.ObjectExtensions.Get
             .SelectMany(selector: item =>
                 UnpackItems(
                     data: item.Data,
-                    itemType: itemType))
-            .ToArray();
+                    itemType: itemType))];
     }
 
     private static IEnumerable<object> UnpackItems(
@@ -125,9 +118,7 @@ value: value.GetRawText(), settings: cCoder.Data.Extensions.ObjectExtensions.Get
     {
         string trimmed = data.TrimStart();
 
-        Type deserializationType = trimmed.StartsWith(
-            value: "[",
-            comparisonType: StringComparison.Ordinal)
+        Type deserializationType = trimmed.StartsWith(value: '[')
                 ? itemType.MakeArrayType()
                 : itemType;
 

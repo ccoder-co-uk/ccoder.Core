@@ -9,7 +9,7 @@ namespace cCoder.Core.Dependencies.OData;
 
 internal sealed class ControllerReadDependency : ControllerBase
 {
-    internal IActionResult Resolve<TEntity>(
+    internal static IActionResult Resolve<TEntity>(
         ControllerBase controller,
         Func<TEntity> get)
         where TEntity : class

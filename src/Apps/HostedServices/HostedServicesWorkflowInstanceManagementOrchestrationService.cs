@@ -36,11 +36,17 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
         }
         catch (Exception exception)
         {
-            log.LogError(exception: exception,message: exception.Message);
+            log.LogError(
+                exception: exception,
+                message: "Workflow processing failed: {ErrorMessage}",
+                args: exception.Message);
 
             if (exception.InnerException is not null)
             {
-                log.LogError(exception: exception.InnerException,message: exception.InnerException.Message);
+                log.LogError(
+                    exception: exception.InnerException,
+                    message: "Inner workflow processing failure: {ErrorMessage}",
+                    args: exception.InnerException.Message);
             }
         }
     }
@@ -77,11 +83,17 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
         }
         catch (Exception exception)
         {
-            log.LogError(exception: exception,message: exception.Message);
+            log.LogError(
+                exception: exception,
+                message: "Workflow maintenance failed: {ErrorMessage}",
+                args: exception.Message);
 
             if (exception.InnerException is not null)
             {
-                log.LogError(exception: exception.InnerException,message: exception.InnerException.Message);
+                log.LogError(
+                    exception: exception.InnerException,
+                    message: "Inner workflow maintenance failure: {ErrorMessage}",
+                    args: exception.InnerException.Message);
             }
         }
     }
@@ -113,11 +125,17 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
         }
         catch (Exception exception)
         {
-            log.LogError(exception: exception,message: exception.Message);
+            log.LogError(
+                exception: exception,
+                message: "Workflow queue processing failed: {ErrorMessage}",
+                args: exception.Message);
 
             if (exception.InnerException is not null)
             {
-                log.LogError(exception: exception.InnerException,message: exception.InnerException.Message);
+                log.LogError(
+                    exception: exception.InnerException,
+                    message: "Inner workflow queue processing failure: {ErrorMessage}",
+                    args: exception.InnerException.Message);
             }
         }
     }
@@ -139,7 +157,12 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
 
         if (dropCount > 0)
         {
-            log.LogInformation(message: "Dropped {Count} Workflow instances older than 7 days.",args: dropCount);
+            if (log.IsEnabled(logLevel: LogLevel.Information))
+            {
+                log.LogInformation(
+                    message: "Dropped {Count} Workflow instances older than 7 days.",
+                    args: dropCount);
+            }
         }
     }
 

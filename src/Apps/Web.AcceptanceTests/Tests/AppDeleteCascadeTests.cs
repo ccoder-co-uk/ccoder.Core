@@ -402,9 +402,7 @@ public sealed partial class AppDeleteCascadeTests(WebAcceptanceFixture fixture)
         CoreDataContext core,
         IQueryable query)
     {
-        object[] items = query
-            .Cast<object>()
-            .ToArray();
+        object[] items = [.. query.Cast<object>()];
 
         if (items.Length == 0)
         {

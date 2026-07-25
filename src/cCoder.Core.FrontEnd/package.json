@@ -1,0 +1,14 @@
+{
+  "name": "ccoder.core.frontend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "clean": "node scripts/clean.mjs",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.1"
+  }
+}

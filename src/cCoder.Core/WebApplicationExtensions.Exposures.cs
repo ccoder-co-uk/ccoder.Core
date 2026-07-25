@@ -15,8 +15,11 @@ namespace cCoder.Core;
 
 public static partial class WebApplicationExtensions
 {
-    private static readonly Regex DmsRouteRegex = new(@"^\/api\/dms.*", RegexOptions.Compiled);
-    private static readonly Regex WebDavRouteRegex = new(@"^\/api\/webdav.*", RegexOptions.Compiled);
+    [GeneratedRegex(@"^\/api\/dms.*")]
+    private static partial Regex GetDmsRouteRegex();
+
+    [GeneratedRegex(@"^\/api\/webdav.*")]
+    private static partial Regex GetWebDavRouteRegex();
 
     private static WebApplication UseCoreApiShell(this WebApplication app)
     {
@@ -101,11 +104,11 @@ middleware: async (context, next) =>
         log?.LogInformation(message: "Initialising Document Management");
 
         app.MapWhen(
-predicate: context => DmsRouteRegex.IsMatch(input: context.Request.Path.Value?.ToLower() ?? string.Empty), configuration: branch => branch.UseMiddleware<DMSMiddleware>()
+predicate: context => GetDmsRouteRegex().IsMatch(input: context.Request.Path.Value?.ToLower() ?? string.Empty), configuration: branch => branch.UseMiddleware<DMSMiddleware>()
         );
 
         app.MapWhen(
-predicate: context => WebDavRouteRegex.IsMatch(input: context.Request.Path.Value?.ToLower() ?? string.Empty), configuration: branch => branch.UseMiddleware<WebDavMiddleware>()
+predicate: context => GetWebDavRouteRegex().IsMatch(input: context.Request.Path.Value?.ToLower() ?? string.Empty), configuration: branch => branch.UseMiddleware<WebDavMiddleware>()
         );
 
         return app;

@@ -7,14 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace cCoder.Core.Exposures.OData.Responses;
 
-public class RawResult : IActionResult
+public class RawResult(string response) : IActionResult
 {
-    private readonly string response;
-
-    public RawResult(string response)
-    {
-        this.response = response;
-    }
+    private readonly string response = response;
 
     public Task ExecuteResultAsync(ActionContext context) =>
         Task.FromResult(

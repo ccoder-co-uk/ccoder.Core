@@ -84,12 +84,11 @@ internal sealed partial class BaselinePackageCatalogProcessingService
     {
         Guid packageId = Guid.NewGuid();
 
-        PackageItem[] items = (package.Items ?? [])
+        PackageItem[] items = [.. (package.Items ?? [])
             .Select(selector: item =>
                 ClonePackageItem(
                     item: item,
-                    packageId: packageId))
-            .ToArray();
+                    packageId: packageId))];
 
         return new Package
         {
@@ -117,9 +116,7 @@ internal sealed partial class BaselinePackageCatalogProcessingService
     {
         string trimmed = data.TrimStart();
 
-        return trimmed.StartsWith(
-            value: "[",
-            comparisonType: StringComparison.Ordinal)
+        return trimmed.StartsWith(value: '[')
                 ? JsonConvert.DeserializeObject<T[]>(
                     value: trimmed,
                     settings: settings) ?? []

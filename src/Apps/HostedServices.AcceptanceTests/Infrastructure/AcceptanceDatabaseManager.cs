@@ -67,7 +67,7 @@ internal sealed class AcceptanceDatabaseManager(
         return Task.CompletedTask;
     }
 
-    private void ForceDropDatabase(string connectionString)
+    private static void ForceDropDatabase(string connectionString)
     {
         if (string.IsNullOrWhiteSpace(value: connectionString))
         {
@@ -99,7 +99,14 @@ BEGIN
 END";
 
         _ = command.Parameters.AddWithValue(parameterName: "@databaseName", value: databaseName);
-        command.ExecuteNonQuery();
+
+        try
+        {
+            command.ExecuteNonQuery();
+        }
+        catch (SqlException exception) when (exception.Number == 3701)
+        {
+        }
     }
 
     private static void EnsureSafeAcceptanceDatabase(string connectionString, string protectedDatabaseName)

@@ -141,19 +141,18 @@ path: "xl/theme/theme1.xml", text: @"<?xml version='1.0' encoding='UTF-8' standa
     private void InsertData(ZipArchive excelFile, IEnumerable<object> data)
     {
         string[] properties = [];
-        object[] items = data.ToArray();
+        object[] items = [.. data];
 
-        if (items.Any())
+        if (items.Length > 0)
         {
             if (items.First() is IDictionary<string, object> dictionary)
             {
-                properties = dictionary
-                    .Keys.Where(predicate: key => dictionary[key] is not IEnumerable or string)
-                    .ToArray();
+                properties = [.. dictionary
+                    .Keys.Where(predicate: key => dictionary[key] is not IEnumerable or string)];
             }
             else
             {
-                properties = items
+                properties = [.. items
                     .First()
                     .GetType()
                     .GetProperties()
@@ -162,8 +161,7 @@ path: "xl/theme/theme1.xml", text: @"<?xml version='1.0' encoding='UTF-8' standa
                             || property.PropertyType == typeof(string))
                         && property.PropertyType is not IEnumerable
                     )
-                    .Select(selector: property => property.Name)
-                    .ToArray();
+                    .Select(selector: property => property.Name)];
             }
         }
 
@@ -303,10 +301,8 @@ handler: $"<row r=\"{rowNumber}\" x14ac:dyDescent=\"0.25\" spans=\"1:{properties
 
             for (int columnIndex = 0; columnIndex < properties.Length; columnIndex++)
             {
-                IDictionary<string, object> dictionary = item as IDictionary<string, object>;
-
                 object propertyValue =
-                    dictionary != null
+                    item is IDictionary<string, object> dictionary
                         ? dictionary[properties[columnIndex]]
                         : objectProperties
                             .First(predicate: property => property.Name == properties[columnIndex])
@@ -376,9 +372,12 @@ format: dateFormat, formatProvider: CultureInfo.CreateSpecificCulture(name: cult
         }
 
         return new string(
-            value: letters.ToString()
-                .Reverse()
-                .ToArray());
+            value:
+            [
+                .. letters
+                    .ToString()
+                    .Reverse()
+            ]);
     }
 
     private static Resource ForNameAndCulture(
@@ -415,12 +414,11 @@ format: dateFormat, formatProvider: CultureInfo.CreateSpecificCulture(name: cult
         IEnumerable<Resource> potentials,
         string culture)
     {
-        List<string> cultureParts = (culture ?? string.Empty)
+        List<string> cultureParts = [.. (culture ?? string.Empty)
             .ToLowerInvariant()
             .Split(
                 separator: '-',
-                options: StringSplitOptions.RemoveEmptyEntries)
-            .ToList();
+                options: StringSplitOptions.RemoveEmptyEntries)];
 
         for (int take = cultureParts.Count; take > 0; take--)
         {

@@ -181,11 +181,10 @@ value:                         new[]
 
         IReadOnlyList<Package> exportedPackages = await ExportPackagesAsync(appId: created.Id);
 
-        PackageItem[] pageItems = exportedPackages
+        PackageItem[] pageItems = [.. exportedPackages
             .Where(predicate: found => string.Equals(a: found.Name,b: "Pages",comparisonType: StringComparison.OrdinalIgnoreCase))
             .SelectMany(selector: found => found.Items ?? [])
-            .Where(predicate: found => string.Equals(a: found.Type,b: "Core/Page",comparisonType: StringComparison.OrdinalIgnoreCase))
-            .ToArray();
+            .Where(predicate: found => string.Equals(a: found.Type,b: "Core/Page",comparisonType: StringComparison.OrdinalIgnoreCase))];
 
         bool hasCommonCachePage = pageItems.Any(predicate: item =>
         {

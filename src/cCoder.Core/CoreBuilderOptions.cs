@@ -47,15 +47,12 @@ using MailRuntimeConfig = cCoder.Mail.Models.Config;
 
 namespace cCoder.Core;
 
-public partial class CoreBuilderOptions
+public partial class CoreBuilderOptions(IServiceCollection services)
 {
-    private readonly IServiceCollection services;
+    private readonly IServiceCollection services = services;
     private readonly List<EventProvider> eventProviders = [];
     private CoreConfiguration coreConfiguration;
     private string sessionCacheConnectionString;
-
-    public CoreBuilderOptions(IServiceCollection services) =>
-        this.services = services;
 
     public CoreBuilderOptions WithCoreConfiguration(Action<CoreConfiguration> configure)
     {

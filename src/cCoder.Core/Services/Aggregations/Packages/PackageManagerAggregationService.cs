@@ -118,7 +118,7 @@ internal sealed partial class PackageManagerAggregationService(
                     packageName: packageName));
         }
 
-        return exportedPackages.ToArray();
+        return [.. exportedPackages];
     }
 
     public ValueTask ImportPackagesAsync(
@@ -143,9 +143,7 @@ internal sealed partial class PackageManagerAggregationService(
         {
             Package sanitizedPackage = SanitizePackage(package: package);
 
-            PackageItem[] appItems = (sanitizedPackage.Items ?? [])
-                .Where(predicate: item => string.Equals(a: item.Type, b: AppConfigurationItemType, comparisonType: StringComparison.OrdinalIgnoreCase))
-                .ToArray();
+            PackageItem[] appItems = [.. (sanitizedPackage.Items ?? []).Where(predicate: item => string.Equals(a: item.Type, b: AppConfigurationItemType, comparisonType: StringComparison.OrdinalIgnoreCase))];
 
             if (appItems.Length > 0)
             {
@@ -155,13 +153,12 @@ internal sealed partial class PackageManagerAggregationService(
                 }
             }
 
-            PackageItem[] remainingItems = (sanitizedPackage.Items ?? [])
+            PackageItem[] remainingItems = [.. (sanitizedPackage.Items ?? [])
                 .Where(predicate: item =>
                     !string.Equals(a: item.Type, b: AppConfigurationItemType, comparisonType: StringComparison.OrdinalIgnoreCase)
                     && !string.Equals(a: item.Type, b: "Core/Page", comparisonType: StringComparison.OrdinalIgnoreCase)
                     && !string.Equals(a: item.Type, b: "Core/PageRole", comparisonType: StringComparison.OrdinalIgnoreCase)
-                    && !string.Equals(a: item.Type, b: "Core/FolderRole", comparisonType: StringComparison.OrdinalIgnoreCase))
-                .ToArray();
+                    && !string.Equals(a: item.Type, b: "Core/FolderRole", comparisonType: StringComparison.OrdinalIgnoreCase))];
 
             if (remainingItems.Length > 0)
             {
@@ -179,27 +176,21 @@ internal sealed partial class PackageManagerAggregationService(
                     package: remainingPackage);
             }
 
-            PackageItem[] pageItems = (sanitizedPackage.Items ?? [])
-                .Where(predicate: item => string.Equals(a: item.Type, b: "Core/Page", comparisonType: StringComparison.OrdinalIgnoreCase))
-                .ToArray();
+            PackageItem[] pageItems = [.. (sanitizedPackage.Items ?? []).Where(predicate: item => string.Equals(a: item.Type, b: "Core/Page", comparisonType: StringComparison.OrdinalIgnoreCase))];
 
             if (pageItems.Length > 0)
             {
                 await ImportPagesAsync(appId: appId, pageItems: pageItems);
             }
 
-            PackageItem[] pageRoleItems = (sanitizedPackage.Items ?? [])
-                .Where(predicate: item => string.Equals(a: item.Type, b: "Core/PageRole", comparisonType: StringComparison.OrdinalIgnoreCase))
-                .ToArray();
+            PackageItem[] pageRoleItems = [.. (sanitizedPackage.Items ?? []).Where(predicate: item => string.Equals(a: item.Type, b: "Core/PageRole", comparisonType: StringComparison.OrdinalIgnoreCase))];
 
             if (pageRoleItems.Length > 0)
             {
                 await ImportPageRolesAsync(appId: appId, pageRoleItems: pageRoleItems);
             }
 
-            PackageItem[] folderRoleItems = (sanitizedPackage.Items ?? [])
-                .Where(predicate: item => string.Equals(a: item.Type, b: "Core/FolderRole", comparisonType: StringComparison.OrdinalIgnoreCase))
-                .ToArray();
+            PackageItem[] folderRoleItems = [.. (sanitizedPackage.Items ?? []).Where(predicate: item => string.Equals(a: item.Type, b: "Core/FolderRole", comparisonType: StringComparison.OrdinalIgnoreCase))];
 
             if (folderRoleItems.Length > 0)
             {
@@ -210,11 +201,10 @@ internal sealed partial class PackageManagerAggregationService(
 
     private async Task ImportPagesAsync(int appId, IEnumerable<PackageItem> pageItems)
     {
-        Page[] items = pageItems
+        Page[] items = [.. pageItems
             .SelectMany(selector: item => DeserializePackageItems<Page>(data: item.Data))
             .OrderBy(keySelector: item => GetPageDepth(path: item.Path))
-            .ThenBy(keySelector: item => item.Order)
-            .ToArray();
+            .ThenBy(keySelector: item => item.Order)];
 
         if (items.Length == 0)
         {
@@ -268,23 +258,21 @@ internal sealed partial class PackageManagerAggregationService(
                         Path = normalizedPath,
                         ResourceKey = item.ResourceKey,
                         Layout = item.Layout,
-                        PageInfo = (item.PageInfo ?? [])
+                        PageInfo = [.. (item.PageInfo ?? [])
                         .Select(selector: info => new PageInfo
                         {
                             CultureId = info.CultureId,
                             Title = info.Title,
                             Description = info.Description,
                             Keywords = info.Keywords,
-                        })
-                        .ToList(),
-                        Contents = (item.Contents ?? [])
+                        })],
+                        Contents = [.. (item.Contents ?? [])
                         .Select(selector: content => new cCoder.Data.Models.CMS.Content
                         {
                             CultureId = content.CultureId,
                             Name = content.Name,
                             Html = content.Html,
-                        })
-                        .ToList(),
+                        })],
                     });
 
                 await core.SaveChangesAsync();
@@ -309,7 +297,7 @@ internal sealed partial class PackageManagerAggregationService(
             core.Set<cCoder.Data.Models.CMS.Content>()
                 .RemoveRange(entities: existingPage.Contents ?? []);
 
-            existingPage.PageInfo = (item.PageInfo ?? [])
+            existingPage.PageInfo = [.. (item.PageInfo ?? [])
                 .Select(selector: info => new PageInfo
                 {
                     PageId = existingPage.Id,
@@ -317,18 +305,16 @@ internal sealed partial class PackageManagerAggregationService(
                     Title = info.Title,
                     Description = info.Description,
                     Keywords = info.Keywords,
-                })
-                .ToList();
+                })];
 
-            existingPage.Contents = (item.Contents ?? [])
+            existingPage.Contents = [.. (item.Contents ?? [])
                 .Select(selector: content => new cCoder.Data.Models.CMS.Content
                 {
                     PageId = existingPage.Id,
                     CultureId = content.CultureId,
                     Name = content.Name,
                     Html = content.Html,
-                })
-                .ToList();
+                })];
 
             await core.SaveChangesAsync();
         }
@@ -336,10 +322,9 @@ internal sealed partial class PackageManagerAggregationService(
 
     private async Task ImportPageRolesAsync(int appId, IEnumerable<PackageItem> pageRoleItems)
     {
-        PageRolePackageItem[] items = pageRoleItems
+        PageRolePackageItem[] items = [.. pageRoleItems
             .SelectMany(selector: item => DeserializePackageItems<PageRolePackageItem>(data: item.Data))
-            .Where(predicate: item => !string.IsNullOrWhiteSpace(value: item.Path) && !string.IsNullOrWhiteSpace(value: item.Role))
-            .ToArray();
+            .Where(predicate: item => !string.IsNullOrWhiteSpace(value: item.Path) && !string.IsNullOrWhiteSpace(value: item.Role))];
 
         if (items.Length == 0)
         {
@@ -363,9 +348,7 @@ internal sealed partial class PackageManagerAggregationService(
             .Where(predicate: found => found.AppId == appId)
             .ToDictionaryAsync(keySelector: found => found.Name, elementSelector: found => found.Id, comparer: StringComparer.OrdinalIgnoreCase);
 
-        int[] pageIds = pageIdsByPath.Values
-            .Distinct()
-            .ToArray();
+        int[] pageIds = [.. pageIdsByPath.Values.Distinct()];
 
         HashSet<string> existingPairs =
         [
@@ -422,10 +405,9 @@ internal sealed partial class PackageManagerAggregationService(
 
     private async Task ImportFolderRolesAsync(int appId, IEnumerable<PackageItem> folderRoleItems)
     {
-        FolderRolePackageItem[] items = folderRoleItems
+        FolderRolePackageItem[] items = [.. folderRoleItems
             .SelectMany(selector: item => DeserializePackageItems<FolderRolePackageItem>(data: item.Data))
-            .Where(predicate: item => !string.IsNullOrWhiteSpace(value: item.Path) && !string.IsNullOrWhiteSpace(value: item.Name))
-            .ToArray();
+            .Where(predicate: item => !string.IsNullOrWhiteSpace(value: item.Path) && !string.IsNullOrWhiteSpace(value: item.Name))];
 
         if (items.Length == 0)
         {
@@ -444,12 +426,11 @@ internal sealed partial class PackageManagerAggregationService(
             .GroupBy(keySelector: found => NormalizeFolderPath(path: found.Path), comparer: StringComparer.OrdinalIgnoreCase)
             .ToDictionary(keySelector: group => group.Key, elementSelector: group => group.First(), comparer: StringComparer.OrdinalIgnoreCase);
 
-        string[] paths = items
+        string[] paths = [.. items
             .Select(selector: item => NormalizeFolderPath(path: item.Path))
             .Distinct(comparer: StringComparer.OrdinalIgnoreCase)
             .OrderBy(keySelector: path => path.Count(predicate: character => character == '/'))
-            .ThenBy(keySelector: path => path, comparer: StringComparer.OrdinalIgnoreCase)
-            .ToArray();
+            .ThenBy(keySelector: path => path, comparer: StringComparer.OrdinalIgnoreCase)];
 
         foreach (string path in paths)
         {
@@ -485,10 +466,9 @@ internal sealed partial class PackageManagerAggregationService(
             .Where(predicate: found => found.AppId == appId)
             .ToDictionaryAsync(keySelector: found => found.Name, elementSelector: found => found.Id, comparer: StringComparer.OrdinalIgnoreCase);
 
-        Guid[] folderIds = foldersByPath.Values
+        Guid[] folderIds = [.. foldersByPath.Values
             .Select(selector: folder => folder.Id)
-            .Distinct()
-            .ToArray();
+            .Distinct()];
 
         HashSet<string> existingPairs =
         [
@@ -539,12 +519,7 @@ internal sealed partial class PackageManagerAggregationService(
 
         App app = await core.Set<App>()
             .IgnoreQueryFilters()
-            .SingleOrDefaultAsync(predicate: found => found.Id == appId);
-
-        if (app is null)
-        {
-            throw new InvalidOperationException($"App '{appId}' was not found.");
-        }
+            .SingleOrDefaultAsync(predicate: found => found.Id == appId) ?? throw new InvalidOperationException($"App '{appId}' was not found.");
 
         return new Package(AppConfigurationPackageName)
         {
@@ -593,15 +568,14 @@ inner: core.Set<Role>()
     })
             .ToArrayAsync();
 
-        PageRolePackageItem[] items = rows
+        PageRolePackageItem[] items = [.. rows
             .Select(selector: item => new PageRolePackageItem
             {
                 Path = NormalizePagePath(path: item.Path),
                 Role = item.Role,
             })
             .OrderBy(keySelector: item => item.Path, comparer: StringComparer.OrdinalIgnoreCase)
-            .ThenBy(keySelector: item => item.Role, comparer: StringComparer.OrdinalIgnoreCase)
-            .ToArray();
+            .ThenBy(keySelector: item => item.Role, comparer: StringComparer.OrdinalIgnoreCase)];
 
         return new Package("PageRoles")
         {
@@ -641,15 +615,14 @@ inner: core.Set<Role>()
     })
             .ToArrayAsync();
 
-        FolderRolePackageItem[] items = rows
+        FolderRolePackageItem[] items = [.. rows
             .Select(selector: item => new FolderRolePackageItem
             {
                 Path = NormalizeFolderPath(path: item.Path),
                 Name = item.Name,
             })
             .OrderBy(keySelector: item => item.Path, comparer: StringComparer.OrdinalIgnoreCase)
-            .ThenBy(keySelector: item => item.Name, comparer: StringComparer.OrdinalIgnoreCase)
-            .ToArray();
+            .ThenBy(keySelector: item => item.Name, comparer: StringComparer.OrdinalIgnoreCase)];
 
         return new Package("FolderRoles")
         {
@@ -680,12 +653,7 @@ inner: core.Set<Role>()
 
         App app = await core.Set<App>()
             .IgnoreQueryFilters()
-            .SingleOrDefaultAsync(predicate: found => found.Id == appId);
-
-        if (app is null)
-        {
-            throw new InvalidOperationException($"App '{appId}' was not found.");
-        }
+            .SingleOrDefaultAsync(predicate: found => found.Id == appId) ?? throw new InvalidOperationException($"App '{appId}' was not found.");
 
         app.DefaultCultureId = imported.DefaultCultureId ?? string.Empty;
         app.Name = imported.Name ?? app.Name;
@@ -739,15 +707,14 @@ inner: core.Set<Role>()
             Description = package.Description,
             Category = package.Category,
             SourceApi = package.SourceApi,
-            Items = (package.Items ?? [])
+            Items = [.. (package.Items ?? [])
                 .Select(selector: item => new PackageItem
                 {
                     Id = item.Id,
                     PackageId = item.PackageId,
                     Type = item.Type,
                     Data = StripTypeMetadata(data: item.Data),
-                })
-                .ToArray(),
+                })],
         };
 
     private static string StripTypeMetadata(string data)
@@ -759,7 +726,8 @@ inner: core.Set<Role>()
 
         string trimmed = data.TrimStart();
 
-        if (!trimmed.StartsWith(value: "{", comparisonType: StringComparison.Ordinal) && !trimmed.StartsWith(value: "[", comparisonType: StringComparison.Ordinal))
+        if (!trimmed.StartsWith(value: '{')
+            && !trimmed.StartsWith(value: '['))
         {
             return data;
         }

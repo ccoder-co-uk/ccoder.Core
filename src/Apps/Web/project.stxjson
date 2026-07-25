@@ -597,7 +597,7 @@
       "Description": "API controller methods must use HTTP nouns: Get, Post, Put, or Delete.",
       "Severity": "Warning",
       "Type": "Web.Controllers.HomeController",
-      "LineNumber": 44
+      "LineNumber": 36
     }
   ]
 }

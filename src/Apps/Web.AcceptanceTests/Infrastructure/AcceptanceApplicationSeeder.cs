@@ -157,7 +157,7 @@ entity:                 new User
             return;
         }
 
-        CommonObject[] commonObjects = AcceptanceSeedData
+        CommonObject[] commonObjects = [.. AcceptanceSeedData
             .LoadCommonObjects()
             .Select(selector: item => new CommonObject
             {
@@ -173,8 +173,7 @@ entity:                 new User
                 Type = item.Type,
                 Json = item.Json,
                 Culture = item.Culture,
-            })
-            .ToArray();
+            })];
 
         NormalizeCommonObjects(commonObjects: commonObjects);
 
@@ -243,7 +242,7 @@ entity:                 new User
             return;
         }
 
-        Role[] roles = AcceptanceSeedData
+        Role[] roles = [.. AcceptanceSeedData
             .LoadRoles(packageName: "Roles",itemType: "Core/Role")
             .Select(selector: role => new Role
             {
@@ -252,8 +251,7 @@ entity:                 new User
                 Name = role.Name,
                 Description = role.Description,
                 Privs = NormalizeRolePrivileges(role: role),
-            })
-            .ToArray();
+            })];
 
         await core.Set<Role>()
             .AddRangeAsync(entities: roles);
@@ -282,7 +280,7 @@ entity:                 new User
             return;
         }
 
-        Layout[] layouts = AcceptanceSeedData
+        Layout[] layouts = [.. AcceptanceSeedData
             .LoadLayouts(packageName: "Layouts",itemType: "Core/Layout")
             .Select(selector: layout => new Layout
             {
@@ -297,8 +295,7 @@ entity:                 new User
                 CreatedBy = layout.CreatedBy,
                 LastUpdated = layout.LastUpdated,
                 LastUpdatedBy = layout.LastUpdatedBy,
-            })
-            .ToArray();
+            })];
 
         await core.Set<Layout>()
             .AddRangeAsync(entities: layouts);
@@ -314,7 +311,7 @@ entity:                 new User
             return;
         }
 
-        Template[] templates = AcceptanceSeedData
+        Template[] templates = [.. AcceptanceSeedData
             .LoadTemplates(packageName: "Templates",itemType: "Core/Template")
             .Select(selector: template => new Template
             {
@@ -328,8 +325,7 @@ entity:                 new User
                 CreatedBy = template.CreatedBy,
                 LastUpdated = template.LastUpdated,
                 LastUpdatedBy = template.LastUpdatedBy,
-            })
-            .ToArray();
+            })];
 
         await core.Set<Template>()
             .AddRangeAsync(entities: templates);
@@ -345,7 +341,7 @@ entity:                 new User
             return;
         }
 
-        Resource[] resources = AcceptanceSeedData
+        Resource[] resources = [.. AcceptanceSeedData
             .LoadResources(packageName: "Resources",itemType: "Core/Resource")
             .Select(selector: resource => new Resource
             {
@@ -361,8 +357,7 @@ entity:                 new User
                 CreatedBy = resource.CreatedBy,
                 LastUpdated = resource.LastUpdated,
                 LastUpdatedBy = resource.LastUpdatedBy,
-            })
-            .ToArray();
+            })];
 
         await core.Set<Resource>()
             .AddRangeAsync(entities: resources);
@@ -378,7 +373,7 @@ entity:                 new User
             return;
         }
 
-        Component[] components = AcceptanceSeedData
+        Component[] components = [.. AcceptanceSeedData
             .LoadComponents(packageName: "Components",itemType: "Core/Component")
             .Select(selector: component => new Component
             {
@@ -394,8 +389,7 @@ entity:                 new User
                 CreatedBy = component.CreatedBy,
                 LastUpdated = component.LastUpdated,
                 LastUpdatedBy = component.LastUpdatedBy,
-            })
-            .ToArray();
+            })];
 
         await core.Set<Component>()
             .AddRangeAsync(entities: components);
@@ -411,7 +405,7 @@ entity:                 new User
             return;
         }
 
-        Script[] scripts = AcceptanceSeedData
+        Script[] scripts = [.. AcceptanceSeedData
             .LoadScripts(packageName: "Scripts",itemType: "Core/Script")
             .Select(selector: script => new Script
             {
@@ -425,8 +419,7 @@ entity:                 new User
                 CreatedBy = script.CreatedBy,
                 LastUpdated = script.LastUpdated,
                 LastUpdatedBy = script.LastUpdatedBy,
-            })
-            .ToArray();
+            })];
 
         await core.Set<Script>()
             .AddRangeAsync(entities: scripts);

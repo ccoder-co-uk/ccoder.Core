@@ -57,15 +57,8 @@ input: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 
     private static string GetCulture(OutputFormatterWriteContext context, Encoding selectedEncoding)
     {
-        if (context == null)
-        {
-            throw new ArgumentNullException(nameof(context));
-        }
-
-        if (selectedEncoding == null)
-        {
-            throw new ArgumentNullException(nameof(selectedEncoding));
-        }
+        ArgumentNullException.ThrowIfNull(argument: context);
+        ArgumentNullException.ThrowIfNull(argument: selectedEncoding);
 
         return context.HttpContext.Request.Query.ContainsKey(key: "culture")
             ? Thread.CurrentThread.CurrentCulture.Name
@@ -76,7 +69,7 @@ input: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     {
         base.WriteResponseHeaders(context: context);
 
-        context.HttpContext.Response.Headers["Content-Disposition"] =
+        context.HttpContext.Response.Headers.ContentDisposition =
             "Content-Disposition: attachment; Data.xlsx;";
     }
 
@@ -100,8 +93,8 @@ collection: cachedResources
         }
 
         resources.AddRange(
-collection: new Resource[]
-            {
+collection:
+            [
                 new()
                 {
                     Name = "dateformat",
@@ -116,10 +109,10 @@ collection: new Resource[]
                         ? context.HttpContext.Request.Query["moneyFormat"].ToString()
                         : "n",
                 },
-            }
+            ]
         );
 
         resources.AddRange(collection: cachedResources);
-        return resources.ToArray();
+        return [.. resources];
     }
 }

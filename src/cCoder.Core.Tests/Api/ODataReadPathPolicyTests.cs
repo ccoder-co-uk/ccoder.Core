@@ -10,6 +10,9 @@ namespace cCoder.Core.Tests.Api;
 
 public sealed partial class ODataReadPathPolicyTests
 {
+    private static readonly Regex DirectKeyLookupRegex =
+        new(pattern: @"\b[a-zA-Z_][a-zA-Z0-9_]*\.Get\(key\)");
+
     [Fact]
     public void EntityControllers_GetById_ShouldQueryThroughFilteredGetAll()
     {
@@ -41,9 +44,16 @@ public sealed partial class ODataReadPathPolicyTests
                 continue;
             }
 
-            if (!routeGetBody.Contains(value: "SingleResult.Create(",comparisonType: StringComparison.Ordinal) ||
-                !routeGetBody.Contains(value: ".GetAll(",comparisonType: StringComparison.Ordinal) ||
-                Regex.IsMatch(input: routeGetBody,pattern: @"\b[a-zA-Z_][a-zA-Z0-9_]*\.Get\(key\)"))
+            bool usesDirectKeyLookup = DirectKeyLookupRegex
+                .IsMatch(input: routeGetBody);
+
+            if (!routeGetBody.Contains(
+                    value: "SingleResult.Create(",
+                    comparisonType: StringComparison.Ordinal)
+                || !routeGetBody.Contains(
+                    value: ".GetAll(",
+                    comparisonType: StringComparison.Ordinal)
+                || usesDirectKeyLookup)
             {
                 violations.Add(item: RelativeToRepository(path: file));
             }
@@ -106,11 +116,25 @@ public sealed partial class ODataReadPathPolicyTests
     private static string repositoryRoot;
 
     private static string[] GetControllerFiles() =>
-        Directory.GetFiles(path: Path.Combine(path1: RepositoryRoot,path2: "src"),searchPattern: "*Controller.cs",searchOption: SearchOption.AllDirectories)
-            .Where(predicate: path => !path.Contains(value: $"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}",comparisonType: StringComparison.OrdinalIgnoreCase))
-            .Where(predicate: path => !path.Contains(value: $"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}",comparisonType: StringComparison.OrdinalIgnoreCase))
-            .Where(predicate: path => path.Contains(value: $"{Path.DirectorySeparatorChar}Exposures{Path.DirectorySeparatorChar}Controllers{Path.DirectorySeparatorChar}",comparisonType: StringComparison.OrdinalIgnoreCase))
-            .ToArray();
+        [.. Directory
+            .GetFiles(
+                path: Path.Combine(
+                    path1: RepositoryRoot,
+                    path2: "src"),
+                searchPattern: "*Controller.cs",
+                searchOption: SearchOption.AllDirectories)
+            .Where(predicate: path =>
+                !path.Contains(
+                    value: $"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}",
+                    comparisonType: StringComparison.OrdinalIgnoreCase))
+            .Where(predicate: path =>
+                !path.Contains(
+                    value: $"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}",
+                    comparisonType: StringComparison.OrdinalIgnoreCase))
+            .Where(predicate: path =>
+                path.Contains(
+                    value: $"{Path.DirectorySeparatorChar}Exposures{Path.DirectorySeparatorChar}Controllers{Path.DirectorySeparatorChar}",
+                    comparisonType: StringComparison.OrdinalIgnoreCase))];
 
     private static string ExtractMethodBody(string source, string signatureStart)
     {
@@ -162,7 +186,7 @@ public sealed partial class ODataReadPathPolicyTests
 
     private static string FindRepositoryRoot()
     {
-        DirectoryInfo current = new DirectoryInfo(AppContext.BaseDirectory);
+        DirectoryInfo current = new(AppContext.BaseDirectory);
 
         while (current is not null)
         {

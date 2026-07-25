@@ -22,7 +22,7 @@ public sealed partial class ApiRootControllerTests
         // Then
         using JsonDocument document = JsonDocument.Parse(json: result);
 
-        string[] typeNames = document.RootElement
+        string[] typeNames = [.. document.RootElement
             .EnumerateArray()
             .SelectMany(selector: typeSet => typeSet.GetProperty(propertyName: "Types")
             .EnumerateArray())
@@ -30,8 +30,7 @@ public sealed partial class ApiRootControllerTests
             .GetString())
             .Where(predicate: typeName => !string.IsNullOrWhiteSpace(value: typeName))
             .Cast<string>()
-            .Distinct(comparer: StringComparer.OrdinalIgnoreCase)
-            .ToArray();
+            .Distinct(comparer: StringComparer.OrdinalIgnoreCase)];
 
         typeNames.Should()
             .Contain(
@@ -59,7 +58,7 @@ expected:         [
             "LogDataItem",
         ]);
 
-        string[] contextTypes = document.RootElement
+        string[] contextTypes = [.. document.RootElement
             .EnumerateArray()
             .SelectMany(selector: typeSet =>
             {
@@ -70,8 +69,7 @@ expected:         [
                     .EnumerateArray()
                     .Select(selector: type => $"{contextName}/{type.GetProperty(propertyName: "Name")
                     .GetString()}");
-            })
-            .ToArray();
+            })];
 
         contextTypes.Should()
             .Contain(

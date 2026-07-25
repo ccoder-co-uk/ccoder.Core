@@ -41,10 +41,9 @@ internal sealed partial class FormatterODataProcessingService
 
     private static dynamic[] ProcessIEumerable(IEnumerable enumerable)
     {
-        dynamic[] rawDataItems = enumerable
+        dynamic[] rawDataItems = [.. enumerable
             .Cast<object>()
-            .Select(selector: i => UnpackSelectExpandWrapper(contextObject: i))
-            .ToArray();
+            .Select(selector: i => UnpackSelectExpandWrapper(contextObject: i))];
 
         foreach (dynamic item in rawDataItems)
         {
@@ -77,7 +76,7 @@ internal sealed partial class FormatterODataProcessingService
 
     private static void ProcessDictionary(IDictionary<string, object> dict)
     {
-        string[] keys = dict.Keys.ToArray();
+        string[] keys = [.. dict.Keys];
 
         foreach (string key in keys)
         {
