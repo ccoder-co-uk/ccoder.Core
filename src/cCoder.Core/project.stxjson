@@ -264,6 +264,41 @@
       ]
     },
     {
+      "Name": "cCoder.Core.Brokers.Packaging.PackageBroker",
+      "StandardElementType": "Broker",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "ExportPackage",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "packageName",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "Package"
+        },
+        {
+          "Name": "ImportPackageAsync",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "package",
+              "Type": "Package"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        }
+      ]
+    },
+    {
       "Name": "cCoder.Core.Brokers.Planning.PlanningAppBroker",
       "StandardElementType": "Broker",
       "Properties": [],
@@ -297,6 +332,30 @@
             }
           ],
           "ReturnType": "System.Threading.Tasks.ValueTask"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Brokers.Setup.CoreSetupContextBroker",
+      "StandardElementType": "Broker",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "CreateCoreContext",
+          "Inputs": [],
+          "ReturnType": "DbContext"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Brokers.Setup.SecuritySetupContextBroker",
+      "StandardElementType": "Broker",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "CreateSecurityContext",
+          "Inputs": [],
+          "ReturnType": "DbContext"
         }
       ]
     },
@@ -339,7 +398,7 @@
     },
     {
       "Name": "cCoder.Core.CoreApiBuilderOptions",
-      "StandardElementType": "Unknown",
+      "StandardElementType": "App",
       "Properties": [],
       "Methods": [
         {
@@ -568,7 +627,7 @@
     },
     {
       "Name": "cCoder.Core.CoreBuilderOptions",
-      "StandardElementType": "Unknown",
+      "StandardElementType": "App",
       "Properties": [],
       "Methods": [
         {
@@ -757,7 +816,7 @@
     },
     {
       "Name": "cCoder.Core.CoreConfigurationMapper",
-      "StandardElementType": "Unknown",
+      "StandardElementType": "App",
       "Properties": [],
       "Methods": []
     },
@@ -1173,6 +1232,41 @@
     },
     {
       "Name": "cCoder.Core.Dependencies.Packaging.DocumentManagementPackageManagerBroker",
+      "StandardElementType": "Dependency",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "ExportPackage",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "packageName",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "Package"
+        },
+        {
+          "Name": "ImportPackageAsync",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "package",
+              "Type": "Package"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Dependencies.Packaging.PackageManagerDependency",
       "StandardElementType": "Dependency",
       "Properties": [],
       "Methods": [
@@ -1662,6 +1756,61 @@
       ]
     },
     {
+      "Name": "cCoder.Core.Exposures.Managers.TemplatedEmailManager",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "QueueAppTemplatedEmailAsync",
+          "Inputs": [
+            {
+              "Name": "app",
+              "Type": "cCoder.Data.Models.CMS.App"
+            },
+            {
+              "Name": "templateName",
+              "Type": "System.String"
+            },
+            {
+              "Name": "culture",
+              "Type": "System.String"
+            },
+            {
+              "Name": "model",
+              "Type": "System.Object"
+            },
+            {
+              "Name": "toEmail",
+              "Type": "System.String"
+            },
+            {
+              "Name": "subject",
+              "Type": "System.String"
+            },
+            {
+              "Name": "sentByUserId",
+              "Type": "System.String"
+            },
+            {
+              "Name": "mailSenderName",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.Mail.QueuedEmail\u003E"
+        },
+        {
+          "Name": "QueueTemplatedEmailDetailsAsync",
+          "Inputs": [
+            {
+              "Name": "details",
+              "Type": "cCoder.Mail.Models.TemplatedEmailDetails"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.Mail.QueuedEmail\u003E"
+        }
+      ]
+    },
+    {
       "Name": "cCoder.Core.Exposures.Managers.UserRegistrationManager",
       "StandardElementType": "Exposure",
       "Properties": [],
@@ -1876,19 +2025,54 @@
       ]
     },
     {
+      "Name": "cCoder.Core.Exposures.Setup.FirstTimeSetupStateManager",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "IsInitializedAsync",
+          "Inputs": [
+            {
+              "Name": "cancellationToken",
+              "Type": "System.Threading.CancellationToken"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task\u003CSystem.Boolean\u003E"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Exposures.Setup.SetupRequestHostManager",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "NormalizeHost",
+          "Inputs": [
+            {
+              "Name": "host",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.String"
+        }
+      ]
+    },
+    {
       "Name": "cCoder.Core.Exposures.Setup.UIBaseline",
       "StandardElementType": "Exposure",
-      "Properties": [
+      "Properties": [],
+      "Methods": [
         {
-          "Name": "Packages",
-          "Type": "Package[]"
+          "Name": "GetPackages",
+          "Inputs": [],
+          "ReturnType": "Package[]"
         }
-      ],
-      "Methods": []
+      ]
     },
     {
       "Name": "cCoder.Core.HttpEventHubUrlResolver",
-      "StandardElementType": "Unknown",
+      "StandardElementType": "App",
       "Properties": [],
       "Methods": [
         {
@@ -2814,6 +2998,104 @@
       "Methods": []
     },
     {
+      "Name": "cCoder.Core.Models.TemplatedEmailOperation",
+      "StandardElementType": "Model",
+      "Properties": [
+        {
+          "Name": "App",
+          "Type": "cCoder.Data.Models.CMS.App"
+        },
+        {
+          "Name": "Content",
+          "Type": "System.String"
+        },
+        {
+          "Name": "Culture",
+          "Type": "System.String"
+        },
+        {
+          "Name": "CurrentUser",
+          "Type": "cCoder.Data.Models.Security.User"
+        },
+        {
+          "Name": "Details",
+          "Type": "cCoder.Mail.Models.TemplatedEmailDetails"
+        },
+        {
+          "Name": "Email",
+          "Type": "QueuedEmail"
+        },
+        {
+          "Name": "MailSender",
+          "Type": "MailSender"
+        },
+        {
+          "Name": "MailSenderName",
+          "Type": "System.String"
+        },
+        {
+          "Name": "Model",
+          "Type": "System.Object"
+        },
+        {
+          "Name": "SentByUserId",
+          "Type": "System.String"
+        },
+        {
+          "Name": "Subject",
+          "Type": "System.String"
+        },
+        {
+          "Name": "Template",
+          "Type": "cCoder.Data.Models.CMS.Template"
+        },
+        {
+          "Name": "TemplateName",
+          "Type": "System.String"
+        },
+        {
+          "Name": "ToEmail",
+          "Type": "System.String"
+        }
+      ],
+      "Methods": []
+    },
+    {
+      "Name": "cCoder.Core.Models.UserRegistrationOperation",
+      "StandardElementType": "Model",
+      "Properties": [
+        {
+          "Name": "AuthenticationToken",
+          "Type": "Token"
+        },
+        {
+          "Name": "Password",
+          "Type": "System.String"
+        },
+        {
+          "Name": "Registration",
+          "Type": "RegisterUser"
+        },
+        {
+          "Name": "RegistrationToken",
+          "Type": "System.String"
+        },
+        {
+          "Name": "Type",
+          "Type": "cCoder.Core.Models.UserRegistrationOperationType"
+        },
+        {
+          "Name": "User",
+          "Type": "SSOUser"
+        },
+        {
+          "Name": "Username",
+          "Type": "System.String"
+        }
+      ],
+      "Methods": []
+    },
+    {
       "Name": "cCoder.Core.Services.Aggregations.AppAggregationService",
       "StandardElementType": "AggregationService",
       "Properties": [],
@@ -2932,48 +3214,24 @@
       "Properties": [],
       "Methods": [
         {
-          "Name": "ConfirmRegistrationAsync",
+          "Name": "ExecuteUserRegistrationOperationAsync",
           "Inputs": [
             {
-              "Name": "token",
-              "Type": "System.String"
+              "Name": "userRegistrationOperation",
+              "Type": "cCoder.Core.Models.UserRegistrationOperation"
             }
           ],
-          "ReturnType": "System.Threading.Tasks.ValueTask"
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Core.Models.UserRegistrationOperation\u003E"
         },
         {
-          "Name": "LoginAsync",
+          "Name": "GetUserRegistrationOperation",
           "Inputs": [
             {
-              "Name": "username",
-              "Type": "System.String"
-            },
-            {
-              "Name": "password",
-              "Type": "System.String"
+              "Name": "userRegistrationOperation",
+              "Type": "cCoder.Core.Models.UserRegistrationOperation"
             }
           ],
-          "ReturnType": "System.Threading.Tasks.ValueTask\u003CToken\u003E"
-        },
-        {
-          "Name": "LogoutAsync",
-          "Inputs": [],
-          "ReturnType": "System.Threading.Tasks.ValueTask"
-        },
-        {
-          "Name": "Me",
-          "Inputs": [],
-          "ReturnType": "SSOUser"
-        },
-        {
-          "Name": "RegisterUserAsync",
-          "Inputs": [
-            {
-              "Name": "registerUser",
-              "Type": "RegisterUser"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask\u003CSSOUser\u003E"
+          "ReturnType": "cCoder.Core.Models.UserRegistrationOperation"
         }
       ]
     },
@@ -3019,6 +3277,23 @@
           "Inputs": [
             {
               "Name": "updatedApp",
+              "Type": "App"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Foundations.AppSecurity.AppSecurityUserRoleService",
+      "StandardElementType": "FoundationService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "SaveAppUserRolesAsync",
+          "Inputs": [
+            {
+              "Name": "app",
               "Type": "App"
             }
           ],
@@ -3268,6 +3543,101 @@
       ]
     },
     {
+      "Name": "cCoder.Core.Services.Foundations.Setup.CoreSetupStateService",
+      "StandardElementType": "FoundationService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "IsCoreInitializedAsync",
+          "Inputs": [
+            {
+              "Name": "cancellationToken",
+              "Type": "System.Threading.CancellationToken"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CSystem.Boolean\u003E"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Foundations.Setup.SecuritySetupStateService",
+      "StandardElementType": "FoundationService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "IsSecurityInitializedAsync",
+          "Inputs": [
+            {
+              "Name": "cancellationToken",
+              "Type": "System.Threading.CancellationToken"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CSystem.Boolean\u003E"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Foundations.TemplatedEmails.TemplatedEmailContentService",
+      "StandardElementType": "FoundationService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "RenderTemplatedEmailOperationContent",
+          "Inputs": [
+            {
+              "Name": "templatedEmailOperation",
+              "Type": "cCoder.Core.Models.TemplatedEmailOperation"
+            }
+          ],
+          "ReturnType": "cCoder.Core.Models.TemplatedEmailOperation"
+        },
+        {
+          "Name": "ResolveTemplatedEmailOperationContent",
+          "Inputs": [
+            {
+              "Name": "templatedEmailOperation",
+              "Type": "cCoder.Core.Models.TemplatedEmailOperation"
+            }
+          ],
+          "ReturnType": "cCoder.Core.Models.TemplatedEmailOperation"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Foundations.TemplatedEmails.TemplatedEmailIdentityService",
+      "StandardElementType": "FoundationService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "ResolveTemplatedEmailOperationIdentity",
+          "Inputs": [
+            {
+              "Name": "templatedEmailOperation",
+              "Type": "cCoder.Core.Models.TemplatedEmailOperation"
+            }
+          ],
+          "ReturnType": "cCoder.Core.Models.TemplatedEmailOperation"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Foundations.TemplatedEmails.TemplatedEmailQueueService",
+      "StandardElementType": "FoundationService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "QueueTemplatedEmailOperationAsync",
+          "Inputs": [
+            {
+              "Name": "templatedEmailOperation",
+              "Type": "cCoder.Core.Models.TemplatedEmailOperation"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Core.Models.TemplatedEmailOperation\u003E"
+        }
+      ]
+    },
+    {
       "Name": "cCoder.Core.Services.Foundations.Workflow.WorkflowAppService",
       "StandardElementType": "FoundationService",
       "Properties": [],
@@ -3305,6 +3675,23 @@
       ]
     },
     {
+      "Name": "cCoder.Core.Services.Orchestrations.FirstTimeSetupStateOrchestrationService",
+      "StandardElementType": "OrchestrationService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "IsInitializedAsync",
+          "Inputs": [
+            {
+              "Name": "cancellationToken",
+              "Type": "System.Threading.CancellationToken"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task\u003CSystem.Boolean\u003E"
+        }
+      ]
+    },
+    {
       "Name": "cCoder.Core.Services.Orchestrations.HostedServicesAppSecurityAppAddOrchestrationService",
       "StandardElementType": "OrchestrationService",
       "Properties": [],
@@ -3322,57 +3709,19 @@
       ]
     },
     {
-      "Name": "cCoder.Core.Services.Orchestrations.TemplatedEmailOrchestrationService",
+      "Name": "cCoder.Core.Services.Orchestrations.TemplatedEmailOperationOrchestrationService",
       "StandardElementType": "OrchestrationService",
       "Properties": [],
       "Methods": [
         {
-          "Name": "QueueAppTemplatedEmailAsync",
+          "Name": "QueueTemplatedEmailOperationAsync",
           "Inputs": [
             {
-              "Name": "app",
-              "Type": "cCoder.Data.Models.CMS.App"
-            },
-            {
-              "Name": "templateName",
-              "Type": "System.String"
-            },
-            {
-              "Name": "culture",
-              "Type": "System.String"
-            },
-            {
-              "Name": "model",
-              "Type": "System.Object"
-            },
-            {
-              "Name": "toEmail",
-              "Type": "System.String"
-            },
-            {
-              "Name": "subject",
-              "Type": "System.String"
-            },
-            {
-              "Name": "sentByUserId",
-              "Type": "System.String"
-            },
-            {
-              "Name": "mailSenderName",
-              "Type": "System.String"
+              "Name": "templatedEmailOperation",
+              "Type": "cCoder.Core.Models.TemplatedEmailOperation"
             }
           ],
-          "ReturnType": "System.Threading.Tasks.ValueTask\u003CQueuedEmail\u003E"
-        },
-        {
-          "Name": "QueueTemplatedEmailDetailsAsync",
-          "Inputs": [
-            {
-              "Name": "details",
-              "Type": "cCoder.Mail.Models.TemplatedEmailDetails"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask\u003CQueuedEmail\u003E"
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Core.Models.TemplatedEmailOperation\u003E"
         }
       ]
     },
@@ -3503,16 +3852,6 @@
           "ReturnType": "System.Byte[]"
         },
         {
-          "Name": "LoadCommonObjects",
-          "Inputs": [],
-          "ReturnType": "CommonObject[]"
-        },
-        {
-          "Name": "LoadCoreReviewPackages",
-          "Inputs": [],
-          "ReturnType": "Package[]"
-        },
-        {
           "Name": "LoadDefaultAppConfig",
           "Inputs": [],
           "ReturnType": "System.String"
@@ -3521,6 +3860,30 @@
           "Name": "LoadDmsAssetPaths",
           "Inputs": [],
           "ReturnType": "System.String[]"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Processings.Setup.BaselineCommonObjectCatalogProcessingService",
+      "StandardElementType": "ProcessingService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "LoadCommonObjects",
+          "Inputs": [],
+          "ReturnType": "CommonObject[]"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Processings.Setup.BaselinePackageCatalogProcessingService",
+      "StandardElementType": "ProcessingService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "LoadCoreReviewPackages",
+          "Inputs": [],
+          "ReturnType": "Package[]"
         },
         {
           "Name": "LoadPackageItems",
@@ -3540,6 +3903,23 @@
           "Name": "LoadPackages",
           "Inputs": [],
           "ReturnType": "Package[]"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Processings.Setup.SetupRequestHostProcessingService",
+      "StandardElementType": "ProcessingService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "NormalizeHost",
+          "Inputs": [
+            {
+              "Name": "host",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.String"
         }
       ]
     },
@@ -3675,23 +4055,6 @@
       "Methods": []
     },
     {
-      "Name": "cCoder.Core.Services.Setup.FirstTimeSetupStateService",
-      "StandardElementType": "Unknown",
-      "Properties": [],
-      "Methods": [
-        {
-          "Name": "IsInitializedAsync",
-          "Inputs": [
-            {
-              "Name": "cancellationToken",
-              "Type": "System.Threading.CancellationToken"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.Task\u003CSystem.Boolean\u003E"
-        }
-      ]
-    },
-    {
       "Name": "cCoder.Core.Services.Setup.FirstTimeSetupTenantService",
       "StandardElementType": "Unknown",
       "Properties": [],
@@ -3810,23 +4173,6 @@
       ]
     },
     {
-      "Name": "cCoder.Core.Services.Setup.SetupRequestHostNormalizer",
-      "StandardElementType": "Unknown",
-      "Properties": [],
-      "Methods": [
-        {
-          "Name": "Normalize",
-          "Inputs": [
-            {
-              "Name": "host",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.String"
-        }
-      ]
-    },
-    {
       "Name": "cCoder.Core.WebApplicationExtensions",
       "StandardElementType": "App",
       "Properties": [],
@@ -3876,6 +4222,10 @@
       "ToType": "cCoder.Core.Dependencies.Eventing.ServiceBusEventingDependency"
     },
     {
+      "FromType": "cCoder.Core.Brokers.Packaging.PackageBroker",
+      "ToType": "cCoder.Core.Dependencies.Packaging.PackageManagerDependency"
+    },
+    {
       "FromType": "cCoder.Core.Dependencies.Formatters.CsvFormatter",
       "ToType": "cCoder.Core.Services.Processings.Formatters.FormatterODataProcessingService"
     },
@@ -3897,15 +4247,23 @@
     },
     {
       "FromType": "cCoder.Core.Exposures.Controllers.SetupController",
+      "ToType": "cCoder.Core.Exposures.Setup.SetupRequestHostManager"
+    },
+    {
+      "FromType": "cCoder.Core.Exposures.Controllers.SetupController",
       "ToType": "cCoder.Core.Services.Setup.FirstTimeSetupOrchestrationService"
     },
     {
       "FromType": "cCoder.Core.Exposures.Controllers.TemplatedEmailController",
-      "ToType": "cCoder.Core.Services.Orchestrations.TemplatedEmailOrchestrationService"
+      "ToType": "cCoder.Core.Exposures.Managers.TemplatedEmailManager"
     },
     {
       "FromType": "cCoder.Core.Exposures.Cors.CoreAllowedOriginStore",
       "ToType": "cCoder.Core.Services.Processings.AllowedOrigins.AllowedOriginStoreProcessingService"
+    },
+    {
+      "FromType": "cCoder.Core.Exposures.Managers.TemplatedEmailManager",
+      "ToType": "cCoder.Core.Services.Orchestrations.TemplatedEmailOperationOrchestrationService"
     },
     {
       "FromType": "cCoder.Core.Exposures.Managers.UserRegistrationManager",
@@ -3914,6 +4272,14 @@
     {
       "FromType": "cCoder.Core.Exposures.Setup.BaselineAssetCatalog",
       "ToType": "cCoder.Core.Services.Processings.Setup.BaselineAssetCatalogProcessingService"
+    },
+    {
+      "FromType": "cCoder.Core.Exposures.Setup.FirstTimeSetupStateManager",
+      "ToType": "cCoder.Core.Services.Orchestrations.FirstTimeSetupStateOrchestrationService"
+    },
+    {
+      "FromType": "cCoder.Core.Exposures.Setup.SetupRequestHostManager",
+      "ToType": "cCoder.Core.Services.Processings.Setup.SetupRequestHostProcessingService"
     },
     {
       "FromType": "cCoder.Core.Models.CoreAllowedOriginSnapshot",
@@ -3952,12 +4318,16 @@
       "ToType": "cCoder.Core.Services.Foundations.Workflow.WorkflowAppService"
     },
     {
-      "FromType": "cCoder.Core.Services.Aggregations.SecurityAccountEmailAggregationService",
-      "ToType": "cCoder.Core.Services.Foundations.ContentManagement.ContentManagementAppService"
+      "FromType": "cCoder.Core.Services.Aggregations.Packages.PackageManagerAggregationService",
+      "ToType": "cCoder.Core.Brokers.Packaging.PackageBroker"
     },
     {
       "FromType": "cCoder.Core.Services.Aggregations.SecurityAccountEmailAggregationService",
-      "ToType": "cCoder.Core.Services.Orchestrations.TemplatedEmailOrchestrationService"
+      "ToType": "cCoder.Core.Exposures.Managers.TemplatedEmailManager"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Aggregations.SecurityAccountEmailAggregationService",
+      "ToType": "cCoder.Core.Services.Foundations.ContentManagement.ContentManagementAppService"
     },
     {
       "FromType": "cCoder.Core.Services.Foundations.AllowedOrigins.AllowedOriginStoreService",
@@ -3966,10 +4336,6 @@
     {
       "FromType": "cCoder.Core.Services.Foundations.AllowedOrigins.AllowedOriginStoreService",
       "ToType": "cCoder.Core.Brokers.Http.HttpRequestBroker"
-    },
-    {
-      "FromType": "cCoder.Core.Services.Foundations.AppSecurity.AppSecurityAppService",
-      "ToType": "cCoder.Core.Brokers.AppSecurity.AppSecurityAppBroker"
     },
     {
       "FromType": "cCoder.Core.Services.Foundations.ContentManagement.ContentManagementAppService",
@@ -4000,16 +4366,52 @@
       "ToType": "cCoder.Core.Brokers.Planning.PlanningAppBroker"
     },
     {
+      "FromType": "cCoder.Core.Services.Foundations.Setup.CoreSetupStateService",
+      "ToType": "cCoder.Core.Brokers.Setup.CoreSetupContextBroker"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Foundations.Setup.SecuritySetupStateService",
+      "ToType": "cCoder.Core.Brokers.Setup.SecuritySetupContextBroker"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Foundations.TemplatedEmails.TemplatedEmailContentService",
+      "ToType": "cCoder.Core.Brokers.ContentManagement.ContentManagementAppBroker"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Foundations.TemplatedEmails.TemplatedEmailQueueService",
+      "ToType": "cCoder.Core.Brokers.Mail.MailManagerBroker"
+    },
+    {
       "FromType": "cCoder.Core.Services.Foundations.Workflow.WorkflowAppService",
       "ToType": "cCoder.Core.Brokers.Workflow.WorkflowAppBroker"
     },
     {
-      "FromType": "cCoder.Core.Services.Orchestrations.TemplatedEmailOrchestrationService",
-      "ToType": "cCoder.Core.Services.Foundations.ContentManagement.ContentManagementAppService"
+      "FromType": "cCoder.Core.Services.Orchestrations.FirstTimeSetupStateOrchestrationService",
+      "ToType": "cCoder.Core.Services.Foundations.Setup.CoreSetupStateService"
     },
     {
-      "FromType": "cCoder.Core.Services.Orchestrations.TemplatedEmailOrchestrationService",
-      "ToType": "cCoder.Core.Services.Foundations.Mail.MailManagerService"
+      "FromType": "cCoder.Core.Services.Orchestrations.FirstTimeSetupStateOrchestrationService",
+      "ToType": "cCoder.Core.Services.Foundations.Setup.SecuritySetupStateService"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Orchestrations.HostedServicesAppSecurityAppAddOrchestrationService",
+      "ToType": "cCoder.Core.Services.Foundations.AppSecurity.AppSecurityAppService"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Orchestrations.HostedServicesAppSecurityAppAddOrchestrationService",
+      "ToType": "cCoder.Core.Services.Foundations.AppSecurity.AppSecurityUserRoleService"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Orchestrations.TemplatedEmailOperationOrchestrationService",
+      "ToType": "cCoder.Core.Services.Foundations.TemplatedEmails.TemplatedEmailContentService"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Orchestrations.TemplatedEmailOperationOrchestrationService",
+      "ToType": "cCoder.Core.Services.Foundations.TemplatedEmails.TemplatedEmailIdentityService"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Orchestrations.TemplatedEmailOperationOrchestrationService",
+      "ToType": "cCoder.Core.Services.Foundations.TemplatedEmails.TemplatedEmailQueueService"
     },
     {
       "FromType": "cCoder.Core.Services.Processings.AllowedOrigins.AllowedOriginStoreProcessingService",
@@ -4025,7 +4427,7 @@
     },
     {
       "FromType": "cCoder.Core.Services.Setup.FirstTimeSetupOrchestrationService",
-      "ToType": "cCoder.Core.Services.Setup.FirstTimeSetupStateService"
+      "ToType": "cCoder.Core.Exposures.Setup.FirstTimeSetupStateManager"
     },
     {
       "FromType": "cCoder.Core.Services.Setup.FirstTimeSetupOrchestrationService",
@@ -4034,88 +4436,46 @@
   ],
   "AnalysisItems": [
     {
-      "Code": "STX0001",
-      "Description": "The type is not a valid Standard element type.",
+      "Code": "STXAPP001",
+      "Description": "Program.cs, IServiceCollectionExtensions.cs, IHostExtensions.cs, and WebApplicationExtensions.cs must live at the project root.",
       "Severity": "Warning",
       "Type": "cCoder.Core.CoreApiBuilderOptions",
       "LineNumber": 13
     },
     {
-      "Code": "STX0001",
-      "Description": "The type is not a valid Standard element type.",
+      "Code": "STXAPI001",
+      "Description": "An API controller must have exactly one business dependency.",
       "Severity": "Warning",
-      "Type": "cCoder.Core.CoreBuilderOptions",
-      "LineNumber": 48
+      "Type": "cCoder.Core.Exposures.Controllers.SetupController",
+      "LineNumber": 13
     },
     {
-      "Code": "STX0001",
-      "Description": "The type is not a valid Standard element type.",
+      "Code": "STXF002",
+      "Description": "A foundation service may only depend on brokers, exposures, or nothing.",
       "Severity": "Warning",
-      "Type": "cCoder.Core.CoreConfigurationMapper",
+      "Type": "cCoder.Core.Services.Foundations.AppSecurity.AppSecurityAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STXF002",
+      "Description": "A foundation service may only depend on brokers, exposures, or nothing.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.AppSecurity.AppSecurityUserRoleService",
       "LineNumber": 11
     },
     {
-      "Code": "STX0002",
-      "Description": "Properties may only be declared on models.",
+      "Code": "STXF002",
+      "Description": "A foundation service may only depend on brokers, exposures, or nothing.",
       "Severity": "Warning",
-      "Type": "cCoder.Core.Exposures.Setup.UIBaseline",
-      "LineNumber": 11
+      "Type": "cCoder.Core.Services.Foundations.TemplatedEmails.TemplatedEmailContentService",
+      "LineNumber": 13
     },
     {
-      "Code": "STX0002",
-      "Description": "Properties may only be declared on models.",
+      "Code": "STXF002",
+      "Description": "A foundation service may only depend on brokers, exposures, or nothing.",
       "Severity": "Warning",
-      "Type": "cCoder.Core.Exposures.Setup.UIBaseline",
-      "LineNumber": 11
-    },
-    {
-      "Code": "STX0002",
-      "Description": "Properties may only be declared on models.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.Exposures.Setup.UIBaseline",
-      "LineNumber": 11
-    },
-    {
-      "Code": "STX0002",
-      "Description": "Properties may only be declared on models.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.Exposures.Setup.UIBaseline",
-      "LineNumber": 11
-    },
-    {
-      "Code": "STX0001",
-      "Description": "The type is not a valid Standard element type.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.HttpEventHubUrlResolver",
-      "LineNumber": 9
-    },
-    {
-      "Code": "STXA001",
-      "Description": "An aggregation service may have any number of dependencies, but they must share the same service variation.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.Services.Aggregations.AppAggregationService",
-      "LineNumber": 18
-    },
-    {
-      "Code": "STXA001",
-      "Description": "An aggregation service may have any number of dependencies, but they must share the same service variation.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.Services.Aggregations.SecurityAccountEmailAggregationService",
-      "LineNumber": 16
-    },
-    {
-      "Code": "STXO001",
-      "Description": "An orchestration must have two or three foundation or processing dependencies and must not mix them.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.Services.Orchestrations.HostedServicesAppSecurityAppAddOrchestrationService",
+      "Type": "cCoder.Core.Services.Foundations.TemplatedEmails.TemplatedEmailIdentityService",
       "LineNumber": 12
-    },
-    {
-      "Code": "STXO001",
-      "Description": "An orchestration must have two or three foundation or processing dependencies and must not mix them.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.Services.Orchestrations.TemplatedEmailOrchestrationService",
-      "LineNumber": 20
     },
     {
       "Code": "STX0001",
@@ -4135,13 +4495,6 @@
       "Code": "STX0001",
       "Description": "The type is not a valid Standard element type.",
       "Severity": "Warning",
-      "Type": "cCoder.Core.Services.Setup.FirstTimeSetupStateService",
-      "LineNumber": 15
-    },
-    {
-      "Code": "STX0001",
-      "Description": "The type is not a valid Standard element type.",
-      "Severity": "Warning",
       "Type": "cCoder.Core.Services.Setup.FirstTimeSetupTenantService",
       "LineNumber": 15
     },
@@ -4151,13 +4504,6 @@
       "Severity": "Warning",
       "Type": "cCoder.Core.Services.Setup.FirstTimeSetupUserService",
       "LineNumber": 13
-    },
-    {
-      "Code": "STX0001",
-      "Description": "The type is not a valid Standard element type.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.Services.Setup.SetupRequestHostNormalizer",
-      "LineNumber": 7
     }
   ]
 }

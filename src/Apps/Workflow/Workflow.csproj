@@ -7,7 +7,7 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="cCoder.CodeAnalysis" Version="2026.7.25.314" />
+    <PackageReference Include="cCoder.CodeAnalysis" Version="2026.7.25.343" />
     <PackageReference Include="cCoder.Data" Version="2026.7.23.1914" />
     <PackageReference Include="cCoder.Workflow.Activities" Version="2026.7.24.2333" />
     <PackageReference Include="cCoder.Workflow.Engine" Version="2026.7.24.2333" />
