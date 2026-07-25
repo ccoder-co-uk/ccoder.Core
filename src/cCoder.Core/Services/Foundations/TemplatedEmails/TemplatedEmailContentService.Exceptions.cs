@@ -4,30 +4,29 @@
 
 using cCoder.Core.Models.Exceptions;
 
-namespace cCoder.Core.Services.Orchestrations;
+namespace cCoder.Core.Services.Foundations.TemplatedEmails;
 
-internal sealed partial class TemplatedEmailOrchestrationService
+internal sealed partial class TemplatedEmailContentService
 {
-    private static async ValueTask<TResult> TryCatch<TResult>(
-        Func<ValueTask<TResult>> operation)
+    private static TResult TryCatch<TResult>(Func<TResult> operation)
     {
         try
         {
-            return await operation();
+            return operation();
         }
-        catch (CoreValidationException innerException)
+        catch (ArgumentException innerException)
         {
-            throw new CoreOrchestrationValidationException(
+            throw new CoreValidationException(
                 innerException: innerException);
         }
         catch (CoreDependencyException innerException)
         {
-            throw new CoreOrchestrationDependencyException(
+            throw new CoreDependencyException(
                 innerException: innerException);
         }
         catch (Exception innerException)
         {
-            throw new CoreOrchestrationServiceException(
+            throw new CoreServiceException(
                 innerException: innerException);
         }
     }

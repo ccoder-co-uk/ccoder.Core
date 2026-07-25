@@ -35,6 +35,7 @@ using cCoder.Core.Services.Orchestrations;
 using cCoder.Core.Services.Processings.AllowedOrigins;
 using cCoder.Core.Services.Processings.Setup;
 using cCoder.Core.Services.Foundations.Setup;
+using cCoder.Core.Services.Foundations.TemplatedEmails;
 using cCoder.Core.Brokers.Setup;
 using cCoder.Core.Services.Setup;
 using cCoder.Data;
@@ -220,7 +221,21 @@ predicate: (documentName, apiDescription) =>
     {
         services.AddTransient<IAppAggregationService, AppAggregationService>();
         services.AddTransient<IAppOrchestrationService, AppAggregationService>();
-        services.AddTransient<TemplatedEmailOrchestrationService>();
+        services.AddTransient<
+            ITemplatedEmailContentService,
+            TemplatedEmailContentService>();
+
+        services.AddTransient<
+            ITemplatedEmailIdentityService,
+            TemplatedEmailIdentityService>();
+
+        services.AddTransient<
+            ITemplatedEmailQueueService,
+            TemplatedEmailQueueService>();
+
+        services.AddTransient<
+            ITemplatedEmailOperationOrchestrationService,
+            TemplatedEmailOperationOrchestrationService>();
         services.AddTransient<ITemplatedEmailManager, TemplatedEmailManager>();
         services.AddTransient<ITemplatedEmailOrchestrationService, TemplatedEmailManager>();
         services.AddTransient<IUserRegistrationOrchestrationService, UserRegistrationManager>();

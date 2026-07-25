@@ -4,7 +4,7 @@
 
 using cCoder.Core.Services.Foundations.ContentManagement;
 using cCoder.Core.Services.Aggregations;
-using cCoder.Core.Services.Orchestrations;
+using cCoder.Core.Exposures.Managers;
 using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.Mail;
 using cCoder.Security.Objects.Entities;
@@ -17,16 +17,18 @@ namespace cCoder.Core.Tests.Orchestrations;
 public partial class SecurityAccountEmailOrchestrationServiceTests
 {
     private readonly Mock<IContentManagementAppService> contentManagementAppServiceMock;
-    private readonly Mock<ITemplatedEmailOrchestrationService> templatedEmailOrchestrationServiceMock;
+    private readonly Mock<ITemplatedEmailManager> templatedEmailManagerMock;
     private readonly SecurityAccountEmailAggregationService orchestrationService;
 
     public SecurityAccountEmailOrchestrationServiceTests()
     {
         contentManagementAppServiceMock = new Mock<IContentManagementAppService>(MockBehavior.Strict);
-        templatedEmailOrchestrationServiceMock = new Mock<ITemplatedEmailOrchestrationService>(MockBehavior.Strict);
+        templatedEmailManagerMock =
+            new Mock<ITemplatedEmailManager>(MockBehavior.Strict);
+
         orchestrationService = new SecurityAccountEmailAggregationService(
             contentManagementAppServiceMock.Object,
-            templatedEmailOrchestrationServiceMock.Object);
+            templatedEmailManagerMock.Object);
     }
 
     private static App CreateApp(string templateName) =>
@@ -68,8 +70,9 @@ public partial class SecurityAccountEmailOrchestrationServiceTests
     private void SetupQueuedEmailExpectation(
         string templateName,
         string subject) =>
-        templatedEmailOrchestrationServiceMock
-            .Setup(expression: service => service.QueueAsync(
+        templatedEmailManagerMock
+            .Setup(expression: service =>
+                service.QueueAppTemplatedEmailAsync(
                 app: It.Is<App>(match: app => app.Id == 17),
                 templateName: templateName,
                 culture: "cy-GB",
@@ -95,8 +98,9 @@ public partial class SecurityAccountEmailOrchestrationServiceTests
     private void VerifyQueuedEmail(
         string templateName,
         string subject) =>
-        templatedEmailOrchestrationServiceMock.Verify(
-            expression: service => service.QueueAsync(
+        templatedEmailManagerMock.Verify(
+            expression: service =>
+                service.QueueAppTemplatedEmailAsync(
                 app: It.Is<App>(match: app => app.Id == 17),
                 templateName: templateName,
                 culture: "cy-GB",
