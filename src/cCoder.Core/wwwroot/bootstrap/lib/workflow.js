@@ -1,4 +1,4 @@
-class Close extends Collidable {
+﻿class Close extends Collidable {
     constructor(parent) {
         super('x', 0, 0, parent.h - 2, parent.h - 2, 0);
         this.type = 'close';
@@ -26,7 +26,7 @@ class Close extends Collidable {
         this.flow.Links = this.flow.Links.filter(l => l.model.Destination !== this.parent.activity.model.Ref);
     }
 }
-class Handle extends Collidable {
+﻿class Handle extends Collidable {
     constructor(parent, col, textCol) {
         super(parent.model.Ref, parent.x, parent.y, parent.w - 1, handleHeight, 0);
 
@@ -75,7 +75,7 @@ class Handle extends Collidable {
         }
     }
 }
-class Link extends Collidable {
+﻿class Link extends Collidable {
     constructor(model, flow) {
         super('', 0, 0, 0, 0, 5);
         this.model = model;
@@ -141,7 +141,7 @@ class Link extends Collidable {
         });
     }
 }
-class Action extends Collidable {
+﻿class Action extends Collidable {
     constructor(parent, text, offsetX, offsetY, height, width, col, onClick) {
         super(text, parent.x + offsetX, parent.y + offsetY, height, width, 0);
         this.type = 'Action';
@@ -168,7 +168,7 @@ class Action extends Collidable {
         draw.text(ctx, this.x + 10, this.y + 15, this.text, this.col);
     }
 }
-class Activity extends Collidable {
+﻿class Activity extends Collidable {
     constructor(meta, flow, model) {
         super(meta.DisplayName.replace("Activity", ""), 0, 0, activityWidth, 100, 0);
 
@@ -341,7 +341,7 @@ class Activity extends Collidable {
         $(".flowConsole", dialog).append(messages);
     }
 }
-/// <reference path="workflowdesigner.js" />
+﻿/// <reference path="workflowdesigner.js" />
 class Connector extends Collidable {
     constructor(parent, type) {
         super('', 0, 0, 0, 0, nodeSize);
@@ -445,7 +445,7 @@ class Connector extends Collidable {
         }
     }
 }
-const activityWidth = 200;
+﻿const activityWidth = 200;
 const handleHeight = 25;
 const nodeSize = 16;
 
@@ -699,7 +699,7 @@ class Flow {
         this.Links.map(l => l.draw(ctx));
     }
 }
-class WorkflowDesigner {
+﻿class WorkflowDesigner {
     constructor(container, flow) {
 
         //TODO: handle this not being available for some reason

@@ -1,4 +1,4 @@
-const draw = {
+﻿const draw = {
     rect: function(ctx, x, y, w, h, col, sel, stroke) {
         ctx.beginPath();
         ctx.rect(x, y, w, h);
@@ -118,7 +118,7 @@ class Collidable extends Drawable {
         return collision;
     }
 }
-class Widget
+﻿class Widget
 {
     constructor(element, args) {
         if (!args) {
@@ -171,7 +171,7 @@ jQuery.fn.getPath = function () {
 
     return path;
 };
-class Dialog extends Widget {
+﻿class Dialog extends Widget {
     /* Consumes https://demos.telerik.com/kendo-ui/templates/expressions to build a read only detail view of an object or portion of an object */
     constructor(args) {
         super(null, args);
@@ -245,7 +245,7 @@ class Dialog extends Widget {
 }
 
 
-class BootstrapDialog extends Widget {
+﻿class BootstrapDialog extends Widget {
     constructor(args) {
         super(null, args);
 
@@ -328,7 +328,7 @@ class BootstrapDialog extends Widget {
 }
 
 
-class BootstrapTabs extends Widget {
+﻿class BootstrapTabs extends Widget {
     constructor(args) {
         super(null, args);
 
@@ -464,7 +464,7 @@ class BootstrapTabs extends Widget {
         }
     }
 }
-class Chart extends Widget
+﻿class Chart extends Widget
 {
     constructor(element, args) {
         super(element, args);
@@ -550,7 +550,7 @@ class PieChart extends Widget {
         this.kendoObject.refresh();
     }
 }
-class ConfirmDialog extends Dialog {
+﻿class ConfirmDialog extends Dialog {
 
     init(callback) {
         if (!this.template) {
@@ -598,7 +598,7 @@ class ConsoleDialog extends Dialog {
         $("[name=console]", this.element).scrollTop($("[name=flowConsole]", this.element).height());
     }
 }
-class ExportDialog extends Dialog {
+﻿class ExportDialog extends Dialog {
     constructor(args) {
         super(args);
         this.width = args.width || 500;
@@ -696,7 +696,7 @@ class ExportDialog extends Dialog {
 
     }
 }
-class DetailWidget extends Widget {
+﻿class DetailWidget extends Widget {
     // Consumes https://demos.telerik.com/kendo-ui/templates/expressions to build a read only detail view of an object
     // or portion of an object
     constructor(element, args) {
@@ -793,7 +793,7 @@ class DetailWidget extends Widget {
 
     fieldValueExpression(fieldName) { /* Intentional */ }
 }
-class EditorDialog extends Dialog {
+﻿class EditorDialog extends Dialog {
     constructor(args) {
         super(args);
 
@@ -820,7 +820,7 @@ class EditorDialog extends Dialog {
         this.data = this.writableEditor.data;
     }
 }
-class GridWidget extends Widget {
+﻿class GridWidget extends Widget {
     constructor(element, dataSource) {
         super(element);
 
@@ -1274,7 +1274,7 @@ class GridWidget extends Widget {
         }
     }
 }
-class ContextMenuWidget extends Widget {
+﻿class ContextMenuWidget extends Widget {
     constructor(element) {
         super(element);
 
@@ -1338,7 +1338,7 @@ class ContextMenuWidget extends Widget {
         });
     }
 }
-class FileDropContainerWidget extends Widget {
+﻿class FileDropContainerWidget extends Widget {
     constructor(element) {
         super(element, null);
         this.container = element;
@@ -1396,7 +1396,7 @@ class FileDropContainerWidget extends Widget {
         $(this.container)[0].style.setProperty("display", "flex", "important");
     }
 }
-class Picker extends Dialog {
+﻿class Picker extends Dialog {
 	constructor(args) {
 		super(args);
 		args = args || {};
@@ -1497,7 +1497,7 @@ class Picker extends Dialog {
 		});
     }
 }
-class ReadOnlyDetailView extends DetailWidget {
+﻿class ReadOnlyDetailView extends DetailWidget {
     fieldValueExpression(fieldName) {
         let meta = this.fields.filter(i => i.field === fieldName)[0];
 
@@ -1523,7 +1523,7 @@ class ReadOnlyDetailView extends DetailWidget {
         }
     }
 }
-class Tree extends Widget {
+﻿class Tree extends Widget {
     constructor(element, dataSource) {
         super(element, null);
         this.dataSource = dataSource;
@@ -1632,7 +1632,7 @@ class Tree extends Widget {
     }
 
 }
-class DataTreeViewWidget extends Widget {
+﻿class DataTreeViewWidget extends Widget {
     constructor(element, treeViewConfig) {
         super(element, null);
 
@@ -1700,7 +1700,7 @@ class DataTreeViewWidget extends Widget {
 
     async wireUp() { }
 }
-class ODataTreeOptions {
+﻿class ODataTreeOptions {
     setElement(element) {
         this.element = element;
         return this;
@@ -1816,7 +1816,7 @@ class ODataTree extends Tree {
     
     }
 }
-class Workspace extends Widget {
+﻿class Workspace extends Widget {
     constructor(element, args) {
         super(element, args);
 
@@ -1881,7 +1881,7 @@ class Workspace extends Widget {
         this.leftPanel.remove(tree.element);
     }
 }
-class WritableDetailView extends DetailWidget {
+﻿class WritableDetailView extends DetailWidget {
     constructor(element, args) {
         super(element, args);
         this.editable = true;
@@ -1907,7 +1907,7 @@ class WritableDetailView extends DetailWidget {
         }
     }
 }
-/* Api Management */
+﻿/* Api Management */
 class Api
 {
     constructor(args) {
@@ -2152,7 +2152,7 @@ window.api = new Api({
     baseUrl: session.apiRoot,
     token: session.token
 });
-const html = {
+﻿const html = {
     encode: function (value) { return $('<div />').text(value).html(); },
     decode: function (value) { return $('<div/>').html(value).text(); }
 };
@@ -2435,7 +2435,7 @@ function getMonthlyDateRange(start, end, format) {
     return months;
 }
 
-const model = {
+﻿const model = {
     clone: (obj) => JSON.parse(JSON.stringify(obj)),
 
     prepareItem: function (item, meta) {
@@ -3054,7 +3054,7 @@ const model = {
             }).concat(extraFields ? extraFields : []);
     }
 };
-class Close extends Collidable {
+﻿class Close extends Collidable {
     constructor(parent) {
         super('x', 0, 0, parent.h - 2, parent.h - 2, 0);
         this.type = 'close';
@@ -3082,7 +3082,7 @@ class Close extends Collidable {
         this.flow.Links = this.flow.Links.filter(l => l.model.Destination !== this.parent.activity.model.Ref);
     }
 }
-class Handle extends Collidable {
+﻿class Handle extends Collidable {
     constructor(parent, col, textCol) {
         super(parent.model.Ref, parent.x, parent.y, parent.w - 1, handleHeight, 0);
 
@@ -3131,7 +3131,7 @@ class Handle extends Collidable {
         }
     }
 }
-class Link extends Collidable {
+﻿class Link extends Collidable {
     constructor(model, flow) {
         super('', 0, 0, 0, 0, 5);
         this.model = model;
@@ -3197,7 +3197,7 @@ class Link extends Collidable {
         });
     }
 }
-class Action extends Collidable {
+﻿class Action extends Collidable {
     constructor(parent, text, offsetX, offsetY, height, width, col, onClick) {
         super(text, parent.x + offsetX, parent.y + offsetY, height, width, 0);
         this.type = 'Action';
@@ -3224,7 +3224,7 @@ class Action extends Collidable {
         draw.text(ctx, this.x + 10, this.y + 15, this.text, this.col);
     }
 }
-class Activity extends Collidable {
+﻿class Activity extends Collidable {
     constructor(meta, flow, model) {
         super(meta.DisplayName.replace("Activity", ""), 0, 0, activityWidth, 100, 0);
 
@@ -3397,7 +3397,7 @@ class Activity extends Collidable {
         $(".flowConsole", dialog).append(messages);
     }
 }
-/// <reference path="workflowdesigner.js" />
+﻿/// <reference path="workflowdesigner.js" />
 class Connector extends Collidable {
     constructor(parent, type) {
         super('', 0, 0, 0, 0, nodeSize);
@@ -3501,7 +3501,7 @@ class Connector extends Collidable {
         }
     }
 }
-const activityWidth = 200;
+﻿const activityWidth = 200;
 const handleHeight = 25;
 const nodeSize = 16;
 
@@ -3755,7 +3755,7 @@ class Flow {
         this.Links.map(l => l.draw(ctx));
     }
 }
-class WorkflowDesigner {
+﻿class WorkflowDesigner {
     constructor(container, flow) {
 
         //TODO: handle this not being available for some reason

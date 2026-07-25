@@ -1,4 +1,4 @@
-class Widget
+﻿class Widget
 {
     constructor(element, args) {
         if (!args) {
@@ -51,7 +51,7 @@ jQuery.fn.getPath = function () {
 
     return path;
 };
-class Dialog extends Widget {
+﻿class Dialog extends Widget {
     /* Consumes https://demos.telerik.com/kendo-ui/templates/expressions to build a read only detail view of an object or portion of an object */
     constructor(args) {
         super(null, args);
@@ -125,7 +125,7 @@ class Dialog extends Widget {
 }
 
 
-class BootstrapDialog extends Widget {
+﻿class BootstrapDialog extends Widget {
     constructor(args) {
         super(null, args);
 
@@ -208,7 +208,7 @@ class BootstrapDialog extends Widget {
 }
 
 
-class BootstrapTabs extends Widget {
+﻿class BootstrapTabs extends Widget {
     constructor(args) {
         super(null, args);
 
@@ -344,7 +344,7 @@ class BootstrapTabs extends Widget {
         }
     }
 }
-class Chart extends Widget
+﻿class Chart extends Widget
 {
     constructor(element, args) {
         super(element, args);
@@ -430,7 +430,7 @@ class PieChart extends Widget {
         this.kendoObject.refresh();
     }
 }
-class ConfirmDialog extends Dialog {
+﻿class ConfirmDialog extends Dialog {
 
     init(callback) {
         if (!this.template) {
@@ -478,7 +478,7 @@ class ConsoleDialog extends Dialog {
         $("[name=console]", this.element).scrollTop($("[name=flowConsole]", this.element).height());
     }
 }
-class ExportDialog extends Dialog {
+﻿class ExportDialog extends Dialog {
     constructor(args) {
         super(args);
         this.width = args.width || 500;
@@ -576,7 +576,7 @@ class ExportDialog extends Dialog {
 
     }
 }
-class DetailWidget extends Widget {
+﻿class DetailWidget extends Widget {
     // Consumes https://demos.telerik.com/kendo-ui/templates/expressions to build a read only detail view of an object
     // or portion of an object
     constructor(element, args) {
@@ -673,7 +673,7 @@ class DetailWidget extends Widget {
 
     fieldValueExpression(fieldName) { /* Intentional */ }
 }
-class EditorDialog extends Dialog {
+﻿class EditorDialog extends Dialog {
     constructor(args) {
         super(args);
 
@@ -700,7 +700,7 @@ class EditorDialog extends Dialog {
         this.data = this.writableEditor.data;
     }
 }
-class GridWidget extends Widget {
+﻿class GridWidget extends Widget {
     constructor(element, dataSource) {
         super(element);
 
@@ -1154,7 +1154,7 @@ class GridWidget extends Widget {
         }
     }
 }
-class ContextMenuWidget extends Widget {
+﻿class ContextMenuWidget extends Widget {
     constructor(element) {
         super(element);
 
@@ -1218,7 +1218,7 @@ class ContextMenuWidget extends Widget {
         });
     }
 }
-class FileDropContainerWidget extends Widget {
+﻿class FileDropContainerWidget extends Widget {
     constructor(element) {
         super(element, null);
         this.container = element;
@@ -1276,7 +1276,7 @@ class FileDropContainerWidget extends Widget {
         $(this.container)[0].style.setProperty("display", "flex", "important");
     }
 }
-class Picker extends Dialog {
+﻿class Picker extends Dialog {
 	constructor(args) {
 		super(args);
 		args = args || {};
@@ -1377,7 +1377,7 @@ class Picker extends Dialog {
 		});
     }
 }
-class ReadOnlyDetailView extends DetailWidget {
+﻿class ReadOnlyDetailView extends DetailWidget {
     fieldValueExpression(fieldName) {
         let meta = this.fields.filter(i => i.field === fieldName)[0];
 
@@ -1403,7 +1403,7 @@ class ReadOnlyDetailView extends DetailWidget {
         }
     }
 }
-class Tree extends Widget {
+﻿class Tree extends Widget {
     constructor(element, dataSource) {
         super(element, null);
         this.dataSource = dataSource;
@@ -1512,7 +1512,7 @@ class Tree extends Widget {
     }
 
 }
-class DataTreeViewWidget extends Widget {
+﻿class DataTreeViewWidget extends Widget {
     constructor(element, treeViewConfig) {
         super(element, null);
 
@@ -1580,7 +1580,7 @@ class DataTreeViewWidget extends Widget {
 
     async wireUp() { }
 }
-class ODataTreeOptions {
+﻿class ODataTreeOptions {
     setElement(element) {
         this.element = element;
         return this;
@@ -1696,7 +1696,7 @@ class ODataTree extends Tree {
     
     }
 }
-class Workspace extends Widget {
+﻿class Workspace extends Widget {
     constructor(element, args) {
         super(element, args);
 
@@ -1761,7 +1761,7 @@ class Workspace extends Widget {
         this.leftPanel.remove(tree.element);
     }
 }
-class WritableDetailView extends DetailWidget {
+﻿class WritableDetailView extends DetailWidget {
     constructor(element, args) {
         super(element, args);
         this.editable = true;
