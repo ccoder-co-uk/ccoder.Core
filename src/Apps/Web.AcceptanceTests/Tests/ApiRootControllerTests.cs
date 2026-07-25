@@ -42,15 +42,14 @@ public sealed partial class ApiRootControllerTests(WebAcceptanceFixture fixture)
     }
 
     private string[] GetRegisteredRoutes() =>
-        Fixture.Factory.Services.GetServices<EndpointDataSource>()
+        [.. Fixture.Factory.Services.GetServices<EndpointDataSource>()
             .SelectMany(selector: source => source.Endpoints)
             .OfType<RouteEndpoint>()
             .Select(selector: ToManifestLine)
             .Where(predicate: IsManifestRoute)
             .Where(predicate: static line => !line.Contains(value: "GetMetadata",comparisonType: StringComparison.OrdinalIgnoreCase))
             .Distinct(comparer: StringComparer.Ordinal)
-            .OrderBy(keySelector: line => line,comparer: StringComparer.Ordinal)
-            .ToArray();
+            .OrderBy(keySelector: line => line,comparer: StringComparer.Ordinal)];
 
     private static string ToManifestLine(RouteEndpoint endpoint)
     {

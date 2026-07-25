@@ -48,10 +48,7 @@ public class XmlFormatter : TextOutputFormatter
         Encoding selectedEncoding
     )
     {
-        if (selectedEncoding == null)
-        {
-            throw new ArgumentNullException(nameof(selectedEncoding));
-        }
+        ArgumentNullException.ThrowIfNull(argument: selectedEncoding);
 
         string json = JsonConvert.SerializeObject(
 value: new { item = formatterODataProcessingService.HandleOData(contextObject: context.Object) }

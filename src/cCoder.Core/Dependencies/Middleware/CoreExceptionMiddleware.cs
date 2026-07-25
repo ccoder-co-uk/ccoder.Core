@@ -25,7 +25,8 @@ internal sealed class CoreExceptionMiddleware(
             context.Response.ContentType = "application/json";
             log.LogError(
                 exception: exception,
-                message: exception.Message);
+                message: "Unhandled request exception: {ErrorMessage}",
+                args: exception.Message);
 
             await context.Response.WriteAsync(
                 text: "{ \"error\": \""

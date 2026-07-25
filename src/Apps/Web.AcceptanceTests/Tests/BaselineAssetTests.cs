@@ -79,9 +79,11 @@ public sealed partial class BaselineAssetTests
         BaselineAssetCatalog catalog = new();
 
         // When
-        string[] packageNames = catalog.LoadPackages()
-            .Select(selector: package => package.Name)
-            .ToArray();
+        string[] packageNames =
+        [
+            .. catalog.LoadPackages()
+                .Select(selector: package => package.Name)
+        ];
 
         // Then
         packageNames.Should()
@@ -103,9 +105,11 @@ expected:         [
         BaselineAssetCatalog catalog = new();
 
         // When
-        string[] packageNames = catalog.LoadCoreReviewPackages()
-            .Select(selector: package => package.Name)
-            .ToArray();
+        string[] packageNames =
+        [
+            .. catalog.LoadCoreReviewPackages()
+                .Select(selector: package => package.Name)
+        ];
 
         // Then
         packageNames.Should()

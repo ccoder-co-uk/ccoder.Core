@@ -53,10 +53,7 @@ text: formatterODataProcessingService
         OutputFormatterWriteContext context
     )
     {
-        if (context == null)
-        {
-            throw new ArgumentNullException(nameof(context));
-        }
+        ArgumentNullException.ThrowIfNull(argument: context);
 
         return (
             context.HttpContext.Request.Query.ContainsKey(key: "delimiter")
@@ -93,8 +90,8 @@ collection: cachedResources
         }
 
         resources.AddRange(
-collection: new Resource[]
-            {
+collection:
+            [
                 new()
                 {
                     Name = "dateformat",
@@ -109,10 +106,10 @@ collection: new Resource[]
                         ? context.HttpContext.Request.Query["moneyFormat"].ToString()
                         : "n",
                 },
-            }
+            ]
         );
 
         resources.AddRange(collection: cachedResources);
-        return resources.ToArray();
+        return [.. resources];
     }
 }

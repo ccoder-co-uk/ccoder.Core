@@ -27,21 +27,22 @@ using SsoToken = cCoder.Security.Objects.Entities.Token;
 namespace cCoder.IntegrationTests.Tests;
 
 [Collection(IntegrationAcceptanceCollection.Name)]
-public sealed partial class SecurityAccountEventIntegrationTests
+public sealed partial class SecurityAccountEventIntegrationTests(IntegrationAcceptanceFixture fixture)
 {
     private const int BaselineAppId = 1;
     private const string AdminUserId = "admin";
     private const string DefaultPassword = "TestPass01!";
+
+    private static readonly Regex TokenLinkRegex = new(
+        pattern: @"(?:[?&])t=([^""'<&\s]+)",
+        options: RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
     {
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
     };
 
-    private readonly IntegrationAcceptanceFixture fixture;
-
-    public SecurityAccountEventIntegrationTests(IntegrationAcceptanceFixture fixture) =>
-        this.fixture = fixture;
+    private readonly IntegrationAcceptanceFixture fixture = fixture;
 
     private async Task EnsureMailSenderAsync()
     {
@@ -354,8 +355,8 @@ requestUri:                 "/Api/Mail/ReceivedEmail/Receive",value:            
     {
         string content = WebUtility.HtmlDecode(value: email.Content ?? string.Empty);
 
-        Match match = Regex.Match(
-input:             content,pattern:             @"(?:[?&])t=([^""'<&\s]+)",options:             RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+        Match match = TokenLinkRegex
+            .Match(input: content);
 
         if (!match.Success)
         {
@@ -416,8 +417,7 @@ entities:             await core.Set<ReceivedEmail>()
 
         if (coreUsers.Length > 0)
         {
-            string[] coreUserIds = coreUsers.Select(selector: user => user.Id)
-                .ToArray();
+            string[] coreUserIds = [.. coreUsers.Select(selector: user => user.Id)];
 
             UserRole[] userRoles = await core.Set<UserRole>()
                 .IgnoreQueryFilters()
@@ -447,8 +447,7 @@ entities:             await core.Set<ReceivedEmail>()
             return;
         }
 
-        string[] ssoUserIds = ssoUsers.Select(selector: user => user.Id)
-            .ToArray();
+        string[] ssoUserIds = [.. ssoUsers.Select(selector: user => user.Id)];
 
         SsoToken[] tokens = await sso.Set<SsoToken>()
             .IgnoreQueryFilters()

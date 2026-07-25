@@ -14,6 +14,7 @@ public static class ControllerReadExtensions
         this ControllerBase controller,
         Func<TEntity> get)
         where TEntity : class =>
-        new ControllerReadDependency()
-            .Resolve(controller: controller, get: get);
+        ControllerReadDependency.Resolve(
+            controller: controller,
+            get: get);
 }

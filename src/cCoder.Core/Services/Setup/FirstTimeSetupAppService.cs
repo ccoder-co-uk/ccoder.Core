@@ -420,7 +420,7 @@ core: core, appId: appId, templates: UnpackPackageItem<Template>(data: item.Data
     {
         string trimmed = data.TrimStart();
 
-        return trimmed.StartsWith(value: "[", comparisonType: StringComparison.Ordinal)
+        return trimmed.StartsWith(value: '[')
             ? JsonConvert.DeserializeObject<T[]>(value: trimmed) ?? []
             : JsonConvert.DeserializeObject<T>(value: trimmed) is T item
                 ? [item]

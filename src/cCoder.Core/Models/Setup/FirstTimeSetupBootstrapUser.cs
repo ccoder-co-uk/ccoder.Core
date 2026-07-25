@@ -4,25 +4,17 @@
 
 namespace cCoder.Core.Services.Setup;
 
-internal sealed class FirstTimeSetupBootstrapUser
+internal sealed class FirstTimeSetupBootstrapUser(
+    string userId,
+    string email,
+    string displayName,
+    string confirmationToken)
 {
-    public FirstTimeSetupBootstrapUser(
-        string userId,
-        string email,
-        string displayName,
-        string confirmationToken)
-    {
-        UserId = userId;
-        Email = email;
-        DisplayName = displayName;
-        ConfirmationToken = confirmationToken;
-    }
+    public string UserId { get; } = userId;
 
-    public string UserId { get; }
+    public string Email { get; } = email;
 
-    public string Email { get; }
+    public string DisplayName { get; } = displayName;
 
-    public string DisplayName { get; }
-
-    public string ConfirmationToken { get; }
+    public string ConfirmationToken { get; } = confirmationToken;
 }

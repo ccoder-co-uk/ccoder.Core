@@ -137,7 +137,12 @@ message: "Unable to persist request log entry to SSO. {Message}", args: ex.Messa
             }
         }
 
-        logger.LogDebug(message: logEntry);
+        if (logger.IsEnabled(logLevel: LogLevel.Debug))
+        {
+            logger.LogDebug(
+                message: "Request diagnostics: {LogEntry}",
+                args: logEntry);
+        }
     }
 
     private static async Task<bool> SqlTableExistsAsync(

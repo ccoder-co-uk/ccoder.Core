@@ -120,9 +120,11 @@ internal sealed partial class EdmModelProcessingService
                         .ToDictionary(keySelector: i => i.k, elementSelector: i => i.v),
                 });
 
-            result.Operations = GetBaseCRUDOperations(type: result)
-                .Union(second: customOperations)
-                .ToList();
+            result.Operations =
+            [
+                .. GetBaseCRUDOperations(type: result)
+                    .Union(second: customOperations)
+            ];
         }
         else
         {

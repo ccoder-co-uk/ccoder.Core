@@ -21,11 +21,10 @@ internal static class EndpointManifestReader
 
         using StreamReader reader = new(stream);
 
-        return reader.ReadToEnd()
+        return [.. reader.ReadToEnd()
             .Split(separator: ['\r', '\n'],options: StringSplitOptions.RemoveEmptyEntries)
             .Select(selector: static line => line.Trim())
-            .Where(predicate: line => !line.StartsWith(value: "#",comparisonType: StringComparison.Ordinal))
-            .OrderBy(keySelector: line => line,comparer: StringComparer.Ordinal)
-            .ToArray();
+            .Where(predicate: line => !line.StartsWith(value: '#'))
+            .OrderBy(keySelector: line => line,comparer: StringComparer.Ordinal)];
     }
 }

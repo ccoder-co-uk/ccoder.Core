@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <OutputType>Library</OutputType>
     <IsPackable>true</IsPackable>
-    <NoWarn>1591</NoWarn>
+    <NoWarn>1591;STX0001</NoWarn>
     <Features>experimental-data-section-string-literals</Features>
   </PropertyGroup>
   <PropertyGroup>

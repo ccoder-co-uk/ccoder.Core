@@ -279,7 +279,7 @@ entity:                 new CoreUser
             return;
         }
 
-        CommonObject[] commonObjects = AcceptanceSeedData
+        CommonObject[] commonObjects = [.. AcceptanceSeedData
             .LoadCommonObjects()
             .Select(selector: item => new CommonObject
             {
@@ -295,8 +295,7 @@ entity:                 new CoreUser
                 Type = item.Type,
                 Json = item.Json,
                 Culture = item.Culture,
-            })
-            .ToArray();
+            })];
 
         NormalizeCommonObjects(commonObjects: commonObjects);
 
@@ -356,7 +355,7 @@ entity:                 new CoreUser
             .Select(selector: role => role.Name)
             .ToArrayAsync();
 
-        Role[] roles = AcceptanceSeedData
+        Role[] roles = [.. AcceptanceSeedData
             .LoadRoles(packageName: "Roles",itemType: "Core/Role")
             .Where(predicate: role => !existingRoleNames.Contains(value: role.Name))
             .Select(selector: role => new Role
@@ -366,8 +365,7 @@ entity:                 new CoreUser
                 Name = role.Name,
                 Description = role.Description,
                 Privs = NormalizeRolePrivileges(role: role),
-            })
-            .ToArray();
+            })];
 
         if (roles.Length == 0)
         {
@@ -401,7 +399,7 @@ entity:                 new CoreUser
             return;
         }
 
-        Layout[] layouts = AcceptanceSeedData
+        Layout[] layouts = [.. AcceptanceSeedData
             .LoadLayouts(packageName: "Layouts",itemType: "Core/Layout")
             .Select(selector: layout => new Layout
             {
@@ -416,8 +414,7 @@ entity:                 new CoreUser
                 CreatedBy = layout.CreatedBy,
                 LastUpdated = layout.LastUpdated,
                 LastUpdatedBy = layout.LastUpdatedBy,
-            })
-            .ToArray();
+            })];
 
         await core.Set<Layout>()
             .AddRangeAsync(entities: layouts);
@@ -433,7 +430,7 @@ entity:                 new CoreUser
             return;
         }
 
-        Template[] templates = AcceptanceSeedData
+        Template[] templates = [.. AcceptanceSeedData
             .LoadTemplates(packageName: "Templates",itemType: "Core/Template")
             .Select(selector: template => new Template
             {
@@ -447,8 +444,7 @@ entity:                 new CoreUser
                 CreatedBy = template.CreatedBy,
                 LastUpdated = template.LastUpdated,
                 LastUpdatedBy = template.LastUpdatedBy,
-            })
-            .ToArray();
+            })];
 
         await core.Set<Template>()
             .AddRangeAsync(entities: templates);
@@ -498,7 +494,7 @@ entity:                 new CoreUser
             return;
         }
 
-        Resource[] resources = AcceptanceSeedData
+        Resource[] resources = [.. AcceptanceSeedData
             .LoadResources(packageName: "Resources",itemType: "Core/Resource")
             .Select(selector: resource => new Resource
             {
@@ -514,8 +510,7 @@ entity:                 new CoreUser
                 CreatedBy = resource.CreatedBy,
                 LastUpdated = resource.LastUpdated,
                 LastUpdatedBy = resource.LastUpdatedBy,
-            })
-            .ToArray();
+            })];
 
         await core.Set<Resource>()
             .AddRangeAsync(entities: resources);
@@ -531,7 +526,7 @@ entity:                 new CoreUser
             return;
         }
 
-        Component[] components = AcceptanceSeedData
+        Component[] components = [.. AcceptanceSeedData
             .LoadComponents(packageName: "Components",itemType: "Core/Component")
             .Select(selector: component => new Component
             {
@@ -547,8 +542,7 @@ entity:                 new CoreUser
                 CreatedBy = component.CreatedBy,
                 LastUpdated = component.LastUpdated,
                 LastUpdatedBy = component.LastUpdatedBy,
-            })
-            .ToArray();
+            })];
 
         await core.Set<Component>()
             .AddRangeAsync(entities: components);
@@ -564,7 +558,7 @@ entity:                 new CoreUser
             return;
         }
 
-        Script[] scripts = AcceptanceSeedData
+        Script[] scripts = [.. AcceptanceSeedData
             .LoadScripts(packageName: "Scripts",itemType: "Core/Script")
             .Select(selector: script => new Script
             {
@@ -578,8 +572,7 @@ entity:                 new CoreUser
                 CreatedBy = script.CreatedBy,
                 LastUpdated = script.LastUpdated,
                 LastUpdatedBy = script.LastUpdatedBy,
-            })
-            .ToArray();
+            })];
 
         await core.Set<Script>()
             .AddRangeAsync(entities: scripts);

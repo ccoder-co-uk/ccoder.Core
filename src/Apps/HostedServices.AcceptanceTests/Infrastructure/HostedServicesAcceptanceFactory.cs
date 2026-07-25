@@ -17,13 +17,10 @@ using HostedServicesProgram = HostedServices.Program;
 
 namespace HostedServices.AcceptanceTests.Infrastructure;
 
-internal sealed class HostedServicesAcceptanceFactory
-    : WebApplicationFactory<HostedServicesProgram>
+internal sealed class HostedServicesAcceptanceFactory(AcceptanceSettings settings)
+        : WebApplicationFactory<HostedServicesProgram>
 {
-    private readonly AcceptanceSettings settings;
-
-    public HostedServicesAcceptanceFactory(AcceptanceSettings settings) =>
-        this.settings = settings;
+    private readonly AcceptanceSettings settings = settings;
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {

@@ -39,19 +39,16 @@ using MailRuntimeConfig = cCoder.Mail.Models.Config;
 
 namespace cCoder.Core;
 
-public partial class CoreApiBuilderOptions
+public partial class CoreApiBuilderOptions(IServiceCollection services)
 {
     private readonly Dictionary<string, List<Action<ODataConventionModelBuilder>>> routeContributors =
         new(StringComparer.OrdinalIgnoreCase);
     private readonly List<EventProvider> eventProviders = [];
 
-    private readonly IServiceCollection services;
+    private readonly IServiceCollection services = services;
     private CoreConfiguration coreConfiguration;
     private string sessionCacheConnectionString;
     private bool applied;
-
-    public CoreApiBuilderOptions(IServiceCollection services) =>
-        this.services = services;
 
     public CoreApiBuilderOptions WithCoreConfiguration(Action<CoreConfiguration> configure)
     {

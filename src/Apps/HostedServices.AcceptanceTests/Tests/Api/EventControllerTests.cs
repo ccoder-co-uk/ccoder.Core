@@ -963,16 +963,14 @@ requestUri: "/Api/Eventing", value: new HttpEventMessage
                 .Select(selector: role => role.Id)];
 
         await core.DeleteAllAsync(
-userRoles: core.Set<UserRole>()
+userRoles: [.. core.Set<UserRole>()
             .IgnoreQueryFilters()
-                .Where(predicate: userRole => roleIds.Contains(value: userRole.RoleId))
-                .ToArray());
+                .Where(predicate: userRole => roleIds.Contains(value: userRole.RoleId))]);
 
         await core.DeleteAllAsync(
-folderRoles: core.Set<FolderRole>()
+folderRoles: [.. core.Set<FolderRole>()
             .IgnoreQueryFilters()
-                .Where(predicate: folderRole => roleIds.Contains(value: folderRole.RoleId))
-                .ToArray());
+                .Where(predicate: folderRole => roleIds.Contains(value: folderRole.RoleId))]);
 
         Guid[] folderIds =
             [.. core.Set<Folder>()
@@ -987,53 +985,45 @@ folderRoles: core.Set<FolderRole>()
                 .Select(selector: file => file.Id)];
 
         await core.DeleteAllAsync(
-fileContents: core.Set<FileContent>()
+fileContents: [.. core.Set<FileContent>()
             .IgnoreQueryFilters()
-                .Where(predicate: content => fileIds.Contains(value: content.FileId))
-                .ToArray());
+                .Where(predicate: content => fileIds.Contains(value: content.FileId))]);
 
         await core.DeleteAllAsync(
-files: core.Set<DmsFile>()
+files: [.. core.Set<DmsFile>()
             .IgnoreQueryFilters()
-                .Where(predicate: file => fileIds.Contains(value: file.Id))
-                .ToArray());
+                .Where(predicate: file => fileIds.Contains(value: file.Id))]);
 
         await core.DeleteAllAsync(
-folders: core.Set<Folder>()
+folders: [.. core.Set<Folder>()
             .IgnoreQueryFilters()
                 .Where(predicate: folder => folderIds.Contains(value: folder.Id))
-                .OrderByDescending(keySelector: folder => folder.Path.Length)
-                .ToArray());
+                .OrderByDescending(keySelector: folder => folder.Path.Length)]);
 
         await core.DeleteAllAsync(
-mailServers: core.Set<MailServer>()
+mailServers: [.. core.Set<MailServer>()
             .IgnoreQueryFilters()
-                .Where(predicate: server => server.AppId == appId)
-                .ToArray());
+                .Where(predicate: server => server.AppId == appId)]);
 
         await core.DeleteAllAsync(
-queuedEmails: core.Set<QueuedEmail>()
+queuedEmails: [.. core.Set<QueuedEmail>()
             .IgnoreQueryFilters()
-                .Where(predicate: email => email.AppId == appId)
-                .ToArray());
+                .Where(predicate: email => email.AppId == appId)]);
 
         await core.DeleteAllAsync(
-sentEmails: core.Set<SentEmail>()
+sentEmails: [.. core.Set<SentEmail>()
             .IgnoreQueryFilters()
-                .Where(predicate: email => email.AppId == appId)
-                .ToArray());
+                .Where(predicate: email => email.AppId == appId)]);
 
         await core.DeleteAllAsync(
-calendars: core.Set<Calendar>()
+calendars: [.. core.Set<Calendar>()
             .IgnoreQueryFilters()
-                .Where(predicate: calendar => calendar.AppId == appId)
-                .ToArray());
+                .Where(predicate: calendar => calendar.AppId == appId)]);
 
         await core.DeleteAllAsync(
-scheduledTasks: core.Set<ScheduledTask>()
+scheduledTasks: [.. core.Set<ScheduledTask>()
             .IgnoreQueryFilters()
-                .Where(predicate: task => task.AppId == appId)
-                .ToArray());
+                .Where(predicate: task => task.AppId == appId)]);
 
         Guid[] flowIds =
             [.. core.Set<FlowDefinition>()
@@ -1042,34 +1032,29 @@ scheduledTasks: core.Set<ScheduledTask>()
                 .Select(selector: flow => flow.Id)];
 
         await core.DeleteAllAsync(
-workflowEvents: core.Set<WorkflowEvent>()
+workflowEvents: [.. core.Set<WorkflowEvent>()
             .IgnoreQueryFilters()
-                .Where(predicate: workflowEvent => flowIds.Contains(value: workflowEvent.FlowId))
-                .ToArray());
+                .Where(predicate: workflowEvent => flowIds.Contains(value: workflowEvent.FlowId))]);
 
         await core.DeleteAllAsync(
-flowInstances: core.Set<FlowInstanceData>()
+flowInstances: [.. core.Set<FlowInstanceData>()
             .IgnoreQueryFilters()
-                .Where(predicate: instance => flowIds.Contains(value: instance.FlowDefinitionId))
-                .ToArray());
+                .Where(predicate: instance => flowIds.Contains(value: instance.FlowDefinitionId))]);
 
         await core.DeleteAllAsync(
-flowDefinitions: core.Set<FlowDefinition>()
+flowDefinitions: [.. core.Set<FlowDefinition>()
             .IgnoreQueryFilters()
-                .Where(predicate: flow => flow.AppId == appId)
-                .ToArray());
+                .Where(predicate: flow => flow.AppId == appId)]);
 
         await core.DeleteAllAsync(
-appCultures: core.Set<AppCulture>()
+appCultures: [.. core.Set<AppCulture>()
             .IgnoreQueryFilters()
-                .Where(predicate: culture => culture.AppId == appId)
-                .ToArray());
+                .Where(predicate: culture => culture.AppId == appId)]);
 
         await core.DeleteAllAsync(
-roles: core.Set<Role>()
+roles: [.. core.Set<Role>()
             .IgnoreQueryFilters()
-                .Where(predicate: role => role.AppId == appId)
-                .ToArray());
+                .Where(predicate: role => role.AppId == appId)]);
 
         AppEntity app = core.Set<AppEntity>()
             .IgnoreQueryFilters()

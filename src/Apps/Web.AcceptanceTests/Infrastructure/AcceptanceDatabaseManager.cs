@@ -130,7 +130,14 @@ BEGIN
 END";
 
         _ = command.Parameters.AddWithValue(parameterName: "@databaseName",value: databaseName);
-        command.ExecuteNonQuery();
+
+        try
+        {
+            command.ExecuteNonQuery();
+        }
+        catch (SqlException exception) when (exception.Number == 3701)
+        {
+        }
     }
 
     private static SqlConnectionStringBuilder CreateAcceptanceConnectionStringBuilder(
