@@ -582,6 +582,7 @@ fileName:             "dotnet",arguments:             $"\"{Path.Combine(path1: h
             ["Settings__DecryptionKey"] = Settings.DecryptionKey,
             ["Settings__AggregateDomains"] = "false",
             ["Services__Workflow"] = WorkflowBaseAddress.ToString(),
+            ["Workflow__QueueInstanceManagement__PollingIntervalMilliseconds"] = "250",
             ["Eventing__ProviderType"] = Settings.EventProviderType,
             ["Eventing__Http__MaxConcurrency"] = "1"
         };

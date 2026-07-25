@@ -91,7 +91,7 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
     {
         await RunQueueInstanceBackgroundServiceDependencyAsync(cancellationToken: cancellationToken);
 
-        using PeriodicTimer timer = new(TimeSpan.FromMinutes(minutes: 1));
+        using PeriodicTimer timer = new(GetQueuePollingInterval());
 
         while (!cancellationToken.IsCancellationRequested
             && await timer.WaitForNextTickAsync(cancellationToken: cancellationToken))
@@ -120,6 +120,16 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
                 log.LogError(exception: exception.InnerException,message: exception.InnerException.Message);
             }
         }
+    }
+
+    private TimeSpan GetQueuePollingInterval()
+    {
+        int pollingIntervalMilliseconds = configuration.GetValue(
+            key: "Workflow:QueueInstanceManagement:PollingIntervalMilliseconds",
+            defaultValue: 60000);
+
+        return TimeSpan.FromMilliseconds(
+            value: pollingIntervalMilliseconds);
     }
 
     private async ValueTask DropOldInstancesAsync(CancellationToken cancellationToken)
