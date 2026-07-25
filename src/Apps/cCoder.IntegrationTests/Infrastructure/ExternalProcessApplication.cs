@@ -9,14 +9,12 @@ using System.Text;
 
 namespace cCoder.IntegrationTests.Infrastructure;
 
-internal sealed class ExternalProcessApplication : IAsyncDisposable
+internal sealed class ExternalProcessApplication(string name) : IAsyncDisposable
 {
     private readonly StringBuilder output = new();
     private Process process;
 
-    public string Name { get; }
-
-    public ExternalProcessApplication(string name) => Name = name;
+    public string Name { get; } = name;
 
     public string Output => output.ToString();
 

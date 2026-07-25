@@ -1,0 +1,7 @@
+<Project>
+  <Target Name="ConfigureFunctionsWorkerExtensionBuild" BeforeTargets="_WorkerExtensionsBuild">
+    <PropertyGroup>
+      <_FunctionsExtensionCommonProps>$(_FunctionsExtensionCommonProps);SuppressNETCoreSdkPreviewMessage=true</_FunctionsExtensionCommonProps>
+    </PropertyGroup>
+  </Target>
+</Project>

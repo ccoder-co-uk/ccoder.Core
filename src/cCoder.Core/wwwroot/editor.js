@@ -1,4 +1,4 @@
-async function initialisePageEditing() {
+﻿async function initialisePageEditing() {
     if ($(".component[name=Login]").length > 0) {
         return;
     }
@@ -13,7 +13,7 @@ async function initialisePageEditing() {
 }
 
 $(initialisePageEditing);
-class ContentEditor {
+﻿class ContentEditor {
     constructor(element, page) {
         this.element = element;
         this.page = page;
@@ -144,7 +144,7 @@ class ContentEditor {
         });
     }
 }
-class PageToolbar {
+﻿class PageToolbar {
     async init() {
         await this.getPage();
 

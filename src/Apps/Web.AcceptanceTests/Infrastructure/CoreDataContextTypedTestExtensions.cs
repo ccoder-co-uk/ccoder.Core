@@ -270,161 +270,161 @@ internal static class CoreDataContextTypedTestExtensions
 
     public static async Task DeleteAllAsync(this CoreDataContext core, IEnumerable<UserRole> userRoles)
     {
-        UserRole[] items = userRoles.ToArray();
+        UserRole[] items = [.. userRoles];
         core.UserRoles.RemoveRange(entities: items);
         _ = await core.SaveChangesAsync();
     }
 
     public static async Task DeleteAllAsync(this CoreDataContext core, IEnumerable<Role> roles)
     {
-        Role[] items = roles.ToArray();
+        Role[] items = [.. roles];
         core.Roles.RemoveRange(entities: items);
         _ = await core.SaveChangesAsync();
     }
 
     public static async Task DeleteAllAsync(this CoreDataContext core, IEnumerable<AppCulture> appCultures)
     {
-        AppCulture[] items = appCultures.ToArray();
+        AppCulture[] items = [.. appCultures];
         core.AppCultures.RemoveRange(entities: items);
         _ = await core.SaveChangesAsync();
     }
 
     public static async Task DeleteAllAsync(this CoreDataContext core, IEnumerable<Culture> cultures)
     {
-        Culture[] items = cultures.ToArray();
+        Culture[] items = [.. cultures];
         core.Cultures.RemoveRange(entities: items);
         _ = await core.SaveChangesAsync();
     }
 
     public static async Task DeleteAllAsync(this CoreDataContext core, IEnumerable<CommonObject> commonObjects)
     {
-        CommonObject[] items = commonObjects.ToArray();
+        CommonObject[] items = [.. commonObjects];
         core.CommonObjects.RemoveRange(entities: items);
         _ = await core.SaveChangesAsync();
     }
 
     public static async Task DeleteAllAsync(this CoreDataContext core, IEnumerable<Content> contents)
     {
-        Content[] items = contents.ToArray();
+        Content[] items = [.. contents];
         core.Contents.RemoveRange(entities: items);
         _ = await core.SaveChangesAsync();
     }
 
     public static async Task DeleteAllAsync(this CoreDataContext core, IEnumerable<PageInfo> pageInfos)
     {
-        PageInfo[] items = pageInfos.ToArray();
+        PageInfo[] items = [.. pageInfos];
         core.PageInfo.RemoveRange(entities: items);
         _ = await core.SaveChangesAsync();
     }
 
     public static async Task DeleteAllAsync(this CoreDataContext core, IEnumerable<PageRole> pageRoles)
     {
-        PageRole[] items = pageRoles.ToArray();
+        PageRole[] items = [.. pageRoles];
         core.PageRoles.RemoveRange(entities: items);
         _ = await core.SaveChangesAsync();
     }
 
     public static async Task DeleteAllAsync(this CoreDataContext core, IEnumerable<Page> pages)
     {
-        Page[] items = pages.ToArray();
+        Page[] items = [.. pages];
         core.Pages.RemoveRange(entities: items);
         _ = await core.SaveChangesAsync();
     }
 
     public static async Task DeleteAllAsync(this CoreDataContext core, IEnumerable<FolderRole> folderRoles)
     {
-        FolderRole[] items = folderRoles.ToArray();
+        FolderRole[] items = [.. folderRoles];
         core.FolderRoles.RemoveRange(entities: items);
         _ = await core.SaveChangesAsync();
     }
 
     public static async Task DeleteAllAsync(this CoreDataContext core, IEnumerable<FileContent> fileContents)
     {
-        FileContent[] items = fileContents.ToArray();
+        FileContent[] items = [.. fileContents];
         core.FileContents.RemoveRange(entities: items);
         _ = await core.SaveChangesAsync();
     }
 
     public static async Task DeleteAllAsync(this CoreDataContext core, IEnumerable<FileEntity> files)
     {
-        FileEntity[] items = files.ToArray();
+        FileEntity[] items = [.. files];
         core.Files.RemoveRange(entities: items);
         _ = await core.SaveChangesAsync();
     }
 
     public static async Task DeleteAllAsync(this CoreDataContext core, IEnumerable<Folder> folders)
     {
-        Folder[] items = folders.ToArray();
+        Folder[] items = [.. folders];
         core.Folders.RemoveRange(entities: items);
         _ = await core.SaveChangesAsync();
     }
 
     public static async Task DeleteAllAsync(this CoreDataContext core, IEnumerable<MailServer> mailServers)
     {
-        MailServer[] items = mailServers.ToArray();
+        MailServer[] items = [.. mailServers];
         core.MailServers.RemoveRange(entities: items);
         _ = await core.SaveChangesAsync();
     }
 
     public static async Task DeleteAllAsync(this CoreDataContext core, IEnumerable<EmailSendFailure> sendFailures)
     {
-        EmailSendFailure[] items = sendFailures.ToArray();
+        EmailSendFailure[] items = [.. sendFailures];
         core.SendFailures.RemoveRange(entities: items);
         _ = await core.SaveChangesAsync();
     }
 
     public static async Task DeleteAllAsync(this CoreDataContext core, IEnumerable<QueuedEmail> queuedEmails)
     {
-        QueuedEmail[] items = queuedEmails.ToArray();
+        QueuedEmail[] items = [.. queuedEmails];
         core.QueuedMail.RemoveRange(entities: items);
         _ = await core.SaveChangesAsync();
     }
 
     public static async Task DeleteAllAsync(this CoreDataContext core, IEnumerable<SentEmail> sentEmails)
     {
-        SentEmail[] items = sentEmails.ToArray();
+        SentEmail[] items = [.. sentEmails];
         core.SentMail.RemoveRange(entities: items);
         _ = await core.SaveChangesAsync();
     }
 
     public static async Task DeleteAllAsync(this CoreDataContext core, IEnumerable<CalendarEvent> calendarEvents)
     {
-        CalendarEvent[] items = calendarEvents.ToArray();
+        CalendarEvent[] items = [.. calendarEvents];
         core.Events.RemoveRange(entities: items);
         _ = await core.SaveChangesAsync();
     }
 
     public static async Task DeleteAllAsync(this CoreDataContext core, IEnumerable<Calendar> calendars)
     {
-        Calendar[] items = calendars.ToArray();
+        Calendar[] items = [.. calendars];
         core.Calendars.RemoveRange(entities: items);
         _ = await core.SaveChangesAsync();
     }
 
     public static async Task DeleteAllAsync(this CoreDataContext core, IEnumerable<ScheduledTask> scheduledTasks)
     {
-        ScheduledTask[] items = scheduledTasks.ToArray();
+        ScheduledTask[] items = [.. scheduledTasks];
         core.ScheduledTasks.RemoveRange(entities: items);
         _ = await core.SaveChangesAsync();
     }
 
     public static async Task DeleteAllAsync(this CoreDataContext core, IEnumerable<FlowInstanceData> flowInstances)
     {
-        FlowInstanceData[] items = flowInstances.ToArray();
+        FlowInstanceData[] items = [.. flowInstances];
         core.FlowInstances.RemoveRange(entities: items);
         _ = await core.SaveChangesAsync();
     }
 
     public static async Task DeleteAllAsync(this CoreDataContext core, IEnumerable<FlowDefinition> flowDefinitions)
     {
-        FlowDefinition[] items = flowDefinitions.ToArray();
+        FlowDefinition[] items = [.. flowDefinitions];
         core.FlowDefinitions.RemoveRange(entities: items);
         _ = await core.SaveChangesAsync();
     }
 
     public static async Task DeleteAllAsync(this CoreDataContext core, IEnumerable<WorkflowEvent> workflowEvents)
     {
-        WorkflowEvent[] items = workflowEvents.ToArray();
+        WorkflowEvent[] items = [.. workflowEvents];
         core.WorflowEvents.RemoveRange(entities: items);
         _ = await core.SaveChangesAsync();
     }

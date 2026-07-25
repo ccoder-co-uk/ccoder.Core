@@ -79,7 +79,7 @@ public class MetadataContainer
         Description = type.Name;
         ServerType = type.AssemblyQualifiedName ?? type.FullName ?? type.Name;
         ServerTypeName = type.FullName ?? type.Name;
-        Properties = Array.Empty<PropertyContainer>();
+        Properties = [];
     }
 
     public MetadataContainer(Type type, bool isEntity, bool hasEndpoint)

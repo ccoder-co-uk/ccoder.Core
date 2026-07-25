@@ -53,7 +53,7 @@ internal sealed partial class
                 .ToArray());
 
     private T[] LoadPackageItems<T>(string itemType) =>
-        LoadBaselinePackages()
+        [.. LoadBaselinePackages()
             .SelectMany(selector: package => package.Items ?? [])
             .Where(predicate: item =>
                 string.Equals(
@@ -62,8 +62,7 @@ internal sealed partial class
                     comparisonType:
                         StringComparison.OrdinalIgnoreCase))
             .SelectMany(selector: item =>
-                UnpackItems<T>(data: item.Data))
-            .ToArray();
+                UnpackItems<T>(data: item.Data))];
 
     private static IEnumerable<Package> LoadBaselinePackages() =>
         CoreUIBaseline.GetPackages()
@@ -187,9 +186,7 @@ internal sealed partial class
     {
         string trimmed = data.TrimStart();
 
-        return trimmed.StartsWith(
-            value: "[",
-            comparisonType: StringComparison.Ordinal)
+        return trimmed.StartsWith(value: '[')
                 ? JsonConvert.DeserializeObject<T[]>(
                     value: trimmed,
                     settings: settings) ?? []

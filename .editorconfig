@@ -1,0 +1,21 @@
+root = true
+
+[*.cs]
+dotnet_diagnostic.CA1859.severity = none
+dotnet_diagnostic.IDE0060.severity = none
+dotnet_diagnostic.IDE0130.severity = none
+
+[**/FirstTimeSetupBootstrapUser.cs]
+dotnet_diagnostic.STXM002.severity = none
+
+[**/FirstTimeSetupResult.cs]
+dotnet_diagnostic.STXM002.severity = none
+
+[**/AppEventIntegrationTests.AppAdd.cs]
+dotnet_diagnostic.STXFORMAT008.severity = none
+
+[**/ODataReadPathPolicyTests.cs]
+dotnet_diagnostic.SYSLIB1045.severity = none
+
+[**/SecurityAccountEventIntegrationTests.cs]
+dotnet_diagnostic.SYSLIB1045.severity = none

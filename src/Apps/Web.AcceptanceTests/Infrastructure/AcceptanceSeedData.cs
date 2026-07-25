@@ -25,34 +25,40 @@ value:             value.GetRawText(),settings:             cCoder.Data.Extensio
     }
 
     public static Role[] LoadRoles(string packageName, string itemType) =>
-        LoadPackageItems(packageName: packageName, itemType: itemType, modelType: typeof(Role))
-            .Cast<Role>()
-            .ToArray();
+        [
+            .. LoadPackageItems(packageName: packageName, itemType: itemType, modelType: typeof(Role))
+                .Cast<Role>()
+        ];
 
     public static Layout[] LoadLayouts(string packageName, string itemType) =>
-        LoadPackageItems(packageName: packageName, itemType: itemType, modelType: typeof(Layout))
-            .Cast<Layout>()
-            .ToArray();
+        [
+            .. LoadPackageItems(packageName: packageName, itemType: itemType, modelType: typeof(Layout))
+                .Cast<Layout>()
+        ];
 
     public static Template[] LoadTemplates(string packageName, string itemType) =>
-        LoadPackageItems(packageName: packageName, itemType: itemType, modelType: typeof(Template))
-            .Cast<Template>()
-            .ToArray();
+        [
+            .. LoadPackageItems(packageName: packageName, itemType: itemType, modelType: typeof(Template))
+                .Cast<Template>()
+        ];
 
     public static Resource[] LoadResources(string packageName, string itemType) =>
-        LoadPackageItems(packageName: packageName, itemType: itemType, modelType: typeof(Resource))
-            .Cast<Resource>()
-            .ToArray();
+        [
+            .. LoadPackageItems(packageName: packageName, itemType: itemType, modelType: typeof(Resource))
+                .Cast<Resource>()
+        ];
 
     public static Component[] LoadComponents(string packageName, string itemType) =>
-        LoadPackageItems(packageName: packageName, itemType: itemType, modelType: typeof(Component))
-            .Cast<Component>()
-            .ToArray();
+        [
+            .. LoadPackageItems(packageName: packageName, itemType: itemType, modelType: typeof(Component))
+                .Cast<Component>()
+        ];
 
     public static Script[] LoadScripts(string packageName, string itemType) =>
-        LoadPackageItems(packageName: packageName, itemType: itemType, modelType: typeof(Script))
-            .Cast<Script>()
-            .ToArray();
+        [
+            .. LoadPackageItems(packageName: packageName, itemType: itemType, modelType: typeof(Script))
+                .Cast<Script>()
+        ];
 
     private static object[] LoadPackageItems(string packageName, string itemType, Type modelType)
     {
@@ -61,10 +67,9 @@ value:             value.GetRawText(),settings:             cCoder.Data.Extensio
             string.Equals(a: found.Name,b: packageName,comparisonType: StringComparison.OrdinalIgnoreCase)
         );
 
-        return package.Items
+        return [.. package.Items
             .Where(predicate: item => string.Equals(a: item.Type,b: itemType,comparisonType: StringComparison.OrdinalIgnoreCase))
-            .SelectMany(selector: item => UnpackItems(data: item.Data, modelType: modelType))
-            .ToArray();
+            .SelectMany(selector: item => UnpackItems(data: item.Data, modelType: modelType))];
     }
 
     public static CommonObject[] LoadCommonObjects()
@@ -75,7 +80,7 @@ value:             value.GetRawText(),settings:             cCoder.Data.Extensio
         result.AddRange(collection: LoadCommonObjects(fileName: "Core.Component.latest.json"));
         result.AddRange(collection: LoadCommonObjects(fileName: "Core.Script.latest.json"));
 
-        return result.ToArray();
+        return [.. result];
     }
 
     private static CommonObject[] LoadCommonObjects(string fileName)
@@ -95,7 +100,7 @@ value:             value.GetRawText(),settings:             cCoder.Data.Extensio
     {
         string trimmed = data.TrimStart();
 
-        if (trimmed.StartsWith(value: "[", comparisonType: StringComparison.Ordinal))
+        if (trimmed.StartsWith(value: '['))
         {
             Array values = (Array)JsonConvert.DeserializeObject(
                 value: trimmed,

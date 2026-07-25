@@ -28,6 +28,7 @@ using cCoder.Core.Services.Foundations.AllowedOrigins;
 using cCoder.Core.Services.Foundations.AppSecurity;
 using cCoder.Core.Services.Foundations.ContentManagement;
 using cCoder.Core.Services.Foundations.DocumentManagement;
+using cCoder.Core.Services.Foundations.Eventing;
 using cCoder.Core.Services.Foundations.Mail;
 using cCoder.Core.Services.Foundations.Planning;
 using cCoder.Core.Services.Foundations.Workflow;
@@ -136,8 +137,7 @@ predicate: (documentName, apiDescription) =>
         services.AddEventing(configure: configuration =>
         {
             configuration.EventProviders =
-                (eventProviders ?? []).Where(predicate: provider => provider is not null)
-                .ToArray();
+                [.. (eventProviders ?? []).Where(predicate: provider => provider is not null)];
         });
 
         services.AddEventingForType<SecurityAccountEvent>();
@@ -164,6 +164,8 @@ predicate: (documentName, apiDescription) =>
     private static void AddCoreBrokers(IServiceCollection services)
     {
         services.AddTransient<IContentManagementAppBroker, ContentManagementAppBroker>();
+        services.AddTransient<IAppGraphEventBroker, AppGraphEventBroker>();
+        services.AddTransient<IAuthInfoBroker, AuthInfoBroker>();
         services.AddTransient<IHttpRequestBroker, HttpRequestBroker>();
         services.AddTransient<IAppSecurityAppBroker, AppSecurityAppBroker>();
         services.AddTransient<IPlanningAppBroker, PlanningAppBroker>();
@@ -190,6 +192,7 @@ predicate: (documentName, apiDescription) =>
     private static void AddCoreFoundationServices(IServiceCollection services)
     {
         services.AddTransient<IContentManagementAppService, ContentManagementAppService>();
+        services.AddTransient<IAppGraphEventService, AppGraphEventService>();
         services.AddTransient<IAllowedOriginStoreService, AllowedOriginStoreService>();
         services.AddTransient<IAppSecurityAppService, AppSecurityAppService>();
         services.AddTransient<IPlanningAppService, PlanningAppService>();
@@ -483,7 +486,7 @@ predicate: (documentName, apiDescription) =>
     {
         DefaultODataBatchHandler batchHandler = new();
 
-        CoreApiRouteDefinition[] definitions = (routeDefinitions ?? [])
+        CoreApiRouteDefinition[] definitions = [.. (routeDefinitions ?? [])
             .Where(predicate: route =>
                 route is not null
                 && (string.Equals(
@@ -501,8 +504,7 @@ predicate: (documentName, apiDescription) =>
                     || string.Equals(
                         a: route.RoutePath,
                         b: "Api/Security",
-                        comparisonType: StringComparison.OrdinalIgnoreCase)))
-            .ToArray();
+                        comparisonType: StringComparison.OrdinalIgnoreCase)))];
 
         IMvcBuilder mvcBuilder = services.AddControllers();
 

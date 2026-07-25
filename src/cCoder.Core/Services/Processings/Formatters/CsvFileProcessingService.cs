@@ -41,8 +41,7 @@ internal sealed partial class CsvFileProcessingService(
 
             if (source is IEnumerable enumerable)
             {
-                object[] items = enumerable.Cast<object>()
-                    .ToArray();
+                object[] items = [.. enumerable.Cast<object>()];
 
                 if (items.Length == 0)
                 {
@@ -84,14 +83,13 @@ internal sealed partial class CsvFileProcessingService(
             return $"{sourceHeader}\n{sourceValues}";
         });
 
-    private PropertyInfo[] SelectProperties(object source) =>
-        source.GetType()
+    private static PropertyInfo[] SelectProperties(object source) =>
+        [.. source.GetType()
             .GetProperties()
             .Where(
                 predicate: property =>
                     property.PropertyType.IsValueType
-                    || property.PropertyType == typeof(string))
-            .ToArray();
+                    || property.PropertyType == typeof(string))];
 
     private string BuildHeader(
         object source,
@@ -142,24 +140,22 @@ internal sealed partial class CsvFileProcessingService(
     {
         if (source is IDictionary<string, object> dictionary)
         {
-            string[] values = dictionary.Values
+            string[] values = [.. dictionary.Values
                 .Select(
                     selector: value => FormatCsvValue(
                         value: value,
                         dateFormat: dateFormat,
-                        moneyFormat: moneyFormat))
-                .ToArray();
+                        moneyFormat: moneyFormat))];
 
             return $"{string.Join(separator: delimiter, value: values)}\n";
         }
 
-        string[] propertyValues = properties
+        string[] propertyValues = [.. properties
             .Select(
                 selector: property => FormatCsvValue(
                     value: property.GetValue(obj: source),
                     dateFormat: dateFormat,
-                    moneyFormat: moneyFormat))
-            .ToArray();
+                    moneyFormat: moneyFormat))];
 
         return string.Join(
             separator: delimiter,

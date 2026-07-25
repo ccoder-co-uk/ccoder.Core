@@ -6,6 +6,7 @@ using cCoder.Core.Services.Foundations.AppSecurity;
 using cCoder.Core.Services.Aggregations;
 using cCoder.Core.Services.Foundations.ContentManagement;
 using cCoder.Core.Services.Foundations.DocumentManagement;
+using cCoder.Core.Services.Foundations.Eventing;
 using cCoder.Core.Services.Foundations.Mail;
 using cCoder.Core.Services.Foundations.Planning;
 using cCoder.Core.Services.Foundations.Workflow;
@@ -29,6 +30,7 @@ public sealed partial class AppAggregationServiceTests
         Mock<IDocumentManagementAppService> documentManagementAppServiceMock = new(MockBehavior.Strict);
         Mock<IWorkflowAppService> workflowAppServiceMock = new(MockBehavior.Strict);
         Mock<IMailAppService> mailAppServiceMock = new(MockBehavior.Strict);
+        Mock<IAppGraphEventService> appGraphEventServiceMock = new(MockBehavior.Strict);
         MockSequence sequence = new();
         CoreConfiguration configuration = new();
 
@@ -63,13 +65,14 @@ public sealed partial class AppAggregationServiceTests
             .Returns(value: ValueTask.CompletedTask);
 
         AppAggregationService service = new(
-            contentManagementAppServiceMock.Object,
-            appSecurityAppServiceMock.Object,
-            planningAppServiceMock.Object,
-            documentManagementAppServiceMock.Object,
-            workflowAppServiceMock.Object,
-            mailAppServiceMock.Object,
-            configuration);
+            contentManagementAppService: contentManagementAppServiceMock.Object,
+            appSecurityAppService: appSecurityAppServiceMock.Object,
+            planningAppService: planningAppServiceMock.Object,
+            documentManagementAppService: documentManagementAppServiceMock.Object,
+            workflowAppService: workflowAppServiceMock.Object,
+            mailAppService: mailAppServiceMock.Object,
+            appGraphEventService: appGraphEventServiceMock.Object,
+            configuration: configuration);
 
         // When
         await service.DeleteAppAsync(appId: appId);
