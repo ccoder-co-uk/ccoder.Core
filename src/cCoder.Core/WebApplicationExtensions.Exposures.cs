@@ -1,9 +1,12 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Text.RegularExpressions;
 using cCoder.Core.Exposures;
-using cCoder.Core.Exposures.Hubs;
+using cCoder.Core.Dependencies.Hubs;
 using cCoder.DocumentManagement.Exposures.Middleware;
-using cCoder.Logging.Exposures.Hubs;
-using cCoder.Workflow.Exposures.Hubs;
+using cCoder.Workflow;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Net.Http.Headers;
@@ -23,11 +26,11 @@ public static partial class WebApplicationExtensions
                 ctx.Context.Response.Headers[HeaderNames.CacheControl] = "public,max-age=" + 86400,
         };
 
-        app.UseStaticFiles(defaultStaticFileOptions);
+        app.UseStaticFiles(options: defaultStaticFileOptions);
 
-        if (Directory.Exists("\\.well-known"))
+        if (Directory.Exists(path: "\\.well-known"))
         {
-            app.UseStaticFiles(new StaticFileOptions
+            app.UseStaticFiles(options: new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider("\\.well-known"),
                 RequestPath = new PathString("\\.well-known"),
@@ -39,13 +42,15 @@ public static partial class WebApplicationExtensions
         app.UseRouting();
         app.MapStaticAssets();
         app.MapControllers();
+
         app.MapControllerRoute(
             name: "default",
             pattern: @"{*path}",
             defaults: new { controller = "Home", action = "Index" },
             constraints: new { path = new NoApiRouteConstraint() }
         );
-        app.MapHub<NotificationHub>("/Api/Hubs/Notification");
+
+        app.MapHub<NotificationHub>(pattern: "/Api/Hubs/Notification");
         return app;
     }
 
@@ -55,25 +60,28 @@ public static partial class WebApplicationExtensions
         ILogger log = null
     )
     {
-        log?.LogInformation("Initialising Content Management");
+        log?.LogInformation(message: "Initialising Content Management");
         app.UseSession();
         app.HandleExceptions();
         app.UseCoreFormatters();
         app.UseCoreCaching();
-        app.Use(
-            async (context, next) =>
-            {
-                await onRequest(context, log ?? NullLogger.Instance);
 
-                context.Response.OnStarting(() =>
+        app.Use(
+middleware: async (context, next) =>
+            {
+                await onRequest(arg1: context, arg2: log ?? NullLogger.Instance);
+
+                context.Response.OnStarting(callback: () =>
                 {
                     if (context.Request.Query["edit"] != "true")
-                        context.Response.Headers.Append("X-Frame-Options", "DENY");
+                    {
+                        context.Response.Headers.Append(key: "X-Frame-Options", value: "DENY");
+                    }
 
-                    _ = context.Response.Headers.Remove("X-AspNet-Version");
-                    _ = context.Response.Headers.Remove("X-AspNetMvc-Version");
-                    _ = context.Response.Headers.Remove("X-Sourcefiles");
-                    _ = context.Response.Headers.Remove("Server");
+                    _ = context.Response.Headers.Remove(key: "X-AspNet-Version");
+                    _ = context.Response.Headers.Remove(key: "X-AspNetMvc-Version");
+                    _ = context.Response.Headers.Remove(key: "X-Sourcefiles");
+                    _ = context.Response.Headers.Remove(key: "Server");
 
                     return Task.CompletedTask;
                 });
@@ -81,6 +89,7 @@ public static partial class WebApplicationExtensions
                 await next();
             }
         );
+
         return app;
     }
 
@@ -89,15 +98,14 @@ public static partial class WebApplicationExtensions
         ILogger log = null
     )
     {
-        log?.LogInformation("Initialising Document Management");
+        log?.LogInformation(message: "Initialising Document Management");
+
         app.MapWhen(
-            context => DmsRouteRegex.IsMatch(context.Request.Path.Value?.ToLower() ?? string.Empty),
-            branch => branch.UseMiddleware<DMSMiddleware>()
+predicate: context => DmsRouteRegex.IsMatch(input: context.Request.Path.Value?.ToLower() ?? string.Empty), configuration: branch => branch.UseMiddleware<DMSMiddleware>()
         );
 
         app.MapWhen(
-            context => WebDavRouteRegex.IsMatch(context.Request.Path.Value?.ToLower() ?? string.Empty),
-            branch => branch.UseMiddleware<WebDavMiddleware>()
+predicate: context => WebDavRouteRegex.IsMatch(input: context.Request.Path.Value?.ToLower() ?? string.Empty), configuration: branch => branch.UseMiddleware<WebDavMiddleware>()
         );
 
         return app;
@@ -105,15 +113,8 @@ public static partial class WebApplicationExtensions
 
     private static WebApplication UseWorkflowExposure(this WebApplication app, ILogger log = null)
     {
-        log?.LogInformation("Initialising Workflow");
-        app.MapHub<WorkflowHub>("/Api/Hubs/Workflow");
-        return app;
+        log?.LogInformation(message: "Initialising Workflow");
+        return app.StartWorkflowWeb(log: log);
     }
 
-    private static WebApplication UseLoggingExposure(this WebApplication app, ILogger log = null)
-    {
-        log?.LogInformation("Initialising Logging");
-        app.MapHub<LogHub>("/Api/Hubs/Logs");
-        return app;
-    }
 }

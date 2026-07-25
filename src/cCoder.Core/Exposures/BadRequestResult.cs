@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Data.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -11,20 +15,15 @@ public class BadRequestResult : BadRequestObjectResult
         : base(modelState)
     {
         Value = modelState
-            .Select(i => new ModelStateError
+            .Select(selector: i => new ModelStateError
             {
                 Key = i.Key,
                 Value = i.Value?.RawValue,
                 Errors = i
-                    .Value?.Errors?.Select(e => $"{e.ErrorMessage} - {e.Exception?.Message}")
+                    .Value?.Errors?.Select(selector: e => $"{e.ErrorMessage} - {e.Exception?.Message}")
                     .ToArray(),
             })
             .ToArray()
             .ToJsonForOdata();
     }
 }
-
-
-
-
-

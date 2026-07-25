@@ -1,5 +1,9 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Data;
-using cCoder.Logging.Exposures.Hubs;
+using cCoder.Logging;
 using cCoder.Security.Data.EF;
 using cCoder.Security.Data.EF.Interfaces;
 using Microsoft.AspNetCore.Http.Features;
@@ -20,17 +24,19 @@ public static partial class WebApplicationExtensions
 
     public static WebApplication StartCoreWeb(this WebApplication app)
     {
-        if (!TryMarkCoreWebStarted(app))
+        if (!TryMarkCoreWebStarted(app: app))
+        {
             return app;
+        }
 
         ILogger log = app.Services
             .GetService<ILoggerFactory>()?
-            .CreateLogger("cCoder.Core.Web")
+            .CreateLogger(categoryName: "cCoder.Core.Web")
             ?? NullLogger.Instance;
 
-        app.EnsureCoreDatabasesMigrated(log);
+        app.EnsureCoreDatabasesMigrated(log: log);
         app.UseHttpsRedirection();
-        app.UseCoreApi(log);
+        app.UseCoreApi(log: log);
 
         return app;
     }
@@ -39,10 +45,12 @@ public static partial class WebApplicationExtensions
     {
         lock (StartedCoreWebAppsLock)
         {
-            if (StartedCoreWebApps.TryGetValue(app, out _))
+            if (StartedCoreWebApps.TryGetValue(key: app, value: out _))
+            {
                 return false;
+            }
 
-            StartedCoreWebApps.Add(app, new object());
+            StartedCoreWebApps.Add(key: app, value: new object());
             return true;
         }
     }
@@ -51,65 +59,78 @@ public static partial class WebApplicationExtensions
     {
         ILogger log = app.Services
             .GetService<ILoggerFactory>()?
-            .CreateLogger("cCoder.Core.HostedServices")
+            .CreateLogger(categoryName: "cCoder.Core.HostedServices")
             ?? NullLogger.Instance;
 
-        app.EnsureCoreDatabasesMigrated(log);
-        IHostedService[] hostedServices = app.Services.GetServices<IHostedService>().ToArray();
+        app.EnsureCoreDatabasesMigrated(log: log);
+
+        IHostedService[] hostedServices = app.Services.GetServices<IHostedService>()
+            .ToArray();
+
         log.LogInformation(
-            "Registered hosted services: {HostedServices}",
-            string.Join(", ", hostedServices.Select(service => service.GetType().FullName)));
+message: "Registered hosted services: {HostedServices}", args: string.Join(separator: ", ", values: hostedServices.Select(selector: service => service.GetType().FullName)));
 
         app.ListenToExternalEvents();
         app.UseRouting();
         app.UseAuthorization();
         app.UseCoreDefaultCors();
-        app.UseStaticFiles(new StaticFileOptions
+
+        app.UseStaticFiles(options: new StaticFileOptions
         {
             HttpsCompression = HttpsCompressionMode.Compress,
         });
-        app.Use(async (context, next) =>
+
+        app.Use(middleware: async (context, next) =>
         {
-            context.Response.OnStarting(() =>
+            context.Response.OnStarting(callback: () =>
             {
                 if (context.Request.Query["edit"] != "true")
-                    context.Response.Headers.Append("X-Frame-Options", "DENY");
+                {
+                    context.Response.Headers.Append(key: "X-Frame-Options", value: "DENY");
+                }
 
-                _ = context.Response.Headers.Remove("X-AspNet-Version");
-                _ = context.Response.Headers.Remove("X-AspNetMvc-Version");
-                _ = context.Response.Headers.Remove("X-Sourcefiles");
-                _ = context.Response.Headers.Remove("Server");
+                _ = context.Response.Headers.Remove(key: "X-AspNet-Version");
+                _ = context.Response.Headers.Remove(key: "X-AspNetMvc-Version");
+                _ = context.Response.Headers.Remove(key: "X-Sourcefiles");
+                _ = context.Response.Headers.Remove(key: "Server");
 
                 return Task.CompletedTask;
             });
+
             await next();
         });
+
         app.MapControllers();
-        app.MapHub<LogHub>("/Hubs/Logs");
+        app.StartLoggingWeb(log: log);
         return app;
     }
 
     private static void EnsureCoreDatabasesMigrated(this WebApplication app, ILogger log = null)
     {
         using IServiceScope scope = app.Services.CreateScope();
+
         ICoreContextFactory coreContextFactory =
             scope.ServiceProvider.GetRequiredService<ICoreContextFactory>();
+
         ISecurityDbContextFactory securityDbContextFactory =
             scope.ServiceProvider.GetRequiredService<ISecurityDbContextFactory>();
 
         using CoreDataContext coreContext = coreContextFactory.CreateCoreContext();
-        using SecurityDbContext securityContext = securityDbContextFactory.CreateDbContext(true);
+        using SecurityDbContext securityContext = securityDbContextFactory.CreateDbContext(ignoreAuthInfo: true);
 
         string coreConnectionString = coreContext.Database.GetConnectionString();
         string securityConnectionString = securityContext.Database.GetConnectionString();
 
         log?.LogInformation(
-            "Applying startup database migrations. Core={CoreDatabase}; Security={SecurityDatabase}",
-            ResolveDatabaseName(coreConnectionString),
-            ResolveDatabaseName(securityConnectionString));
+            message: "Applying startup database migrations. Core={CoreDatabase}; Security={SecurityDatabase}",
+            args:
+            [
+                ResolveDatabaseName(connectionString: coreConnectionString),
+                ResolveDatabaseName(connectionString: securityConnectionString)
+            ]);
 
         using IDisposable migrationLock =
-            AcquireStartupMigrationLock(coreConnectionString, securityConnectionString, log);
+            AcquireStartupMigrationLock(coreConnectionString: coreConnectionString, securityConnectionString: securityConnectionString, log: log);
 
         securityContext.Migrate();
         coreContext.Migrate();
@@ -120,23 +141,24 @@ public static partial class WebApplicationExtensions
         string securityConnectionString,
         ILogger log)
     {
-        string lockName = BuildStartupMigrationLockName(coreConnectionString, securityConnectionString);
+        string lockName = BuildStartupMigrationLockName(coreConnectionString: coreConnectionString, securityConnectionString: securityConnectionString);
         Mutex mutex = new(false, lockName);
 
         try
         {
-            if (!mutex.WaitOne(TimeSpan.FromMinutes(2)))
+            if (!mutex.WaitOne(timeout: TimeSpan.FromMinutes(minutes: 2)))
+            {
                 throw new TimeoutException(
                     $"Timed out waiting for startup migration lock '{lockName}'.");
+            }
         }
         catch (AbandonedMutexException)
         {
             log?.LogWarning(
-                "Recovered abandoned startup migration lock {LockName}. Continuing with database migration.",
-                lockName);
+message: "Recovered abandoned startup migration lock {LockName}. Continuing with database migration.", args: lockName);
         }
 
-        log?.LogDebug("Acquired startup migration lock {LockName}.", lockName);
+        log?.LogDebug(message: "Acquired startup migration lock {LockName}.", args: lockName);
         return new StartupMigrationLock(mutex, lockName, log);
     }
 
@@ -145,23 +167,29 @@ public static partial class WebApplicationExtensions
         string securityConnectionString)
     {
         string lockKey = string.Join(
-            "|",
-            ResolveDatabaseName(coreConnectionString),
-            ResolveDatabaseName(securityConnectionString));
+            separator: "|",
+            values:
+            [
+                ResolveDatabaseName(connectionString: coreConnectionString),
+                ResolveDatabaseName(connectionString: securityConnectionString)
+            ]);
 
-        byte[] hash = SHA256.HashData(Encoding.UTF8.GetBytes(lockKey));
-        return $"Global\\cCoder.Core.StartupMigrate.{Convert.ToHexString(hash)}";
+        byte[] hash = SHA256.HashData(source: Encoding.UTF8.GetBytes(s: lockKey));
+        return $"Global\\cCoder.Core.StartupMigrate.{Convert.ToHexString(inArray: hash)}";
     }
 
     private static string ResolveDatabaseName(string connectionString)
     {
-        if (string.IsNullOrWhiteSpace(connectionString))
+        if (string.IsNullOrWhiteSpace(value: connectionString))
+        {
             return "(none)";
+        }
 
         try
         {
             SqlConnectionStringBuilder builder = new(connectionString);
-            return string.IsNullOrWhiteSpace(builder.InitialCatalog)
+
+            return string.IsNullOrWhiteSpace(value: builder.InitialCatalog)
                 ? "(default)"
                 : builder.InitialCatalog;
         }
@@ -178,7 +206,7 @@ public static partial class WebApplicationExtensions
             try
             {
                 mutex.ReleaseMutex();
-                log?.LogDebug("Released startup migration lock {LockName}.", lockName);
+                log?.LogDebug(message: "Released startup migration lock {LockName}.", args: lockName);
             }
             finally
             {

@@ -1,5 +1,10 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Core.Services.Foundations.ContentManagement;
-using cCoder.Core.Services.Orchestrations;
+using cCoder.Core.Services.Aggregations;
+using cCoder.Core.Exposures.Managers;
 using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.Mail;
 using cCoder.Security.Objects.Entities;
@@ -12,16 +17,18 @@ namespace cCoder.Core.Tests.Orchestrations;
 public partial class SecurityAccountEmailOrchestrationServiceTests
 {
     private readonly Mock<IContentManagementAppService> contentManagementAppServiceMock;
-    private readonly Mock<ITemplatedEmailOrchestrationService> templatedEmailOrchestrationServiceMock;
-    private readonly SecurityAccountEmailOrchestrationService orchestrationService;
+    private readonly Mock<ITemplatedEmailManager> templatedEmailManagerMock;
+    private readonly SecurityAccountEmailAggregationService orchestrationService;
 
     public SecurityAccountEmailOrchestrationServiceTests()
     {
         contentManagementAppServiceMock = new Mock<IContentManagementAppService>(MockBehavior.Strict);
-        templatedEmailOrchestrationServiceMock = new Mock<ITemplatedEmailOrchestrationService>(MockBehavior.Strict);
-        orchestrationService = new SecurityAccountEmailOrchestrationService(
+        templatedEmailManagerMock =
+            new Mock<ITemplatedEmailManager>(MockBehavior.Strict);
+
+        orchestrationService = new SecurityAccountEmailAggregationService(
             contentManagementAppServiceMock.Object,
-            templatedEmailOrchestrationServiceMock.Object);
+            templatedEmailManagerMock.Object);
     }
 
     private static App CreateApp(string templateName) =>
@@ -55,42 +62,52 @@ public partial class SecurityAccountEmailOrchestrationServiceTests
             }
         };
 
-    private void SetupAppLookup(App app)
-    {
+    private void SetupAppLookup(App app) =>
         contentManagementAppServiceMock
-            .Setup(service => service.GetAll(true))
-            .Returns(new[] { app }.AsQueryable());
-    }
+            .Setup(expression: service => service.GetAllApps(ignoreFilters: true))
+            .Returns(value: new[] { app }.AsQueryable());
 
-    private void SetupQueuedEmailExpectation(string templateName, string subject)
-    {
-        templatedEmailOrchestrationServiceMock
-            .Setup(service => service.QueueAsync(
-                It.Is<App>(app => app.Id == 17),
-                templateName,
-                "cy-GB",
-                It.Is<object>(model =>
-                    ReadModelValue<string>(model, "Token") == "token-123"
-                    && ReadModelValue<SSOUser>(model, "SSOUser").Id == "user-123"),
-                "user@example.com",
-                subject,
-                "user-123",
-                "Default"))
-            .ReturnsAsync(new QueuedEmail());
-    }
+    private void SetupQueuedEmailExpectation(
+        string templateName,
+        string subject) =>
+        templatedEmailManagerMock
+            .Setup(expression: service =>
+                service.QueueAppTemplatedEmailAsync(
+                app: It.Is<App>(match: app => app.Id == 17),
+                templateName: templateName,
+                culture: "cy-GB",
+                model: It.Is<object>(match: model =>
+                    ReadToken(model: model) == "token-123"
+                    && ReadUser(model: model).Id == "user-123"),
+                toEmail: "user@example.com",
+                subject: subject,
+                sentByUserId: "user-123",
+                mailSenderName: "Default"))
+            .ReturnsAsync(value: new QueuedEmail());
 
-    private static TValue ReadModelValue<TValue>(object model, string propertyName) =>
-        (TValue)model.GetType().GetProperty(propertyName)!.GetValue(model);
+    private static string ReadToken(object model) =>
+        (string)model.GetType()
+            .GetProperty(name: "Token")!
+            .GetValue(obj: model);
 
-    private void VerifyQueuedEmail(string templateName, string subject) =>
-        templatedEmailOrchestrationServiceMock.Verify(service => service.QueueAsync(
-                It.Is<App>(app => app.Id == 17),
-                templateName,
-                "cy-GB",
-                It.IsAny<object>(),
-                "user@example.com",
-                subject,
-                "user-123",
-                "Default"),
-            Times.Once);
+    private static SSOUser ReadUser(object model) =>
+        (SSOUser)model.GetType()
+            .GetProperty(name: "SSOUser")!
+            .GetValue(obj: model);
+
+    private void VerifyQueuedEmail(
+        string templateName,
+        string subject) =>
+        templatedEmailManagerMock.Verify(
+            expression: service =>
+                service.QueueAppTemplatedEmailAsync(
+                app: It.Is<App>(match: app => app.Id == 17),
+                templateName: templateName,
+                culture: "cy-GB",
+                model: It.IsAny<object>(),
+                toEmail: "user@example.com",
+                subject: subject,
+                sentByUserId: "user-123",
+                mailSenderName: "Default"),
+            times: Times.Once);
 }

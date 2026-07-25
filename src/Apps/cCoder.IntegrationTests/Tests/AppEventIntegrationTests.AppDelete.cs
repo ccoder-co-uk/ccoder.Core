@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Data;
 using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.DMS;
@@ -18,42 +22,86 @@ public sealed partial class AppEventIntegrationTests
     [Fact]
     public async Task AppDelete_RaisesExternalEventAndHostedServicesRemovesCrossDomainChildren()
     {
+        // Given
         int appId = 0;
         Guid roleId = Guid.NewGuid();
         Guid flowId = Guid.NewGuid();
         Guid folderId = Guid.NewGuid();
         Guid fileId = Guid.NewGuid();
-        string appDomain = $"{Unique("delete")}.local";
+        string appDomain = $"{Unique(prefix: "delete")}.local";
 
         try
         {
-            appId = await CreateStandaloneAppAsync(appDomain);
-            await GrantGuestAdminAsync(appId);
-            await SeedAppDeleteScenarioAsync(appId, roleId, flowId, folderId, fileId);
+            appId = await CreateStandaloneAppAsync(domain: appDomain);
+            await GrantGuestAdminAsync(appId: appId);
+            await SeedAppDeleteScenarioAsync(appId: appId,roleId: roleId,flowId: flowId,folderId: folderId,fileId: fileId);
 
-            await SendWithOptionalHostAsync(HttpMethod.Delete, $"/Api/ContentManagement/App({appId})", host: appDomain);
+            // When
+            await SendWithOptionalHostAsync(method: HttpMethod.Delete,relativeUrl: $"/Api/ContentManagement/App({appId})",host: appDomain);
 
-            await WaitUntilAsync(async () =>
+            await WaitUntilAsync(predicate: async () =>
             {
                 await using CoreDataContext core = CreateCoreContext();
-                return !await core.Set<Role>().IgnoreQueryFilters().AnyAsync(role => role.AppId == appId);
+
+                return !await core.Set<Role>()
+                    .IgnoreQueryFilters()
+                    .AnyAsync(predicate: role => role.AppId == appId);
             });
 
             await using CoreDataContext verification = CreateCoreContext();
-            (await verification.Set<AppEntity>().IgnoreQueryFilters().AnyAsync(app => app.Id == appId)).Should().BeFalse();
-            (await verification.Set<Role>().IgnoreQueryFilters().AnyAsync(role => role.AppId == appId)).Should().BeFalse();
-            (await verification.Set<UserRole>().IgnoreQueryFilters().AnyAsync(userRole => userRole.RoleId == roleId)).Should().BeFalse();
-            (await verification.Set<Folder>().IgnoreQueryFilters().AnyAsync(folder => folder.AppId == appId)).Should().BeFalse();
-            (await verification.Set<DmsFile>().IgnoreQueryFilters().AnyAsync(file => file.Id == fileId)).Should().BeFalse();
-            (await verification.Set<FileContent>().IgnoreQueryFilters().AnyAsync(content => content.FileId == fileId)).Should().BeFalse();
-            (await verification.Set<MailServer>().IgnoreQueryFilters().AnyAsync(server => server.AppId == appId)).Should().BeFalse();
-            (await verification.Set<Calendar>().IgnoreQueryFilters().AnyAsync(calendar => calendar.AppId == appId)).Should().BeFalse();
-            (await verification.Set<FlowDefinition>().IgnoreQueryFilters().AnyAsync(flow => flow.Id == flowId)).Should().BeFalse();
+
+            // Then
+            (await verification.Set<AppEntity>()
+                .IgnoreQueryFilters()
+                .AnyAsync(predicate: app => app.Id == appId)).Should()
+                .BeFalse();
+
+            (await verification.Set<Role>()
+                .IgnoreQueryFilters()
+                .AnyAsync(predicate: role => role.AppId == appId)).Should()
+                .BeFalse();
+
+            (await verification.Set<UserRole>()
+                .IgnoreQueryFilters()
+                .AnyAsync(predicate: userRole => userRole.RoleId == roleId)).Should()
+                .BeFalse();
+
+            (await verification.Set<Folder>()
+                .IgnoreQueryFilters()
+                .AnyAsync(predicate: folder => folder.AppId == appId)).Should()
+                .BeFalse();
+
+            (await verification.Set<DmsFile>()
+                .IgnoreQueryFilters()
+                .AnyAsync(predicate: file => file.Id == fileId)).Should()
+                .BeFalse();
+
+            (await verification.Set<FileContent>()
+                .IgnoreQueryFilters()
+                .AnyAsync(predicate: content => content.FileId == fileId)).Should()
+                .BeFalse();
+
+            (await verification.Set<MailServer>()
+                .IgnoreQueryFilters()
+                .AnyAsync(predicate: server => server.AppId == appId)).Should()
+                .BeFalse();
+
+            (await verification.Set<Calendar>()
+                .IgnoreQueryFilters()
+                .AnyAsync(predicate: calendar => calendar.AppId == appId)).Should()
+                .BeFalse();
+
+            (await verification.Set<FlowDefinition>()
+                .IgnoreQueryFilters()
+                .AnyAsync(predicate: flow => flow.Id == flowId)).Should()
+                .BeFalse();
         }
         finally
         {
             if (appId != 0)
-                await DeleteAppGraphAsync(appId);
+            {
+                await DeleteAppGraphAsync(appId: appId);
+            }
         }
     }
 }

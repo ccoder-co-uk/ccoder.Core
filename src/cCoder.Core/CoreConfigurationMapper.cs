@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Globalization;
 using cCoder.Core.Models;
 using cCoder.Data;
@@ -10,73 +14,109 @@ internal static class CoreConfigurationMapper
         CoreConfiguration target,
         Config source)
     {
-        target.ConnectionStrings = CloneDictionary(source.ConnectionStrings);
-        target.Settings = CloneDictionary(source.Settings);
-        target.Services = CloneDictionary(source.Services);
+        target.ConnectionStrings = CloneDictionary(source: source.ConnectionStrings);
+        target.Settings = CloneDictionary(source: source.Settings);
+        target.Services = CloneDictionary(source: source.Services);
         target.DebugInfo = source.DebugInfo;
         target.LogSQL = source.LogSQL;
 
-        if (TryGetValue(target.ConnectionStrings, "Core", out string coreConnectionString))
+        if (TryGetValue(values: target.ConnectionStrings, key: "Core", value: out string coreConnectionString))
+        {
             target.CoreConnectionString = coreConnectionString;
+        }
 
-        if (TryGetValue(target.ConnectionStrings, "SSO", out string securityConnectionString))
+        if (TryGetValue(values: target.ConnectionStrings, key: "SSO", value: out string securityConnectionString))
+        {
             target.SecurityConnectionString = securityConnectionString;
+        }
 
-        if (TryGetBool(target.Settings, "AggregateDomains", out bool aggregateDomains))
+        if (TryGetBool(values: target.Settings, key: "AggregateDomains", value: out bool aggregateDomains))
+        {
             target.AggregateDomains = aggregateDomains;
+        }
 
-        if (TryGetValue(target.Settings, "DecryptionKey", out string decryptionKey))
+        if (TryGetValue(values: target.Settings, key: "DecryptionKey", value: out string decryptionKey))
+        {
             target.DecryptionKey = decryptionKey;
+        }
 
-        if (TryGetValue(target.Settings, "CacheSource", out string cacheSource))
+        if (TryGetValue(values: target.Settings, key: "CacheSource", value: out string cacheSource))
+        {
             target.CacheSource = cacheSource;
+        }
 
-        if (TryGetInt(target.Settings, "CacheSourceAppId", out int cacheSourceAppId))
+        if (TryGetInt(values: target.Settings, key: "CacheSourceAppId", value: out int cacheSourceAppId))
+        {
             target.CacheSourceAppId = cacheSourceAppId;
+        }
 
-        if (TryGetInt(target.Settings, "CacheExpiry", out int cacheExpiry))
+        if (TryGetInt(values: target.Settings, key: "CacheExpiry", value: out int cacheExpiry))
+        {
             target.CacheExpiry = cacheExpiry;
+        }
 
-        if (TryGetInt(target.Settings, "sslPort", out int sslPort))
+        if (TryGetInt(values: target.Settings, key: "sslPort", value: out int sslPort))
+        {
             target.SslPort = sslPort;
+        }
 
-        if (TryGetValue(target.Services, "Workflow", out string workflowServiceUrl))
+        if (TryGetValue(values: target.Services, key: "Workflow", value: out string workflowServiceUrl))
+        {
             target.WorkflowServiceUrl = workflowServiceUrl;
+        }
 
-        if (TryGetValue(target.Settings, "MailGraphTenantId", out string mailGraphTenantId))
+        if (TryGetValue(values: target.Settings, key: "MailGraphTenantId", value: out string mailGraphTenantId))
+        {
             target.MailGraphTenantId = mailGraphTenantId;
+        }
 
-        if (TryGetValue(target.Settings, "MailGraphClientId", out string mailGraphClientId))
+        if (TryGetValue(values: target.Settings, key: "MailGraphClientId", value: out string mailGraphClientId))
+        {
             target.MailGraphClientId = mailGraphClientId;
+        }
 
-        if (TryGetValue(target.Settings, "MailGraphClientSecret", out string mailGraphClientSecret))
+        if (TryGetValue(values: target.Settings, key: "MailGraphClientSecret", value: out string mailGraphClientSecret))
+        {
             target.MailGraphClientSecret = mailGraphClientSecret;
+        }
 
-        if (TryGetValue(target.Settings, "MailGraphBaseUrl", out string mailGraphBaseUrl))
+        if (TryGetValue(values: target.Settings, key: "MailGraphBaseUrl", value: out string mailGraphBaseUrl))
+        {
             target.MailGraphBaseUrl = mailGraphBaseUrl;
+        }
 
-        if (TryGetValue(target.Settings, "MailGraphLoginBaseUrl", out string mailGraphLoginBaseUrl))
+        if (TryGetValue(values: target.Settings, key: "MailGraphLoginBaseUrl", value: out string mailGraphLoginBaseUrl))
+        {
             target.MailGraphLoginBaseUrl = mailGraphLoginBaseUrl;
+        }
 
-        if (TryGetValue(target.Settings, "MailGraphReceiveUser", out string mailGraphReceiveUser))
+        if (TryGetValue(values: target.Settings, key: "MailGraphReceiveUser", value: out string mailGraphReceiveUser))
+        {
             target.MailGraphReceiveUser = mailGraphReceiveUser;
+        }
 
-        if (TryGetValue(target.Settings, "MailDefaultSenderProviderName", out string mailDefaultSenderProviderName))
+        if (TryGetValue(values: target.Settings, key: "MailDefaultSenderProviderName", value: out string mailDefaultSenderProviderName))
+        {
             target.MailDefaultSenderProviderName = mailDefaultSenderProviderName;
+        }
 
-        if (TryGetValue(target.Settings, "MailDefaultReceiverProviderName", out string mailDefaultReceiverProviderName))
+        if (TryGetValue(values: target.Settings, key: "MailDefaultReceiverProviderName", value: out string mailDefaultReceiverProviderName))
+        {
             target.MailDefaultReceiverProviderName = mailDefaultReceiverProviderName;
+        }
 
-        if (TryGetValue(target.ConnectionStrings, "ServiceBus", out string serviceBusConnectionString))
+        if (TryGetValue(values: target.ConnectionStrings, key: "ServiceBus", value: out string serviceBusConnectionString))
+        {
             target.ServiceBusConnectionString = serviceBusConnectionString;
+        }
 
         target.EnableHttpEventing =
-            string.Equals(target.EventProviderType, "Http", StringComparison.OrdinalIgnoreCase)
-            && !string.IsNullOrWhiteSpace(target.HttpEventHubUrl);
+            string.Equals(a: target.EventProviderType, b: "Http", comparisonType: StringComparison.OrdinalIgnoreCase)
+            && !string.IsNullOrWhiteSpace(value: target.HttpEventHubUrl);
 
         target.EnableServiceBusEventing =
-            string.Equals(target.EventProviderType, "ServiceBus", StringComparison.OrdinalIgnoreCase)
-            && !string.IsNullOrWhiteSpace(target.ServiceBusConnectionString);
+            string.Equals(a: target.EventProviderType, b: "ServiceBus", comparisonType: StringComparison.OrdinalIgnoreCase)
+            && !string.IsNullOrWhiteSpace(value: target.ServiceBusConnectionString);
     }
 
     internal static void Copy(
@@ -108,9 +148,9 @@ internal static class CoreConfigurationMapper
         target.EnableHttpEventing = source.EnableHttpEventing;
         target.EnableServiceBusEventing = source.EnableServiceBusEventing;
         target.EventProviders = source.EventProviders ?? [];
-        target.ConnectionStrings = CloneDictionary(source.ConnectionStrings);
-        target.Settings = CloneDictionary(source.Settings);
-        target.Services = CloneDictionary(source.Services);
+        target.ConnectionStrings = CloneDictionary(source: source.ConnectionStrings);
+        target.Settings = CloneDictionary(source: source.Settings);
+        target.Services = CloneDictionary(source: source.Services);
         target.DebugInfo = source.DebugInfo;
         target.LogSQL = source.LogSQL;
     }
@@ -118,9 +158,9 @@ internal static class CoreConfigurationMapper
     internal static Config CreateRuntimeConfiguration(CoreConfiguration configuration) =>
         new()
         {
-            ConnectionStrings = BuildConnectionStrings(configuration),
-            Settings = BuildSettings(configuration),
-            Services = BuildServices(configuration),
+            ConnectionStrings = BuildConnectionStrings(configuration: configuration),
+            Settings = BuildSettings(configuration: configuration),
+            Services = BuildServices(configuration: configuration),
             DebugInfo = configuration.DebugInfo,
             LogSQL = configuration.LogSQL,
         };
@@ -136,67 +176,69 @@ internal static class CoreConfigurationMapper
         bool currentLogSql)
     {
         if (defaults is null)
+        {
             return;
+        }
 
-        SetIfMissing(connectionStrings, "Core", defaults.CoreConnectionString);
-        SetIfMissing(connectionStrings, "SSO", defaults.SecurityConnectionString);
-        SetIfMissing(connectionStrings, "ServiceBus", defaults.ServiceBusConnectionString);
-        SetIfMissing(settings, "DecryptionKey", defaults.DecryptionKey);
-        SetIfMissing(settings, "AggregateDomains", defaults.AggregateDomains);
-        SetIfMissing(settings, "CacheSource", defaults.CacheSource);
-        SetIfMissing(settings, "CacheSourceAppId", defaults.CacheSourceAppId);
-        SetIfMissing(settings, "CacheExpiry", defaults.CacheExpiry);
-        SetIfMissing(settings, "sslPort", defaults.SslPort);
-        SetIfMissing(settings, "MailGraphTenantId", defaults.MailGraphTenantId);
-        SetIfMissing(settings, "MailGraphClientId", defaults.MailGraphClientId);
-        SetIfMissing(settings, "MailGraphClientSecret", defaults.MailGraphClientSecret);
-        SetIfMissing(settings, "MailGraphBaseUrl", defaults.MailGraphBaseUrl);
-        SetIfMissing(settings, "MailGraphLoginBaseUrl", defaults.MailGraphLoginBaseUrl);
-        SetIfMissing(settings, "MailGraphReceiveUser", defaults.MailGraphReceiveUser);
-        SetIfMissing(settings, "MailDefaultSenderProviderName", defaults.MailDefaultSenderProviderName);
-        SetIfMissing(settings, "MailDefaultReceiverProviderName", defaults.MailDefaultReceiverProviderName);
-        SetIfMissing(servicesMap, "Workflow", defaults.WorkflowServiceUrl);
+        SetIfMissing(values: connectionStrings, key: "Core", value: defaults.CoreConnectionString);
+        SetIfMissing(values: connectionStrings, key: "SSO", value: defaults.SecurityConnectionString);
+        SetIfMissing(values: connectionStrings, key: "ServiceBus", value: defaults.ServiceBusConnectionString);
+        SetIfMissing(values: settings, key: "DecryptionKey", value: defaults.DecryptionKey);
+        SetIfMissing(values: settings, key: "AggregateDomains", value: defaults.AggregateDomains);
+        SetIfMissing(values: settings, key: "CacheSource", value: defaults.CacheSource);
+        SetIfMissing(values: settings, key: "CacheSourceAppId", value: defaults.CacheSourceAppId);
+        SetIfMissing(values: settings, key: "CacheExpiry", value: defaults.CacheExpiry);
+        SetIfMissing(values: settings, key: "sslPort", value: defaults.SslPort);
+        SetIfMissing(values: settings, key: "MailGraphTenantId", value: defaults.MailGraphTenantId);
+        SetIfMissing(values: settings, key: "MailGraphClientId", value: defaults.MailGraphClientId);
+        SetIfMissing(values: settings, key: "MailGraphClientSecret", value: defaults.MailGraphClientSecret);
+        SetIfMissing(values: settings, key: "MailGraphBaseUrl", value: defaults.MailGraphBaseUrl);
+        SetIfMissing(values: settings, key: "MailGraphLoginBaseUrl", value: defaults.MailGraphLoginBaseUrl);
+        SetIfMissing(values: settings, key: "MailGraphReceiveUser", value: defaults.MailGraphReceiveUser);
+        SetIfMissing(values: settings, key: "MailDefaultSenderProviderName", value: defaults.MailDefaultSenderProviderName);
+        SetIfMissing(values: settings, key: "MailDefaultReceiverProviderName", value: defaults.MailDefaultReceiverProviderName);
+        SetIfMissing(values: servicesMap, key: "Workflow", value: defaults.WorkflowServiceUrl);
 
-        MergeMissingEntries(connectionStrings, defaults.ConnectionStrings);
-        MergeMissingEntries(settings, defaults.Settings);
-        MergeMissingEntries(servicesMap, defaults.Services);
-        debugInfo(currentDebugInfo || defaults.DebugInfo);
-        logSql(currentLogSql || defaults.LogSQL);
+        MergeMissingEntries(target: connectionStrings, defaults: defaults.ConnectionStrings);
+        MergeMissingEntries(target: settings, defaults: defaults.Settings);
+        MergeMissingEntries(target: servicesMap, defaults: defaults.Services);
+        debugInfo(obj: currentDebugInfo || defaults.DebugInfo);
+        logSql(obj: currentLogSql || defaults.LogSQL);
     }
 
     private static Dictionary<string, string> BuildConnectionStrings(CoreConfiguration configuration)
     {
-        Dictionary<string, string> connectionStrings = CloneDictionary(configuration.ConnectionStrings);
-        SetIfPresent(connectionStrings, "Core", configuration.CoreConnectionString);
-        SetIfPresent(connectionStrings, "SSO", configuration.SecurityConnectionString);
-        SetIfPresent(connectionStrings, "ServiceBus", configuration.ServiceBusConnectionString);
+        Dictionary<string, string> connectionStrings = CloneDictionary(source: configuration.ConnectionStrings);
+        SetIfPresent(values: connectionStrings, key: "Core", value: configuration.CoreConnectionString);
+        SetIfPresent(values: connectionStrings, key: "SSO", value: configuration.SecurityConnectionString);
+        SetIfPresent(values: connectionStrings, key: "ServiceBus", value: configuration.ServiceBusConnectionString);
         return connectionStrings;
     }
 
     private static Dictionary<string, string> BuildSettings(CoreConfiguration configuration)
     {
-        Dictionary<string, string> settings = CloneDictionary(configuration.Settings);
-        SetIfPresent(settings, "DecryptionKey", configuration.DecryptionKey);
-        SetIfPresent(settings, "AggregateDomains", configuration.AggregateDomains);
-        SetIfPresent(settings, "CacheSource", configuration.CacheSource);
-        SetIfPresent(settings, "CacheSourceAppId", configuration.CacheSourceAppId);
-        SetIfPresent(settings, "CacheExpiry", configuration.CacheExpiry);
-        SetIfPresent(settings, "sslPort", configuration.SslPort);
-        SetIfPresent(settings, "MailGraphTenantId", configuration.MailGraphTenantId);
-        SetIfPresent(settings, "MailGraphClientId", configuration.MailGraphClientId);
-        SetIfPresent(settings, "MailGraphClientSecret", configuration.MailGraphClientSecret);
-        SetIfPresent(settings, "MailGraphBaseUrl", configuration.MailGraphBaseUrl);
-        SetIfPresent(settings, "MailGraphLoginBaseUrl", configuration.MailGraphLoginBaseUrl);
-        SetIfPresent(settings, "MailGraphReceiveUser", configuration.MailGraphReceiveUser);
-        SetIfPresent(settings, "MailDefaultSenderProviderName", configuration.MailDefaultSenderProviderName);
-        SetIfPresent(settings, "MailDefaultReceiverProviderName", configuration.MailDefaultReceiverProviderName);
+        Dictionary<string, string> settings = CloneDictionary(source: configuration.Settings);
+        SetIfPresent(values: settings, key: "DecryptionKey", value: configuration.DecryptionKey);
+        SetIfPresent(values: settings, key: "AggregateDomains", value: configuration.AggregateDomains);
+        SetIfPresent(values: settings, key: "CacheSource", value: configuration.CacheSource);
+        SetIfPresent(values: settings, key: "CacheSourceAppId", value: configuration.CacheSourceAppId);
+        SetIfPresent(values: settings, key: "CacheExpiry", value: configuration.CacheExpiry);
+        SetIfPresent(values: settings, key: "sslPort", value: configuration.SslPort);
+        SetIfPresent(values: settings, key: "MailGraphTenantId", value: configuration.MailGraphTenantId);
+        SetIfPresent(values: settings, key: "MailGraphClientId", value: configuration.MailGraphClientId);
+        SetIfPresent(values: settings, key: "MailGraphClientSecret", value: configuration.MailGraphClientSecret);
+        SetIfPresent(values: settings, key: "MailGraphBaseUrl", value: configuration.MailGraphBaseUrl);
+        SetIfPresent(values: settings, key: "MailGraphLoginBaseUrl", value: configuration.MailGraphLoginBaseUrl);
+        SetIfPresent(values: settings, key: "MailGraphReceiveUser", value: configuration.MailGraphReceiveUser);
+        SetIfPresent(values: settings, key: "MailDefaultSenderProviderName", value: configuration.MailDefaultSenderProviderName);
+        SetIfPresent(values: settings, key: "MailDefaultReceiverProviderName", value: configuration.MailDefaultReceiverProviderName);
         return settings;
     }
 
     private static Dictionary<string, string> BuildServices(CoreConfiguration configuration)
     {
-        Dictionary<string, string> services = CloneDictionary(configuration.Services);
-        SetIfPresent(services, "Workflow", configuration.WorkflowServiceUrl);
+        Dictionary<string, string> services = CloneDictionary(source: configuration.Services);
+        SetIfPresent(values: services, key: "Workflow", value: configuration.WorkflowServiceUrl);
         return services;
     }
 
@@ -208,12 +250,16 @@ internal static class CoreConfigurationMapper
         IDictionary<string, string> defaults)
     {
         if (target is null || defaults is null)
+        {
             return;
+        }
 
         foreach ((string key, string value) in defaults)
         {
-            if (!target.ContainsKey(key))
+            if (!target.ContainsKey(key: key))
+            {
                 target[key] = value;
+            }
         }
     }
 
@@ -224,8 +270,8 @@ internal static class CoreConfigurationMapper
     {
         value = string.Empty;
 
-        return values?.TryGetValue(key, out value) == true
-            && !string.IsNullOrWhiteSpace(value);
+        return values?.TryGetValue(key: key, value: out value) == true
+            && !string.IsNullOrWhiteSpace(value: value);
     }
 
     private static bool TryGetInt(
@@ -235,8 +281,8 @@ internal static class CoreConfigurationMapper
     {
         value = default;
 
-        return values?.TryGetValue(key, out string raw) == true
-            && int.TryParse(raw, NumberStyles.Integer, CultureInfo.InvariantCulture, out value);
+        return values?.TryGetValue(key: key, value: out string raw) == true
+            && int.TryParse(s: raw, style: NumberStyles.Integer, provider: CultureInfo.InvariantCulture, result: out value);
     }
 
     private static bool TryGetBool(
@@ -246,8 +292,8 @@ internal static class CoreConfigurationMapper
     {
         value = default;
 
-        return values?.TryGetValue(key, out string raw) == true
-            && bool.TryParse(raw, out value);
+        return values?.TryGetValue(key: key, value: out string raw) == true
+            && bool.TryParse(value: raw, result: out value);
     }
 
     private static void SetIfMissing(
@@ -255,8 +301,10 @@ internal static class CoreConfigurationMapper
         string key,
         string value)
     {
-        if (values is null || string.IsNullOrWhiteSpace(key) || string.IsNullOrWhiteSpace(value) || values.ContainsKey(key))
+        if (values is null || string.IsNullOrWhiteSpace(value: key) || string.IsNullOrWhiteSpace(value: value) || values.ContainsKey(key: key))
+        {
             return;
+        }
 
         values[key] = value;
     }
@@ -267,24 +315,28 @@ internal static class CoreConfigurationMapper
         int? value)
     {
         if (!value.HasValue)
+        {
             return;
+        }
 
-        SetIfMissing(values, key, value.Value.ToString(CultureInfo.InvariantCulture));
+        SetIfMissing(values: values, key: key, value: value.Value.ToString(provider: CultureInfo.InvariantCulture));
     }
 
     private static void SetIfMissing(
         IDictionary<string, string> values,
         string key,
         bool value) =>
-        SetIfMissing(values, key, value ? "true" : "false");
+        SetIfMissing(values: values, key: key, value: value ? "true" : "false");
 
     private static void SetIfPresent(
         IDictionary<string, string> values,
         string key,
         string value)
     {
-        if (values is null || string.IsNullOrWhiteSpace(key) || string.IsNullOrWhiteSpace(value))
+        if (values is null || string.IsNullOrWhiteSpace(value: key) || string.IsNullOrWhiteSpace(value: value))
+        {
             return;
+        }
 
         values[key] = value;
     }
@@ -295,14 +347,16 @@ internal static class CoreConfigurationMapper
         int? value)
     {
         if (!value.HasValue)
+        {
             return;
+        }
 
-        SetIfPresent(values, key, value.Value.ToString(CultureInfo.InvariantCulture));
+        SetIfPresent(values: values, key: key, value: value.Value.ToString(provider: CultureInfo.InvariantCulture));
     }
 
     private static void SetIfPresent(
         IDictionary<string, string> values,
         string key,
         bool value) =>
-        SetIfPresent(values, key, value ? "true" : "false");
+        SetIfPresent(values: values, key: key, value: value ? "true" : "false");
 }

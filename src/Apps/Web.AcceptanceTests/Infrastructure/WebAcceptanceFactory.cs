@@ -1,5 +1,10 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Data;
 using cCoder.Security.Data.EF;
+using cCoder.Security.Data.EF.Dependencies;
 using cCoder.Security.Data.EF.Interfaces;
 using cCoder.Security.Objects;
 using Microsoft.AspNetCore.Hosting;
@@ -23,24 +28,25 @@ internal sealed class WebAcceptanceFactory : WebApplicationFactory<Program>
     public WebAcceptanceFactory(AcceptanceSettings settings)
     {
         this.settings = settings;
-        originalHttpEventHubUrl = Environment.GetEnvironmentVariable("Eventing__Http__HubUrl");
-        originalHostedServicesUrl = Environment.GetEnvironmentVariable("Services__HostedServices");
-        originalExternalEventingSetting = Environment.GetEnvironmentVariable("Settings__enableExternalEventing");
-        originalAggregateDomainsSetting = Environment.GetEnvironmentVariable("Settings__AggregateDomains");
+        originalHttpEventHubUrl = Environment.GetEnvironmentVariable(variable: "Eventing__Http__HubUrl");
+        originalHostedServicesUrl = Environment.GetEnvironmentVariable(variable: "Services__HostedServices");
+        originalExternalEventingSetting = Environment.GetEnvironmentVariable(variable: "Settings__enableExternalEventing");
+        originalAggregateDomainsSetting = Environment.GetEnvironmentVariable(variable: "Settings__AggregateDomains");
 
-        Environment.SetEnvironmentVariable("Eventing__Http__HubUrl", null);
-        Environment.SetEnvironmentVariable("Services__HostedServices", null);
-        Environment.SetEnvironmentVariable("Settings__enableExternalEventing", "false");
-        Environment.SetEnvironmentVariable("Settings__AggregateDomains", settings.AggregateDomains.ToString());
+        Environment.SetEnvironmentVariable(variable: "Eventing__Http__HubUrl",value: null);
+        Environment.SetEnvironmentVariable(variable: "Services__HostedServices",value: null);
+        Environment.SetEnvironmentVariable(variable: "Settings__enableExternalEventing",value: "false");
+        Environment.SetEnvironmentVariable(variable: "Settings__AggregateDomains",value: settings.AggregateDomains.ToString());
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.UseEnvironment("Acceptance");
-        builder.ConfigureAppConfiguration((_, config) =>
+        builder.UseEnvironment(environment: "Acceptance");
+
+        builder.ConfigureAppConfiguration(configureDelegate: (_, config) =>
         {
             config.AddInMemoryCollection(
-            [
+initialData:             [
                 new KeyValuePair<string, string>("ConnectionStrings:Core", settings.CoreConnectionString),
                 new KeyValuePair<string, string>("ConnectionStrings:SSO", settings.SsoConnectionString),
                 new KeyValuePair<string, string>("Settings:DecryptionKey", settings.DecryptionKey),
@@ -49,13 +55,15 @@ internal sealed class WebAcceptanceFactory : WebApplicationFactory<Program>
                 new KeyValuePair<string, string>("Eventing:Http:HubUrl", string.Empty),
             ]);
         });
-        builder.ConfigureServices(services =>
+
+        builder.ConfigureServices(configureServices: services =>
         {
             services.RemoveAll<Config>();
             services.RemoveAll<ICoreContextFactory>();
             services.RemoveAll<ISecurityDbContextFactory>();
+
             services.AddSingleton(
-                new Config
+implementationInstance:                 new Config
                 {
                     ConnectionStrings = new Dictionary<string, string>
                     {
@@ -71,30 +79,28 @@ internal sealed class WebAcceptanceFactory : WebApplicationFactory<Program>
                     Services = new Dictionary<string, string>(),
                 }
             );
+
             services.AddScoped<ISecurityDbContextFactory>(
-                provider => new MSSQLSecurityDbContextFactory(settings.SsoConnectionString)
+implementationFactory:                 provider => new MSSQLSecurityDbContextFactory(settings.SsoConnectionString)
                 {
                     GetAuthInfo = ignoreAuthInfo => ignoreAuthInfo
                         ? new SSOAuthInfo { SSOUserId = "Guest" }
                         : provider.GetService<ISSOAuthInfo>(),
                 }
             );
+
             cCoder.Data.IServiceCollectionExtensions.AddCoreData(
-                services,
-                settings.CoreConnectionString
+services:                 services,connectionString:                 settings.CoreConnectionString
             );
         });
     }
 
     protected override void Dispose(bool disposing)
     {
-        Environment.SetEnvironmentVariable("Eventing__Http__HubUrl", originalHttpEventHubUrl);
-        Environment.SetEnvironmentVariable("Services__HostedServices", originalHostedServicesUrl);
-        Environment.SetEnvironmentVariable("Settings__enableExternalEventing", originalExternalEventingSetting);
-        Environment.SetEnvironmentVariable("Settings__AggregateDomains", originalAggregateDomainsSetting);
-        base.Dispose(disposing);
+        Environment.SetEnvironmentVariable(variable: "Eventing__Http__HubUrl",value: originalHttpEventHubUrl);
+        Environment.SetEnvironmentVariable(variable: "Services__HostedServices",value: originalHostedServicesUrl);
+        Environment.SetEnvironmentVariable(variable: "Settings__enableExternalEventing",value: originalExternalEventingSetting);
+        Environment.SetEnvironmentVariable(variable: "Settings__AggregateDomains",value: originalAggregateDomainsSetting);
+        base.Dispose(disposing: disposing);
     }
 }
-
-
-

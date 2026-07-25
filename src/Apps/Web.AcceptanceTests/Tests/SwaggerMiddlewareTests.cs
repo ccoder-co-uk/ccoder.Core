@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Net;
 using FluentAssertions;
 using Web.AcceptanceTests.Infrastructure;
@@ -13,9 +17,12 @@ public sealed partial class SwaggerMiddlewareTests(WebAcceptanceFixture fixture)
 
     private async Task<int> InvokeAsync(string baseUrl)
     {
-        using HttpResponseMessage response = await Client.GetAsync(baseUrl);
+        using HttpResponseMessage response = await Client.GetAsync(requestUri: baseUrl);
         string content = await response.Content.ReadAsStringAsync();
-        response.StatusCode.Should().Be(HttpStatusCode.OK, content);
+
+        response.StatusCode.Should()
+            .Be(expected: HttpStatusCode.OK,because: content);
+
         return (int)response.StatusCode;
     }
 }

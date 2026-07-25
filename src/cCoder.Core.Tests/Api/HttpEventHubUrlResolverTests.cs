@@ -1,56 +1,90 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Xunit;
 
 namespace cCoder.Core.Tests.Api;
 
-public sealed class HttpEventHubUrlResolverTests
+public sealed partial class HttpEventHubUrlResolverTests
 {
     [Fact]
     public void Resolve_ShouldAppendDefaultEventingPathForHostedServicesRoot()
     {
+        // Given
         IConfiguration configuration = BuildConfiguration(
-            ("Settings:enableExternalEventing", "true"),
-            ("Services:HostedServices", "https://hosted.local"));
+            values:
+            [
+                ("Settings:enableExternalEventing", "true"),
+                ("Services:HostedServices", "https://hosted.local")
+            ]);
 
-        string result = HttpEventHubUrlResolver.Resolve(configuration);
+        // When
+        string result = HttpEventHubUrlResolver.Resolve(configuration: configuration);
 
-        result.Should().Be("https://hosted.local/Api/Eventing");
+        // Then
+        result.Should()
+            .Be(expected: "https://hosted.local/Api/Eventing");
     }
 
     [Fact]
     public void Resolve_ShouldPreserveExplicitHubUrl()
     {
+        // Given
         IConfiguration configuration = BuildConfiguration(
-            ("Eventing:Http:HubUrl", "https://hosted.local/Api/Eventing"));
+            values:
+            [
+                ("Eventing:Http:HubUrl", "https://hosted.local/Api/Eventing")
+            ]);
 
-        string result = HttpEventHubUrlResolver.Resolve(configuration);
+        // When
+        string result = HttpEventHubUrlResolver.Resolve(configuration: configuration);
 
-        result.Should().Be("https://hosted.local/Api/Eventing");
+        // Then
+        result.Should()
+            .Be(expected: "https://hosted.local/Api/Eventing");
     }
 
     [Fact]
     public void Resolve_ShouldReturnEmptyWhenExternalEventingIsDisabled()
     {
+        // Given
         IConfiguration configuration = BuildConfiguration(
-            ("Settings:enableExternalEventing", "false"),
-            ("Services:HostedServices", "https://hosted.local"));
+            values:
+            [
+                ("Settings:enableExternalEventing", "false"),
+                ("Services:HostedServices", "https://hosted.local")
+            ]);
 
-        string result = HttpEventHubUrlResolver.Resolve(configuration);
+        // When
+        string result = HttpEventHubUrlResolver.Resolve(configuration: configuration);
 
-        result.Should().BeEmpty();
+        // Then
+        result.Should()
+            .BeEmpty();
     }
 
     [Fact]
     public void Normalize_ShouldLeaveNonRootAbsolutePathsUntouched()
     {
-        string result = HttpEventHubUrlResolver.Normalize("https://hosted.local/internal/event-hub");
+        // Given
+        const string eventHubUrl = "https://hosted.local/internal/event-hub";
 
-        result.Should().Be("https://hosted.local/internal/event-hub");
+        // When
+        string result = HttpEventHubUrlResolver.Normalize(value: eventHubUrl);
+
+        // Then
+        result.Should()
+            .Be(expected: "https://hosted.local/internal/event-hub");
     }
 
     private static IConfiguration BuildConfiguration(params (string Key, string Value)[] values) =>
         new ConfigurationBuilder()
-            .AddInMemoryCollection(values.ToDictionary(item => item.Key, item => item.Value))
+            .AddInMemoryCollection(
+                initialData: values.ToDictionary(
+                    keySelector: item => item.Key,
+                    elementSelector: item => item.Value))
             .Build();
 }

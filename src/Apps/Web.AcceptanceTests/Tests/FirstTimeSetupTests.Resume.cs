@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Net;
 using cCoder.Security.Data.Models;
 using cCoder.Security.Exposures;
@@ -13,12 +17,13 @@ public sealed partial class FirstTimeSetupTests
     [Fact]
     public async Task ShouldResumeWhenSecurityTenantAlreadyExists()
     {
+        // Given
         await using SetupHarness harness = await SetupHarness.CreateAsync();
 
         ITenantManager tenantManager = harness.Factory.Services.GetRequiredService<ITenantManager>();
 
         await tenantManager.SetupAsync(
-            new SetupDetails
+setupDetails:             new SetupDetails
             {
                 Tenant = new Tenant
                 {
@@ -39,11 +44,16 @@ public sealed partial class FirstTimeSetupTests
                 }
             });
 
-        await SubmitSetupAsync(harness);
+        // When
+        await SubmitSetupAsync(harness: harness);
 
-        using HttpResponseMessage response = await harness.Client.GetAsync("/Setup");
+        using HttpResponseMessage response = await harness.Client.GetAsync(requestUri: "/Setup");
 
-        response.StatusCode.Should().Be(HttpStatusCode.Redirect);
-        response.Headers.Location!.OriginalString.Should().Be("/");
+        // Then
+        response.StatusCode.Should()
+            .Be(expected: HttpStatusCode.Redirect);
+
+        response.Headers.Location!.OriginalString.Should()
+            .Be(expected: "/");
     }
 }

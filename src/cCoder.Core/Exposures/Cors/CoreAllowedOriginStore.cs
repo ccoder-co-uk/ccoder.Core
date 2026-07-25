@@ -1,11 +1,13 @@
-using cCoder.Core.Services.Foundations.AllowedOrigins;
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Core.Services.Processings.AllowedOrigins;
 
 namespace cCoder.Core.Exposures.Cors;
 
 internal sealed class CoreAllowedOriginStore(
-    IAllowedOriginStoreService allowedOriginStoreService,
-    IAllowedOriginProcessingService allowedOriginProcessingService,
+    IAllowedOriginStoreProcessingService allowedOriginStoreProcessingService,
     ILogger<CoreAllowedOriginStore> logger)
     : ICoreAllowedOriginStore
 {
@@ -13,18 +15,13 @@ internal sealed class CoreAllowedOriginStore(
     {
         try
         {
-            string[] configuredOrigins =
-                await allowedOriginStoreService.GetAllowedOriginsAsync();
-
-            return allowedOriginProcessingService.IsAllowed(
-                origin,
-                allowedOriginProcessingService.CreateSnapshot(configuredOrigins));
+            return await allowedOriginStoreProcessingService
+                .IsCoreAllowedOriginAllowedAsync(origin: origin);
         }
         catch (Exception exception)
         {
             logger.LogWarning(
-                "Unable to resolve the request allowed origins. {Message}",
-                exception.Message);
+message: "Unable to resolve the request allowed origins. {Message}", args: exception.Message);
 
             return false;
         }

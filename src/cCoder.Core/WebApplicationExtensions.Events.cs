@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.AppSecurity;
 using cCoder.ContentManagement;
 using cCoder.DocumentManagement;
@@ -7,6 +11,7 @@ using cCoder.Eventing.AzureServiceBus.Models;
 using cCoder.Eventing.Models;
 using cCoder.Logging;
 using cCoder.Mail;
+using cCoder.Core.Services.Aggregations;
 using cCoder.Security;
 using cCoder.Security.Objects.Events;
 using cCoder.Workflow;
@@ -51,15 +56,14 @@ public static partial class WebApplicationExtensions
         using IServiceScope scope = app.Services.CreateScope();
         IEventHub eventHub = scope.ServiceProvider.GetRequiredService<IEventHub>();
 
-        eventHub.ListenToEvent<SecurityAccountEvent, ISecurityAccountEmailOrchestrationService>(
-            SecurityAccountEventNames.RegistrationCreated,
-            static (service, accountEvent) => service.QueueRegistrationCreatedEmailAsync(accountEvent));
-        eventHub.ListenToEvent<SecurityAccountEvent, ISecurityAccountEmailOrchestrationService>(
-            SecurityAccountEventNames.InvitationCreated,
-            static (service, accountEvent) => service.QueueInvitationCreatedEmailAsync(accountEvent));
-        eventHub.ListenToEvent<SecurityAccountEvent, ISecurityAccountEmailOrchestrationService>(
-            SecurityAccountEventNames.PasswordResetRequested,
-            static (service, accountEvent) => service.QueuePasswordResetRequestedEmailAsync(accountEvent));
+        eventHub.ListenToEvent<SecurityAccountEvent, ISecurityAccountEmailAggregationService>(
+name: SecurityAccountEventNames.RegistrationCreated, handler: static (service, accountEvent) => service.QueueRegistrationCreatedSecurityAccountEventEmailAsync(accountEvent: accountEvent));
+
+        eventHub.ListenToEvent<SecurityAccountEvent, ISecurityAccountEmailAggregationService>(
+name: SecurityAccountEventNames.InvitationCreated, handler: static (service, accountEvent) => service.QueueInvitationCreatedSecurityAccountEventEmailAsync(accountEvent: accountEvent));
+
+        eventHub.ListenToEvent<SecurityAccountEvent, ISecurityAccountEmailAggregationService>(
+name: SecurityAccountEventNames.PasswordResetRequested, handler: static (service, accountEvent) => service.QueuePasswordResetRequestedSecurityAccountEventEmailAsync(accountEvent: accountEvent));
 
         return app;
     }
@@ -67,19 +71,22 @@ public static partial class WebApplicationExtensions
     private static WebApplication UseServiceBusAppDeleteForwarder(this WebApplication app)
     {
         using IServiceScope scope = app.Services.CreateScope();
+
         IAzureServiceBusEventHub serviceBusEventHub =
             scope.ServiceProvider.GetService<IAzureServiceBusEventHub>();
+
         IEventHub eventHub = scope.ServiceProvider.GetRequiredService<IEventHub>();
 
         if (serviceBusEventHub is null)
+        {
             return app;
+        }
 
         eventHub.ListenToEvent<CmsApp, ServiceBusAppDeleteForwardingService>(
-            "app_delete",
-            static (service, entity) => service.ForwardAsync(entity));
+name: "app_delete", handler: static (service, entity) => service.ForwardAppDeleteAsync(app: entity));
+
         eventHub.ListenToEvent<Folder, ServiceBusFolderDeleteForwardingService>(
-            "folder_delete",
-            static (service, entity) => service.ForwardAsync(entity));
+name: "folder_delete", handler: static (service, entity) => service.ForwardFolderDeleteAsync(folder: entity));
 
         return app;
     }
@@ -89,9 +96,12 @@ public static partial class WebApplicationExtensions
         using IServiceScope scope = app.Services.CreateScope();
         IEventHub eventHub = scope.ServiceProvider.GetRequiredService<IEventHub>();
 
-        eventHub.ListenToEvent<CmsApp, HostedServicesAppSecurityAppAddOrchestrationService>(
-            "app_add",
-            static (service, entity) => service.HandleAsync(entity));
+        eventHub.ListenToEvent<
+            CmsApp,
+            IHostedServicesAppSecurityAppAddOrchestrationService>(
+            name: "app_add",
+            handler: static (service, entity) =>
+                service.HandleAppAsync(app: entity));
 
         return app;
     }
@@ -102,9 +112,8 @@ public static partial class WebApplicationExtensions
         IEventHub eventHub = scope.ServiceProvider.GetRequiredService<IEventHub>();
 
         eventHub.ListenToEvent<CmsApp, AppSecurityAppOrchestrationService>(
-            "app_update",
-            static (service, entity) => service.UpdateAsync(entity));
- 
+name: "app_update", handler: static (service, entity) => service.UpdateAppAsync(app: entity));
+
         return app;
     }
 
@@ -114,8 +123,7 @@ public static partial class WebApplicationExtensions
         IEventHub eventHub = scope.ServiceProvider.GetRequiredService<IEventHub>();
 
         eventHub.ListenToEvent<CmsApp, AppSecurityAppOrchestrationService>(
-            "app_delete",
-            static (service, entity) => service.DeleteAsync(entity.Id));
+name: "app_delete", handler: static (service, entity) => service.DeleteAsync(appId: entity.Id));
 
         return app;
     }
@@ -126,7 +134,9 @@ public static partial class WebApplicationExtensions
         IServiceProvider services = scope.ServiceProvider;
 
         foreach (MailEventHandlerService handlers in services.GetServices<MailEventHandlerService>())
+        {
             handlers.ListenToAllEvents();
+        }
 
         return app;
     }
@@ -137,13 +147,15 @@ public static partial class WebApplicationExtensions
         IAzureServiceBusEventHub eventHub = scope.ServiceProvider.GetService<IAzureServiceBusEventHub>();
 
         if (eventHub is null)
+        {
             return app;
+        }
 
-        eventHub.ListenToLocalEventHub<CmsApp>("app_add");
-        eventHub.ListenToLocalEventHub<CmsApp>("app_update");
-        eventHub.ListenToLocalEventHub<CmsApp>("app_delete");
-        eventHub.ListenToLocalEventHub<Folder>("folder_delete");
-        eventHub.ListenToLocalEventHub<FlowInstanceData>("flow_instance_data_add");
+        eventHub.ListenToLocalEventHub<CmsApp>(eventName: "app_add");
+        eventHub.ListenToLocalEventHub<CmsApp>(eventName: "app_update");
+        eventHub.ListenToLocalEventHub<CmsApp>(eventName: "app_delete");
+        eventHub.ListenToLocalEventHub<Folder>(eventName: "folder_delete");
+        eventHub.ListenToLocalEventHub<FlowInstanceData>(eventName: "flow_instance_data_add");
 
         return app;
     }
@@ -152,23 +164,22 @@ public static partial class WebApplicationExtensions
         this IAzureServiceBusEventHub serviceBusEventHub,
         string eventName) =>
         serviceBusEventHub.ListenToEvent<T>(
-            eventName,
-            async (serviceProvider, entity) =>
+name: eventName, handler: async (serviceProvider, entity) =>
             {
                 IEventHub localEventHub = serviceProvider.GetRequiredService<IEventHub>();
+
                 IServiceBusEventAuthInfo authInfo =
                     serviceProvider.GetService<IServiceBusEventAuthInfo>();
 
                 await localEventHub.RaiseEventAsync(
-                    eventName,
-                    new EventMessage<T>
-                    {
-                        AuthInfo = new EventAuthInfo
-                        {
-                            SSOUserId = authInfo?.SSOUserId ?? string.Empty
-                        },
-                        Data = entity
-                    });
+name: eventName, message: new EventMessage<T>
+{
+    AuthInfo = new EventAuthInfo
+    {
+        SSOUserId = authInfo?.SSOUserId ?? string.Empty
+    },
+    Data = entity
+});
             });
 
 }

@@ -1,11 +1,16 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Data.Models.Packaging;
 
 namespace cCoder.Core.Exposures.Setup;
 
 public static partial class UIBaseline
 {
-    private static Package Components => new()
-    {
+    private static Package CreateComponentsPackage() =>
+        new()
+        {
         Name = "Core Review Components",
         Description = "Unresolved Core component baseline items.",
         Category = "CoreReview",
@@ -181,5 +186,5 @@ public static partial class UIBaseline
 """
             }
         ]
-    };
+        };
 }

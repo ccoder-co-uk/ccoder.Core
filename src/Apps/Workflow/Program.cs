@@ -1,29 +1,26 @@
-using cCoder.Workflow.Engine;
-using Microsoft.Azure.Functions.Worker;
-using Microsoft.Extensions.Configuration;
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
+using Microsoft.Azure.Functions.Worker.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Workflow;
 
-IHost host = new HostBuilder()
-    .ConfigureFunctionsWebApplication()
-    .ConfigureLogging(loggingBuilder =>
+namespace Workflow;
+
+internal static class Program
+{
+    private static async Task Main()
     {
-        IConfigurationRoot configRoot = new ConfigurationBuilder()
-            .AddEnvironmentVariables()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("host.json", optional: false, reloadOnChange: true)
-            .Build();
+        FunctionsApplicationBuilder builder =
+            FunctionsApplication.CreateBuilder(args: []);
 
-        loggingBuilder.ClearProviders();
-        loggingBuilder.AddSimpleConsole(options => options.SingleLine = true);
-        loggingBuilder.AddFilter(level => level >= LogLevel.Debug);
-        loggingBuilder.AddConfiguration(configRoot.GetSection("logging"));
-    })
-    .ConfigureServices(services =>
-    {
-        services.AddWorkflowEngine();
-    })
-    .Build();
+        builder.ConfigureFunctionsWebApplication();
+        builder.Services.AddWorkflowApplication();
 
-await host.RunAsync();
+        await builder
+            .Build()
+            .RunAsync();
+    }
+}

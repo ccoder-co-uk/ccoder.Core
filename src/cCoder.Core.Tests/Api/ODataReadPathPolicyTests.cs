@@ -1,55 +1,73 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Text.RegularExpressions;
 using FluentAssertions;
 using Xunit;
 
 namespace cCoder.Core.Tests.Api;
 
-public sealed class ODataReadPathPolicyTests
+public sealed partial class ODataReadPathPolicyTests
 {
     [Fact]
     public void EntityControllers_GetById_ShouldQueryThroughFilteredGetAll()
     {
+        // Given
         string[] controllerFiles = GetControllerFiles();
         List<string> violations = [];
 
+        // When
         foreach (string file in controllerFiles)
         {
-            string source = File.ReadAllText(file);
+            string source = File.ReadAllText(path: file);
 
-            if (!source.Contains("[FromRoute]", StringComparison.Ordinal) ||
-                !source.Contains("ODataQueryOptions", StringComparison.Ordinal))
+            if (!source.Contains(
+                    value: "[FromRoute]",
+                    comparisonType: StringComparison.Ordinal)
+                || !source.Contains(
+                    value: "ODataQueryOptions",
+                    comparisonType: StringComparison.Ordinal))
             {
                 continue;
             }
 
-            string routeGetBody = ExtractMethodBody(source, "public IActionResult Get([FromRoute]");
-            if (string.IsNullOrWhiteSpace(routeGetBody))
+            string routeGetBody = ExtractMethodBody(
+                source: source,
+                signatureStart: "public IActionResult Get([FromRoute]");
+
+            if (string.IsNullOrWhiteSpace(value: routeGetBody))
             {
                 continue;
             }
 
-            if (!routeGetBody.Contains("SingleResult.Create(", StringComparison.Ordinal) ||
-                !routeGetBody.Contains(".GetAll(", StringComparison.Ordinal) ||
-                Regex.IsMatch(routeGetBody, @"\b[a-zA-Z_][a-zA-Z0-9_]*\.Get\(key\)"))
+            if (!routeGetBody.Contains(value: "SingleResult.Create(",comparisonType: StringComparison.Ordinal) ||
+                !routeGetBody.Contains(value: ".GetAll(",comparisonType: StringComparison.Ordinal) ||
+                Regex.IsMatch(input: routeGetBody,pattern: @"\b[a-zA-Z_][a-zA-Z0-9_]*\.Get\(key\)"))
             {
-                violations.Add(RelativeToRepository(file));
+                violations.Add(item: RelativeToRepository(path: file));
             }
         }
 
-        violations.Should().BeEmpty("entity OData Get(id) actions should read through filtered GetAll() so OData applies to the query root");
+        // Then
+        violations
+            .Should()
+            .BeEmpty(because: "entity OData Get(id) actions should read through filtered GetAll() so OData applies to the query root");
     }
 
     [Fact]
     public void EntityControllers_CollectionReads_ShouldNotIgnoreFilters()
     {
+        // Given
         string[] controllerFiles = GetControllerFiles();
         List<string> violations = [];
 
+        // When
         foreach (string file in controllerFiles)
         {
-            string source = File.ReadAllText(file);
+            string source = File.ReadAllText(path: file);
 
-            if (!source.Contains("ODataQueryOptions", StringComparison.Ordinal))
+            if (!source.Contains(value: "ODataQueryOptions",comparisonType: StringComparison.Ordinal))
             {
                 continue;
             }
@@ -60,22 +78,26 @@ public sealed class ODataReadPathPolicyTests
                          "public IActionResult Get(ODataQueryOptions<"
                      })
             {
-                string methodBody = ExtractMethodBody(source, methodSignature);
-                if (string.IsNullOrWhiteSpace(methodBody))
+                string methodBody = ExtractMethodBody(source: source,signatureStart: methodSignature);
+
+                if (string.IsNullOrWhiteSpace(value: methodBody))
                 {
                     continue;
                 }
 
-                if (methodBody.Contains("GetAll(true", StringComparison.Ordinal) ||
-                    methodBody.Contains("GetAll(ignoreFilters: true", StringComparison.Ordinal))
+                if (methodBody.Contains(value: "GetAll(true",comparisonType: StringComparison.Ordinal) ||
+                    methodBody.Contains(value: "GetAll(ignoreFilters: true",comparisonType: StringComparison.Ordinal))
                 {
-                    violations.Add(RelativeToRepository(file));
+                    violations.Add(item: RelativeToRepository(path: file));
                     break;
                 }
             }
         }
 
-        violations.Should().BeEmpty("HTTP GET exposure points should remain filtered and must not bypass query filters");
+        // Then
+        violations
+            .Should()
+            .BeEmpty(because: "HTTP GET exposure points should remain filtered and must not bypass query filters");
     }
 
     private static string RepositoryRoot =>
@@ -84,26 +106,28 @@ public sealed class ODataReadPathPolicyTests
     private static string repositoryRoot;
 
     private static string[] GetControllerFiles() =>
-        Directory.GetFiles(Path.Combine(RepositoryRoot, "src"), "*Controller.cs", SearchOption.AllDirectories)
-            .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
-            .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
-            .Where(path => path.Contains($"{Path.DirectorySeparatorChar}Exposures{Path.DirectorySeparatorChar}Controllers{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
+        Directory.GetFiles(path: Path.Combine(path1: RepositoryRoot,path2: "src"),searchPattern: "*Controller.cs",searchOption: SearchOption.AllDirectories)
+            .Where(predicate: path => !path.Contains(value: $"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}",comparisonType: StringComparison.OrdinalIgnoreCase))
+            .Where(predicate: path => !path.Contains(value: $"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}",comparisonType: StringComparison.OrdinalIgnoreCase))
+            .Where(predicate: path => path.Contains(value: $"{Path.DirectorySeparatorChar}Exposures{Path.DirectorySeparatorChar}Controllers{Path.DirectorySeparatorChar}",comparisonType: StringComparison.OrdinalIgnoreCase))
             .ToArray();
 
     private static string ExtractMethodBody(string source, string signatureStart)
     {
-        int signatureIndex = source.IndexOf(signatureStart, StringComparison.Ordinal);
+        int signatureIndex = source.IndexOf(value: signatureStart,comparisonType: StringComparison.Ordinal);
+
         if (signatureIndex < 0)
         {
             return string.Empty;
         }
 
-        int arrowIndex = source.IndexOf("=>", signatureIndex, StringComparison.Ordinal);
-        int braceIndex = source.IndexOf('{', signatureIndex);
+        int arrowIndex = source.IndexOf(value: "=>",startIndex: signatureIndex,comparisonType: StringComparison.Ordinal);
+        int braceIndex = source.IndexOf(value: '{',startIndex: signatureIndex);
 
         if (arrowIndex >= 0 && (braceIndex < 0 || arrowIndex < braceIndex))
         {
-            int statementEnd = source.IndexOf(';', arrowIndex);
+            int statementEnd = source.IndexOf(value: ';',startIndex: arrowIndex);
+
             return statementEnd < 0
                 ? source[arrowIndex..]
                 : source[arrowIndex..statementEnd];
@@ -115,6 +139,7 @@ public sealed class ODataReadPathPolicyTests
         }
 
         int depth = 0;
+
         for (int index = braceIndex; index < source.Length; index++)
         {
             if (source[index] == '{')
@@ -124,6 +149,7 @@ public sealed class ODataReadPathPolicyTests
             else if (source[index] == '}')
             {
                 depth--;
+
                 if (depth == 0)
                 {
                     return source[(braceIndex + 1)..index];
@@ -137,9 +163,10 @@ public sealed class ODataReadPathPolicyTests
     private static string FindRepositoryRoot()
     {
         DirectoryInfo current = new DirectoryInfo(AppContext.BaseDirectory);
+
         while (current is not null)
         {
-            if (Directory.Exists(Path.Combine(current.FullName, "src")))
+            if (Directory.Exists(path: Path.Combine(path1: current.FullName,path2: "src")))
             {
                 return current.FullName;
             }
@@ -151,5 +178,6 @@ public sealed class ODataReadPathPolicyTests
     }
 
     private static string RelativeToRepository(string path) =>
-        Path.GetRelativePath(RepositoryRoot, path).Replace(Path.DirectorySeparatorChar, '/');
+        Path.GetRelativePath(relativeTo: RepositoryRoot,path: path)
+            .Replace(oldChar: Path.DirectorySeparatorChar,newChar: '/');
 }

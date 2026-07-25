@@ -1,12 +1,15 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Mail.Models;
-using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.Mail;
-using cCoder.Data.Models.Security;
 
 namespace cCoder.Core.Services.Foundations.Mail;
 
-public interface IMailManagerService
+internal interface IMailManagerService
 {
-    ValueTask<QueuedEmail> AddAsync(QueuedEmail email, bool checkPrivileges = false);
+    ValueTask<QueuedEmail> AddQueuedEmailAsync(
+        QueuedEmail newQueuedEmail,
+        bool checkPrivileges = false);
 }
-

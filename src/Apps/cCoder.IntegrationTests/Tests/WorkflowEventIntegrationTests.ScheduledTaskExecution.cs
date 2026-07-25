@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Data;
 using cCoder.Data.Models.Workflow;
 using cCoder.Data.Models.Planning;
@@ -12,146 +16,198 @@ public sealed partial class WorkflowEventIntegrationTests
     [Fact]
     public async Task ScheduledTaskExecution_QueuesAndCompletesWorkflowInstance()
     {
+        // Given
         Guid flowId = Guid.Empty;
         int taskId = 0;
 
         try
         {
-            flowId = await CreateFlowDefinitionAsync(BaselineAppId, Unique("Scheduled Flow"));
-            taskId = await CreateScheduledTaskAsync(flowId, Unique("Scheduled Task"));
+            flowId = await CreateFlowDefinitionAsync(appId: BaselineAppId,name: Unique(prefix: "Scheduled Flow"));
+            taskId = await CreateScheduledTaskAsync(flowId: flowId,name: Unique(prefix: "Scheduled Task"));
 
-            await PostAsync($"/Api/Workflow/ScheduledTask({taskId})/Execute?incrementNextExecution=true");
+            // When
+            await PostAsync(relativeUrl: $"/Api/Workflow/ScheduledTask({taskId})/Execute?incrementNextExecution=true");
 
-            await WaitUntilAsync(async () => await HasAnyFlowInstanceAsync(flowId));
+            await WaitUntilAsync(predicate: async () => await HasAnyFlowInstanceAsync(flowId: flowId));
 
             await WaitUntilAsync(
-                async () => await HasFlowInstanceStateAsync(flowId, "Complete"),
-                diagnosticsFactory: () => BuildFlowDiagnosticsAsync(flowId));
+predicate:                 async () => await HasFlowInstanceStateAsync(flowId: flowId,state: "Complete"),                diagnosticsFactory: () => BuildFlowDiagnosticsAsync(flowId: flowId));
 
-            FlowInstanceData instance = await GetLatestInstanceAsync(flowId);
-            instance.Should().NotBeNull();
-            instance.Caller.Should().Be(AdminUserId);
-            instance.State.Should().Be("Complete");
-            instance.ContextString.Should().Contain("Execution complete.");
-            instance.ContextString.Should().NotContain("Execution failed.");
+            FlowInstanceData instance = await GetLatestInstanceAsync(flowId: flowId);
 
-            FlowInstanceData[] instances = await GetFlowInstancesAsync(flowId);
-            instances.Should().HaveCount(1);
-            instances.Should().OnlyContain(found => found.State == "Complete");
+            // Then
+            instance.Should()
+                .NotBeNull();
+
+            instance.Caller.Should()
+                .Be(expected: AdminUserId);
+
+            instance.State.Should()
+                .Be(expected: "Complete");
+
+            instance.ContextString.Should()
+                .Contain(expected: "Execution complete.");
+
+            instance.ContextString.Should()
+                .NotContain(unexpected: "Execution failed.");
+
+            FlowInstanceData[] instances = await GetFlowInstancesAsync(flowId: flowId);
+
+            instances.Should()
+                .HaveCount(expected: 1);
+
+            instances.Should()
+                .OnlyContain(predicate: found => found.State == "Complete");
         }
         finally
         {
-            await DeleteFlowArtifactsAsync(flowId, taskId);
+            await DeleteFlowArtifactsAsync(flowId: flowId,taskId: taskId);
         }
     }
 
     [Fact]
     public async Task ScheduledTaskRunner_ExecutesDueScheduledTask()
     {
+        // Given
         Guid flowId = Guid.Empty;
         int taskId = 0;
 
         try
         {
-            flowId = await CreateFlowDefinitionAsync(BaselineAppId, Unique("Hosted Scheduled Flow"));
-            taskId = await CreateScheduledTaskAsync(
-                flowId,
-                Unique("Hosted Scheduled Task"),
-                nextExecution: DateTimeOffset.UtcNow.AddMinutes(-5));
+            flowId = await CreateFlowDefinitionAsync(appId: BaselineAppId,name: Unique(prefix: "Hosted Scheduled Flow"));
 
+            taskId = await CreateScheduledTaskAsync(
+flowId:                 flowId,name:                 Unique(prefix: "Hosted Scheduled Task"),                nextExecution: DateTimeOffset.UtcNow.AddMinutes(minutes: -5));
+
+            // When
             await fixture.RestartHostedServicesAsync();
 
             await WaitUntilAsync(
-                async () => await HasAnyFlowInstanceAsync(flowId),
-                attempts: 60,
-                diagnosticsFactory: () => BuildFlowDiagnosticsAsync(flowId));
+predicate:                 async () => await HasAnyFlowInstanceAsync(flowId: flowId),                attempts: 60,                diagnosticsFactory: () => BuildFlowDiagnosticsAsync(flowId: flowId));
 
             await WaitUntilAsync(
-                async () => await HasFlowInstanceStateAsync(flowId, "Complete"),
-                attempts: 60,
-                diagnosticsFactory: () => BuildFlowDiagnosticsAsync(flowId));
+predicate:                 async () => await HasFlowInstanceStateAsync(flowId: flowId,state: "Complete"),                attempts: 60,                diagnosticsFactory: () => BuildFlowDiagnosticsAsync(flowId: flowId));
 
-            FlowInstanceData instance = await GetLatestInstanceAsync(flowId);
-            instance.Should().NotBeNull();
-            instance.Caller.Should().Be(AdminUserId);
-            instance.State.Should().Be("Complete");
-            FlowInstanceData[] instances = await GetFlowInstancesAsync(flowId);
-            instances.Should().HaveCount(1);
-            instances.Should().OnlyContain(found => found.State == "Complete");
+            FlowInstanceData instance = await GetLatestInstanceAsync(flowId: flowId);
+
+            // Then
+            instance.Should()
+                .NotBeNull();
+
+            instance.Caller.Should()
+                .Be(expected: AdminUserId);
+
+            instance.State.Should()
+                .Be(expected: "Complete");
+
+            FlowInstanceData[] instances = await GetFlowInstancesAsync(flowId: flowId);
+
+            instances.Should()
+                .HaveCount(expected: 1);
+
+            instances.Should()
+                .OnlyContain(predicate: found => found.State == "Complete");
 
             await using CoreDataContext core = CreateCoreContext();
-            ScheduledTask task = await core.Set<ScheduledTask>().IgnoreQueryFilters()
-                .FirstAsync(found => found.Id == taskId);
 
-            task.LastExecuted.Should().NotBeNull();
-            task.LastExecuted.Should().BeAfter(DateTimeOffset.UtcNow.AddMinutes(-3));
-            task.NextExecution.Should().NotBeNull();
-            task.NextExecution.Should().BeAfter(DateTimeOffset.UtcNow.AddSeconds(-5));
+            ScheduledTask task = await core.Set<ScheduledTask>()
+                .IgnoreQueryFilters()
+                .FirstAsync(predicate: found => found.Id == taskId);
+
+            task.LastExecuted.Should()
+                .NotBeNull();
+
+            task.LastExecuted.Should()
+                .BeAfter(expected: DateTimeOffset.UtcNow.AddMinutes(minutes: -3));
+
+            task.NextExecution.Should()
+                .NotBeNull();
+
+            task.NextExecution.Should()
+                .BeAfter(expected: DateTimeOffset.UtcNow.AddSeconds(seconds: -5));
         }
         finally
         {
-            await DeleteFlowArtifactsAsync(flowId, taskId);
+            await DeleteFlowArtifactsAsync(flowId: flowId,taskId: taskId);
         }
     }
 
     [Fact]
     public async Task ScheduledTaskRunner_ExecutesTaskThatBecomesDueAfterStartupWithoutExceptions()
     {
+        // Given
         Guid flowId = Guid.Empty;
         int taskId = 0;
 
         try
         {
-            flowId = await CreateFlowDefinitionAsync(BaselineAppId, Unique("Delayed Hosted Scheduled Flow"));
+            flowId = await CreateFlowDefinitionAsync(appId: BaselineAppId,name: Unique(prefix: "Delayed Hosted Scheduled Flow"));
+
             taskId = await CreateScheduledTaskAsync(
-                flowId,
-                Unique("Delayed Hosted Scheduled Task"),
-                nextExecution: DateTimeOffset.UtcNow.AddHours(1));
+flowId:                 flowId,name:                 Unique(prefix: "Delayed Hosted Scheduled Task"),                nextExecution: DateTimeOffset.UtcNow.AddHours(hours: 1));
 
             await fixture.RestartHostedServicesAsync();
 
             await WaitUntilAsync(
-                () => Task.FromResult(HostedServicesOutputContains("No scheduled tasks are due to run.")),
-                attempts: 40,
-                delayMilliseconds: 250,
-                diagnosticsFactory: () => BuildFlowDiagnosticsAsync(flowId));
+predicate:                 () => Task.FromResult(result: HostedServicesOutputContains(value: "No scheduled tasks are due to run.")),                attempts: 40,                delayMilliseconds: 250,                diagnosticsFactory: () => BuildFlowDiagnosticsAsync(flowId: flowId));
 
-            await UpdateScheduledTaskNextExecutionAsync(taskId, DateTimeOffset.UtcNow.AddMinutes(-5));
+            // When
+            await UpdateScheduledTaskNextExecutionAsync(taskId: taskId,nextExecution: DateTimeOffset.UtcNow.AddMinutes(minutes: -5));
 
             await WaitUntilAsync(
-                async () => await HasFlowInstanceStateAsync(flowId, "Complete"),
-                attempts: 180,
-                delayMilliseconds: 500,
-                diagnosticsFactory: () => BuildFlowDiagnosticsAsync(flowId));
+predicate:                 async () => await HasFlowInstanceStateAsync(flowId: flowId,state: "Complete"),                attempts: 180,                delayMilliseconds: 500,                diagnosticsFactory: () => BuildFlowDiagnosticsAsync(flowId: flowId));
 
-            fixture.HostedServicesOutput.Should().NotContain("Exception thrown whilst raising scheduled_task_execute event");
-            fixture.HostedServicesOutput.Should().NotContain("Object reference not set to an instance of an object");
+            // Then
+            fixture.HostedServicesOutput.Should()
+                .NotContain(unexpected: "Exception thrown whilst raising scheduled_task_execute event");
 
-            FlowInstanceData instance = await GetLatestInstanceAsync(flowId);
-            instance.Should().NotBeNull();
-            instance.Caller.Should().Be(AdminUserId);
-            instance.State.Should().Be("Complete");
-            FlowInstanceData[] instances = await GetFlowInstancesAsync(flowId);
-            instances.Should().HaveCount(1);
-            instances.Should().OnlyContain(found => found.State == "Complete");
+            fixture.HostedServicesOutput.Should()
+                .NotContain(unexpected: "Object reference not set to an instance of an object");
+
+            FlowInstanceData instance = await GetLatestInstanceAsync(flowId: flowId);
+
+            instance.Should()
+                .NotBeNull();
+
+            instance.Caller.Should()
+                .Be(expected: AdminUserId);
+
+            instance.State.Should()
+                .Be(expected: "Complete");
+
+            FlowInstanceData[] instances = await GetFlowInstancesAsync(flowId: flowId);
+
+            instances.Should()
+                .HaveCount(expected: 1);
+
+            instances.Should()
+                .OnlyContain(predicate: found => found.State == "Complete");
 
             await using CoreDataContext core = CreateCoreContext();
-            ScheduledTask task = await core.Set<ScheduledTask>().IgnoreQueryFilters()
-                .FirstAsync(found => found.Id == taskId);
 
-            task.LastExecuted.Should().NotBeNull();
-            task.NextExecution.Should().NotBeNull();
-            task.NextExecution.Should().BeAfter(DateTimeOffset.UtcNow.AddMinutes(-1));
+            ScheduledTask task = await core.Set<ScheduledTask>()
+                .IgnoreQueryFilters()
+                .FirstAsync(predicate: found => found.Id == taskId);
+
+            task.LastExecuted.Should()
+                .NotBeNull();
+
+            task.NextExecution.Should()
+                .NotBeNull();
+
+            task.NextExecution.Should()
+                .BeAfter(expected: DateTimeOffset.UtcNow.AddMinutes(minutes: -1));
         }
         finally
         {
-            await DeleteFlowArtifactsAsync(flowId, taskId);
+            await DeleteFlowArtifactsAsync(flowId: flowId,taskId: taskId);
         }
     }
 
     [Fact]
     public async Task ScheduledTaskRunner_QueuesTaskForExecuteOnlyUserWithoutReadPrivilege()
     {
+        // Given
         Guid flowId = Guid.Empty;
         int taskId = 0;
         string executeOnlyUserId = null;
@@ -159,48 +215,54 @@ public sealed partial class WorkflowEventIntegrationTests
 
         try
         {
-            (executeOnlyUserId, executeOnlyRoleId) = await CreateExecuteOnlyUserAsync(BaselineAppId);
+            (executeOnlyUserId, executeOnlyRoleId) = await CreateExecuteOnlyUserAsync(appId: BaselineAppId);
 
-            flowId = await CreateFlowDefinitionAsync(BaselineAppId, Unique("Execute Only Scheduled Flow"));
+            flowId = await CreateFlowDefinitionAsync(appId: BaselineAppId,name: Unique(prefix: "Execute Only Scheduled Flow"));
+
             taskId = await CreateScheduledTaskAsync(
-                flowId,
-                Unique("Execute Only Scheduled Task"),
-                nextExecution: DateTimeOffset.UtcNow.AddMinutes(-5),
-                executeAs: executeOnlyUserId);
+flowId:                 flowId,name:                 Unique(prefix: "Execute Only Scheduled Task"),                nextExecution: DateTimeOffset.UtcNow.AddMinutes(minutes: -5),                executeAs: executeOnlyUserId);
 
+            // When
             await fixture.RestartHostedServicesAsync();
 
             await WaitUntilAsync(
-                async () => await HasAnyFlowInstanceAsync(flowId),
-                attempts: 60,
-                diagnosticsFactory: () => BuildFlowDiagnosticsAsync(flowId));
+predicate:                 async () => await HasAnyFlowInstanceAsync(flowId: flowId),                attempts: 60,                diagnosticsFactory: () => BuildFlowDiagnosticsAsync(flowId: flowId));
 
-            fixture.HostedServicesOutput.Should().NotContain("Exception thrown whilst raising scheduled_task_execute event");
-            fixture.HostedServicesOutput.Should().NotContain("Access Denied!");
+            // Then
+            fixture.HostedServicesOutput.Should()
+                .NotContain(unexpected: "Exception thrown whilst raising scheduled_task_execute event");
+
+            fixture.HostedServicesOutput.Should()
+                .NotContain(unexpected: "Access Denied!");
 
             await WaitUntilAsync(
-                async () =>
+predicate:                 async () =>
                 {
-                    FlowInstanceData latestInstance = await GetLatestInstanceAsync(flowId);
+                    FlowInstanceData latestInstance = await GetLatestInstanceAsync(flowId: flowId);
 
                     return latestInstance.State != "Queued";
-                },
-                attempts: 180,
-                delayMilliseconds: 500,
-                diagnosticsFactory: () => BuildFlowDiagnosticsAsync(flowId));
+                },                attempts: 180,                delayMilliseconds: 500,                diagnosticsFactory: () => BuildFlowDiagnosticsAsync(flowId: flowId));
 
-            FlowInstanceData instance = await GetLatestInstanceAsync(flowId);
-            instance.Should().NotBeNull();
-            instance.Caller.Should().Be(executeOnlyUserId);
-            instance.State.Should().NotBe("Queued");
+            FlowInstanceData instance = await GetLatestInstanceAsync(flowId: flowId);
 
-            FlowInstanceData[] instances = await GetFlowInstancesAsync(flowId);
-            instances.Should().HaveCount(1);
+            instance.Should()
+                .NotBeNull();
+
+            instance.Caller.Should()
+                .Be(expected: executeOnlyUserId);
+
+            instance.State.Should()
+                .NotBe(unexpected: "Queued");
+
+            FlowInstanceData[] instances = await GetFlowInstancesAsync(flowId: flowId);
+
+            instances.Should()
+                .HaveCount(expected: 1);
         }
         finally
         {
-            await DeleteFlowArtifactsAsync(flowId, taskId);
-            await DeleteExecuteOnlyUserAsync(executeOnlyUserId, executeOnlyRoleId);
+            await DeleteFlowArtifactsAsync(flowId: flowId,taskId: taskId);
+            await DeleteExecuteOnlyUserAsync(userId: executeOnlyUserId,roleId: executeOnlyRoleId);
         }
     }
 }

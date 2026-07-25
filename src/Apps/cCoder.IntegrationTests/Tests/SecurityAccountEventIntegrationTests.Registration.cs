@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Data.Models.Mail;
 using cCoder.Security.Objects.DTOs;
 using cCoder.Security.Objects.Entities;
@@ -11,36 +15,45 @@ public sealed partial class SecurityAccountEventIntegrationTests
     [Fact]
     public async Task Registration_SendsConfirmationEmailAndCompletesRegistration()
     {
+        // Given
         await EnsureMailSenderAsync();
-        RegisterUser user = CreateRegisterUser("registration");
-        await CleanupAccountAsync(user.Email);
+        RegisterUser user = CreateRegisterUser(purpose: "registration");
+        await CleanupAccountAsync(email: user.Email);
 
         DateTimeOffset requestedAt = DateTimeOffset.UtcNow;
-        string authToken = await CreateAuthTokenAsync(AdminUserId);
+        string authToken = await CreateAuthTokenAsync(userId: AdminUserId);
 
-        (SSOUser registeredUser, string confirmationToken) = await RegisterAsync(user, authToken);
+        // When
+        (SSOUser registeredUser, string confirmationToken) = await RegisterAsync(user: user,authToken: authToken);
 
-        registeredUser.Email.Should().Be(user.Email);
-        confirmationToken.Should().NotBeNullOrWhiteSpace();
+        // Then
+        registeredUser.Email.Should()
+            .Be(expected: user.Email);
 
-        await AssertAppSecurityUserCreatedAsync(user);
-        QueuedEmail queuedEmail = await AssertQueuedEmailAsync(user, "Confirm Registration");
+        confirmationToken.Should()
+            .NotBeNullOrWhiteSpace();
 
-        queuedEmail.Content.Should().Contain(confirmationToken);
+        await AssertAppSecurityUserCreatedAsync(user: user);
+        QueuedEmail queuedEmail = await AssertQueuedEmailAsync(user: user,subjectFragment: "Confirm Registration");
 
-        await AssertSentEmailAsync(user, "Confirm Registration");
+        queuedEmail.Content.Should()
+            .Contain(expected: confirmationToken);
+
+        await AssertSentEmailAsync(user: user,subjectFragment: "Confirm Registration");
+
         ReceivedEmail receivedEmail = await ReceiveEmailAsync(
-            user,
-            "Confirm Registration",
-            requestedAt);
-        string emailToken = ExtractTokenFromEmail(receivedEmail);
+user:             user,subjectFragment:             "Confirm Registration",from:             requestedAt);
 
-        emailToken.Should().Be(confirmationToken);
+        string emailToken = ExtractTokenFromEmail(email: receivedEmail);
 
-        await ConfirmRegistrationAsync(emailToken);
+        emailToken.Should()
+            .Be(expected: confirmationToken);
 
-        Token loginToken = await LoginAsync(user);
+        await ConfirmRegistrationAsync(token: emailToken);
 
-        loginToken.Id.Should().NotBeNullOrWhiteSpace();
+        Token loginToken = await LoginAsync(user: user);
+
+        loginToken.Id.Should()
+            .NotBeNullOrWhiteSpace();
     }
 }

@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Net;
 using System.Text;
 using System.Text.Json;
@@ -17,7 +21,8 @@ public sealed partial class PackageManagerControllerTests
     [Fact]
     public async Task ShouldImportPackageFromBodyWhenImportThis()
     {
-        string name = Unique("ImportedPackage");
+        // Given
+        string name = Unique(prefix: "ImportedPackage");
 
         using HttpRequestMessage request = new(HttpMethod.Post, $"{BaseUrl}/ImportThis?appId=1")
         {
@@ -35,16 +40,20 @@ public sealed partial class PackageManagerControllerTests
                 "application/json"),
         };
 
-        using HttpResponseMessage response = await Client.SendAsync(request);
+        // When
+        using HttpResponseMessage response = await Client.SendAsync(request: request);
         string content = await response.Content.ReadAsStringAsync();
 
-        response.StatusCode.Should().Be(HttpStatusCode.OK, content);
+        // Then
+        response.StatusCode.Should()
+            .Be(expected: HttpStatusCode.OK,because: content);
     }
 
     [Fact]
     public async Task ShouldImportPackageArrayFromBodyWhenImportThis()
     {
-        string name = Unique("ImportedPackages");
+        // Given
+        string name = Unique(prefix: "ImportedPackages");
 
         using HttpRequestMessage request = new(HttpMethod.Post, $"{BaseUrl}/ImportThis?appId=1")
         {
@@ -64,16 +73,21 @@ public sealed partial class PackageManagerControllerTests
                 "application/json"),
         };
 
-        using HttpResponseMessage response = await Client.SendAsync(request);
+        // When
+        using HttpResponseMessage response = await Client.SendAsync(request: request);
         string content = await response.Content.ReadAsStringAsync();
 
-        response.StatusCode.Should().Be(HttpStatusCode.OK, content);
+        // Then
+        response.StatusCode.Should()
+            .Be(expected: HttpStatusCode.OK,because: content);
     }
 
     [Fact]
     public async Task ShouldImportResourcesIntoSeededAppWhenImport()
     {
-        string uniqueResourceKey = Unique("resource-key");
+        // Given
+        string uniqueResourceKey = Unique(prefix: "resource-key");
+
         Package package = new("Resources")
         {
             Items =
@@ -82,11 +96,11 @@ public sealed partial class PackageManagerControllerTests
                 {
                     Type = "Core/Resource",
                     Data = JsonSerializer.Serialize(
-                        new[]
+value:                         new[]
                         {
                             new Resource
                             {
-                                Name = Unique("ImportedResource"),
+                                Name = Unique(prefix: "ImportedResource"),
                                 Key = uniqueResourceKey,
                                 Culture = string.Empty,
                                 DisplayName = "Imported Resource",
@@ -97,25 +111,30 @@ public sealed partial class PackageManagerControllerTests
             ],
         };
 
-        int statusCode = await ImportPackageAsync(1, package);
-        IReadOnlyList<Package> exportedPackages = await ExportPackagesAsync(1);
+        // When
+        int statusCode = await ImportPackageAsync(appId: 1,package: package);
+        IReadOnlyList<Package> exportedPackages = await ExportPackagesAsync(appId: 1);
 
-        statusCode.Should().Be((int)HttpStatusCode.OK);
+        // Then
+        statusCode.Should()
+            .Be(expected: (int)HttpStatusCode.OK);
+
         exportedPackages
-            .Where(found => string.Equals(found.Name, "Resources", StringComparison.OrdinalIgnoreCase))
-            .SelectMany(found => found.Items ?? [])
+            .Where(predicate: found => string.Equals(a: found.Name,b: "Resources",comparisonType: StringComparison.OrdinalIgnoreCase))
+            .SelectMany(selector: found => found.Items ?? [])
             .Should()
-            .Contain(item => item.Data.Contains(uniqueResourceKey, StringComparison.Ordinal));
+            .Contain(predicate: item => item.Data.Contains(value: uniqueResourceKey,comparisonType: StringComparison.Ordinal));
     }
 
     [Fact]
     public async Task ShouldRoundTripCapturedPackagesIntoNewApp()
     {
-        CoreApp created = await AddAppAsync(new CoreApp
+        // Given
+        CoreApp created = await AddAppAsync(app: new CoreApp
         {
-            Name = Unique("Imported Target"),
+            Name = Unique(prefix: "Imported Target"),
             Domain = $"{Guid.NewGuid():N}.local",
-            TenantId = Unique("tenant"),
+            TenantId = Unique(prefix: "tenant"),
             DefaultTheme = "Default",
             DefaultCultureId = string.Empty,
             ConfigJson = "{\"deployment\":{\"dms\":[\"Content\"]}}",
@@ -123,10 +142,12 @@ public sealed partial class PackageManagerControllerTests
 
         Package[] capturedPackages = AcceptanceSeedData.LoadExportPackages();
 
-        await ImportPackagesAsync(created.Id, capturedPackages);
+        // When
+        await ImportPackagesAsync(appId: created.Id,packages: capturedPackages);
 
-        IReadOnlyList<Package> exportedPackages = await ExportPackagesAsync(created.Id);
+        IReadOnlyList<Package> exportedPackages = await ExportPackagesAsync(appId: created.Id);
 
+        // Then
         using AssertionScope _ = new();
 
         foreach (object[] row in CapturedPackageTypeCounts())
@@ -135,55 +156,64 @@ public sealed partial class PackageManagerControllerTests
             string itemType = (string)row[1];
             int expectedCount = (int)row[2];
 
-            CountComparableExportedEntities(exportedPackages, packageName, itemType)
+            CountComparableExportedEntities(packages: exportedPackages,packageName: packageName,itemType: itemType)
                 .Should()
-                .Be(expectedCount, $"{packageName} should round-trip {itemType} items");
+                .Be(expected: expectedCount,because: $"{packageName} should round-trip {itemType} items");
         }
     }
 
     [Fact]
     public async Task ShouldPreserveCapturedCustomPagePathsWhenImportedIntoNewApp()
     {
-        CoreApp created = await AddAppAsync(new CoreApp
+        // Given
+        CoreApp created = await AddAppAsync(app: new CoreApp
         {
-            Name = Unique("Imported Target"),
+            Name = Unique(prefix: "Imported Target"),
             Domain = $"{Guid.NewGuid():N}.local",
-            TenantId = Unique("tenant"),
+            TenantId = Unique(prefix: "tenant"),
             DefaultTheme = "Default",
             DefaultCultureId = string.Empty,
             ConfigJson = "{\"deployment\":{\"dms\":[\"Content\"]}}",
         });
 
-        await ImportPackagesAsync(created.Id, AcceptanceSeedData.LoadExportPackages());
+        // When
+        await ImportPackagesAsync(appId: created.Id,packages: AcceptanceSeedData.LoadExportPackages());
 
-        IReadOnlyList<Package> exportedPackages = await ExportPackagesAsync(created.Id);
+        IReadOnlyList<Package> exportedPackages = await ExportPackagesAsync(appId: created.Id);
+
         PackageItem[] pageItems = exportedPackages
-            .Where(found => string.Equals(found.Name, "Pages", StringComparison.OrdinalIgnoreCase))
-            .SelectMany(found => found.Items ?? [])
-            .Where(found => string.Equals(found.Type, "Core/Page", StringComparison.OrdinalIgnoreCase))
+            .Where(predicate: found => string.Equals(a: found.Name,b: "Pages",comparisonType: StringComparison.OrdinalIgnoreCase))
+            .SelectMany(selector: found => found.Items ?? [])
+            .Where(predicate: found => string.Equals(a: found.Type,b: "Core/Page",comparisonType: StringComparison.OrdinalIgnoreCase))
             .ToArray();
 
-        bool hasCommonCachePage = pageItems.Any(item =>
+        bool hasCommonCachePage = pageItems.Any(predicate: item =>
         {
-            using JsonDocument document = JsonDocument.Parse(item.Data);
+            using JsonDocument document = JsonDocument.Parse(json: item.Data);
 
             return document.RootElement.ValueKind == JsonValueKind.Array
-                && document.RootElement.EnumerateArray().Any(page =>
-                    string.Equals(page.GetProperty("Path").GetString(), "Admin/CommonCache", StringComparison.OrdinalIgnoreCase)
-                    && string.Equals(page.GetProperty("Name").GetString(), "Common Cache Endpoint", StringComparison.Ordinal));
+                && document.RootElement.EnumerateArray()
+                .Any(predicate: page =>
+                    string.Equals(a: page.GetProperty(propertyName: "Path")
+                .GetString(),b: "Admin/CommonCache",comparisonType: StringComparison.OrdinalIgnoreCase)
+                    && string.Equals(a: page.GetProperty(propertyName: "Name")
+                .GetString(),b: "Common Cache Endpoint",comparisonType: StringComparison.Ordinal));
         });
 
-        hasCommonCachePage.Should().BeTrue();
+        // Then
+        hasCommonCachePage.Should()
+            .BeTrue();
     }
 
     [Fact]
     public async Task ShouldImportAppConfigurationWithoutOverwritingLocalDomainOrTenant()
     {
-        CoreApp created = await AddAppAsync(new CoreApp
+        // Given
+        CoreApp created = await AddAppAsync(app: new CoreApp
         {
-            Name = Unique("Target App"),
+            Name = Unique(prefix: "Target App"),
             Domain = $"{Guid.NewGuid():N}.local",
-            TenantId = Unique("tenant"),
+            TenantId = Unique(prefix: "tenant"),
             DefaultTheme = "Default",
             DefaultCultureId = string.Empty,
             ConfigJson = "{\"deployment\":{\"dms\":[\"Content\"]}}",
@@ -191,8 +221,9 @@ public sealed partial class PackageManagerControllerTests
 
         string originalDomain = created.Domain;
         string originalTenantId = created.TenantId;
+
         string body = JsonSerializer.Serialize(
-            new
+value:             new
             {
                 name = "AppConfiguration",
                 description = "Acceptance app configuration package",
@@ -204,7 +235,7 @@ public sealed partial class PackageManagerControllerTests
                     {
                         type = "Core/App",
                         data = JsonSerializer.Serialize(
-                            new
+value:                             new
                             {
                                 Name = "Imported App",
                                 Domain = "live.example.com",
@@ -217,18 +248,31 @@ public sealed partial class PackageManagerControllerTests
                 },
             });
 
-        int statusCode = await ImportPackageAsync(body, created.Id);
+        // When
+        int statusCode = await ImportPackageAsync(body: body,appId: created.Id);
 
-        CoreApp updated = await GetStoredAppAsync(created.Id);
+        CoreApp updated = await GetStoredAppAsync(appId: created.Id);
 
-        statusCode.Should().Be((int)HttpStatusCode.OK);
-        updated.Name.Should().Be("Imported App");
-        updated.DefaultTheme.Should().Be("Ocean");
-        updated.DefaultCultureId.Should().Be("en-GB");
-        updated.ConfigJson.Should().Contain("Common/Cache");
-        updated.Domain.Should().Be(originalDomain);
-        updated.TenantId.Should().Be(originalTenantId);
+        // Then
+        statusCode.Should()
+            .Be(expected: (int)HttpStatusCode.OK);
+
+        updated.Name.Should()
+            .Be(expected: "Imported App");
+
+        updated.DefaultTheme.Should()
+            .Be(expected: "Ocean");
+
+        updated.DefaultCultureId.Should()
+            .Be(expected: "en-GB");
+
+        updated.ConfigJson.Should()
+            .Contain(expected: "Common/Cache");
+
+        updated.Domain.Should()
+            .Be(expected: originalDomain);
+
+        updated.TenantId.Should()
+            .Be(expected: originalTenantId);
     }
 }
-
-

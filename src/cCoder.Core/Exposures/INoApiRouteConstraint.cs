@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 namespace cCoder.Core.Exposures;
 
 public class NoApiRouteConstraint : IRouteConstraint
@@ -10,8 +14,6 @@ public class NoApiRouteConstraint : IRouteConstraint
         RouteDirection routeDirection
     ) =>
         httpContext.Request.Path.HasValue
-        && !httpContext.Request.Path.Value.ToLower().Contains("/api/");
+        && !httpContext.Request.Path.Value.ToLower()
+            .Contains(value: "/api/");
 }
-
-
-

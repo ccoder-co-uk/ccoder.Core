@@ -1,5 +1,10 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Data;
 using cCoder.Security.Data.EF;
+using cCoder.Security.Data.EF.Dependencies;
 using cCoder.Security.Data.EF.Interfaces;
 using cCoder.Security.Objects;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,7 +20,7 @@ internal static class IntegrationServiceProviderFactory
         services.AddLogging();
 
         services.AddSingleton(
-            new Config
+implementationInstance:             new Config
             {
                 ConnectionStrings = new Dictionary<string, string>
                 {
@@ -31,14 +36,14 @@ internal static class IntegrationServiceProviderFactory
             });
 
         services.AddScoped<ISecurityDbContextFactory>(
-            provider => new MSSQLSecurityDbContextFactory(settings.SsoConnectionString)
+implementationFactory:             provider => new MSSQLSecurityDbContextFactory(settings.SsoConnectionString)
             {
                 GetAuthInfo = ignoreAuthInfo => ignoreAuthInfo
                     ? new SSOAuthInfo { SSOUserId = "Guest" }
                     : provider.GetService<ISSOAuthInfo>()
             });
 
-        cCoder.Data.IServiceCollectionExtensions.AddCoreData(services, settings.CoreConnectionString);
+        cCoder.Data.IServiceCollectionExtensions.AddCoreData(services: services,connectionString: settings.CoreConnectionString);
 
         return services.BuildServiceProvider(validateScopes: false);
     }

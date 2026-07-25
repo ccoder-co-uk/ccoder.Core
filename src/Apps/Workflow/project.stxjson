@@ -1,0 +1,158 @@
+{
+  "Classes": [
+    {
+      "Name": "Workflow.Exposures.Execute",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "Run",
+          "Inputs": [
+            {
+              "Name": "request",
+              "Type": "Microsoft.Azure.Functions.Worker.Http.HttpRequestData"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task\u003CMicrosoft.Azure.Functions.Worker.Http.HttpResponseData\u003E"
+        }
+      ]
+    },
+    {
+      "Name": "Workflow.Exposures.ExecuteFromServiceBus",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "RunAsync",
+          "Inputs": [
+            {
+              "Name": "message",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task"
+        }
+      ]
+    },
+    {
+      "Name": "Workflow.Exposures.ExecuteScript",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "Run",
+          "Inputs": [
+            {
+              "Name": "request",
+              "Type": "Microsoft.Azure.Functions.Worker.Http.HttpRequestData"
+            },
+            {
+              "Name": "useDetails",
+              "Type": "System.Boolean"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task\u003CMicrosoft.Azure.Functions.Worker.Http.HttpResponseData\u003E"
+        }
+      ]
+    },
+    {
+      "Name": "Workflow.Exposures.Health",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "Run",
+          "Inputs": [
+            {
+              "Name": "request",
+              "Type": "Microsoft.Azure.Functions.Worker.Http.HttpRequestData"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task\u003CMicrosoft.Azure.Functions.Worker.Http.HttpResponseData\u003E"
+        }
+      ]
+    },
+    {
+      "Name": "Workflow.IServiceCollectionExtensions",
+      "StandardElementType": "App",
+      "Properties": [],
+      "Methods": []
+    },
+    {
+      "Name": "Workflow.Program",
+      "StandardElementType": "App",
+      "Properties": [],
+      "Methods": []
+    },
+    {
+      "Name": "Workflow.Services.Processings.WorkflowFunctions.WorkflowFunctionsProcessingService",
+      "StandardElementType": "ProcessingService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "ProcessExecuteAsync",
+          "Inputs": [
+            {
+              "Name": "request",
+              "Type": "Microsoft.Azure.Functions.Worker.Http.HttpRequestData"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task\u003CMicrosoft.Azure.Functions.Worker.Http.HttpResponseData\u003E"
+        },
+        {
+          "Name": "ProcessExecuteScriptAsync",
+          "Inputs": [
+            {
+              "Name": "request",
+              "Type": "Microsoft.Azure.Functions.Worker.Http.HttpRequestData"
+            },
+            {
+              "Name": "useDetails",
+              "Type": "System.Boolean"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task\u003CMicrosoft.Azure.Functions.Worker.Http.HttpResponseData\u003E"
+        },
+        {
+          "Name": "ProcessHealthAsync",
+          "Inputs": [
+            {
+              "Name": "request",
+              "Type": "Microsoft.Azure.Functions.Worker.Http.HttpRequestData"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task\u003CMicrosoft.Azure.Functions.Worker.Http.HttpResponseData\u003E"
+        },
+        {
+          "Name": "ProcessServiceBusMessageAsync",
+          "Inputs": [
+            {
+              "Name": "message",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task"
+        }
+      ]
+    }
+  ],
+  "Links": [
+    {
+      "FromType": "Workflow.Exposures.Execute",
+      "ToType": "Workflow.Services.Processings.WorkflowFunctions.WorkflowFunctionsProcessingService"
+    },
+    {
+      "FromType": "Workflow.Exposures.ExecuteFromServiceBus",
+      "ToType": "Workflow.Services.Processings.WorkflowFunctions.WorkflowFunctionsProcessingService"
+    },
+    {
+      "FromType": "Workflow.Exposures.ExecuteScript",
+      "ToType": "Workflow.Services.Processings.WorkflowFunctions.WorkflowFunctionsProcessingService"
+    },
+    {
+      "FromType": "Workflow.Exposures.Health",
+      "ToType": "Workflow.Services.Processings.WorkflowFunctions.WorkflowFunctionsProcessingService"
+    }
+  ],
+  "AnalysisItems": []
+}

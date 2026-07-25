@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using FluentAssertions;
 using Microsoft.AspNetCore.SignalR.Client;
 using Xunit;
@@ -12,38 +16,51 @@ public sealed partial class NotificationHubTests
     {
         // Given
         string expectedMessage = $"acceptance-message-{Guid.NewGuid():N}";
+
         TaskCompletionSource<(string level, string message, string thread)> messageReceived =
             new(TaskCreationOptions.RunContinuationsAsynchronously);
+
         HubConnection connection = await ConnectAsync();
 
         try
         {
-            connection.On<string, string, string>("ConsoleReceive", (level, message, receivedThread) =>
+            connection.On<string, string, string>(methodName: "ConsoleReceive",handler: (level, message, receivedThread) =>
             {
                 if (message == expectedMessage)
-                    messageReceived.TrySetResult((level, message, receivedThread));
+                {
+                    messageReceived.TrySetResult(result: (level, message, receivedThread));
+                }
             });
 
             // When
-            await connection.InvokeAsync("Join", Thread).WaitAsync(TimeSpan.FromSeconds(10));
+            await connection.InvokeAsync(methodName: "Join",arg1: Thread)
+                .WaitAsync(timeout: TimeSpan.FromSeconds(seconds: 10));
+
             await connection
-                .InvokeAsync("ConsoleSend", "info", expectedMessage, Thread)
-                .WaitAsync(TimeSpan.FromSeconds(10));
+                .InvokeAsync(methodName: "ConsoleSend",arg1: "info",arg2: expectedMessage,arg3: Thread)
+                .WaitAsync(timeout: TimeSpan.FromSeconds(seconds: 10));
+
             (string level, string message, string receivedThread) actual = await messageReceived
-                .Task.WaitAsync(TimeSpan.FromSeconds(10));
+                .Task.WaitAsync(timeout: TimeSpan.FromSeconds(seconds: 10));
 
             // Then
-            actual.level.Should().Be("info");
-            actual.message.Should().Be(expectedMessage);
-            actual.receivedThread.Should().Be(Thread);
+            actual.level.Should()
+                .Be(expected: "info");
+
+            actual.message.Should()
+                .Be(expected: expectedMessage);
+
+            actual.receivedThread.Should()
+                .Be(expected: Thread);
         }
         finally
         {
-            await connection.StopAsync().WaitAsync(TimeSpan.FromSeconds(5));
-            await connection.DisposeAsync().AsTask().WaitAsync(TimeSpan.FromSeconds(5));
+            await connection.StopAsync()
+                .WaitAsync(timeout: TimeSpan.FromSeconds(seconds: 5));
+
+            await connection.DisposeAsync()
+                .AsTask()
+                .WaitAsync(timeout: TimeSpan.FromSeconds(seconds: 5));
         }
     }
 }
-
-
-

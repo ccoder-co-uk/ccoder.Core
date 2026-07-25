@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.ContentManagement.Exposures.Caching;
 using cCoder.Core.Exposures.Cors;
 
@@ -19,30 +23,31 @@ public static partial class WebApplicationExtensions
         IHttpContextAccessor httpContextAccessor =
             app.Services.GetRequiredService<IHttpContextAccessor>();
 
-        app.Use(async (context, next) =>
+        app.Use(middleware: async (context, next) =>
         {
             string origin = context.Request.Headers.Origin.ToString();
 
-            if (!string.IsNullOrWhiteSpace(origin))
+            if (!string.IsNullOrWhiteSpace(value: origin))
             {
                 ICoreAllowedOriginStore originStore =
                     context.RequestServices.GetRequiredService<ICoreAllowedOriginStore>();
 
-                context.Items[IsCoreCorsOriginAllowed] = await originStore.IsAllowedAsync(origin);
+                context.Items[IsCoreCorsOriginAllowed] = await originStore.IsAllowedAsync(origin: origin);
             }
 
             await next();
         });
 
-        app.UseCors(builder =>
+        app.UseCors(configurePolicy: builder =>
         {
             builder.AllowAnyHeader();
             builder.AllowAnyMethod();
-            builder.SetIsOriginAllowed(_ =>
+
+            builder.SetIsOriginAllowed(isOriginAllowed: _ =>
                 httpContextAccessor.HttpContext?.Items.TryGetValue(
-                    IsCoreCorsOriginAllowed,
-                    out object isAllowed) == true
+key: IsCoreCorsOriginAllowed, value: out object isAllowed) == true
                 && isAllowed is true);
+
             builder.AllowCredentials();
         });
 
@@ -51,7 +56,7 @@ public static partial class WebApplicationExtensions
 
     private static WebApplication UseCoreExceptionHandling(this WebApplication app, RequestDelegate errorHandler)
     {
-        app.UseExceptionHandler(errorApp => errorApp.Run(errorHandler));
+        app.UseExceptionHandler(configure: errorApp => errorApp.Run(handler: errorHandler));
         return app;
     }
 }

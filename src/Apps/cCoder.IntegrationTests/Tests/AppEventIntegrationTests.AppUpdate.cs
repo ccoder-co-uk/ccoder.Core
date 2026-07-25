@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Data;
 using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.DMS;
@@ -14,30 +18,30 @@ public sealed partial class AppEventIntegrationTests
     [Fact]
     public async Task AppUpdate_RaisesExternalEventAndHostedServicesUpdatesChildren()
     {
+        // Given
         int appId = 0;
         Guid roleId = Guid.NewGuid();
         Guid rootFolderId = Guid.NewGuid();
         Guid childFolderId = Guid.NewGuid();
         Guid fileId = Guid.NewGuid();
-        string appDomain = $"{Unique("update")}.local";
+        string appDomain = $"{Unique(prefix: "update")}.local";
 
         try
         {
-            appId = await CreateStandaloneAppAsync(appDomain);
-            await GrantGuestAdminAsync(appId);
-            await SeedAppUpdateScenarioAsync(appId, roleId, rootFolderId, childFolderId, fileId);
+            appId = await CreateStandaloneAppAsync(domain: appDomain);
+            await GrantGuestAdminAsync(appId: appId);
+            await SeedAppUpdateScenarioAsync(appId: appId,roleId: roleId,rootFolderId: rootFolderId,childFolderId: childFolderId,fileId: fileId);
 
+            // When
             await SendAsJsonAsync(
-                HttpMethod.Put,
-                $"/Api/ContentManagement/App({appId})",
-                new
+method:                 HttpMethod.Put,relativeUrl:                 $"/Api/ContentManagement/App({appId})",payload:                 new
                 {
                     id = appId,
-                    name = Unique("Updated App"),
+                    name = Unique(prefix: "Updated App"),
                     domain = appDomain,
                     defaultTheme = "Default",
                     defaultCultureId = string.Empty,
-                    tenantId = Unique("tenant"),
+                    tenantId = Unique(prefix: "tenant"),
                     configJson = "{}",
                     roles = new[]
                     {
@@ -68,28 +72,56 @@ public sealed partial class AppEventIntegrationTests
                             path = "renamed"
                         }
                     }
-                },
-                host: appDomain);
+                },                host: appDomain);
 
-            await WaitUntilAsync(async () =>
+            await WaitUntilAsync(predicate: async () =>
             {
                 await using CoreDataContext core = CreateCoreContext();
-                return await core.Set<Folder>().IgnoreQueryFilters()
-                    .AnyAsync(folder => folder.Id == childFolderId && folder.Path == "renamed/child");
+
+                return await core.Set<Folder>()
+                    .IgnoreQueryFilters()
+                    .AnyAsync(predicate: folder => folder.Id == childFolderId && folder.Path == "renamed/child");
             });
 
             await using CoreDataContext verification = CreateCoreContext();
-            (await verification.Set<Role>().IgnoreQueryFilters().SingleAsync(role => role.Id == roleId)).Privs.Should().Be("app_read,folder_update");
-            (await verification.Set<AppCulture>().IgnoreQueryFilters().AnyAsync(culture => culture.AppId == appId && culture.CultureId == "fr-FR")).Should().BeTrue();
-            (await verification.Set<AppCulture>().IgnoreQueryFilters().AnyAsync(culture => culture.AppId == appId && culture.CultureId == "en-GB")).Should().BeFalse();
-            (await verification.Set<Folder>().IgnoreQueryFilters().SingleAsync(folder => folder.Id == rootFolderId)).Path.Should().Be("renamed");
-            (await verification.Set<Folder>().IgnoreQueryFilters().SingleAsync(folder => folder.Id == childFolderId)).Path.Should().Be("renamed/child");
-            (await verification.Set<DmsFile>().IgnoreQueryFilters().SingleAsync(file => file.Id == fileId)).Path.Should().Be("renamed/child/file.txt");
+
+            // Then
+            (await verification.Set<Role>()
+                .IgnoreQueryFilters()
+                .SingleAsync(predicate: role => role.Id == roleId)).Privs.Should()
+                .Be(expected: "app_read,folder_update");
+
+            (await verification.Set<AppCulture>()
+                .IgnoreQueryFilters()
+                .AnyAsync(predicate: culture => culture.AppId == appId && culture.CultureId == "fr-FR")).Should()
+                .BeTrue();
+
+            (await verification.Set<AppCulture>()
+                .IgnoreQueryFilters()
+                .AnyAsync(predicate: culture => culture.AppId == appId && culture.CultureId == "en-GB")).Should()
+                .BeFalse();
+
+            (await verification.Set<Folder>()
+                .IgnoreQueryFilters()
+                .SingleAsync(predicate: folder => folder.Id == rootFolderId)).Path.Should()
+                .Be(expected: "renamed");
+
+            (await verification.Set<Folder>()
+                .IgnoreQueryFilters()
+                .SingleAsync(predicate: folder => folder.Id == childFolderId)).Path.Should()
+                .Be(expected: "renamed/child");
+
+            (await verification.Set<DmsFile>()
+                .IgnoreQueryFilters()
+                .SingleAsync(predicate: file => file.Id == fileId)).Path.Should()
+                .Be(expected: "renamed/child/file.txt");
         }
         finally
         {
             if (appId != 0)
-                await DeleteAppGraphAsync(appId);
+            {
+                await DeleteAppGraphAsync(appId: appId);
+            }
         }
     }
 }

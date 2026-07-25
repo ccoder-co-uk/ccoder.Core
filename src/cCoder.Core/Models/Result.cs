@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.ComponentModel.DataAnnotations;
 
 namespace cCoder.Core.Models;
@@ -20,7 +24,9 @@ public class Result<T> : Result
         get
         {
             if (id != null)
+            {
                 return id;
+            }
 
             try
             {
@@ -35,9 +41,6 @@ public class Result<T> : Result
     }
 
     public T Item { get; set; }
-
-    public Result<TNew> ToNew<TNew>(TNew item) =>
-        new() { Success = Success, Message = Message, Item = item };
 }
 
 public class AuditResultsByUser
