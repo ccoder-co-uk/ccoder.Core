@@ -28,6 +28,7 @@ using cCoder.Core.Services.Foundations.AllowedOrigins;
 using cCoder.Core.Services.Foundations.AppSecurity;
 using cCoder.Core.Services.Foundations.ContentManagement;
 using cCoder.Core.Services.Foundations.DocumentManagement;
+using cCoder.Core.Services.Foundations.Eventing;
 using cCoder.Core.Services.Foundations.Mail;
 using cCoder.Core.Services.Foundations.Planning;
 using cCoder.Core.Services.Foundations.Workflow;
@@ -164,6 +165,8 @@ predicate: (documentName, apiDescription) =>
     private static void AddCoreBrokers(IServiceCollection services)
     {
         services.AddTransient<IContentManagementAppBroker, ContentManagementAppBroker>();
+        services.AddTransient<IAppGraphEventBroker, AppGraphEventBroker>();
+        services.AddTransient<IAuthInfoBroker, AuthInfoBroker>();
         services.AddTransient<IHttpRequestBroker, HttpRequestBroker>();
         services.AddTransient<IAppSecurityAppBroker, AppSecurityAppBroker>();
         services.AddTransient<IPlanningAppBroker, PlanningAppBroker>();
@@ -190,6 +193,7 @@ predicate: (documentName, apiDescription) =>
     private static void AddCoreFoundationServices(IServiceCollection services)
     {
         services.AddTransient<IContentManagementAppService, ContentManagementAppService>();
+        services.AddTransient<IAppGraphEventService, AppGraphEventService>();
         services.AddTransient<IAllowedOriginStoreService, AllowedOriginStoreService>();
         services.AddTransient<IAppSecurityAppService, AppSecurityAppService>();
         services.AddTransient<IPlanningAppService, PlanningAppService>();

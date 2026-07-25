@@ -150,6 +150,45 @@
       ]
     },
     {
+      "Name": "cCoder.Core.Brokers.Eventing.AppGraphEventBroker",
+      "StandardElementType": "Broker",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "RaiseAppAddEventAsync",
+          "Inputs": [
+            {
+              "Name": "message",
+              "Type": "EventMessage\u003CApp\u003E"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        },
+        {
+          "Name": "RaiseAppUpdateEventAsync",
+          "Inputs": [
+            {
+              "Name": "message",
+              "Type": "EventMessage\u003CApp\u003E"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Brokers.Eventing.AuthInfoBroker",
+      "StandardElementType": "Broker",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "GetCurrentSsoUserId",
+          "Inputs": [],
+          "ReturnType": "System.String"
+        }
+      ]
+    },
+    {
       "Name": "cCoder.Core.Brokers.Eventing.ServiceBusAppDeleteForwardingBroker",
       "StandardElementType": "Broker",
       "Properties": [],
@@ -3414,6 +3453,33 @@
       ]
     },
     {
+      "Name": "cCoder.Core.Services.Foundations.Eventing.AppGraphEventService",
+      "StandardElementType": "FoundationService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "RaiseAppAddEventAsync",
+          "Inputs": [
+            {
+              "Name": "app",
+              "Type": "App"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        },
+        {
+          "Name": "RaiseAppUpdateEventAsync",
+          "Inputs": [
+            {
+              "Name": "app",
+              "Type": "App"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        }
+      ]
+    },
+    {
       "Name": "cCoder.Core.Services.Foundations.Eventing.ServiceBusAppDeleteForwardingService",
       "StandardElementType": "FoundationService",
       "Properties": [],
@@ -4307,6 +4373,10 @@
     },
     {
       "FromType": "cCoder.Core.Services.Aggregations.AppAggregationService",
+      "ToType": "cCoder.Core.Services.Foundations.Eventing.AppGraphEventService"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Aggregations.AppAggregationService",
       "ToType": "cCoder.Core.Services.Foundations.Mail.MailAppService"
     },
     {
@@ -4344,6 +4414,14 @@
     {
       "FromType": "cCoder.Core.Services.Foundations.DocumentManagement.DocumentManagementAppService",
       "ToType": "cCoder.Core.Brokers.DocumentManagement.DocumentManagementAppBroker"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Foundations.Eventing.AppGraphEventService",
+      "ToType": "cCoder.Core.Brokers.Eventing.AppGraphEventBroker"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Foundations.Eventing.AppGraphEventService",
+      "ToType": "cCoder.Core.Brokers.Eventing.AuthInfoBroker"
     },
     {
       "FromType": "cCoder.Core.Services.Foundations.Eventing.ServiceBusAppDeleteForwardingService",
