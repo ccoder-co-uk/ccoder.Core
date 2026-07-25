@@ -17,6 +17,7 @@ public class Program
 
         WebApplication app = builder.Build();
         app.StartCoreWeb();
+        app.MapWebHealth();
         app.Run();
     }
 }

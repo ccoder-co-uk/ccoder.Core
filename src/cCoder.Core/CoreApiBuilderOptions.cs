@@ -602,9 +602,9 @@ hubUrl: configuration.HttpEventHubUrl, configure: options => options.MaxConcurre
         target.IncludeLegacyCoreContext = source.IncludeLegacyCoreContext;
         target.DebugInfo = source.DebugInfo;
         target.LogSQL = source.LogSQL;
-        target.ConnectionStrings = new Dictionary<string, string>(source.ConnectionStrings, StringComparer.OrdinalIgnoreCase);
-        target.Settings = new Dictionary<string, string>(source.Settings, StringComparer.OrdinalIgnoreCase);
-        target.Services = new Dictionary<string, string>(source.Services, StringComparer.OrdinalIgnoreCase);
+        target.ConnectionStrings = CopyDictionary(source: source.ConnectionStrings);
+        target.Settings = CopyDictionary(source: source.Settings);
+        target.Services = CopyDictionary(source: source.Services);
         CopyEventProviders(source: source.EventProviders, target: target.EventProviders);
     }
 
@@ -616,9 +616,9 @@ hubUrl: configuration.HttpEventHubUrl, configure: options => options.MaxConcurre
         target.IncludeLegacyCoreContext = source.IncludeLegacyCoreContext;
         target.DebugInfo = source.DebugInfo;
         target.LogSQL = source.LogSQL;
-        target.ConnectionStrings = new Dictionary<string, string>(source.ConnectionStrings, StringComparer.OrdinalIgnoreCase);
-        target.Settings = new Dictionary<string, string>(source.Settings, StringComparer.OrdinalIgnoreCase);
-        target.Services = new Dictionary<string, string>(source.Services, StringComparer.OrdinalIgnoreCase);
+        target.ConnectionStrings = CopyDictionary(source: source.ConnectionStrings);
+        target.Settings = CopyDictionary(source: source.Settings);
+        target.Services = CopyDictionary(source: source.Services);
         CopyEventProviders(source: source.EventProviders, target: target.EventProviders);
     }
 
@@ -630,9 +630,9 @@ hubUrl: configuration.HttpEventHubUrl, configure: options => options.MaxConcurre
         target.IncludeLegacyCoreContext = source.IncludeLegacyCoreContext;
         target.DebugInfo = source.DebugInfo;
         target.LogSQL = source.LogSQL;
-        target.ConnectionStrings = new Dictionary<string, string>(source.ConnectionStrings, StringComparer.OrdinalIgnoreCase);
-        target.Settings = new Dictionary<string, string>(source.Settings, StringComparer.OrdinalIgnoreCase);
-        target.Services = new Dictionary<string, string>(source.Services, StringComparer.OrdinalIgnoreCase);
+        target.ConnectionStrings = CopyDictionary(source: source.ConnectionStrings);
+        target.Settings = CopyDictionary(source: source.Settings);
+        target.Services = CopyDictionary(source: source.Services);
         CopyEventProviders(source: source.EventProviders, target: target.EventProviders);
     }
 
@@ -644,9 +644,9 @@ hubUrl: configuration.HttpEventHubUrl, configure: options => options.MaxConcurre
         target.IncludeLegacyCoreContext = source.IncludeLegacyCoreContext;
         target.DebugInfo = source.DebugInfo;
         target.LogSQL = source.LogSQL;
-        target.ConnectionStrings = new Dictionary<string, string>(source.ConnectionStrings, StringComparer.OrdinalIgnoreCase);
-        target.Settings = new Dictionary<string, string>(source.Settings, StringComparer.OrdinalIgnoreCase);
-        target.Services = new Dictionary<string, string>(source.Services, StringComparer.OrdinalIgnoreCase);
+        target.ConnectionStrings = CopyDictionary(source: source.ConnectionStrings);
+        target.Settings = CopyDictionary(source: source.Settings);
+        target.Services = CopyDictionary(source: source.Services);
         CopyEventProviders(source: source.EventProviders, target: target.EventProviders);
     }
 
@@ -658,9 +658,9 @@ hubUrl: configuration.HttpEventHubUrl, configure: options => options.MaxConcurre
         target.IncludeLegacyCoreContext = source.IncludeLegacyCoreContext;
         target.DebugInfo = source.DebugInfo;
         target.LogSQL = source.LogSQL;
-        target.ConnectionStrings = new Dictionary<string, string>(source.ConnectionStrings, StringComparer.OrdinalIgnoreCase);
-        target.Settings = new Dictionary<string, string>(source.Settings, StringComparer.OrdinalIgnoreCase);
-        target.Services = new Dictionary<string, string>(source.Services, StringComparer.OrdinalIgnoreCase);
+        target.ConnectionStrings = CopyDictionary(source: source.ConnectionStrings);
+        target.Settings = CopyDictionary(source: source.Settings);
+        target.Services = CopyDictionary(source: source.Services);
         target.MicrosoftGraph.TenantId = source.MicrosoftGraph.TenantId;
         target.MicrosoftGraph.ClientId = source.MicrosoftGraph.ClientId;
         target.MicrosoftGraph.ClientSecret = source.MicrosoftGraph.ClientSecret;
@@ -680,9 +680,9 @@ hubUrl: configuration.HttpEventHubUrl, configure: options => options.MaxConcurre
         target.IncludeLegacyCoreContext = source.IncludeLegacyCoreContext;
         target.DebugInfo = source.DebugInfo;
         target.LogSQL = source.LogSQL;
-        target.ConnectionStrings = new Dictionary<string, string>(source.ConnectionStrings, StringComparer.OrdinalIgnoreCase);
-        target.Settings = new Dictionary<string, string>(source.Settings, StringComparer.OrdinalIgnoreCase);
-        target.Services = new Dictionary<string, string>(source.Services, StringComparer.OrdinalIgnoreCase);
+        target.ConnectionStrings = CopyDictionary(source: source.ConnectionStrings);
+        target.Settings = CopyDictionary(source: source.Settings);
+        target.Services = CopyDictionary(source: source.Services);
         CopyEventProviders(source: source.EventProviders, target: target.EventProviders);
     }
 
@@ -700,6 +700,12 @@ hubUrl: configuration.HttpEventHubUrl, configure: options => options.MaxConcurre
             target.Add(item: provider);
         }
     }
+
+    private static Dictionary<string, string> CopyDictionary(
+        IDictionary<string, string> source) =>
+        new(
+            dictionary: source ?? new Dictionary<string, string>(),
+            comparer: StringComparer.OrdinalIgnoreCase);
 
     private void ApplyMailDefaults(MailConfiguration configuration)
     {

@@ -15,6 +15,7 @@ using cCoder.Eventing.AzureServiceBus.Models;
 using cCoder.Eventing.Http;
 using cCoder.Eventing.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 namespace Web;
 
@@ -84,7 +85,23 @@ internal static class IServiceCollectionExtensions
             });
         });
 
+        services.AddHealthChecks();
+
         return services;
+    }
+
+    internal static WebApplication MapWebHealth(
+        this WebApplication app)
+    {
+        app.MapHealthChecks(
+            pattern: "/Health",
+            options: new HealthCheckOptions
+            {
+                ResponseWriter = async (context, _) =>
+                    await context.Response.WriteAsync(text: "OK")
+            });
+
+        return app;
     }
 
     private static IConfiguration ConfigureApplication(ConfigurationManager configuration, IWebHostEnvironment environment)

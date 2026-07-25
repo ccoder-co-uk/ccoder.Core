@@ -34,7 +34,7 @@ namespace Web.Controllers
             Request.Host.Host.Replace(oldValue: "www.",newValue: "")
                 .ToLowerInvariant();
 
-        private dynamic CreateExpandoObject()
+        private ExpandoObject CreateExpandoObject()
         {
             dynamic result = new ExpandoObject();
             IDictionary<string, object> values = (IDictionary<string, object>)result;
@@ -75,7 +75,7 @@ namespace Web.Controllers
                 }
             }
 
-            return result;
+            return (ExpandoObject)result;
         }
 
         public HomeController(
