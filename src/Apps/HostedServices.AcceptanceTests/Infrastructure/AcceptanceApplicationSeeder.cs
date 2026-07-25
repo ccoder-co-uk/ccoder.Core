@@ -20,7 +20,7 @@ internal sealed class AcceptanceApplicationSeeder(IServiceProvider services)
     private const int AppId = 1;
     private const string AppDomain = "localhost";
     private const string AcceptanceAdminRoleName = "Acceptance Administrators";
-    private const string AcceptanceAdminPrivileges =
+    internal const string AcceptanceAdminPrivileges =
         "app_admin,"
         + "app_create,app_read,app_update,app_delete,"
         + "calendar_create,calendar_read,calendar_update,calendar_delete,"

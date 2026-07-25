@@ -641,6 +641,21 @@ condition: () =>
             ConfigJson = "{}",
         });
 
+        Role appAdministratorRole = await core.AddRoleAsync(role: new Role
+        {
+            Id = Guid.NewGuid(),
+            AppId = app.Id,
+            Name = Unique(prefix: "Acceptance Administrators"),
+            Description = "Acceptance event administrator",
+            Privs = AcceptanceApplicationSeeder.AcceptanceAdminPrivileges
+        });
+
+        await core.AddUserRoleAsync(userRole: new UserRole
+        {
+            RoleId = appAdministratorRole.Id,
+            UserId = "Guest"
+        });
+
         return app.Id;
     }
 

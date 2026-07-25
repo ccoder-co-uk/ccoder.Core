@@ -14,6 +14,7 @@ using cCoder.Core.Services.Foundations.AllowedOrigins;
 using cCoder.Core.Brokers.Eventing;
 using cCoder.Core.Services.Foundations.ContentManagement;
 using cCoder.Core.Services.Orchestrations;
+using cCoder.Core.Services.Foundations.AppSecurity;
 using cCoder.Core.Services.Processings.AllowedOrigins;
 using cCoder.Data;
 using cCoder.DocumentManagement.Models;
@@ -234,6 +235,8 @@ services: securityServices, decryptionKey: decryptionKey ?? string.Empty);
         });
 
         services.AddScoped<ICoreAllowedOriginStore, CoreAllowedOriginStore>();
+        services.TryAddTransient<IAppSecurityAppService, AppSecurityAppService>();
+        services.TryAddTransient<IAppSecurityUserRoleService, AppSecurityUserRoleService>();
         services.TryAddTransient<
             IHostedServicesAppSecurityAppAddOrchestrationService,
             HostedServicesAppSecurityAppAddOrchestrationService>();
