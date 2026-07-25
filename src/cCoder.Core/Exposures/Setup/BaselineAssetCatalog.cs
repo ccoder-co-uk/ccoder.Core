@@ -11,6 +11,14 @@ namespace cCoder.Core.Exposures.Setup;
 
 public sealed class BaselineAssetCatalog
 {
+    private static readonly IBaselinePackageCatalogProcessingService
+        packageProcessingService =
+            new BaselinePackageCatalogProcessingService();
+
+    private static readonly IBaselineCommonObjectCatalogProcessingService
+        commonObjectProcessingService =
+            new BaselineCommonObjectCatalogProcessingService();
+
     private readonly IBaselineAssetCatalogProcessingService processingService;
 
     public BaselineAssetCatalog()
@@ -19,7 +27,8 @@ public sealed class BaselineAssetCatalog
     }
 
     internal BaselineAssetCatalog(Assembly assembly)
-        : this(new BaselineAssetCatalogProcessingService(assembly: assembly))
+        : this(new BaselineAssetCatalogProcessingService(
+            assembly: assembly))
     {
     }
 
@@ -37,18 +46,18 @@ public sealed class BaselineAssetCatalog
         processingService.LoadDmsAssetPaths();
 
     public Package[] LoadCoreReviewPackages() =>
-        processingService.LoadCoreReviewPackages();
+        packageProcessingService.LoadCoreReviewPackages();
 
     public Package[] LoadPackages() =>
-        processingService.LoadPackages();
+        packageProcessingService.LoadPackages();
 
     public T[] LoadPackageItems<T>(
         string packageName,
         string itemType) =>
-        processingService.LoadPackageItems<T>(
+        packageProcessingService.LoadPackageItems<T>(
             packageName: packageName,
             itemType: itemType);
 
     public CommonObject[] LoadCommonObjects() =>
-        processingService.LoadCommonObjects();
+        commonObjectProcessingService.LoadCommonObjects();
 }

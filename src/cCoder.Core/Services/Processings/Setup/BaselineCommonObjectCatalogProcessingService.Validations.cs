@@ -4,12 +4,7 @@
 
 namespace cCoder.Core.Services.Processings.Setup;
 
-internal interface IBaselineAssetCatalogProcessingService
+internal sealed partial class
+    BaselineCommonObjectCatalogProcessingService
 {
-    string LoadDefaultAppConfig();
-
-    byte[] LoadAssetBytes(string relativePath);
-
-    string[] LoadDmsAssetPaths();
-
 }
