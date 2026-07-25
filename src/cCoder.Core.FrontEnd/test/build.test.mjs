@@ -17,15 +17,13 @@ test("build stages the public frontend assets", async () => {
         "everything.min.js",
         "everything.css",
         "everything.min.css",
-        "bootstrap/lib/core.js",
-        "bootstrap/lib/editor.js",
-        "bootstrap/lib/monaco.js",
-        "bootstrap/lib/widget.js",
-        "bootstrap/lib/workflow.js",
-        "bootstrap/lib/framework.js",
-        "bootstrap/lib/background.js",
-        "bootstrap/css/site.min.css",
-        "bootstrap/css/kendo-font-icons.ttf"
+        "core.js",
+        "editor.js",
+        "monaco.js",
+        "widget.js",
+        "workflow.js",
+        "framework.js",
+        "background.js"
     ];
 
     for (const expectedAsset of expectedAssets) {
@@ -33,6 +31,24 @@ test("build stages the public frontend assets", async () => {
 
         assert.equal(asset.isFile(), true);
         assert.ok(asset.size > 0);
+    }
+});
+
+test("build does not stage frontend source or dependency inputs", async () => {
+    const excludedAssets = [
+        "bootstrap/css/site.min.css",
+        "bootstrap/lib/Core/api.js",
+        "bootstrap/lib/core.js",
+        "bootstrap/lib/widgets/widget.js",
+        "css/site.min.css",
+        "dependencies/dependencies.min.js",
+        "dependencies/kendo/kendo-ui-license.js"
+    ];
+
+    for (const excludedAsset of excludedAssets) {
+        await assert.rejects(
+            stat(path.join(stageDirectory, excludedAsset)),
+            error => error.code === "ENOENT");
     }
 });
 
@@ -46,7 +62,7 @@ test("everything JavaScript is syntactically valid", async () => {
 
 test("framework preserves the configured bundle order", async () => {
     const framework = await readFile(
-        path.join(stageDirectory, "bootstrap/lib/framework.js"),
+        path.join(stageDirectory, "framework.js"),
         "utf8");
 
     const drawingPosition = framework.indexOf("class Drawable");
