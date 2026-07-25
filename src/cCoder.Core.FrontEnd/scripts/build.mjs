@@ -11,23 +11,23 @@ const assetsDirectory = path.join(projectDirectory, "assets");
 const stageDirectory = path.join(projectDirectory, "stage");
 
 const javascriptBundles = {
-    "bootstrap/lib/core.js": [
+    "core.js": [
         "bootstrap/lib/Core/api.js",
         "bootstrap/lib/Core/util.js",
         "bootstrap/lib/Core/model.js"
     ],
-    "bootstrap/lib/editor.js": [
+    "editor.js": [
         "bootstrap/lib/Core/editor.js",
         "bootstrap/lib/Core/contentEditor.js",
         "bootstrap/lib/Core/pageToolbar.js"
     ],
-    "bootstrap/lib/monaco.js": [
+    "monaco.js": [
         "bootstrap/lib/Monaco/MonacoEditor.js",
         "bootstrap/lib/Monaco/JavaScriptMonacoEditor.js",
         "bootstrap/lib/Monaco/HTMLMonacoEditor.js",
         "bootstrap/lib/Monaco/CSharpMonacoEditor.js"
     ],
-    "bootstrap/lib/widget.js": [
+    "widget.js": [
         "bootstrap/lib/widgets/widget.js",
         "bootstrap/lib/widgets/dialog.js",
         "bootstrap/lib/widgets/bootstrapDialog.js",
@@ -50,7 +50,7 @@ const javascriptBundles = {
         "bootstrap/lib/widgets/workspace.js",
         "bootstrap/lib/widgets/writableDetailView.js"
     ],
-    "bootstrap/lib/workflow.js": [
+    "workflow.js": [
         "bootstrap/lib/workflow/close.js",
         "bootstrap/lib/workflow/handle.js",
         "bootstrap/lib/workflow/link.js",
@@ -120,50 +120,44 @@ const drawing = await readFiles([
 
 const framework = [
     drawing,
-    await readFile(path.join(stageDirectory, "bootstrap/lib/widget.js"), "utf8"),
-    await readFile(path.join(stageDirectory, "bootstrap/lib/core.js"), "utf8"),
-    await readFile(path.join(stageDirectory, "bootstrap/lib/workflow.js"), "utf8")
+    await readFile(path.join(stageDirectory, "widget.js"), "utf8"),
+    await readFile(path.join(stageDirectory, "core.js"), "utf8"),
+    await readFile(path.join(stageDirectory, "workflow.js"), "utf8")
 ].join("\n");
 
-await write("bootstrap/lib/framework.js", framework);
+await write("framework.js", framework);
 await write(
-    "bootstrap/lib/framework.min.js",
+    "framework.min.js",
     await minify(framework, "js"));
 
 const background = await readFiles([
     "bootstrap/lib/background.js"
 ]);
 
-await write("bootstrap/lib/background.js", background);
+await write("background.js", background);
 await write(
-    "bootstrap/lib/background.min.js",
+    "background.min.js",
     await minify(background, "js"));
 
 const dependencies = [
     await readFiles(dependencyFiles),
     await readFile(
-        path.join(stageDirectory, "bootstrap/lib/monaco.min.js"),
+        path.join(stageDirectory, "monaco.min.js"),
         "utf8"),
     await readFile(
         path.join(assetsDirectory, "dependencies/other/signalr.min.js"),
         "utf8")
 ].join("\n");
 
-await write("dependencies/dependencies.min.js", dependencies);
-
 const everything = [
     dependencies,
     await readFile(
-        path.join(stageDirectory, "bootstrap/lib/framework.min.js"),
+        path.join(stageDirectory, "framework.min.js"),
         "utf8")
 ].join("\n");
 
 await write("everything.js", everything);
 await write("everything.min.js", everything);
-
-const rootSiteCss = await readFile(
-    path.join(assetsDirectory, "css/site.css"),
-    "utf8");
 
 const bootstrapSiteCss = await readFile(
     path.join(assetsDirectory, "bootstrap/css/site.css"),
@@ -175,24 +169,17 @@ const dependencyCss = await readFiles([
     "bootstrap/css/kendo-font-icons.css"
 ]);
 
-await write("css/site.min.css", await minify(rootSiteCss, "css"));
-await write("bootstrap/css/site.min.css", await minify(bootstrapSiteCss, "css"));
-await write("dependencies/dependencies.min.css", dependencyCss);
+const kendoFont = await readFile(
+    path.join(assetsDirectory, "bootstrap/css/kendo-font-icons.ttf"));
+
+const selfContainedDependencyCss = dependencyCss.replace(
+    'url("/bootstrap/css/kendo-font-icons.ttf")',
+    `url("data:font/ttf;base64,${kendoFont.toString("base64")}")`);
 
 const everythingCss = [
-    dependencyCss,
+    selfContainedDependencyCss,
     await minify(bootstrapSiteCss, "css")
 ].join("\n");
 
 await write("everything.css", everythingCss);
 await write("everything.min.css", everythingCss);
-
-const kendoFont = await readFile(
-    path.join(assetsDirectory, "bootstrap/css/kendo-font-icons.ttf"));
-
-await write("bootstrap/css/kendo-font-icons.ttf", kendoFont);
-
-const kendoLicense = await readFile(
-    path.join(assetsDirectory, "dependencies/kendo/kendo-ui-license.js"));
-
-await write("dependencies/kendo/kendo-ui-license.js", kendoLicense);
