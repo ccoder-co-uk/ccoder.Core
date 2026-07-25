@@ -50,6 +50,10 @@ public sealed partial class HostedServicesRegistrationTests
             && descriptor.ImplementationFactory is not null)
             .Should()
             .BeGreaterThanOrEqualTo(expected: 3);
+
+        services.Should()
+            .NotContain(predicate: descriptor =>
+                descriptor.ServiceType == typeof(IAzureServiceBusEventHub));
     }
 
     [Fact]
