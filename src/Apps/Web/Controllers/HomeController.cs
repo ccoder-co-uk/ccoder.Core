@@ -20,8 +20,6 @@ namespace Web.Controllers
 {
     public sealed class HomeController : Controller
     {
-        private readonly ILogger log;
-
         private readonly IPageRenderer pageRenderer;
         private readonly IFirstTimeSetupStateService setupStateService;
         private readonly ISetupRequestHostManager setupRequestHostManager;
@@ -35,18 +33,17 @@ namespace Web.Controllers
             IPageRenderer pageRenderer,
             IFirstTimeSetupStateService setupStateService,
             ISetupRequestHostManager setupRequestHostManager,
-            IHomeSessionManager homeSessionManager,
-            ILogger<HomeController> log)
+            IHomeSessionManager homeSessionManager)
         {
             this.pageRenderer = pageRenderer;
             this.setupStateService = setupStateService;
             this.setupRequestHostManager = setupRequestHostManager;
             this.homeSessionManager = homeSessionManager;
-            this.log = log;
         }
 
         [HttpGet]
         [ServiceFilter(typeof(HomeDefaultsActionFilter))]
+        [ServiceFilter(typeof(HomeExceptionFilter))]
         public async Task<IActionResult> Index(
             string path = null,
             string theme = null,
@@ -145,9 +142,9 @@ request:                     new PageRenderRequest
                 viewResult.StatusCode = page.StatusCode;
                 return viewResult;
             }
-            catch (Exception ex)
+            catch
             {
-                return Error(ex: ex);
+                throw;
             }
         }
 
@@ -176,43 +173,6 @@ request:                     new PageRenderRequest
 
             ViewData["Session"] = session;
             ViewData["Edit"] = edit;
-        }
-
-        IActionResult Error(Exception ex)
-        {
-            log.LogWarning(message: $"Problem with page request: {ex.Message}\n{ex.StackTrace}");
-            log.LogWarning(message: $"   Source: {Request.HttpContext.Connection.RemoteIpAddress}:{Request.HttpContext.Connection.RemotePort}");
-
-            try
-            {
-                string theme =
-                    homeSessionManager.GetSessionValue(
-                        context: HttpContext,
-                        key: "theme");
-
-                string culture =
-                    homeSessionManager.GetSessionValue(
-                        context: HttpContext,
-                        key: "culture");
-
-                string errorPageQuery =
-                    $"Core/Page/Render()?host={GetHost()}&path=Error&theme={theme}&culture={culture}";
-
-                log.LogInformation(message: $"GET {errorPageQuery}");
-
-                PageRenderResponse response = pageRenderer.RenderError(
-request:                     new PageRenderRequest
-                    {
-                        Host = GetHost(),
-                        Theme = theme,
-                        Culture = culture,
-                        RequestUrl = Request.GetEncodedUrl(),
-                        Exception = ex
-                    });
-
-                return View(viewName: "Index",model: response.Page);
-            }
-            catch { return PartialView(viewName: "Error",model: ex); }
         }
 
     }

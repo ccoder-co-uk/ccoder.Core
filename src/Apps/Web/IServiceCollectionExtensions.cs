@@ -90,6 +90,7 @@ internal static class IServiceCollectionExtensions
 
         services.AddHealthChecks();
         services.AddScoped<HomeDefaultsActionFilter>();
+        services.AddScoped<HomeExceptionFilter>();
         services.AddScoped<
             IHomeSessionProcessingService,
             HomeSessionProcessingService>();
