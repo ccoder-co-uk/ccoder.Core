@@ -36,11 +36,22 @@ jobs:
         run: |
           "value=$(Get-Date -Format 'yyyy.M.d.HHmm')" >> $env:GITHUB_OUTPUT
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: ccoder.Core/src/cCoder.Core.FrontEnd/package-lock.json
+
       - name: Restore
         run: dotnet restore ccoder.Core/src/cCoder.Core.sln --source https://api.nuget.org/v3/index.json --no-cache
 
       - name: Build
         run: dotnet build ccoder.Core/src/cCoder.Core.sln -c Release --no-restore /p:Version="${{ steps.version.outputs.value }}"
+
+      - name: Test frontend
+        working-directory: ccoder.Core/src/cCoder.Core.FrontEnd
+        run: npm test
 
       - name: Test
         run: dotnet test ccoder.Core/src/cCoder.Core.sln -c Release --no-build --settings ccoder.Core/src/cCoder.Core.runsettings
