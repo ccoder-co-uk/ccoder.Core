@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Web.Dependencies.Filters;
 using Web.Services.Processings;
 using Web.Exposures;
+using Web.Services.Aggregations;
 
 namespace Web;
 
@@ -95,6 +96,8 @@ internal static class IServiceCollectionExtensions
             IHomeSessionProcessingService,
             HomeSessionProcessingService>();
         services.AddScoped<IHomeSessionManager, HomeSessionManager>();
+        services.AddScoped<IApiCacheAggregationService, ApiCacheAggregationService>();
+        services.AddScoped<IApiCacheManager, ApiCacheManager>();
 
         return services;
     }

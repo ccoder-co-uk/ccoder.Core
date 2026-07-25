@@ -9,8 +9,6 @@ using cCoder.Core.Exposures.OData.Responses;
 using cCoder.Data;
 using cCoder.Data.Models;
 using Microsoft.AspNetCore.Mvc;
-using ContentManagementCommonObjectCache = cCoder.ContentManagement.Exposures.Caching.ICommonObjectCache;
-using ContentManagementMetadataCache = cCoder.ContentManagement.Exposures.Caching.IMetadataCache;
 
 
 namespace Web.Controllers.Api
@@ -18,8 +16,6 @@ namespace Web.Controllers.Api
     [Route("Api")]
     public class ApiRootController : Controller
     {
-        protected readonly ContentManagementCommonObjectCache CommonCache;
-        protected readonly ContentManagementMetadataCache MetadataCache;
         protected readonly Config Config;
         protected readonly IAuthorizationBroker AuthorizationBroker;
         protected readonly IReadOnlyList<ApiInfo> ApiContexts;
@@ -27,13 +23,9 @@ namespace Web.Controllers.Api
         public ApiRootController(
             Config config,
             IAuthorizationBroker authorizationBroker,
-            IEnumerable<ApiInfo> apiContexts,
-            ContentManagementCommonObjectCache commonObjectCache,
-            ContentManagementMetadataCache metadataCache
+            IEnumerable<ApiInfo> apiContexts
         )
         {
-            CommonCache = commonObjectCache;
-            MetadataCache = metadataCache;
             Config = config;
             AuthorizationBroker = authorizationBroker;
             ApiContexts = apiContexts
@@ -89,16 +81,5 @@ namespace Web.Controllers.Api
             return Ok(value: await response.Content.ReadAsStringAsync());
         }
 
-        [HttpGet("GetMetadata")]
-        public IActionResult GetMetadata(string culture = "") =>
-            Content(content: MetadataCache.GetAll(culture: culture),contentType: "application/json");
-
-        [HttpGet("RefreshCache")]
-        public IActionResult GetRefreshCache()
-        {
-            CommonCache.Refresh();
-            MetadataCache.Rebuild();
-            return Ok();
-        }
     }
 }
