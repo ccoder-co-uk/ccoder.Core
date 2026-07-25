@@ -1,9 +1,11 @@
 <Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/1.0.6165494">
   <PropertyGroup>
-    <BuildCommand>npm run build</BuildCommand>
-    <CleanCommand>npm run clean</CleanCommand>
+    <BuildCommand Condition="$([MSBuild]::IsOSPlatform('Windows'))">scripts\run-npm.cmd run build</BuildCommand>
+    <BuildCommand Condition="!$([MSBuild]::IsOSPlatform('Windows'))">npm ci &amp;&amp; npm run build</BuildCommand>
+    <CleanCommand Condition="$([MSBuild]::IsOSPlatform('Windows'))">scripts\run-npm.cmd run clean</CleanCommand>
+    <CleanCommand Condition="!$([MSBuild]::IsOSPlatform('Windows'))">npm run clean</CleanCommand>
     <ShouldRunBuildScript>true</ShouldRunBuildScript>
-    <ShouldRunNpmInstall>true</ShouldRunNpmInstall>
+    <ShouldRunNpmInstall>false</ShouldRunNpmInstall>
     <StartupCommand>npm run build</StartupCommand>
   </PropertyGroup>
 </Project>
