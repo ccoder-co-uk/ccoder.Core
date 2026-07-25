@@ -465,7 +465,7 @@
           "Inputs": [
             {
               "Name": "configure",
-              "Type": "System.Action\u003CcCoder.AppSecurity.Models.AppSecurityConfiguration\u003E"
+              "Type": "System.Action\u003CAppSecurityConfiguration\u003E"
             }
           ],
           "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
@@ -475,7 +475,7 @@
           "Inputs": [
             {
               "Name": "configure",
-              "Type": "System.Action\u003CcCoder.ContentManagement.Models.ContentManagementConfiguration\u003E"
+              "Type": "System.Action\u003CContentManagementConfiguration\u003E"
             }
           ],
           "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
@@ -714,7 +714,7 @@
           "Inputs": [
             {
               "Name": "configure",
-              "Type": "System.Action\u003CcCoder.AppSecurity.Models.AppSecurityConfiguration\u003E"
+              "Type": "System.Action\u003CAppSecurityConfiguration\u003E"
             }
           ],
           "ReturnType": "cCoder.Core.CoreBuilderOptions"
@@ -724,7 +724,7 @@
           "Inputs": [
             {
               "Name": "configure",
-              "Type": "System.Action\u003CcCoder.ContentManagement.Models.ContentManagementConfiguration\u003E"
+              "Type": "System.Action\u003CContentManagementConfiguration\u003E"
             },
             {
               "Name": "map",
@@ -4098,6 +4098,27 @@
       "Severity": "Warning",
       "Type": "cCoder.Core.Exposures.Controllers.SetupController",
       "LineNumber": 12
+    },
+    {
+      "Code": "STXF002",
+      "Description": "A foundation service may only depend on brokers, exposures, or nothing.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.AppSecurity.AppSecurityAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STXF002",
+      "Description": "A foundation service may only depend on brokers, exposures, or nothing.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.AppSecurity.AppSecurityUserRoleService",
+      "LineNumber": 11
+    },
+    {
+      "Code": "STXF002",
+      "Description": "A foundation service may only depend on brokers, exposures, or nothing.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.TemplatedEmails.TemplatedEmailContentService",
+      "LineNumber": 13
     },
     {
       "Code": "STXF002",
