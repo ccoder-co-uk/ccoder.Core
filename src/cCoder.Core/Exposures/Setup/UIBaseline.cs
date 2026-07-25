@@ -8,10 +8,10 @@ namespace cCoder.Core.Exposures.Setup;
 
 public static partial class UIBaseline
 {
-    public static Package[] Packages =>
-    [
-        Resources,
-        Pages,
-        Components
-    ];
+    public static Package[] GetPackages() =>
+        [
+            CreateResourcesPackage(),
+            CreatePagesPackage(),
+            CreateComponentsPackage()
+        ];
 }

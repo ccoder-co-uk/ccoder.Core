@@ -8,8 +8,9 @@ namespace cCoder.Core.Exposures.Setup;
 
 public static partial class UIBaseline
 {
-    static Package Resources => new()
-    {
+    private static Package CreateResourcesPackage() =>
+        new()
+        {
         Name = "Core Review Resources",
         Category = "CoreReview",
         Description = "Unresolved Core resource baseline items.",
@@ -1322,5 +1323,5 @@ public static partial class UIBaseline
 """
             }
         ]
-    };
+        };
 }

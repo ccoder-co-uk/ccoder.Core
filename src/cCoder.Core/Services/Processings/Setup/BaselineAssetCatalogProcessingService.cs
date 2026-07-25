@@ -58,7 +58,7 @@ internal sealed partial class BaselineAssetCatalogProcessingService
 
     public Package[] LoadCoreReviewPackages() =>
         TryCatch(operation: () =>
-            CoreUIBaseline.Packages
+            CoreUIBaseline.GetPackages()
                 .Select(selector: ClonePackage)
                 .Where(predicate: package => package.Items?.Count > 0)
                 .ToArray());
@@ -120,7 +120,7 @@ internal sealed partial class BaselineAssetCatalogProcessingService
             .ToArray();
 
     private static IEnumerable<Package> LoadBaselinePackages() =>
-        CoreUIBaseline.Packages
+        CoreUIBaseline.GetPackages()
             .Concat(second: AppSecurityUIBaseline.Packages)
             .Concat(second: ContentManagementUIBaseline.Packages)
             .Concat(second: DocumentManagementUIBaseline.Packages)
