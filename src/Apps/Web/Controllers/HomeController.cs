@@ -5,14 +5,13 @@
 using System.Dynamic;
 using cCoder.ContentManagement.Exposures;
 using cCoder.ContentManagement.Models;
-using cCoder.ContentManagement.Services.Processings;
 using cCoder.Data;
 using cCoder.Core.Models;
 using cCoder.Core.Exposures.Setup;
 using cCoder.Core.Services.Setup;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
+using Web.Dependencies.Filters;
 using App = cCoder.Data.Models.CMS.App;
 using RenderResult = cCoder.ContentManagement.Models.RenderResult;
 
@@ -23,7 +22,6 @@ namespace Web.Controllers
     {
         private readonly ILogger log;
 
-        private readonly IAppProcessingService appProcessingService;
         private readonly IPageRenderer pageRenderer;
         private readonly IFirstTimeSetupStateService setupStateService;
         private readonly ISetupRequestHostManager setupRequestHostManager;
@@ -81,20 +79,19 @@ namespace Web.Controllers
         }
 
         public HomeController(
-            IAppProcessingService appService,
             IPageRenderer pageRenderer,
             IFirstTimeSetupStateService setupStateService,
             ISetupRequestHostManager setupRequestHostManager,
             ILogger<HomeController> log)
         {
-            appProcessingService = appService;
-            pageRenderer = pageRenderer;
+            this.pageRenderer = pageRenderer;
             this.setupStateService = setupStateService;
             this.setupRequestHostManager = setupRequestHostManager;
             this.log = log;
         }
 
         [HttpGet]
+        [ServiceFilter(typeof(HomeDefaultsActionFilter))]
         public async Task<IActionResult> Index(
             string path = null,
             string theme = null,
@@ -201,46 +198,6 @@ request:                     new PageRenderRequest
 
             ViewData["Session"] = session;
             ViewData["Edit"] = edit;
-        }
-
-        public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
-        {
-            try
-            {
-                if (!await setupStateService.IsInitializedAsync(cancellationToken: context.HttpContext.RequestAborted))
-                {
-                    await base.OnActionExecutionAsync(context: context,next: next);
-                    return;
-                }
-
-                App app = appProcessingService
-                    .GetAllApp(ignoreFilters: true)
-                    .Where(predicate: a => a.Domain == GetHost())
-                    .Select(selector: a => new App
-                    {
-                        Id = a.Id,
-                        Domain = a.Domain,
-                        DefaultCultureId = a.DefaultCultureId,
-                        DefaultTheme = a.DefaultTheme
-                    })
-                    .FirstOrDefault();
-
-                if (app != null && GetSessionValue(key: "theme") == null)
-                {
-                    SetSessionValue(key: "theme",value: app.DefaultTheme ?? "Default");
-                }
-
-                if (app != null && GetSessionValue(key: "culture") == null)
-                {
-                    SetSessionValue(key: "culture",value: app.DefaultCultureId ?? string.Empty);
-                }
-            }
-            catch (Exception ex)
-            {
-                log.LogWarning(message: $"Unable to determine the current app domain and set defaults for request on {Request.Host.Host}\n{ex.Message}\n{ex.StackTrace}");
-            }
-
-            await base.OnActionExecutionAsync(context: context,next: next);
         }
 
         IActionResult Error(Exception ex)

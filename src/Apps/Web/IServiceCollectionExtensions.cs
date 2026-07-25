@@ -16,6 +16,7 @@ using cCoder.Eventing.Http;
 using cCoder.Eventing.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Web.Dependencies.Filters;
 
 namespace Web;
 
@@ -86,6 +87,7 @@ internal static class IServiceCollectionExtensions
         });
 
         services.AddHealthChecks();
+        services.AddScoped<HomeDefaultsActionFilter>();
 
         return services;
     }
