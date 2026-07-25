@@ -10,5 +10,6 @@ namespace Web.Controllers;
 public sealed class HealthController : ControllerBase
 {
     [HttpGet]
-    public IActionResult Get() => Content(content: "OK",contentType: "text/plain");
+    public IActionResult Get() =>
+        Content(content: "OK",contentType: "text/plain");
 }

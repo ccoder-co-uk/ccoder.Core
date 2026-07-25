@@ -18,11 +18,11 @@ namespace Web.Controllers.Api
     [Route("Api")]
     public class ApiRootController : Controller
     {
-        protected ContentManagementCommonObjectCache CommonCache { get; }
-        protected ContentManagementMetadataCache MetadataCache { get; }
-        protected Config Config { get; }
-        protected IAuthorizationBroker AuthorizationBroker { get; }
-        protected IReadOnlyList<ApiInfo> ApiContexts { get; }
+        protected readonly ContentManagementCommonObjectCache CommonCache;
+        protected readonly ContentManagementMetadataCache MetadataCache;
+        protected readonly Config Config;
+        protected readonly IAuthorizationBroker AuthorizationBroker;
+        protected readonly IReadOnlyList<ApiInfo> ApiContexts;
 
         public ApiRootController(
             Config config,
@@ -37,7 +37,11 @@ namespace Web.Controllers.Api
             Config = config;
             AuthorizationBroker = authorizationBroker;
             ApiContexts = apiContexts
-                .Where(predicate: context => string.Equals(context.Kind, "Context", StringComparison.OrdinalIgnoreCase))
+                .Where(predicate: context =>
+                    string.Equals(
+                        a: context.Kind,
+                        b: "Context",
+                        comparisonType: StringComparison.OrdinalIgnoreCase))
                 .OrderBy(keySelector: context => context.Name,comparer: StringComparer.OrdinalIgnoreCase)
                 .ToArray();
         }
@@ -62,13 +66,15 @@ namespace Web.Controllers.Api
         }
 
         [HttpPut]
-        public Task<IActionResult> Put() => Post();
+        public Task<IActionResult> Put() =>
+            Post();
 
         [HttpGet("Time")]
-        public IActionResult Time() => Ok(value: new { DateTimeOffset.UtcNow });
+        public IActionResult GetTime() =>
+            Ok(value: new { DateTimeOffset.UtcNow });
 
         [HttpPost("ExecuteScript")]
-        public async Task<IActionResult> ExecuteScript()
+        public async Task<IActionResult> PostExecuteScript()
         {
             AuthorizationBroker.Authorize(appId: (int?)null,privilege: "script_execute");
 
@@ -84,11 +90,11 @@ namespace Web.Controllers.Api
         }
 
         [HttpGet("GetMetadata")]
-        public IActionResult GetMetadata(string culture = "")
-            => Content(content: MetadataCache.GetAll(culture: culture),contentType: "application/json");
+        public IActionResult GetMetadata(string culture = "") =>
+            Content(content: MetadataCache.GetAll(culture: culture),contentType: "application/json");
 
         [HttpGet("RefreshCache")]
-        public IActionResult RebuildCache()
+        public IActionResult GetRefreshCache()
         {
             CommonCache.Refresh();
             MetadataCache.Rebuild();

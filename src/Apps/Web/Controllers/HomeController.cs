@@ -20,61 +20,62 @@ namespace Web.Controllers
 {
     public sealed class HomeController : Controller
     {
-        readonly ILogger log;
+        private readonly ILogger log;
 
-        IAppProcessingService AppProcessingService { get; }
-        IPageRenderer PageRenderer { get; }
-        IFirstTimeSetupStateService SetupStateService { get; }
+        private readonly IAppProcessingService appProcessingService;
+        private readonly IPageRenderer pageRenderer;
+        private readonly IFirstTimeSetupStateService setupStateService;
 
-        ICoreAuthInfo AuthInfo =>
+        private ICoreAuthInfo GetAuthInfo() =>
             HttpContext?.RequestServices.GetService<ICoreAuthInfo>()
             ?? new CoreAuthInfo { SSOUserId = "Guest" };
 
-        string Host => Request.Host.Host.Replace(oldValue: "www.",newValue: "")
+        private string GetHost() =>
+            Request.Host.Host.Replace(oldValue: "www.",newValue: "")
                 .ToLowerInvariant();
 
-        dynamic DynamicSessionObject
+        private dynamic CreateExpandoObject()
         {
-            get
+            dynamic result = new ExpandoObject();
+            IDictionary<string, object> values = (IDictionary<string, object>)result;
+
+            result.apiRoot = (Request.Host.Port is not 443 and not 80)
+                ? $"{Request.Scheme}://{GetHost()}:{Request.Host.Port}/Api/"
+                : $"{Request.Scheme}://{GetHost()}/Api/";
+
+            ICoreAuthInfo authInfo = GetAuthInfo();
+
+            if (!string.IsNullOrWhiteSpace(value: authInfo.SSOUserId)
+                && !string.Equals(a: authInfo.SSOUserId,b: "Guest",comparisonType: StringComparison.OrdinalIgnoreCase))
             {
-                dynamic result = new ExpandoObject();
-                IDictionary<string, object> values = (IDictionary<string, object>)result;
+                values["user"] = authInfo.SSOUserId;
+            }
 
-                result.apiRoot = (Request.Host.Port is not 443 and not 80)
-                    ? $"{Request.Scheme}://{Host}:{Request.Host.Port}/Api/"
-                    : $"{Request.Scheme}://{Host}/Api/";
+            string token = Request.Query["t"].ToString();
 
-                if (!string.IsNullOrWhiteSpace(value: AuthInfo.SSOUserId)
-                    && !string.Equals(a: AuthInfo.SSOUserId,b: "Guest",comparisonType: StringComparison.OrdinalIgnoreCase))
-                {
-                    values["user"] = AuthInfo.SSOUserId;
-                }
+            if (!string.IsNullOrWhiteSpace(value: token))
+            {
+                values["token"] = token;
+            }
 
-                string token = Request.Query["t"].ToString();
-                if (!string.IsNullOrWhiteSpace(value: token))
-                {
-                    values["token"] = token;
-                }
-
-                if (!CanUseSession())
-                {
-                    return result;
-                }
-
-                foreach (string i in HttpContext.Session.Keys)
-                {
-                    if (i == "ssoUser")
-                    {
-                        values["user"] = AuthInfo.SSOUserId;
-                    }
-                    else
-                    {
-                        values[i] = GetSessionValue(key: i);
-                    }
-                }
-
+            if (!CanUseSession())
+            {
                 return result;
             }
+
+            foreach (string key in HttpContext.Session.Keys)
+            {
+                if (key == "ssoUser")
+                {
+                    values["user"] = authInfo.SSOUserId;
+                }
+                else
+                {
+                    values[key] = GetSessionValue(key: key);
+                }
+            }
+
+            return result;
         }
 
         public HomeController(
@@ -83,9 +84,9 @@ namespace Web.Controllers
             IFirstTimeSetupStateService setupStateService,
             ILogger<HomeController> log)
         {
-            AppProcessingService = appService;
-            PageRenderer = pageRenderer;
-            SetupStateService = setupStateService;
+            appProcessingService = appService;
+            pageRenderer = pageRenderer;
+            this.setupStateService = setupStateService;
             this.log = log;
         }
 
@@ -99,7 +100,7 @@ namespace Web.Controllers
         {
             try
             {
-                if (!await SetupStateService.IsInitializedAsync(cancellationToken: cancellationToken))
+                if (!await setupStateService.IsInitializedAsync(cancellationToken: cancellationToken))
                 {
                     return View(
 viewName:                         "~/Views/Setup/Index.cshtml",model:                         new FirstTimeSetupViewModel
@@ -144,10 +145,10 @@ viewName:                         "~/Views/Setup/Index.cshtml",model:           
                     theme = GetSessionValue(key: "theme") ?? string.Empty;
                 }
 
-                PageRenderResponse response = PageRenderer.Render(
+                PageRenderResponse response = pageRenderer.Render(
 request:                     new PageRenderRequest
                     {
-                        Host = Host,
+                        Host = GetHost(),
                         Path = path,
                         Theme = theme,
                         Culture = culture,
@@ -174,7 +175,7 @@ request:                     new PageRenderRequest
 
         private void SetupViewBag(bool edit, App app, RenderResult page)
         {
-            dynamic session = DynamicSessionObject;
+            dynamic session = CreateExpandoObject();
 
             session.app = new
             {
@@ -201,15 +202,15 @@ request:                     new PageRenderRequest
         {
             try
             {
-                if (!await SetupStateService.IsInitializedAsync(cancellationToken: context.HttpContext.RequestAborted))
+                if (!await setupStateService.IsInitializedAsync(cancellationToken: context.HttpContext.RequestAborted))
                 {
                     await base.OnActionExecutionAsync(context: context,next: next);
                     return;
                 }
 
-                App app = AppProcessingService
+                App app = appProcessingService
                     .GetAllApp(ignoreFilters: true)
-                    .Where(predicate: a => a.Domain == Host)
+                    .Where(predicate: a => a.Domain == GetHost())
                     .Select(selector: a => new App
                     {
                         Id = a.Id,
@@ -244,13 +245,13 @@ request:                     new PageRenderRequest
 
             try
             {
-                string errorPageQuery = $"Core/Page/Render()?host={Host}&path=Error&theme={GetSessionValue(key: "theme")}&culture={GetSessionValue(key: "culture")}";
+                string errorPageQuery = $"Core/Page/Render()?host={GetHost()}&path=Error&theme={GetSessionValue(key: "theme")}&culture={GetSessionValue(key: "culture")}";
                 log.LogInformation(message: $"GET {errorPageQuery}");
 
-                PageRenderResponse response = PageRenderer.RenderError(
+                PageRenderResponse response = pageRenderer.RenderError(
 request:                     new PageRenderRequest
                     {
-                        Host = Host,
+                        Host = GetHost(),
                         Theme = GetSessionValue(key: "theme"),
                         Culture = GetSessionValue(key: "culture"),
                         RequestUrl = Request.GetEncodedUrl(),
