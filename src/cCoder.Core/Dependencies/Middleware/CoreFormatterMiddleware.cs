@@ -16,27 +16,27 @@ internal sealed class CoreFormatterMiddleware : IMiddleware
             Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(
                 queryString: context.Request.QueryString.Value);
 
-        if (query.ContainsKey(key: "t"))
+        if (query.TryGetValue(key: "t", value: out StringValues token))
         {
-            context.Request.Headers["Authorization"] =
-                $"bearer {query["t"][0]}";
+            context.Request.Headers.Authorization =
+                $"bearer {token[0]}";
         }
 
         if (query.TryGetValue(
             key: "$format",
             value: out StringValues value))
         {
-            context.Request.Headers["Accept"] = value[0] switch
+            context.Request.Headers.Accept = value[0] switch
             {
                 "xml" => "application/xml",
                 "csv" => "text/csv",
                 "excel" =>
                     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                _ => context.Request.Headers["Content-Type"],
+                _ => context.Request.Headers.ContentType,
             };
 
-            context.Response.Headers["Content-Disposition"] =
-                query["$format"][0] switch
+            context.Response.Headers.ContentDisposition =
+                value[0] switch
                 {
                     "xml" => "attachment; filename=export.xml",
                     "csv" => "attachment; filename=export.csv",

@@ -4556,11 +4556,60 @@
       "LineNumber": 22
     },
     {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Setup.FirstTimeSetupBootstrapUser",
+      "LineNumber": 13
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Setup.FirstTimeSetupBootstrapUser",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Setup.FirstTimeSetupBootstrapUser",
+      "LineNumber": 17
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Setup.FirstTimeSetupBootstrapUser",
+      "LineNumber": 19
+    },
+    {
       "Code": "STX0001",
       "Description": "The type is not a valid Standard element type.",
       "Severity": "Warning",
       "Type": "cCoder.Core.Services.Setup.FirstTimeSetupOrchestrationService",
       "LineNumber": 15
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Setup.FirstTimeSetupResult",
+      "LineNumber": 12
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Setup.FirstTimeSetupResult",
+      "LineNumber": 14
+    },
+    {
+      "Code": "STXM002",
+      "Description": "Model properties must not declare default values.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Setup.FirstTimeSetupResult",
+      "LineNumber": 16
     },
     {
       "Code": "STX0001",

@@ -21,7 +21,7 @@ using SsoToken = cCoder.Security.Objects.Entities.Token;
 namespace cCoder.IntegrationTests.Tests;
 
 [Collection(IntegrationAcceptanceCollection.Name)]
-public sealed partial class FolderEventIntegrationTests
+public sealed partial class FolderEventIntegrationTests(IntegrationAcceptanceFixture fixture)
 {
     private const int BaselineAppId = 1;
     private const string AdminUserId = "admin";
@@ -34,10 +34,7 @@ public sealed partial class FolderEventIntegrationTests
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
     };
 
-    private readonly IntegrationAcceptanceFixture fixture;
-
-    public FolderEventIntegrationTests(IntegrationAcceptanceFixture fixture) =>
-        this.fixture = fixture;
+    private readonly IntegrationAcceptanceFixture fixture = fixture;
 
     private async Task<Guid> CreateFlowDefinitionAsync(int appId, string name, string authToken)
     {
@@ -126,16 +123,14 @@ public sealed partial class FolderEventIntegrationTests
         if (flowId != Guid.Empty)
         {
             await core.DeleteAllAsync(
-flowInstances:                 core.Set<FlowInstanceData>()
+flowInstances: [.. core.Set<FlowInstanceData>()
                 .IgnoreQueryFilters()
-                    .Where(predicate: instance => instance.FlowDefinitionId == flowId)
-                    .ToArray());
+                    .Where(predicate: instance => instance.FlowDefinitionId == flowId)]);
 
             await core.DeleteAllAsync(
-workflowEvents:                 core.Set<WorkflowEvent>()
+workflowEvents: [.. core.Set<WorkflowEvent>()
                 .IgnoreQueryFilters()
-                    .Where(predicate: workflowEvent => workflowEvent.FlowId == flowId)
-                    .ToArray());
+                    .Where(predicate: workflowEvent => workflowEvent.FlowId == flowId)]);
 
             FlowDefinition flow = await core.Set<FlowDefinition>()
                 .IgnoreQueryFilters()

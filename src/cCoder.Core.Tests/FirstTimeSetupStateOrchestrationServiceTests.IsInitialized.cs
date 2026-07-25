@@ -20,14 +20,14 @@ public sealed partial class FirstTimeSetupStateOrchestrationServiceTests
                 service.IsCoreInitializedAsync(
                     cancellationToken:
                         It.IsAny<CancellationToken>()))
-            .Returns(value: ValueTask.FromResult(result: true));
+            .ReturnsAsync(value: true);
 
         securitySetupStateServiceMock
             .Setup(expression: service =>
                 service.IsSecurityInitializedAsync(
                     cancellationToken:
                         It.IsAny<CancellationToken>()))
-            .Returns(value: ValueTask.FromResult(result: true));
+            .ReturnsAsync(value: true);
 
         // When
         bool isInitialized =
@@ -48,7 +48,7 @@ public sealed partial class FirstTimeSetupStateOrchestrationServiceTests
                 service.IsCoreInitializedAsync(
                     cancellationToken:
                         It.IsAny<CancellationToken>()))
-            .Returns(value: ValueTask.FromResult(result: false));
+            .ReturnsAsync(value: false);
 
         // When
         bool isInitialized =

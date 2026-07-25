@@ -68,6 +68,7 @@ public sealed partial class AppEventIntegrationTests
                         enableSSL = false
                     }
                 },
+
                 calendars = new[]
                 {
                     new
@@ -76,6 +77,7 @@ public sealed partial class AppEventIntegrationTests
                         description = "Calendar"
                     }
                 },
+
                 flows = new[]
                 {
                     new

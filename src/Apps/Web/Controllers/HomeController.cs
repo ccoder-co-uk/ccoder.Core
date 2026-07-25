@@ -18,28 +18,20 @@ using RenderResult = cCoder.ContentManagement.Models.RenderResult;
 
 namespace Web.Controllers
 {
-    public sealed class HomeController : Controller
+    public sealed class HomeController(
+        IPageRenderer pageRenderer,
+        IFirstTimeSetupStateService setupStateService,
+        ISetupRequestHostManager setupRequestHostManager,
+        IHomeSessionManager homeSessionManager) : Controller
     {
-        private readonly IPageRenderer pageRenderer;
-        private readonly IFirstTimeSetupStateService setupStateService;
-        private readonly ISetupRequestHostManager setupRequestHostManager;
-        private readonly IHomeSessionManager homeSessionManager;
+        private readonly IPageRenderer pageRenderer = pageRenderer;
+        private readonly IFirstTimeSetupStateService setupStateService = setupStateService;
+        private readonly ISetupRequestHostManager setupRequestHostManager = setupRequestHostManager;
+        private readonly IHomeSessionManager homeSessionManager = homeSessionManager;
 
         private string GetHost() =>
             Request.Host.Host.Replace(oldValue: "www.",newValue: "")
                 .ToLowerInvariant();
-
-        public HomeController(
-            IPageRenderer pageRenderer,
-            IFirstTimeSetupStateService setupStateService,
-            ISetupRequestHostManager setupRequestHostManager,
-            IHomeSessionManager homeSessionManager)
-        {
-            this.pageRenderer = pageRenderer;
-            this.setupStateService = setupStateService;
-            this.setupRequestHostManager = setupRequestHostManager;
-            this.homeSessionManager = homeSessionManager;
-        }
 
         [HttpGet]
         [ServiceFilter(typeof(HomeDefaultsActionFilter))]

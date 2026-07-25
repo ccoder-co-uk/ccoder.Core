@@ -19,8 +19,8 @@ namespace cCoder.Core;
 
 public static partial class WebApplicationExtensions
 {
-    private static readonly ConditionalWeakTable<WebApplication, object> StartedCoreWebApps = new();
-    private static readonly object StartedCoreWebAppsLock = new();
+    private static readonly ConditionalWeakTable<WebApplication, object> StartedCoreWebApps = [];
+    private static readonly Lock StartedCoreWebAppsLock = new();
 
     public static WebApplication StartCoreWeb(this WebApplication app)
     {
@@ -64,11 +64,17 @@ public static partial class WebApplicationExtensions
 
         app.EnsureCoreDatabasesMigrated(log: log);
 
-        IHostedService[] hostedServices = app.Services.GetServices<IHostedService>()
-            .ToArray();
+        IHostedService[] hostedServices = [.. app.Services.GetServices<IHostedService>()];
 
-        log.LogInformation(
-message: "Registered hosted services: {HostedServices}", args: string.Join(separator: ", ", values: hostedServices.Select(selector: service => service.GetType().FullName)));
+        if (log.IsEnabled(logLevel: LogLevel.Information))
+        {
+            log.LogInformation(
+                message: "Registered hosted services: {HostedServices}",
+                args: string.Join(
+                    separator: ", ",
+                    values: hostedServices.Select(
+                        selector: service => service.GetType().FullName)));
+        }
 
         app.ListenToExternalEvents();
         app.UseRouting();
@@ -121,13 +127,16 @@ message: "Registered hosted services: {HostedServices}", args: string.Join(separ
         string coreConnectionString = coreContext.Database.GetConnectionString();
         string securityConnectionString = securityContext.Database.GetConnectionString();
 
-        log?.LogInformation(
-            message: "Applying startup database migrations. Core={CoreDatabase}; Security={SecurityDatabase}",
-            args:
-            [
-                ResolveDatabaseName(connectionString: coreConnectionString),
-                ResolveDatabaseName(connectionString: securityConnectionString)
-            ]);
+        if (log?.IsEnabled(logLevel: LogLevel.Information) == true)
+        {
+            log.LogInformation(
+                message: "Applying startup database migrations. Core={CoreDatabase}; Security={SecurityDatabase}",
+                args:
+                [
+                    ResolveDatabaseName(connectionString: coreConnectionString),
+                    ResolveDatabaseName(connectionString: securityConnectionString)
+                ]);
+        }
 
         using IDisposable migrationLock =
             AcquireStartupMigrationLock(coreConnectionString: coreConnectionString, securityConnectionString: securityConnectionString, log: log);
@@ -158,7 +167,13 @@ message: "Registered hosted services: {HostedServices}", args: string.Join(separ
 message: "Recovered abandoned startup migration lock {LockName}. Continuing with database migration.", args: lockName);
         }
 
-        log?.LogDebug(message: "Acquired startup migration lock {LockName}.", args: lockName);
+        if (log?.IsEnabled(logLevel: LogLevel.Debug) == true)
+        {
+            log.LogDebug(
+                message: "Acquired startup migration lock {LockName}.",
+                args: lockName);
+        }
+
         return new StartupMigrationLock(mutex, lockName, log);
     }
 
@@ -206,7 +221,12 @@ message: "Recovered abandoned startup migration lock {LockName}. Continuing with
             try
             {
                 mutex.ReleaseMutex();
-                log?.LogDebug(message: "Released startup migration lock {LockName}.", args: lockName);
+                if (log?.IsEnabled(logLevel: LogLevel.Debug) == true)
+                {
+                    log.LogDebug(
+                        message: "Released startup migration lock {LockName}.",
+                        args: lockName);
+                }
             }
             finally
             {

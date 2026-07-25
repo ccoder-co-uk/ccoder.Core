@@ -13,13 +13,12 @@ namespace cCoder.Core;
 public partial class CoreApiBuilderOptions
 {
     private IEnumerable<CoreApiRouteDefinition> BuildRouteDefinitions() =>
-        routeContributors
+        [.. routeContributors
             .Select(selector: route => new CoreApiRouteDefinition(
                 Name: GetContextName(routePath: route.Key),
                 RoutePath: route.Key,
                 RouteModel: BuildRouteModel(contributors: route.Value)))
-            .OrderBy(keySelector: route => route.Name, comparer: StringComparer.OrdinalIgnoreCase)
-            .ToArray();
+            .OrderBy(keySelector: route => route.Name, comparer: StringComparer.OrdinalIgnoreCase)];
 
     private void RegisterContext(
         string routePath,
@@ -129,7 +128,7 @@ public partial class CoreApiBuilderOptions
         configType.GetProperty(name: "IncludeLegacyCoreContext")?.SetValue(obj: configuration, value: false);
     }
 
-    private void ApplyDomainRouteMode<TDomainConfiguration>(
+    private static void ApplyDomainRouteMode<TDomainConfiguration>(
         TDomainConfiguration configuration,
         string domainName)
     {
@@ -142,9 +141,7 @@ public partial class CoreApiBuilderOptions
     private static CoreApiRouteDefinition[] EnsureRequiredRoutes(
         IEnumerable<CoreApiRouteDefinition> routes)
     {
-        CoreApiRouteDefinition[] definitions = (routes ?? [])
-            .Where(predicate: route => route is not null)
-            .ToArray();
+        CoreApiRouteDefinition[] definitions = [.. (routes ?? []).Where(predicate: route => route is not null)];
 
         if (definitions.Any(predicate: route => string.Equals(a: route.Name, b: "Security", comparisonType: StringComparison.OrdinalIgnoreCase)))
         {

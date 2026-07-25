@@ -44,10 +44,9 @@ internal sealed partial class AllowedOriginStoreService(
 
                 string[] origins = app is null
                     ? []
-                    : GetAllowedOrigins(app: app)
+                    : [.. GetAllowedOrigins(app: app)
                         .Where(predicate: origin => !string.IsNullOrWhiteSpace(value: origin))
-                        .Distinct(comparer: StringComparer.OrdinalIgnoreCase)
-                        .ToArray();
+                        .Distinct(comparer: StringComparer.OrdinalIgnoreCase)];
 
                 return ValueTask.FromResult(result: origins);
             }
@@ -79,8 +78,7 @@ internal sealed partial class AllowedOriginStoreService(
         {
             using JsonDocument document = JsonDocument.Parse(json: configJson);
 
-            return ExtractOrigins(element: document.RootElement, propertyName: null)
-                .ToArray();
+            return [.. ExtractOrigins(element: document.RootElement, propertyName: null)];
         }
         catch (JsonException)
         {
@@ -137,10 +135,9 @@ internal sealed partial class AllowedOriginStoreService(
         }
 
         string normalized = new(
-            propertyName
+            [.. propertyName
                 .Where(predicate: char.IsLetterOrDigit)
-                .Select(selector: char.ToLowerInvariant)
-                .ToArray());
+                .Select(selector: char.ToLowerInvariant)]);
 
         return OriginPropertyNames.Any(predicate: name => normalized.Contains(value: name));
     }

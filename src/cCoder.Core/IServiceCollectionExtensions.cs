@@ -137,8 +137,7 @@ predicate: (documentName, apiDescription) =>
         services.AddEventing(configure: configuration =>
         {
             configuration.EventProviders =
-                (eventProviders ?? []).Where(predicate: provider => provider is not null)
-                .ToArray();
+                [.. (eventProviders ?? []).Where(predicate: provider => provider is not null)];
         });
 
         services.AddEventingForType<SecurityAccountEvent>();
@@ -487,7 +486,7 @@ predicate: (documentName, apiDescription) =>
     {
         DefaultODataBatchHandler batchHandler = new();
 
-        CoreApiRouteDefinition[] definitions = (routeDefinitions ?? [])
+        CoreApiRouteDefinition[] definitions = [.. (routeDefinitions ?? [])
             .Where(predicate: route =>
                 route is not null
                 && (string.Equals(
@@ -505,8 +504,7 @@ predicate: (documentName, apiDescription) =>
                     || string.Equals(
                         a: route.RoutePath,
                         b: "Api/Security",
-                        comparisonType: StringComparison.OrdinalIgnoreCase)))
-            .ToArray();
+                        comparisonType: StringComparison.OrdinalIgnoreCase)))];
 
         IMvcBuilder mvcBuilder = services.AddControllers();
 

@@ -180,11 +180,10 @@ inner:                 core.Set<Role>()
         guestRoleNames.Should()
             .Equal(expected: "Guests");
 
-        string[] componentCommonObjectNames = commonObjects
+        string[] componentCommonObjectNames = [.. commonObjects
             .Where(predicate: found => found.Type == "Core/Component")
             .Select(selector: found => found.Name)
-            .OrderBy(keySelector: name => name)
-            .ToArray();
+            .OrderBy(keySelector: name => name)];
 
         componentCommonObjectNames.Should()
             .Contain(expected: ["Client", "ClientList", "TenantManagement"]);
@@ -646,10 +645,9 @@ inner:                     core.Set<Role>()
                 IUserOrchestrationService userOrchestrationService =
                     harness.Factory.Services.GetRequiredService<IUserOrchestrationService>();
 
-                string[] visibleUserIds = userOrchestrationService.GetAll(ignoreFilters: true)
+                string[] visibleUserIds = [.. userOrchestrationService.GetAll(ignoreFilters: true)
                     .OrderBy(keySelector: found => found.Id)
-                    .Select(selector: found => found.Id)
-                    .ToArray();
+                    .Select(selector: found => found.Id)];
 
                 userVisibilityProbe = $"VisibleUsers=[{string.Join(separator: ", ",value: visibleUserIds)}]";
             }

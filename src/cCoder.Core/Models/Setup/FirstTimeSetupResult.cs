@@ -4,21 +4,14 @@
 
 namespace cCoder.Core.Services.Setup;
 
-public sealed class FirstTimeSetupResult
+public sealed class FirstTimeSetupResult(
+    string tenantId,
+    int appId,
+    string userId)
 {
-    public FirstTimeSetupResult(
-        string tenantId,
-        int appId,
-        string userId)
-    {
-        TenantId = tenantId;
-        AppId = appId;
-        UserId = userId;
-    }
+    public string TenantId { get; } = tenantId;
 
-    public string TenantId { get; }
+    public int AppId { get; } = appId;
 
-    public int AppId { get; }
-
-    public string UserId { get; }
+    public string UserId { get; } = userId;
 }

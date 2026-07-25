@@ -27,11 +27,17 @@ public sealed class WorkflowController(
         }
         catch (Exception ex)
         {
-            log.LogError(exception: ex,message: ex.Message);
+            log.LogError(
+                exception: ex,
+                message: "Workflow execution failed: {ErrorMessage}",
+                args: ex.Message);
 
             if (ex.InnerException is not null)
             {
-                log.LogError(exception: ex.InnerException,message: ex.InnerException.Message);
+                log.LogError(
+                    exception: ex.InnerException,
+                    message: "Inner workflow execution failure: {ErrorMessage}",
+                    args: ex.InnerException.Message);
             }
         }
 

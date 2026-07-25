@@ -11,5 +11,5 @@ internal sealed class ApiContextBroker(
     : IApiContextBroker
 {
     public ApiInfo[] SelectAllApiInfos() =>
-        apiInfos.ToArray();
+        [.. apiInfos];
 }

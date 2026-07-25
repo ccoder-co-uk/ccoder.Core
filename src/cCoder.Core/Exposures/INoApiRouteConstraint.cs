@@ -14,6 +14,7 @@ public class NoApiRouteConstraint : IRouteConstraint
         RouteDirection routeDirection
     ) =>
         httpContext.Request.Path.HasValue
-        && !httpContext.Request.Path.Value.ToLower()
-            .Contains(value: "/api/");
+        && !httpContext.Request.Path.Value.Contains(
+            value: "/api/",
+            comparisonType: StringComparison.OrdinalIgnoreCase);
 }
