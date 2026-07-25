@@ -61,7 +61,7 @@ jobs:
           dotnet pack ccoder.Core/src/cCoder.Core/cCoder.Core.csproj -c Release --no-build --output "${{ env.NUGET_DIRECTORY }}" /p:Version="${{ steps.version.outputs.value }}"
 
       - name: Upload package artifacts
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: nuget
           if-no-files-found: error
