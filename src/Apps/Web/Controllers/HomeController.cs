@@ -12,6 +12,7 @@ using cCoder.Core.Services.Setup;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Web.Dependencies.Filters;
+using Web.Exposures;
 using App = cCoder.Data.Models.CMS.App;
 using RenderResult = cCoder.ContentManagement.Models.RenderResult;
 
@@ -25,6 +26,7 @@ namespace Web.Controllers
         private readonly IPageRenderer pageRenderer;
         private readonly IFirstTimeSetupStateService setupStateService;
         private readonly ISetupRequestHostManager setupRequestHostManager;
+        private readonly IHomeSessionManager homeSessionManager;
 
         private ICoreAuthInfo GetAuthInfo() =>
             HttpContext?.RequestServices.GetService<ICoreAuthInfo>()
@@ -58,7 +60,8 @@ namespace Web.Controllers
                 values["token"] = token;
             }
 
-            if (!CanUseSession())
+            if (!homeSessionManager.CanUseSession(
+                context: HttpContext))
             {
                 return result;
             }
@@ -71,7 +74,10 @@ namespace Web.Controllers
                 }
                 else
                 {
-                    values[key] = GetSessionValue(key: key);
+                    values[key] =
+                        homeSessionManager.GetSessionValue(
+                            context: HttpContext,
+                            key: key);
                 }
             }
 
@@ -82,11 +88,13 @@ namespace Web.Controllers
             IPageRenderer pageRenderer,
             IFirstTimeSetupStateService setupStateService,
             ISetupRequestHostManager setupRequestHostManager,
+            IHomeSessionManager homeSessionManager,
             ILogger<HomeController> log)
         {
             this.pageRenderer = pageRenderer;
             this.setupStateService = setupStateService;
             this.setupRequestHostManager = setupRequestHostManager;
+            this.homeSessionManager = homeSessionManager;
             this.log = log;
         }
 
@@ -131,20 +139,34 @@ viewName:                         "~/Views/Setup/Index.cshtml",model:           
 
                 if (culture != null)
                 {
-                    SetSessionValue(key: "culture",value: culture);
+                    homeSessionManager.SetSessionValue(
+                        context: HttpContext,
+                        key: "culture",
+                        value: culture);
                 }
                 else
                 {
-                    culture = GetSessionValue(key: "culture") ?? string.Empty;
+                    culture =
+                        homeSessionManager.GetSessionValue(
+                            context: HttpContext,
+                            key: "culture")
+                        ?? string.Empty;
                 }
 
                 if (theme != null)
                 {
-                    SetSessionValue(key: "theme",value: theme);
+                    homeSessionManager.SetSessionValue(
+                        context: HttpContext,
+                        key: "theme",
+                        value: theme);
                 }
                 else
                 {
-                    theme = GetSessionValue(key: "theme") ?? string.Empty;
+                    theme =
+                        homeSessionManager.GetSessionValue(
+                            context: HttpContext,
+                            key: "theme")
+                        ?? string.Empty;
                 }
 
                 PageRenderResponse response = pageRenderer.Render(
@@ -158,8 +180,15 @@ request:                     new PageRenderRequest
                         RequestUrl = Request.GetEncodedUrl()
                     });
 
-                SetSessionValue(key: "theme",value: response.Theme);
-                SetSessionValue(key: "culture",value: response.Culture);
+                homeSessionManager.SetSessionValue(
+                    context: HttpContext,
+                    key: "theme",
+                    value: response.Theme);
+
+                homeSessionManager.SetSessionValue(
+                    context: HttpContext,
+                    key: "culture",
+                    value: response.Culture);
 
                 RenderResult page = response.Page;
 
@@ -207,15 +236,27 @@ request:                     new PageRenderRequest
 
             try
             {
-                string errorPageQuery = $"Core/Page/Render()?host={GetHost()}&path=Error&theme={GetSessionValue(key: "theme")}&culture={GetSessionValue(key: "culture")}";
+                string theme =
+                    homeSessionManager.GetSessionValue(
+                        context: HttpContext,
+                        key: "theme");
+
+                string culture =
+                    homeSessionManager.GetSessionValue(
+                        context: HttpContext,
+                        key: "culture");
+
+                string errorPageQuery =
+                    $"Core/Page/Render()?host={GetHost()}&path=Error&theme={theme}&culture={culture}";
+
                 log.LogInformation(message: $"GET {errorPageQuery}");
 
                 PageRenderResponse response = pageRenderer.RenderError(
 request:                     new PageRenderRequest
                     {
                         Host = GetHost(),
-                        Theme = GetSessionValue(key: "theme"),
-                        Culture = GetSessionValue(key: "culture"),
+                        Theme = theme,
+                        Culture = culture,
                         RequestUrl = Request.GetEncodedUrl(),
                         Exception = ex
                     });
@@ -225,38 +266,5 @@ request:                     new PageRenderRequest
             catch { return PartialView(viewName: "Error",model: ex); }
         }
 
-        string GetSessionValue(string key) =>
-            CanUseSession() && HttpContext.Session.Keys.Contains(value: key.ToLowerInvariant())
-                ? HttpContext.Session.GetString(key: key)
-                : null;
-
-        void SetSessionValue(string key, string value)
-        {
-            if (!CanUseSession())
-            {
-                return;
-            }
-
-            if (value != null)
-            {
-                HttpContext.Session.SetString(key: key.ToLowerInvariant(),value: value);
-            }
-            else if (HttpContext.Session.Keys.Contains(value: key.ToLowerInvariant()))
-            {
-                HttpContext.Session.Remove(key: key.ToLowerInvariant());
-            }
-        }
-
-        bool CanUseSession()
-        {
-            try
-            {
-                return HttpContext.Session?.IsAvailable == true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
     }
 }

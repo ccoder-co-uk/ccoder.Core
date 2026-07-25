@@ -17,6 +17,8 @@ using cCoder.Eventing.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Web.Dependencies.Filters;
+using Web.Services.Processings;
+using Web.Exposures;
 
 namespace Web;
 
@@ -88,6 +90,10 @@ internal static class IServiceCollectionExtensions
 
         services.AddHealthChecks();
         services.AddScoped<HomeDefaultsActionFilter>();
+        services.AddScoped<
+            IHomeSessionProcessingService,
+            HomeSessionProcessingService>();
+        services.AddScoped<IHomeSessionManager, HomeSessionManager>();
 
         return services;
     }
