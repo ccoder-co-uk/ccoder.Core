@@ -1,38 +1,44 @@
-using cCoder.Workflow.Services.Orchestrations;
-using Microsoft.AspNetCore.Mvc;
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
 
+using cCoder.Workflow.Services.Processings;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HostedServices.Controllers;
 
 [Route("Workflow")]
-public sealed class WorkflowController(IWorkflowInstanceManagementOrchestrationService workflowInstanceManagementService, ILogger<WorkflowController> log)
+public sealed class WorkflowController(
+    IWorkflowInstanceProcessingService workflowInstanceProcessingService,
+    ILogger<WorkflowController> log)
     : Controller
 {
     [HttpGet("")]
-    public IActionResult Index() => View();
+    public IActionResult Get() =>
+        View(viewName: "Index");
 
     [HttpPost("ExecuteNextFlowInstanceInQueue")]
-    public async Task<IActionResult> ExecuteNextFlowInstanceInQueue(Guid flowId)
+    public async Task<IActionResult> Post(Guid flowId)
     {
         try
         {
-            await workflowInstanceManagementService.ExecuteWaitingQueuedInstanceByIdAsync(flowId);
+            await workflowInstanceProcessingService.ExecuteWaitingQueuedInstanceByIdAsync(
+                flowInstanceDataId: flowId);
         }
         catch (Exception ex)
         {
-            log.LogError(ex, ex.Message);
+            log.LogError(exception: ex,message: ex.Message);
 
             if (ex.InnerException is not null)
-                log.LogError(ex.InnerException, ex.InnerException.Message);
+            {
+                log.LogError(exception: ex.InnerException,message: ex.InnerException.Message);
+            }
         }
 
         return Ok();
     }
 
     [HttpGet("GetStats")]
-    public IActionResult GetStats() => Json(workflowInstanceManagementService.GetStats());
+    public IActionResult GetStats() =>
+        Json(data: workflowInstanceProcessingService.GetStats());
 }
-
-
-
-

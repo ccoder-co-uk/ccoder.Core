@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Headers;
@@ -41,13 +45,17 @@ internal sealed class ExternalProcessApplication : IAsyncDisposable
         };
 
         foreach ((string key, string value) in environmentVariables)
+        {
             process.StartInfo.Environment[key] = value;
+        }
 
-        process.OutputDataReceived += (_, args) => Append(args.Data);
-        process.ErrorDataReceived += (_, args) => Append(args.Data);
+        process.OutputDataReceived += (_, args) => Append(line: args.Data);
+        process.ErrorDataReceived += (_, args) => Append(line: args.Data);
 
         if (!process.Start())
+        {
             throw new InvalidOperationException($"Failed to start process '{Name}'.");
+        }
 
         process.BeginOutputReadLine();
         process.BeginErrorReadLine();
@@ -57,16 +65,22 @@ internal sealed class ExternalProcessApplication : IAsyncDisposable
         while (!cancellationTokenSource.IsCancellationRequested)
         {
             if (process.HasExited)
+            {
                 throw new InvalidOperationException($"Process '{Name}' exited before it became ready.{Environment.NewLine}{Output}");
+            }
 
             if (await readinessProbe())
+            {
                 return;
+            }
 
-            await Task.Delay(500, cancellationTokenSource.Token).ContinueWith(_ => { }, TaskScheduler.Default);
+            await Task.Delay(millisecondsDelay: 500,cancellationToken: cancellationTokenSource.Token)
+                .ContinueWith(continuationAction: _ => { },scheduler: TaskScheduler.Default);
         }
 
         string diagnostics = readinessDiagnostics?.Invoke();
-        string readinessDetails = string.IsNullOrWhiteSpace(diagnostics)
+
+        string readinessDetails = string.IsNullOrWhiteSpace(value: diagnostics)
             ? string.Empty
             : $"{Environment.NewLine}Readiness diagnostics:{Environment.NewLine}{diagnostics}";
 
@@ -77,7 +91,9 @@ internal sealed class ExternalProcessApplication : IAsyncDisposable
     public async ValueTask DisposeAsync()
     {
         if (process is null)
+        {
             return;
+        }
 
         try
         {
@@ -86,10 +102,12 @@ internal sealed class ExternalProcessApplication : IAsyncDisposable
                 process.Kill(entireProcessTree: true);
 
                 Task waitForExitTask = process.WaitForExitAsync();
-                Task completedTask = await Task.WhenAny(waitForExitTask, Task.Delay(TimeSpan.FromSeconds(15)));
+                Task completedTask = await Task.WhenAny(task1: waitForExitTask,task2: Task.Delay(delay: TimeSpan.FromSeconds(seconds: 15)));
 
                 if (completedTask == waitForExitTask)
+                {
                     await waitForExitTask;
+                }
             }
         }
         catch
@@ -105,9 +123,13 @@ internal sealed class ExternalProcessApplication : IAsyncDisposable
     private void Append(string line)
     {
         if (line is null)
+        {
             return;
+        }
 
         lock (output)
-            output.AppendLine(line);
+        {
+            output.AppendLine(value: line);
+        }
     }
 }

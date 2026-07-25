@@ -1,62 +1,83 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using cCoder.Core.Models;
 using cCoder.Core.Services.Setup;
+using cCoder.Core.Exposures.Setup;
 
 namespace cCoder.Core.Exposures.Controllers;
 
 [Route("Setup")]
 public sealed class SetupController(
-    IFirstTimeSetupStateService setupStateService,
     IFirstTimeSetupOrchestrationService setupOrchestrationService,
-    cCoder.Core.Services.Orchestrations.IUserRegistrationOrchestrationService userRegistrationOrchestrationService,
+    ISetupRequestHostManager setupRequestHostManager,
     ILogger<SetupController> log)
     : Controller
 {
     [HttpGet("")]
-    public async Task<IActionResult> Index(CancellationToken cancellationToken)
+    public async Task<IActionResult> Get(CancellationToken cancellationToken)
     {
-        if (await setupStateService.IsInitializedAsync(cancellationToken))
-            return Redirect("/");
+        if (await setupOrchestrationService.IsInitializedAsync(cancellationToken: cancellationToken))
+        {
+            return Redirect(url: "/");
+        }
 
-        return View(CreateViewModel());
+        return View(
+            viewName: "Index",
+            model: CreateFirstTimeSetupViewModel());
     }
 
     [HttpPost("")]
-    public async Task<IActionResult> Index(
-        [Bind(Prefix = "Setup")] FirstTimeSetupRequest setup,
+    public async Task<IActionResult> Post(
+        [Bind(Prefix = "Setup")] FirstTimeSetupRequest newFirstTimeSetupRequest,
         CancellationToken cancellationToken)
     {
         try
         {
-            if (await setupStateService.IsInitializedAsync(cancellationToken))
-                return Redirect("/");
+            if (await setupOrchestrationService.IsInitializedAsync(cancellationToken: cancellationToken))
+            {
+                return Redirect(url: "/");
+            }
 
             if (!ModelState.IsValid)
-                return View(CreateViewModel(setup));
+            {
+                return View(
+                    viewName: "Index",
+                    model: CreateFirstTimeSetupViewModel(
+                        setup: newFirstTimeSetupRequest));
+            }
 
-            setup.Domain = SetupRequestHostNormalizer.Normalize(Request.Host.Host);
+            newFirstTimeSetupRequest.Domain =
+                setupRequestHostManager.NormalizeHost(
+                    host: Request.Host.Host);
 
-            FirstTimeSetupResult result = await setupOrchestrationService.SetupAsync(
-                setup,
-                cancellationToken);
+            await setupOrchestrationService.SetupAsync(
+                request: newFirstTimeSetupRequest,
+                cancellationToken: cancellationToken);
 
-            await userRegistrationOrchestrationService.LoginAsync(result.UserId, setup.Password);
-
-            return Redirect("/");
+            return Redirect(url: "/");
         }
         catch (Exception ex)
         {
-            log.LogError(ex, "First-time setup failed.");
-            ModelState.AddModelError(string.Empty, ex.Message);
-            return View(CreateViewModel(setup));
+            log.LogError(exception: ex, message: "First-time setup failed.");
+            ModelState.AddModelError(key: string.Empty, errorMessage: ex.Message);
+
+            return View(
+                viewName: "Index",
+                model: CreateFirstTimeSetupViewModel(
+                    setup: newFirstTimeSetupRequest));
         }
     }
 
-    private FirstTimeSetupViewModel CreateViewModel(FirstTimeSetupRequest setup = null) =>
+    private FirstTimeSetupViewModel CreateFirstTimeSetupViewModel(
+        FirstTimeSetupRequest setup = null) =>
         new()
         {
-            Domain = SetupRequestHostNormalizer.Normalize(Request.Host.Host),
+            Domain = setupRequestHostManager.NormalizeHost(
+                host: Request.Host.Host),
             Setup = setup ?? new FirstTimeSetupRequest(),
         };
 }

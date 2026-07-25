@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using FluentAssertions;
 using Web.AcceptanceTests.Infrastructure;
 using Xunit;
@@ -5,13 +9,19 @@ using Xunit;
 namespace Web.AcceptanceTests.Tests;
 
 [Collection(WebAcceptanceCollection.Name)]
-public sealed class HealthEndpointTests(WebAcceptanceFixture fixture)
+public sealed partial class HealthEndpointTests(WebAcceptanceFixture fixture)
 {
     [Fact]
     public async Task ShouldReturnOk()
     {
-        string content = await fixture.Client.GetStringAsync("Health");
+        // Given
+        const string healthEndpoint = "Health";
 
-        content.Should().Be("OK");
+        // When
+        string content = await fixture.Client.GetStringAsync(requestUri: healthEndpoint);
+
+        // Then
+        content.Should()
+            .Be(expected: "OK");
     }
 }

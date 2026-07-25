@@ -1,48 +1,26 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Data.Models.CMS;
-using cCoder.Data.Models.Security;
-using AppSecurityAppOrchestrationService = cCoder.AppSecurity.Services.Orchestrations.IAppOrchestrationService;
-using AppSecurityUserRoleBroker = cCoder.AppSecurity.Brokers.Storages.IUserRoleBroker;
+using cCoder.Core.Services.Foundations.AppSecurity;
 
 namespace cCoder.Core.Services.Orchestrations;
 
-internal sealed class HostedServicesAppSecurityAppAddOrchestrationService(
-    AppSecurityAppOrchestrationService appOrchestrationService,
-    AppSecurityUserRoleBroker userRoleBroker)
+internal sealed partial class HostedServicesAppSecurityAppAddOrchestrationService(
+    IAppSecurityAppService appSecurityAppService,
+    IAppSecurityUserRoleService appSecurityUserRoleService)
+    : IHostedServicesAppSecurityAppAddOrchestrationService
 {
-    public async ValueTask HandleAsync(App app)
-    {
-        ArgumentNullException.ThrowIfNull(app);
-
-        await appOrchestrationService.AddAsync(app);
-        await SaveRoleUsersAsync(app);
-    }
-
-    private async ValueTask SaveRoleUsersAsync(App app)
-    {
-        UserRole[] userRoles =
-            [.. (app.Roles ?? [])
-                .SelectMany(role => role.Users ?? [])
-                .Where(userRole =>
-                    userRole is not null &&
-                    userRole.RoleId != Guid.Empty &&
-                    !string.IsNullOrWhiteSpace(userRole.UserId))
-                .GroupBy(userRole => $"{userRole.RoleId:N}:{userRole.UserId}", StringComparer.OrdinalIgnoreCase)
-                .Select(group => new UserRole
-                {
-                    RoleId = group.First().RoleId,
-                    UserId = group.First().UserId
-                })];
-
-        foreach (UserRole userRole in userRoles)
+    public ValueTask HandleAppAsync(App app) =>
+        TryCatch(operation: async () =>
         {
-            bool exists = userRoleBroker
-                .GetAllUserRoles(ignoreFilters: true)
-                .Any(existing =>
-                    existing.RoleId == userRole.RoleId &&
-                    existing.UserId == userRole.UserId);
+            ValidateAppOnHandle(app: app);
 
-            if (!exists)
-                await userRoleBroker.AddUserRoleAsync(userRole);
-        }
-    }
+            await appSecurityAppService.AddAppAsync(
+                newApp: app);
+
+            await appSecurityUserRoleService.SaveAppUserRolesAsync(
+                app: app);
+        });
 }

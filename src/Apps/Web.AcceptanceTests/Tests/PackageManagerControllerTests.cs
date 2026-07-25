@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Net;
 using System.Net.Http.Json;
 using System.Text;
@@ -25,20 +29,21 @@ public sealed partial class PackageManagerControllerTests(WebAcceptanceFixture f
     private string BaseUrl { get; } = "/Api/Core/Package";
     private static JsonSerializerOptions JsonOptions { get; } = new() { PropertyNameCaseInsensitive = true };
 
-    private static string Unique(string prefix) => $"{prefix}-{Guid.NewGuid():N}";
+    private static string Unique(string prefix) =>
+        $"{prefix}-{Guid.NewGuid():N}";
 
     public static IEnumerable<object[]> CapturedPackageTypeCounts()
     {
         foreach (Package package in AcceptanceSeedData.LoadExportPackages())
         {
             foreach (IGrouping<string, PackageItem> group in (package.Items ?? [])
-                .GroupBy(item => item.Type, StringComparer.OrdinalIgnoreCase))
+                .GroupBy(keySelector: item => item.Type,comparer: StringComparer.OrdinalIgnoreCase))
             {
                 yield return
                 [
                     package.Name,
                     group.Key,
-                    group.Sum(item => CountComparableCapturedEntities(group.Key, item.Data)),
+                    group.Sum(selector: item => CountComparableCapturedEntities(itemType: group.Key,data: item.Data)),
                 ];
             }
         }
@@ -51,35 +56,45 @@ public sealed partial class PackageManagerControllerTests(WebAcceptanceFixture f
             Content = new StringContent(body, Encoding.UTF8, "application/json"),
         };
 
-        using HttpResponseMessage response = await Client.SendAsync(request);
+        using HttpResponseMessage response = await Client.SendAsync(request: request);
         string content = await response.Content.ReadAsStringAsync();
-        response.StatusCode.Should().Be(HttpStatusCode.OK, content);
+
+        response.StatusCode.Should()
+            .Be(expected: HttpStatusCode.OK,because: content);
+
         return (int)response.StatusCode;
     }
 
     private async Task<int> ImportPackageAsync(int appId, Package package)
     {
         using HttpResponseMessage response = await Client.PostAsJsonAsync(
-            $"{BaseUrl}/Import?appId={appId}",
-            package);
+requestUri:             $"{BaseUrl}/Import?appId={appId}",value:             package);
 
         string content = await response.Content.ReadAsStringAsync();
-        response.StatusCode.Should().Be(HttpStatusCode.OK, content);
+
+        response.StatusCode.Should()
+            .Be(expected: HttpStatusCode.OK,because: content);
+
         return (int)response.StatusCode;
     }
 
     private async Task<IReadOnlyList<Package>> ExportPackagesAsync(int appId)
     {
-        using HttpResponseMessage response = await Client.GetAsync($"{BaseUrl}/Export?appId={appId}");
+        using HttpResponseMessage response = await Client.GetAsync(requestUri: $"{BaseUrl}/Export?appId={appId}");
         string content = await response.Content.ReadAsStringAsync();
-        response.StatusCode.Should().Be(HttpStatusCode.OK, content);
-        return JsonSerializer.Deserialize<List<Package>>(content, JsonOptions)!;
+
+        response.StatusCode.Should()
+            .Be(expected: HttpStatusCode.OK,because: content);
+
+        return JsonSerializer.Deserialize<List<Package>>(json: content,options: JsonOptions)!;
     }
 
     private async Task ImportPackagesAsync(int appId, IEnumerable<Package> packages)
     {
         foreach (Package package in packages)
-            await ImportPackageAsync(appId, package);
+        {
+            await ImportPackageAsync(appId: appId,package: package);
+        }
     }
 
     private async Task<CoreApp> GetStoredAppAsync(int appId)
@@ -90,7 +105,7 @@ public sealed partial class PackageManagerControllerTests(WebAcceptanceFixture f
 
         return await core.Set<CoreApp>()
             .IgnoreQueryFilters()
-            .SingleAsync(found => found.Id == appId);
+            .SingleAsync(predicate: found => found.Id == appId);
     }
 
     private async Task<CoreApp> AddAppAsync(CoreApp app)
@@ -99,9 +114,11 @@ public sealed partial class PackageManagerControllerTests(WebAcceptanceFixture f
             .GetRequiredService<ICoreContextFactory>()
             .CreateCoreContext();
 
-        CoreApp created = (await core.Set<CoreApp>().AddAsync(app)).Entity;
+        CoreApp created = (await core.Set<CoreApp>()
+            .AddAsync(entity: app)).Entity;
+
         await core.SaveChangesAsync();
-        await GrantGuestAdminAsync(created.Id);
+        await GrantGuestAdminAsync(appId: created.Id);
         return created;
     }
 
@@ -113,54 +130,56 @@ public sealed partial class PackageManagerControllerTests(WebAcceptanceFixture f
 
         CoreApp app = await core.Set<CoreApp>()
             .IgnoreQueryFilters()
-            .SingleAsync(found => found.Id == appId);
+            .SingleAsync(predicate: found => found.Id == appId);
 
-        core.Remove(app);
+        core.Remove(entity: app);
         await core.SaveChangesAsync();
     }
 
     private static int CountExportedItems(IReadOnlyList<Package> packages, string packageName, string itemType) =>
         packages
-            .Where(package => string.Equals(package.Name, packageName, StringComparison.OrdinalIgnoreCase))
-            .SelectMany(package => package.Items ?? [])
-            .Count(item => string.Equals(item.Type, itemType, StringComparison.OrdinalIgnoreCase));
+            .Where(predicate: package => string.Equals(a: package.Name,b: packageName,comparisonType: StringComparison.OrdinalIgnoreCase))
+            .SelectMany(selector: package => package.Items ?? [])
+            .Count(predicate: item => string.Equals(a: item.Type,b: itemType,comparisonType: StringComparison.OrdinalIgnoreCase));
 
     private static int CountExportedEntities(IReadOnlyList<Package> packages, string packageName, string itemType) =>
         packages
-            .Where(package => string.Equals(package.Name, packageName, StringComparison.OrdinalIgnoreCase))
-            .SelectMany(package => package.Items ?? [])
-            .Where(item => string.Equals(item.Type, itemType, StringComparison.OrdinalIgnoreCase))
-            .Sum(item => CountSerializedEntities(item.Data));
+            .Where(predicate: package => string.Equals(a: package.Name,b: packageName,comparisonType: StringComparison.OrdinalIgnoreCase))
+            .SelectMany(selector: package => package.Items ?? [])
+            .Where(predicate: item => string.Equals(a: item.Type,b: itemType,comparisonType: StringComparison.OrdinalIgnoreCase))
+            .Sum(selector: item => CountSerializedEntities(data: item.Data));
 
     private static int CountComparableExportedEntities(IReadOnlyList<Package> packages, string packageName, string itemType) =>
         itemType switch
         {
             "Core/Role" => packages
-                .Where(package => string.Equals(package.Name, packageName, StringComparison.OrdinalIgnoreCase))
-                .SelectMany(package => package.Items ?? [])
-                .Where(item => string.Equals(item.Type, itemType, StringComparison.OrdinalIgnoreCase))
-                .Sum(item => CountSerializedObjectsExcluding(item.Data, "Name", AcceptanceAdminRoleName)),
+                .Where(predicate: package => string.Equals(a: package.Name,b: packageName,comparisonType: StringComparison.OrdinalIgnoreCase))
+                .SelectMany(selector: package => package.Items ?? [])
+                .Where(predicate: item => string.Equals(a: item.Type,b: itemType,comparisonType: StringComparison.OrdinalIgnoreCase))
+                .Sum(selector: item => CountSerializedObjectsExcluding(data: item.Data,propertyName: "Name",excludedValue: AcceptanceAdminRoleName)),
             "Core/PageRole" => packages
-                .Where(package => string.Equals(package.Name, packageName, StringComparison.OrdinalIgnoreCase))
-                .SelectMany(package => package.Items ?? [])
-                .Where(item => string.Equals(item.Type, itemType, StringComparison.OrdinalIgnoreCase))
-                .Sum(item => CountSerializedObjectsExcluding(item.Data, "Role", AcceptanceAdminRoleName)),
-            _ => CountExportedEntities(packages, packageName, itemType),
+                .Where(predicate: package => string.Equals(a: package.Name,b: packageName,comparisonType: StringComparison.OrdinalIgnoreCase))
+                .SelectMany(selector: package => package.Items ?? [])
+                .Where(predicate: item => string.Equals(a: item.Type,b: itemType,comparisonType: StringComparison.OrdinalIgnoreCase))
+                .Sum(selector: item => CountSerializedObjectsExcluding(data: item.Data,propertyName: "Role",excludedValue: AcceptanceAdminRoleName)),
+            _ => CountExportedEntities(packages: packages,packageName: packageName,itemType: itemType),
         };
 
     private static int CountComparableCapturedEntities(string itemType, string data) =>
         itemType switch
         {
-            "Core/PageRole" => CountValidPageRoleEntities(data),
-            _ => CountSerializedEntities(data),
+            "Core/PageRole" => CountValidPageRoleEntities(data: data),
+            _ => CountSerializedEntities(data: data),
         };
 
     private static int CountSerializedEntities(string data)
     {
-        if (string.IsNullOrWhiteSpace(data))
+        if (string.IsNullOrWhiteSpace(value: data))
+        {
             return 0;
+        }
 
-        using JsonDocument document = JsonDocument.Parse(data);
+        using JsonDocument document = JsonDocument.Parse(json: data);
 
         return document.RootElement.ValueKind switch
         {
@@ -172,46 +191,51 @@ public sealed partial class PackageManagerControllerTests(WebAcceptanceFixture f
 
     private static int CountSerializedObjectsExcluding(string data, string propertyName, string excludedValue)
     {
-        if (string.IsNullOrWhiteSpace(data))
+        if (string.IsNullOrWhiteSpace(value: data))
+        {
             return 0;
+        }
 
-        using JsonDocument document = JsonDocument.Parse(data);
+        using JsonDocument document = JsonDocument.Parse(json: data);
 
         return document.RootElement.ValueKind switch
         {
             JsonValueKind.Array => document.RootElement.EnumerateArray()
-                .Count(element => !IsExcluded(element, propertyName, excludedValue)),
-            JsonValueKind.Object => IsExcluded(document.RootElement, propertyName, excludedValue) ? 0 : 1,
+                .Count(predicate: element => !IsExcluded(element: element,propertyName: propertyName,excludedValue: excludedValue)),
+            JsonValueKind.Object => IsExcluded(element: document.RootElement,propertyName: propertyName,excludedValue: excludedValue) ? 0 : 1,
             _ => 0,
         };
     }
 
     private static int CountValidPageRoleEntities(string data)
     {
-        if (string.IsNullOrWhiteSpace(data))
+        if (string.IsNullOrWhiteSpace(value: data))
+        {
             return 0;
+        }
 
-        using JsonDocument document = JsonDocument.Parse(data);
+        using JsonDocument document = JsonDocument.Parse(json: data);
 
         return document.RootElement.ValueKind switch
         {
-            JsonValueKind.Array => document.RootElement.EnumerateArray().Count(IsValidPageRole),
-            JsonValueKind.Object => IsValidPageRole(document.RootElement) ? 1 : 0,
+            JsonValueKind.Array => document.RootElement.EnumerateArray()
+            .Count(predicate: IsValidPageRole),
+            JsonValueKind.Object => IsValidPageRole(element: document.RootElement) ? 1 : 0,
             _ => 0,
         };
     }
 
     private static bool IsExcluded(JsonElement element, string propertyName, string excludedValue) =>
-        element.TryGetProperty(propertyName, out JsonElement value)
-        && string.Equals(value.GetString(), excludedValue, StringComparison.OrdinalIgnoreCase);
+        element.TryGetProperty(propertyName: propertyName,value: out JsonElement value)
+        && string.Equals(a: value.GetString(),b: excludedValue,comparisonType: StringComparison.OrdinalIgnoreCase);
 
     private static bool IsValidPageRole(JsonElement element) =>
-        HasNonEmptyString(element, "Path")
-        && HasNonEmptyString(element, "Role");
+        HasNonEmptyString(element: element,propertyName: "Path")
+        && HasNonEmptyString(element: element,propertyName: "Role");
 
     private static bool HasNonEmptyString(JsonElement element, string propertyName) =>
-        element.TryGetProperty(propertyName, out JsonElement value)
-        && !string.IsNullOrWhiteSpace(value.GetString());
+        element.TryGetProperty(propertyName: propertyName,value: out JsonElement value)
+        && !string.IsNullOrWhiteSpace(value: value.GetString());
 
     private async Task GrantGuestAdminAsync(int appId)
     {
@@ -221,11 +245,11 @@ public sealed partial class PackageManagerControllerTests(WebAcceptanceFixture f
 
         Role templateRole = await core.Set<Role>()
             .IgnoreQueryFilters()
-            .SingleAsync(found => found.AppId == 1 && found.Name == AcceptanceAdminRoleName);
+            .SingleAsync(predicate: found => found.AppId == 1 && found.Name == AcceptanceAdminRoleName);
 
         Role role = await core.Set<Role>()
             .IgnoreQueryFilters()
-            .SingleOrDefaultAsync(found => found.AppId == appId && found.Name == AcceptanceAdminRoleName);
+            .SingleOrDefaultAsync(predicate: found => found.AppId == appId && found.Name == AcceptanceAdminRoleName);
 
         if (role is null)
         {
@@ -238,18 +262,20 @@ public sealed partial class PackageManagerControllerTests(WebAcceptanceFixture f
                 Privs = templateRole.Privs,
             };
 
-            await core.Set<Role>().AddAsync(role);
+            await core.Set<Role>()
+                .AddAsync(entity: role);
         }
 
         bool hasGuestRole = await core.Set<UserRole>()
             .IgnoreQueryFilters()
-            .AnyAsync(found => found.RoleId == role.Id && found.UserId == "Guest");
+            .AnyAsync(predicate: found => found.RoleId == role.Id && found.UserId == "Guest");
 
         if (!hasGuestRole)
-            await core.Set<UserRole>().AddAsync(new UserRole { RoleId = role.Id, UserId = "Guest" });
+        {
+            await core.Set<UserRole>()
+                .AddAsync(entity: new UserRole { RoleId = role.Id, UserId = "Guest" });
+        }
 
         await core.SaveChangesAsync();
     }
 }
-
-

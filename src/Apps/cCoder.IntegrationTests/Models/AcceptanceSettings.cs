@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 namespace cCoder.IntegrationTests.Models;
 
 internal sealed class AcceptanceSettings
@@ -15,5 +19,5 @@ internal sealed class AcceptanceSettings
     public int ServiceBusMaxConcurrency { get; init; } = 1;
 
     public bool UseServiceBusEventing =>
-        string.Equals(EventProviderType, "ServiceBus", StringComparison.OrdinalIgnoreCase);
+        string.Equals(a: EventProviderType,b: "ServiceBus",comparisonType: StringComparison.OrdinalIgnoreCase);
 }

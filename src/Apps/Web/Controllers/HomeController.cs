@@ -1,12 +1,17 @@
-using System.Dynamic;
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.ContentManagement.Exposures;
-using cCoder.ContentManagement.Services.Processings;
+using cCoder.ContentManagement.Models;
 using cCoder.Data;
 using cCoder.Core.Models;
+using cCoder.Core.Exposures.Setup;
 using cCoder.Core.Services.Setup;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
+using Web.Dependencies.Filters;
+using Web.Exposures;
 using App = cCoder.Data.Models.CMS.App;
 using RenderResult = cCoder.ContentManagement.Models.RenderResult;
 
@@ -15,67 +20,30 @@ namespace Web.Controllers
 {
     public sealed class HomeController : Controller
     {
-        readonly ILogger log;
+        private readonly IPageRenderer pageRenderer;
+        private readonly IFirstTimeSetupStateService setupStateService;
+        private readonly ISetupRequestHostManager setupRequestHostManager;
+        private readonly IHomeSessionManager homeSessionManager;
 
-        IAppProcessingService AppProcessingService { get; }
-        IPageRenderer PageRenderer { get; }
-        IFirstTimeSetupStateService SetupStateService { get; }
-
-        ICoreAuthInfo AuthInfo =>
-            HttpContext?.RequestServices.GetService<ICoreAuthInfo>()
-            ?? new CoreAuthInfo { SSOUserId = "Guest" };
-
-        string Host => Request.Host.Host.Replace("www.", "").ToLowerInvariant();
-
-        dynamic DynamicSessionObject
-        {
-            get
-            {
-                dynamic result = new ExpandoObject();
-                IDictionary<string, object> values = (IDictionary<string, object>)result;
-
-                result.apiRoot = (Request.Host.Port is not 443 and not 80)
-                    ? $"{Request.Scheme}://{Host}:{Request.Host.Port}/Api/"
-                    : $"{Request.Scheme}://{Host}/Api/";
-
-                if (!string.IsNullOrWhiteSpace(AuthInfo.SSOUserId)
-                    && !string.Equals(AuthInfo.SSOUserId, "Guest", StringComparison.OrdinalIgnoreCase))
-                {
-                    values["user"] = AuthInfo.SSOUserId;
-                }
-
-                string token = Request.Query["t"].ToString();
-                if (!string.IsNullOrWhiteSpace(token))
-                    values["token"] = token;
-
-                if (!CanUseSession())
-                    return result;
-
-                foreach (string i in HttpContext.Session.Keys)
-                {
-                    if (i == "ssoUser")
-                        values["user"] = AuthInfo.SSOUserId;
-                    else
-                        values[i] = GetSessionValue(i);
-                }
-
-                return result;
-            }
-        }
+        private string GetHost() =>
+            Request.Host.Host.Replace(oldValue: "www.",newValue: "")
+                .ToLowerInvariant();
 
         public HomeController(
-            IAppProcessingService appService,
             IPageRenderer pageRenderer,
             IFirstTimeSetupStateService setupStateService,
-            ILogger<HomeController> log)
+            ISetupRequestHostManager setupRequestHostManager,
+            IHomeSessionManager homeSessionManager)
         {
-            AppProcessingService = appService;
-            PageRenderer = pageRenderer;
-            SetupStateService = setupStateService;
-            this.log = log;
+            this.pageRenderer = pageRenderer;
+            this.setupStateService = setupStateService;
+            this.setupRequestHostManager = setupRequestHostManager;
+            this.homeSessionManager = homeSessionManager;
         }
 
         [HttpGet]
+        [ServiceFilter(typeof(HomeDefaultsActionFilter))]
+        [ServiceFilter(typeof(HomeExceptionFilter))]
         public async Task<IActionResult> Index(
             string path = null,
             string theme = null,
@@ -85,45 +53,70 @@ namespace Web.Controllers
         {
             try
             {
-                if (!await SetupStateService.IsInitializedAsync(cancellationToken))
+                if (!await setupStateService.IsInitializedAsync(cancellationToken: cancellationToken))
                 {
                     return View(
-                        "~/Views/Setup/Index.cshtml",
-                        new FirstTimeSetupViewModel
+viewName:                         "~/Views/Setup/Index.cshtml",model:                         new FirstTimeSetupViewModel
                         {
-                            Domain = SetupRequestHostNormalizer.Normalize(Request.Host.Host),
+                            Domain = setupRequestHostManager.NormalizeHost(
+                                host: Request.Host.Host),
                         });
                 }
 
-                if (path?.ToLower().EndsWith(".php") ?? false)
+                if (path?.ToLower()
+                    .EndsWith(value: ".php") ?? false)
                 {
                     Response.HttpContext.Abort();
                     return Ok();
                 }
 
                 if (path?.ToLower() == "robots.txt")
-                    return Content("User-agent: * Allow: *", "text/plain");
+                {
+                    return Content(content: "User-agent: * Allow: *",contentType: "text/plain");
+                }
 
                 path ??= string.Empty;
 
-                culture = Response.HttpContext.Request.Query.ContainsKey("culture")
+                culture = Response.HttpContext.Request.Query.ContainsKey(key: "culture")
                     ? Response.HttpContext.Request.Query["culture"].ToString()
                     : null;
 
                 if (culture != null)
-                    SetSessionValue("culture", culture);
+                {
+                    homeSessionManager.SetSessionValue(
+                        context: HttpContext,
+                        key: "culture",
+                        value: culture);
+                }
                 else
-                    culture = GetSessionValue("culture") ?? string.Empty;
+                {
+                    culture =
+                        homeSessionManager.GetSessionValue(
+                            context: HttpContext,
+                            key: "culture")
+                        ?? string.Empty;
+                }
 
                 if (theme != null)
-                    SetSessionValue("theme", theme);
+                {
+                    homeSessionManager.SetSessionValue(
+                        context: HttpContext,
+                        key: "theme",
+                        value: theme);
+                }
                 else
-                    theme = GetSessionValue("theme") ?? string.Empty;
+                {
+                    theme =
+                        homeSessionManager.GetSessionValue(
+                            context: HttpContext,
+                            key: "theme")
+                        ?? string.Empty;
+                }
 
-                PageRenderResponse response = PageRenderer.Render(
-                    new PageRenderRequest
+                PageRenderResponse response = pageRenderer.Render(
+request:                     new PageRenderRequest
                     {
-                        Host = Host,
+                        Host = GetHost(),
                         Path = path,
                         Theme = theme,
                         Culture = culture,
@@ -131,26 +124,35 @@ namespace Web.Controllers
                         RequestUrl = Request.GetEncodedUrl()
                     });
 
-                SetSessionValue("theme", response.Theme);
-                SetSessionValue("culture", response.Culture);
+                homeSessionManager.SetSessionValue(
+                    context: HttpContext,
+                    key: "theme",
+                    value: response.Theme);
+
+                homeSessionManager.SetSessionValue(
+                    context: HttpContext,
+                    key: "culture",
+                    value: response.Culture);
 
                 RenderResult page = response.Page;
 
-                SetupViewBag(edit, response.App, page);
+                SetupViewBag(edit: edit,app: response.App,page: page);
 
-                ViewResult viewResult = View(page);
+                ViewResult viewResult = View(model: page);
                 viewResult.StatusCode = page.StatusCode;
                 return viewResult;
             }
-            catch (Exception ex)
+            catch
             {
-                return Error(ex);
+                throw;
             }
         }
 
         private void SetupViewBag(bool edit, App app, RenderResult page)
         {
-            dynamic session = DynamicSessionObject;
+            dynamic session =
+                homeSessionManager.CreateExpandoObject(
+                    context: HttpContext);
 
             session.app = new
             {
@@ -162,100 +164,16 @@ namespace Web.Controllers
                 app.Config
             };
 
-            session.page = page.KeyInfo();
+            session.page = new
+            {
+                page.AppId,
+                page.PageId,
+                page.ParentId,
+            };
 
             ViewData["Session"] = session;
             ViewData["Edit"] = edit;
         }
 
-        public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
-        {
-            try
-            {
-                if (!await SetupStateService.IsInitializedAsync(context.HttpContext.RequestAborted))
-                {
-                    await base.OnActionExecutionAsync(context, next);
-                    return;
-                }
-
-                App app = AppProcessingService
-                    .GetAll(ignoreFilters: true)
-                    .Where(a => a.Domain == Host)
-                    .Select(a => new App
-                    {
-                        Id = a.Id,
-                        Domain = a.Domain,
-                        DefaultCultureId = a.DefaultCultureId,
-                        DefaultTheme = a.DefaultTheme
-                    })
-                    .FirstOrDefault();
-
-                if (app != null && GetSessionValue("theme") == null)
-                    SetSessionValue("theme", app.DefaultTheme ?? "Default");
-
-                if (app != null && GetSessionValue("culture") == null)
-                    SetSessionValue("culture", app.DefaultCultureId ?? string.Empty);
-            }
-            catch (Exception ex)
-            {
-                log.LogWarning($"Unable to determine the current app domain and set defaults for request on {Request.Host.Host}\n{ex.Message}\n{ex.StackTrace}");
-            }
-
-            await base.OnActionExecutionAsync(context, next);
-        }
-
-        IActionResult Error(Exception ex)
-        {
-            log.LogWarning($"Problem with page request: {ex.Message}\n{ex.StackTrace}");
-            log.LogWarning($"   Source: {Request.HttpContext.Connection.RemoteIpAddress}:{Request.HttpContext.Connection.RemotePort}");
-
-            // attempt to recover the apps own custom error page, or provide the system default defined below
-            try
-            {
-                string errorPageQuery = $"Core/Page/Render()?host={Host}&path=Error&theme={GetSessionValue("theme")}&culture={GetSessionValue("culture")}";
-                log.LogInformation($"GET {errorPageQuery}");
-
-                PageRenderResponse response = PageRenderer.RenderError(
-                    new PageRenderRequest
-                    {
-                        Host = Host,
-                        Theme = GetSessionValue("theme"),
-                        Culture = GetSessionValue("culture"),
-                        RequestUrl = Request.GetEncodedUrl(),
-                        Exception = ex
-                    });
-
-                return View("Index", response.Page);
-            }
-            catch { return PartialView("Error", ex); }
-        }
-
-        string GetSessionValue(string key) =>
-            CanUseSession() && HttpContext.Session.Keys.Contains(key.ToLowerInvariant())
-                ? HttpContext.Session.GetString(key)
-                : null;
-
-        void SetSessionValue(string key, string value)
-        {
-            if (!CanUseSession())
-                return;
-
-            if (value != null)
-                HttpContext.Session.SetString(key.ToLowerInvariant(), value);
-            else if (HttpContext.Session.Keys.Contains(key.ToLowerInvariant()))
-                HttpContext.Session.Remove(key.ToLowerInvariant());
-        }
-
-        bool CanUseSession()
-        {
-            try
-            {
-                return HttpContext.Session?.IsAvailable == true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
     }
 }

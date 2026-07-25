@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Workflow.Exposures;
 using cCoder.Data.Models.CMS;
 
@@ -5,8 +9,12 @@ namespace cCoder.Core.Brokers.Planning;
 
 internal class PlanningAppBroker(IWorkflowAppExposure workflowAppExposure) : IPlanningAppBroker
 {
-    public ValueTask AddAsync(App app) => workflowAppExposure.AddAsync(app);
-    public ValueTask UpdateAsync(App app) => workflowAppExposure.UpdateAsync(app);
-    public ValueTask DeleteAsync(int appId) => workflowAppExposure.DeleteAsync(appId);
-}
+    public ValueTask AddAppAsync(App newApp) =>
+        workflowAppExposure.AddAsync(newApp: newApp);
 
+    public ValueTask UpdateAppAsync(App updatedApp) =>
+        workflowAppExposure.UpdateAsync(updatedApp: updatedApp);
+
+    public ValueTask DeleteAppAsync(int appId) =>
+        workflowAppExposure.DeleteAsync(appId: appId);
+}

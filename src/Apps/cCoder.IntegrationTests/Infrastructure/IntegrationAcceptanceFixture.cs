@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Diagnostics;
 using System.Net;
 using System.Security.Cryptography;
@@ -66,118 +70,111 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
     {
         Settings = new AcceptanceSettings
         {
-            CoreConnectionString = AddDatabaseSuffix("CCODER_ACCEPTANCE_CORE_CONNECTION_STRING"),
-            SsoConnectionString = AddDatabaseSuffix("CCODER_ACCEPTANCE_SSO_CONNECTION_STRING"),
+            CoreConnectionString = AddDatabaseSuffix(variableName: "CCODER_ACCEPTANCE_CORE_CONNECTION_STRING"),
+            SsoConnectionString = AddDatabaseSuffix(variableName: "CCODER_ACCEPTANCE_SSO_CONNECTION_STRING"),
             DecryptionKey = DecryptionKey,
             EventProviderType = ResolveEventProviderType(),
             ServiceBusConnectionString = ResolveOptionalSetting(
-                "CCODER_INTEGRATION_SERVICE_BUS_CONNECTION_STRING",
-                "ConnectionStrings__ServiceBus",
-                "EVENT_LIBRARY_AZURE_SERVICE_BUS_CONNECTION_STRING"),
+                variableNames:
+                [
+                    "CCODER_INTEGRATION_SERVICE_BUS_CONNECTION_STRING",
+                    "ConnectionStrings__ServiceBus",
+                    "EVENT_LIBRARY_AZURE_SERVICE_BUS_CONNECTION_STRING"
+                ]),
             ServiceBusMaxConcurrency = ResolveIntSetting(
-                "CCODER_INTEGRATION_SERVICE_BUS_MAX_CONCURRENCY",
-                "Eventing__ServiceBus__MaxConcurrency",
-                1)
+primaryName:                 "CCODER_INTEGRATION_SERVICE_BUS_MAX_CONCURRENCY",secondaryName:                 "Eventing__ServiceBus__MaxConcurrency",fallback:                 1)
         };
 
         if (Settings.UseServiceBusEventing)
+        {
             await EnsureServiceBusQueuesAreCleanAsync();
+        }
 
         int webHttpsPort = FindFreePort();
         int hostedServicesHttpPort = FindFreePort();
         int workflowHttpPort = FindFreePort();
-        acceptanceArtifactsRoot = Path.Combine(
-            repositoryRoot,
-            "artifacts",
-            "integration-tests",
-            Guid.NewGuid().ToString("N"));
-        workflowOutputDirectory = Path.Combine(acceptanceArtifactsRoot, "Workflow");
-        hostedServicesOutputDirectory = Path.Combine(acceptanceArtifactsRoot, "HostedServices");
-        webOutputDirectory = Path.Combine(acceptanceArtifactsRoot, "Web");
 
-        Directory.CreateDirectory(workflowOutputDirectory);
-        Directory.CreateDirectory(hostedServicesOutputDirectory);
-        Directory.CreateDirectory(webOutputDirectory);
+        acceptanceArtifactsRoot = Path.Combine(
+path1:             repositoryRoot,path2:             "artifacts",path3:             "integration-tests",path4:             Guid.NewGuid()
+            .ToString(format: "N"));
+
+        workflowOutputDirectory = Path.Combine(path1: acceptanceArtifactsRoot,path2: "Workflow");
+        hostedServicesOutputDirectory = Path.Combine(path1: acceptanceArtifactsRoot,path2: "HostedServices");
+        webOutputDirectory = Path.Combine(path1: acceptanceArtifactsRoot,path2: "Web");
+
+        Directory.CreateDirectory(path: workflowOutputDirectory);
+        Directory.CreateDirectory(path: hostedServicesOutputDirectory);
+        Directory.CreateDirectory(path: webOutputDirectory);
 
         WebBaseAddress = new Uri($"https://localhost:{webHttpsPort}/");
         HostedServicesBaseAddress = new Uri($"http://localhost:{hostedServicesHttpPort}/");
         WorkflowBaseAddress = new Uri($"http://localhost:{workflowHttpPort}/api/");
 
-        databaseServices = IntegrationServiceProviderFactory.Create(Settings);
-        Console.WriteLine("Integration fixture: database service provider created.");
+        databaseServices = IntegrationServiceProviderFactory.Create(settings: Settings);
+        Console.WriteLine(value: "Integration fixture: database service provider created.");
+
         databaseManager = new IntegrationAcceptanceDatabaseManager(
             databaseServices,
             Settings.CoreConnectionString,
             Settings.SsoConnectionString);
+
         await databaseManager.ResetDatabasesAsync();
-        Console.WriteLine("Integration fixture: acceptance databases reset.");
+        Console.WriteLine(value: "Integration fixture: acceptance databases reset.");
 
         await new IntegrationAcceptanceSeeder(databaseServices).SeedAsync();
-        Console.WriteLine("Integration fixture: baseline data seeded.");
+        Console.WriteLine(value: "Integration fixture: baseline data seeded.");
 
         await BuildApplicationAsync(
-            "src\\Apps\\Workflow\\Workflow.csproj",
-            string.Empty,
-            workflowOutputDirectory,
-            Path.Combine(acceptanceArtifactsRoot, "obj", "Workflow"));
-        Console.WriteLine("Integration fixture: Workflow built.");
+projectPath:             "src\\Apps\\Workflow\\Workflow.csproj",msbuildProperties:             string.Empty,outputDirectory:             workflowOutputDirectory,intermediateDirectory:             Path.Combine(path1: acceptanceArtifactsRoot,path2: "obj",path3: "Workflow"));
+
+        Console.WriteLine(value: "Integration fixture: Workflow built.");
 
         await BuildApplicationAsync(
-            "src\\Apps\\HostedServices\\HostedServices.csproj",
-            string.Empty,
-            hostedServicesOutputDirectory,
-            Path.Combine(acceptanceArtifactsRoot, "obj", "HostedServices"));
-        Console.WriteLine("Integration fixture: HostedServices built.");
+projectPath:             "src\\Apps\\HostedServices\\HostedServices.csproj",msbuildProperties:             string.Empty,outputDirectory:             hostedServicesOutputDirectory,intermediateDirectory:             Path.Combine(path1: acceptanceArtifactsRoot,path2: "obj",path3: "HostedServices"));
+
+        Console.WriteLine(value: "Integration fixture: HostedServices built.");
 
         await BuildApplicationAsync(
-            "src\\Apps\\Web\\Web.csproj",
-            string.Empty,
-            webOutputDirectory,
-            Path.Combine(acceptanceArtifactsRoot, "obj", "Web"));
-        Console.WriteLine("Integration fixture: Web built.");
+projectPath:             "src\\Apps\\Web\\Web.csproj",msbuildProperties:             string.Empty,outputDirectory:             webOutputDirectory,intermediateDirectory:             Path.Combine(path1: acceptanceArtifactsRoot,path2: "obj",path3: "Web"));
+
+        Console.WriteLine(value: "Integration fixture: Web built.");
 
         workflowApplication = new ExternalProcessApplication("Workflow");
+
         await workflowApplication.StartAsync(
-            ResolveFuncExecutablePath(),
-            $"start --port {workflowHttpPort} --csharp --no-build",
-            workflowOutputDirectory,
-            new Dictionary<string, string>
+fileName:             ResolveFuncExecutablePath(),arguments:             $"start --port {workflowHttpPort} --csharp --no-build",workingDirectory:             workflowOutputDirectory,environmentVariables:             new Dictionary<string, string>
             {
                 ["FUNCTIONS_WORKER_RUNTIME"] = "dotnet-isolated"
-            },
-            readinessProbe: () => ProbeHealthAsync(WorkflowBaseAddress),
-            timeout: TimeSpan.FromMinutes(2),
-            readinessDiagnostics: GetHealthProbeDiagnostics);
-        Console.WriteLine("Integration fixture: Workflow started.");
+            },            readinessProbe: () => ProbeHealthAsync(baseAddress: WorkflowBaseAddress),            timeout: TimeSpan.FromMinutes(minutes: 2),            readinessDiagnostics: GetHealthProbeDiagnostics);
+
+        Console.WriteLine(value: "Integration fixture: Workflow started.");
 
         await StartHostedServicesAsync();
 
         Dictionary<string, string> webEnvironment = CreateCommonApplicationEnvironment();
-        AddHttpsCertificateEnvironment(webEnvironment);
+        AddHttpsCertificateEnvironment(environment: webEnvironment);
         webEnvironment["ASPNETCORE_URLS"] = WebBaseAddress.ToString();
         webEnvironment["Settings__sslPort"] = webHttpsPort.ToString();
         webEnvironment["Settings__enableExternalEventing"] = "true";
         webEnvironment["Services__HostedServices"] = HostedServicesBaseAddress.ToString();
 
         webApplication = new ExternalProcessApplication("Web");
-        await webApplication.StartAsync(
-            "dotnet",
-            $"\"{Path.Combine(webOutputDirectory, "Web.dll")}\"",
-            webOutputDirectory,
-            webEnvironment,
-            readinessProbe: () => ProbeHealthAsync(WebBaseAddress, useInsecureHandler: true),
-            timeout: TimeSpan.FromMinutes(2),
-            readinessDiagnostics: GetHealthProbeDiagnostics);
-        Console.WriteLine("Integration fixture: Web started.");
 
-        WebClient = CreateClient(WebBaseAddress, useInsecureHandler: true);
-        HostedServicesClient = CreateClient(HostedServicesBaseAddress, useInsecureHandler: false);
+        await webApplication.StartAsync(
+fileName:             "dotnet",arguments:             $"\"{Path.Combine(path1: webOutputDirectory,path2: "Web.dll")}\"",workingDirectory:             webOutputDirectory,environmentVariables:             webEnvironment,            readinessProbe: () => ProbeHealthAsync(baseAddress: WebBaseAddress,useInsecureHandler: true),            timeout: TimeSpan.FromMinutes(minutes: 2),            readinessDiagnostics: GetHealthProbeDiagnostics);
+
+        Console.WriteLine(value: "Integration fixture: Web started.");
+
+        WebClient = CreateClient(baseAddress: WebBaseAddress,useInsecureHandler: true);
+        HostedServicesClient = CreateClient(baseAddress: HostedServicesBaseAddress,useInsecureHandler: false);
     }
 
     public async Task RestartHostedServicesAsync()
     {
         if (hostedServicesApplication is not null)
+        {
             await hostedServicesApplication.DisposeAsync();
+        }
 
         await StartHostedServicesAsync();
     }
@@ -188,29 +185,43 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
         HostedServicesClient?.Dispose();
 
         if (webApplication is not null)
+        {
             await webApplication.DisposeAsync();
+        }
 
         if (hostedServicesApplication is not null)
+        {
             await hostedServicesApplication.DisposeAsync();
+        }
 
         if (workflowApplication is not null)
+        {
             await workflowApplication.DisposeAsync();
+        }
 
         if (databaseServices is not null)
+        {
             await databaseServices.DisposeAsync();
+        }
 
         if (databaseManager is not null)
+        {
             await databaseManager.DropDatabasesAsync();
+        }
 
         try
         {
             if (Settings?.UseServiceBusEventing == true)
+            {
                 await DrainServiceBusQueuesAsync();
+            }
 
             if (!ShouldKeepArtifacts()
-                && !string.IsNullOrWhiteSpace(acceptanceArtifactsRoot)
-                && Directory.Exists(acceptanceArtifactsRoot))
-                Directory.Delete(acceptanceArtifactsRoot, recursive: true);
+                && !string.IsNullOrWhiteSpace(value: acceptanceArtifactsRoot)
+                && Directory.Exists(path: acceptanceArtifactsRoot))
+            {
+                Directory.Delete(path: acceptanceArtifactsRoot,recursive: true);
+            }
         }
         catch
         {
@@ -232,17 +243,17 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
             : new HttpClient();
 
         client.BaseAddress = baseAddress;
-        client.Timeout = TimeSpan.FromMinutes(2);
+        client.Timeout = TimeSpan.FromMinutes(minutes: 2);
         return client;
     }
 
     private async Task<bool> ProbeAsync(Uri uri, bool useInsecureHandler = false)
     {
-        using HttpClient client = CreateClient(new Uri($"{uri.Scheme}://{uri.Authority}/"), useInsecureHandler);
+        using HttpClient client = CreateClient(baseAddress: new Uri($"{uri.Scheme}://{uri.Authority}/"),useInsecureHandler: useInsecureHandler);
 
         try
         {
-            using HttpResponseMessage response = await client.GetAsync(uri.PathAndQuery);
+            using HttpResponseMessage response = await client.GetAsync(requestUri: uri.PathAndQuery);
             return response.IsSuccessStatusCode;
         }
         catch
@@ -258,115 +269,139 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
         string intermediateDirectory)
     {
         string localBuildProperties = ResolveLocalBuildProperties();
+
         string outputProperties =
-            $"-p:OutputPath=\"{FormatMsBuildPath(outputDirectory, trailingSlash: false)}\" " +
-            $"-p:IntermediateOutputPath=\"{FormatMsBuildPath(intermediateDirectory, trailingSlash: true)}\"";
-        string combinedProperties = CombineMsBuildProperties(localBuildProperties, msbuildProperties, outputProperties);
+            $"-p:OutputPath=\"{FormatMsBuildPath(path: outputDirectory,trailingSlash: false)}\" " +
+            $"-p:IntermediateOutputPath=\"{FormatMsBuildPath(path: intermediateDirectory,trailingSlash: true)}\"";
 
-        Console.WriteLine($"Integration fixture: building {projectPath} with properties: {combinedProperties}");
+        string combinedProperties = CombineMsBuildProperties(
+            values: [localBuildProperties, msbuildProperties, outputProperties]);
 
-        await RunCommandAsync(
-            "dotnet",
-            $"restore {projectPath} {combinedProperties}");
+        Console.WriteLine(value: $"Integration fixture: building {projectPath} with properties: {combinedProperties}");
 
         await RunCommandAsync(
-            "dotnet",
-            $"build {projectPath} --no-restore -m:1 -p:BuildInParallel=false -p:UseSharedCompilation=false {combinedProperties}");
+fileName:             "dotnet",arguments:             $"restore {projectPath} {combinedProperties}");
+
+        await RunCommandAsync(
+fileName:             "dotnet",arguments:             $"build {projectPath} --no-restore -m:1 -p:BuildInParallel=false -p:UseSharedCompilation=false {combinedProperties}");
     }
 
     private string ResolveLocalBuildProperties()
     {
         bool useLocalWorkflow = string.Equals(
-            Environment.GetEnvironmentVariable("CCODER_INTEGRATION_USE_LOCAL_WORKFLOW"),
-            "true",
-            StringComparison.OrdinalIgnoreCase);
+a:             Environment.GetEnvironmentVariable(variable: "CCODER_INTEGRATION_USE_LOCAL_WORKFLOW"),b:             "true",comparisonType:             StringComparison.OrdinalIgnoreCase);
+
         bool useLocalSecurity = string.Equals(
-            Environment.GetEnvironmentVariable("CCODER_INTEGRATION_USE_LOCAL_SECURITY"),
-            "true",
-            StringComparison.OrdinalIgnoreCase);
+a:             Environment.GetEnvironmentVariable(variable: "CCODER_INTEGRATION_USE_LOCAL_SECURITY"),b:             "true",comparisonType:             StringComparison.OrdinalIgnoreCase);
+
         bool useLocalAppSecurity = string.Equals(
-            Environment.GetEnvironmentVariable("CCODER_INTEGRATION_USE_LOCAL_APPSECURITY"),
-            "true",
-            StringComparison.OrdinalIgnoreCase);
+a:             Environment.GetEnvironmentVariable(variable: "CCODER_INTEGRATION_USE_LOCAL_APPSECURITY"),b:             "true",comparisonType:             StringComparison.OrdinalIgnoreCase);
+
         bool useLocalData = string.Equals(
-            Environment.GetEnvironmentVariable("CCODER_INTEGRATION_USE_LOCAL_DATA"),
-            "true",
-            StringComparison.OrdinalIgnoreCase);
+a:             Environment.GetEnvironmentVariable(variable: "CCODER_INTEGRATION_USE_LOCAL_DATA"),b:             "true",comparisonType:             StringComparison.OrdinalIgnoreCase);
+
         string localSecurityAssemblyVersion = ResolveOptionalSetting(
-            "CCODER_INTEGRATION_LOCAL_SECURITY_ASSEMBLY_VERSION");
+variableNames:             "CCODER_INTEGRATION_LOCAL_SECURITY_ASSEMBLY_VERSION");
 
         string localAppSecurityProject = Path.GetFullPath(
-            Path.Combine(
-                repositoryRoot,
-                "..",
-                "cCoder.AppSecurity",
-                "src",
-                "cCoder.AppSecurity",
-                "cCoder.AppSecurity.csproj"));
+path:             Path.Combine(
+                paths:
+                [
+                    repositoryRoot,
+                    "..",
+                    "cCoder.AppSecurity",
+                    "src",
+                    "cCoder.AppSecurity",
+                    "cCoder.AppSecurity.csproj"
+                ]));
+
         string localDataProject = Path.GetFullPath(
-            Path.Combine(
-                repositoryRoot,
-                "..",
-                "cCoder.Data",
-                "src",
-                "cCoder.Data",
-                "cCoder.Data.csproj"));
+path:             Path.Combine(
+                paths:
+                [
+                    repositoryRoot,
+                    "..",
+                    "cCoder.Data",
+                    "src",
+                    "cCoder.Data",
+                    "cCoder.Data.csproj"
+                ]));
+
         string localWorkflowProject = Path.GetFullPath(
-            Path.Combine(
-                repositoryRoot,
-                "..",
-                "cCoder.Workflow",
-                "src",
-                "cCoder.Workflow",
-                "cCoder.Workflow.csproj"));
+path:             Path.Combine(
+                paths:
+                [
+                    repositoryRoot,
+                    "..",
+                    "cCoder.Workflow",
+                    "src",
+                    "cCoder.Workflow",
+                    "cCoder.Workflow.csproj"
+                ]));
+
         string localSecurityProject = Path.GetFullPath(
-            Path.Combine(
-                repositoryRoot,
-                "..",
-                "cCoder.Security",
-                "src",
-                "cCoder.Security",
-                "cCoder.Security.csproj"));
+path:             Path.Combine(
+                paths:
+                [
+                    repositoryRoot,
+                    "..",
+                    "cCoder.Security",
+                    "src",
+                    "cCoder.Security",
+                    "cCoder.Security.csproj"
+                ]));
 
         if (!useLocalWorkflow
             && !useLocalSecurity
             && !useLocalAppSecurity
             && !useLocalData)
+        {
             return string.Empty;
+        }
 
         List<string> properties = [];
 
-        if (useLocalAppSecurity && File.Exists(localAppSecurityProject))
-            properties.Add("-p:UseLocalAppSecurity=true");
-
-        if (useLocalData && File.Exists(localDataProject))
-            properties.Add("-p:UseLocalData=true");
-
-        if (useLocalSecurity && File.Exists(localSecurityProject))
-            properties.Add("-p:UseLocalSecurity=true");
-
-        if (useLocalWorkflow && File.Exists(localWorkflowProject))
-            properties.Add("-p:UseLocalWorkflow=true");
-
-        if (useLocalSecurity && !string.IsNullOrWhiteSpace(localSecurityAssemblyVersion))
+        if (useLocalAppSecurity && File.Exists(path: localAppSecurityProject))
         {
-            properties.Add($"-p:Version={localSecurityAssemblyVersion}");
-            properties.Add($"-p:AssemblyVersion={localSecurityAssemblyVersion}");
-            properties.Add($"-p:FileVersion={localSecurityAssemblyVersion}");
+            properties.Add(item: "-p:UseLocalAppSecurity=true");
         }
 
-        return string.Join(" ", properties);
+        if (useLocalData && File.Exists(path: localDataProject))
+        {
+            properties.Add(item: "-p:UseLocalData=true");
+        }
+
+        if (useLocalSecurity && File.Exists(path: localSecurityProject))
+        {
+            properties.Add(item: "-p:UseLocalSecurity=true");
+        }
+
+        if (useLocalWorkflow && File.Exists(path: localWorkflowProject))
+        {
+            properties.Add(item: "-p:UseLocalWorkflow=true");
+        }
+
+        if (useLocalSecurity && !string.IsNullOrWhiteSpace(value: localSecurityAssemblyVersion))
+        {
+            properties.Add(item: $"-p:Version={localSecurityAssemblyVersion}");
+            properties.Add(item: $"-p:AssemblyVersion={localSecurityAssemblyVersion}");
+            properties.Add(item: $"-p:FileVersion={localSecurityAssemblyVersion}");
+        }
+
+        return string.Join(separator: " ",values: properties);
     }
 
     private static string CombineMsBuildProperties(params string[] values) =>
-        string.Join(" ", values.Where(value => !string.IsNullOrWhiteSpace(value)));
+        string.Join(separator: " ",values: values.Where(predicate: value => !string.IsNullOrWhiteSpace(value: value)));
 
     private static string FormatMsBuildPath(string path, bool trailingSlash)
     {
-        string formattedPath = path.Replace('\\', '/');
+        string formattedPath = path.Replace(oldChar: '\\',newChar: '/');
 
-        if (trailingSlash && !formattedPath.EndsWith('/'))
+        if (trailingSlash && !formattedPath.EndsWith(value: '/'))
+        {
             formattedPath += '/';
+        }
 
         return formattedPath;
     }
@@ -396,30 +431,38 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
         process.OutputDataReceived += (_, args) =>
         {
             if (args.Data is not null)
-                output.AppendLine(args.Data);
+            {
+                output.AppendLine(value: args.Data);
+            }
         };
 
         process.ErrorDataReceived += (_, args) =>
         {
             if (args.Data is not null)
-                output.AppendLine(args.Data);
+            {
+                output.AppendLine(value: args.Data);
+            }
         };
 
         if (!process.Start())
+        {
             throw new InvalidOperationException($"Failed to start command '{fileName} {arguments}'.");
+        }
 
         process.BeginOutputReadLine();
         process.BeginErrorReadLine();
         await process.WaitForExitAsync();
 
         if (process.ExitCode != 0)
+        {
             throw new InvalidOperationException(
                 $"Command '{fileName} {arguments}' failed with exit code {process.ExitCode}.{Environment.NewLine}{output}");
+        }
     }
 
     private static string AddDatabaseSuffix(string variableName)
     {
-        string connectionString = ReadRequiredConnectionString(variableName);
+        string connectionString = ReadRequiredConnectionString(variableName: variableName);
 
         SqlConnectionStringBuilder builder = new(connectionString)
         {
@@ -428,8 +471,11 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
         };
 
         string databaseName = builder.InitialCatalog ?? string.Empty;
-        if (string.IsNullOrWhiteSpace(databaseName))
+
+        if (string.IsNullOrWhiteSpace(value: databaseName))
+        {
             return connectionString;
+        }
 
         builder.InitialCatalog = $"{databaseName}-ccoder-integrationtests";
         return builder.ConnectionString;
@@ -438,12 +484,14 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
     private static string ReadRequiredConnectionString(string variableName)
     {
         string connectionString =
-            Environment.GetEnvironmentVariable(variableName)
-            ?? Environment.GetEnvironmentVariable(variableName, EnvironmentVariableTarget.User)
-            ?? Environment.GetEnvironmentVariable(variableName, EnvironmentVariableTarget.Machine);
+            Environment.GetEnvironmentVariable(variable: variableName)
+            ?? Environment.GetEnvironmentVariable(variable: variableName,target: EnvironmentVariableTarget.User)
+            ?? Environment.GetEnvironmentVariable(variable: variableName,target: EnvironmentVariableTarget.Machine);
 
-        if (!string.IsNullOrWhiteSpace(connectionString))
+        if (!string.IsNullOrWhiteSpace(value: connectionString))
+        {
             return connectionString;
+        }
 
         throw new InvalidOperationException(
             $"Acceptance connection string environment variable '{variableName}' was not found.");
@@ -455,8 +503,10 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
 
         while (directory is not null)
         {
-            if (File.Exists(Path.Combine(directory.FullName, "src", "cCoder.Core.sln")))
+            if (File.Exists(path: Path.Combine(path1: directory.FullName,path2: "src",path3: "cCoder.Core.sln")))
+            {
                 return directory.FullName;
+            }
 
             directory = directory.Parent;
         }
@@ -471,28 +521,25 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
         hostedServicesEnvironment["Settings__sslPort"] = WebBaseAddress.Port.ToString();
 
         hostedServicesApplication = new ExternalProcessApplication("HostedServices");
+
         await hostedServicesApplication.StartAsync(
-            "dotnet",
-            $"\"{Path.Combine(hostedServicesOutputDirectory, "HostedServices.dll")}\"",
-            hostedServicesOutputDirectory,
-            hostedServicesEnvironment,
-            readinessProbe: () => ProbeHealthAsync(HostedServicesBaseAddress),
-            timeout: TimeSpan.FromMinutes(2),
-            readinessDiagnostics: GetHealthProbeDiagnostics);
-        Console.WriteLine("Integration fixture: HostedServices started.");
+fileName:             "dotnet",arguments:             $"\"{Path.Combine(path1: hostedServicesOutputDirectory,path2: "HostedServices.dll")}\"",workingDirectory:             hostedServicesOutputDirectory,environmentVariables:             hostedServicesEnvironment,            readinessProbe: () => ProbeHealthAsync(baseAddress: HostedServicesBaseAddress),            timeout: TimeSpan.FromMinutes(minutes: 2),            readinessDiagnostics: GetHealthProbeDiagnostics);
+
+        Console.WriteLine(value: "Integration fixture: HostedServices started.");
     }
 
     private async Task<bool> ProbeHealthAsync(Uri baseAddress, bool useInsecureHandler = false)
     {
-        using HttpClient client = CreateClient(baseAddress, useInsecureHandler);
+        using HttpClient client = CreateClient(baseAddress: baseAddress,useInsecureHandler: useInsecureHandler);
         Uri healthUri = new(baseAddress, "Health");
 
         try
         {
-            using HttpResponseMessage response = await client.GetAsync("Health");
+            using HttpResponseMessage response = await client.GetAsync(requestUri: "Health");
             string content = await response.Content.ReadAsStringAsync();
+
             if (response.IsSuccessStatusCode
-                && string.Equals(content, "OK", StringComparison.Ordinal))
+                && string.Equals(a: content,b: "OK",comparisonType: StringComparison.Ordinal))
             {
                 lastHealthProbeFailure = null;
                 return true;
@@ -500,11 +547,12 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
 
             lastHealthProbeFailure =
                 $"GET {healthUri} returned {(int)response.StatusCode} {response.StatusCode} with body '{content}'.";
+
             return false;
         }
         catch (Exception exception)
         {
-            lastHealthProbeFailure = $"GET {healthUri} failed: {FormatException(exception)}";
+            lastHealthProbeFailure = $"GET {healthUri} failed: {FormatException(exception: exception)}";
             return false;
         }
     }
@@ -517,9 +565,11 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
         List<string> messages = [];
 
         for (Exception current = exception; current is not null; current = current.InnerException)
-            messages.Add($"{current.GetType().FullName}: {current.Message}");
+        {
+            messages.Add(item: $"{current.GetType().FullName}: {current.Message}");
+        }
 
-        return string.Join(" ---> ", messages);
+        return string.Join(separator: " ---> ",values: messages);
     }
 
     private Dictionary<string, string> CreateCommonApplicationEnvironment()
@@ -532,27 +582,29 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
             ["Settings__DecryptionKey"] = Settings.DecryptionKey,
             ["Settings__AggregateDomains"] = "false",
             ["Services__Workflow"] = WorkflowBaseAddress.ToString(),
+            ["Workflow__QueueInstanceManagement__PollingIntervalMilliseconds"] = "250",
             ["Eventing__ProviderType"] = Settings.EventProviderType,
             ["Eventing__Http__MaxConcurrency"] = "1"
         };
 
-        AddOptionalEnvironment(environment, "CCODER_MAIL_GRAPH_TENANT_ID");
-        AddOptionalEnvironment(environment, "CCODER_MAIL_GRAPH_CLIENT_ID");
-        AddOptionalEnvironment(environment, "CCODER_MAIL_GRAPH_CLIENT_SECRET");
-        AddOptionalEnvironment(environment, "CCODER_MAIL_GRAPH_BASE_URL");
-        AddOptionalEnvironment(environment, "CCODER_MAIL_GRAPH_LOGIN_BASE_URL");
-        AddOptionalEnvironment(environment, "CCODER_MAIL_INTEGRATION_SEND_HOST");
-        AddOptionalEnvironment(environment, "CCODER_MAIL_INTEGRATION_SEND_USER");
-        AddOptionalEnvironment(environment, "CCODER_MAIL_INTEGRATION_SMTP_USER");
-        AddOptionalEnvironment(environment, "CCODER_MAIL_INTEGRATION_SMTP_FROM");
-        AddOptionalEnvironment(environment, "CCODER_MAIL_INTEGRATION_RECEIVE_USER");
-        AddOptionalEnvironment(environment, "CCODER_MAIL_INTEGRATION_TO");
-        AddOptionalEnvironment(environment, "CCODER_MAIL_DEFAULT_SENDER_PROVIDER");
-        AddOptionalEnvironment(environment, "CCODER_MAIL_DEFAULT_RECEIVER_PROVIDER");
+        AddOptionalEnvironment(environment: environment,variableName: "CCODER_MAIL_GRAPH_TENANT_ID");
+        AddOptionalEnvironment(environment: environment,variableName: "CCODER_MAIL_GRAPH_CLIENT_ID");
+        AddOptionalEnvironment(environment: environment,variableName: "CCODER_MAIL_GRAPH_CLIENT_SECRET");
+        AddOptionalEnvironment(environment: environment,variableName: "CCODER_MAIL_GRAPH_BASE_URL");
+        AddOptionalEnvironment(environment: environment,variableName: "CCODER_MAIL_GRAPH_LOGIN_BASE_URL");
+        AddOptionalEnvironment(environment: environment,variableName: "CCODER_MAIL_INTEGRATION_SEND_HOST");
+        AddOptionalEnvironment(environment: environment,variableName: "CCODER_MAIL_INTEGRATION_SEND_USER");
+        AddOptionalEnvironment(environment: environment,variableName: "CCODER_MAIL_INTEGRATION_SMTP_USER");
+        AddOptionalEnvironment(environment: environment,variableName: "CCODER_MAIL_INTEGRATION_SMTP_FROM");
+        AddOptionalEnvironment(environment: environment,variableName: "CCODER_MAIL_INTEGRATION_RECEIVE_USER");
+        AddOptionalEnvironment(environment: environment,variableName: "CCODER_MAIL_INTEGRATION_TO");
+        AddOptionalEnvironment(environment: environment,variableName: "CCODER_MAIL_DEFAULT_SENDER_PROVIDER");
+        AddOptionalEnvironment(environment: environment,variableName: "CCODER_MAIL_DEFAULT_RECEIVER_PROVIDER");
 
         if (Settings.UseServiceBusEventing)
         {
             environment["ConnectionStrings__ServiceBus"] = Settings.ServiceBusConnectionString;
+
             environment["Eventing__ServiceBus__MaxConcurrency"] =
                 Settings.ServiceBusMaxConcurrency.ToString();
         }
@@ -564,18 +616,23 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
         IDictionary<string, string> environment,
         string variableName)
     {
-        string value = ResolveOptionalSetting(variableName);
+        string value = ResolveOptionalSetting(variableNames: variableName);
 
-        if (!string.IsNullOrWhiteSpace(value))
+        if (!string.IsNullOrWhiteSpace(value: value))
+        {
             environment[variableName] = value;
+        }
     }
 
     private void AddHttpsCertificateEnvironment(Dictionary<string, string> environment)
     {
-        string certificatePath = Path.Combine(acceptanceArtifactsRoot, "localhost-https.pfx");
-        string certificatePassword = Guid.NewGuid().ToString("N");
+        string certificatePath = Path.Combine(path1: acceptanceArtifactsRoot,path2: "localhost-https.pfx");
 
-        using RSA rsa = RSA.Create(2048);
+        string certificatePassword = Guid.NewGuid()
+            .ToString(format: "N");
+
+        using RSA rsa = RSA.Create(keySizeInBits: 2048);
+
         CertificateRequest request = new(
             "CN=localhost",
             rsa,
@@ -583,31 +640,33 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
             RSASignaturePadding.Pkcs1);
 
         SubjectAlternativeNameBuilder subjectAlternativeNameBuilder = new();
-        subjectAlternativeNameBuilder.AddDnsName("localhost");
-        subjectAlternativeNameBuilder.AddIpAddress(IPAddress.Loopback);
-        subjectAlternativeNameBuilder.AddIpAddress(IPAddress.IPv6Loopback);
+        subjectAlternativeNameBuilder.AddDnsName(dnsName: "localhost");
+        subjectAlternativeNameBuilder.AddIpAddress(ipAddress: IPAddress.Loopback);
+        subjectAlternativeNameBuilder.AddIpAddress(ipAddress: IPAddress.IPv6Loopback);
 
-        request.CertificateExtensions.Add(subjectAlternativeNameBuilder.Build());
+        request.CertificateExtensions.Add(item: subjectAlternativeNameBuilder.Build());
+
         request.CertificateExtensions.Add(
-            new X509BasicConstraintsExtension(
+item:             new X509BasicConstraintsExtension(
                 certificateAuthority: false,
                 hasPathLengthConstraint: false,
                 pathLengthConstraint: 0,
                 critical: false));
+
         request.CertificateExtensions.Add(
-            new X509KeyUsageExtension(
+item:             new X509KeyUsageExtension(
                 X509KeyUsageFlags.DigitalSignature | X509KeyUsageFlags.KeyEncipherment,
                 critical: true));
+
         request.CertificateExtensions.Add(
-            new X509EnhancedKeyUsageExtension(
+item:             new X509EnhancedKeyUsageExtension(
                 [new Oid("1.3.6.1.5.5.7.3.1")],
                 critical: false));
 
         using X509Certificate2 certificate = request.CreateSelfSigned(
-            DateTimeOffset.UtcNow.AddMinutes(-5),
-            DateTimeOffset.UtcNow.AddDays(1));
+notBefore:             DateTimeOffset.UtcNow.AddMinutes(minutes: -5),notAfter:             DateTimeOffset.UtcNow.AddDays(days: 1));
 
-        File.WriteAllBytes(certificatePath, certificate.Export(X509ContentType.Pkcs12, certificatePassword));
+        File.WriteAllBytes(path: certificatePath,bytes: certificate.Export(contentType: X509ContentType.Pkcs12,password: certificatePassword));
 
         environment["ASPNETCORE_Kestrel__Certificates__Default__Path"] = certificatePath;
         environment["ASPNETCORE_Kestrel__Certificates__Default__Password"] = certificatePassword;
@@ -615,7 +674,7 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
 
     private async Task EnsureServiceBusQueuesAreCleanAsync()
     {
-        if (string.IsNullOrWhiteSpace(Settings.ServiceBusConnectionString))
+        if (string.IsNullOrWhiteSpace(value: Settings.ServiceBusConnectionString))
         {
             throw new InvalidOperationException(
                 "Service Bus integration mode requires CCODER_INTEGRATION_SERVICE_BUS_CONNECTION_STRING or ConnectionStrings__ServiceBus.");
@@ -625,8 +684,10 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
 
         foreach (string queueName in ServiceBusEventQueues)
         {
-            if (!await administrationClient.QueueExistsAsync(queueName))
-                await administrationClient.CreateQueueAsync(queueName);
+            if (!await administrationClient.QueueExistsAsync(name: queueName))
+            {
+                await administrationClient.CreateQueueAsync(name: queueName);
+            }
         }
 
         await DrainServiceBusQueuesAsync();
@@ -634,25 +695,31 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
 
     private async Task DrainServiceBusQueuesAsync()
     {
-        if (string.IsNullOrWhiteSpace(Settings?.ServiceBusConnectionString))
+        if (string.IsNullOrWhiteSpace(value: Settings?.ServiceBusConnectionString))
+        {
             return;
+        }
 
         await using ServiceBusClient client = new(Settings.ServiceBusConnectionString);
 
         foreach (string queueName in ServiceBusEventQueues)
         {
-            ServiceBusReceiver receiver = client.CreateReceiver(queueName);
+            ServiceBusReceiver receiver = client.CreateReceiver(queueName: queueName);
 
             while (true)
             {
                 IReadOnlyList<ServiceBusReceivedMessage> messages =
-                    await receiver.ReceiveMessagesAsync(100, TimeSpan.FromSeconds(1));
+                    await receiver.ReceiveMessagesAsync(maxMessages: 100,maxWaitTime: TimeSpan.FromSeconds(seconds: 1));
 
                 if (messages.Count == 0)
+                {
                     break;
+                }
 
                 foreach (ServiceBusReceivedMessage message in messages)
-                    await receiver.CompleteMessageAsync(message);
+                {
+                    await receiver.CompleteMessageAsync(message: message);
+                }
             }
 
             await receiver.DisposeAsync();
@@ -660,23 +727,22 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
     }
 
     private static string ResolveEventProviderType() =>
-        ResolveOptionalSetting("CCODER_INTEGRATION_EVENT_PROVIDER", "Eventing__ProviderType")
+        ResolveOptionalSetting(
+            variableNames: ["CCODER_INTEGRATION_EVENT_PROVIDER", "Eventing__ProviderType"])
         ?? "Http";
 
     private static bool ShouldKeepArtifacts() =>
         string.Equals(
-            Environment.GetEnvironmentVariable("CCODER_INTEGRATION_KEEP_ARTIFACTS"),
-            "true",
-            StringComparison.OrdinalIgnoreCase);
+a:             Environment.GetEnvironmentVariable(variable: "CCODER_INTEGRATION_KEEP_ARTIFACTS"),b:             "true",comparisonType:             StringComparison.OrdinalIgnoreCase);
 
     private static int ResolveIntSetting(
         string primaryName,
         string secondaryName,
         int fallback)
     {
-        string raw = ResolveOptionalSetting(primaryName, secondaryName);
+        string raw = ResolveOptionalSetting(variableNames: [primaryName, secondaryName]);
 
-        return int.TryParse(raw, out int value)
+        return int.TryParse(s: raw,result: out int value)
             ? value
             : fallback;
     }
@@ -686,12 +752,14 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
         foreach (string variableName in variableNames)
         {
             string value =
-                Environment.GetEnvironmentVariable(variableName)
-                ?? Environment.GetEnvironmentVariable(variableName, EnvironmentVariableTarget.User)
-                ?? Environment.GetEnvironmentVariable(variableName, EnvironmentVariableTarget.Machine);
+                Environment.GetEnvironmentVariable(variable: variableName)
+                ?? Environment.GetEnvironmentVariable(variable: variableName,target: EnvironmentVariableTarget.User)
+                ?? Environment.GetEnvironmentVariable(variable: variableName,target: EnvironmentVariableTarget.Machine);
 
-            if (!string.IsNullOrWhiteSpace(value))
+            if (!string.IsNullOrWhiteSpace(value: value))
+            {
                 return value;
+            }
         }
 
         return null;
@@ -700,35 +768,45 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
     private static string ResolveFuncExecutablePath()
     {
         string bundledFuncExe = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "npm",
-            "node_modules",
-            "azure-functions-core-tools",
-            "bin",
-            "in-proc6",
-            "func.exe");
+            paths:
+            [
+                Environment.GetFolderPath(folder: Environment.SpecialFolder.ApplicationData),
+                "npm",
+                "node_modules",
+                "azure-functions-core-tools",
+                "bin",
+                "in-proc6",
+                "func.exe"
+            ]);
 
-        if (File.Exists(bundledFuncExe))
+        if (File.Exists(path: bundledFuncExe))
+        {
             return bundledFuncExe;
+        }
 
         string fallbackFuncExe = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "npm",
-            "node_modules",
-            "azure-functions-core-tools",
-            "bin",
-            "func.exe");
+            paths:
+            [
+                Environment.GetFolderPath(folder: Environment.SpecialFolder.ApplicationData),
+                "npm",
+                "node_modules",
+                "azure-functions-core-tools",
+                "bin",
+                "func.exe"
+            ]);
 
-        if (File.Exists(fallbackFuncExe))
+        if (File.Exists(path: fallbackFuncExe))
+        {
             return fallbackFuncExe;
+        }
 
         string roamingNpmFunc = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "npm",
-            "func.cmd");
+path1:             Environment.GetFolderPath(folder: Environment.SpecialFolder.ApplicationData),path2:             "npm",path3:             "func.cmd");
 
-        if (File.Exists(roamingNpmFunc))
+        if (File.Exists(path: roamingNpmFunc))
+        {
             return roamingNpmFunc;
+        }
 
         return "func";
     }

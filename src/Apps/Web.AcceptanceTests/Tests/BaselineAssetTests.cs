@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Text.Json;
 using cCoder.Core.Exposures.Setup;
 using cCoder.Data.Models.CMS;
@@ -8,7 +12,7 @@ using Xunit;
 
 namespace Web.AcceptanceTests.Tests;
 
-public sealed class BaselineAssetTests
+public sealed partial class BaselineAssetTests
 {
     [Theory]
     [InlineData("Core.Resource.latest.json")]
@@ -16,36 +20,73 @@ public sealed class BaselineAssetTests
     [InlineData("Core.Script.latest.json")]
     public void Common_cache_assets_are_present_and_non_empty(string fileName)
     {
-        using var json = AcceptanceAssetLoader.LoadJson(fileName);
+        // Given
+        using var json = AcceptanceAssetLoader.LoadJson(fileName: fileName);
 
-        json.RootElement.ValueKind.Should().BeOneOf(JsonValueKind.Array, JsonValueKind.Object);
-        json.RootElement.GetRawText().Length.Should().BeGreaterThan(2);
+        // When
+        JsonValueKind valueKind = json.RootElement.ValueKind;
+        int contentLength = json.RootElement.GetRawText().Length;
+
+        // Then
+        valueKind.Should()
+            .BeOneOf(
+                validValues: [JsonValueKind.Array, JsonValueKind.Object]);
+
+        contentLength.Should()
+            .BeGreaterThan(expected: 2);
     }
 
     [Fact]
     public void App_export_asset_is_present_and_contains_items()
     {
-        using var json = AcceptanceAssetLoader.LoadJson("App.1.Export.json");
+        // Given
+        using var json = AcceptanceAssetLoader.LoadJson(fileName: "App.1.Export.json");
 
-        json.RootElement.ValueKind.Should().Be(JsonValueKind.Object);
-        json.RootElement.TryGetProperty("value", out var value).Should().BeTrue();
-        value.ValueKind.Should().Be(JsonValueKind.Array);
-        value.GetArrayLength().Should().BeGreaterThan(0);
-        value[0].TryGetProperty("Items", out var items).Should().BeTrue();
-        items.ValueKind.Should().Be(JsonValueKind.Array);
-        items.GetArrayLength().Should().BeGreaterThan(0);
+        // When
+        JsonElement rootElement = json.RootElement;
+        bool hasValue = rootElement.TryGetProperty(propertyName: "value", value: out var value);
+
+        // Then
+        rootElement.ValueKind.Should()
+            .Be(expected: JsonValueKind.Object);
+
+        hasValue.Should()
+            .BeTrue();
+
+        value.ValueKind.Should()
+            .Be(expected: JsonValueKind.Array);
+
+        value.GetArrayLength()
+            .Should()
+            .BeGreaterThan(expected: 0);
+
+        value[0].TryGetProperty(propertyName: "Items",value: out var items)
+            .Should()
+            .BeTrue();
+
+        items.ValueKind.Should()
+            .Be(expected: JsonValueKind.Array);
+
+        items.GetArrayLength()
+            .Should()
+            .BeGreaterThan(expected: 0);
     }
 
     [Fact]
     public void Baseline_packages_include_domain_owned_packages()
     {
+        // Given
         BaselineAssetCatalog catalog = new();
+
+        // When
         string[] packageNames = catalog.LoadPackages()
-            .Select(package => package.Name)
+            .Select(selector: package => package.Name)
             .ToArray();
 
-        packageNames.Should().Contain(
-        [
+        // Then
+        packageNames.Should()
+            .Contain(
+expected:         [
             "AppSecurity Components",
             "Content Management Components",
             "Document Management Components",
@@ -58,24 +99,31 @@ public sealed class BaselineAssetTests
     [Fact]
     public void Core_review_baseline_only_contains_unresolved_crm_review_items()
     {
+        // Given
         BaselineAssetCatalog catalog = new();
+
+        // When
         string[] packageNames = catalog.LoadCoreReviewPackages()
-            .Select(package => package.Name)
+            .Select(selector: package => package.Name)
             .ToArray();
 
-        packageNames.Should().BeEquivalentTo(
-        [
+        // Then
+        packageNames.Should()
+            .BeEquivalentTo(
+expectation:         [
             "Core Review Components",
             "Core Review Pages",
             "Core Review Resources",
         ]);
 
-        Component[] components = catalog.LoadPackageItems<Component>("Core Review Components", "Core/Component");
-        Page[] pages = catalog.LoadPackageItems<Page>("Core Review Pages", "Core/Page");
-        Resource[] resources = catalog.LoadPackageItems<Resource>("Core Review Resources", "Core/Resource");
+        Component[] components = catalog.LoadPackageItems<Component>(packageName: "Core Review Components",itemType: "Core/Component");
+        Page[] pages = catalog.LoadPackageItems<Page>(packageName: "Core Review Pages",itemType: "Core/Page");
+        Resource[] resources = catalog.LoadPackageItems<Resource>(packageName: "Core Review Resources",itemType: "Core/Resource");
 
-        components.Select(component => component.Name).Should().BeEquivalentTo(
-        [
+        components.Select(selector: component => component.Name)
+            .Should()
+            .BeEquivalentTo(
+expectation:         [
             "AppList",
             "Client",
             "ClientFiles",
@@ -90,17 +138,23 @@ public sealed class BaselineAssetTests
             "ThemeList",
         ]);
 
-        components.Should().OnlyContain(component =>
-            string.Equals(component.Key, "CRM", StringComparison.OrdinalIgnoreCase));
+        components.Should()
+            .OnlyContain(predicate: component =>
+            string.Equals(a: component.Key,b: "CRM",comparisonType: StringComparison.OrdinalIgnoreCase));
 
-        pages.Select(page => page.Path).Should().BeEquivalentTo(
-        [
+        pages.Select(selector: page => page.Path)
+            .Should()
+            .BeEquivalentTo(
+expectation:         [
             "Clients",
             "Clients/Client",
         ]);
 
-        resources.Should().NotBeEmpty();
-        resources.Should().OnlyContain(resource =>
-            string.Equals(resource.Key, "CRM", StringComparison.OrdinalIgnoreCase));
+        resources.Should()
+            .NotBeEmpty();
+
+        resources.Should()
+            .OnlyContain(predicate: resource =>
+            string.Equals(a: resource.Key,b: "CRM",comparisonType: StringComparison.OrdinalIgnoreCase));
     }
 }

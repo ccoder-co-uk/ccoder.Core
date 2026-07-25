@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Security.Objects.Events;
 using Xunit;
 
@@ -6,19 +10,23 @@ namespace cCoder.Core.Tests.Orchestrations;
 public partial class SecurityAccountEmailOrchestrationServiceTests
 {
     [Fact]
-    public async Task QueueRegistrationCreatedEmailAsync_ShouldQueueConfirmRegistrationEmail()
+    public async Task QueueRegistrationCreatedSecurityAccountEventEmailAsync_ShouldQueueConfirmRegistrationEmail()
     {
-        App app = CreateApp("ConfirmRegistration");
-        SecurityAccountEvent accountEvent = CreateAccountEvent(SecurityAccountEventKind.RegistrationCreated);
-        SetupAppLookup(app);
+        // Given
+        App app = CreateApp(templateName: "ConfirmRegistration");
+        SecurityAccountEvent accountEvent = CreateAccountEvent(kind: SecurityAccountEventKind.RegistrationCreated);
+        SetupAppLookup(app: app);
+
         SetupQueuedEmailExpectation(
-            "ConfirmRegistration",
-            "Core Portal: Confirm Registration");
+            templateName: "ConfirmRegistration",
+            subject: "Core Portal: Confirm Registration");
 
-        await orchestrationService.QueueRegistrationCreatedEmailAsync(accountEvent);
+        // When
+        await orchestrationService.QueueRegistrationCreatedSecurityAccountEventEmailAsync(accountEvent: accountEvent);
 
+        // Then
         VerifyQueuedEmail(
-            "ConfirmRegistration",
-            "Core Portal: Confirm Registration");
+            templateName: "ConfirmRegistration",
+            subject: "Core Portal: Confirm Registration");
     }
 }

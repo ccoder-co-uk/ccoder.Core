@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Text.Json;
 using FluentAssertions;
 using Xunit;
@@ -16,19 +20,22 @@ public sealed partial class ApiRootControllerTests
         string result = await GetMetadataAsync();
 
         // Then
-        using JsonDocument document = JsonDocument.Parse(result);
+        using JsonDocument document = JsonDocument.Parse(json: result);
 
         string[] typeNames = document.RootElement
             .EnumerateArray()
-            .SelectMany(typeSet => typeSet.GetProperty("Types").EnumerateArray())
-            .Select(type => type.GetProperty("Name").GetString())
-            .Where(typeName => !string.IsNullOrWhiteSpace(typeName))
+            .SelectMany(selector: typeSet => typeSet.GetProperty(propertyName: "Types")
+            .EnumerateArray())
+            .Select(selector: type => type.GetProperty(propertyName: "Name")
+            .GetString())
+            .Where(predicate: typeName => !string.IsNullOrWhiteSpace(value: typeName))
             .Cast<string>()
-            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .Distinct(comparer: StringComparer.OrdinalIgnoreCase)
             .ToArray();
 
-        typeNames.Should().Contain(
-        [
+        typeNames.Should()
+            .Contain(
+expected:         [
             "SSORole",
             "Role",
             "Privilege",
@@ -54,28 +61,30 @@ public sealed partial class ApiRootControllerTests
 
         string[] contextTypes = document.RootElement
             .EnumerateArray()
-            .SelectMany(typeSet =>
+            .SelectMany(selector: typeSet =>
             {
-                string contextName = typeSet.GetProperty("Name").GetString() ?? string.Empty;
-                return typeSet.GetProperty("Types")
+                string contextName = typeSet.GetProperty(propertyName: "Name")
+                    .GetString() ?? string.Empty;
+
+                return typeSet.GetProperty(propertyName: "Types")
                     .EnumerateArray()
-                    .Select(type => $"{contextName}/{type.GetProperty("Name").GetString()}");
+                    .Select(selector: type => $"{contextName}/{type.GetProperty(propertyName: "Name")
+                    .GetString()}");
             })
             .ToArray();
 
-        contextTypes.Should().Contain(
-        [
+        contextTypes.Should()
+            .Contain(
+expected:         [
             "Security/SSORole",
             "Workflow/FlowDefinition",
         ]);
 
-        contextTypes.Should().NotContain(
-        [
+        contextTypes.Should()
+            .NotContain(
+unexpected:         [
             "Core/BusinessProcess",
             "Workflow/BusinessProcess",
         ]);
     }
 }
-
-
-

@@ -1,13 +1,17 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Data.Models.CMS;
 
 namespace cCoder.Core.Services.Foundations.ContentManagement;
 
 public interface IContentManagementAppService
 {
-    App Get(int id, bool ignoreFilters = false);
-    App GetByDomain(string domain, bool ignoreFilters = false);
-    IQueryable<App> GetAll(bool ignoreFilters = false);
-    ValueTask<App> AddAsync(App app);
-    ValueTask<App> UpdateAsync(App app);
-    ValueTask DeleteAsync(int appId);
+    App GetApp(int appId, bool ignoreFilters = false);
+    App GetAppByDomain(string domain, bool ignoreFilters = false);
+    IQueryable<App> GetAllApps(bool ignoreFilters = false);
+    ValueTask<App> AddAppAsync(App newApp);
+    ValueTask<App> UpdateAppAsync(App updatedApp);
+    ValueTask DeleteAppAsync(int appId);
 }

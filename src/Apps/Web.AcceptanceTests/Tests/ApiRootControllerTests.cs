@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Net;
 using FluentAssertions;
 using Microsoft.AspNetCore.Routing;
@@ -17,59 +21,63 @@ public sealed partial class ApiRootControllerTests(WebAcceptanceFixture fixture)
 
     private async Task<string> GetAsync()
     {
-        using HttpResponseMessage response = await Client.GetAsync(BaseUrl);
+        using HttpResponseMessage response = await Client.GetAsync(requestUri: BaseUrl);
         string content = await response.Content.ReadAsStringAsync();
-        response.StatusCode.Should().Be(HttpStatusCode.OK, content);
+
+        response.StatusCode.Should()
+            .Be(expected: HttpStatusCode.OK,because: content);
+
         return content;
     }
 
     private async Task<string> GetMetadataAsync()
     {
-        using HttpResponseMessage response = await Client.GetAsync($"{BaseUrl}/GetMetadata");
+        using HttpResponseMessage response = await Client.GetAsync(requestUri: $"{BaseUrl}/GetMetadata");
         string content = await response.Content.ReadAsStringAsync();
-        response.StatusCode.Should().Be(HttpStatusCode.OK, content);
+
+        response.StatusCode.Should()
+            .Be(expected: HttpStatusCode.OK,because: content);
+
         return content;
     }
 
     private string[] GetRegisteredRoutes() =>
         Fixture.Factory.Services.GetServices<EndpointDataSource>()
-            .SelectMany(source => source.Endpoints)
+            .SelectMany(selector: source => source.Endpoints)
             .OfType<RouteEndpoint>()
-            .Select(ToManifestLine)
-            .Where(IsManifestRoute)
-            .Where(static line => !line.Contains("GetMetadata", StringComparison.OrdinalIgnoreCase))
-            .Distinct(StringComparer.Ordinal)
-            .OrderBy(line => line, StringComparer.Ordinal)
+            .Select(selector: ToManifestLine)
+            .Where(predicate: IsManifestRoute)
+            .Where(predicate: static line => !line.Contains(value: "GetMetadata",comparisonType: StringComparison.OrdinalIgnoreCase))
+            .Distinct(comparer: StringComparer.Ordinal)
+            .OrderBy(keySelector: line => line,comparer: StringComparer.Ordinal)
             .ToArray();
 
     private static string ToManifestLine(RouteEndpoint endpoint)
     {
         string methods =
             string.Join(
-                ",",
-                endpoint.Metadata
+separator:                 ",",values:                 endpoint.Metadata
                     .OfType<HttpMethodMetadata>()
-                    .SelectMany(metadata => metadata.HttpMethods)
-                    .Distinct(StringComparer.Ordinal)
-                    .OrderBy(method => method, StringComparer.Ordinal)
+                    .SelectMany(selector: metadata => metadata.HttpMethods)
+                    .Distinct(comparer: StringComparer.Ordinal)
+                    .OrderBy(keySelector: method => method,comparer: StringComparer.Ordinal)
             );
 
-        if (string.IsNullOrWhiteSpace(methods))
+        if (string.IsNullOrWhiteSpace(value: methods))
+        {
             methods = "ANY";
+        }
 
         return $"{methods} {endpoint.RoutePattern.RawText ?? string.Empty}";
     }
 
     private static bool IsManifestRoute(string line)
     {
-        string route = line[(line.IndexOf(' ') + 1)..];
+        string route = line[(line.IndexOf(value: ' ') + 1)..];
 
-        return route.StartsWith("/Api", StringComparison.Ordinal)
-            || route.StartsWith("Api", StringComparison.Ordinal)
-            || string.Equals(route, "Setup", StringComparison.Ordinal)
-            || string.Equals(route, "{*path}", StringComparison.Ordinal);
+        return route.StartsWith(value: "/Api",comparisonType: StringComparison.Ordinal)
+            || route.StartsWith(value: "Api",comparisonType: StringComparison.Ordinal)
+            || string.Equals(a: route,b: "Setup",comparisonType: StringComparison.Ordinal)
+            || string.Equals(a: route,b: "{*path}",comparisonType: StringComparison.Ordinal);
     }
 }
-
-
-

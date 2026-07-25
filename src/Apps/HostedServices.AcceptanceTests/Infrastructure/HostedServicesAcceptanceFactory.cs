@@ -1,5 +1,10 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Data;
 using cCoder.Security.Data.EF;
+using cCoder.Security.Data.EF.Dependencies;
 using cCoder.Security.Data.EF.Interfaces;
 using cCoder.Security.Objects;
 using Microsoft.AspNetCore.Hosting;
@@ -22,44 +27,48 @@ internal sealed class HostedServicesAcceptanceFactory
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.UseEnvironment("Acceptance");
-        builder.ConfigureAppConfiguration((_, config) =>
+        builder.UseEnvironment(environment: "Acceptance");
+
+        builder.ConfigureAppConfiguration(configureDelegate: (_, config) =>
         {
             config.AddInMemoryCollection(
-            [
+initialData: [
                 new KeyValuePair<string, string>("ConnectionStrings:Core", settings.CoreConnectionString),
                 new KeyValuePair<string, string>("ConnectionStrings:SSO", settings.SsoConnectionString),
                 new KeyValuePair<string, string>("Settings:DecryptionKey", settings.DecryptionKey),
                 new KeyValuePair<string, string>("Eventing:Http:HubUrl", string.Empty),
             ]);
         });
-        builder.ConfigureServices(services =>
+
+        builder.ConfigureServices(configureServices: services =>
         {
             services.RemoveAll<Config>();
             services.RemoveAll<ICoreContextFactory>();
             services.RemoveAll<ISecurityDbContextFactory>();
+
             services.AddSingleton(
-                new Config
-                {
-                    ConnectionStrings = new Dictionary<string, string>
-                    {
-                        ["Core"] = settings.CoreConnectionString,
-                        ["SSO"] = settings.SsoConnectionString,
-                    },
-                    Settings = new Dictionary<string, string>
-                    {
-                        ["DecryptionKey"] = settings.DecryptionKey,
-                    },
-                    Services = new Dictionary<string, string>(),
-                });
+implementationInstance: new Config
+{
+    ConnectionStrings = new Dictionary<string, string>
+    {
+        ["Core"] = settings.CoreConnectionString,
+        ["SSO"] = settings.SsoConnectionString,
+    },
+    Settings = new Dictionary<string, string>
+    {
+        ["DecryptionKey"] = settings.DecryptionKey,
+    },
+    Services = new Dictionary<string, string>(),
+});
+
             services.AddScoped<ISecurityDbContextFactory>(
-                _ => new MSSQLSecurityDbContextFactory(settings.SsoConnectionString)
-                {
-                    GetAuthInfo = _ => new SSOAuthInfo { SSOUserId = "Guest" },
-                });
+implementationFactory: _ => new MSSQLSecurityDbContextFactory(settings.SsoConnectionString)
+{
+    GetAuthInfo = _ => new SSOAuthInfo { SSOUserId = "Guest" },
+});
+
             cCoder.Data.IServiceCollectionExtensions.AddCoreData(
-                services,
-                settings.CoreConnectionString);
+services: services, connectionString: settings.CoreConnectionString);
         });
     }
 }

@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using FluentAssertions;
 using Web.AcceptanceTests.Infrastructure;
 using Xunit;
@@ -17,13 +21,11 @@ public sealed partial class ApiRootControllerTests
         string[] actual = GetRegisteredRoutes();
 
         File.WriteAllLines(
-            Path.Combine(AppContext.BaseDirectory, "ActualEndpointManifest.txt"),
-            actual
+path:             Path.Combine(path1: AppContext.BaseDirectory,path2: "ActualEndpointManifest.txt"),contents:             actual
         );
 
         // Then
-        actual.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
+        actual.Should()
+            .BeEquivalentTo(expectation: expected,config: options => options.WithStrictOrdering());
     }
 }
-
-

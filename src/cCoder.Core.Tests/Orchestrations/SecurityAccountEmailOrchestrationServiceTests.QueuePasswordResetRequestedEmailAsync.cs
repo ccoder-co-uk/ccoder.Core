@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Security.Objects.Events;
 using Xunit;
 
@@ -6,19 +10,23 @@ namespace cCoder.Core.Tests.Orchestrations;
 public partial class SecurityAccountEmailOrchestrationServiceTests
 {
     [Fact]
-    public async Task QueuePasswordResetRequestedEmailAsync_ShouldQueueForgotPasswordEmail()
+    public async Task QueuePasswordResetRequestedSecurityAccountEventEmailAsync_ShouldQueueForgotPasswordEmail()
     {
-        App app = CreateApp("ForgotPassword");
-        SecurityAccountEvent accountEvent = CreateAccountEvent(SecurityAccountEventKind.PasswordResetRequested);
-        SetupAppLookup(app);
+        // Given
+        App app = CreateApp(templateName: "ForgotPassword");
+        SecurityAccountEvent accountEvent = CreateAccountEvent(kind: SecurityAccountEventKind.PasswordResetRequested);
+        SetupAppLookup(app: app);
+
         SetupQueuedEmailExpectation(
-            "ForgotPassword",
-            "Core Portal: Password Reset");
+            templateName: "ForgotPassword",
+            subject: "Core Portal: Password Reset");
 
-        await orchestrationService.QueuePasswordResetRequestedEmailAsync(accountEvent);
+        // When
+        await orchestrationService.QueuePasswordResetRequestedSecurityAccountEventEmailAsync(accountEvent: accountEvent);
 
+        // Then
         VerifyQueuedEmail(
-            "ForgotPassword",
-            "Core Portal: Password Reset");
+            templateName: "ForgotPassword",
+            subject: "Core Portal: Password Reset");
     }
 }

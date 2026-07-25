@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Data.Models.Workflow;
 using FluentAssertions;
 using Xunit;
@@ -9,35 +13,43 @@ public sealed partial class FolderEventIntegrationTests
     [Fact]
     public async Task FolderDelete_RaisesExternalEventAndCompletesSubscribedWorkflow()
     {
+        // Given
         Guid flowId = Guid.Empty;
         Guid workflowEventId = Guid.Empty;
         Guid folderId = Guid.Empty;
 
         try
         {
-            string authToken = await CreateAuthTokenAsync(AdminUserId);
-            flowId = await CreateFlowDefinitionAsync(BaselineAppId, Unique("Folder Delete Flow"), authToken);
-            string folderName = Unique("flow-folder");
-            folderId = await CreateFolderAsync(BaselineAppId, folderName);
-            workflowEventId = await CreateWorkflowEventAsync(flowId, $"folder_delete{folderName}", authToken);
+            string authToken = await CreateAuthTokenAsync(userId: AdminUserId);
+            flowId = await CreateFlowDefinitionAsync(appId: BaselineAppId,name: Unique(prefix: "Folder Delete Flow"),authToken: authToken);
+            string folderName = Unique(prefix: "flow-folder");
+            folderId = await CreateFolderAsync(appId: BaselineAppId,name: folderName);
+            workflowEventId = await CreateWorkflowEventAsync(flowId: flowId,eventContext: $"folder_delete{folderName}",authToken: authToken);
 
-            await SendWithOptionalHostAsync(HttpMethod.Delete, $"/Api/DocumentManagement/Folder({folderId})", authToken: authToken);
+            // When
+            await SendWithOptionalHostAsync(method: HttpMethod.Delete,relativeUrl: $"/Api/DocumentManagement/Folder({folderId})",authToken: authToken);
 
-            await WaitUntilAsync(async () => await HasAnyFlowInstanceAsync(flowId));
+            await WaitUntilAsync(predicate: async () => await HasAnyFlowInstanceAsync(flowId: flowId));
 
             await WaitUntilAsync(
-                async () => await HasFlowInstanceStateAsync(flowId, "Complete"),
-                diagnosticsFactory: () => BuildFlowDiagnosticsAsync(flowId));
+predicate:                 async () => await HasFlowInstanceStateAsync(flowId: flowId,state: "Complete"),                diagnosticsFactory: () => BuildFlowDiagnosticsAsync(flowId: flowId));
 
-            FlowInstanceData instance = await GetLatestInstanceAsync(flowId);
-            instance.Caller.Should().Be(AdminUserId);
-            instance.State.Should().Be("Complete");
-            instance.ContextString.Should().Contain("Execution complete.");
+            FlowInstanceData instance = await GetLatestInstanceAsync(flowId: flowId);
+
+            // Then
+            instance.Caller.Should()
+                .Be(expected: AdminUserId);
+
+            instance.State.Should()
+                .Be(expected: "Complete");
+
+            instance.ContextString.Should()
+                .Contain(expected: "Execution complete.");
         }
         finally
         {
-            await DeleteWorkflowEventAsync(workflowEventId);
-            await DeleteFlowArtifactsAsync(flowId);
+            await DeleteWorkflowEventAsync(workflowEventId: workflowEventId);
+            await DeleteFlowArtifactsAsync(flowId: flowId);
         }
     }
 }

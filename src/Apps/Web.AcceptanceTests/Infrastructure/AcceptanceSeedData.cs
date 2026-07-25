@@ -1,7 +1,13 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Text.Json;
 using cCoder.Data;
 using cCoder.Data.Models;
+using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.Packaging;
+using cCoder.Data.Models.Security;
 using Newtonsoft.Json;
 
 
@@ -11,22 +17,53 @@ internal static class AcceptanceSeedData
 {
     public static Package[] LoadExportPackages()
     {
-        using JsonDocument json = AcceptanceAssetLoader.LoadJson("App.1.Export.json");
-        JsonElement value = json.RootElement.GetProperty("value");
+        using JsonDocument json = AcceptanceAssetLoader.LoadJson(fileName: "App.1.Export.json");
+        JsonElement value = json.RootElement.GetProperty(propertyName: "value");
+
         return JsonConvert.DeserializeObject<Package[]>(
-            value.GetRawText(),
-            cCoder.Data.Extensions.ObjectExtensions.GetJSONSettings());
+value:             value.GetRawText(),settings:             cCoder.Data.Extensions.ObjectExtensions.GetJSONSettings());
     }
 
-    public static T[] LoadPackageItems<T>(string packageName, string itemType)
+    public static Role[] LoadRoles(string packageName, string itemType) =>
+        LoadPackageItems(packageName: packageName, itemType: itemType, modelType: typeof(Role))
+            .Cast<Role>()
+            .ToArray();
+
+    public static Layout[] LoadLayouts(string packageName, string itemType) =>
+        LoadPackageItems(packageName: packageName, itemType: itemType, modelType: typeof(Layout))
+            .Cast<Layout>()
+            .ToArray();
+
+    public static Template[] LoadTemplates(string packageName, string itemType) =>
+        LoadPackageItems(packageName: packageName, itemType: itemType, modelType: typeof(Template))
+            .Cast<Template>()
+            .ToArray();
+
+    public static Resource[] LoadResources(string packageName, string itemType) =>
+        LoadPackageItems(packageName: packageName, itemType: itemType, modelType: typeof(Resource))
+            .Cast<Resource>()
+            .ToArray();
+
+    public static Component[] LoadComponents(string packageName, string itemType) =>
+        LoadPackageItems(packageName: packageName, itemType: itemType, modelType: typeof(Component))
+            .Cast<Component>()
+            .ToArray();
+
+    public static Script[] LoadScripts(string packageName, string itemType) =>
+        LoadPackageItems(packageName: packageName, itemType: itemType, modelType: typeof(Script))
+            .Cast<Script>()
+            .ToArray();
+
+    private static object[] LoadPackageItems(string packageName, string itemType, Type modelType)
     {
-        Package package = LoadExportPackages().First(found =>
-            string.Equals(found.Name, packageName, StringComparison.OrdinalIgnoreCase)
+        Package package = LoadExportPackages()
+            .First(predicate: found =>
+            string.Equals(a: found.Name,b: packageName,comparisonType: StringComparison.OrdinalIgnoreCase)
         );
 
         return package.Items
-            .Where(item => string.Equals(item.Type, itemType, StringComparison.OrdinalIgnoreCase))
-            .SelectMany(item => UnpackItems<T>(item.Data))
+            .Where(predicate: item => string.Equals(a: item.Type,b: itemType,comparisonType: StringComparison.OrdinalIgnoreCase))
+            .SelectMany(selector: item => UnpackItems(data: item.Data, modelType: modelType))
             .ToArray();
     }
 
@@ -34,44 +71,45 @@ internal static class AcceptanceSeedData
     {
         List<CommonObject> result = [];
 
-        result.AddRange(LoadCommonObjects("Core.Resource.latest.json"));
-        result.AddRange(LoadCommonObjects("Core.Component.latest.json"));
-        result.AddRange(LoadCommonObjects("Core.Script.latest.json"));
+        result.AddRange(collection: LoadCommonObjects(fileName: "Core.Resource.latest.json"));
+        result.AddRange(collection: LoadCommonObjects(fileName: "Core.Component.latest.json"));
+        result.AddRange(collection: LoadCommonObjects(fileName: "Core.Script.latest.json"));
 
         return result.ToArray();
     }
 
     private static CommonObject[] LoadCommonObjects(string fileName)
     {
-        using JsonDocument json = AcceptanceAssetLoader.LoadJson(fileName);
+        using JsonDocument json = AcceptanceAssetLoader.LoadJson(fileName: fileName);
+
         JsonElement value =
             json.RootElement.ValueKind == JsonValueKind.Object
-                ? json.RootElement.GetProperty("value")
+                ? json.RootElement.GetProperty(propertyName: "value")
                 : json.RootElement;
 
         return JsonConvert.DeserializeObject<CommonObject[]>(
-            value.GetRawText(),
-            cCoder.Data.Extensions.ObjectExtensions.GetJSONSettings());
+value:             value.GetRawText(),settings:             cCoder.Data.Extensions.ObjectExtensions.GetJSONSettings());
     }
 
-    private static IEnumerable<T> UnpackItems<T>(string data)
+    private static IEnumerable<object> UnpackItems(string data, Type modelType)
     {
         string trimmed = data.TrimStart();
 
-        return trimmed.StartsWith("[", StringComparison.Ordinal)
-            ? JsonConvert.DeserializeObject<T[]>(
-                trimmed,
-                cCoder.Data.Extensions.ObjectExtensions.GetJSONSettings())
-            : [
-                JsonConvert.DeserializeObject<T>(
-                    trimmed,
-                    cCoder.Data.Extensions.ObjectExtensions.GetJSONSettings())
-            ];
+        if (trimmed.StartsWith(value: "[", comparisonType: StringComparison.Ordinal))
+        {
+            Array values = (Array)JsonConvert.DeserializeObject(
+                value: trimmed,
+                type: modelType.MakeArrayType(),
+                settings: cCoder.Data.Extensions.ObjectExtensions.GetJSONSettings());
+
+            return values.Cast<object>();
+        }
+
+        object value = JsonConvert.DeserializeObject(
+            value: trimmed,
+            type: modelType,
+            settings: cCoder.Data.Extensions.ObjectExtensions.GetJSONSettings());
+
+        return [value];
     }
 }
-
-
-
-
-
-

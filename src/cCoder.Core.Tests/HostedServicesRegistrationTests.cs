@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Core;
 using cCoder.Eventing.AzureServiceBus;
 using cCoder.Eventing.AzureServiceBus.Models;
@@ -9,13 +13,14 @@ using Xunit;
 
 namespace cCoder.Core.Tests;
 
-public sealed class HostedServicesRegistrationTests
+public sealed partial class HostedServicesRegistrationTests
 {
     [Fact]
     public void AddCoreHostedServices_ShouldRegisterWorkflowHostedServices()
     {
+        // Given
         IConfiguration configuration = new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string>
+            .AddInMemoryCollection(initialData: new Dictionary<string, string>
             {
                 ["ConnectionStrings:Core"] = "Server=(localdb)\\mssqllocaldb;Database=core-tests;Trusted_Connection=True;TrustServerCertificate=True;",
                 ["ConnectionStrings:SSO"] = "Server=(localdb)\\mssqllocaldb;Database=sso-tests;Trusted_Connection=True;TrustServerCertificate=True;",
@@ -25,11 +30,12 @@ public sealed class HostedServicesRegistrationTests
             .Build();
 
         IServiceCollection services = new ServiceCollection();
-        services.AddSingleton(configuration);
+        services.AddSingleton(implementationInstance: configuration);
 
-        services.AddCoreHostedServices(coreBuilder =>
+        // When
+        services.AddCoreHostedServices(configure: coreBuilder =>
         {
-            coreBuilder.ConfigureDomainsWith(coreConfig =>
+            coreBuilder.ConfigureDomainsWith(configure: coreConfig =>
             {
                 coreConfig.CoreConnectionString = configuration["ConnectionStrings:Core"];
                 coreConfig.SecurityConnectionString = configuration["ConnectionStrings:SSO"];
@@ -38,17 +44,20 @@ public sealed class HostedServicesRegistrationTests
             });
         });
 
-        services.Count(descriptor =>
+        // Then
+        services.Count(predicate: descriptor =>
             descriptor.ServiceType == typeof(IHostedService)
             && descriptor.ImplementationFactory is not null)
-            .Should().BeGreaterThanOrEqualTo(3);
+            .Should()
+            .BeGreaterThanOrEqualTo(expected: 3);
     }
 
     [Fact]
     public void AddCoreHostedServices_GivenServiceBusEventing_ShouldRegisterServiceBusHubWithConcurrency()
     {
+        // Given
         IConfiguration configuration = new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string>
+            .AddInMemoryCollection(initialData: new Dictionary<string, string>
             {
                 ["ConnectionStrings:Core"] = "Server=(localdb)\\mssqllocaldb;Database=core-tests;Trusted_Connection=True;TrustServerCertificate=True;",
                 ["ConnectionStrings:SSO"] = "Server=(localdb)\\mssqllocaldb;Database=sso-tests;Trusted_Connection=True;TrustServerCertificate=True;",
@@ -59,11 +68,12 @@ public sealed class HostedServicesRegistrationTests
             .Build();
 
         IServiceCollection services = new ServiceCollection();
-        services.AddSingleton(configuration);
+        services.AddSingleton(implementationInstance: configuration);
 
-        services.AddCoreHostedServices(coreBuilder =>
+        // When
+        services.AddCoreHostedServices(configure: coreBuilder =>
         {
-            coreBuilder.ConfigureDomainsWith(coreConfig =>
+            coreBuilder.ConfigureDomainsWith(configure: coreConfig =>
             {
                 coreConfig.CoreConnectionString = configuration["ConnectionStrings:Core"];
                 coreConfig.SecurityConnectionString = configuration["ConnectionStrings:SSO"];
@@ -76,14 +86,20 @@ public sealed class HostedServicesRegistrationTests
             });
         });
 
-        services.Should().Contain(descriptor =>
+        // Then
+        services.Should()
+            .Contain(predicate: descriptor =>
             descriptor.ServiceType == typeof(IAzureServiceBusEventHub));
 
         using ServiceProvider serviceProvider = services.BuildServiceProvider();
+
         AzureServiceBusEventingConfiguration eventingConfiguration =
             serviceProvider.GetRequiredService<AzureServiceBusEventingConfiguration>();
 
-        eventingConfiguration.ConnectionString.Should().Be(configuration["ConnectionStrings:ServiceBus"]);
-        eventingConfiguration.MaxConcurrency.Should().Be(3);
+        eventingConfiguration.ConnectionString.Should()
+            .Be(expected: configuration["ConnectionStrings:ServiceBus"]);
+
+        eventingConfiguration.MaxConcurrency.Should()
+            .Be(expected: 3);
     }
 }

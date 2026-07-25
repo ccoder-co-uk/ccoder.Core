@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Linq.Expressions;
 using cCoder.Core.Models;
 using cCoder.Data.Extensions;
@@ -27,28 +31,28 @@ public abstract class ODataModelBuilder
         where T : class
     {
         setName ??= typeof(T).Name;
-        return Builder.EntitySet<T>(setName);
+        return Builder.EntitySet<T>(name: setName);
     }
 
     protected virtual EntitySetConfiguration<T> AddJoinSet<T, TKey>(Expression<Func<T, TKey>> key)
         where T : class
-    {
-        string setName = typeof(T).Name;
-        EntitySetConfiguration<T> setConfig = Builder.EntitySet<T>(setName);
-        _ = Builder.EntityType<T>().HasKey(key);
+        =>
+        (
+            Set: Builder.EntitySet<T>(name: typeof(T).Name),
+            Key: Builder.EntityType<T>()
+                .HasKey(keyDefinitionExpression: key)
+        )
+            .Set;
 
-        return setConfig;
-    }
-
-    /// <summary>
-    /// Used by shared metadata and lookup support
-    /// </summary>
     protected virtual void AddCommonComplextypes()
     {
-        _ = Builder.ComplexType<MetadataContainerSet>();
-        _ = Builder.ComplexType<MetadataContainer>();
-        _ = Builder.ComplexType<PropertyContainer>();
-        _ = Builder.ComplexType<AuditResultsByUser>();
-        _ = Builder.ComplexType<AuditResultByProperty>();
+        _ = new object[]
+        {
+            Builder.ComplexType<MetadataContainerSet>(),
+            Builder.ComplexType<MetadataContainer>(),
+            Builder.ComplexType<PropertyContainer>(),
+            Builder.ComplexType<AuditResultsByUser>(),
+            Builder.ComplexType<AuditResultByProperty>()
+        };
     }
 }

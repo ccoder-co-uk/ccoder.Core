@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Data;
 
 
@@ -8,6 +12,3 @@ namespace Web
         public string SSOUserId { get; set; }
     }
 }
-
-
-

@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -37,7 +41,9 @@ public sealed partial class WorkflowEventIntegrationTests
 
     private async Task<Guid> CreateFlowDefinitionAsync(int appId, string name)
     {
-        FlowDefinition flow = await PostAsJsonAsync<FlowDefinition>("/Api/Workflow/FlowDefinition", new
+        FlowDefinition flow = (FlowDefinition)await PostAsJsonAsync(
+            relativeUrl: "/Api/Workflow/FlowDefinition",
+            payload: new
         {
             appId,
             name,
@@ -48,7 +54,8 @@ public sealed partial class WorkflowEventIntegrationTests
             createdOn = DateTimeOffset.UtcNow,
             lastUpdatedBy = "Guest",
             lastUpdated = DateTimeOffset.UtcNow
-        });
+            },
+            responseType: typeof(FlowDefinition));
 
         return flow.Id;
     }
@@ -59,21 +66,24 @@ public sealed partial class WorkflowEventIntegrationTests
         DateTimeOffset? nextExecution = null,
         string executeAs = null)
     {
-        ScheduledTask task = await PostAsJsonAsync<ScheduledTask>("/Api/Workflow/ScheduledTask", new
+        ScheduledTask task = (ScheduledTask)await PostAsJsonAsync(
+            relativeUrl: "/Api/Workflow/ScheduledTask",
+            payload: new
         {
             appId = BaselineAppId,
             flowId,
             name,
             description = "Integration scheduled task",
             executionArgs = "{}",
-            scheduleInTicks = TimeSpan.FromMinutes(5).Ticks,
+            scheduleInTicks = TimeSpan.FromMinutes(minutes: 5).Ticks,
             executeAs = executeAs ?? AdminUserId,
             createdBy = "Guest",
             updatedBy = "Guest",
             created = DateTimeOffset.UtcNow,
             lastUpdated = DateTimeOffset.UtcNow,
-            nextExecution = nextExecution ?? DateTimeOffset.UtcNow.AddMinutes(5)
-        });
+            nextExecution = nextExecution ?? DateTimeOffset.UtcNow.AddMinutes(minutes: 5)
+            },
+            responseType: typeof(ScheduledTask));
 
         return task.Id;
     }
@@ -81,36 +91,46 @@ public sealed partial class WorkflowEventIntegrationTests
     private async Task DeleteFlowArtifactsAsync(Guid flowId, int taskId = 0)
     {
         if (flowId == Guid.Empty && taskId == 0)
+        {
             return;
+        }
 
         await using CoreDataContext core = CreateCoreContext();
 
         if (taskId != 0)
         {
-            ScheduledTask task = await core.Set<ScheduledTask>().IgnoreQueryFilters()
-                .FirstOrDefaultAsync(found => found.Id == taskId);
+            ScheduledTask task = await core.Set<ScheduledTask>()
+                .IgnoreQueryFilters()
+                .FirstOrDefaultAsync(predicate: found => found.Id == taskId);
 
             if (task is not null)
-                await core.DeleteAllAsync([task]);
+            {
+                await core.DeleteAllAsync(scheduledTasks: [task]);
+            }
         }
 
         if (flowId != Guid.Empty)
         {
             await core.DeleteAllAsync(
-                core.Set<FlowInstanceData>().IgnoreQueryFilters()
-                    .Where(instance => instance.FlowDefinitionId == flowId)
+flowInstances:                 core.Set<FlowInstanceData>()
+                .IgnoreQueryFilters()
+                    .Where(predicate: instance => instance.FlowDefinitionId == flowId)
                     .ToArray());
 
             await core.DeleteAllAsync(
-                core.Set<WorkflowEvent>().IgnoreQueryFilters()
-                    .Where(workflowEvent => workflowEvent.FlowId == flowId)
+workflowEvents:                 core.Set<WorkflowEvent>()
+                .IgnoreQueryFilters()
+                    .Where(predicate: workflowEvent => workflowEvent.FlowId == flowId)
                     .ToArray());
 
-            FlowDefinition flow = await core.Set<FlowDefinition>().IgnoreQueryFilters()
-                .FirstOrDefaultAsync(found => found.Id == flowId);
+            FlowDefinition flow = await core.Set<FlowDefinition>()
+                .IgnoreQueryFilters()
+                .FirstOrDefaultAsync(predicate: found => found.Id == flowId);
 
             if (flow is not null)
-                await core.DeleteAsync(flow);
+            {
+                await core.DeleteAsync(flowDefinition: flow);
+            }
         }
     }
 
@@ -121,7 +141,7 @@ public sealed partial class WorkflowEventIntegrationTests
 
         await using CoreDataContext core = CreateCoreContext();
 
-        await core.AddUserAsync(new cCoder.Data.Models.Security.User
+        await core.AddUserAsync(user: new cCoder.Data.Models.Security.User
         {
             Id = userId,
             DefaultCultureId = "en-GB",
@@ -130,7 +150,7 @@ public sealed partial class WorkflowEventIntegrationTests
             IsActive = true
         });
 
-        await core.AddRoleAsync(new cCoder.Data.Models.Security.Role
+        await core.AddRoleAsync(role: new cCoder.Data.Models.Security.Role
         {
             Id = roleId,
             AppId = appId,
@@ -139,7 +159,7 @@ public sealed partial class WorkflowEventIntegrationTests
             Privs = "flowdefinition_execute"
         });
 
-        await core.AddUserRoleAsync(new cCoder.Data.Models.Security.UserRole
+        await core.AddUserRoleAsync(userRole: new cCoder.Data.Models.Security.UserRole
         {
             RoleId = roleId,
             UserId = userId
@@ -147,9 +167,9 @@ public sealed partial class WorkflowEventIntegrationTests
 
         await using DbContext sso = fixture.DatabaseServices
             .GetRequiredService<ISecurityDbContextFactory>()
-            .CreateDbContext(true);
+            .CreateDbContext(ignoreAuthInfo: true);
 
-        sso.Add(new cCoder.Security.Objects.Entities.SSOUser
+        sso.Add(entity: new cCoder.Security.Objects.Entities.SSOUser
         {
             Id = userId,
             DisplayName = "Scheduled Execute Only",
@@ -164,8 +184,10 @@ public sealed partial class WorkflowEventIntegrationTests
 
     private async Task DeleteExecuteOnlyUserAsync(string userId, Guid roleId)
     {
-        if (string.IsNullOrWhiteSpace(userId) && roleId == Guid.Empty)
+        if (string.IsNullOrWhiteSpace(value: userId) && roleId == Guid.Empty)
+        {
             return;
+        }
 
         await using CoreDataContext core = CreateCoreContext();
 
@@ -173,65 +195,71 @@ public sealed partial class WorkflowEventIntegrationTests
         {
             cCoder.Data.Models.Security.UserRole[] userRoles = await core.Set<cCoder.Data.Models.Security.UserRole>()
                 .IgnoreQueryFilters()
-                .Where(found => found.RoleId == roleId)
+                .Where(predicate: found => found.RoleId == roleId)
                 .ToArrayAsync();
 
             if (userRoles.Length > 0)
-                await core.DeleteAllAsync(userRoles);
+            {
+                await core.DeleteAllAsync(userRoles: userRoles);
+            }
 
             cCoder.Data.Models.Security.Role role = await core.Set<cCoder.Data.Models.Security.Role>()
                 .IgnoreQueryFilters()
-                .FirstOrDefaultAsync(found => found.Id == roleId);
+                .FirstOrDefaultAsync(predicate: found => found.Id == roleId);
 
             if (role is not null)
-                await core.DeleteAsync(role);
+            {
+                await core.DeleteAsync(role: role);
+            }
         }
 
-        if (!string.IsNullOrWhiteSpace(userId))
+        if (!string.IsNullOrWhiteSpace(value: userId))
         {
             cCoder.Data.Models.Security.User user = await core.Set<cCoder.Data.Models.Security.User>()
                 .IgnoreQueryFilters()
-                .FirstOrDefaultAsync(found => found.Id == userId);
+                .FirstOrDefaultAsync(predicate: found => found.Id == userId);
 
             if (user is not null)
-                await core.DeleteAsync(user);
+            {
+                await core.DeleteAsync(user: user);
+            }
         }
 
-        if (!string.IsNullOrWhiteSpace(userId))
+        if (!string.IsNullOrWhiteSpace(value: userId))
         {
             await using DbContext sso = fixture.DatabaseServices
                 .GetRequiredService<ISecurityDbContextFactory>()
-                .CreateDbContext(true);
+                .CreateDbContext(ignoreAuthInfo: true);
 
             cCoder.Security.Objects.Entities.Token[] tokens = await sso.Set<cCoder.Security.Objects.Entities.Token>()
                 .IgnoreQueryFilters()
-                .Where(found => found.UserName == userId)
+                .Where(predicate: found => found.UserName == userId)
                 .ToArrayAsync();
 
             if (tokens.Length > 0)
             {
-                sso.RemoveRange(tokens);
+                sso.RemoveRange(entities: tokens);
                 await sso.SaveChangesAsync();
             }
 
             UserEvent[] userEvents = await sso.Set<UserEvent>()
                 .IgnoreQueryFilters()
-                .Where(found => found.CreatedBy == userId)
+                .Where(predicate: found => found.CreatedBy == userId)
                 .ToArrayAsync();
 
             if (userEvents.Length > 0)
             {
-                sso.RemoveRange(userEvents);
+                sso.RemoveRange(entities: userEvents);
                 await sso.SaveChangesAsync();
             }
 
             cCoder.Security.Objects.Entities.SSOUser ssoUser = await sso.Set<cCoder.Security.Objects.Entities.SSOUser>()
                 .IgnoreQueryFilters()
-                .FirstOrDefaultAsync(found => found.Id == userId);
+                .FirstOrDefaultAsync(predicate: found => found.Id == userId);
 
             if (ssoUser is not null)
             {
-                sso.Remove(ssoUser);
+                sso.Remove(entity: ssoUser);
                 await sso.SaveChangesAsync();
             }
         }
@@ -240,40 +268,50 @@ public sealed partial class WorkflowEventIntegrationTests
     private async Task<bool> HasFlowInstanceStateAsync(Guid flowId, string state)
     {
         await using CoreDataContext core = CreateCoreContext();
-        return await core.Set<FlowInstanceData>().IgnoreQueryFilters()
-            .AnyAsync(instance => instance.FlowDefinitionId == flowId && instance.State == state);
+
+        return await core.Set<FlowInstanceData>()
+            .IgnoreQueryFilters()
+            .AnyAsync(predicate: instance => instance.FlowDefinitionId == flowId && instance.State == state);
     }
 
     private async Task<bool> HasAnyFlowInstanceAsync(Guid flowId)
     {
         await using CoreDataContext core = CreateCoreContext();
-        return await core.Set<FlowInstanceData>().IgnoreQueryFilters()
-            .AnyAsync(instance => instance.FlowDefinitionId == flowId);
+
+        return await core.Set<FlowInstanceData>()
+            .IgnoreQueryFilters()
+            .AnyAsync(predicate: instance => instance.FlowDefinitionId == flowId);
     }
 
     private async Task<FlowInstanceData> GetLatestInstanceAsync(Guid flowId)
     {
         await using CoreDataContext core = CreateCoreContext();
-        return await core.Set<FlowInstanceData>().IgnoreQueryFilters()
-            .Where(instance => instance.FlowDefinitionId == flowId)
-            .OrderByDescending(instance => instance.Start)
+
+        return await core.Set<FlowInstanceData>()
+            .IgnoreQueryFilters()
+            .Where(predicate: instance => instance.FlowDefinitionId == flowId)
+            .OrderByDescending(keySelector: instance => instance.Start)
             .FirstAsync();
     }
 
     private async Task<FlowInstanceData[]> GetFlowInstancesAsync(Guid flowId)
     {
         await using CoreDataContext core = CreateCoreContext();
-        return await core.Set<FlowInstanceData>().IgnoreQueryFilters()
-            .Where(instance => instance.FlowDefinitionId == flowId)
-            .OrderByDescending(instance => instance.Start)
+
+        return await core.Set<FlowInstanceData>()
+            .IgnoreQueryFilters()
+            .Where(predicate: instance => instance.FlowDefinitionId == flowId)
+            .OrderByDescending(keySelector: instance => instance.Start)
             .ToArrayAsync();
     }
 
     private async Task UpdateScheduledTaskNextExecutionAsync(int taskId, DateTimeOffset nextExecution)
     {
         await using CoreDataContext core = CreateCoreContext();
-        ScheduledTask task = await core.Set<ScheduledTask>().IgnoreQueryFilters()
-            .FirstAsync(found => found.Id == taskId);
+
+        ScheduledTask task = await core.Set<ScheduledTask>()
+            .IgnoreQueryFilters()
+            .FirstAsync(predicate: found => found.Id == taskId);
 
         task.NextExecution = nextExecution;
         task.LastUpdated = DateTimeOffset.UtcNow;
@@ -283,10 +321,10 @@ public sealed partial class WorkflowEventIntegrationTests
     }
 
     private bool HostedServicesOutputContains(string value) =>
-        fixture.HostedServicesOutput.Contains(value, StringComparison.Ordinal);
+        fixture.HostedServicesOutput.Contains(value: value,comparisonType: StringComparison.Ordinal);
 
-    private async Task PostAsync(string relativeUrl) =>
-        await SendWithOptionalHostAsync(HttpMethod.Post, relativeUrl);
+    private Task PostAsync(string relativeUrl) =>
+        SendWithOptionalHostAsync(method: HttpMethod.Post,relativeUrl: relativeUrl);
 
     private async Task PostRawAsync(string relativeUrl, string body, string host = null)
     {
@@ -295,34 +333,42 @@ public sealed partial class WorkflowEventIntegrationTests
             Content = new StringContent(body ?? string.Empty, System.Text.Encoding.UTF8, "application/json")
         };
 
-        if (!string.IsNullOrWhiteSpace(host))
+        if (!string.IsNullOrWhiteSpace(value: host))
+        {
             request.Headers.Host = host;
+        }
 
-        using HttpResponseMessage response = await fixture.WebClient.SendAsync(request);
+        using HttpResponseMessage response = await fixture.WebClient.SendAsync(request: request);
         string content = await response.Content.ReadAsStringAsync();
-        response.StatusCode.Should().Be(HttpStatusCode.OK, content);
+
+        response.StatusCode.Should()
+            .Be(expected: HttpStatusCode.OK,because: content);
     }
 
-    private async Task<T> PostAsJsonAsync<T>(
+    private async Task<object> PostAsJsonAsync(
         string relativeUrl,
         object payload,
+        Type responseType,
         string authToken = null)
     {
         using HttpRequestMessage request = new(HttpMethod.Post, relativeUrl)
         {
-            Content = JsonContent.Create(payload, options: RequestJsonOptions)
+            Content = JsonContent.Create(inputValue: payload,options: RequestJsonOptions)
         };
 
-        if (!string.IsNullOrWhiteSpace(authToken))
+        if (!string.IsNullOrWhiteSpace(value: authToken))
         {
             request.Headers.Authorization =
                 new System.Net.Http.Headers.AuthenticationHeaderValue("bearer", authToken);
         }
 
-        using HttpResponseMessage response = await fixture.WebClient.SendAsync(request);
+        using HttpResponseMessage response = await fixture.WebClient.SendAsync(request: request);
         string content = await response.Content.ReadAsStringAsync();
-        response.StatusCode.Should().Be(HttpStatusCode.OK, content);
-        return JsonSerializer.Deserialize<T>(content, JsonOptions)
+
+        response.StatusCode.Should()
+            .Be(expected: HttpStatusCode.OK,because: content);
+
+        return JsonSerializer.Deserialize(json: content, returnType: responseType, options: JsonOptions)
             ?? throw new InvalidOperationException($"Expected payload for {relativeUrl}.");
     }
 
@@ -330,53 +376,58 @@ public sealed partial class WorkflowEventIntegrationTests
     {
         using HttpRequestMessage request = new(method, relativeUrl);
 
-        if (!string.IsNullOrWhiteSpace(host))
+        if (!string.IsNullOrWhiteSpace(value: host))
+        {
             request.Headers.Host = host;
+        }
 
-        using HttpResponseMessage response = await fixture.WebClient.SendAsync(request);
+        using HttpResponseMessage response = await fixture.WebClient.SendAsync(request: request);
         string content = await response.Content.ReadAsStringAsync();
-        response.StatusCode.Should().Be(HttpStatusCode.OK, content);
+
+        response.StatusCode.Should()
+            .Be(expected: HttpStatusCode.OK,because: content);
     }
 
     private async Task<string> BuildFlowDiagnosticsAsync(Guid flowId)
     {
         await using CoreDataContext core = CreateCoreContext();
 
-        FlowInstanceData[] instances = await core.Set<FlowInstanceData>().IgnoreQueryFilters()
-            .Where(instance => instance.FlowDefinitionId == flowId)
-            .OrderByDescending(instance => instance.Start)
+        FlowInstanceData[] instances = await core.Set<FlowInstanceData>()
+            .IgnoreQueryFilters()
+            .Where(predicate: instance => instance.FlowDefinitionId == flowId)
+            .OrderByDescending(keySelector: instance => instance.Start)
             .ToArrayAsync();
 
         string instanceSummary = instances.Length == 0
             ? "No flow instances were found."
             : string.Join(
-                Environment.NewLine,
-                instances.Select(instance =>
-                    $"Instance {instance.Id} | State={instance.State} | Start={instance.Start:u} | End={(instance.End.HasValue ? instance.End.Value.ToString("u") : "<null>")} | Context={instance.ContextString ?? "<null>"}"));
+separator:                 Environment.NewLine,values:                 instances.Select(selector: instance =>
+                    $"Instance {instance.Id} | State={instance.State} | Start={instance.Start:u} | End={(instance.End.HasValue ? instance.End.Value.ToString(format: "u") : "<null>")} | Context={instance.ContextString ?? "<null>"}"));
 
         return string.Join(
-            Environment.NewLine + Environment.NewLine,
-            [
+separator:             Environment.NewLine + Environment.NewLine,value:             [
                 "Flow instances:",
                 instanceSummary,
                 "HostedServices output:",
-                TakeLastLines(fixture.HostedServicesOutput, 200),
+                TakeLastLines(content: fixture.HostedServicesOutput,maxLines: 200),
                 "Workflow output:",
-                TakeLastLines(fixture.WorkflowOutput, 200),
+                TakeLastLines(content: fixture.WorkflowOutput,maxLines: 200),
                 "Web output:",
-                TakeLastLines(fixture.WebOutput, 200)
+                TakeLastLines(content: fixture.WebOutput,maxLines: 200)
             ]);
     }
 
     private static string TakeLastLines(string content, int maxLines)
     {
-        if (string.IsNullOrWhiteSpace(content))
+        if (string.IsNullOrWhiteSpace(value: content))
+        {
             return "<no output>";
+        }
 
         string[] lines = content
-            .Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            .Split(separator: Environment.NewLine,options: StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
-        return string.Join(Environment.NewLine, lines.TakeLast(maxLines));
+        return string.Join(separator: Environment.NewLine,values: lines.TakeLast(count: maxLines));
     }
 
     private static async Task WaitUntilAsync(
@@ -388,9 +439,11 @@ public sealed partial class WorkflowEventIntegrationTests
         for (int attempt = 0; attempt < attempts; attempt++)
         {
             if (await predicate())
+            {
                 return;
+            }
 
-            await Task.Delay(delayMilliseconds);
+            await Task.Delay(millisecondsDelay: delayMilliseconds);
         }
 
         string diagnostics = diagnosticsFactory is null
@@ -401,21 +454,23 @@ public sealed partial class WorkflowEventIntegrationTests
     }
 
     private CoreDataContext CreateCoreContext() =>
-        fixture.DatabaseServices.GetRequiredService<ICoreContextFactory>().CreateCoreContext();
+        fixture.DatabaseServices.GetRequiredService<ICoreContextFactory>()
+            .CreateCoreContext();
 
     private async Task<string> CreateAuthTokenAsync(string userId)
     {
         await using DbContext sso = fixture.DatabaseServices
             .GetRequiredService<ISecurityDbContextFactory>()
-            .CreateDbContext(true);
+            .CreateDbContext(ignoreAuthInfo: true);
 
-        string tokenId = Guid.NewGuid().ToString("N");
+        string tokenId = Guid.NewGuid()
+            .ToString(format: "N");
 
-        sso.Add(new SsoToken
+        sso.Add(entity: new SsoToken
         {
             Id = tokenId,
             Reason = (int)TokenUse.Auth,
-            Expires = DateTimeOffset.UtcNow.AddHours(1),
+            Expires = DateTimeOffset.UtcNow.AddHours(hours: 1),
             UserName = userId
         });
 

@@ -1,11 +1,16 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Data.Models.Packaging;
 
 namespace cCoder.Core.Exposures.Setup;
 
 public static partial class UIBaseline
 {
-    static Package Pages => new()
-    {
+    private static Package CreatePagesPackage() =>
+        new()
+        {
         Name = "Core Review Pages",
         Category = "CoreReview",
         Description = "Unresolved Core page baseline items.",
@@ -73,5 +78,5 @@ public static partial class UIBaseline
 """
             }
         ]
-    };
+        };
 }

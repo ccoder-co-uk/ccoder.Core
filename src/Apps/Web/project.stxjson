@@ -1,0 +1,603 @@
+{
+  "Classes": [
+    {
+      "Name": "Web.Brokers.Api.ApiContextBroker",
+      "StandardElementType": "Broker",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "SelectAllApiInfos",
+          "Inputs": [],
+          "ReturnType": "cCoder.Data.Models.ApiInfo[]"
+        }
+      ]
+    },
+    {
+      "Name": "Web.Brokers.Api.ApiScriptExecutionBroker",
+      "StandardElementType": "Broker",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "ExecuteScriptAsync",
+          "Inputs": [
+            {
+              "Name": "script",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CSystem.String\u003E"
+        }
+      ]
+    },
+    {
+      "Name": "Web.Controllers.Api.ApiRootController",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "Get",
+          "Inputs": [],
+          "ReturnType": "IActionResult"
+        },
+        {
+          "Name": "GetTime",
+          "Inputs": [],
+          "ReturnType": "IActionResult"
+        },
+        {
+          "Name": "Post",
+          "Inputs": [],
+          "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E"
+        },
+        {
+          "Name": "Put",
+          "Inputs": [],
+          "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E"
+        }
+      ]
+    },
+    {
+      "Name": "Web.Controllers.Api.CacheController",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "GetRefreshCache",
+          "Inputs": [],
+          "ReturnType": "IActionResult"
+        }
+      ]
+    },
+    {
+      "Name": "Web.Controllers.Api.MetadataController",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "GetMetadata",
+          "Inputs": [
+            {
+              "Name": "culture",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "IActionResult"
+        }
+      ]
+    },
+    {
+      "Name": "Web.Controllers.Api.ScriptController",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "PostExecuteScript",
+          "Inputs": [],
+          "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E"
+        }
+      ]
+    },
+    {
+      "Name": "Web.Controllers.HomeController",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "Index",
+          "Inputs": [
+            {
+              "Name": "path",
+              "Type": "System.String"
+            },
+            {
+              "Name": "theme",
+              "Type": "System.String"
+            },
+            {
+              "Name": "culture",
+              "Type": "System.String"
+            },
+            {
+              "Name": "edit",
+              "Type": "System.Boolean"
+            },
+            {
+              "Name": "cancellationToken",
+              "Type": "System.Threading.CancellationToken"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E"
+        }
+      ]
+    },
+    {
+      "Name": "Web.CoreAuthInfo",
+      "StandardElementType": "Dependency",
+      "Properties": [
+        {
+          "Name": "SSOUserId",
+          "Type": "System.String"
+        }
+      ],
+      "Methods": []
+    },
+    {
+      "Name": "Web.Dependencies.Filters.HomeDefaultsActionFilter",
+      "StandardElementType": "Dependency",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "OnActionExecutionAsync",
+          "Inputs": [
+            {
+              "Name": "context",
+              "Type": "ActionExecutingContext"
+            },
+            {
+              "Name": "next",
+              "Type": "ActionExecutionDelegate"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task"
+        }
+      ]
+    },
+    {
+      "Name": "Web.Dependencies.Filters.HomeExceptionFilter",
+      "StandardElementType": "Dependency",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "OnException",
+          "Inputs": [
+            {
+              "Name": "context",
+              "Type": "ExceptionContext"
+            }
+          ],
+          "ReturnType": "System.Void"
+        }
+      ]
+    },
+    {
+      "Name": "Web.Exposures.ApiCacheManager",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "RefreshCaches",
+          "Inputs": [],
+          "ReturnType": "System.Void"
+        }
+      ]
+    },
+    {
+      "Name": "Web.Exposures.ApiContextManager",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "GetApiInfos",
+          "Inputs": [],
+          "ReturnType": "cCoder.Data.Models.ApiInfo[]"
+        }
+      ]
+    },
+    {
+      "Name": "Web.Exposures.ApiScriptManager",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "ExecuteApiScriptRequestAsync",
+          "Inputs": [
+            {
+              "Name": "request",
+              "Type": "Web.Models.ApiScriptRequest"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CSystem.String\u003E"
+        }
+      ]
+    },
+    {
+      "Name": "Web.Exposures.HomeSessionManager",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "CanUseSession",
+          "Inputs": [
+            {
+              "Name": "context",
+              "Type": "HttpContext"
+            }
+          ],
+          "ReturnType": "System.Boolean"
+        },
+        {
+          "Name": "CreateExpandoObject",
+          "Inputs": [
+            {
+              "Name": "context",
+              "Type": "HttpContext"
+            }
+          ],
+          "ReturnType": "System.Dynamic.ExpandoObject"
+        },
+        {
+          "Name": "GetSessionValue",
+          "Inputs": [
+            {
+              "Name": "context",
+              "Type": "HttpContext"
+            },
+            {
+              "Name": "key",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.String"
+        },
+        {
+          "Name": "SetSessionValue",
+          "Inputs": [
+            {
+              "Name": "context",
+              "Type": "HttpContext"
+            },
+            {
+              "Name": "key",
+              "Type": "System.String"
+            },
+            {
+              "Name": "value",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.Void"
+        }
+      ]
+    },
+    {
+      "Name": "Web.IServiceCollectionExtensions",
+      "StandardElementType": "App",
+      "Properties": [],
+      "Methods": []
+    },
+    {
+      "Name": "Web.Models.ApiScriptRequest",
+      "StandardElementType": "Model",
+      "Properties": [
+        {
+          "Name": "Script",
+          "Type": "System.String"
+        }
+      ],
+      "Methods": []
+    },
+    {
+      "Name": "Web.Models.ErrorViewModel",
+      "StandardElementType": "Model",
+      "Properties": [
+        {
+          "Name": "RequestId",
+          "Type": "System.String"
+        },
+        {
+          "Name": "ShowRequestId",
+          "Type": "System.Boolean"
+        }
+      ],
+      "Methods": []
+    },
+    {
+      "Name": "Web.Models.Exceptions.ApiCacheDependencyException",
+      "StandardElementType": "Dependency",
+      "Properties": [],
+      "Methods": []
+    },
+    {
+      "Name": "Web.Models.Exceptions.ApiCacheServiceException",
+      "StandardElementType": "Dependency",
+      "Properties": [],
+      "Methods": []
+    },
+    {
+      "Name": "Web.Models.Exceptions.ApiCacheValidationException",
+      "StandardElementType": "Dependency",
+      "Properties": [],
+      "Methods": []
+    },
+    {
+      "Name": "Web.Models.Exceptions.ApiScriptDependencyException",
+      "StandardElementType": "Dependency",
+      "Properties": [],
+      "Methods": []
+    },
+    {
+      "Name": "Web.Models.Exceptions.ApiScriptOrchestrationDependencyException",
+      "StandardElementType": "Dependency",
+      "Properties": [],
+      "Methods": []
+    },
+    {
+      "Name": "Web.Models.Exceptions.ApiScriptOrchestrationServiceException",
+      "StandardElementType": "Dependency",
+      "Properties": [],
+      "Methods": []
+    },
+    {
+      "Name": "Web.Models.Exceptions.ApiScriptOrchestrationValidationException",
+      "StandardElementType": "Dependency",
+      "Properties": [],
+      "Methods": []
+    },
+    {
+      "Name": "Web.Models.Exceptions.ApiScriptServiceException",
+      "StandardElementType": "Dependency",
+      "Properties": [],
+      "Methods": []
+    },
+    {
+      "Name": "Web.Models.Exceptions.ApiScriptValidationException",
+      "StandardElementType": "Dependency",
+      "Properties": [],
+      "Methods": []
+    },
+    {
+      "Name": "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
+      "StandardElementType": "Dependency",
+      "Properties": [],
+      "Methods": []
+    },
+    {
+      "Name": "Web.Models.Exceptions.HomeSessionProcessingServiceException",
+      "StandardElementType": "Dependency",
+      "Properties": [],
+      "Methods": []
+    },
+    {
+      "Name": "Web.Models.Exceptions.HomeSessionProcessingValidationException",
+      "StandardElementType": "Dependency",
+      "Properties": [],
+      "Methods": []
+    },
+    {
+      "Name": "Web.Program",
+      "StandardElementType": "App",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "Main",
+          "Inputs": [
+            {
+              "Name": "args",
+              "Type": "System.String[]"
+            }
+          ],
+          "ReturnType": "System.Void"
+        }
+      ]
+    },
+    {
+      "Name": "Web.Services.Aggregations.ApiCacheAggregationService",
+      "StandardElementType": "AggregationService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "RefreshCaches",
+          "Inputs": [],
+          "ReturnType": "System.Void"
+        }
+      ]
+    },
+    {
+      "Name": "Web.Services.Foundations.Api.ApiContextService",
+      "StandardElementType": "FoundationService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "GetApiInfos",
+          "Inputs": [],
+          "ReturnType": "cCoder.Data.Models.ApiInfo[]"
+        }
+      ]
+    },
+    {
+      "Name": "Web.Services.Foundations.Api.ApiScriptAuthorizationService",
+      "StandardElementType": "FoundationService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "AuthorizeScriptExecution",
+          "Inputs": [],
+          "ReturnType": "System.Void"
+        }
+      ]
+    },
+    {
+      "Name": "Web.Services.Foundations.Api.ApiScriptExecutionService",
+      "StandardElementType": "FoundationService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "ExecuteScriptAsync",
+          "Inputs": [
+            {
+              "Name": "script",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CSystem.String\u003E"
+        }
+      ]
+    },
+    {
+      "Name": "Web.Services.Orchestrations.Api.ApiScriptOrchestrationService",
+      "StandardElementType": "OrchestrationService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "ExecuteApiScriptRequestAsync",
+          "Inputs": [
+            {
+              "Name": "request",
+              "Type": "Web.Models.ApiScriptRequest"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CSystem.String\u003E"
+        }
+      ]
+    },
+    {
+      "Name": "Web.Services.Processings.HomeSessionProcessingService",
+      "StandardElementType": "ProcessingService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "CanUseSession",
+          "Inputs": [
+            {
+              "Name": "context",
+              "Type": "HttpContext"
+            }
+          ],
+          "ReturnType": "System.Boolean"
+        },
+        {
+          "Name": "CreateExpandoObject",
+          "Inputs": [
+            {
+              "Name": "context",
+              "Type": "HttpContext"
+            }
+          ],
+          "ReturnType": "System.Dynamic.ExpandoObject"
+        },
+        {
+          "Name": "GetSessionValue",
+          "Inputs": [
+            {
+              "Name": "context",
+              "Type": "HttpContext"
+            },
+            {
+              "Name": "key",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.String"
+        },
+        {
+          "Name": "SetSessionValue",
+          "Inputs": [
+            {
+              "Name": "context",
+              "Type": "HttpContext"
+            },
+            {
+              "Name": "key",
+              "Type": "System.String"
+            },
+            {
+              "Name": "value",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.Void"
+        }
+      ]
+    }
+  ],
+  "Links": [
+    {
+      "FromType": "Web.Controllers.Api.ApiRootController",
+      "ToType": "Web.Exposures.ApiContextManager"
+    },
+    {
+      "FromType": "Web.Controllers.Api.CacheController",
+      "ToType": "Web.Exposures.ApiCacheManager"
+    },
+    {
+      "FromType": "Web.Controllers.Api.ScriptController",
+      "ToType": "Web.Exposures.ApiScriptManager"
+    },
+    {
+      "FromType": "Web.Controllers.HomeController",
+      "ToType": "Web.Exposures.HomeSessionManager"
+    },
+    {
+      "FromType": "Web.Dependencies.Filters.HomeExceptionFilter",
+      "ToType": "Web.Exposures.HomeSessionManager"
+    },
+    {
+      "FromType": "Web.Exposures.ApiCacheManager",
+      "ToType": "Web.Services.Aggregations.ApiCacheAggregationService"
+    },
+    {
+      "FromType": "Web.Exposures.ApiContextManager",
+      "ToType": "Web.Services.Foundations.Api.ApiContextService"
+    },
+    {
+      "FromType": "Web.Exposures.ApiScriptManager",
+      "ToType": "Web.Services.Orchestrations.Api.ApiScriptOrchestrationService"
+    },
+    {
+      "FromType": "Web.Exposures.HomeSessionManager",
+      "ToType": "Web.Services.Processings.HomeSessionProcessingService"
+    },
+    {
+      "FromType": "Web.Services.Foundations.Api.ApiContextService",
+      "ToType": "Web.Brokers.Api.ApiContextBroker"
+    },
+    {
+      "FromType": "Web.Services.Foundations.Api.ApiScriptExecutionService",
+      "ToType": "Web.Brokers.Api.ApiScriptExecutionBroker"
+    },
+    {
+      "FromType": "Web.Services.Orchestrations.Api.ApiScriptOrchestrationService",
+      "ToType": "Web.Services.Foundations.Api.ApiScriptAuthorizationService"
+    },
+    {
+      "FromType": "Web.Services.Orchestrations.Api.ApiScriptOrchestrationService",
+      "ToType": "Web.Services.Foundations.Api.ApiScriptExecutionService"
+    }
+  ],
+  "AnalysisItems": [
+    {
+      "Code": "STXAPI001",
+      "Description": "An API controller must have exactly one business dependency.",
+      "Severity": "Warning",
+      "Type": "Web.Controllers.HomeController",
+      "LineNumber": 21
+    },
+    {
+      "Code": "STXAPI004",
+      "Description": "API controller methods must use HTTP nouns: Get, Post, Put, or Delete.",
+      "Severity": "Warning",
+      "Type": "Web.Controllers.HomeController",
+      "LineNumber": 44
+    }
+  ]
+}

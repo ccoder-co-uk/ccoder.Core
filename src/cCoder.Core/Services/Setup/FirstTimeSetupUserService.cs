@@ -1,13 +1,19 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using cCoder.Data;
 using cCoder.Data.Models.Security;
-using cCoder.Security.Services.Orchestrations.Interfaces;
+using cCoder.Security.Services.Aggregations.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using cCoder.Core.Models;
+using System.CodeDom.Compiler;
 
 namespace cCoder.Core.Services.Setup;
 
+[GeneratedCode("decompilation-recovery", "1.0")]
 internal sealed class FirstTimeSetupUserService(
-    IAuthenticationOrchestrationService authenticationOrchestrationService,
+    IAuthenticationAggregationService authenticationAggregationService,
     ICoreContextFactory coreContextFactory)
     : IFirstTimeSetupUserService
 {
@@ -16,10 +22,14 @@ internal sealed class FirstTimeSetupUserService(
         string password,
         CancellationToken cancellationToken = default)
     {
-        if (string.IsNullOrWhiteSpace(userId))
+        if (string.IsNullOrWhiteSpace(value: userId))
+        {
             throw new InvalidOperationException("Bootstrap user ID is required.");
+        }
 
-        await authenticationOrchestrationService.LoginAsync(userId, password);
+        await authenticationAggregationService.LoginAsync(
+            username: userId,
+            password: password);
     }
 
     public async Task EnsureBootstrapCoreUserAsync(
@@ -30,23 +40,25 @@ internal sealed class FirstTimeSetupUserService(
 
         bool exists = await core.Set<User>()
             .IgnoreQueryFilters()
-            .AnyAsync(user => user.Id == bootstrapUser.UserId, cancellationToken);
+            .AnyAsync(predicate: user => user.Id == bootstrapUser.UserId, cancellationToken: cancellationToken);
 
         if (exists)
+        {
             return;
+        }
 
-        await core.Set<User>().AddAsync(
-            new User
-            {
-                Id = bootstrapUser.UserId,
-                Email = bootstrapUser.Email,
-                DisplayName = bootstrapUser.DisplayName,
-                DefaultCultureId = string.Empty,
-                IsActive = true
-            },
-            cancellationToken);
+        await core.Set<User>()
+            .AddAsync(
+entity: new User
+{
+    Id = bootstrapUser.UserId,
+    Email = bootstrapUser.Email,
+    DisplayName = bootstrapUser.DisplayName,
+    DefaultCultureId = string.Empty,
+    IsActive = true
+}, cancellationToken: cancellationToken);
 
-        await core.SaveChangesAsync(cancellationToken);
+        await core.SaveChangesAsync(cancellationToken: cancellationToken);
     }
 
     public async Task CompleteFirstUserRegistrationAsync(
@@ -57,7 +69,7 @@ internal sealed class FirstTimeSetupUserService(
     {
         try
         {
-            await EnsureRequiredRoleMembershipsAsync(appId, bootstrapUser.UserId, cancellationToken);
+            await EnsureRequiredRoleMembershipsAsync(appId: appId, userId: bootstrapUser.UserId, cancellationToken: cancellationToken);
         }
         catch (Exception ex)
         {
@@ -73,19 +85,21 @@ internal sealed class FirstTimeSetupUserService(
 
         User coreUser = await core.Set<User>()
             .IgnoreQueryFilters()
-            .SingleOrDefaultAsync(found => found.Id == bootstrapUserId, cancellationToken);
+            .SingleOrDefaultAsync(predicate: found => found.Id == bootstrapUserId, cancellationToken: cancellationToken);
 
         if (coreUser is null)
+        {
             return;
+        }
 
         UserRole[] userRoles = await core.Set<UserRole>()
             .IgnoreQueryFilters()
-            .Where(found => found.UserId == bootstrapUserId)
-            .ToArrayAsync(cancellationToken);
+            .Where(predicate: found => found.UserId == bootstrapUserId)
+            .ToArrayAsync(cancellationToken: cancellationToken);
 
-        core.RemoveRange(userRoles);
-        core.Remove(coreUser);
-        await core.SaveChangesAsync(cancellationToken);
+        core.RemoveRange(entities: userRoles);
+        core.Remove(entity: coreUser);
+        await core.SaveChangesAsync(cancellationToken: cancellationToken);
     }
 
     private async Task EnsureRequiredRoleMembershipsAsync(
@@ -97,32 +111,32 @@ internal sealed class FirstTimeSetupUserService(
 
         Role[] roles = await core.Set<Role>()
             .IgnoreQueryFilters()
-            .Where(role =>
+            .Where(predicate: role =>
                 role.AppId == appId
                 && (role.Name == "Administrators" || role.Name == "Users"))
-            .ToArrayAsync(cancellationToken);
+            .ToArrayAsync(cancellationToken: cancellationToken);
 
         foreach (Role role in roles)
         {
             bool exists = await core.Set<UserRole>()
                 .IgnoreQueryFilters()
                 .AnyAsync(
-                    userRole => userRole.RoleId == role.Id && userRole.UserId == userId,
-                    cancellationToken);
+predicate: userRole => userRole.RoleId == role.Id && userRole.UserId == userId, cancellationToken: cancellationToken);
 
             if (exists)
+            {
                 continue;
+            }
 
-            await core.Set<UserRole>().AddAsync(
-                new UserRole
-                {
-                    RoleId = role.Id,
-                    UserId = userId
-                },
-                cancellationToken);
+            await core.Set<UserRole>()
+                .AddAsync(
+entity: new UserRole
+{
+    RoleId = role.Id,
+    UserId = userId
+}, cancellationToken: cancellationToken);
         }
 
-        await core.SaveChangesAsync(cancellationToken);
+        await core.SaveChangesAsync(cancellationToken: cancellationToken);
     }
 }
-

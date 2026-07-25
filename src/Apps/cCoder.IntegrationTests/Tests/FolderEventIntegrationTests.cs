@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -37,7 +41,9 @@ public sealed partial class FolderEventIntegrationTests
 
     private async Task<Guid> CreateFlowDefinitionAsync(int appId, string name, string authToken)
     {
-        FlowDefinition flow = await PostAsJsonAsync<FlowDefinition>("/Api/Workflow/FlowDefinition", new
+        FlowDefinition flow = (FlowDefinition)await PostAsJsonAsync(
+            relativeUrl: "/Api/Workflow/FlowDefinition",
+            payload: new
         {
             appId,
             name,
@@ -48,14 +54,18 @@ public sealed partial class FolderEventIntegrationTests
             createdOn = DateTimeOffset.UtcNow,
             lastUpdatedBy = "Guest",
             lastUpdated = DateTimeOffset.UtcNow
-        }, authToken);
+            },
+            responseType: typeof(FlowDefinition),
+            authToken: authToken);
 
         return flow.Id;
     }
 
     private async Task<Guid> CreateWorkflowEventAsync(Guid flowId, string eventContext, string authToken)
     {
-        WorkflowEvent workflowEvent = await PostAsJsonAsync<WorkflowEvent>("/Api/Workflow/WorkflowEvent", new
+        WorkflowEvent workflowEvent = (WorkflowEvent)await PostAsJsonAsync(
+            relativeUrl: "/Api/Workflow/WorkflowEvent",
+            payload: new
         {
             flowId,
             type = "Acceptance",
@@ -63,7 +73,9 @@ public sealed partial class FolderEventIntegrationTests
             executeAs = AdminUserId,
             createdBy = "Guest",
             createdOn = DateTimeOffset.UtcNow
-        }, authToken);
+            },
+            responseType: typeof(WorkflowEvent),
+            authToken: authToken);
 
         return workflowEvent.Id;
     }
@@ -71,7 +83,8 @@ public sealed partial class FolderEventIntegrationTests
     private async Task<Guid> CreateFolderAsync(int appId, string name)
     {
         await using CoreDataContext core = CreateCoreContext();
-        Folder folder = await core.AddFolderAsync(new Folder
+
+        Folder folder = await core.AddFolderAsync(folder: new Folder
         {
             Id = Guid.NewGuid(),
             AppId = appId,
@@ -85,86 +98,109 @@ public sealed partial class FolderEventIntegrationTests
     private async Task DeleteWorkflowEventAsync(Guid workflowEventId)
     {
         if (workflowEventId == Guid.Empty)
+        {
             return;
+        }
 
         await using CoreDataContext core = CreateCoreContext();
-        WorkflowEvent workflowEvent = await core.Set<WorkflowEvent>().IgnoreQueryFilters()
-            .FirstOrDefaultAsync(found => found.Id == workflowEventId);
+
+        WorkflowEvent workflowEvent = await core.Set<WorkflowEvent>()
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(predicate: found => found.Id == workflowEventId);
 
         if (workflowEvent is not null)
-            await core.DeleteAllAsync([workflowEvent]);
+        {
+            await core.DeleteAllAsync(workflowEvents: [workflowEvent]);
+        }
     }
 
     private async Task DeleteFlowArtifactsAsync(Guid flowId, int taskId = 0)
     {
         if (flowId == Guid.Empty && taskId == 0)
+        {
             return;
+        }
 
         await using CoreDataContext core = CreateCoreContext();
 
         if (flowId != Guid.Empty)
         {
             await core.DeleteAllAsync(
-                core.Set<FlowInstanceData>().IgnoreQueryFilters()
-                    .Where(instance => instance.FlowDefinitionId == flowId)
+flowInstances:                 core.Set<FlowInstanceData>()
+                .IgnoreQueryFilters()
+                    .Where(predicate: instance => instance.FlowDefinitionId == flowId)
                     .ToArray());
 
             await core.DeleteAllAsync(
-                core.Set<WorkflowEvent>().IgnoreQueryFilters()
-                    .Where(workflowEvent => workflowEvent.FlowId == flowId)
+workflowEvents:                 core.Set<WorkflowEvent>()
+                .IgnoreQueryFilters()
+                    .Where(predicate: workflowEvent => workflowEvent.FlowId == flowId)
                     .ToArray());
 
-            FlowDefinition flow = await core.Set<FlowDefinition>().IgnoreQueryFilters()
-                .FirstOrDefaultAsync(found => found.Id == flowId);
+            FlowDefinition flow = await core.Set<FlowDefinition>()
+                .IgnoreQueryFilters()
+                .FirstOrDefaultAsync(predicate: found => found.Id == flowId);
 
             if (flow is not null)
-                await core.DeleteAsync(flow);
+            {
+                await core.DeleteAsync(flowDefinition: flow);
+            }
         }
     }
 
     private async Task<bool> HasFlowInstanceStateAsync(Guid flowId, string state)
     {
         await using CoreDataContext core = CreateCoreContext();
-        return await core.Set<FlowInstanceData>().IgnoreQueryFilters()
-            .AnyAsync(instance => instance.FlowDefinitionId == flowId && instance.State == state);
+
+        return await core.Set<FlowInstanceData>()
+            .IgnoreQueryFilters()
+            .AnyAsync(predicate: instance => instance.FlowDefinitionId == flowId && instance.State == state);
     }
 
     private async Task<bool> HasAnyFlowInstanceAsync(Guid flowId)
     {
         await using CoreDataContext core = CreateCoreContext();
-        return await core.Set<FlowInstanceData>().IgnoreQueryFilters()
-            .AnyAsync(instance => instance.FlowDefinitionId == flowId);
+
+        return await core.Set<FlowInstanceData>()
+            .IgnoreQueryFilters()
+            .AnyAsync(predicate: instance => instance.FlowDefinitionId == flowId);
     }
 
     private async Task<FlowInstanceData> GetLatestInstanceAsync(Guid flowId)
     {
         await using CoreDataContext core = CreateCoreContext();
-        return await core.Set<FlowInstanceData>().IgnoreQueryFilters()
-            .Where(instance => instance.FlowDefinitionId == flowId)
-            .OrderByDescending(instance => instance.Start)
+
+        return await core.Set<FlowInstanceData>()
+            .IgnoreQueryFilters()
+            .Where(predicate: instance => instance.FlowDefinitionId == flowId)
+            .OrderByDescending(keySelector: instance => instance.Start)
             .FirstAsync();
     }
 
-    private async Task<T> PostAsJsonAsync<T>(
+    private async Task<object> PostAsJsonAsync(
         string relativeUrl,
         object payload,
+        Type responseType,
         string authToken = null)
     {
-        using HttpRequestMessage request = new(HttpMethod.Post, WithAuthToken(relativeUrl, authToken))
+        using HttpRequestMessage request = new(HttpMethod.Post, WithAuthToken(relativeUrl: relativeUrl,authToken: authToken))
         {
-            Content = JsonContent.Create(payload, options: RequestJsonOptions)
+            Content = JsonContent.Create(inputValue: payload,options: RequestJsonOptions)
         };
 
-        if (!string.IsNullOrWhiteSpace(authToken))
+        if (!string.IsNullOrWhiteSpace(value: authToken))
         {
             request.Headers.Authorization =
                 new System.Net.Http.Headers.AuthenticationHeaderValue("bearer", authToken);
         }
 
-        using HttpResponseMessage response = await fixture.WebClient.SendAsync(request);
+        using HttpResponseMessage response = await fixture.WebClient.SendAsync(request: request);
         string content = await response.Content.ReadAsStringAsync();
-        response.StatusCode.Should().Be(HttpStatusCode.OK, content);
-        return JsonSerializer.Deserialize<T>(content, JsonOptions)
+
+        response.StatusCode.Should()
+            .Be(expected: HttpStatusCode.OK,because: content);
+
+        return JsonSerializer.Deserialize(json: content, returnType: responseType, options: JsonOptions)
             ?? throw new InvalidOperationException($"Expected payload for {relativeUrl}.");
     }
 
@@ -174,35 +210,40 @@ public sealed partial class FolderEventIntegrationTests
         string host = null,
         string authToken = null)
     {
-        using HttpRequestMessage request = new(method, WithAuthToken(relativeUrl, authToken));
+        using HttpRequestMessage request = new(method, WithAuthToken(relativeUrl: relativeUrl,authToken: authToken));
 
-        if (!string.IsNullOrWhiteSpace(host))
+        if (!string.IsNullOrWhiteSpace(value: host))
+        {
             request.Headers.Host = host;
+        }
 
-        if (!string.IsNullOrWhiteSpace(authToken))
+        if (!string.IsNullOrWhiteSpace(value: authToken))
         {
             request.Headers.Authorization =
                 new System.Net.Http.Headers.AuthenticationHeaderValue("bearer", authToken);
         }
 
-        using HttpResponseMessage response = await fixture.WebClient.SendAsync(request);
+        using HttpResponseMessage response = await fixture.WebClient.SendAsync(request: request);
         string content = await response.Content.ReadAsStringAsync();
-        response.StatusCode.Should().Be(HttpStatusCode.OK, content);
+
+        response.StatusCode.Should()
+            .Be(expected: HttpStatusCode.OK,because: content);
     }
 
     private async Task<string> CreateAuthTokenAsync(string userId)
     {
         await using DbContext sso = fixture.DatabaseServices
             .GetRequiredService<ISecurityDbContextFactory>()
-            .CreateDbContext(true);
+            .CreateDbContext(ignoreAuthInfo: true);
 
-        string tokenId = Guid.NewGuid().ToString("N");
+        string tokenId = Guid.NewGuid()
+            .ToString(format: "N");
 
-        sso.Add(new SsoToken
+        sso.Add(entity: new SsoToken
         {
             Id = tokenId,
             Reason = (int)TokenUse.Auth,
-            Expires = DateTimeOffset.UtcNow.AddHours(1),
+            Expires = DateTimeOffset.UtcNow.AddHours(hours: 1),
             UserName = userId
         });
 
@@ -212,55 +253,58 @@ public sealed partial class FolderEventIntegrationTests
 
     private static string WithAuthToken(string relativeUrl, string authToken)
     {
-        if (string.IsNullOrWhiteSpace(authToken))
+        if (string.IsNullOrWhiteSpace(value: authToken))
+        {
             return relativeUrl;
+        }
 
-        string separator = relativeUrl.Contains('?')
+        string separator = relativeUrl.Contains(value: '?')
             ? "&"
             : "?";
 
-        return $"{relativeUrl}{separator}t={WebUtility.UrlEncode(authToken)}";
+        return $"{relativeUrl}{separator}t={WebUtility.UrlEncode(value: authToken)}";
     }
 
     private async Task<string> BuildFlowDiagnosticsAsync(Guid flowId)
     {
         await using CoreDataContext core = CreateCoreContext();
 
-        FlowInstanceData[] instances = await core.Set<FlowInstanceData>().IgnoreQueryFilters()
-            .Where(instance => instance.FlowDefinitionId == flowId)
-            .OrderByDescending(instance => instance.Start)
+        FlowInstanceData[] instances = await core.Set<FlowInstanceData>()
+            .IgnoreQueryFilters()
+            .Where(predicate: instance => instance.FlowDefinitionId == flowId)
+            .OrderByDescending(keySelector: instance => instance.Start)
             .ToArrayAsync();
 
         string instanceSummary = instances.Length == 0
             ? "No flow instances were found."
             : string.Join(
-                Environment.NewLine,
-                instances.Select(instance =>
-                    $"Instance {instance.Id} | State={instance.State} | Start={instance.Start:u} | End={(instance.End.HasValue ? instance.End.Value.ToString("u") : "<null>")} | Context={instance.ContextString ?? "<null>"}"));
+separator:                 Environment.NewLine,values:                 instances.Select(selector: instance =>
+                    $"Instance {instance.Id} | State={instance.State} | Start={instance.Start:u} | End={(instance.End.HasValue ? instance.End.Value.ToString(format: "u") : "<null>")} | Context={instance.ContextString ?? "<null>"}"));
 
         return string.Join(
-            Environment.NewLine + Environment.NewLine,
-            [
+separator:             Environment.NewLine + Environment.NewLine,value:             [
                 "Flow instances:",
                 instanceSummary,
                 "HostedServices output:",
-                TakeLastLines(fixture.HostedServicesOutput, 200),
+                TakeLastLines(content: fixture.HostedServicesOutput,maxLines: 200),
                 "Workflow output:",
-                TakeLastLines(fixture.WorkflowOutput, 200),
+                TakeLastLines(content: fixture.WorkflowOutput,maxLines: 200),
                 "Web output:",
-                TakeLastLines(fixture.WebOutput, 200)
+                TakeLastLines(content: fixture.WebOutput,maxLines: 200)
             ]);
     }
 
     private static string TakeLastLines(string content, int maxLines)
     {
-        if (string.IsNullOrWhiteSpace(content))
+        if (string.IsNullOrWhiteSpace(value: content))
+        {
             return "<no output>";
+        }
 
         string[] lines = content
-            .Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            .Split(separator: Environment.NewLine,options: StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
-        return string.Join(Environment.NewLine, lines.TakeLast(maxLines));
+        return string.Join(separator: Environment.NewLine,values: lines.TakeLast(count: maxLines));
     }
 
     private static async Task WaitUntilAsync(
@@ -272,9 +316,11 @@ public sealed partial class FolderEventIntegrationTests
         for (int attempt = 0; attempt < attempts; attempt++)
         {
             if (await predicate())
+            {
                 return;
+            }
 
-            await Task.Delay(delayMilliseconds);
+            await Task.Delay(millisecondsDelay: delayMilliseconds);
         }
 
         string diagnostics = diagnosticsFactory is null
@@ -285,7 +331,8 @@ public sealed partial class FolderEventIntegrationTests
     }
 
     private CoreDataContext CreateCoreContext() =>
-        fixture.DatabaseServices.GetRequiredService<ICoreContextFactory>().CreateCoreContext();
+        fixture.DatabaseServices.GetRequiredService<ICoreContextFactory>()
+            .CreateCoreContext();
 
     private static string Unique(string prefix) =>
         $"{prefix}-{Guid.NewGuid():N}";

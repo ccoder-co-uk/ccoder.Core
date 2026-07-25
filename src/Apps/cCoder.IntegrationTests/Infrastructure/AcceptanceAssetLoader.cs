@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------
+// Copyright (c) Paul.Ward@ccoder.co.uk
+// ---------------------------------------------------------------
+
 using System.Text.Json;
 
 namespace cCoder.IntegrationTests.Infrastructure;
@@ -5,18 +9,20 @@ namespace cCoder.IntegrationTests.Infrastructure;
 internal static class AcceptanceAssetLoader
 {
     public static string AssetsDirectory =>
-        Path.Combine(AppContext.BaseDirectory, "Assets");
+        Path.Combine(path1: AppContext.BaseDirectory,path2: "Assets");
 
     public static string LoadText(string fileName)
     {
-        string path = Path.Combine(AssetsDirectory, fileName);
+        string path = Path.Combine(path1: AssetsDirectory,path2: fileName);
 
-        if (!File.Exists(path))
+        if (!File.Exists(path: path))
+        {
             throw new FileNotFoundException($"Acceptance asset was not found: {path}", path);
+        }
 
-        return File.ReadAllText(path);
+        return File.ReadAllText(path: path);
     }
 
     public static JsonDocument LoadJson(string fileName) =>
-        JsonDocument.Parse(LoadText(fileName));
+        JsonDocument.Parse(json: LoadText(fileName: fileName));
 }
