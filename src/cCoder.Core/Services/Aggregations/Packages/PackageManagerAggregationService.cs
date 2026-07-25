@@ -343,10 +343,19 @@ internal sealed partial class PackageManagerAggregationService(
             .GroupBy(keySelector: found => NormalizePagePath(path: found.Path), comparer: StringComparer.OrdinalIgnoreCase)
             .ToDictionary(keySelector: group => group.Key, elementSelector: group => group.First().Id, comparer: StringComparer.OrdinalIgnoreCase);
 
-        Dictionary<string, Guid> roleIdsByName = await core.Set<Role>()
+        Role[] roles = await core.Set<Role>()
             .IgnoreQueryFilters()
             .Where(predicate: found => found.AppId == appId)
-            .ToDictionaryAsync(keySelector: found => found.Name, elementSelector: found => found.Id, comparer: StringComparer.OrdinalIgnoreCase);
+            .ToArrayAsync();
+
+        Dictionary<string, Guid> roleIdsByName = roles
+            .GroupBy(
+                keySelector: role => role.Name,
+                comparer: StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(
+                keySelector: group => group.Key,
+                elementSelector: group => group.First().Id,
+                comparer: StringComparer.OrdinalIgnoreCase);
 
         int[] pageIds = [.. pageIdsByPath.Values.Distinct()];
 
@@ -461,10 +470,19 @@ internal sealed partial class PackageManagerAggregationService(
 
         await core.SaveChangesAsync();
 
-        Dictionary<string, Guid> roleIdsByName = await core.Set<Role>()
+        Role[] roles = await core.Set<Role>()
             .IgnoreQueryFilters()
             .Where(predicate: found => found.AppId == appId)
-            .ToDictionaryAsync(keySelector: found => found.Name, elementSelector: found => found.Id, comparer: StringComparer.OrdinalIgnoreCase);
+            .ToArrayAsync();
+
+        Dictionary<string, Guid> roleIdsByName = roles
+            .GroupBy(
+                keySelector: role => role.Name,
+                comparer: StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(
+                keySelector: group => group.Key,
+                elementSelector: group => group.First().Id,
+                comparer: StringComparer.OrdinalIgnoreCase);
 
         Guid[] folderIds = [.. foldersByPath.Values
             .Select(selector: folder => folder.Id)
@@ -712,9 +730,31 @@ inner: core.Set<Role>()
                 {
                     Id = item.Id,
                     PackageId = item.PackageId,
-                    Type = item.Type,
+                    Type = NormalizePackageItemType(type: item.Type),
                     Data = StripTypeMetadata(data: item.Data),
                 })],
+        };
+
+    private static string NormalizePackageItemType(string type) =>
+        type switch
+        {
+            string value when value.StartsWith(
+                value: "ContentManagement/",
+                comparisonType: StringComparison.OrdinalIgnoreCase) =>
+                $"Core/{value["ContentManagement/".Length..]}",
+            string value when value.StartsWith(
+                value: "AppSecurity/",
+                comparisonType: StringComparison.OrdinalIgnoreCase) =>
+                $"Core/{value["AppSecurity/".Length..]}",
+            string value when value.StartsWith(
+                value: "DocumentManagement/",
+                comparisonType: StringComparison.OrdinalIgnoreCase) =>
+                $"Core/{value["DocumentManagement/".Length..]}",
+            string value when value.StartsWith(
+                value: "Workflow/",
+                comparisonType: StringComparison.OrdinalIgnoreCase) =>
+                $"Core/{value["Workflow/".Length..]}",
+            _ => type,
         };
 
     private static string StripTypeMetadata(string data)

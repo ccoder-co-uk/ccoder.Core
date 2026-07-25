@@ -408,7 +408,7 @@
                     appendLog("Administrator signed in.");
                     appendLog("Creating the first application.");
 
-                    const app = await sendJson("/Api/Core/App", {
+                    const app = await sendJson("/Api/ContentManagement/App", {
                         Name: tenantName,
                         Domain: domain,
                         DefaultTheme: "Default",

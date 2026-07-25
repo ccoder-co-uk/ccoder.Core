@@ -465,7 +465,7 @@
           "Inputs": [
             {
               "Name": "configure",
-              "Type": "System.Action\u003CAppSecurityConfiguration\u003E"
+              "Type": "System.Action\u003CcCoder.AppSecurity.Models.AppSecurityConfiguration\u003E"
             }
           ],
           "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
@@ -475,7 +475,7 @@
           "Inputs": [
             {
               "Name": "configure",
-              "Type": "System.Action\u003CContentManagementConfiguration\u003E"
+              "Type": "System.Action\u003CcCoder.ContentManagement.Models.ContentManagementConfiguration\u003E"
             }
           ],
           "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
@@ -714,7 +714,7 @@
           "Inputs": [
             {
               "Name": "configure",
-              "Type": "System.Action\u003CAppSecurityConfiguration\u003E"
+              "Type": "System.Action\u003CcCoder.AppSecurity.Models.AppSecurityConfiguration\u003E"
             }
           ],
           "ReturnType": "cCoder.Core.CoreBuilderOptions"
@@ -724,7 +724,7 @@
           "Inputs": [
             {
               "Name": "configure",
-              "Type": "System.Action\u003CContentManagementConfiguration\u003E"
+              "Type": "System.Action\u003CcCoder.ContentManagement.Models.ContentManagementConfiguration\u003E"
             },
             {
               "Name": "map",
@@ -1994,62 +1994,6 @@
       ]
     },
     {
-      "Name": "cCoder.Core.Exposures.Setup.BaselineAssetCatalog",
-      "StandardElementType": "Exposure",
-      "Properties": [],
-      "Methods": [
-        {
-          "Name": "LoadAssetBytes",
-          "Inputs": [
-            {
-              "Name": "relativePath",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.Byte[]"
-        },
-        {
-          "Name": "LoadCommonObjects",
-          "Inputs": [],
-          "ReturnType": "CommonObject[]"
-        },
-        {
-          "Name": "LoadCoreReviewPackages",
-          "Inputs": [],
-          "ReturnType": "Package[]"
-        },
-        {
-          "Name": "LoadDefaultAppConfig",
-          "Inputs": [],
-          "ReturnType": "System.String"
-        },
-        {
-          "Name": "LoadDmsAssetPaths",
-          "Inputs": [],
-          "ReturnType": "System.String[]"
-        },
-        {
-          "Name": "LoadPackageItems",
-          "Inputs": [
-            {
-              "Name": "packageName",
-              "Type": "System.String"
-            },
-            {
-              "Name": "itemType",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "T[]"
-        },
-        {
-          "Name": "LoadPackages",
-          "Inputs": [],
-          "ReturnType": "Package[]"
-        }
-      ]
-    },
-    {
       "Name": "cCoder.Core.Exposures.Setup.FirstTimeSetupStateManager",
       "StandardElementType": "Exposure",
       "Properties": [],
@@ -2080,18 +2024,6 @@
             }
           ],
           "ReturnType": "System.String"
-        }
-      ]
-    },
-    {
-      "Name": "cCoder.Core.Exposures.Setup.UIBaseline",
-      "StandardElementType": "Exposure",
-      "Properties": [],
-      "Methods": [
-        {
-          "Name": "GetPackages",
-          "Inputs": [],
-          "ReturnType": "Package[]"
         }
       ]
     },
@@ -3889,76 +3821,6 @@
       ]
     },
     {
-      "Name": "cCoder.Core.Services.Processings.Setup.BaselineAssetCatalogProcessingService",
-      "StandardElementType": "ProcessingService",
-      "Properties": [],
-      "Methods": [
-        {
-          "Name": "LoadAssetBytes",
-          "Inputs": [
-            {
-              "Name": "relativePath",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.Byte[]"
-        },
-        {
-          "Name": "LoadDefaultAppConfig",
-          "Inputs": [],
-          "ReturnType": "System.String"
-        },
-        {
-          "Name": "LoadDmsAssetPaths",
-          "Inputs": [],
-          "ReturnType": "System.String[]"
-        }
-      ]
-    },
-    {
-      "Name": "cCoder.Core.Services.Processings.Setup.BaselineCommonObjectCatalogProcessingService",
-      "StandardElementType": "ProcessingService",
-      "Properties": [],
-      "Methods": [
-        {
-          "Name": "LoadCommonObjects",
-          "Inputs": [],
-          "ReturnType": "CommonObject[]"
-        }
-      ]
-    },
-    {
-      "Name": "cCoder.Core.Services.Processings.Setup.BaselinePackageCatalogProcessingService",
-      "StandardElementType": "ProcessingService",
-      "Properties": [],
-      "Methods": [
-        {
-          "Name": "LoadCoreReviewPackages",
-          "Inputs": [],
-          "ReturnType": "Package[]"
-        },
-        {
-          "Name": "LoadPackageItems",
-          "Inputs": [
-            {
-              "Name": "packageName",
-              "Type": "System.String"
-            },
-            {
-              "Name": "itemType",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "T[]"
-        },
-        {
-          "Name": "LoadPackages",
-          "Inputs": [],
-          "ReturnType": "Package[]"
-        }
-      ]
-    },
-    {
       "Name": "cCoder.Core.Services.Processings.Setup.SetupRequestHostProcessingService",
       "StandardElementType": "ProcessingService",
       "Properties": [],
@@ -3972,255 +3834,6 @@
             }
           ],
           "ReturnType": "System.String"
-        }
-      ]
-    },
-    {
-      "Name": "cCoder.Core.Services.Setup.FirstTimeSetupAppService",
-      "StandardElementType": "Unknown",
-      "Properties": [],
-      "Methods": [
-        {
-          "Name": "CreateFirstAppAsync",
-          "Inputs": [
-            {
-              "Name": "request",
-              "Type": "cCoder.Core.Models.FirstTimeSetupRequest"
-            },
-            {
-              "Name": "tenantId",
-              "Type": "System.String"
-            },
-            {
-              "Name": "cancellationToken",
-              "Type": "System.Threading.CancellationToken"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.Task\u003CApp\u003E"
-        },
-        {
-          "Name": "RollbackAsync",
-          "Inputs": [
-            {
-              "Name": "bootstrapUserId",
-              "Type": "System.String"
-            },
-            {
-              "Name": "tenantId",
-              "Type": "System.String"
-            },
-            {
-              "Name": "cancellationToken",
-              "Type": "System.Threading.CancellationToken"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.Task"
-        }
-      ]
-    },
-    {
-      "Name": "cCoder.Core.Services.Setup.FirstTimeSetupBootstrapUser",
-      "StandardElementType": "Model",
-      "Properties": [
-        {
-          "Name": "ConfirmationToken",
-          "Type": "System.String"
-        },
-        {
-          "Name": "DisplayName",
-          "Type": "System.String"
-        },
-        {
-          "Name": "Email",
-          "Type": "System.String"
-        },
-        {
-          "Name": "UserId",
-          "Type": "System.String"
-        }
-      ],
-      "Methods": []
-    },
-    {
-      "Name": "cCoder.Core.Services.Setup.FirstTimeSetupOrchestrationService",
-      "StandardElementType": "Unknown",
-      "Properties": [],
-      "Methods": [
-        {
-          "Name": "IsInitializedAsync",
-          "Inputs": [
-            {
-              "Name": "cancellationToken",
-              "Type": "System.Threading.CancellationToken"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.Task\u003CSystem.Boolean\u003E"
-        },
-        {
-          "Name": "SetupAsync",
-          "Inputs": [
-            {
-              "Name": "request",
-              "Type": "cCoder.Core.Models.FirstTimeSetupRequest"
-            },
-            {
-              "Name": "cancellationToken",
-              "Type": "System.Threading.CancellationToken"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.Task\u003CcCoder.Core.Services.Setup.FirstTimeSetupResult\u003E"
-        }
-      ]
-    },
-    {
-      "Name": "cCoder.Core.Services.Setup.FirstTimeSetupPageRoleAssignment",
-      "StandardElementType": "Model",
-      "Properties": [
-        {
-          "Name": "Path",
-          "Type": "System.String"
-        },
-        {
-          "Name": "Role",
-          "Type": "System.String"
-        }
-      ],
-      "Methods": []
-    },
-    {
-      "Name": "cCoder.Core.Services.Setup.FirstTimeSetupResult",
-      "StandardElementType": "Model",
-      "Properties": [
-        {
-          "Name": "AppId",
-          "Type": "System.Int32"
-        },
-        {
-          "Name": "TenantId",
-          "Type": "System.String"
-        },
-        {
-          "Name": "UserId",
-          "Type": "System.String"
-        }
-      ],
-      "Methods": []
-    },
-    {
-      "Name": "cCoder.Core.Services.Setup.FirstTimeSetupTenantService",
-      "StandardElementType": "Unknown",
-      "Properties": [],
-      "Methods": [
-        {
-          "Name": "RollbackAsync",
-          "Inputs": [
-            {
-              "Name": "bootstrapUserId",
-              "Type": "System.String"
-            },
-            {
-              "Name": "tenantId",
-              "Type": "System.String"
-            },
-            {
-              "Name": "cancellationToken",
-              "Type": "System.Threading.CancellationToken"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.Task"
-        },
-        {
-          "Name": "SetupSecurityAsync",
-          "Inputs": [
-            {
-              "Name": "request",
-              "Type": "cCoder.Core.Models.FirstTimeSetupRequest"
-            },
-            {
-              "Name": "userId",
-              "Type": "System.String"
-            },
-            {
-              "Name": "cancellationToken",
-              "Type": "System.Threading.CancellationToken"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.Task\u003CSystem.String\u003E"
-        }
-      ]
-    },
-    {
-      "Name": "cCoder.Core.Services.Setup.FirstTimeSetupUserService",
-      "StandardElementType": "Unknown",
-      "Properties": [],
-      "Methods": [
-        {
-          "Name": "AuthenticateBootstrapUserAsync",
-          "Inputs": [
-            {
-              "Name": "userId",
-              "Type": "System.String"
-            },
-            {
-              "Name": "password",
-              "Type": "System.String"
-            },
-            {
-              "Name": "cancellationToken",
-              "Type": "System.Threading.CancellationToken"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.Task"
-        },
-        {
-          "Name": "CompleteFirstUserRegistrationAsync",
-          "Inputs": [
-            {
-              "Name": "request",
-              "Type": "cCoder.Core.Models.FirstTimeSetupRequest"
-            },
-            {
-              "Name": "bootstrapUser",
-              "Type": "cCoder.Core.Services.Setup.FirstTimeSetupBootstrapUser"
-            },
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "cancellationToken",
-              "Type": "System.Threading.CancellationToken"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.Task"
-        },
-        {
-          "Name": "EnsureBootstrapCoreUserAsync",
-          "Inputs": [
-            {
-              "Name": "bootstrapUser",
-              "Type": "cCoder.Core.Services.Setup.FirstTimeSetupBootstrapUser"
-            },
-            {
-              "Name": "cancellationToken",
-              "Type": "System.Threading.CancellationToken"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.Task"
-        },
-        {
-          "Name": "RollbackAsync",
-          "Inputs": [
-            {
-              "Name": "bootstrapUserId",
-              "Type": "System.String"
-            },
-            {
-              "Name": "cancellationToken",
-              "Type": "System.Threading.CancellationToken"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.Task"
         }
       ]
     },
@@ -4320,10 +3933,6 @@
     {
       "FromType": "cCoder.Core.Exposures.Managers.UserRegistrationManager",
       "ToType": "cCoder.Core.Services.Aggregations.UserRegistrationAggregationService"
-    },
-    {
-      "FromType": "cCoder.Core.Exposures.Setup.BaselineAssetCatalog",
-      "ToType": "cCoder.Core.Services.Processings.Setup.BaselineAssetCatalogProcessingService"
     },
     {
       "FromType": "cCoder.Core.Exposures.Setup.FirstTimeSetupStateManager",
@@ -4480,22 +4089,6 @@
     {
       "FromType": "cCoder.Core.Services.Processings.AllowedOrigins.AllowedOriginStoreProcessingService",
       "ToType": "cCoder.Core.Services.Foundations.AllowedOrigins.AllowedOriginStoreService"
-    },
-    {
-      "FromType": "cCoder.Core.Services.Setup.FirstTimeSetupAppService",
-      "ToType": "cCoder.Core.Exposures.Setup.BaselineAssetCatalog"
-    },
-    {
-      "FromType": "cCoder.Core.Services.Setup.FirstTimeSetupOrchestrationService",
-      "ToType": "cCoder.Core.Exposures.Managers.UserRegistrationManager"
-    },
-    {
-      "FromType": "cCoder.Core.Services.Setup.FirstTimeSetupOrchestrationService",
-      "ToType": "cCoder.Core.Exposures.Setup.FirstTimeSetupStateManager"
-    },
-    {
-      "FromType": "cCoder.Core.Services.Setup.FirstTimeSetupOrchestrationService",
-      "ToType": "cCoder.Core.Services.Setup.FirstTimeSetupUserService"
     }
   ],
   "AnalysisItems": [
@@ -4510,106 +4103,8 @@
       "Code": "STXF002",
       "Description": "A foundation service may only depend on brokers, exposures, or nothing.",
       "Severity": "Warning",
-      "Type": "cCoder.Core.Services.Foundations.AppSecurity.AppSecurityAppService",
-      "LineNumber": 10
-    },
-    {
-      "Code": "STXF002",
-      "Description": "A foundation service may only depend on brokers, exposures, or nothing.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.Services.Foundations.AppSecurity.AppSecurityUserRoleService",
-      "LineNumber": 11
-    },
-    {
-      "Code": "STXF002",
-      "Description": "A foundation service may only depend on brokers, exposures, or nothing.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.Services.Foundations.TemplatedEmails.TemplatedEmailContentService",
-      "LineNumber": 13
-    },
-    {
-      "Code": "STXF002",
-      "Description": "A foundation service may only depend on brokers, exposures, or nothing.",
-      "Severity": "Warning",
       "Type": "cCoder.Core.Services.Foundations.TemplatedEmails.TemplatedEmailIdentityService",
       "LineNumber": 12
-    },
-    {
-      "Code": "STX0001",
-      "Description": "The type is not a valid Standard element type.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.Services.Setup.FirstTimeSetupAppService",
-      "LineNumber": 22
-    },
-    {
-      "Code": "STXM002",
-      "Description": "Model properties must not declare default values.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.Services.Setup.FirstTimeSetupBootstrapUser",
-      "LineNumber": 13
-    },
-    {
-      "Code": "STXM002",
-      "Description": "Model properties must not declare default values.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.Services.Setup.FirstTimeSetupBootstrapUser",
-      "LineNumber": 15
-    },
-    {
-      "Code": "STXM002",
-      "Description": "Model properties must not declare default values.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.Services.Setup.FirstTimeSetupBootstrapUser",
-      "LineNumber": 17
-    },
-    {
-      "Code": "STXM002",
-      "Description": "Model properties must not declare default values.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.Services.Setup.FirstTimeSetupBootstrapUser",
-      "LineNumber": 19
-    },
-    {
-      "Code": "STX0001",
-      "Description": "The type is not a valid Standard element type.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.Services.Setup.FirstTimeSetupOrchestrationService",
-      "LineNumber": 15
-    },
-    {
-      "Code": "STXM002",
-      "Description": "Model properties must not declare default values.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.Services.Setup.FirstTimeSetupResult",
-      "LineNumber": 12
-    },
-    {
-      "Code": "STXM002",
-      "Description": "Model properties must not declare default values.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.Services.Setup.FirstTimeSetupResult",
-      "LineNumber": 14
-    },
-    {
-      "Code": "STXM002",
-      "Description": "Model properties must not declare default values.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.Services.Setup.FirstTimeSetupResult",
-      "LineNumber": 16
-    },
-    {
-      "Code": "STX0001",
-      "Description": "The type is not a valid Standard element type.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.Services.Setup.FirstTimeSetupTenantService",
-      "LineNumber": 16
-    },
-    {
-      "Code": "STX0001",
-      "Description": "The type is not a valid Standard element type.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.Services.Setup.FirstTimeSetupUserService",
-      "LineNumber": 14
     }
   ]
 }
