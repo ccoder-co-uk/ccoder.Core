@@ -8,6 +8,7 @@ using cCoder.ContentManagement.Models;
 using cCoder.ContentManagement.Services.Processings;
 using cCoder.Data;
 using cCoder.Core.Models;
+using cCoder.Core.Exposures.Setup;
 using cCoder.Core.Services.Setup;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +26,7 @@ namespace Web.Controllers
         private readonly IAppProcessingService appProcessingService;
         private readonly IPageRenderer pageRenderer;
         private readonly IFirstTimeSetupStateService setupStateService;
+        private readonly ISetupRequestHostManager setupRequestHostManager;
 
         private ICoreAuthInfo GetAuthInfo() =>
             HttpContext?.RequestServices.GetService<ICoreAuthInfo>()
@@ -82,11 +84,13 @@ namespace Web.Controllers
             IAppProcessingService appService,
             IPageRenderer pageRenderer,
             IFirstTimeSetupStateService setupStateService,
+            ISetupRequestHostManager setupRequestHostManager,
             ILogger<HomeController> log)
         {
             appProcessingService = appService;
             pageRenderer = pageRenderer;
             this.setupStateService = setupStateService;
+            this.setupRequestHostManager = setupRequestHostManager;
             this.log = log;
         }
 
@@ -105,7 +109,8 @@ namespace Web.Controllers
                     return View(
 viewName:                         "~/Views/Setup/Index.cshtml",model:                         new FirstTimeSetupViewModel
                         {
-                            Domain = SetupRequestHostNormalizer.Normalize(host: Request.Host.Host),
+                            Domain = setupRequestHostManager.NormalizeHost(
+                                host: Request.Host.Host),
                         });
                 }
 

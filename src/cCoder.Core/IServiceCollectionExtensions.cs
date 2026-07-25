@@ -32,6 +32,7 @@ using cCoder.Core.Services.Foundations.Planning;
 using cCoder.Core.Services.Foundations.Workflow;
 using cCoder.Core.Services.Orchestrations;
 using cCoder.Core.Services.Processings.AllowedOrigins;
+using cCoder.Core.Services.Processings.Setup;
 using cCoder.Core.Services.Setup;
 using cCoder.Data;
 using cCoder.Eventing;
@@ -232,6 +233,8 @@ predicate: (documentName, apiDescription) =>
         EnsureFirstTimeSetupSecurityServices(services: services);
         EnsureFirstTimeSetupSecurityManagers(services: services);
         services.AddScoped<IFirstTimeSetupStateService, FirstTimeSetupStateService>();
+        services.AddScoped<ISetupRequestHostProcessingService, SetupRequestHostProcessingService>();
+        services.AddScoped<ISetupRequestHostManager, SetupRequestHostManager>();
         services.AddScoped<BaselineAssetCatalog>();
         services.AddScoped<IFirstTimeSetupUserService, FirstTimeSetupUserService>();
         services.AddScoped<IFirstTimeSetupTenantService, FirstTimeSetupTenantService>();

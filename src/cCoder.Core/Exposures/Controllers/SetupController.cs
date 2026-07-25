@@ -6,12 +6,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using cCoder.Core.Models;
 using cCoder.Core.Services.Setup;
+using cCoder.Core.Exposures.Setup;
 
 namespace cCoder.Core.Exposures.Controllers;
 
 [Route("Setup")]
 public sealed class SetupController(
     IFirstTimeSetupOrchestrationService setupOrchestrationService,
+    ISetupRequestHostManager setupRequestHostManager,
     ILogger<SetupController> log)
     : Controller
 {
@@ -49,7 +51,7 @@ public sealed class SetupController(
             }
 
             newFirstTimeSetupRequest.Domain =
-                SetupRequestHostNormalizer.Normalize(
+                setupRequestHostManager.NormalizeHost(
                     host: Request.Host.Host);
 
             await setupOrchestrationService.SetupAsync(
@@ -74,7 +76,8 @@ public sealed class SetupController(
         FirstTimeSetupRequest setup = null) =>
         new()
         {
-            Domain = SetupRequestHostNormalizer.Normalize(host: Request.Host.Host),
+            Domain = setupRequestHostManager.NormalizeHost(
+                host: Request.Host.Host),
             Setup = setup ?? new FirstTimeSetupRequest(),
         };
 }
