@@ -49,7 +49,6 @@ GET Api/AppSecurity/$metadata
 GET Api/AppSecurity/App
 GET Api/AppSecurity/App({key})
 GET Api/AppSecurity/App/$count
-GET Api/AppSecurity/Baseline
 GET Api/AppSecurity/Privilege
 GET Api/AppSecurity/Privilege({key})
 GET Api/AppSecurity/Privilege/$count
@@ -71,7 +70,6 @@ GET Api/ContentManagement/App({key})/Users()
 GET Api/ContentManagement/App/$count
 GET Api/ContentManagement/AppCulture
 GET Api/ContentManagement/AppCulture/$count
-GET Api/ContentManagement/Baseline
 GET Api/ContentManagement/CommonObject
 GET Api/ContentManagement/CommonObject({key})
 GET Api/ContentManagement/CommonObject/$count
@@ -127,7 +125,6 @@ GET Api/Core/PackageItem/$count
 GET Api/Core/ReceivedEmail/ReceiveTop/{count:int}
 GET Api/DocumentManagement
 GET Api/DocumentManagement/$metadata
-GET Api/DocumentManagement/Baseline
 GET Api/DocumentManagement/File
 GET Api/DocumentManagement/File({key})
 GET Api/DocumentManagement/File/$count
@@ -141,7 +138,6 @@ GET Api/DocumentManagement/FolderRole
 GET Api/DocumentManagement/FolderRole/$count
 GET Api/Logging
 GET Api/Logging/$metadata
-GET Api/Logging/Baseline
 GET Api/Logging/LogDataItem
 GET Api/Logging/LogDataItem({key})
 GET Api/Logging/LogDataItem/$count
@@ -150,7 +146,6 @@ GET Api/Logging/LogEntry({key})
 GET Api/Logging/LogEntry/$count
 GET Api/Mail
 GET Api/Mail/$metadata
-GET Api/Mail/Baseline
 GET Api/Mail/MailProviders
 GET Api/Mail/MailProviders/Receivers
 GET Api/Mail/MailProviders/Senders
@@ -173,7 +168,6 @@ GET Api/Mail/ReceivedEmail/ReceiveTop/{count:int}
 GET Api/Mail/SentEmail
 GET Api/Mail/SentEmail({key})
 GET Api/Mail/SentEmail/$count
-GET Api/Packaging/Baseline
 GET Api/RefreshCache
 GET Api/Security
 GET Api/Security/$metadata
@@ -200,7 +194,6 @@ GET Api/Security/UserEvent/$count
 GET Api/Time
 GET Api/Workflow
 GET Api/Workflow/$metadata
-GET Api/Workflow/Baseline
 GET Api/Workflow/Calendar
 GET Api/Workflow/Calendar({key})
 GET Api/Workflow/Calendar/$count
