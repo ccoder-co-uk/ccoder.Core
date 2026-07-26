@@ -11,13 +11,15 @@
     <style>
         :root {
             color-scheme: light;
-            --bg: #f4f1e8;
-            --panel: #fffdf8;
-            --ink: #1f2a37;
-            --accent: #1d4d6f;
-            --accent-2: #d9842b;
-            --border: #d7c8b5;
-            --danger: #a13434;
+            --bg: #f3f9fc;
+            --panel: #ffffff;
+            --ink: #142a48;
+            --muted: #52657a;
+            --accent: #142a48;
+            --accent-hover: #1f426e;
+            --code: #45b9e8;
+            --border: #cfdee8;
+            --danger: #b42318;
         }
 
         * { box-sizing: border-box; }
@@ -25,27 +27,24 @@
         body {
             margin: 0;
             min-height: 100vh;
-            font-family: Georgia, "Times New Roman", serif;
+            font-family: Quicksand, "Segoe UI", Arial, sans-serif;
             color: var(--ink);
-            background:
-                radial-gradient(circle at top left, rgba(217, 132, 43, 0.15), transparent 24rem),
-                radial-gradient(circle at bottom right, rgba(29, 77, 111, 0.12), transparent 28rem),
-                linear-gradient(180deg, #faf7f0, var(--bg));
+            background: var(--bg);
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 2rem 1rem;
+            padding: 2.5rem 1.5rem;
         }
 
         .shell {
-            width: min(100%, 58rem);
+            width: min(100%, 76rem);
             display: grid;
-            grid-template-columns: 1.1fr 0.9fr;
+            grid-template-columns: minmax(20rem, 0.78fr) minmax(36rem, 1.22fr);
             background: var(--panel);
             border: 1px solid var(--border);
-            border-radius: 1.5rem;
+            border-top: 4px solid var(--code);
             overflow: hidden;
-            box-shadow: 0 1.5rem 4rem rgba(31, 42, 55, 0.12);
+            box-shadow: 0 1.25rem 3.5rem rgba(20, 42, 72, 0.13);
         }
 
         .intro,
@@ -55,25 +54,44 @@
 
         .intro {
             background:
-                linear-gradient(160deg, rgba(29, 77, 111, 0.97), rgba(23, 55, 78, 0.92)),
+                linear-gradient(145deg, rgba(20, 42, 72, 0.99), rgba(24, 58, 94, 0.96)),
                 var(--accent);
-            color: #f9f5ef;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
         }
 
-        .eyebrow {
-            display: inline-block;
-            padding: 0.35rem 0.7rem;
-            border: 1px solid rgba(249, 245, 239, 0.25);
-            border-radius: 999px;
-            letter-spacing: 0.08em;
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 2.5rem;
+            font-size: 1.05rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        .brand-mark {
+            color: var(--code);
+            font: 700 1.65rem/1 Consolas, "Courier New", monospace;
+        }
+
+        .brand small {
+            display: block;
+            margin-top: 0.15rem;
+            color: #a9c6d8;
+            font-size: 0.62rem;
+            font-weight: 500;
+            letter-spacing: 0.14em;
             text-transform: uppercase;
-            font-size: 0.72rem;
         }
 
         h1 {
-            margin: 1.25rem 0 1rem;
-            font-size: clamp(2rem, 4vw, 3rem);
-            line-height: 1.05;
+            margin: 0 0 1rem;
+            font-size: clamp(1.85rem, 2.6vw, 2.15rem);
+            font-weight: 400;
+            line-height: 1.12;
+            white-space: nowrap;
         }
 
         .lead {
@@ -85,24 +103,61 @@
 
         .facts {
             margin: 2rem 0 0;
-            padding: 0;
-            list-style: none;
+            padding: 0 0 0 2.75rem;
+            list-style: disc;
             display: grid;
             gap: 0.9rem;
+            position: relative;
         }
 
         .facts li {
-            padding-left: 1rem;
-            border-left: 3px solid rgba(217, 132, 43, 0.9);
+            color: #dceaf2;
+            line-height: 1.45;
+        }
+
+        .facts::before,
+        .facts::after {
+            position: absolute;
+            left: 0;
+            color: var(--code);
+            font: 700 1rem/1 Consolas, "Courier New", monospace;
+        }
+
+        .facts::before {
+            top: -1.6rem;
+            content: "{";
+        }
+
+        .facts::after {
+            bottom: -1.8rem;
+            content: "}";
+        }
+
+        .setup-guide {
+            align-self: flex-start;
+            margin-top: auto;
+            padding-top: 3.5rem;
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration-color: var(--code);
+            text-underline-offset: 0.25rem;
+        }
+
+        .setup-guide:hover,
+        .setup-guide:focus-visible {
+            color: #ffffff;
+            text-decoration-color: var(--code);
         }
 
         .form-panel h2 {
             margin: 0 0 0.75rem;
-            font-size: 1.6rem;
+            font-size: 1.8rem;
+            font-weight: 600;
         }
 
         .subtle {
-            color: #51606f;
+            color: var(--muted);
             line-height: 1.55;
             margin-bottom: 1.5rem;
         }
@@ -110,37 +165,95 @@
         .domain {
             margin: 0 0 1.5rem;
             padding: 0.85rem 1rem;
-            background: #f7f2e9;
+            background: var(--bg);
             border: 1px solid var(--border);
-            border-radius: 0.9rem;
+            border-left: 4px solid var(--code);
             font-size: 0.95rem;
         }
 
         form {
             display: grid;
-            gap: 1rem;
+            gap: 0.9rem;
+        }
+
+        .class-editor {
+            padding: 0.85rem 1.1rem 0.95rem;
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent);
+            background: #f8fbfd;
+            box-shadow: inset 0 1px 0 #ffffff;
+            font-family: Consolas, "Courier New", monospace;
+        }
+
+        .method-declaration,
+        .class-brace {
+            font-size: 0.92rem;
+            line-height: 1.5;
+        }
+
+        .class-brace {
+            color: var(--code);
+            font-weight: 700;
+        }
+
+        .method-body {
+            display: grid;
+            gap: 0.5rem;
+            padding: 0.5rem 0 0.5rem 1.25rem;
+            border-left: 1px solid rgba(69, 185, 232, 0.3);
+        }
+
+        .initializer {
+            display: grid;
+            gap: 0.45rem;
+            padding-left: 1.25rem;
+        }
+
+        .keyword {
+            color: #285bc5;
+        }
+
+        .type {
+            color: #168273;
+        }
+
+        .accessor {
+            color: #7b4ba8;
+        }
+
+        .operator {
+            color: var(--muted);
+        }
+
+        .field-row {
+            display: grid;
+            grid-template-columns: 8.5rem minmax(0, 1fr);
+            align-items: center;
+            gap: 0.45rem 1rem;
         }
 
         label {
-            display: block;
-            font-size: 0.92rem;
-            margin-bottom: 0.35rem;
-            font-weight: 600;
+            color: var(--ink);
+            font-size: 0.82rem;
+            font-weight: 400;
+            text-align: left;
+            white-space: nowrap;
         }
 
         input {
             width: 100%;
-            padding: 0.85rem 0.95rem;
-            border-radius: 0.85rem;
-            border: 1px solid #c7b8a5;
-            background: #fffdfa;
+            min-width: 0;
+            padding: 0.65rem 0.9rem;
+            border: 1px solid #b9cad6;
+            border-radius: 2px;
+            background: #ffffff;
             color: var(--ink);
             font: inherit;
         }
 
         input:focus {
-            outline: 2px solid rgba(29, 77, 111, 0.18);
-            border-color: var(--accent);
+            outline: 3px solid rgba(69, 185, 232, 0.18);
+            border-color: var(--code);
         }
 
         .validation-summary-errors,
@@ -149,25 +262,38 @@
             font-size: 0.9rem;
         }
 
+        .field-row .field-validation-error {
+            grid-column: 2;
+        }
+
         .validation-summary-errors ul {
             margin: 0 0 0.25rem 1rem;
             padding: 0;
         }
 
         button {
-            margin-top: 0.5rem;
-            padding: 0.95rem 1.2rem;
+            justify-self: end;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.55rem;
+            margin-top: 0.65rem;
+            padding: 0.8rem 1.25rem;
             border: 0;
-            border-radius: 999px;
-            background: linear-gradient(135deg, var(--accent), #2c6c95);
+            border-radius: 2px;
+            background: var(--accent);
             color: white;
             font: inherit;
-            font-weight: 700;
+            font-weight: 600;
             cursor: pointer;
         }
 
+        .compile-icon {
+            color: var(--code);
+            font: 700 0.95rem/1 Consolas, "Courier New", monospace;
+        }
+
         button:hover {
-            background: linear-gradient(135deg, #163a53, #25597b);
+            background: var(--accent-hover);
         }
 
         button:disabled {
@@ -212,9 +338,42 @@
                 grid-template-columns: 1fr;
             }
 
+            h1 {
+                white-space: normal;
+            }
+
             .intro,
             .form-panel {
                 padding: 2rem 1.4rem;
+            }
+        }
+
+        @@media (max-width: 620px) {
+            body {
+                padding: 0;
+            }
+
+            .field-row {
+                grid-template-columns: 1fr;
+                gap: 0.35rem;
+            }
+
+            label {
+                text-align: left;
+                white-space: normal;
+            }
+
+            .field-row .field-validation-error {
+                grid-column: 1;
+            }
+
+            .method-body,
+            .initializer {
+                padding-left: 0.75rem;
+            }
+
+            button {
+                width: 100%;
             }
         }
     </style>
@@ -222,64 +381,82 @@
 <body>
     <main class="shell">
         <section class="intro">
-            <span class="eyebrow">First Run</span>
-            <h1>Welcome to cCoder.Core platform setup</h1>
+            <div class="brand">
+                <span class="brand-mark">&lt;/&gt;</span>
+                <span>cCoder <small>Connected. Committed. Capable.</small></span>
+            </div>
             <p class="lead">
-                This first-run flow creates the initial tenant, provisions the baseline application,
-                imports the packaged starter content, and registers the first administrator account.
+                This first-run only flow will:
             </p>
             <ul class="facts">
-                <li>The detected primary domain will be assigned to the first app automatically.</li>
-                <li>The imported baseline includes the starter pages, layouts, templates, scripts, and resources.</li>
-                <li>Once setup completes, this screen should never appear again for the environment.</li>
+                <li>Create the initial tenant.</li>
+                <li>Provision the baseline application.</li>
+                <li>Import the packaged starter content.</li>
+                <li>Register the first administrator account.</li>
+                <li>Assign the detected primary domain to the first app automatically.</li>
+                <li>Include the starter pages, layouts, templates, scripts, and resources in the imported baseline.</li>
             </ul>
+            <a class="setup-guide"
+               href="https://ccoder.co.uk/Documentation/Core/FirstTimeSetup"
+               target="_blank"
+               rel="noopener noreferrer">Read the first-time setup guide →</a>
         </section>
 
         <section class="form-panel">
-            <h2>Initial administrator</h2>
+            <h1>Welcome to cCoder.Core platform setup</h1>
             <p class="subtle">
                 Enter the minimum details required to bootstrap the platform. You can refine the tenant and app
                 configuration from the admin UI after setup completes.
             </p>
 
-            <p class="domain"><strong>Primary domain:</strong> @Model.Domain</p>
-
             @Html.ValidationSummary(false)
 
             <form id="setup-form">
-                <div>
-                    <label asp-for="Setup.TenantName"></label>
-                    <input asp-for="Setup.TenantName" autocomplete="organization" required />
-                    <span asp-validation-for="Setup.TenantName"></span>
-                </div>
+                <div class="class-editor">
+                    <div class="method-declaration">
+                        <span class="keyword">void</span> PlatformSetup()
+                    </div>
+                    <div class="class-brace">{</div>
+                    <div class="method-body">
+                        <div>
+                            <span class="keyword">var</span> details <span class="operator">=</span>
+                            <span class="keyword">new</span> <span class="type">FirstAdminUserDetails</span>()
+                        </div>
+                        <div class="class-brace">{</div>
+                        <div class="initializer">
+                            <div class="field-row">
+                                <label asp-for="Setup.DisplayName">DisplayName <span class="operator">=</span></label>
+                                <input asp-for="Setup.DisplayName" aria-label="Display name" autocomplete="name" required />
+                                <span asp-validation-for="Setup.DisplayName"></span>
+                            </div>
 
-                <div>
-                    <label asp-for="Setup.DisplayName"></label>
-                    <input asp-for="Setup.DisplayName" autocomplete="name" required />
-                    <span asp-validation-for="Setup.DisplayName"></span>
-                </div>
+                            <div class="field-row">
+                                <label asp-for="Setup.Email">Email <span class="operator">=</span></label>
+                                <input asp-for="Setup.Email" aria-label="Email address" autocomplete="email" type="email" required />
+                                <span asp-validation-for="Setup.Email"></span>
+                            </div>
 
-                <div>
-                    <label asp-for="Setup.Email"></label>
-                    <input asp-for="Setup.Email" autocomplete="email" type="email" required />
-                    <span asp-validation-for="Setup.Email"></span>
-                </div>
+                            <div class="field-row">
+                                <label asp-for="Setup.Password">Password <span class="operator">=</span></label>
+                                <input asp-for="Setup.Password" aria-label="Password" autocomplete="new-password" type="password" required />
+                                <span asp-validation-for="Setup.Password"></span>
+                            </div>
 
-                <div>
-                    <label asp-for="Setup.Password"></label>
-                    <input asp-for="Setup.Password" autocomplete="new-password" type="password" required />
-                    <span asp-validation-for="Setup.Password"></span>
-                </div>
+                            <div class="field-row">
+                                <label asp-for="Setup.ConfirmPassword">ConfirmPassword <span class="operator">=</span></label>
+                                <input asp-for="Setup.ConfirmPassword" aria-label="Confirm password" autocomplete="new-password" type="password" required />
+                                <span asp-validation-for="Setup.ConfirmPassword"></span>
+                            </div>
+                        </div>
+                        <div class="class-brace">};</div>
 
-                <div>
-                    <label asp-for="Setup.ConfirmPassword"></label>
-                    <input asp-for="Setup.ConfirmPassword" autocomplete="new-password" type="password" required />
-                    <span asp-validation-for="Setup.ConfirmPassword"></span>
+                        <button id="setup-button" type="submit">
+                            <span class="compile-icon" aria-hidden="true">&#9654;</span>
+                            Submit(details);
+                        </button>
+                    </div>
+                    <div class="class-brace">}</div>
                 </div>
-
-                <button id="setup-button" type="submit">
-                    Create the first environment
-                </button>
             </form>
         </section>
     </main>
@@ -302,6 +479,30 @@
             const assetsRoot =
                 "https://raw.githubusercontent.com/ccoder-co-uk/cCoder.Assets/main/" +
                 "Packages/First%20Time%20Setup/";
+            const defaultAppConfig = {
+                Themes: {
+                    Default: {
+                        margins: "8px",
+                        colours: {
+                            primary: "#142A48",
+                            secondary: "#52BCFF",
+                            background: "white",
+                            text: "black",
+                            text2: "#FFFFFF",
+                        },
+                        font: {
+                            size: "14px",
+                            family: "Quicksand, sans-serif",
+                        },
+                        border: {
+                            style: "solid 1px #CCC",
+                            width: "1px",
+                            radius: 0,
+                        },
+                        shadows: "6px 6px 10px #ccc",
+                    },
+                },
+            };
 
             const appendLog = (message) => {
                 const timestamp = new Date().toLocaleTimeString();
@@ -356,8 +557,7 @@
                     return;
                 }
 
-                const tenantName =
-                    document.getElementById("Setup_TenantName").value.trim();
+                const tenantName = "cCoder Default";
 
                 const displayName =
                     document.getElementById("Setup_DisplayName").value.trim();
@@ -386,7 +586,7 @@
 
                     await sendJson("/Api/Setup", {
                         Tenant: {
-                            Id: "Default",
+                            Id: "default",
                             Name: tenantName,
                         },
                         User: {
@@ -413,8 +613,8 @@
                         Domain: domain,
                         DefaultTheme: "Default",
                         DefaultCultureId: "",
-                        TenantId: "Default",
-                        ConfigJson: "{}",
+                        TenantId: "default",
+                        ConfigJson: JSON.stringify(defaultAppConfig),
                     });
 
                     const appId = app.Id ?? app.id;
