@@ -189,7 +189,7 @@ public sealed partial class FirstTimeSetupTests
                 comparisonType: StringComparison.OrdinalIgnoreCase));
 
         pagePaths.Should()
-            .NotContain(predicate: path => path.StartsWith(
+            .Contain(predicate: path => path.StartsWith(
                 value: "Clients",
                 comparisonType: StringComparison.OrdinalIgnoreCase));
 
