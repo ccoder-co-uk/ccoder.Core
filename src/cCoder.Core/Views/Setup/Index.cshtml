@@ -322,8 +322,8 @@
         }
 
         .setup-log {
-            min-height: 16rem;
-            max-height: 55vh;
+            /* Fifteen success messages at a 1.44rem line height, plus vertical padding. */
+            height: 23.6rem;
             overflow: auto;
             margin: 1rem 0 0;
             padding: 1rem;
@@ -510,6 +510,9 @@
                 log.scrollTop = log.scrollHeight;
             };
 
+            const delay = (milliseconds) =>
+                new Promise((resolve) => window.setTimeout(resolve, milliseconds));
+
             const readError = async (response) => {
                 const message = await response.text();
 
@@ -633,7 +636,9 @@
                             setupPackage)));
 
                     appendLog("Baseline imports completed.");
-                    appendLog("Setup complete. Opening your new platform...");
+                    appendLog("Setup complete.");
+                    appendLog("Redirecting to configured site ...");
+                    await delay(3000);
                     window.location.assign("/");
                 } catch (error) {
                     appendLog(`ERROR: ${error.message}`);
