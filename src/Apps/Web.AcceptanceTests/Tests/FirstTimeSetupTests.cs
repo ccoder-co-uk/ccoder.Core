@@ -52,7 +52,7 @@ public sealed partial class FirstTimeSetupTests
             .Contain(expected: "Welcome to cCoder.Core platform setup");
 
         content.Should()
-            .Contain(expected: "Primary domain:");
+            .Contain(expected: "FirstAdminUserDetails");
     }
 
     [Fact]
