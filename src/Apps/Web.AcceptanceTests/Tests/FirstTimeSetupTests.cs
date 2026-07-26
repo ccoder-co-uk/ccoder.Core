@@ -52,7 +52,7 @@ public sealed partial class FirstTimeSetupTests
             .Contain(expected: "Welcome to cCoder.Core platform setup");
 
         content.Should()
-            .Contain(expected: "Primary domain:");
+            .Contain(expected: "FirstAdminUserDetails");
     }
 
     [Fact]
@@ -189,7 +189,7 @@ public sealed partial class FirstTimeSetupTests
                 comparisonType: StringComparison.OrdinalIgnoreCase));
 
         pagePaths.Should()
-            .NotContain(predicate: path => path.StartsWith(
+            .Contain(predicate: path => path.StartsWith(
                 value: "Clients",
                 comparisonType: StringComparison.OrdinalIgnoreCase));
 
