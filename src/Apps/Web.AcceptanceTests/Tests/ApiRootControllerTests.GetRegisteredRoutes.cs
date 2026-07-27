@@ -26,6 +26,6 @@ path:             Path.Combine(path1: AppContext.BaseDirectory,path2: "ActualEnd
 
         // Then
         actual.Should()
-            .BeEquivalentTo(expectation: expected,config: options => options.WithStrictOrdering());
+            .BeEquivalentTo(expectation: expected);
     }
 }

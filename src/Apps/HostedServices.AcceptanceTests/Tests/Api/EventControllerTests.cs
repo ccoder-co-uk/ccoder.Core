@@ -361,7 +361,9 @@ condition: () =>
 
                     return waitCore.Set<Role>()
                         .IgnoreQueryFilters()
-                        .Any(predicate: role => role.Id == roleId && role.Privs == "app_read,folder_update");
+                        .Any(predicate: role =>
+                            role.Id == roleId
+                            && role.Privs == "app_admin,app_read,folder_update");
                 }, because: "app_update should update children");
 
             using IServiceScope scope = fixture.Factory.Services.CreateScope();
@@ -377,7 +379,7 @@ condition: () =>
                 .IgnoreQueryFilters()
                 .Single(predicate: role => role.Id == roleId)
                 .Privs.Should()
-                .Be(expected: "app_read,folder_update");
+                .Be(expected: "app_admin,app_read,folder_update");
 
             core.Set<AppCulture>()
                 .IgnoreQueryFilters()

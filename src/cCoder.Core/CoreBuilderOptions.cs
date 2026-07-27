@@ -263,6 +263,7 @@ services: securityServices, decryptionKey: decryptionKey ?? string.Empty);
         CoreConfiguration configuration = new();
         configure?.Invoke(obj: configuration);
         CoreConfigurationMapper.ApplyBoundRootSections(target: configuration);
+        CoreConfigurationMapper.ApplyDomainDefaults(target: configuration);
 
         WithCoreConfiguration(configure: coreConfig =>
             CoreConfigurationMapper.Copy(source: configuration, target: coreConfig));

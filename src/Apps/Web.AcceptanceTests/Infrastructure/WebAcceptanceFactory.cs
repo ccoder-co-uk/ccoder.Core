@@ -53,6 +53,7 @@ initialData:             [
                 new KeyValuePair<string, string>("Settings:AggregateDomains", settings.AggregateDomains.ToString()),
                 new KeyValuePair<string, string>("Settings:enableExternalEventing", "false"),
                 new KeyValuePair<string, string>("Eventing:Http:HubUrl", string.Empty),
+                new KeyValuePair<string, string>("DebugInfo", "true"),
             ]);
         });
 
@@ -77,6 +78,7 @@ implementationInstance:                 new Config
                         ["enableExternalEventing"] = "false",
                     },
                     Services = new Dictionary<string, string>(),
+                    DebugInfo = true,
                 }
             );
 

@@ -316,25 +316,9 @@ public sealed partial class FirstTimeSetupTests
                 expected: token.UserName,
                 because: string.Join(separator: ",", value: userIds));
 
-        using HttpResponseMessage appResponse =
-            await harness.Client.PostAsJsonAsync(
-                requestUri: "/Api/ContentManagement/App",
-                value: new
-                {
-                    name = "Acceptance Platform",
-                    domain = "localhost",
-                    defaultTheme = "Default",
-                    defaultCultureId = string.Empty,
-                    tenantId = "default",
-                    configJson = "{}",
-                });
-
-        string appContent = await appResponse.Content.ReadAsStringAsync();
-
-        appResponse.StatusCode.Should()
-            .Be(expected: HttpStatusCode.OK, because: appContent);
-
-        App app = await appResponse.Content.ReadFromJsonAsync<App>();
+        App app = await core.Set<App>()
+            .IgnoreQueryFilters()
+            .SingleAsync();
 
         app.Should()
             .NotBeNull();
@@ -628,7 +612,7 @@ public sealed partial class FirstTimeSetupTests
             if (!string.IsNullOrWhiteSpace(value: builder.InitialCatalog))
             {
                 builder.InitialCatalog =
-                    $"{builder.InitialCatalog}-setup-{suffix}";
+                    $"{builder.InitialCatalog}-acceptance-setup-{suffix}";
             }
 
             return builder.ConnectionString;

@@ -98,7 +98,7 @@ method:                 HttpMethod.Put,relativeUrl:                 $"/Api/Conte
             (await verification.Set<Role>()
                 .IgnoreQueryFilters()
                 .SingleAsync(predicate: role => role.Id == roleId)).Privs.Should()
-                .Be(expected: "app_read,folder_update");
+                .Be(expected: "app_admin,app_read,folder_update");
 
             (await verification.Set<AppCulture>()
                 .IgnoreQueryFilters()

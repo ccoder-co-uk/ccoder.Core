@@ -73,7 +73,9 @@ requestUri:             $"{BaseUrl}/Import?appId={appId}",value:             pac
         string content = await response.Content.ReadAsStringAsync();
 
         response.StatusCode.Should()
-            .Be(expected: HttpStatusCode.OK,because: content);
+            .Be(
+                expected: HttpStatusCode.OK,
+                because: $"{package.Name}: {content}");
 
         return (int)response.StatusCode;
     }
@@ -157,7 +159,7 @@ requestUri:             $"{BaseUrl}/Import?appId={appId}",value:             pac
                 .SelectMany(selector: package => package.Items ?? [])
                 .Where(predicate: item => string.Equals(a: item.Type,b: itemType,comparisonType: StringComparison.OrdinalIgnoreCase))
                 .Sum(selector: item => CountSerializedObjectsExcluding(data: item.Data,propertyName: "Name",excludedValue: AcceptanceAdminRoleName)),
-            "Core/PageRole" => packages
+            "ContentManagement/PageRole" => packages
                 .Where(predicate: package => string.Equals(a: package.Name,b: packageName,comparisonType: StringComparison.OrdinalIgnoreCase))
                 .SelectMany(selector: package => package.Items ?? [])
                 .Where(predicate: item => string.Equals(a: item.Type,b: itemType,comparisonType: StringComparison.OrdinalIgnoreCase))
@@ -168,7 +170,7 @@ requestUri:             $"{BaseUrl}/Import?appId={appId}",value:             pac
     private static int CountComparableCapturedEntities(string itemType, string data) =>
         itemType switch
         {
-            "Core/PageRole" => CountValidPageRoleEntities(data: data),
+            "ContentManagement/PageRole" => CountValidPageRoleEntities(data: data),
             _ => CountSerializedEntities(data: data),
         };
 
