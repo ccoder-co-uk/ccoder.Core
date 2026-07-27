@@ -105,7 +105,7 @@
     <ProjectReference Include="$(LocalWorkflowEngineProject)" AdditionalProperties="UseLocalData=$(UseLocalData);UseLocalSecurity=$(UseLocalSecurity)" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="cCoder.AppSecurity" Version="2026.7.28.23" Condition="'$(UseLocalAppSecurity)' != 'true'" />
+    <PackageReference Include="cCoder.AppSecurity" Version="2026.7.28.53" Condition="'$(UseLocalAppSecurity)' != 'true'" />
     <PackageReference Include="cCoder.CodeAnalysis" Version="2026.7.25.357" />
     <PackageReference Include="cCoder.ContentManagement" Version="2026.7.27.2210" Condition="'$(UseLocalContentManagement)' != 'true'" />
     <PackageReference Include="cCoder.Data" Version="2026.7.23.1914" Condition="'$(UseLocalData)' != 'true'" />
@@ -118,9 +118,9 @@
     <PackageReference Include="cCoder.Packaging" Version="2026.7.27.2326" Condition="'$(UseLocalPackaging)' != 'true'" />
     <PackageReference Include="cCoder.Security" Version="2026.7.26.1336" Condition="'$(UseLocalSecurity)' != 'true'" />
     <PackageReference Include="cCoder.Security.Data" Version="2026.7.26.1336" Condition="'$(UseLocalSecurity)' != 'true'" />
-    <PackageReference Include="cCoder.Workflow" Version="2026.7.27.1948" Condition="'$(UseLocalWorkflow)' != 'true'" />
-    <PackageReference Include="cCoder.Workflow.Activities" Version="2026.7.27.1948" Condition="'$(UseLocalWorkflow)' != 'true'" />
-    <PackageReference Include="cCoder.Workflow.Engine" Version="2026.7.27.1948" Condition="'$(UseLocalWorkflow)' != 'true'" />
+    <PackageReference Include="cCoder.Workflow" Version="2026.7.28.48" Condition="'$(UseLocalWorkflow)' != 'true'" />
+    <PackageReference Include="cCoder.Workflow.Activities" Version="2026.7.28.48" Condition="'$(UseLocalWorkflow)' != 'true'" />
+    <PackageReference Include="cCoder.Workflow.Engine" Version="2026.7.28.48" Condition="'$(UseLocalWorkflow)' != 'true'" />
     <PackageReference Include="Microsoft.AspNetCore.OData" Version="9.5.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.10" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
