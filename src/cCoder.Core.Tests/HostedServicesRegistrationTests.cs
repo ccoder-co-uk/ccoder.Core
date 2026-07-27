@@ -25,7 +25,8 @@ public sealed partial class HostedServicesRegistrationTests
                 ["ConnectionStrings:Core"] = "Server=(localdb)\\mssqllocaldb;Database=core-tests;Trusted_Connection=True;TrustServerCertificate=True;",
                 ["ConnectionStrings:SSO"] = "Server=(localdb)\\mssqllocaldb;Database=sso-tests;Trusted_Connection=True;TrustServerCertificate=True;",
                 ["Settings:DecryptionKey"] = "000000000000000000000000000000000000000000000000",
-                ["Services:Workflow"] = "http://localhost:7071/api/"
+                ["Services:Workflow"] = "http://localhost:7071/api/",
+                ["ContentManagement:RootPath"] = "Api/BoundContent"
             })
             .Build();
 
@@ -35,13 +36,7 @@ public sealed partial class HostedServicesRegistrationTests
         // When
         services.AddCoreHostedServices(configure: coreBuilder =>
         {
-            coreBuilder.ConfigureDomainsWith(configure: coreConfig =>
-            {
-                coreConfig.CoreConnectionString = configuration["ConnectionStrings:Core"];
-                coreConfig.SecurityConnectionString = configuration["ConnectionStrings:SSO"];
-                coreConfig.DecryptionKey = configuration["Settings:DecryptionKey"];
-                coreConfig.WorkflowServiceUrl = configuration["Services:Workflow"];
-            });
+            coreBuilder.ConfigureDomainsWith(configure: configuration.Bind);
         });
 
         // Then
@@ -54,6 +49,14 @@ public sealed partial class HostedServicesRegistrationTests
         services.Should()
             .NotContain(predicate: descriptor =>
                 descriptor.ServiceType == typeof(IAzureServiceBusEventHub));
+
+        using ServiceProvider serviceProvider = services.BuildServiceProvider();
+
+        serviceProvider
+            .GetRequiredService<cCoder.ContentManagement.Models.ContentManagementConfiguration>()
+            .RootPath
+            .Should()
+            .Be(expected: "Api/BoundContent");
     }
 
     [Fact]

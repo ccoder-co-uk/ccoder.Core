@@ -38,6 +38,7 @@ internal static class IServiceCollectionExtensions
         {
             coreBuilder.ConfigureDomainsWith(configure: coreConfig =>
             {
+                config.Bind(instance: coreConfig);
                 coreConfig.CoreConnectionString = config.GetValue<string>("ConnectionStrings:Core");
                 coreConfig.SecurityConnectionString = config.GetValue<string>("ConnectionStrings:SSO");
                 coreConfig.DecryptionKey = config.GetValue<string>("Settings:DecryptionKey");

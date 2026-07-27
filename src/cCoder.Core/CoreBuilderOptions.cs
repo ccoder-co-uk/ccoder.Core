@@ -262,6 +262,7 @@ services: securityServices, decryptionKey: decryptionKey ?? string.Empty);
     {
         CoreConfiguration configuration = new();
         configure?.Invoke(obj: configuration);
+        CoreConfigurationMapper.ApplyBoundRootSections(target: configuration);
 
         WithCoreConfiguration(configure: coreConfig =>
             CoreConfigurationMapper.Copy(source: configuration, target: coreConfig));
@@ -271,12 +272,45 @@ services: securityServices, decryptionKey: decryptionKey ?? string.Empty);
         WithSecurity(
 connectionString: configuration.SecurityConnectionString, decryptionKey: configuration.DecryptionKey);
 
-        UseAppSecurity();
-        UseContentManagement();
-        UseDocumentManagement();
-        UseLogging();
-        UseMail();
-        UseWorkflow();
+        UseAppSecurity(configure: domain =>
+        {
+            ApplyConfiguration(source: configuration.AppSecurity, target: domain);
+            domain.RootPath = configuration.AppSecurity.RootPath;
+            domain.IncludeLegacyCoreContext = configuration.AppSecurity.IncludeLegacyCoreContext;
+            domain.IsMigrating = configuration.AppSecurity.IsMigrating;
+        });
+        UseContentManagement(configure: domain =>
+        {
+            ApplyConfiguration(source: configuration.ContentManagement, target: domain);
+            domain.RootPath = configuration.ContentManagement.RootPath;
+            domain.IncludeLegacyCoreContext = configuration.ContentManagement.IncludeLegacyCoreContext;
+        });
+        UseDocumentManagement(configure: domain =>
+        {
+            ApplyConfiguration(source: configuration.DocumentManagement, target: domain);
+            domain.RootPath = configuration.DocumentManagement.RootPath;
+            domain.IncludeLegacyCoreContext = configuration.DocumentManagement.IncludeLegacyCoreContext;
+        });
+        UseLogging(configure: domain =>
+        {
+            ApplyConfiguration(source: configuration.DomainLogging, target: domain);
+            domain.RootPath = configuration.DomainLogging.RootPath;
+            domain.IncludeLegacyCoreContext = configuration.DomainLogging.IncludeLegacyCoreContext;
+        });
+        UseMail(configure: domain =>
+        {
+            ApplyConfiguration(source: configuration.Mail, target: domain);
+            domain.RootPath = configuration.Mail.RootPath;
+            domain.IncludeLegacyCoreContext = configuration.Mail.IncludeLegacyCoreContext;
+            domain.IsMigrating = configuration.Mail.IsMigrating;
+        });
+        UseWorkflow(configure: domain =>
+        {
+            ApplyConfiguration(source: configuration.Workflow, target: domain);
+            domain.RootPath = configuration.Workflow.RootPath;
+            domain.IncludeLegacyCoreContext = configuration.Workflow.IncludeLegacyCoreContext;
+            domain.IsMigrating = configuration.Workflow.IsMigrating;
+        });
         UseConfiguredExternalEventing(configuration: configuration);
         WithEventProviders(eventProviders: configuration.EventProviders ?? []);
 
@@ -285,6 +319,170 @@ connectionString: configuration.SecurityConnectionString, decryptionKey: configu
 
     public CoreBuilderOptions UseAll(Action<CoreConfiguration> configure) =>
         ConfigureDomainsWith(configure: configure);
+
+    private static void ApplyConfiguration(
+        AppSecurityConfiguration source,
+        AppSecurityConfiguration target) =>
+        ApplyConfiguration(
+            source.ConnectionStrings,
+            source.Settings,
+            source.Services,
+            source.DebugInfo,
+            source.LogSQL,
+            source.EventProviders,
+            connectionStrings => MergeDictionary(target.ConnectionStrings, connectionStrings),
+            settings => MergeDictionary(target.Settings, settings),
+            services => MergeDictionary(target.Services, services),
+            debugInfo => target.DebugInfo = debugInfo,
+            logSql => target.LogSQL = logSql,
+            eventProviders => target.EventProviders = eventProviders);
+
+    private static void ApplyConfiguration(
+        ContentManagementConfiguration source,
+        ContentManagementConfiguration target) =>
+        ApplyConfiguration(
+            source.ConnectionStrings,
+            source.Settings,
+            source.Services,
+            source.DebugInfo,
+            source.LogSQL,
+            source.EventProviders,
+            connectionStrings => MergeDictionary(target.ConnectionStrings, connectionStrings),
+            settings => MergeDictionary(target.Settings, settings),
+            services => MergeDictionary(target.Services, services),
+            debugInfo => target.DebugInfo = debugInfo,
+            logSql => target.LogSQL = logSql,
+            eventProviders => target.EventProviders = eventProviders);
+
+    private static void ApplyConfiguration(
+        DocumentManagementConfiguration source,
+        DocumentManagementConfiguration target) =>
+        ApplyConfiguration(
+            source.ConnectionStrings,
+            source.Settings,
+            source.Services,
+            source.DebugInfo,
+            source.LogSQL,
+            source.EventProviders,
+            connectionStrings => MergeDictionary(target.ConnectionStrings, connectionStrings),
+            settings => MergeDictionary(target.Settings, settings),
+            services => MergeDictionary(target.Services, services),
+            debugInfo => target.DebugInfo = debugInfo,
+            logSql => target.LogSQL = logSql,
+            eventProviders => target.EventProviders = eventProviders);
+
+    private static void ApplyConfiguration(
+        LoggingConfiguration source,
+        LoggingConfiguration target) =>
+        ApplyConfiguration(
+            source.ConnectionStrings,
+            source.Settings,
+            source.Services,
+            source.DebugInfo,
+            source.LogSQL,
+            source.EventProviders,
+            connectionStrings => MergeDictionary(target.ConnectionStrings, connectionStrings),
+            settings => MergeDictionary(target.Settings, settings),
+            services => MergeDictionary(target.Services, services),
+            debugInfo => target.DebugInfo = debugInfo,
+            logSql => target.LogSQL = logSql,
+            eventProviders => target.EventProviders = eventProviders);
+
+    private static void ApplyConfiguration(
+        MailConfiguration source,
+        MailConfiguration target)
+    {
+        ApplyConfiguration(
+            source.ConnectionStrings,
+            source.Settings,
+            source.Services,
+            source.DebugInfo,
+            source.LogSQL,
+            source.EventProviders,
+            connectionStrings => MergeDictionary(target.ConnectionStrings, connectionStrings),
+            settings => MergeDictionary(target.Settings, settings),
+            services => MergeDictionary(target.Services, services),
+            debugInfo => target.DebugInfo = debugInfo,
+            logSql => target.LogSQL = logSql,
+            eventProviders => { });
+
+        SetIfPresent(value: source.DefaultSenderProviderName, apply: value => target.DefaultSenderProviderName = value);
+        SetIfPresent(value: source.DefaultReceiverProviderName, apply: value => target.DefaultReceiverProviderName = value);
+        SetIfPresent(value: source.MicrosoftGraph.TenantId, apply: value => target.MicrosoftGraph.TenantId = value);
+        SetIfPresent(value: source.MicrosoftGraph.ClientId, apply: value => target.MicrosoftGraph.ClientId = value);
+        SetIfPresent(value: source.MicrosoftGraph.ClientSecret, apply: value => target.MicrosoftGraph.ClientSecret = value);
+        SetIfPresent(value: source.MicrosoftGraph.GraphBaseUrl, apply: value => target.MicrosoftGraph.GraphBaseUrl = value);
+        SetIfPresent(value: source.MicrosoftGraph.LoginBaseUrl, apply: value => target.MicrosoftGraph.LoginBaseUrl = value);
+        SetIfPresent(value: source.MicrosoftGraph.ReceiveUser, apply: value => target.MicrosoftGraph.ReceiveUser = value);
+    }
+
+    private static void ApplyConfiguration(
+        WorkflowConfiguration source,
+        WorkflowConfiguration target) =>
+        ApplyConfiguration(
+            source.ConnectionStrings,
+            source.Settings,
+            source.Services,
+            source.DebugInfo,
+            source.LogSQL,
+            source.EventProviders,
+            connectionStrings => MergeDictionary(target.ConnectionStrings, connectionStrings),
+            settings => MergeDictionary(target.Settings, settings),
+            services => MergeDictionary(target.Services, services),
+            debugInfo => target.DebugInfo = debugInfo,
+            logSql => target.LogSQL = logSql,
+            eventProviders => target.EventProviders = eventProviders);
+
+    private static void ApplyConfiguration(
+        IDictionary<string, string> connectionStrings,
+        IDictionary<string, string> settings,
+        IDictionary<string, string> services,
+        bool debugInfo,
+        bool logSql,
+        EventProvider[] eventProviders,
+        Action<IDictionary<string, string>> setConnectionStrings,
+        Action<IDictionary<string, string>> setSettings,
+        Action<IDictionary<string, string>> setServices,
+        Action<bool> setDebugInfo,
+        Action<bool> setLogSql,
+        Action<EventProvider[]> setEventProviders)
+    {
+        setConnectionStrings(new Dictionary<string, string>(
+            connectionStrings ?? new Dictionary<string, string>(),
+            StringComparer.OrdinalIgnoreCase));
+        setSettings(new Dictionary<string, string>(
+            settings ?? new Dictionary<string, string>(),
+            StringComparer.OrdinalIgnoreCase));
+        setServices(new Dictionary<string, string>(
+            services ?? new Dictionary<string, string>(),
+            StringComparer.OrdinalIgnoreCase));
+        setDebugInfo(debugInfo);
+        setLogSql(logSql);
+        setEventProviders(eventProviders is null ? [] : [.. eventProviders]);
+    }
+
+    private static void MergeDictionary(
+        IDictionary<string, string> target,
+        IDictionary<string, string> source)
+    {
+        if (target is null || source is null)
+        {
+            return;
+        }
+
+        foreach ((string key, string value) in source)
+        {
+            target[key] = value;
+        }
+    }
+
+    private static void SetIfPresent(string value, Action<string> apply)
+    {
+        if (!string.IsNullOrWhiteSpace(value: value))
+        {
+            apply(obj: value);
+        }
+    }
 
     internal void Apply()
     {
@@ -499,11 +697,4 @@ defaults: coreConfiguration, connectionStrings: connectionStrings, settings: set
         SetIfPresent(value: coreConfiguration.MailDefaultReceiverProviderName, apply: value => configuration.DefaultReceiverProviderName = value);
     }
 
-    private static void SetIfPresent(string value, Action<string> apply)
-    {
-        if (!string.IsNullOrWhiteSpace(value: value))
-        {
-            apply(obj: value);
-        }
-    }
 }
