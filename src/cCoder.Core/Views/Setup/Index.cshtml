@@ -558,7 +558,9 @@
 
             const downloadPackage = async (name) => {
                 appendLog(`Downloading ${name}...`);
-                const response = await fetch(`${assetsRoot}${name}.json`);
+                const response = await fetch(
+                    `${assetsRoot}${name}.json?version=${Date.now()}`,
+                    { cache: "no-store" });
 
                 if (!response.ok) {
                     throw new Error(await readError(response));
