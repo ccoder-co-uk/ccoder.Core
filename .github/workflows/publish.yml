@@ -20,7 +20,7 @@ defaults:
 
 jobs:
   build-test-pack:
-    runs-on: self-hosted
+    runs-on: [self-hosted, Windows, X64, test]
     defaults:
       run:
         shell: powershell
