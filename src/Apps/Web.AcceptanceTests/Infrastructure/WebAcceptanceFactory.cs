@@ -66,10 +66,12 @@ initialData:             [
         {
             services.AddSingleton<ILoggerProvider>(implementationInstance: LogCapture);
             services.AddOptions();
+
             services.Replace(
                 descriptor: ServiceDescriptor.Singleton<
                     IDistributedCache,
                     MemoryDistributedCache>());
+
             services.RemoveAll<Config>();
             services.RemoveAll<ICoreContextFactory>();
             services.RemoveAll<ISecurityDbContextFactory>();
