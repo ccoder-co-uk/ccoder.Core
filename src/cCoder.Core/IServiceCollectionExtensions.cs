@@ -40,6 +40,7 @@ using cCoder.Core.Services.Foundations.TemplatedEmails;
 using cCoder.Core.Brokers.Setup;
 using cCoder.Core.Services.Setup;
 using cCoder.Data;
+using cCoder.Data.Models.Packaging;
 using cCoder.Eventing;
 using cCoder.Eventing.Models;
 using cCoder.Packaging;
@@ -56,6 +57,8 @@ using Microsoft.AspNetCore.OData.Batch;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
+using Microsoft.OData.Edm;
+using Microsoft.OData.ModelBuilder;
 
 namespace cCoder.Core;
 
@@ -479,6 +482,13 @@ predicate: (documentName, apiDescription) =>
         IEnumerable<CoreApiRouteDefinition> routeDefinitions)
     {
         DefaultODataBatchHandler batchHandler = new();
+        ODataConventionModelBuilder packagingModelBuilder = new();
+
+        packagingModelBuilder.EntitySet<Package>(name: nameof(Package));
+        packagingModelBuilder.EntitySet<PackageItem>(name: nameof(PackageItem));
+        packagingModelBuilder.Namespace = string.Empty;
+
+        IEdmModel packagingModel = packagingModelBuilder.GetEdmModel();
 
         CoreApiRouteDefinition[] definitions = [.. (routeDefinitions ?? [])
             .Where(predicate: route =>
@@ -514,6 +524,11 @@ predicate: (documentName, apiDescription) =>
                 .Select()
                 .OrderBy()
                 .SetMaxTop(maxTopValue: 1000);
+
+            _ = options.AddRouteComponents(
+                routePrefix: "Api/Packaging",
+                model: packagingModel,
+                batchHandler: batchHandler);
 
             foreach (CoreApiRouteDefinition routeDefinition in definitions)
             {
