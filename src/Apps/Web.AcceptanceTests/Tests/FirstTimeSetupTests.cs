@@ -336,6 +336,7 @@ public sealed partial class FirstTimeSetupTests
                 .ToArrayAsync();
 
             appContent = $"{appContent}{Environment.NewLine}Apps: {string.Join(separator: ", ", value: appState)}";
+            appContent = $"{appContent}{Environment.NewLine}{harness.Factory.LogCapture.Read()}";
         }
 
         appResponse.StatusCode.Should()

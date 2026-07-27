@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 using Web.AcceptanceTests.Models;
 
 
@@ -24,6 +25,8 @@ internal sealed class WebAcceptanceFactory : WebApplicationFactory<Program>
     private readonly string originalHostedServicesUrl;
     private readonly string originalExternalEventingSetting;
     private readonly string originalAggregateDomainsSetting;
+
+    internal AcceptanceLogCapture LogCapture { get; } = new();
 
     public WebAcceptanceFactory(AcceptanceSettings settings)
     {
@@ -59,6 +62,7 @@ initialData:             [
 
         builder.ConfigureServices(configureServices: services =>
         {
+            services.AddSingleton<ILoggerProvider>(implementationInstance: LogCapture);
             services.RemoveAll<Config>();
             services.RemoveAll<ICoreContextFactory>();
             services.RemoveAll<ISecurityDbContextFactory>();

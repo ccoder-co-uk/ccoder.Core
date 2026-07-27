@@ -318,7 +318,6 @@ POST Api/Mail/ReceivedEmail
 POST Api/Mail/ReceivedEmail/Receive
 POST Api/Mail/SentEmail
 POST Api/Packaging/Package
-POST Api/Packaging/Package/Import
 POST Api/Packaging/PackageItem
 POST Api/Security/SSORole
 POST Api/Security/SSOUserRole

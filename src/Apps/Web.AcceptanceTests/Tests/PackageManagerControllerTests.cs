@@ -14,7 +14,6 @@ using cCoder.Data.Models.Security;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using cCoder.Packaging.Services.Aggregations;
 using Web.AcceptanceTests.Infrastructure;
 using Xunit;
 using CoreApp = cCoder.Data.Models.CMS.App;
@@ -75,19 +74,7 @@ requestUri:             $"{BaseUrl}/Import?appId={appId}",value:             pac
 
         if (response.StatusCode != HttpStatusCode.OK)
         {
-            try
-            {
-                IPackageManagerAggregationService manager = fixture.Factory.Services
-                    .GetRequiredService<IPackageManagerAggregationService>();
-
-                await manager.ImportPackageAsync(
-                    appId: appId,
-                    package: package);
-            }
-            catch (Exception exception)
-            {
-                content = $"{content}{Environment.NewLine}{exception}";
-            }
+            content = $"{content}{Environment.NewLine}{fixture.Factory.LogCapture.Read()}";
         }
 
         response.StatusCode.Should()

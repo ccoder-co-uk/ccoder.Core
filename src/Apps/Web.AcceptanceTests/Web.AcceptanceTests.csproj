@@ -4,6 +4,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
     <IsPackable>false</IsPackable>
+    <NoWarn>$(NoWarn);STXTEST001</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
     <LocalSecurityProject>..\..\..\..\cCoder.Security\src\cCoder.Security\cCoder.Security.csproj</LocalSecurityProject>
