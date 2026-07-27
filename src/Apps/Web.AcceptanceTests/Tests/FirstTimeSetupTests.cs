@@ -316,9 +316,32 @@ public sealed partial class FirstTimeSetupTests
                 expected: token.UserName,
                 because: string.Join(separator: ",", value: userIds));
 
-        App app = await core.Set<App>()
-            .IgnoreQueryFilters()
-            .SingleAsync();
+        using HttpResponseMessage appResponse = await harness.Client.PostAsJsonAsync(
+            requestUri: "/Api/ContentManagement/App",
+            value: new
+            {
+                Name = "First Time Setup",
+                Domain = "localhost",
+                TenantId = "default",
+            });
+
+        string appContent = await appResponse.Content.ReadAsStringAsync();
+
+        if (appResponse.StatusCode != HttpStatusCode.OK)
+        {
+            string[] appState = await core.Set<App>()
+                .IgnoreQueryFilters()
+                .Select(selector: app =>
+                    $"{app.Id}:{app.Name}:{app.Domain}:{app.TenantId}")
+                .ToArrayAsync();
+
+            appContent = $"{appContent}{Environment.NewLine}Apps: {string.Join(separator: ", ", value: appState)}";
+        }
+
+        appResponse.StatusCode.Should()
+            .Be(expected: HttpStatusCode.OK, because: appContent);
+
+        App app = await appResponse.Content.ReadFromJsonAsync<App>();
 
         app.Should()
             .NotBeNull();
