@@ -540,6 +540,26 @@
                     : null;
             };
 
+            const ensureImportSucceeded = (results, name) => {
+                if (!Array.isArray(results)) {
+                    return;
+                }
+
+                const failures = results.filter((result) =>
+                    result.Success === false || result.success === false);
+
+                if (failures.length === 0) {
+                    return;
+                }
+
+                const message = failures[0].Message
+                    ?? failures[0].message
+                    ?? "The import returned an unsuccessful result.";
+
+                throw new Error(
+                    `${name} import failed for ${failures.length} item(s): ${message}`);
+            };
+
             const getJson = async (url) => {
                 const response = await fetch(url, {
                     credentials: "same-origin",
@@ -666,16 +686,23 @@
                             downloadPackage("app-baseline"),
                         ]);
 
-                    appendLog("Importing common cache and application baselines.");
+                    appendLog("Importing application baseline.");
 
-                    await Promise.all([
-                        sendJson(
-                            "/Api/ContentManagement/CommonObject/Import",
-                            toCommonObjects(commonCachePackage)),
-                        sendJson(
-                            `/Api/Core/Package/Import?appId=${appId}`,
-                            appBaselinePackage),
-                    ]);
+                    const appResults = await sendJson(
+                        `/Api/Core/Package/Import?appId=${appId}`,
+                        appBaselinePackage);
+
+                    ensureImportSucceeded(appResults, "Application baseline");
+
+                    appendLog("Importing common cache baseline.");
+
+                    const commonCacheResults = await sendJson(
+                        "/Api/ContentManagement/CommonObject/Import",
+                        toCommonObjects(commonCachePackage));
+
+                    ensureImportSucceeded(
+                        commonCacheResults,
+                        "Common cache baseline");
 
                     appendLog("Baseline imports completed.");
                     appendLog("Activating the common cache.");
