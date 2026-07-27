@@ -74,7 +74,6 @@ requestUri:             $"{BaseUrl}/Import?appId={appId}",value:             pac
 
         if (response.StatusCode != HttpStatusCode.OK)
         {
-            content = $"{content}{Environment.NewLine}{fixture.Factory.LogCapture.Read()}";
         }
 
         response.StatusCode.Should()

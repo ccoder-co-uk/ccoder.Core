@@ -3,6 +3,7 @@
 // ---------------------------------------------------------------
 
 using FluentAssertions;
+using System.Text.Json;
 using Web.AcceptanceTests.Infrastructure;
 using Xunit;
 
@@ -25,7 +26,18 @@ path:             Path.Combine(path1: AppContext.BaseDirectory,path2: "ActualEnd
         );
 
         // Then
+        string[] missing = expected
+            .Except(second: actual, comparer: StringComparer.Ordinal)
+            .ToArray();
+
+        string[] unexpected = actual
+            .Except(second: expected, comparer: StringComparer.Ordinal)
+            .ToArray();
+
         actual.Should()
-            .BeEquivalentTo(expectation: expected);
+            .BeEquivalentTo(
+                expectation: expected,
+                because: $"missing routes: {JsonSerializer.Serialize(value: missing)}; "
+                    + $"unexpected routes: {JsonSerializer.Serialize(value: unexpected)}");
     }
 }
