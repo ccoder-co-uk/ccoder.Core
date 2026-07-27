@@ -477,8 +477,7 @@
             const log = document.getElementById("setup-log");
             const domain = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Domain));
             const assetsRoot =
-                "https://raw.githubusercontent.com/ccoder-co-uk/cCoder.Assets/main/" +
-                "Packages/";
+                @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.AssetsRoot));
             const defaultAppConfig = {
                 Themes: {
                     Default: {
@@ -600,7 +599,23 @@
 
                 for (const item of reusablePackages) {
                     const setupPackage = await downloadPackage(item.Path);
-                    await sendJson("/Api/Packaging/Package", setupPackage);
+                    const packageItems = setupPackage.Items ?? [];
+                    const packageRecord = {
+                        ...setupPackage,
+                        Items: [],
+                    };
+                    const registeredPackage = await sendJson(
+                        "/Api/Packaging/Package",
+                        packageRecord);
+                    const packageId =
+                        registeredPackage.Id ?? registeredPackage.id;
+
+                    for (const packageItem of packageItems) {
+                        await sendJson("/Api/Packaging/PackageItem", {
+                            ...packageItem,
+                            PackageId: packageId,
+                        });
+                    }
                 }
 
                 appendLog("Reusable packages registered.");
@@ -618,7 +633,10 @@
                         Key: record.ResourceKey
                             ?? record.Key
                             ?? setupPackage.Category,
-                        Type: item.Type,
+                        // Common-object rendering still identifies the content
+                        // management resource families by their established
+                        // cache type names. Package routes remain domain based.
+                        Type: `Core/${item.Type.split("/").pop()}`,
                         Json: JSON.stringify(record),
                         Culture: record.Culture ?? "",
                     }));
