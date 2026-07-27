@@ -550,10 +550,10 @@ public sealed partial class FirstTimeSetupTests
             AcceptanceSettings settings = new()
             {
                 CoreConnectionString = AddDatabaseSuffix(
-                    variableName: "CCODER_ACCEPTANCE_CORE_CONNECTION_STRING",
+                    variableName: "ConnectionStrings__Core",
                     suffix: suffix),
                 SsoConnectionString = AddDatabaseSuffix(
-                    variableName: "CCODER_ACCEPTANCE_SSO_CONNECTION_STRING",
+                    variableName: "ConnectionStrings__SSO",
                     suffix: suffix),
                 DecryptionKey =
                     "000000000000000000000000000000000000000000000000",
