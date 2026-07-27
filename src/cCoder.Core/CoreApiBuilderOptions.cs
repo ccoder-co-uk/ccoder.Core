@@ -217,6 +217,7 @@ services: securityServices, decryptionKey: coreConfiguration?.DecryptionKey ?? s
     {
         CoreConfiguration configuration = new();
         configure?.Invoke(obj: configuration);
+        CoreConfigurationMapper.ApplyBoundRootSections(target: configuration);
 
         WithCoreConfiguration(configure: coreConfig =>
             CoreConfigurationMapper.Copy(source: configuration, target: coreConfig));
@@ -226,12 +227,18 @@ services: securityServices, decryptionKey: coreConfiguration?.DecryptionKey ?? s
         WithSecurity(
 connectionString: configuration.SecurityConnectionString, decryptionKey: configuration.DecryptionKey, rootPath: configuration.SecurityRootPath);
 
-        AddAppSecurityApi();
-        AddContentManagementApi();
-        AddDocumentManagementApi();
-        AddLoggingApi();
-        AddMailApi();
-        AddWorkflowApi();
+        AddAppSecurityApi(configure: domain =>
+            ApplyConfiguration(source: configuration.AppSecurity, target: domain));
+        AddContentManagementApi(configure: domain =>
+            ApplyConfiguration(source: configuration.ContentManagement, target: domain));
+        AddDocumentManagementApi(configure: domain =>
+            ApplyConfiguration(source: configuration.DocumentManagement, target: domain));
+        AddLoggingApi(configure: domain =>
+            ApplyConfiguration(source: configuration.DomainLogging, target: domain));
+        AddMailApi(configure: domain =>
+            ApplyConfiguration(source: configuration.Mail, target: domain));
+        AddWorkflowApi(configure: domain =>
+            ApplyConfiguration(source: configuration.Workflow, target: domain));
         UseLegacyCoreApi();
         UseConfiguredExternalEventing(configuration: configuration);
         WithEventProviders(eventProviders: configuration.EventProviders ?? []);
@@ -604,9 +611,9 @@ hubUrl: configuration.HttpEventHubUrl, configure: options => options.MaxConcurre
         target.IncludeLegacyCoreContext = source.IncludeLegacyCoreContext;
         target.DebugInfo = source.DebugInfo;
         target.LogSQL = source.LogSQL;
-        target.ConnectionStrings = CopyDictionary(source: source.ConnectionStrings);
-        target.Settings = CopyDictionary(source: source.Settings);
-        target.Services = CopyDictionary(source: source.Services);
+        MergeDictionary(target: target.ConnectionStrings, source: source.ConnectionStrings);
+        MergeDictionary(target: target.Settings, source: source.Settings);
+        MergeDictionary(target: target.Services, source: source.Services);
         CopyEventProviders(source: source.EventProviders, target: target.EventProviders);
     }
 
@@ -618,9 +625,9 @@ hubUrl: configuration.HttpEventHubUrl, configure: options => options.MaxConcurre
         target.IncludeLegacyCoreContext = source.IncludeLegacyCoreContext;
         target.DebugInfo = source.DebugInfo;
         target.LogSQL = source.LogSQL;
-        target.ConnectionStrings = CopyDictionary(source: source.ConnectionStrings);
-        target.Settings = CopyDictionary(source: source.Settings);
-        target.Services = CopyDictionary(source: source.Services);
+        MergeDictionary(target: target.ConnectionStrings, source: source.ConnectionStrings);
+        MergeDictionary(target: target.Settings, source: source.Settings);
+        MergeDictionary(target: target.Services, source: source.Services);
         CopyEventProviders(source: source.EventProviders, target: target.EventProviders);
     }
 
@@ -632,9 +639,9 @@ hubUrl: configuration.HttpEventHubUrl, configure: options => options.MaxConcurre
         target.IncludeLegacyCoreContext = source.IncludeLegacyCoreContext;
         target.DebugInfo = source.DebugInfo;
         target.LogSQL = source.LogSQL;
-        target.ConnectionStrings = CopyDictionary(source: source.ConnectionStrings);
-        target.Settings = CopyDictionary(source: source.Settings);
-        target.Services = CopyDictionary(source: source.Services);
+        MergeDictionary(target: target.ConnectionStrings, source: source.ConnectionStrings);
+        MergeDictionary(target: target.Settings, source: source.Settings);
+        MergeDictionary(target: target.Services, source: source.Services);
         CopyEventProviders(source: source.EventProviders, target: target.EventProviders);
     }
 
@@ -646,9 +653,9 @@ hubUrl: configuration.HttpEventHubUrl, configure: options => options.MaxConcurre
         target.IncludeLegacyCoreContext = source.IncludeLegacyCoreContext;
         target.DebugInfo = source.DebugInfo;
         target.LogSQL = source.LogSQL;
-        target.ConnectionStrings = CopyDictionary(source: source.ConnectionStrings);
-        target.Settings = CopyDictionary(source: source.Settings);
-        target.Services = CopyDictionary(source: source.Services);
+        MergeDictionary(target: target.ConnectionStrings, source: source.ConnectionStrings);
+        MergeDictionary(target: target.Settings, source: source.Settings);
+        MergeDictionary(target: target.Services, source: source.Services);
         CopyEventProviders(source: source.EventProviders, target: target.EventProviders);
     }
 
@@ -660,17 +667,17 @@ hubUrl: configuration.HttpEventHubUrl, configure: options => options.MaxConcurre
         target.IncludeLegacyCoreContext = source.IncludeLegacyCoreContext;
         target.DebugInfo = source.DebugInfo;
         target.LogSQL = source.LogSQL;
-        target.ConnectionStrings = CopyDictionary(source: source.ConnectionStrings);
-        target.Settings = CopyDictionary(source: source.Settings);
-        target.Services = CopyDictionary(source: source.Services);
-        target.MicrosoftGraph.TenantId = source.MicrosoftGraph.TenantId;
-        target.MicrosoftGraph.ClientId = source.MicrosoftGraph.ClientId;
-        target.MicrosoftGraph.ClientSecret = source.MicrosoftGraph.ClientSecret;
-        target.MicrosoftGraph.GraphBaseUrl = source.MicrosoftGraph.GraphBaseUrl;
-        target.MicrosoftGraph.LoginBaseUrl = source.MicrosoftGraph.LoginBaseUrl;
-        target.MicrosoftGraph.ReceiveUser = source.MicrosoftGraph.ReceiveUser;
-        target.DefaultSenderProviderName = source.DefaultSenderProviderName;
-        target.DefaultReceiverProviderName = source.DefaultReceiverProviderName;
+        MergeDictionary(target: target.ConnectionStrings, source: source.ConnectionStrings);
+        MergeDictionary(target: target.Settings, source: source.Settings);
+        MergeDictionary(target: target.Services, source: source.Services);
+        SetIfPresent(value: source.MicrosoftGraph.TenantId, apply: value => target.MicrosoftGraph.TenantId = value);
+        SetIfPresent(value: source.MicrosoftGraph.ClientId, apply: value => target.MicrosoftGraph.ClientId = value);
+        SetIfPresent(value: source.MicrosoftGraph.ClientSecret, apply: value => target.MicrosoftGraph.ClientSecret = value);
+        SetIfPresent(value: source.MicrosoftGraph.GraphBaseUrl, apply: value => target.MicrosoftGraph.GraphBaseUrl = value);
+        SetIfPresent(value: source.MicrosoftGraph.LoginBaseUrl, apply: value => target.MicrosoftGraph.LoginBaseUrl = value);
+        SetIfPresent(value: source.MicrosoftGraph.ReceiveUser, apply: value => target.MicrosoftGraph.ReceiveUser = value);
+        SetIfPresent(value: source.DefaultSenderProviderName, apply: value => target.DefaultSenderProviderName = value);
+        SetIfPresent(value: source.DefaultReceiverProviderName, apply: value => target.DefaultReceiverProviderName = value);
         CopyEventProviders(source: source.EventProviders, target: target.EventProviders);
     }
 
@@ -682,9 +689,9 @@ hubUrl: configuration.HttpEventHubUrl, configure: options => options.MaxConcurre
         target.IncludeLegacyCoreContext = source.IncludeLegacyCoreContext;
         target.DebugInfo = source.DebugInfo;
         target.LogSQL = source.LogSQL;
-        target.ConnectionStrings = CopyDictionary(source: source.ConnectionStrings);
-        target.Settings = CopyDictionary(source: source.Settings);
-        target.Services = CopyDictionary(source: source.Services);
+        MergeDictionary(target: target.ConnectionStrings, source: source.ConnectionStrings);
+        MergeDictionary(target: target.Settings, source: source.Settings);
+        MergeDictionary(target: target.Services, source: source.Services);
         CopyEventProviders(source: source.EventProviders, target: target.EventProviders);
     }
 
@@ -709,6 +716,29 @@ hubUrl: configuration.HttpEventHubUrl, configure: options => options.MaxConcurre
             dictionary: source ?? new Dictionary<string, string>(),
             comparer: StringComparer.OrdinalIgnoreCase);
 
+    private static void MergeDictionary(
+        IDictionary<string, string> target,
+        IDictionary<string, string> source)
+    {
+        if (target is null || source is null)
+        {
+            return;
+        }
+
+        foreach ((string key, string value) in source)
+        {
+            target[key] = value;
+        }
+    }
+
+    private static void SetIfPresent(string value, Action<string> apply)
+    {
+        if (!string.IsNullOrWhiteSpace(value: value))
+        {
+            apply(obj: value);
+        }
+    }
+
     private void ApplyMailDefaults(MailConfiguration configuration)
     {
         if (coreConfiguration is null)
@@ -726,11 +756,4 @@ hubUrl: configuration.HttpEventHubUrl, configure: options => options.MaxConcurre
         SetIfPresent(value: coreConfiguration.MailDefaultReceiverProviderName, apply: value => configuration.DefaultReceiverProviderName = value);
     }
 
-    private static void SetIfPresent(string value, Action<string> apply)
-    {
-        if (!string.IsNullOrWhiteSpace(value: value))
-        {
-            apply(obj: value);
-        }
-    }
 }

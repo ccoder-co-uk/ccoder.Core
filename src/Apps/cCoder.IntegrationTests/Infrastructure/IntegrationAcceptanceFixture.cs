@@ -70,8 +70,8 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
     {
         Settings = new AcceptanceSettings
         {
-            CoreConnectionString = AddDatabaseSuffix(variableName: "CCODER_ACCEPTANCE_CORE_CONNECTION_STRING"),
-            SsoConnectionString = AddDatabaseSuffix(variableName: "CCODER_ACCEPTANCE_SSO_CONNECTION_STRING"),
+            CoreConnectionString = AddDatabaseSuffix(variableName: "ConnectionStrings__Core"),
+            SsoConnectionString = AddDatabaseSuffix(variableName: "ConnectionStrings__SSO"),
             DecryptionKey = DecryptionKey,
             EventProviderType = ResolveEventProviderType(),
             ServiceBusConnectionString = ResolveOptionalSetting(
@@ -477,7 +477,7 @@ path:             Path.Combine(
             return connectionString;
         }
 
-        builder.InitialCatalog = $"{databaseName}-ccoder-integrationtests";
+        builder.InitialCatalog = $"{databaseName}-acceptance-{Guid.NewGuid():N}";
         return builder.ConnectionString;
     }
 

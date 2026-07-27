@@ -2,7 +2,13 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using cCoder.AppSecurity.Models;
+using cCoder.ContentManagement.Models;
+using cCoder.DocumentManagement.Models;
 using cCoder.Eventing.Models;
+using cCoder.Logging.Models;
+using cCoder.Mail.Models;
+using cCoder.Workflow.Models;
 
 namespace cCoder.Core.Models;
 
@@ -32,6 +38,13 @@ public sealed class CoreConfiguration
         ConnectionStrings = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         Settings = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         Services = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        AppSecurity = new AppSecurityConfiguration();
+        ContentManagement = new ContentManagementConfiguration();
+        DocumentManagement = new DocumentManagementConfiguration();
+        DomainLogging = new LoggingConfiguration();
+        Mail = new MailConfiguration();
+        Workflow = new WorkflowConfiguration();
+        Eventing = new EventingConfiguration();
     }
 
     public string CoreConnectionString { get; set; }
@@ -64,4 +77,11 @@ public sealed class CoreConfiguration
     public IDictionary<string, string> Services { get; set; }
     public bool DebugInfo { get; set; }
     public bool LogSQL { get; set; }
+    public AppSecurityConfiguration AppSecurity { get; set; }
+    public ContentManagementConfiguration ContentManagement { get; set; }
+    public DocumentManagementConfiguration DocumentManagement { get; set; }
+    public LoggingConfiguration DomainLogging { get; set; }
+    public MailConfiguration Mail { get; set; }
+    public WorkflowConfiguration Workflow { get; set; }
+    public EventingConfiguration Eventing { get; set; }
 }

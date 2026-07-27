@@ -3,23 +3,40 @@
 // ---------------------------------------------------------------
 
 using System.Globalization;
+using cCoder.AppSecurity.Models;
+using cCoder.ContentManagement.Models;
 using cCoder.Core.Models;
 using cCoder.Data;
+using cCoder.DocumentManagement.Models;
+using cCoder.Logging.Models;
+using cCoder.Mail.Models;
+using cCoder.Workflow.Models;
 
 namespace cCoder.Core;
 
 internal static class CoreConfigurationMapper
 {
+    internal static void ApplyBoundRootSections(CoreConfiguration target) =>
+        PopulateFromRuntimeConfiguration(
+            target: target,
+            source: new cCoder.Data.Config
+            {
+                ConnectionStrings = target.ConnectionStrings,
+                Settings = target.Settings,
+                Services = target.Services,
+                DebugInfo = target.DebugInfo,
+                LogSQL = target.LogSQL,
+            });
+
     internal static void PopulateFromRuntimeConfiguration(
         CoreConfiguration target,
-        Config source)
+        cCoder.Data.Config source)
     {
         target.ConnectionStrings = CloneDictionary(source: source.ConnectionStrings);
         target.Settings = CloneDictionary(source: source.Settings);
         target.Services = CloneDictionary(source: source.Services);
         target.DebugInfo = source.DebugInfo;
         target.LogSQL = source.LogSQL;
-
         if (TryGetValue(values: target.ConnectionStrings, key: "Core", value: out string coreConnectionString))
         {
             target.CoreConnectionString = coreConnectionString;
@@ -153,9 +170,16 @@ internal static class CoreConfigurationMapper
         target.Services = CloneDictionary(source: source.Services);
         target.DebugInfo = source.DebugInfo;
         target.LogSQL = source.LogSQL;
+        target.AppSecurity = source.AppSecurity ?? new AppSecurityConfiguration();
+        target.ContentManagement = source.ContentManagement ?? new ContentManagementConfiguration();
+        target.DocumentManagement = source.DocumentManagement ?? new DocumentManagementConfiguration();
+        target.DomainLogging = source.DomainLogging ?? new LoggingConfiguration();
+        target.Mail = source.Mail ?? new MailConfiguration();
+        target.Workflow = source.Workflow ?? new WorkflowConfiguration();
+        target.Eventing = source.Eventing ?? new cCoder.Eventing.Models.EventingConfiguration();
     }
 
-    internal static Config CreateRuntimeConfiguration(CoreConfiguration configuration) =>
+    internal static cCoder.Data.Config CreateRuntimeConfiguration(CoreConfiguration configuration) =>
         new()
         {
             ConnectionStrings = BuildConnectionStrings(configuration: configuration),
