@@ -167,22 +167,28 @@ requestUri:             $"{BaseUrl}/Import?appId={appId}",value:             pac
         packages
             .Where(predicate: package => string.Equals(a: package.Name,b: packageName,comparisonType: StringComparison.OrdinalIgnoreCase))
             .SelectMany(selector: package => package.Items ?? [])
-            .Count(predicate: item => string.Equals(a: item.Type,b: itemType,comparisonType: StringComparison.OrdinalIgnoreCase));
+            .Count(predicate: item => AreEquivalentPackageItemTypes(
+                expected: itemType,
+                actual: item.Type));
 
     private static int CountExportedEntities(IReadOnlyList<Package> packages, string packageName, string itemType) =>
         packages
             .Where(predicate: package => string.Equals(a: package.Name,b: packageName,comparisonType: StringComparison.OrdinalIgnoreCase))
             .SelectMany(selector: package => package.Items ?? [])
-            .Where(predicate: item => string.Equals(a: item.Type,b: itemType,comparisonType: StringComparison.OrdinalIgnoreCase))
+            .Where(predicate: item => AreEquivalentPackageItemTypes(
+                expected: itemType,
+                actual: item.Type))
             .Sum(selector: item => CountSerializedEntities(data: item.Data));
 
     private static int CountComparableExportedEntities(IReadOnlyList<Package> packages, string packageName, string itemType) =>
         itemType switch
         {
-            "Core/Role" => packages
+            "Core/Role" or "AppSecurity/Role" => packages
                 .Where(predicate: package => string.Equals(a: package.Name,b: packageName,comparisonType: StringComparison.OrdinalIgnoreCase))
                 .SelectMany(selector: package => package.Items ?? [])
-                .Where(predicate: item => string.Equals(a: item.Type,b: itemType,comparisonType: StringComparison.OrdinalIgnoreCase))
+                .Where(predicate: item => AreEquivalentPackageItemTypes(
+                    expected: itemType,
+                    actual: item.Type))
                 .Sum(selector: item => CountSerializedObjectsExcluding(data: item.Data,propertyName: "Name",excludedValue: AcceptanceAdminRoleName)),
             "ContentManagement/PageRole" => packages
                 .Where(predicate: package => string.Equals(a: package.Name,b: packageName,comparisonType: StringComparison.OrdinalIgnoreCase))
@@ -191,6 +197,27 @@ requestUri:             $"{BaseUrl}/Import?appId={appId}",value:             pac
                 .Sum(selector: item => CountSerializedObjectsExcluding(data: item.Data,propertyName: "Role",excludedValue: AcceptanceAdminRoleName)),
             _ => CountExportedEntities(packages: packages,packageName: packageName,itemType: itemType),
         };
+
+    private static bool AreEquivalentPackageItemTypes(string expected, string actual)
+    {
+        if (string.Equals(a: expected, b: actual, comparisonType: StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        return (expected, actual) switch
+        {
+            ("AppSecurity/Role", "Core/Role") or
+            ("Core/Role", "AppSecurity/Role") or
+            ("Workflow/FlowDefinition", "Core/FlowDefinition") or
+            ("Core/FlowDefinition", "Workflow/FlowDefinition") or
+            ("Workflow/Calendar", "Core/Calendar") or
+            ("Core/Calendar", "Workflow/Calendar") or
+            ("Workflow/CalendarEvent", "Core/CalendarEvent") or
+            ("Core/CalendarEvent", "Workflow/CalendarEvent") => true,
+            _ => false,
+        };
+    }
 
     private static int CountComparableCapturedEntities(string itemType, string data) =>
         itemType switch

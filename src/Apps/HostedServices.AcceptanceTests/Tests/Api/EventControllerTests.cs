@@ -363,7 +363,7 @@ condition: () =>
                         .IgnoreQueryFilters()
                         .Any(predicate: role =>
                             role.Id == roleId
-                            && role.Privs == "app_admin,app_read,folder_update");
+                            && role.Privs == "app_read,folder_update");
 
                     bool culturesUpdated =
                         waitCore.Set<AppCulture>()
@@ -410,7 +410,7 @@ condition: () =>
                 .IgnoreQueryFilters()
                 .Single(predicate: role => role.Id == roleId)
                 .Privs.Should()
-                .Be(expected: "app_admin,app_read,folder_update");
+                .Be(expected: "app_read,folder_update");
 
             core.Set<AppCulture>()
                 .IgnoreQueryFilters()
