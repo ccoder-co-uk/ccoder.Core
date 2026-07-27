@@ -32,7 +32,7 @@ public sealed partial class FirstTimeSetupTests
 {
     private const string AssetsRoot =
         "https://raw.githubusercontent.com/ccoder-co-uk/cCoder.Assets/main/" +
-        "Packages/First%20Time%20Setup/";
+        "Packages/";
 
     [Fact]
     public async Task ShouldRenderSetupExperienceWhenEnvironmentIsEmpty()
@@ -95,7 +95,10 @@ public sealed partial class FirstTimeSetupTests
             .Contain(expected: "common-cache");
 
         content.Should()
-            .Contain(expected: "app-baseline");
+            .Contain(expected: "first-app");
+
+        content.Should()
+            .Contain(expected: "\"/Api/Packaging/Package\"");
 
         content.Should()
             .Contain(expected: "\"/Api/RefreshCache\"");
@@ -136,7 +139,7 @@ public sealed partial class FirstTimeSetupTests
             .Be(expected: "localhost");
 
         app.TenantId.Should()
-            .Be(expected: "Default");
+            .Be(expected: "default");
 
         Tenant tenant = await sso.Set<Tenant>()
             .IgnoreQueryFilters()
@@ -198,14 +201,17 @@ public sealed partial class FirstTimeSetupTests
                 value: "Clients",
                 comparisonType: StringComparison.OrdinalIgnoreCase));
 
-        (await core.Set<Component>()
+        string[] componentNames = await core.Set<Component>()
             .IgnoreQueryFilters()
-            .AnyAsync(predicate: component =>
-                component.AppId == app.Id
-                && component.Name == "Login"
-                && component.ResourceKey == "AppSecurity"))
+            .Select(selector: component =>
+                $"{component.AppId}:{component.ResourceKey}/{component.Name}")
+            .ToArrayAsync();
+
+        componentNames
             .Should()
-            .BeTrue();
+            .Contain(
+                expected: $"{app.Id}:AppSecurity/Login",
+                because: string.Join(separator: ",", value: componentNames));
 
         (await core.Set<Resource>()
             .IgnoreQueryFilters()
@@ -216,13 +222,28 @@ public sealed partial class FirstTimeSetupTests
             .Should()
             .BeTrue();
 
-        (await core.Set<Script>()
+        (await core.Set<CommonObject>()
             .IgnoreQueryFilters()
-            .AnyAsync(predicate: script =>
-                script.AppId == app.Id
-                && script.Name == "CoreDailyUsageApiDetailsGrid"))
+            .AnyAsync(predicate: commonObject =>
+                commonObject.Key == "Security"
+                && commonObject.Type == "ContentManagement/Script"
+                && commonObject.Name == "CoreDailyUsageApiDetailsGrid"))
             .Should()
             .BeTrue();
+
+        string[] packageNames = await core.Set<Package>()
+            .IgnoreQueryFilters()
+            .Select(selector: package => package.Name)
+            .ToArrayAsync();
+
+        packageNames.Should()
+            .Contain(expected: "Baseline New App");
+
+        packageNames.Should()
+            .Contain(expected: "DocumentManagement App");
+
+        packageNames.Should()
+            .Contain(expected: "DocumentManagement Common Cache");
     }
 
     private static async Task SubmitSetupAsync(SetupHarness harness)
@@ -234,7 +255,7 @@ public sealed partial class FirstTimeSetupTests
                 {
                     Tenant = new Tenant
                     {
-                        Id = "Default",
+                        Id = "default",
                         Name = "Acceptance Platform",
                     },
                     User = new SSOUser
@@ -319,10 +340,10 @@ public sealed partial class FirstTimeSetupTests
             [
             DownloadPackageAsync(
                 client: assetsClient,
-                name: "common-cache"),
+                path: "First%20Time%20Setup/common-cache.json"),
             DownloadPackageAsync(
                 client: assetsClient,
-                name: "app-baseline")
+                path: "First%20Time%20Setup/first-app.json")
             ]);
 
         await ImportCommonCachePackageAsync(
@@ -333,6 +354,80 @@ public sealed partial class FirstTimeSetupTests
             client: harness.Client,
             appId: app!.Id,
             package: packages[1]);
+
+        string[] packagingRoutes = harness.Factory.Services
+            .GetServices<Microsoft.AspNetCore.Routing.EndpointDataSource>()
+            .SelectMany(selector: source => source.Endpoints)
+            .OfType<Microsoft.AspNetCore.Routing.RouteEndpoint>()
+            .Where(predicate: endpoint =>
+                endpoint.RoutePattern.RawText?.Contains(
+                    value: "Packaging/Package",
+                    comparisonType: StringComparison.OrdinalIgnoreCase) == true)
+            .Select(selector: endpoint =>
+                $"{endpoint.RoutePattern.RawText}: {string.Join(
+                    separator: ",",
+                    values: endpoint.Metadata
+                        .GetMetadata<Microsoft.AspNetCore.Routing.HttpMethodMetadata>()
+                        ?.HttpMethods
+                    ?? [])}")
+            .ToArray();
+
+        packagingRoutes.Should()
+            .Contain(
+                predicate: route => route.EndsWith(
+                    value: ": POST",
+                    comparisonType: StringComparison.Ordinal),
+                because: string.Join(
+                    separator: "; ",
+                    value: packagingRoutes));
+
+        await RegisterReusablePackagesAsync(
+            assetsClient: assetsClient,
+            apiClient: harness.Client);
+    }
+
+    private static async Task RegisterReusablePackagesAsync(
+        HttpClient assetsClient,
+        HttpClient apiClient)
+    {
+        JsonObject manifest = await assetsClient
+            .GetFromJsonAsync<JsonObject>(
+                requestUri: $"{AssetsRoot}manifest.json");
+
+        manifest.Should()
+            .NotBeNull();
+
+        foreach (JsonNode packageNode in manifest!["Packages"]!.AsArray())
+        {
+            JsonObject manifestPackage = packageNode.AsObject();
+
+            if (manifestPackage["FirstTimeSetup"]!.GetValue<bool>())
+            {
+                continue;
+            }
+
+            Package package = await DownloadPackageAsync(
+                client: assetsClient,
+                path: Uri.EscapeDataString(
+                        stringToEscape: manifestPackage["Path"]!
+                            .GetValue<string>())
+                    .Replace(
+                        oldValue: "%2F",
+                        newValue: "/",
+                        comparisonType: StringComparison.OrdinalIgnoreCase));
+
+            using HttpResponseMessage response =
+                await apiClient.PostAsJsonAsync(
+                    requestUri: "/Api/Packaging/Package",
+                    value: package);
+
+            string content = await response.Content.ReadAsStringAsync();
+
+            response.StatusCode.Should()
+                .Be(
+                    expected: HttpStatusCode.OK,
+                    because: $"{content}; {response.Headers}");
+        }
     }
 
     private static async Task ImportCommonCachePackageAsync(
@@ -354,7 +449,9 @@ public sealed partial class FirstTimeSetupTests
             {
                 values.Add(item: new JsonObject
                 {
-                    ["Name"] = record.GetProperty("Name").GetString(),
+                    ["Name"] = record
+                        .GetProperty(propertyName: "Name")
+                        .GetString(),
                     ["Description"] = record.TryGetProperty(
                         propertyName: "Description",
                         value: out JsonElement description)
@@ -388,10 +485,10 @@ public sealed partial class FirstTimeSetupTests
 
     private static async Task<Package> DownloadPackageAsync(
         HttpClient client,
-        string name)
+        string path)
     {
         Package package = await client.GetFromJsonAsync<Package>(
-            requestUri: $"{AssetsRoot}{name}.json");
+            requestUri: $"{AssetsRoot}{path}");
 
         package.Should()
             .NotBeNull();
@@ -413,6 +510,11 @@ public sealed partial class FirstTimeSetupTests
         response.StatusCode.Should()
             .Be(
                 expected: HttpStatusCode.OK,
+                because: $"{package.Name}: {content}");
+
+        content.Should()
+            .NotContain(
+                unexpected: "\"Success\":false",
                 because: $"{package.Name}: {content}");
     }
 

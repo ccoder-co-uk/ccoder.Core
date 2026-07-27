@@ -478,7 +478,7 @@
             const domain = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Domain));
             const assetsRoot =
                 "https://raw.githubusercontent.com/ccoder-co-uk/cCoder.Assets/main/" +
-                "Packages/First%20Time%20Setup/";
+                "Packages/";
             const defaultAppConfig = {
                 Themes: {
                     Default: {
@@ -576,19 +576,34 @@
                     : null;
             };
 
-            const downloadPackage = async (name) => {
-                appendLog(`Downloading ${name}...`);
+            const downloadPackage = async (path, name) => {
+                appendLog(`Downloading ${name ?? path}...`);
                 const response = await fetch(
-                    `${assetsRoot}${name}.json?version=${Date.now()}`,
+                    `${assetsRoot}${encodeURI(path)}?version=${Date.now()}`,
                     { cache: "no-store" });
 
                 if (!response.ok) {
                     throw new Error(await readError(response));
                 }
 
-                appendLog(`Downloaded ${name}.`);
+                appendLog(`Downloaded ${name ?? path}.`);
 
                 return response.json();
+            };
+
+            const registerReusablePackages = async (manifest) => {
+                const reusablePackages = manifest.Packages.filter(
+                    (item) => !item.FirstTimeSetup);
+
+                appendLog(
+                    `Registering ${reusablePackages.length} reusable packages.`);
+
+                for (const item of reusablePackages) {
+                    const setupPackage = await downloadPackage(item.Path);
+                    await sendJson("/Api/Packaging/Package", setupPackage);
+                }
+
+                appendLog("Reusable packages registered.");
             };
 
             const toCommonObjects = (setupPackage) => ({
@@ -680,17 +695,26 @@
                     const appId = app.Id ?? app.id;
                     appendLog(`Application created with ID ${appId}.`);
 
-                    const [commonCachePackage, appBaselinePackage] =
+                    const [
+                        manifest,
+                        commonCachePackage,
+                        firstAppPackage,
+                    ] =
                         await Promise.all([
-                            downloadPackage("common-cache"),
-                            downloadPackage("app-baseline"),
+                            downloadPackage("manifest.json", "package manifest"),
+                            downloadPackage(
+                                "First Time Setup/common-cache.json",
+                                "first-time common cache"),
+                            downloadPackage(
+                                "First Time Setup/first-app.json",
+                                "first application"),
                         ]);
 
                     appendLog("Importing application baseline.");
 
                     const appResults = await sendJson(
                         `/Api/Core/Package/Import?appId=${appId}`,
-                        appBaselinePackage);
+                        firstAppPackage);
 
                     ensureImportSucceeded(appResults, "Application baseline");
 
@@ -705,6 +729,7 @@
                         "Common cache baseline");
 
                     appendLog("Baseline imports completed.");
+                    await registerReusablePackages(manifest);
                     appendLog("Activating the common cache.");
                     await getJson("/Api/RefreshCache");
                     appendLog("Setup complete.");

@@ -4,6 +4,7 @@
 
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using cCoder.ContentManagement.Services.Orchestrations;
 using cCoder.Core.Models.Packaging;
 using cCoder.Data;
 using cCoder.Data.Models.CMS;
@@ -18,6 +19,11 @@ namespace cCoder.Core.Services.Aggregations.Packages;
 
 internal sealed partial class PackageManagerAggregationService(
     IPackageBroker packageBroker,
+    IComponentOrchestrationService componentOrchestrationService,
+    ILayoutOrchestrationService layoutOrchestrationService,
+    IResourceOrchestrationService resourceOrchestrationService,
+    IScriptOrchestrationService scriptOrchestrationService,
+    ITemplateOrchestrationService templateOrchestrationService,
     ICoreContextFactory coreContextFactory
 ) : IPackageManagerAggregationService
 {
@@ -153,11 +159,27 @@ internal sealed partial class PackageManagerAggregationService(
                 }
             }
 
+            PackageItem[] contentManagementItems = [.. (sanitizedPackage.Items ?? [])
+                .Where(predicate: item =>
+                    item.Type.StartsWith(
+                        value: "ContentManagement/",
+                        comparisonType: StringComparison.OrdinalIgnoreCase)
+                    && !string.Equals(a: item.Type, b: AppConfigurationItemType, comparisonType: StringComparison.OrdinalIgnoreCase)
+                    && !string.Equals(a: item.Type, b: "ContentManagement/Page", comparisonType: StringComparison.OrdinalIgnoreCase)
+                    && !string.Equals(a: item.Type, b: "ContentManagement/PageRole", comparisonType: StringComparison.OrdinalIgnoreCase))];
+
+            if (contentManagementItems.Length > 0)
+            {
+                await ImportContentManagementItemsAsync(
+                    appId: appId,
+                    packageItems: contentManagementItems);
+            }
+
             PackageItem[] remainingItems = [.. (sanitizedPackage.Items ?? [])
                 .Where(predicate: item =>
-                    !string.Equals(a: item.Type, b: AppConfigurationItemType, comparisonType: StringComparison.OrdinalIgnoreCase)
-                    && !string.Equals(a: item.Type, b: "ContentManagement/Page", comparisonType: StringComparison.OrdinalIgnoreCase)
-                    && !string.Equals(a: item.Type, b: "ContentManagement/PageRole", comparisonType: StringComparison.OrdinalIgnoreCase)
+                    !item.Type.StartsWith(
+                        value: "ContentManagement/",
+                        comparisonType: StringComparison.OrdinalIgnoreCase)
                     && !string.Equals(a: item.Type, b: "DocumentManagement/FolderRole", comparisonType: StringComparison.OrdinalIgnoreCase))];
 
             if (remainingItems.Length > 0)
@@ -195,6 +217,52 @@ internal sealed partial class PackageManagerAggregationService(
             if (folderRoleItems.Length > 0)
             {
                 await ImportFolderRolesAsync(appId: appId, folderRoleItems: folderRoleItems);
+            }
+        }
+    }
+
+    private async Task ImportContentManagementItemsAsync(
+        int appId,
+        IEnumerable<PackageItem> packageItems)
+    {
+        foreach (PackageItem packageItem in packageItems)
+        {
+            switch (packageItem.Type)
+            {
+                case "ContentManagement/Component":
+                    await componentOrchestrationService.ImportComponentsAsync(
+                        appId: appId,
+                        items: DeserializePackageItems<Component>(
+                            data: packageItem.Data));
+                    break;
+
+                case "ContentManagement/Layout":
+                    await layoutOrchestrationService.ImportLayoutsAsync(
+                        appId: appId,
+                        items: DeserializePackageItems<Layout>(
+                            data: packageItem.Data));
+                    break;
+
+                case "ContentManagement/Resource":
+                    await resourceOrchestrationService.ImportResourcesAsync(
+                        appId: appId,
+                        items: DeserializePackageItems<Resource>(
+                            data: packageItem.Data));
+                    break;
+
+                case "ContentManagement/Script":
+                    await scriptOrchestrationService.ImportScriptsAsync(
+                        appId: appId,
+                        items: DeserializePackageItems<Script>(
+                            data: packageItem.Data));
+                    break;
+
+                case "ContentManagement/Template":
+                    await templateOrchestrationService.ImportTemplatesAsync(
+                        appId: appId,
+                        items: DeserializePackageItems<Template>(
+                            data: packageItem.Data));
+                    break;
             }
         }
     }
