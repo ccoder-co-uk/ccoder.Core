@@ -5,6 +5,8 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using cCoder.Data;
 using cCoder.Data.Models;
 using cCoder.Data.Models.CMS;
@@ -94,6 +96,9 @@ public sealed partial class FirstTimeSetupTests
 
         content.Should()
             .Contain(expected: "app-baseline");
+
+        content.Should()
+            .Contain(expected: "\"/Api/RefreshCache\"");
     }
 
     [Fact]
@@ -293,7 +298,7 @@ public sealed partial class FirstTimeSetupTests
                     domain = "localhost",
                     defaultTheme = "Default",
                     defaultCultureId = string.Empty,
-                    tenantId = "Default",
+                    tenantId = "default",
                     configJson = "{}",
                 });
 
@@ -320,14 +325,66 @@ public sealed partial class FirstTimeSetupTests
                 name: "app-baseline")
             ]);
 
-        foreach (Package package in packages.Reverse())
-        {
-            await ImportPackageAsync(
-                client: harness.Client,
-                appId: app!.Id,
-                package: package);
-        }
+        await ImportCommonCachePackageAsync(
+            client: harness.Client,
+            package: packages[0]);
+
+        await ImportPackageAsync(
+            client: harness.Client,
+            appId: app!.Id,
+            package: packages[1]);
     }
+
+    private static async Task ImportCommonCachePackageAsync(
+        HttpClient client,
+        Package package)
+    {
+        JsonArray values = [];
+
+        foreach (PackageItem item in package.Items)
+        {
+            using JsonDocument data = JsonDocument.Parse(json: item.Data);
+
+            IEnumerable<JsonElement> records =
+                data.RootElement.ValueKind == JsonValueKind.Array
+                    ? data.RootElement.EnumerateArray()
+                    : [data.RootElement];
+
+            foreach (JsonElement record in records)
+            {
+                values.Add(item: new JsonObject
+                {
+                    ["Name"] = record.GetProperty("Name").GetString(),
+                    ["Description"] = record.TryGetProperty(
+                        propertyName: "Description",
+                        value: out JsonElement description)
+                            ? description.GetString()
+                            : null,
+                    ["Version"] = 1,
+                    ["Key"] = ReadOptionalString(record: record, name: "ResourceKey")
+                        ?? ReadOptionalString(record: record, name: "Key")
+                        ?? package.Category,
+                    ["Type"] = item.Type,
+                    ["Json"] = record.GetRawText(),
+                    ["Culture"] = ReadOptionalString(record: record, name: "Culture")
+                        ?? string.Empty,
+                });
+            }
+        }
+
+        using HttpResponseMessage response = await client.PostAsJsonAsync(
+            requestUri: "/Api/ContentManagement/CommonObject/Import",
+            value: new JsonObject { ["value"] = values });
+
+        response.StatusCode.Should()
+            .Be(expected: HttpStatusCode.OK);
+    }
+
+    private static string ReadOptionalString(JsonElement record, string name) =>
+        record.TryGetProperty(propertyName: name, value: out JsonElement value)
+            && value.ValueKind == JsonValueKind.String
+                ? value.GetString()
+                : null;
 
     private static async Task<Package> DownloadPackageAsync(
         HttpClient client,

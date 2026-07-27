@@ -540,6 +540,22 @@
                     : null;
             };
 
+            const getJson = async (url) => {
+                const response = await fetch(url, {
+                    credentials: "same-origin",
+                });
+
+                if (!response.ok) {
+                    throw new Error(await readError(response));
+                }
+
+                const contentType = response.headers.get("content-type") || "";
+
+                return contentType.includes("application/json")
+                    ? response.json()
+                    : null;
+            };
+
             const downloadPackage = async (name) => {
                 appendLog(`Downloading ${name}...`);
                 const response = await fetch(`${assetsRoot}${name}.json`);
@@ -552,6 +568,25 @@
 
                 return response.json();
             };
+
+            const toCommonObjects = (setupPackage) => ({
+                value: setupPackage.Items.flatMap((item) => {
+                    const data = JSON.parse(item.Data);
+                    const records = Array.isArray(data) ? data : [data];
+
+                    return records.map((record) => ({
+                        Name: record.Name,
+                        Description: record.Description ?? null,
+                        Version: 1,
+                        Key: record.ResourceKey
+                            ?? record.Key
+                            ?? setupPackage.Category,
+                        Type: item.Type,
+                        Json: JSON.stringify(record),
+                        Culture: record.Culture ?? "",
+                    }));
+                }),
+            });
 
             form.addEventListener("submit", async (event) => {
                 event.preventDefault();
@@ -623,19 +658,26 @@
                     const appId = app.Id ?? app.id;
                     appendLog(`Application created with ID ${appId}.`);
 
-                    const packages = await Promise.all([
-                        downloadPackage("common-cache"),
-                        downloadPackage("app-baseline"),
-                    ]);
+                    const [commonCachePackage, appBaselinePackage] =
+                        await Promise.all([
+                            downloadPackage("common-cache"),
+                            downloadPackage("app-baseline"),
+                        ]);
 
                     appendLog("Importing common cache and application baselines.");
 
-                    await Promise.all(packages.map((setupPackage) =>
+                    await Promise.all([
+                        sendJson(
+                            "/Api/ContentManagement/CommonObject/Import",
+                            toCommonObjects(commonCachePackage)),
                         sendJson(
                             `/Api/Core/Package/Import?appId=${appId}`,
-                            setupPackage)));
+                            appBaselinePackage),
+                    ]);
 
                     appendLog("Baseline imports completed.");
+                    appendLog("Activating the common cache.");
+                    await getJson("/Api/RefreshCache");
                     appendLog("Setup complete.");
                     appendLog("Redirecting to configured site ...");
                     await delay(3000);
