@@ -22,7 +22,7 @@ internal sealed partial class PackageManagerAggregationService(
 ) : IPackageManagerAggregationService
 {
     private const string AppConfigurationPackageName = "AppConfiguration";
-    private const string AppConfigurationItemType = "Core/App";
+    private const string AppConfigurationItemType = "ContentManagement/App";
 
     private static readonly string[] DefaultPackageNames =
     [
@@ -156,9 +156,9 @@ internal sealed partial class PackageManagerAggregationService(
             PackageItem[] remainingItems = [.. (sanitizedPackage.Items ?? [])
                 .Where(predicate: item =>
                     !string.Equals(a: item.Type, b: AppConfigurationItemType, comparisonType: StringComparison.OrdinalIgnoreCase)
-                    && !string.Equals(a: item.Type, b: "Core/Page", comparisonType: StringComparison.OrdinalIgnoreCase)
-                    && !string.Equals(a: item.Type, b: "Core/PageRole", comparisonType: StringComparison.OrdinalIgnoreCase)
-                    && !string.Equals(a: item.Type, b: "Core/FolderRole", comparisonType: StringComparison.OrdinalIgnoreCase))];
+                    && !string.Equals(a: item.Type, b: "ContentManagement/Page", comparisonType: StringComparison.OrdinalIgnoreCase)
+                    && !string.Equals(a: item.Type, b: "ContentManagement/PageRole", comparisonType: StringComparison.OrdinalIgnoreCase)
+                    && !string.Equals(a: item.Type, b: "DocumentManagement/FolderRole", comparisonType: StringComparison.OrdinalIgnoreCase))];
 
             if (remainingItems.Length > 0)
             {
@@ -176,21 +176,21 @@ internal sealed partial class PackageManagerAggregationService(
                     package: remainingPackage);
             }
 
-            PackageItem[] pageItems = [.. (sanitizedPackage.Items ?? []).Where(predicate: item => string.Equals(a: item.Type, b: "Core/Page", comparisonType: StringComparison.OrdinalIgnoreCase))];
+            PackageItem[] pageItems = [.. (sanitizedPackage.Items ?? []).Where(predicate: item => string.Equals(a: item.Type, b: "ContentManagement/Page", comparisonType: StringComparison.OrdinalIgnoreCase))];
 
             if (pageItems.Length > 0)
             {
                 await ImportPagesAsync(appId: appId, pageItems: pageItems);
             }
 
-            PackageItem[] pageRoleItems = [.. (sanitizedPackage.Items ?? []).Where(predicate: item => string.Equals(a: item.Type, b: "Core/PageRole", comparisonType: StringComparison.OrdinalIgnoreCase))];
+            PackageItem[] pageRoleItems = [.. (sanitizedPackage.Items ?? []).Where(predicate: item => string.Equals(a: item.Type, b: "ContentManagement/PageRole", comparisonType: StringComparison.OrdinalIgnoreCase))];
 
             if (pageRoleItems.Length > 0)
             {
                 await ImportPageRolesAsync(appId: appId, pageRoleItems: pageRoleItems);
             }
 
-            PackageItem[] folderRoleItems = [.. (sanitizedPackage.Items ?? []).Where(predicate: item => string.Equals(a: item.Type, b: "Core/FolderRole", comparisonType: StringComparison.OrdinalIgnoreCase))];
+            PackageItem[] folderRoleItems = [.. (sanitizedPackage.Items ?? []).Where(predicate: item => string.Equals(a: item.Type, b: "DocumentManagement/FolderRole", comparisonType: StringComparison.OrdinalIgnoreCase))];
 
             if (folderRoleItems.Length > 0)
             {
@@ -604,7 +604,7 @@ inner: core.Set<Role>()
             [
                 new PackageItem
                 {
-                    Type = "Core/PageRole",
+                    Type = "ContentManagement/PageRole",
                     Data = JsonSerializer.Serialize(value: items),
                 },
             ],
@@ -651,7 +651,7 @@ inner: core.Set<Role>()
             [
                 new PackageItem
                 {
-                    Type = "Core/FolderRole",
+                    Type = "DocumentManagement/FolderRole",
                     Data = JsonSerializer.Serialize(value: items),
                 },
             ],
@@ -730,31 +730,9 @@ inner: core.Set<Role>()
                 {
                     Id = item.Id,
                     PackageId = item.PackageId,
-                    Type = NormalizePackageItemType(type: item.Type),
+                    Type = item.Type,
                     Data = StripTypeMetadata(data: item.Data),
                 })],
-        };
-
-    private static string NormalizePackageItemType(string type) =>
-        type switch
-        {
-            string value when value.StartsWith(
-                value: "ContentManagement/",
-                comparisonType: StringComparison.OrdinalIgnoreCase) =>
-                $"Core/{value["ContentManagement/".Length..]}",
-            string value when value.StartsWith(
-                value: "AppSecurity/",
-                comparisonType: StringComparison.OrdinalIgnoreCase) =>
-                $"Core/{value["AppSecurity/".Length..]}",
-            string value when value.StartsWith(
-                value: "DocumentManagement/",
-                comparisonType: StringComparison.OrdinalIgnoreCase) =>
-                $"Core/{value["DocumentManagement/".Length..]}",
-            string value when value.StartsWith(
-                value: "Workflow/",
-                comparisonType: StringComparison.OrdinalIgnoreCase) =>
-                $"Core/{value["Workflow/".Length..]}",
-            _ => type,
         };
 
     private static string StripTypeMetadata(string data)
