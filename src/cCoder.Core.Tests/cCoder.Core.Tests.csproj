@@ -22,7 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\cCoder.Core\cCoder.Core.csproj" />
     <ProjectReference Include="..\Apps\HostedServices\HostedServices.csproj" />
-    <PackageReference Include="cCoder.AppSecurity" Version="2026.7.27.1914" />
+    <PackageReference Include="cCoder.AppSecurity" Version="2026.7.28.4" />
     <PackageReference Include="cCoder.ContentManagement" Version="2026.7.27.2210" />
     <PackageReference Include="cCoder.Data" Version="2026.7.23.1914" />
   </ItemGroup>

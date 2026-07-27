@@ -101,6 +101,27 @@ requestUri:             $"{BaseUrl}/Import?appId={appId}",value:             pac
         foreach (Package package in packages)
         {
             await ImportPackageAsync(appId: appId,package: package);
+
+            if (string.Equals(
+                a: package.Name,
+                b: "Roles",
+                comparisonType: StringComparison.OrdinalIgnoreCase))
+            {
+                await using DbContext core = fixture.Factory.Services
+                    .GetRequiredService<ICoreContextFactory>()
+                    .CreateCoreContext();
+
+                string[] importedRoleNames = await core.Set<Role>()
+                    .IgnoreQueryFilters()
+                    .Where(predicate: role => role.AppId == appId)
+                    .Select(selector: role => role.Name)
+                    .ToArrayAsync();
+
+                importedRoleNames.Should()
+                    .Contain(
+                        expected: "Administrators",
+                        because: $"the Roles package should materialize before dependent packages; found {string.Join(separator: ", ", value: importedRoleNames)}");
+            }
         }
     }
 

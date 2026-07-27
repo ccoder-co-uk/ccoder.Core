@@ -10,6 +10,8 @@ using cCoder.Security.Objects;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
@@ -63,6 +65,11 @@ initialData:             [
         builder.ConfigureServices(configureServices: services =>
         {
             services.AddSingleton<ILoggerProvider>(implementationInstance: LogCapture);
+            services.AddOptions();
+            services.Replace(
+                descriptor: ServiceDescriptor.Singleton<
+                    IDistributedCache,
+                    MemoryDistributedCache>());
             services.RemoveAll<Config>();
             services.RemoveAll<ICoreContextFactory>();
             services.RemoveAll<ISecurityDbContextFactory>();
