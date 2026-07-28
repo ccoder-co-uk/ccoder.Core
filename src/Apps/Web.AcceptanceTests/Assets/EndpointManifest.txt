@@ -33,6 +33,8 @@ DELETE Api/Mail/MailServer({key})
 DELETE Api/Mail/QueuedEmail({key})
 DELETE Api/Mail/ReceivedEmail({key})
 DELETE Api/Mail/SentEmail({key})
+DELETE Api/Packaging/Package({key})
+DELETE Api/Packaging/PackageItem({key})
 DELETE Api/Security/SSORole({key})
 DELETE Api/Security/SSOUser({key})
 DELETE Api/Security/Tenant({key})
@@ -168,6 +170,14 @@ GET Api/Mail/ReceivedEmail/ReceiveTop/{count:int}
 GET Api/Mail/SentEmail
 GET Api/Mail/SentEmail({key})
 GET Api/Mail/SentEmail/$count
+GET Api/Packaging
+GET Api/Packaging/$metadata
+GET Api/Packaging/Package
+GET Api/Packaging/Package({key})
+GET Api/Packaging/Package/$count
+GET Api/Packaging/PackageItem
+GET Api/Packaging/PackageItem({key})
+GET Api/Packaging/PackageItem/$count
 GET Api/RefreshCache
 GET Api/Security
 GET Api/Security/$metadata
@@ -243,6 +253,8 @@ PATCH Api/Mail/MailServer({key})
 PATCH Api/Mail/QueuedEmail({key})
 PATCH Api/Mail/ReceivedEmail({key})
 PATCH Api/Mail/SentEmail({key})
+PATCH Api/Packaging/Package({key})
+PATCH Api/Packaging/PackageItem({key})
 PATCH Api/Workflow/Calendar({key})
 PATCH Api/Workflow/CalendarEvent({key})
 PATCH Api/Workflow/FlowDefinition({key})
@@ -305,9 +317,12 @@ POST Api/Mail/QueuedEmail
 POST Api/Mail/ReceivedEmail
 POST Api/Mail/ReceivedEmail/Receive
 POST Api/Mail/SentEmail
+POST Api/Packaging/Package
+POST Api/Packaging/PackageItem
 POST Api/Security/SSORole
 POST Api/Security/SSOUserRole
 POST Api/Security/Tenant
+POST Api/Setup
 POST Api/Workflow/Calendar
 POST Api/Workflow/CalendarEvent
 POST Api/Workflow/FlowDefinition
@@ -317,7 +332,6 @@ POST Api/Workflow/FlowInstanceData
 POST Api/Workflow/ScheduledTask
 POST Api/Workflow/ScheduledTask({key})/Execute
 POST Api/Workflow/WorkflowEvent
-POST Api/Setup
 PUT Api
 PUT Api/AppSecurity/App({key})
 PUT Api/AppSecurity/Privilege({key})
@@ -346,6 +360,8 @@ PUT Api/Mail/MailServer({key})
 PUT Api/Mail/QueuedEmail({key})
 PUT Api/Mail/ReceivedEmail({key})
 PUT Api/Mail/SentEmail({key})
+PUT Api/Packaging/Package({key})
+PUT Api/Packaging/PackageItem({key})
 PUT Api/Security/SSORole({key})
 PUT Api/Security/SSOUser({key})
 PUT Api/Security/Tenant({key})

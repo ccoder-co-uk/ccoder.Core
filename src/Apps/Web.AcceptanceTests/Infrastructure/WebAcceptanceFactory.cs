@@ -10,6 +10,8 @@ using cCoder.Security.Objects;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Web.AcceptanceTests.Models;
@@ -53,11 +55,19 @@ initialData:             [
                 new KeyValuePair<string, string>("Settings:AggregateDomains", settings.AggregateDomains.ToString()),
                 new KeyValuePair<string, string>("Settings:enableExternalEventing", "false"),
                 new KeyValuePair<string, string>("Eventing:Http:HubUrl", string.Empty),
+                new KeyValuePair<string, string>("DebugInfo", "true"),
             ]);
         });
 
         builder.ConfigureServices(configureServices: services =>
         {
+            services.AddOptions();
+
+            services.Replace(
+                descriptor: ServiceDescriptor.Singleton<
+                    IDistributedCache,
+                    MemoryDistributedCache>());
+
             services.RemoveAll<Config>();
             services.RemoveAll<ICoreContextFactory>();
             services.RemoveAll<ISecurityDbContextFactory>();
@@ -77,6 +87,7 @@ implementationInstance:                 new Config
                         ["enableExternalEventing"] = "false",
                     },
                     Services = new Dictionary<string, string>(),
+                    DebugInfo = true,
                 }
             );
 

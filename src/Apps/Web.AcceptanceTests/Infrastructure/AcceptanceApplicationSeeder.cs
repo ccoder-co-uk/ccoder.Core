@@ -281,7 +281,7 @@ entity:                 new User
         }
 
         Layout[] layouts = [.. AcceptanceSeedData
-            .LoadLayouts(packageName: "Layouts",itemType: "Core/Layout")
+            .LoadLayouts(packageName: "Layouts",itemType: "ContentManagement/Layout")
             .Select(selector: layout => new Layout
             {
                 Id = 0,
@@ -312,7 +312,7 @@ entity:                 new User
         }
 
         Template[] templates = [.. AcceptanceSeedData
-            .LoadTemplates(packageName: "Templates",itemType: "Core/Template")
+            .LoadTemplates(packageName: "Templates",itemType: "ContentManagement/Template")
             .Select(selector: template => new Template
             {
                 Id = 0,
@@ -342,7 +342,7 @@ entity:                 new User
         }
 
         Resource[] resources = [.. AcceptanceSeedData
-            .LoadResources(packageName: "Resources",itemType: "Core/Resource")
+            .LoadResources(packageName: "Resources",itemType: "ContentManagement/Resource")
             .Select(selector: resource => new Resource
             {
                 Id = 0,
@@ -374,7 +374,7 @@ entity:                 new User
         }
 
         Component[] components = [.. AcceptanceSeedData
-            .LoadComponents(packageName: "Components",itemType: "Core/Component")
+            .LoadComponents(packageName: "Components",itemType: "ContentManagement/Component")
             .Select(selector: component => new Component
             {
                 Id = 0,
@@ -406,7 +406,7 @@ entity:                 new User
         }
 
         Script[] scripts = [.. AcceptanceSeedData
-            .LoadScripts(packageName: "Scripts",itemType: "Core/Script")
+            .LoadScripts(packageName: "Scripts",itemType: "ContentManagement/Script")
             .Select(selector: script => new Script
             {
                 Id = 0,

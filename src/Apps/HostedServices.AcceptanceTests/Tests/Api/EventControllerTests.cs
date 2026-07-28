@@ -359,9 +359,42 @@ condition: () =>
                         .GetRequiredService<ICoreContextFactory>()
                         .CreateCoreContext();
 
-                    return waitCore.Set<Role>()
+                    bool roleUpdated = waitCore.Set<Role>()
                         .IgnoreQueryFilters()
-                        .Any(predicate: role => role.Id == roleId && role.Privs == "app_read,folder_update");
+                        .Any(predicate: role =>
+                            role.Id == roleId
+                            && role.Privs == "app_read,folder_update");
+
+                    bool culturesUpdated =
+                        waitCore.Set<AppCulture>()
+                            .IgnoreQueryFilters()
+                            .Any(predicate: culture =>
+                                culture.AppId == appId
+                                && culture.CultureId == "fr-FR")
+                        && !waitCore.Set<AppCulture>()
+                            .IgnoreQueryFilters()
+                            .Any(predicate: culture =>
+                                culture.AppId == appId
+                                && culture.CultureId == "en-GB");
+
+                    bool pathsUpdated =
+                        waitCore.Set<Folder>()
+                            .IgnoreQueryFilters()
+                            .Any(predicate: folder =>
+                                folder.Id == rootFolderId
+                                && folder.Path == "renamed")
+                        && waitCore.Set<Folder>()
+                            .IgnoreQueryFilters()
+                            .Any(predicate: folder =>
+                                folder.Id == childFolderId
+                                && folder.Path == "renamed/child")
+                        && waitCore.Set<DmsFile>()
+                            .IgnoreQueryFilters()
+                            .Any(predicate: file =>
+                                file.Id == fileId
+                                && file.Path == "renamed/child/file.txt");
+
+                    return roleUpdated && culturesUpdated && pathsUpdated;
                 }, because: "app_update should update children");
 
             using IServiceScope scope = fixture.Factory.Services.CreateScope();

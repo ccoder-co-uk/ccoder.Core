@@ -316,20 +316,27 @@ public sealed partial class FirstTimeSetupTests
                 expected: token.UserName,
                 because: string.Join(separator: ",", value: userIds));
 
-        using HttpResponseMessage appResponse =
-            await harness.Client.PostAsJsonAsync(
-                requestUri: "/Api/ContentManagement/App",
-                value: new
-                {
-                    name = "Acceptance Platform",
-                    domain = "localhost",
-                    defaultTheme = "Default",
-                    defaultCultureId = string.Empty,
-                    tenantId = "default",
-                    configJson = "{}",
-                });
+        using HttpResponseMessage appResponse = await harness.Client.PostAsJsonAsync(
+            requestUri: "/Api/ContentManagement/App",
+            value: new
+            {
+                Name = "First Time Setup",
+                Domain = "localhost",
+                TenantId = "default",
+            });
 
         string appContent = await appResponse.Content.ReadAsStringAsync();
+
+        if (appResponse.StatusCode != HttpStatusCode.OK)
+        {
+            string[] appState = await core.Set<App>()
+                .IgnoreQueryFilters()
+                .Select(selector: app =>
+                    $"{app.Id}:{app.Name}:{app.Domain}:{app.TenantId}")
+                .ToArrayAsync();
+
+            appContent = $"{appContent}{Environment.NewLine}Apps: {string.Join(separator: ", ", value: appState)}";
+        }
 
         appResponse.StatusCode.Should()
             .Be(expected: HttpStatusCode.OK, because: appContent);
@@ -628,7 +635,7 @@ public sealed partial class FirstTimeSetupTests
             if (!string.IsNullOrWhiteSpace(value: builder.InitialCatalog))
             {
                 builder.InitialCatalog =
-                    $"{builder.InitialCatalog}-setup-{suffix}";
+                    $"{builder.InitialCatalog}-acceptance-setup-{suffix}";
             }
 
             return builder.ConnectionString;

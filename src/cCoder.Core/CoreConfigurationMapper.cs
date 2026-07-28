@@ -28,6 +28,86 @@ internal static class CoreConfigurationMapper
                 LogSQL = target.LogSQL,
             });
 
+    internal static void ApplyDomainDefaults(CoreConfiguration target)
+    {
+        CoreConfiguration root = target;
+
+        ApplyDomainDefaults(
+            domainTarget: target.AppSecurity,
+            connectionStrings: target.AppSecurity.ConnectionStrings,
+            settings: target.AppSecurity.Settings,
+            services: target.AppSecurity.Services);
+
+        ApplyDomainDefaults(
+            domainTarget: target.ContentManagement,
+            connectionStrings: target.ContentManagement.ConnectionStrings,
+            settings: target.ContentManagement.Settings,
+            services: target.ContentManagement.Services);
+
+        ApplyDomainDefaults(
+            domainTarget: target.DocumentManagement,
+            connectionStrings: target.DocumentManagement.ConnectionStrings,
+            settings: target.DocumentManagement.Settings,
+            services: target.DocumentManagement.Services);
+
+        ApplyDomainDefaults(
+            domainTarget: target.DomainLogging,
+            connectionStrings: target.DomainLogging.ConnectionStrings,
+            settings: target.DomainLogging.Settings,
+            services: target.DomainLogging.Services);
+
+        ApplyDomainDefaults(
+            domainTarget: target.Mail,
+            connectionStrings: target.Mail.ConnectionStrings,
+            settings: target.Mail.Settings,
+            services: target.Mail.Services);
+
+        ApplyDomainDefaults(
+            domainTarget: target.Workflow,
+            connectionStrings: target.Workflow.ConnectionStrings,
+            settings: target.Workflow.Settings,
+            services: target.Workflow.Services);
+
+        void ApplyDomainDefaults(
+            object domainTarget,
+            IDictionary<string, string> connectionStrings,
+            IDictionary<string, string> settings,
+            IDictionary<string, string> services)
+        {
+            MergeMissingEntries(target: connectionStrings, defaults: root.ConnectionStrings);
+            MergeMissingEntries(target: settings, defaults: root.Settings);
+            MergeMissingEntries(target: services, defaults: root.Services);
+
+            switch (domainTarget)
+            {
+                case AppSecurityConfiguration configuration:
+                    configuration.DebugInfo |= root.DebugInfo;
+                    configuration.LogSQL |= root.LogSQL;
+                    break;
+                case ContentManagementConfiguration configuration:
+                    configuration.DebugInfo |= root.DebugInfo;
+                    configuration.LogSQL |= root.LogSQL;
+                    break;
+                case DocumentManagementConfiguration configuration:
+                    configuration.DebugInfo |= root.DebugInfo;
+                    configuration.LogSQL |= root.LogSQL;
+                    break;
+                case LoggingConfiguration configuration:
+                    configuration.DebugInfo |= root.DebugInfo;
+                    configuration.LogSQL |= root.LogSQL;
+                    break;
+                case MailConfiguration configuration:
+                    configuration.DebugInfo |= root.DebugInfo;
+                    configuration.LogSQL |= root.LogSQL;
+                    break;
+                case WorkflowConfiguration configuration:
+                    configuration.DebugInfo |= root.DebugInfo;
+                    configuration.LogSQL |= root.LogSQL;
+                    break;
+            }
+        }
+    }
+
     internal static void PopulateFromRuntimeConfiguration(
         CoreConfiguration target,
         cCoder.Data.Config source)
@@ -128,12 +208,14 @@ internal static class CoreConfigurationMapper
         }
 
         target.EnableHttpEventing =
-            string.Equals(a: target.EventProviderType, b: "Http", comparisonType: StringComparison.OrdinalIgnoreCase)
-            && !string.IsNullOrWhiteSpace(value: target.HttpEventHubUrl);
+            target.EnableHttpEventing
+            || (string.Equals(a: target.EventProviderType, b: "Http", comparisonType: StringComparison.OrdinalIgnoreCase)
+                && !string.IsNullOrWhiteSpace(value: target.HttpEventHubUrl));
 
         target.EnableServiceBusEventing =
-            string.Equals(a: target.EventProviderType, b: "ServiceBus", comparisonType: StringComparison.OrdinalIgnoreCase)
-            && !string.IsNullOrWhiteSpace(value: target.ServiceBusConnectionString);
+            target.EnableServiceBusEventing
+            || (string.Equals(a: target.EventProviderType, b: "ServiceBus", comparisonType: StringComparison.OrdinalIgnoreCase)
+                && !string.IsNullOrWhiteSpace(value: target.ServiceBusConnectionString));
     }
 
     internal static void Copy(

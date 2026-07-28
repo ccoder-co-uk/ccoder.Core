@@ -13,6 +13,7 @@ namespace cCoder.IntegrationTests.Tests;
 public sealed partial class SecurityAccountEventIntegrationTests
 {
     [Fact]
+    [Trait("Category", "ExternalIntegration")]
     public async Task Registration_SendsConfirmationEmailAndCompletesRegistration()
     {
         // Given
