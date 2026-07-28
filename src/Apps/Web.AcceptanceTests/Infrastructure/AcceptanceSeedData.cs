@@ -20,8 +20,15 @@ internal static class AcceptanceSeedData
         using JsonDocument json = AcceptanceAssetLoader.LoadJson(fileName: "App.1.Export.json");
         JsonElement value = json.RootElement.GetProperty(propertyName: "value");
 
-        return JsonConvert.DeserializeObject<Package[]>(
+        Package[] packages = JsonConvert.DeserializeObject<Package[]>(
 value:             value.GetRawText(),settings:             cCoder.Data.Extensions.ObjectExtensions.GetJSONSettings());
+
+        foreach (PackageItem item in packages.SelectMany(selector: package => package.Items ?? []))
+        {
+            item.Type = NormalizePackageItemType(type: item.Type);
+        }
+
+        return packages;
     }
 
     public static Role[] LoadRoles(string packageName, string itemType) =>
@@ -71,6 +78,24 @@ value:             value.GetRawText(),settings:             cCoder.Data.Extensio
             .Where(predicate: item => string.Equals(a: item.Type,b: itemType,comparisonType: StringComparison.OrdinalIgnoreCase))
             .SelectMany(selector: item => UnpackItems(data: item.Data, modelType: modelType))];
     }
+
+    private static string NormalizePackageItemType(string type) =>
+        type switch
+        {
+            "Core/Role" => "AppSecurity/Role",
+            "Core/FolderRole" => "DocumentManagement/FolderRole",
+            "Core/Calendar" => "Workflow/Calendar",
+            "Core/CalendarEvent" => "Workflow/CalendarEvent",
+            "Core/FlowDefinition" => "Workflow/FlowDefinition",
+            "Core/Component"
+            or "Core/Layout"
+            or "Core/Page"
+            or "Core/PageRole"
+            or "Core/Resource"
+            or "Core/Script"
+            or "Core/Template" => $"ContentManagement/{type["Core/".Length..]}",
+            _ => type,
+        };
 
     public static CommonObject[] LoadCommonObjects()
     {

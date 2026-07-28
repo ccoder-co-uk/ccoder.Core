@@ -28,7 +28,7 @@ internal sealed partial class PackageManagerAggregationService(
 ) : IPackageManagerAggregationService
 {
     private const string AppConfigurationPackageName = "AppConfiguration";
-    private const string AppConfigurationItemType = "ContentManagement/App";
+    private const string AppConfigurationItemType = "Core/App";
 
     private static readonly string[] DefaultPackageNames =
     [

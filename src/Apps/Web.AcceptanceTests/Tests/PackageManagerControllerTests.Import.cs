@@ -94,7 +94,7 @@ public sealed partial class PackageManagerControllerTests
             [
                 new PackageItem
                 {
-                    Type = "Core/Resource",
+                    Type = "ContentManagement/Resource",
                     Data = JsonSerializer.Serialize(
 value:                         new[]
                         {
@@ -184,7 +184,7 @@ value:                         new[]
         PackageItem[] pageItems = [.. exportedPackages
             .Where(predicate: found => string.Equals(a: found.Name,b: "Pages",comparisonType: StringComparison.OrdinalIgnoreCase))
             .SelectMany(selector: found => found.Items ?? [])
-            .Where(predicate: found => string.Equals(a: found.Type,b: "Core/Page",comparisonType: StringComparison.OrdinalIgnoreCase))];
+            .Where(predicate: found => string.Equals(a: found.Type,b: "ContentManagement/Page",comparisonType: StringComparison.OrdinalIgnoreCase))];
 
         bool hasCommonCachePage = pageItems.Any(predicate: item =>
         {

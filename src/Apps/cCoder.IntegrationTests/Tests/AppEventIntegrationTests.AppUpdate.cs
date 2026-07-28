@@ -79,12 +79,42 @@ method:                 HttpMethod.Put,relativeUrl:                 $"/Api/Conte
                 {
                     await using CoreDataContext core = CreateCoreContext();
 
-                    return await core.Set<Folder>()
+                    bool roleUpdated = await core.Set<Role>()
                         .IgnoreQueryFilters()
-                        .AnyAsync(
-                            predicate: folder =>
+                        .AnyAsync(predicate: role =>
+                            role.Id == roleId
+                            && role.Privs == "app_read,folder_update");
+
+                    bool culturesUpdated =
+                        await core.Set<AppCulture>()
+                            .IgnoreQueryFilters()
+                            .AnyAsync(predicate: culture =>
+                                culture.AppId == appId
+                                && culture.CultureId == "fr-FR")
+                        && !await core.Set<AppCulture>()
+                            .IgnoreQueryFilters()
+                            .AnyAsync(predicate: culture =>
+                                culture.AppId == appId
+                                && culture.CultureId == "en-GB");
+
+                    bool pathsUpdated =
+                        await core.Set<Folder>()
+                            .IgnoreQueryFilters()
+                            .AnyAsync(predicate: folder =>
+                                folder.Id == rootFolderId
+                                && folder.Path == "renamed")
+                        && await core.Set<Folder>()
+                            .IgnoreQueryFilters()
+                            .AnyAsync(predicate: folder =>
                                 folder.Id == childFolderId
-                                && folder.Path == "renamed/child");
+                                && folder.Path == "renamed/child")
+                        && await core.Set<DmsFile>()
+                            .IgnoreQueryFilters()
+                            .AnyAsync(predicate: file =>
+                                file.Id == fileId
+                                && file.Path == "renamed/child/file.txt");
+
+                    return roleUpdated && culturesUpdated && pathsUpdated;
                 },
                 diagnosticsFactory: () => BuildEventDiagnosticsAsync(
                     appId: appId,
