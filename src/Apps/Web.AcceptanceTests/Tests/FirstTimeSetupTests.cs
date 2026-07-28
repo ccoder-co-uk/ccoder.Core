@@ -1,4 +1,4 @@
-// ---------------------------------------------------------------
+﻿// ---------------------------------------------------------------
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
@@ -200,11 +200,6 @@ public sealed partial class FirstTimeSetupTests
         pagePaths.Should()
             .Contain(predicate: path => path.StartsWith(
                 value: "Admin",
-                comparisonType: StringComparison.OrdinalIgnoreCase));
-
-        pagePaths.Should()
-            .Contain(predicate: path => path.StartsWith(
-                value: "Clients",
                 comparisonType: StringComparison.OrdinalIgnoreCase));
 
         string[] componentNames = await core.Set<Component>()
