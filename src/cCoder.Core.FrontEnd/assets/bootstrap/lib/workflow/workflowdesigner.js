@@ -1,8 +1,7 @@
 ﻿class WorkflowDesigner {
     constructor(container, flow) {
 
-        //TODO: handle this not being available for some reason
-        window.flowTheme = session.app.Config.Themes[session.theme];
+        window.flowTheme = resolveWorkflowTheme(session.app, session.theme);
 
         this.stepTypes = window.knownTypes.filter(ctx => ctx.Name === "Workflow")[0].Types;
         this.workspace = $(".workspace", container);
@@ -313,4 +312,28 @@
             window.removeEventListener('keydown', this.listenForEsc);
         }
     }
+}
+
+function resolveWorkflowTheme(app, themeName) {
+    const themes = app?.Config?.Themes;
+    const themeEntries = themes && typeof themes === "object"
+        ? Object.entries(themes)
+        : [];
+    const requestedTheme = themeName?.toLowerCase();
+    const defaultTheme = app?.DefaultTheme?.toLowerCase();
+    const candidates = [
+        themes?.[themeName],
+        themeEntries.find(([name]) => name.toLowerCase() === requestedTheme)?.[1],
+        themeEntries.find(([name]) => name.toLowerCase() === defaultTheme)?.[1],
+        themes?.Default,
+        ...themeEntries.map(([, theme]) => theme)
+    ];
+
+    return candidates.find(theme =>
+        theme?.colours?.primary && theme?.colours?.secondary) ?? {
+        colours: {
+            primary: "#142A48",
+            secondary: "#52BCFF"
+        }
+    };
 }
