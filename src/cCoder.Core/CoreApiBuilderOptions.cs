@@ -34,8 +34,6 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Text.Json.Serialization;
-using ContentManagementRuntimeConfig = cCoder.ContentManagement.Models.Config;
-using MailRuntimeConfig = cCoder.Mail.Models.Config;
 
 namespace cCoder.Core;
 
@@ -54,22 +52,9 @@ public partial class CoreApiBuilderOptions(IServiceCollection services)
     {
         coreConfiguration ??= new CoreConfiguration();
         configure?.Invoke(obj: coreConfiguration);
-
-        Data.Config runtimeConfiguration = CreateRuntimeConfiguration(configuration: coreConfiguration);
         services.AddSingleton(implementationInstance: coreConfiguration);
-        services.AddSingleton(implementationInstance: runtimeConfiguration);
-        services.AddSingleton(implementationInstance: CreateContentManagementRuntimeConfig(config: runtimeConfiguration));
-        services.AddSingleton(implementationInstance: CreateMailRuntimeConfig(config: runtimeConfiguration));
 
         return this;
-    }
-
-    public CoreApiBuilderOptions WithCoreConfiguration(Data.Config configuration)
-    {
-        configuration ??= new Data.Config();
-
-        return WithCoreConfiguration(configure: coreConfig =>
-            CoreConfigurationMapper.PopulateFromRuntimeConfiguration(target: coreConfig, source: configuration));
     }
 
     public CoreApiBuilderOptions WithEventProviders(params EventProvider[] eventProviders)
@@ -82,7 +67,13 @@ public partial class CoreApiBuilderOptions(IServiceCollection services)
     {
         if (!string.IsNullOrWhiteSpace(value: connectionString))
         {
-            EnsureCoreConfiguration().CoreConnectionString = connectionString;
+            CoreConfiguration configuration = EnsureCoreConfiguration();
+            configuration.AppSecurity.ConnectionString = connectionString;
+            configuration.ContentManagement.ConnectionString = connectionString;
+            configuration.DocumentManagement.ConnectionString = connectionString;
+            configuration.Logging.ConnectionString = connectionString;
+            configuration.Mail.ConnectionString = connectionString;
+            configuration.Workflow.ConnectionString = connectionString;
         }
 
         return this;
@@ -102,17 +93,17 @@ public partial class CoreApiBuilderOptions(IServiceCollection services)
         {
             if (!string.IsNullOrWhiteSpace(value: connectionString))
             {
-                coreConfig.SecurityConnectionString = connectionString;
+                coreConfig.Security.ConnectionString = connectionString;
             }
 
             if (!string.IsNullOrWhiteSpace(value: decryptionKey))
             {
-                coreConfig.DecryptionKey = decryptionKey;
+                coreConfig.Security.DecryptionKey = decryptionKey;
             }
 
             if (!string.IsNullOrWhiteSpace(value: rootPath))
             {
-                coreConfig.SecurityRootPath = rootPath;
+                coreConfig.Security.RootPath = rootPath;
             }
         });
 
@@ -121,29 +112,29 @@ public partial class CoreApiBuilderOptions(IServiceCollection services)
         Action<HttpEventingOptions> configure = null) =>
         WithCoreConfiguration(configure: coreConfig =>
         {
-            coreConfig.EnableHttpEventing = true;
+            coreConfig.Eventing.ProviderType = "Http";
 
             if (!string.IsNullOrWhiteSpace(value: hubUrl))
             {
-                coreConfig.HttpEventHubUrl = hubUrl;
+                coreConfig.Eventing.Http.HubUrl = hubUrl;
             }
 
             if (configure is not null)
             {
                 HttpEventingOptions eventingOptions = new();
                 configure(obj: eventingOptions);
-                coreConfig.MaxConcurrency = eventingOptions.MaxConcurrency;
+                coreConfig.Eventing.Http.MaxConcurrency = eventingOptions.MaxConcurrency;
             }
         });
 
     public CoreApiBuilderOptions UseServiceBusEventing(string connectionString) =>
         WithCoreConfiguration(configure: coreConfig =>
         {
-            coreConfig.EnableServiceBusEventing = true;
+            coreConfig.Eventing.ProviderType = "ServiceBus";
 
             if (!string.IsNullOrWhiteSpace(value: connectionString))
             {
-                coreConfig.ServiceBusConnectionString = connectionString;
+                coreConfig.Eventing.ServiceBus.ConnectionString = connectionString;
             }
         });
 
@@ -154,13 +145,12 @@ public partial class CoreApiBuilderOptions(IServiceCollection services)
 
         cCoder.Security.IServiceCollectionExtensions.AddSecurityApi(services: services, configAction: (securityServices, securityConfig) =>
         {
-            securityConfig.RootPath = coreConfiguration?.SecurityRootPath ?? rootPath;
-
-            securityConfig.AddMSSQLModelProvider(
-services: securityServices, connectionString: coreConfiguration?.SecurityConnectionString ?? string.Empty);
+            securityConfig.RootPath = coreConfiguration?.Security.RootPath ?? rootPath;
+            securityConfig.ConnectionString =
+                coreConfiguration?.Security.ConnectionString ?? string.Empty;
 
             securityConfig.UseAESHMMACPasswordEncryption(
-services: securityServices, decryptionKey: coreConfiguration?.DecryptionKey ?? string.Empty);
+services: securityServices, decryptionKey: coreConfiguration?.Security.DecryptionKey ?? string.Empty);
 
             configure?.Invoke(arg1: securityServices, arg2: securityConfig);
             rootPath = EnsureRoutePath(routePath: securityConfig.RootPath, defaultContext: "Security");
@@ -181,9 +171,9 @@ services: securityServices, decryptionKey: coreConfiguration?.DecryptionKey ?? s
         configure(obj: domains);
 
         if (string.IsNullOrWhiteSpace(value: domains.Connection)
-            && !string.IsNullOrWhiteSpace(value: coreConfiguration?.CoreConnectionString))
+            && !string.IsNullOrWhiteSpace(value: coreConfiguration?.ContentManagement.ConnectionString))
         {
-            domains.Connection = coreConfiguration.CoreConnectionString;
+            domains.Connection = coreConfiguration.ContentManagement.ConnectionString;
         }
 
         if (string.IsNullOrWhiteSpace(value: domains.Connection))
@@ -192,7 +182,12 @@ services: securityServices, decryptionKey: coreConfiguration?.DecryptionKey ?? s
                 "CoreDomainsConfig.Connection must be provided when adding the core business domains or available via core configuration.");
         }
 
-        cCoder.Data.IServiceCollectionExtensions.AddCoreData(services: services, connectionString: domains.Connection);
+        cCoder.Data.IServiceCollectionExtensions.AddData(
+            services: services,
+            configuration: new cCoder.Data.Models.DataConfiguration
+            {
+                ConnectionString = domains.Connection,
+            });
 
         AddAppSecurityApi(configure: domain => ConfigureDomainRouting(configuration: domain, domainName: "AppSecurity", defaults: domains));
         AddContentManagementApi(configure: domain => ConfigureDomainRouting(configuration: domain, domainName: "ContentManagement", defaults: domains));
@@ -217,31 +212,25 @@ services: securityServices, decryptionKey: coreConfiguration?.DecryptionKey ?? s
     {
         CoreConfiguration configuration = new();
         configure?.Invoke(obj: configuration);
-        CoreConfigurationMapper.ApplyBoundRootSections(target: configuration);
+        return ConfigureDomainsWith(configuration: configuration);
+    }
 
-        WithCoreConfiguration(configure: coreConfig =>
-            CoreConfigurationMapper.Copy(source: configuration, target: coreConfig));
+    public CoreApiBuilderOptions ConfigureDomainsWith(CoreConfiguration configuration)
+    {
+        configuration ??= new CoreConfiguration();
+        coreConfiguration = configuration;
+        services.AddSingleton(implementationInstance: configuration);
 
-        AddStorage(connectionString: configuration.CoreConnectionString);
-
-        WithSecurity(
-connectionString: configuration.SecurityConnectionString, decryptionKey: configuration.DecryptionKey, rootPath: configuration.SecurityRootPath);
-
-        AddAppSecurityApi(configure: domain =>
-            ApplyConfiguration(source: configuration.AppSecurity, target: domain));
-        AddContentManagementApi(configure: domain =>
-            ApplyConfiguration(source: configuration.ContentManagement, target: domain));
-        AddDocumentManagementApi(configure: domain =>
-            ApplyConfiguration(source: configuration.DocumentManagement, target: domain));
-        AddLoggingApi(configure: domain =>
-            ApplyConfiguration(source: configuration.DomainLogging, target: domain));
-        AddMailApi(configure: domain =>
-            ApplyConfiguration(source: configuration.Mail, target: domain));
-        AddWorkflowApi(configure: domain =>
-            ApplyConfiguration(source: configuration.Workflow, target: domain));
+        services.AddSecurityApi(configuration.Security);
+        AddAppSecurityApi(configuration.AppSecurity);
+        AddContentManagementApi(configuration.ContentManagement);
+        AddDocumentManagementApi(configuration.DocumentManagement);
+        AddLoggingApi(configuration.Logging);
+        AddMailApi(configuration.Mail);
+        AddWorkflowApi(configuration.Workflow);
         UseLegacyCoreApi();
         UseConfiguredExternalEventing(configuration: configuration);
-        WithEventProviders(eventProviders: configuration.EventProviders ?? []);
+        WithEventProviders(eventProviders: configuration.Eventing.EventProviders ?? []);
 
         return this;
     }
@@ -252,18 +241,17 @@ connectionString: configuration.SecurityConnectionString, decryptionKey: configu
     public CoreApiBuilderOptions AddAppSecurityApi(
         Action<AppSecurityConfiguration> configure = null)
     {
-        AppSecurityConfiguration domain = new();
-        ApplyCoreDefaults(configuration: domain);
+        AppSecurityConfiguration domain =
+            coreConfiguration?.AppSecurity ?? new AppSecurityConfiguration();
         configure?.Invoke(obj: domain);
-        ApplyDomainRouteMode(configuration: domain, domainName: "AppSecurity");
+        return AddAppSecurityApi(domain);
+    }
 
-        services.AddAppSecurityWeb(
-configure: configuration =>
-            {
-                ApplyConfiguration(source: domain, target: configuration);
-                ApplyDomainRouteMode(configuration: configuration, domainName: "AppSecurity");
-                configuration.IncludeLegacyCoreContext = false;
-            }, builder: new ODataConventionModelBuilder());
+    internal CoreApiBuilderOptions AddAppSecurityApi(AppSecurityConfiguration domain)
+    {
+        ApplyDomainRouteMode(configuration: domain, domainName: "AppSecurity");
+        domain.IncludeLegacyCoreContext = false;
+        services.AddAppSecurityWeb(domain, new ODataConventionModelBuilder());
 
         RegisterDomainContext(
 routePath: domain.RootPath, includeLegacyCoreContext: domain.IncludeLegacyCoreContext, configureModel: static builder => builder.ConfigureAppSecurityApiModel());
@@ -274,18 +262,17 @@ routePath: domain.RootPath, includeLegacyCoreContext: domain.IncludeLegacyCoreCo
     public CoreApiBuilderOptions AddContentManagementApi(
         Action<ContentManagementConfiguration> configure = null)
     {
-        ContentManagementConfiguration domain = new();
-        ApplyCoreDefaults(configuration: domain);
+        ContentManagementConfiguration domain =
+            coreConfiguration?.ContentManagement ?? new ContentManagementConfiguration();
         configure?.Invoke(obj: domain);
-        ApplyDomainRouteMode(configuration: domain, domainName: "ContentManagement");
+        return AddContentManagementApi(domain);
+    }
 
-        services.AddContentManagementWeb(
-newContentManagementConfiguration: configuration =>
-            {
-                ApplyConfiguration(source: domain, target: configuration);
-                ApplyDomainRouteMode(configuration: configuration, domainName: "ContentManagement");
-                configuration.IncludeLegacyCoreContext = false;
-            }, builder: new ODataConventionModelBuilder());
+    internal CoreApiBuilderOptions AddContentManagementApi(ContentManagementConfiguration domain)
+    {
+        ApplyDomainRouteMode(configuration: domain, domainName: "ContentManagement");
+        domain.IncludeLegacyCoreContext = false;
+        services.AddContentManagementWeb(domain, new ODataConventionModelBuilder());
 
         RegisterDomainContext(
 routePath: domain.RootPath, includeLegacyCoreContext: domain.IncludeLegacyCoreContext, configureModel: static builder => builder.ConfigureContentManagementApiModel());
@@ -296,18 +283,17 @@ routePath: domain.RootPath, includeLegacyCoreContext: domain.IncludeLegacyCoreCo
     public CoreApiBuilderOptions AddDocumentManagementApi(
         Action<DocumentManagementConfiguration> configure = null)
     {
-        DocumentManagementConfiguration domain = new();
-        ApplyCoreDefaults(configuration: domain);
+        DocumentManagementConfiguration domain =
+            coreConfiguration?.DocumentManagement ?? new DocumentManagementConfiguration();
         configure?.Invoke(obj: domain);
-        ApplyDomainRouteMode(configuration: domain, domainName: "DocumentManagement");
+        return AddDocumentManagementApi(domain);
+    }
 
-        services.AddDocumentManagementWeb(
-configure: configuration =>
-            {
-                ApplyConfiguration(source: domain, target: configuration);
-                ApplyDomainRouteMode(configuration: configuration, domainName: "DocumentManagement");
-                configuration.IncludeLegacyCoreContext = false;
-            }, builder: new ODataConventionModelBuilder());
+    internal CoreApiBuilderOptions AddDocumentManagementApi(DocumentManagementConfiguration domain)
+    {
+        ApplyDomainRouteMode(configuration: domain, domainName: "DocumentManagement");
+        domain.IncludeLegacyCoreContext = false;
+        services.AddDocumentManagementWeb(domain, new ODataConventionModelBuilder());
 
         RegisterDomainContext(
 routePath: domain.RootPath, includeLegacyCoreContext: domain.IncludeLegacyCoreContext, configureModel: static builder => builder.ConfigureDocumentManagementApiModel());
@@ -318,18 +304,16 @@ routePath: domain.RootPath, includeLegacyCoreContext: domain.IncludeLegacyCoreCo
     public CoreApiBuilderOptions AddLoggingApi(
         Action<LoggingConfiguration> configure = null)
     {
-        LoggingConfiguration domain = new();
-        ApplyCoreDefaults(configuration: domain);
+        LoggingConfiguration domain = coreConfiguration?.Logging ?? new LoggingConfiguration();
         configure?.Invoke(obj: domain);
-        ApplyDomainRouteMode(configuration: domain, domainName: "Logging");
+        return AddLoggingApi(domain);
+    }
 
-        services.AddLoggingWeb(
-configure: configuration =>
-            {
-                ApplyConfiguration(source: domain, target: configuration);
-                ApplyDomainRouteMode(configuration: configuration, domainName: "Logging");
-                configuration.IncludeLegacyCoreContext = false;
-            }, builder: new ODataConventionModelBuilder());
+    internal CoreApiBuilderOptions AddLoggingApi(LoggingConfiguration domain)
+    {
+        ApplyDomainRouteMode(configuration: domain, domainName: "Logging");
+        domain.IncludeLegacyCoreContext = false;
+        services.AddLoggingWeb(domain, new ODataConventionModelBuilder());
 
         RegisterDomainContext(
 routePath: domain.RootPath, includeLegacyCoreContext: domain.IncludeLegacyCoreContext, configureModel: static builder => builder.ConfigureLoggingApiModel());
@@ -340,18 +324,16 @@ routePath: domain.RootPath, includeLegacyCoreContext: domain.IncludeLegacyCoreCo
     public CoreApiBuilderOptions AddMailApi(
         Action<MailConfiguration> configure = null)
     {
-        MailConfiguration domain = new();
-        ApplyCoreDefaults(configuration: domain);
+        MailConfiguration domain = coreConfiguration?.Mail ?? new MailConfiguration();
         configure?.Invoke(obj: domain);
-        ApplyDomainRouteMode(configuration: domain, domainName: "Mail");
+        return AddMailApi(domain);
+    }
 
-        services.AddMailWeb(
-newMailConfiguration: configuration =>
-            {
-                ApplyConfiguration(source: domain, target: configuration);
-                ApplyDomainRouteMode(configuration: configuration, domainName: "Mail");
-                configuration.IncludeLegacyCoreContext = false;
-            }, builder: new ODataConventionModelBuilder());
+    internal CoreApiBuilderOptions AddMailApi(MailConfiguration domain)
+    {
+        ApplyDomainRouteMode(configuration: domain, domainName: "Mail");
+        domain.IncludeLegacyCoreContext = false;
+        services.AddMailWeb(domain, new ODataConventionModelBuilder());
 
         RegisterDomainContext(
 routePath: domain.RootPath, includeLegacyCoreContext: domain.IncludeLegacyCoreContext, configureModel: static builder => builder.ConfigureMailApiModel());
@@ -362,18 +344,16 @@ routePath: domain.RootPath, includeLegacyCoreContext: domain.IncludeLegacyCoreCo
     public CoreApiBuilderOptions AddWorkflowApi(
         Action<WorkflowConfiguration> configure = null)
     {
-        WorkflowConfiguration domain = new();
-        ApplyCoreDefaults(configuration: domain);
+        WorkflowConfiguration domain = coreConfiguration?.Workflow ?? new WorkflowConfiguration();
         configure?.Invoke(obj: domain);
-        ApplyDomainRouteMode(configuration: domain, domainName: "Workflow");
+        return AddWorkflowApi(domain);
+    }
 
-        services.AddWorkflowWeb(
-newConfigure: configuration =>
-            {
-                ApplyConfiguration(source: domain, target: configuration);
-                ApplyDomainRouteMode(configuration: configuration, domainName: "Workflow");
-                configuration.IncludeLegacyCoreContext = false;
-            }, builder: new ODataConventionModelBuilder());
+    internal CoreApiBuilderOptions AddWorkflowApi(WorkflowConfiguration domain)
+    {
+        ApplyDomainRouteMode(configuration: domain, domainName: "Workflow");
+        domain.IncludeLegacyCoreContext = false;
+        services.AddWorkflowWeb(domain, new ODataConventionModelBuilder());
 
         RegisterDomainContext(
 routePath: domain.RootPath, includeLegacyCoreContext: domain.IncludeLegacyCoreContext, configureModel: static builder => builder.ConfigureWorkflowApiModel());
@@ -388,7 +368,6 @@ routePath: domain.RootPath, includeLegacyCoreContext: domain.IncludeLegacyCoreCo
             return;
         }
 
-        ApplyCoreData();
         ApplySessionCacheFallback();
         ApplyHttpEventing();
         ApplyServiceBusEventing();
@@ -400,72 +379,14 @@ routePath: domain.RootPath, includeLegacyCoreContext: domain.IncludeLegacyCoreCo
         applied = true;
     }
 
-    private static ContentManagementRuntimeConfig CreateContentManagementRuntimeConfig(Data.Config config) =>
-        new()
-        {
-            ConnectionStrings = new Dictionary<string, string>(
-                config.ConnectionStrings ?? new Dictionary<string, string>()),
-            Settings = new Dictionary<string, string>(
-                config.Settings ?? new Dictionary<string, string>()),
-            Services = new Dictionary<string, string>(
-                config.Services ?? new Dictionary<string, string>()),
-            DebugInfo = config.DebugInfo,
-            LogSQL = config.LogSQL,
-        };
-
-    private static MailRuntimeConfig CreateMailRuntimeConfig(Data.Config config) =>
-        new()
-        {
-            ConnectionStrings = new Dictionary<string, string>(
-                config.ConnectionStrings ?? new Dictionary<string, string>()),
-            Settings = new Dictionary<string, string>(
-                config.Settings ?? new Dictionary<string, string>()),
-            Services = new Dictionary<string, string>(
-                config.Services ?? new Dictionary<string, string>()),
-            DebugInfo = config.DebugInfo,
-            LogSQL = config.LogSQL,
-        };
-
-    private void ApplyCoreDefaults(AppSecurityConfiguration configuration) =>
-        ApplyCoreDefaults(
-connectionStrings: configuration.ConnectionStrings, settings: configuration.Settings, servicesMap: configuration.Services, debugInfo: value => configuration.DebugInfo = value, logSql: value => configuration.LogSQL = value, currentDebugInfo: configuration.DebugInfo, currentLogSql: configuration.LogSQL);
-
-    private void ApplyCoreDefaults(ContentManagementConfiguration configuration) =>
-        ApplyCoreDefaults(
-connectionStrings: configuration.ConnectionStrings, settings: configuration.Settings, servicesMap: configuration.Services, debugInfo: value => configuration.DebugInfo = value, logSql: value => configuration.LogSQL = value, currentDebugInfo: configuration.DebugInfo, currentLogSql: configuration.LogSQL);
-
-    private void ApplyCoreDefaults(DocumentManagementConfiguration configuration) =>
-        ApplyCoreDefaults(
-connectionStrings: configuration.ConnectionStrings, settings: configuration.Settings, servicesMap: configuration.Services, debugInfo: value => configuration.DebugInfo = value, logSql: value => configuration.LogSQL = value, currentDebugInfo: configuration.DebugInfo, currentLogSql: configuration.LogSQL);
-
-    private void ApplyCoreDefaults(LoggingConfiguration configuration) =>
-        ApplyCoreDefaults(
-connectionStrings: configuration.ConnectionStrings, settings: configuration.Settings, servicesMap: configuration.Services, debugInfo: value => configuration.DebugInfo = value, logSql: value => configuration.LogSQL = value, currentDebugInfo: configuration.DebugInfo, currentLogSql: configuration.LogSQL);
-
-    private void ApplyCoreDefaults(MailConfiguration configuration)
+    internal void ConfigureEventing(EventingConfiguration configuration)
     {
-        ApplyCoreDefaults(
-connectionStrings: configuration.ConnectionStrings, settings: configuration.Settings, servicesMap: configuration.Services, debugInfo: value => configuration.DebugInfo = value, logSql: value => configuration.LogSQL = value, currentDebugInfo: configuration.DebugInfo, currentLogSql: configuration.LogSQL);
-
-        ApplyMailDefaults(configuration: configuration);
+        coreConfiguration ??= new CoreConfiguration();
+        coreConfiguration.Eventing = configuration;
+        UseConfiguredExternalEventing(configuration: coreConfiguration);
+        WithEventProviders(eventProviders: configuration.EventProviders ?? []);
     }
 
-    private void ApplyCoreDefaults(WorkflowConfiguration configuration) =>
-        ApplyCoreDefaults(
-connectionStrings: configuration.ConnectionStrings, settings: configuration.Settings, servicesMap: configuration.Services, debugInfo: value => configuration.DebugInfo = value, logSql: value => configuration.LogSQL = value, currentDebugInfo: configuration.DebugInfo, currentLogSql: configuration.LogSQL);
-
-    private void ApplyCoreDefaults(
-        IDictionary<string, string> connectionStrings,
-        IDictionary<string, string> settings,
-        IDictionary<string, string> servicesMap,
-        Action<bool> debugInfo,
-        Action<bool> logSql,
-        bool currentDebugInfo,
-        bool currentLogSql)
-    {
-        CoreConfigurationMapper.ApplyDefaults(
-defaults: coreConfiguration, connectionStrings: connectionStrings, settings: settings, servicesMap: servicesMap, debugInfo: debugInfo, logSql: logSql, currentDebugInfo: currentDebugInfo, currentLogSql: currentLogSql);
-    }
 
     private void ApplySessionCacheFallback()
     {
@@ -520,29 +441,28 @@ defaults: coreConfiguration, connectionStrings: connectionStrings, settings: set
         }
     }
 
-    private void ApplyCoreData()
-    {
-        services.AddCoreData(connectionString: ResolveCoreConnectionString());
-    }
-
     private void ApplyHttpEventing()
     {
-        if (coreConfiguration?.EnableHttpEventing != true)
+        if (coreConfiguration is null
+            || !IsHttpEventProvider(configuration: coreConfiguration.Eventing)
+            || string.IsNullOrWhiteSpace(coreConfiguration.Eventing.Http.HubUrl))
         {
             return;
         }
 
         services.AddHttpEventing(configure: options =>
         {
-            options.HubUrl = coreConfiguration.HttpEventHubUrl;
-            options.MaxConcurrency = coreConfiguration.MaxConcurrency;
+            options.HubUrl = coreConfiguration.Eventing.Http.HubUrl;
+            options.MaxConcurrency = coreConfiguration.Eventing.Http.MaxConcurrency;
             options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
         });
     }
 
     private void ApplyServiceBusEventing()
     {
-        if (coreConfiguration?.EnableServiceBusEventing != true)
+        if (coreConfiguration is null
+            || !IsServiceBusEventProvider(configuration: coreConfiguration.Eventing)
+            || string.IsNullOrWhiteSpace(coreConfiguration.Eventing.ServiceBus.ConnectionString))
         {
             return;
         }
@@ -564,196 +484,43 @@ defaults: coreConfiguration, connectionStrings: connectionStrings, settings: set
 
         services.AddAzureServiceBusEventing(configure: options =>
         {
-            options.ConnectionString = coreConfiguration.ServiceBusConnectionString;
-            options.MaxConcurrency = coreConfiguration.MaxConcurrency;
+            options.ConnectionString = coreConfiguration.Eventing.ServiceBus.ConnectionString;
+            options.MaxConcurrency = coreConfiguration.Eventing.ServiceBus.MaxConcurrency;
         });
     }
 
     private void UseConfiguredExternalEventing(CoreConfiguration configuration)
     {
-        if (configuration.EnableServiceBusEventing)
+        if (IsServiceBusEventProvider(configuration: configuration.Eventing))
         {
-            UseServiceBusEventing(connectionString: configuration.ServiceBusConnectionString);
+            UseServiceBusEventing(
+                connectionString: configuration.Eventing.ServiceBus.ConnectionString);
             return;
         }
 
-        if (configuration.EnableHttpEventing || !string.IsNullOrWhiteSpace(value: configuration.HttpEventHubUrl))
+        if (IsHttpEventProvider(configuration: configuration.Eventing))
         {
             UseHttpEventing(
-hubUrl: configuration.HttpEventHubUrl, configure: options => options.MaxConcurrency = configuration.MaxConcurrency);
+                hubUrl: configuration.Eventing.Http.HubUrl,
+                configure: options =>
+                    options.MaxConcurrency = configuration.Eventing.Http.MaxConcurrency);
         }
     }
 
-    private string ResolveCoreConnectionString()
-    {
-        string connectionString = coreConfiguration?.CoreConnectionString;
+    private static bool IsHttpEventProvider(EventingConfiguration configuration) =>
+        string.Equals(
+            a: configuration.ProviderType,
+            b: "Http",
+            comparisonType: StringComparison.OrdinalIgnoreCase);
 
-        if (string.IsNullOrWhiteSpace(value: connectionString))
-        {
-            throw new InvalidOperationException(
-                "A core database connection must be provided directly or available via core configuration.");
-        }
-
-        return connectionString;
-    }
-
-    private static Data.Config CreateRuntimeConfiguration(CoreConfiguration configuration) =>
-        CoreConfigurationMapper.CreateRuntimeConfiguration(configuration: configuration);
+    private static bool IsServiceBusEventProvider(EventingConfiguration configuration) =>
+        string.Equals(
+            a: configuration.ProviderType,
+            b: "ServiceBus",
+            comparisonType: StringComparison.OrdinalIgnoreCase);
 
     private CoreConfiguration EnsureCoreConfiguration() =>
         coreConfiguration ??= new CoreConfiguration();
 
-    private static void ApplyConfiguration(
-        AppSecurityConfiguration source,
-        AppSecurityConfiguration target)
-    {
-        target.RootPath = source.RootPath;
-        target.IncludeLegacyCoreContext = source.IncludeLegacyCoreContext;
-        target.DebugInfo = source.DebugInfo;
-        target.LogSQL = source.LogSQL;
-        MergeDictionary(target: target.ConnectionStrings, source: source.ConnectionStrings);
-        MergeDictionary(target: target.Settings, source: source.Settings);
-        MergeDictionary(target: target.Services, source: source.Services);
-        CopyEventProviders(source: source.EventProviders, target: target.EventProviders);
-    }
-
-    private static void ApplyConfiguration(
-        ContentManagementConfiguration source,
-        ContentManagementConfiguration target)
-    {
-        target.RootPath = source.RootPath;
-        target.IncludeLegacyCoreContext = source.IncludeLegacyCoreContext;
-        target.DebugInfo = source.DebugInfo;
-        target.LogSQL = source.LogSQL;
-        MergeDictionary(target: target.ConnectionStrings, source: source.ConnectionStrings);
-        MergeDictionary(target: target.Settings, source: source.Settings);
-        MergeDictionary(target: target.Services, source: source.Services);
-        CopyEventProviders(source: source.EventProviders, target: target.EventProviders);
-    }
-
-    private static void ApplyConfiguration(
-        DocumentManagementConfiguration source,
-        DocumentManagementConfiguration target)
-    {
-        target.RootPath = source.RootPath;
-        target.IncludeLegacyCoreContext = source.IncludeLegacyCoreContext;
-        target.DebugInfo = source.DebugInfo;
-        target.LogSQL = source.LogSQL;
-        MergeDictionary(target: target.ConnectionStrings, source: source.ConnectionStrings);
-        MergeDictionary(target: target.Settings, source: source.Settings);
-        MergeDictionary(target: target.Services, source: source.Services);
-        CopyEventProviders(source: source.EventProviders, target: target.EventProviders);
-    }
-
-    private static void ApplyConfiguration(
-        LoggingConfiguration source,
-        LoggingConfiguration target)
-    {
-        target.RootPath = source.RootPath;
-        target.IncludeLegacyCoreContext = source.IncludeLegacyCoreContext;
-        target.DebugInfo = source.DebugInfo;
-        target.LogSQL = source.LogSQL;
-        MergeDictionary(target: target.ConnectionStrings, source: source.ConnectionStrings);
-        MergeDictionary(target: target.Settings, source: source.Settings);
-        MergeDictionary(target: target.Services, source: source.Services);
-        CopyEventProviders(source: source.EventProviders, target: target.EventProviders);
-    }
-
-    private static void ApplyConfiguration(
-        MailConfiguration source,
-        MailConfiguration target)
-    {
-        target.RootPath = source.RootPath;
-        target.IncludeLegacyCoreContext = source.IncludeLegacyCoreContext;
-        target.DebugInfo = source.DebugInfo;
-        target.LogSQL = source.LogSQL;
-        MergeDictionary(target: target.ConnectionStrings, source: source.ConnectionStrings);
-        MergeDictionary(target: target.Settings, source: source.Settings);
-        MergeDictionary(target: target.Services, source: source.Services);
-        SetIfPresent(value: source.MicrosoftGraph.TenantId, apply: value => target.MicrosoftGraph.TenantId = value);
-        SetIfPresent(value: source.MicrosoftGraph.ClientId, apply: value => target.MicrosoftGraph.ClientId = value);
-        SetIfPresent(value: source.MicrosoftGraph.ClientSecret, apply: value => target.MicrosoftGraph.ClientSecret = value);
-        SetIfPresent(value: source.MicrosoftGraph.GraphBaseUrl, apply: value => target.MicrosoftGraph.GraphBaseUrl = value);
-        SetIfPresent(value: source.MicrosoftGraph.LoginBaseUrl, apply: value => target.MicrosoftGraph.LoginBaseUrl = value);
-        SetIfPresent(value: source.MicrosoftGraph.ReceiveUser, apply: value => target.MicrosoftGraph.ReceiveUser = value);
-        SetIfPresent(value: source.DefaultSenderProviderName, apply: value => target.DefaultSenderProviderName = value);
-        SetIfPresent(value: source.DefaultReceiverProviderName, apply: value => target.DefaultReceiverProviderName = value);
-        CopyEventProviders(source: source.EventProviders, target: target.EventProviders);
-    }
-
-    private static void ApplyConfiguration(
-        WorkflowConfiguration source,
-        WorkflowConfiguration target)
-    {
-        target.RootPath = source.RootPath;
-        target.IncludeLegacyCoreContext = source.IncludeLegacyCoreContext;
-        target.DebugInfo = source.DebugInfo;
-        target.LogSQL = source.LogSQL;
-        MergeDictionary(target: target.ConnectionStrings, source: source.ConnectionStrings);
-        MergeDictionary(target: target.Settings, source: source.Settings);
-        MergeDictionary(target: target.Services, source: source.Services);
-        CopyEventProviders(source: source.EventProviders, target: target.EventProviders);
-    }
-
-    private static void CopyEventProviders(
-        IEnumerable<EventProvider> source,
-        ICollection<EventProvider> target)
-    {
-        if (source is null || target is null)
-        {
-            return;
-        }
-
-        foreach (EventProvider provider in source)
-        {
-            target.Add(item: provider);
-        }
-    }
-
-    private static Dictionary<string, string> CopyDictionary(
-        IDictionary<string, string> source) =>
-        new(
-            dictionary: source ?? new Dictionary<string, string>(),
-            comparer: StringComparer.OrdinalIgnoreCase);
-
-    private static void MergeDictionary(
-        IDictionary<string, string> target,
-        IDictionary<string, string> source)
-    {
-        if (target is null || source is null)
-        {
-            return;
-        }
-
-        foreach ((string key, string value) in source)
-        {
-            target[key] = value;
-        }
-    }
-
-    private static void SetIfPresent(string value, Action<string> apply)
-    {
-        if (!string.IsNullOrWhiteSpace(value: value))
-        {
-            apply(obj: value);
-        }
-    }
-
-    private void ApplyMailDefaults(MailConfiguration configuration)
-    {
-        if (coreConfiguration is null)
-        {
-            return;
-        }
-
-        SetIfPresent(value: coreConfiguration.MailGraphTenantId, apply: value => configuration.MicrosoftGraph.TenantId = value);
-        SetIfPresent(value: coreConfiguration.MailGraphClientId, apply: value => configuration.MicrosoftGraph.ClientId = value);
-        SetIfPresent(value: coreConfiguration.MailGraphClientSecret, apply: value => configuration.MicrosoftGraph.ClientSecret = value);
-        SetIfPresent(value: coreConfiguration.MailGraphBaseUrl, apply: value => configuration.MicrosoftGraph.GraphBaseUrl = value);
-        SetIfPresent(value: coreConfiguration.MailGraphLoginBaseUrl, apply: value => configuration.MicrosoftGraph.LoginBaseUrl = value);
-        SetIfPresent(value: coreConfiguration.MailGraphReceiveUser, apply: value => configuration.MicrosoftGraph.ReceiveUser = value);
-        SetIfPresent(value: coreConfiguration.MailDefaultSenderProviderName, apply: value => configuration.DefaultSenderProviderName = value);
-        SetIfPresent(value: coreConfiguration.MailDefaultReceiverProviderName, apply: value => configuration.DefaultReceiverProviderName = value);
-    }
 
 }

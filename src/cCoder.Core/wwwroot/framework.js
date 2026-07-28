@@ -972,15 +972,19 @@ class ConsoleDialog extends Dialog {
             that.enableMultiselectFilteringOn(that.columns[i]);
         }
 
+        if (that.searchable && that.search == null) {
+            that.search = {
+                fields: that.columns
+                    .filter(column => column.field && (column.type === "string" || column.Type === "string"))
+                    .map(column => column.field)
+            };
+        }
+
         await that.buildConfig.apply(that);
 
         if (that.searchable) {
             if (that.config.toolbar == null) { that.config.toolbar = []; }
             that.config.toolbar.push({ name: "search" });
-
-            that.search = that.search != null
-                ? that.search
-                : { fields: that.columns.filter(x => x.Type == "string").map(c => c.field) };
         }
 
         if (that.exports) {
@@ -1020,6 +1024,30 @@ class ConsoleDialog extends Dialog {
     
     postInit() {
         let that = this;
+
+        if (that.searchable) {
+            let searchInput = $(".k-grid-search input", that.gridElement);
+            let searchName = (that.gridName || "grid").replace(/[^a-zA-Z0-9_-]/g, "") + "-grid-search";
+
+            searchInput
+                .attr("name", searchName)
+                .attr("type", "search")
+                .attr("autocomplete", "off")
+                .attr("autocapitalize", "none")
+                .attr("spellcheck", "false")
+                .attr("data-1p-ignore", "true")
+                .attr("data-lpignore", "true")
+                .prop("readonly", true)
+                .one("focus pointerdown", function () {
+                    $(this).prop("readonly", false);
+                });
+
+            // Credential managers can populate the generated Kendo input before
+            // GridWidget gets a chance to identify it as a search control.
+            if (searchInput.val()) {
+                searchInput.val("").trigger("input");
+            }
+        }
 
         if (that.headerTooltip) {
             let gridHead = that.kendoObject.thead;
@@ -1274,6 +1302,7 @@ class ConsoleDialog extends Dialog {
         }
     }
 }
+
 ﻿class ContextMenuWidget extends Widget {
     constructor(element) {
         super(element);

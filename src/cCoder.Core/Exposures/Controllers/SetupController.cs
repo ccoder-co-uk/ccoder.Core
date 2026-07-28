@@ -3,7 +3,6 @@
 // ---------------------------------------------------------------
 
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using cCoder.Core.Models;
 using cCoder.Core.Services.Setup;
 using cCoder.Core.Exposures.Setup;
@@ -14,7 +13,7 @@ namespace cCoder.Core.Exposures.Controllers;
 public sealed class SetupController(
     IFirstTimeSetupStateService setupStateService,
     ISetupRequestHostManager setupRequestHostManager,
-    IConfiguration configuration)
+    CoreConfiguration configuration)
     : Controller
 {
     [HttpGet("")]
@@ -34,10 +33,7 @@ public sealed class SetupController(
     private FirstTimeSetupViewModel CreateFirstTimeSetupViewModel() =>
         new()
         {
-            AssetsRoot = configuration.GetValue<string>(
-                    key: "Settings:AssetsRoot")
-                ?? "https://raw.githubusercontent.com/ccoder-co-uk/" +
-                    "cCoder.Assets/main/Packages/",
+            AssetsRoot = configuration.Packaging.AssetsRoot,
             Domain = setupRequestHostManager.NormalizeHost(
                 host: Request.Host.Host),
             Setup = new FirstTimeSetupRequest(),

@@ -30,15 +30,21 @@ internal sealed class WebAcceptanceFactory : WebApplicationFactory<Program>
     public WebAcceptanceFactory(AcceptanceSettings settings)
     {
         this.settings = settings;
-        originalHttpEventHubUrl = Environment.GetEnvironmentVariable(variable: "Eventing__Http__HubUrl");
+        originalHttpEventHubUrl = Environment.GetEnvironmentVariable(
+            variable: "Eventing__Http__HubUrl");
         originalHostedServicesUrl = Environment.GetEnvironmentVariable(variable: "Services__HostedServices");
         originalExternalEventingSetting = Environment.GetEnvironmentVariable(variable: "Settings__enableExternalEventing");
-        originalAggregateDomainsSetting = Environment.GetEnvironmentVariable(variable: "Settings__AggregateDomains");
+        originalAggregateDomainsSetting = Environment.GetEnvironmentVariable(
+            variable: "AppSecurity__AggregateDomains");
 
-        Environment.SetEnvironmentVariable(variable: "Eventing__Http__HubUrl",value: null);
+        Environment.SetEnvironmentVariable(
+            variable: "Eventing__Http__HubUrl",
+            value: null);
         Environment.SetEnvironmentVariable(variable: "Services__HostedServices",value: null);
         Environment.SetEnvironmentVariable(variable: "Settings__enableExternalEventing",value: "false");
-        Environment.SetEnvironmentVariable(variable: "Settings__AggregateDomains",value: settings.AggregateDomains.ToString());
+        Environment.SetEnvironmentVariable(
+            variable: "AppSecurity__AggregateDomains",
+            value: settings.AggregateDomains.ToString());
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -49,10 +55,15 @@ internal sealed class WebAcceptanceFactory : WebApplicationFactory<Program>
         {
             config.AddInMemoryCollection(
 initialData:             [
-                new KeyValuePair<string, string>("ConnectionStrings:Core", settings.CoreConnectionString),
-                new KeyValuePair<string, string>("ConnectionStrings:SSO", settings.SsoConnectionString),
-                new KeyValuePair<string, string>("Settings:DecryptionKey", settings.DecryptionKey),
-                new KeyValuePair<string, string>("Settings:AggregateDomains", settings.AggregateDomains.ToString()),
+                new KeyValuePair<string, string>("AppSecurity:ConnectionString", settings.CoreConnectionString),
+                new KeyValuePair<string, string>("Security:ConnectionString", settings.SsoConnectionString),
+                new KeyValuePair<string, string>("Security:DecryptionKey", settings.DecryptionKey),
+                new KeyValuePair<string, string>("AppSecurity:AggregateDomains", settings.AggregateDomains.ToString()),
+                new KeyValuePair<string, string>("ContentManagement:ConnectionString", settings.CoreConnectionString),
+                new KeyValuePair<string, string>("DocumentManagement:ConnectionString", settings.CoreConnectionString),
+                new KeyValuePair<string, string>("Logging:ConnectionString", settings.CoreConnectionString),
+                new KeyValuePair<string, string>("Mail:ConnectionString", settings.CoreConnectionString),
+                new KeyValuePair<string, string>("Workflow:ConnectionString", settings.CoreConnectionString),
                 new KeyValuePair<string, string>("Settings:enableExternalEventing", "false"),
                 new KeyValuePair<string, string>("Eventing:Http:HubUrl", string.Empty),
                 new KeyValuePair<string, string>("DebugInfo", "true"),
@@ -108,10 +119,14 @@ services:                 services,connectionString:                 settings.Co
 
     protected override void Dispose(bool disposing)
     {
-        Environment.SetEnvironmentVariable(variable: "Eventing__Http__HubUrl",value: originalHttpEventHubUrl);
+        Environment.SetEnvironmentVariable(
+            variable: "Eventing__Http__HubUrl",
+            value: originalHttpEventHubUrl);
         Environment.SetEnvironmentVariable(variable: "Services__HostedServices",value: originalHostedServicesUrl);
         Environment.SetEnvironmentVariable(variable: "Settings__enableExternalEventing",value: originalExternalEventingSetting);
-        Environment.SetEnvironmentVariable(variable: "Settings__AggregateDomains",value: originalAggregateDomainsSetting);
+        Environment.SetEnvironmentVariable(
+            variable: "AppSecurity__AggregateDomains",
+            value: originalAggregateDomainsSetting);
         base.Dispose(disposing: disposing);
     }
 }

@@ -41,8 +41,6 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using System.Text.Json.Serialization;
-using ContentManagementRuntimeConfig = cCoder.ContentManagement.Models.Config;
-using MailRuntimeConfig = cCoder.Mail.Models.Config;
 
 
 namespace cCoder.Core;
@@ -58,22 +56,9 @@ public partial class CoreBuilderOptions(IServiceCollection services)
     {
         coreConfiguration ??= new CoreConfiguration();
         configure?.Invoke(obj: coreConfiguration);
-
-        Data.Config runtimeConfiguration = CreateRuntimeConfiguration(configuration: coreConfiguration);
         services.AddSingleton(implementationInstance: coreConfiguration);
-        services.AddSingleton(implementationInstance: runtimeConfiguration);
-        services.AddSingleton(implementationInstance: CreateContentManagementRuntimeConfig(config: runtimeConfiguration));
-        services.AddSingleton(implementationInstance: CreateMailRuntimeConfig(config: runtimeConfiguration));
 
         return this;
-    }
-
-    public CoreBuilderOptions WithCoreConfiguration(Data.Config configuration)
-    {
-        configuration ??= new Data.Config();
-
-        return WithCoreConfiguration(configure: coreConfig =>
-            CoreConfigurationMapper.PopulateFromRuntimeConfiguration(target: coreConfig, source: configuration));
     }
 
     public CoreBuilderOptions WithEventProviders(params EventProvider[] eventProviders)
@@ -86,7 +71,13 @@ public partial class CoreBuilderOptions(IServiceCollection services)
     {
         if (!string.IsNullOrWhiteSpace(value: connectionString))
         {
-            EnsureCoreConfiguration().CoreConnectionString = connectionString;
+            CoreConfiguration configuration = EnsureCoreConfiguration();
+            configuration.AppSecurity.ConnectionString = connectionString;
+            configuration.ContentManagement.ConnectionString = connectionString;
+            configuration.DocumentManagement.ConnectionString = connectionString;
+            configuration.Logging.ConnectionString = connectionString;
+            configuration.Mail.ConnectionString = connectionString;
+            configuration.Workflow.ConnectionString = connectionString;
         }
 
         return this;
@@ -98,8 +89,7 @@ public partial class CoreBuilderOptions(IServiceCollection services)
     {
         cCoder.Security.IServiceCollectionExtensions.AddSecurity(services: services, configAction: (securityServices, securityConfig) =>
         {
-            securityConfig.AddMSSQLModelProvider(
-services: securityServices, connectionString: connectionString ?? string.Empty);
+            securityConfig.ConnectionString = connectionString ?? string.Empty;
 
             securityConfig.UseAESHMMACPasswordEncryption(
 services: securityServices, decryptionKey: decryptionKey ?? string.Empty);
@@ -109,21 +99,21 @@ services: securityServices, decryptionKey: decryptionKey ?? string.Empty);
         {
             if (!string.IsNullOrWhiteSpace(value: connectionString))
             {
-                coreConfig.SecurityConnectionString = connectionString;
+                coreConfig.Security.ConnectionString = connectionString;
             }
 
             if (!string.IsNullOrWhiteSpace(value: decryptionKey))
             {
-                coreConfig.DecryptionKey = decryptionKey;
+                coreConfig.Security.DecryptionKey = decryptionKey;
             }
         });
     }
 
     public CoreBuilderOptions UseHttpEventing() =>
-        WithCoreConfiguration(configure: coreConfig => coreConfig.EnableHttpEventing = true);
+        WithCoreConfiguration(configure: coreConfig => coreConfig.Eventing.ProviderType = "Http");
 
     public CoreBuilderOptions UseServiceBusEventing() =>
-        WithCoreConfiguration(configure: coreConfig => coreConfig.EnableServiceBusEventing = true);
+        WithCoreConfiguration(configure: coreConfig => coreConfig.Eventing.ProviderType = "ServiceBus");
 
     public CoreBuilderOptions WithSessionCache(string connectionString)
     {
@@ -138,30 +128,16 @@ services: securityServices, decryptionKey: decryptionKey ?? string.Empty);
         return this;
     }
 
-    private string ResolveCoreConnectionString()
-    {
-        string connectionString = coreConfiguration?.CoreConnectionString;
-
-        if (string.IsNullOrWhiteSpace(value: connectionString))
-        {
-            throw new InvalidOperationException(
-                "A core database connection must be provided directly or available via core configuration.");
-        }
-
-        return connectionString;
-    }
-
     public CoreBuilderOptions UseContentManagement(
         Action<ContentManagementConfiguration> configure = null,
         IDictionary<string, IEdmModel> map = null,
         bool servicesOnly = false
     )
     {
-        services.AddContentManagementHostedServices(newContentManagementConfiguration: configuration =>
-        {
-            ApplyCoreDefaults(configuration: configuration);
-            configure?.Invoke(obj: configuration);
-        });
+        ContentManagementConfiguration configuration =
+            coreConfiguration?.ContentManagement ?? new ContentManagementConfiguration();
+        configure?.Invoke(obj: configuration);
+        services.AddContentManagementHostedServices(configuration);
 
         services.TryAddTransient<IContentManagementAppBroker, ContentManagementAppBroker>();
         services.TryAddTransient<IHttpRequestBroker, HttpRequestBroker>();
@@ -181,11 +157,10 @@ services: securityServices, decryptionKey: decryptionKey ?? string.Empty);
     public CoreBuilderOptions UseDocumentManagement(
         Action<DocumentManagementConfiguration> configure = null)
     {
-        services.AddDocumentManagementHostedServices(configure: configuration =>
-        {
-            ApplyCoreDefaults(configuration: configuration);
-            configure?.Invoke(obj: configuration);
-        });
+        DocumentManagementConfiguration configuration =
+            coreConfiguration?.DocumentManagement ?? new DocumentManagementConfiguration();
+        configure?.Invoke(obj: configuration);
+        services.AddDocumentManagementHostedServices(configuration);
 
         return this;
     }
@@ -204,33 +179,28 @@ services: securityServices, decryptionKey: decryptionKey ?? string.Empty);
 
     public CoreBuilderOptions UseMail(Action<MailConfiguration> configure = null)
     {
-        services.AddMailHostedServices(newMailConfiguration: configuration =>
-        {
-            ApplyCoreDefaults(configuration: configuration);
-            configure?.Invoke(obj: configuration);
-        });
+        MailConfiguration configuration = coreConfiguration?.Mail ?? new MailConfiguration();
+        configure?.Invoke(obj: configuration);
+        services.AddMailHostedServices(configuration);
 
         return this;
     }
 
     public CoreBuilderOptions UseWorkflow(Action<WorkflowConfiguration> configure = null)
     {
-        services.AddWorkflowHostedServices(newConfigure: configuration =>
-        {
-            ApplyCoreDefaults(configuration: configuration);
-            configure?.Invoke(obj: configuration);
-        });
+        WorkflowConfiguration configuration = coreConfiguration?.Workflow ?? new WorkflowConfiguration();
+        configure?.Invoke(obj: configuration);
+        services.AddWorkflowHostedServices(configuration);
 
         return this;
     }
 
     public CoreBuilderOptions UseAppSecurity(Action<AppSecurityConfiguration> configure = null)
     {
-        services.AddAppSecurityHostedServices(configure: configuration =>
-        {
-            ApplyCoreDefaults(configuration: configuration);
-            configure?.Invoke(obj: configuration);
-        });
+        AppSecurityConfiguration configuration =
+            coreConfiguration?.AppSecurity ?? new AppSecurityConfiguration();
+        configure?.Invoke(obj: configuration);
+        services.AddAppSecurityHostedServices(configuration);
 
         services.AddScoped<ICoreAllowedOriginStore, CoreAllowedOriginStore>();
         services.TryAddTransient<IAppSecurityAppService, AppSecurityAppService>();
@@ -243,18 +213,15 @@ services: securityServices, decryptionKey: decryptionKey ?? string.Empty);
 
     public CoreBuilderOptions UseLogging(Action<LoggingConfiguration> configure = null)
     {
-        services.AddLoggingHostedServices(configure: configuration =>
-        {
-            ApplyCoreDefaults(configuration: configuration);
-            configure?.Invoke(obj: configuration);
-        });
+        LoggingConfiguration configuration = coreConfiguration?.Logging ?? new LoggingConfiguration();
+        configure?.Invoke(obj: configuration);
+        services.AddLoggingHostedServices(configuration);
 
         return this;
     }
 
     public CoreBuilderOptions AuthorizeUsersWith()
     {
-        services.AddCoreAuthInfo();
         return this;
     }
 
@@ -262,304 +229,73 @@ services: securityServices, decryptionKey: decryptionKey ?? string.Empty);
     {
         CoreConfiguration configuration = new();
         configure?.Invoke(obj: configuration);
-        CoreConfigurationMapper.ApplyBoundRootSections(target: configuration);
-        CoreConfigurationMapper.ApplyDomainDefaults(target: configuration);
+        return ConfigureDomainsWith(configuration: configuration);
+    }
 
-        WithCoreConfiguration(configure: coreConfig =>
-            CoreConfigurationMapper.Copy(source: configuration, target: coreConfig));
+    public CoreBuilderOptions ConfigureDomainsWith(CoreConfiguration configuration)
+    {
+        configuration ??= new CoreConfiguration();
+        coreConfiguration = configuration;
+        services.AddSingleton(implementationInstance: configuration);
 
-        AddStorage(connectionString: configuration.CoreConnectionString);
+        services.AddSecurityHostedServices(configuration.Security);
+        services.AddAppSecurityHostedServices(configuration.AppSecurity);
+        services.AddContentManagementHostedServices(configuration.ContentManagement);
+        services.AddDocumentManagementHostedServices(configuration.DocumentManagement);
+        services.AddLoggingHostedServices(configuration.Logging);
+        services.AddMailHostedServices(configuration.Mail);
+        services.AddWorkflowHostedServices(configuration.Workflow);
 
-        WithSecurity(
-connectionString: configuration.SecurityConnectionString, decryptionKey: configuration.DecryptionKey);
+        services.AddScoped<ICoreAllowedOriginStore, CoreAllowedOriginStore>();
+        services.TryAddTransient<IAppSecurityAppService, AppSecurityAppService>();
+        services.TryAddTransient<IAppSecurityUserRoleService, AppSecurityUserRoleService>();
+        services.TryAddTransient<
+            IHostedServicesAppSecurityAppAddOrchestrationService,
+            HostedServicesAppSecurityAppAddOrchestrationService>();
+        services.TryAddTransient<IContentManagementAppBroker, ContentManagementAppBroker>();
+        services.TryAddTransient<IHttpRequestBroker, HttpRequestBroker>();
+        services.TryAddTransient<IContentManagementAppService, ContentManagementAppService>();
+        services.TryAddTransient<IAllowedOriginStoreService, AllowedOriginStoreService>();
+        services.TryAddTransient<IAllowedOriginStoreProcessingService, AllowedOriginStoreProcessingService>();
 
-        UseAppSecurity(configure: domain =>
-        {
-            ApplyConfiguration(source: configuration.AppSecurity, target: domain);
-            domain.RootPath = configuration.AppSecurity.RootPath;
-            domain.IncludeLegacyCoreContext = configuration.AppSecurity.IncludeLegacyCoreContext;
-            domain.IsMigrating = configuration.AppSecurity.IsMigrating;
-        });
-        UseContentManagement(configure: domain =>
-        {
-            ApplyConfiguration(source: configuration.ContentManagement, target: domain);
-            domain.RootPath = configuration.ContentManagement.RootPath;
-            domain.IncludeLegacyCoreContext = configuration.ContentManagement.IncludeLegacyCoreContext;
-        });
-        UseDocumentManagement(configure: domain =>
-        {
-            ApplyConfiguration(source: configuration.DocumentManagement, target: domain);
-            domain.RootPath = configuration.DocumentManagement.RootPath;
-            domain.IncludeLegacyCoreContext = configuration.DocumentManagement.IncludeLegacyCoreContext;
-        });
-        UseLogging(configure: domain =>
-        {
-            ApplyConfiguration(source: configuration.DomainLogging, target: domain);
-            domain.RootPath = configuration.DomainLogging.RootPath;
-            domain.IncludeLegacyCoreContext = configuration.DomainLogging.IncludeLegacyCoreContext;
-        });
-        UseMail(configure: domain =>
-        {
-            ApplyConfiguration(source: configuration.Mail, target: domain);
-            domain.RootPath = configuration.Mail.RootPath;
-            domain.IncludeLegacyCoreContext = configuration.Mail.IncludeLegacyCoreContext;
-            domain.IsMigrating = configuration.Mail.IsMigrating;
-        });
-        UseWorkflow(configure: domain =>
-        {
-            ApplyConfiguration(source: configuration.Workflow, target: domain);
-            domain.RootPath = configuration.Workflow.RootPath;
-            domain.IncludeLegacyCoreContext = configuration.Workflow.IncludeLegacyCoreContext;
-            domain.IsMigrating = configuration.Workflow.IsMigrating;
-        });
         UseConfiguredExternalEventing(configuration: configuration);
-        WithEventProviders(eventProviders: configuration.EventProviders ?? []);
+        WithEventProviders(eventProviders: configuration.Eventing.EventProviders ?? []);
 
         return this;
+    }
+
+    internal void ConfigureCoreServices(CoreConfiguration configuration)
+    {
+        coreConfiguration = configuration;
+
+        services.AddScoped<ICoreAllowedOriginStore, CoreAllowedOriginStore>();
+        services.TryAddTransient<IAppSecurityAppService, AppSecurityAppService>();
+        services.TryAddTransient<IAppSecurityUserRoleService, AppSecurityUserRoleService>();
+        services.TryAddTransient<
+            IHostedServicesAppSecurityAppAddOrchestrationService,
+            HostedServicesAppSecurityAppAddOrchestrationService>();
+        services.TryAddTransient<IContentManagementAppBroker, ContentManagementAppBroker>();
+        services.TryAddTransient<IHttpRequestBroker, HttpRequestBroker>();
+        services.TryAddTransient<IContentManagementAppService, ContentManagementAppService>();
+        services.TryAddTransient<IAllowedOriginStoreService, AllowedOriginStoreService>();
+        services.TryAddTransient<IAllowedOriginStoreProcessingService, AllowedOriginStoreProcessingService>();
+
+        UseConfiguredExternalEventing(configuration);
+        WithEventProviders(configuration.Eventing.EventProviders ?? []);
     }
 
     public CoreBuilderOptions UseAll(Action<CoreConfiguration> configure) =>
         ConfigureDomainsWith(configure: configure);
 
-    private static void ApplyConfiguration(
-        AppSecurityConfiguration source,
-        AppSecurityConfiguration target) =>
-        ApplyConfiguration(
-            source.ConnectionStrings,
-            source.Settings,
-            source.Services,
-            source.DebugInfo,
-            source.LogSQL,
-            source.EventProviders,
-            connectionStrings => MergeDictionary(target.ConnectionStrings, connectionStrings),
-            settings => MergeDictionary(target.Settings, settings),
-            services => MergeDictionary(target.Services, services),
-            debugInfo => target.DebugInfo = debugInfo,
-            logSql => target.LogSQL = logSql,
-            eventProviders => target.EventProviders = eventProviders);
-
-    private static void ApplyConfiguration(
-        ContentManagementConfiguration source,
-        ContentManagementConfiguration target) =>
-        ApplyConfiguration(
-            source.ConnectionStrings,
-            source.Settings,
-            source.Services,
-            source.DebugInfo,
-            source.LogSQL,
-            source.EventProviders,
-            connectionStrings => MergeDictionary(target.ConnectionStrings, connectionStrings),
-            settings => MergeDictionary(target.Settings, settings),
-            services => MergeDictionary(target.Services, services),
-            debugInfo => target.DebugInfo = debugInfo,
-            logSql => target.LogSQL = logSql,
-            eventProviders => target.EventProviders = eventProviders);
-
-    private static void ApplyConfiguration(
-        DocumentManagementConfiguration source,
-        DocumentManagementConfiguration target) =>
-        ApplyConfiguration(
-            source.ConnectionStrings,
-            source.Settings,
-            source.Services,
-            source.DebugInfo,
-            source.LogSQL,
-            source.EventProviders,
-            connectionStrings => MergeDictionary(target.ConnectionStrings, connectionStrings),
-            settings => MergeDictionary(target.Settings, settings),
-            services => MergeDictionary(target.Services, services),
-            debugInfo => target.DebugInfo = debugInfo,
-            logSql => target.LogSQL = logSql,
-            eventProviders => target.EventProviders = eventProviders);
-
-    private static void ApplyConfiguration(
-        LoggingConfiguration source,
-        LoggingConfiguration target) =>
-        ApplyConfiguration(
-            source.ConnectionStrings,
-            source.Settings,
-            source.Services,
-            source.DebugInfo,
-            source.LogSQL,
-            source.EventProviders,
-            connectionStrings => MergeDictionary(target.ConnectionStrings, connectionStrings),
-            settings => MergeDictionary(target.Settings, settings),
-            services => MergeDictionary(target.Services, services),
-            debugInfo => target.DebugInfo = debugInfo,
-            logSql => target.LogSQL = logSql,
-            eventProviders => target.EventProviders = eventProviders);
-
-    private static void ApplyConfiguration(
-        MailConfiguration source,
-        MailConfiguration target)
-    {
-        ApplyConfiguration(
-            source.ConnectionStrings,
-            source.Settings,
-            source.Services,
-            source.DebugInfo,
-            source.LogSQL,
-            source.EventProviders,
-            connectionStrings => MergeDictionary(target.ConnectionStrings, connectionStrings),
-            settings => MergeDictionary(target.Settings, settings),
-            services => MergeDictionary(target.Services, services),
-            debugInfo => target.DebugInfo = debugInfo,
-            logSql => target.LogSQL = logSql,
-            eventProviders => { });
-
-        SetIfPresent(value: source.DefaultSenderProviderName, apply: value => target.DefaultSenderProviderName = value);
-        SetIfPresent(value: source.DefaultReceiverProviderName, apply: value => target.DefaultReceiverProviderName = value);
-        SetIfPresent(value: source.MicrosoftGraph.TenantId, apply: value => target.MicrosoftGraph.TenantId = value);
-        SetIfPresent(value: source.MicrosoftGraph.ClientId, apply: value => target.MicrosoftGraph.ClientId = value);
-        SetIfPresent(value: source.MicrosoftGraph.ClientSecret, apply: value => target.MicrosoftGraph.ClientSecret = value);
-        SetIfPresent(value: source.MicrosoftGraph.GraphBaseUrl, apply: value => target.MicrosoftGraph.GraphBaseUrl = value);
-        SetIfPresent(value: source.MicrosoftGraph.LoginBaseUrl, apply: value => target.MicrosoftGraph.LoginBaseUrl = value);
-        SetIfPresent(value: source.MicrosoftGraph.ReceiveUser, apply: value => target.MicrosoftGraph.ReceiveUser = value);
-    }
-
-    private static void ApplyConfiguration(
-        WorkflowConfiguration source,
-        WorkflowConfiguration target) =>
-        ApplyConfiguration(
-            source.ConnectionStrings,
-            source.Settings,
-            source.Services,
-            source.DebugInfo,
-            source.LogSQL,
-            source.EventProviders,
-            connectionStrings => MergeDictionary(target.ConnectionStrings, connectionStrings),
-            settings => MergeDictionary(target.Settings, settings),
-            services => MergeDictionary(target.Services, services),
-            debugInfo => target.DebugInfo = debugInfo,
-            logSql => target.LogSQL = logSql,
-            eventProviders => target.EventProviders = eventProviders);
-
-    private static void ApplyConfiguration(
-        IDictionary<string, string> connectionStrings,
-        IDictionary<string, string> settings,
-        IDictionary<string, string> services,
-        bool debugInfo,
-        bool logSql,
-        EventProvider[] eventProviders,
-        Action<IDictionary<string, string>> setConnectionStrings,
-        Action<IDictionary<string, string>> setSettings,
-        Action<IDictionary<string, string>> setServices,
-        Action<bool> setDebugInfo,
-        Action<bool> setLogSql,
-        Action<EventProvider[]> setEventProviders)
-    {
-        setConnectionStrings(new Dictionary<string, string>(
-            connectionStrings ?? new Dictionary<string, string>(),
-            StringComparer.OrdinalIgnoreCase));
-        setSettings(new Dictionary<string, string>(
-            settings ?? new Dictionary<string, string>(),
-            StringComparer.OrdinalIgnoreCase));
-        setServices(new Dictionary<string, string>(
-            services ?? new Dictionary<string, string>(),
-            StringComparer.OrdinalIgnoreCase));
-        setDebugInfo(debugInfo);
-        setLogSql(logSql);
-        setEventProviders(eventProviders is null ? [] : [.. eventProviders]);
-    }
-
-    private static void MergeDictionary(
-        IDictionary<string, string> target,
-        IDictionary<string, string> source)
-    {
-        if (target is null || source is null)
-        {
-            return;
-        }
-
-        foreach ((string key, string value) in source)
-        {
-            target[key] = value;
-        }
-    }
-
-    private static void SetIfPresent(string value, Action<string> apply)
-    {
-        if (!string.IsNullOrWhiteSpace(value: value))
-        {
-            apply(obj: value);
-        }
-    }
 
     internal void Apply()
     {
-        ApplyCoreData();
         ApplySessionCacheFallback();
         ApplyHttpEventing();
         ApplyServiceBusEventing();
         services.AddCoreEventing(eventProviders: eventProviders);
     }
 
-    private static ContentManagementRuntimeConfig CreateContentManagementRuntimeConfig(Data.Config config) =>
-        new()
-        {
-            ConnectionStrings = new Dictionary<string, string>(
-                config.ConnectionStrings ?? new Dictionary<string, string>()),
-            Settings = new Dictionary<string, string>(
-                config.Settings ?? new Dictionary<string, string>()),
-            Services = new Dictionary<string, string>(
-                config.Services ?? new Dictionary<string, string>()),
-            DebugInfo = config.DebugInfo,
-            LogSQL = config.LogSQL,
-        };
-
-    private static MailRuntimeConfig CreateMailRuntimeConfig(Data.Config config) =>
-        new()
-        {
-            ConnectionStrings = new Dictionary<string, string>(
-                config.ConnectionStrings ?? new Dictionary<string, string>()),
-            Settings = new Dictionary<string, string>(
-                config.Settings ?? new Dictionary<string, string>()),
-            Services = new Dictionary<string, string>(
-                config.Services ?? new Dictionary<string, string>()),
-            DebugInfo = config.DebugInfo,
-            LogSQL = config.LogSQL,
-        };
-
-    private void ApplyCoreDefaults(AppSecurityConfiguration configuration) =>
-        ApplyCoreDefaults(
-connectionStrings: configuration.ConnectionStrings, settings: configuration.Settings, servicesMap: configuration.Services, debugInfo: value => configuration.DebugInfo = value, logSql: value => configuration.LogSQL = value, currentDebugInfo: configuration.DebugInfo, currentLogSql: configuration.LogSQL);
-
-    private void ApplyCoreDefaults(ContentManagementConfiguration configuration) =>
-        ApplyCoreDefaults(
-connectionStrings: configuration.ConnectionStrings, settings: configuration.Settings, servicesMap: configuration.Services, debugInfo: value => configuration.DebugInfo = value, logSql: value => configuration.LogSQL = value, currentDebugInfo: configuration.DebugInfo, currentLogSql: configuration.LogSQL);
-
-    private void ApplyCoreDefaults(DocumentManagementConfiguration configuration) =>
-        ApplyCoreDefaults(
-connectionStrings: configuration.ConnectionStrings, settings: configuration.Settings, servicesMap: configuration.Services, debugInfo: value => configuration.DebugInfo = value, logSql: value => configuration.LogSQL = value, currentDebugInfo: configuration.DebugInfo, currentLogSql: configuration.LogSQL);
-
-    private void ApplyCoreDefaults(LoggingConfiguration configuration) =>
-        ApplyCoreDefaults(
-connectionStrings: configuration.ConnectionStrings, settings: configuration.Settings, servicesMap: configuration.Services, debugInfo: value => configuration.DebugInfo = value, logSql: value => configuration.LogSQL = value, currentDebugInfo: configuration.DebugInfo, currentLogSql: configuration.LogSQL);
-
-    private void ApplyCoreDefaults(MailConfiguration configuration)
-    {
-        ApplyCoreDefaults(
-connectionStrings: configuration.ConnectionStrings, settings: configuration.Settings, servicesMap: configuration.Services, debugInfo: value => configuration.DebugInfo = value, logSql: value => configuration.LogSQL = value, currentDebugInfo: configuration.DebugInfo, currentLogSql: configuration.LogSQL);
-
-        ApplyMailDefaults(configuration: configuration);
-    }
-
-    private void ApplyCoreDefaults(WorkflowConfiguration configuration) =>
-        ApplyCoreDefaults(
-connectionStrings: configuration.ConnectionStrings, settings: configuration.Settings, servicesMap: configuration.Services, debugInfo: value => configuration.DebugInfo = value, logSql: value => configuration.LogSQL = value, currentDebugInfo: configuration.DebugInfo, currentLogSql: configuration.LogSQL);
-
-    private void ApplyCoreDefaults(
-        IDictionary<string, string> connectionStrings,
-        IDictionary<string, string> settings,
-        IDictionary<string, string> servicesMap,
-        Action<bool> debugInfo,
-        Action<bool> logSql,
-        bool currentDebugInfo,
-        bool currentLogSql)
-    {
-        CoreConfigurationMapper.ApplyDefaults(
-defaults: coreConfiguration, connectionStrings: connectionStrings, settings: settings, servicesMap: servicesMap, debugInfo: debugInfo, logSql: logSql, currentDebugInfo: currentDebugInfo, currentLogSql: currentLogSql);
-    }
 
     private void ApplySessionCacheFallback()
     {
@@ -614,27 +350,28 @@ defaults: coreConfiguration, connectionStrings: connectionStrings, settings: set
         }
     }
 
-    private void ApplyCoreData() =>
-        services.AddCoreData(connectionString: ResolveCoreConnectionString());
-
     private void ApplyHttpEventing()
     {
-        if (coreConfiguration?.EnableHttpEventing != true)
+        if (coreConfiguration is null
+            || !IsHttpEventProvider(configuration: coreConfiguration.Eventing)
+            || string.IsNullOrWhiteSpace(coreConfiguration.Eventing.Http.HubUrl))
         {
             return;
         }
 
         services.AddHttpEventingHostedServices(configure: options =>
         {
-            options.HubUrl = coreConfiguration.HttpEventHubUrl;
-            options.MaxConcurrency = coreConfiguration.MaxConcurrency;
+            options.HubUrl = coreConfiguration.Eventing.Http.HubUrl;
+            options.MaxConcurrency = coreConfiguration.Eventing.Http.MaxConcurrency;
             options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
         });
     }
 
     private void ApplyServiceBusEventing()
     {
-        if (coreConfiguration?.EnableServiceBusEventing != true)
+        if (coreConfiguration is null
+            || !IsServiceBusEventProvider(configuration: coreConfiguration.Eventing)
+            || string.IsNullOrWhiteSpace(coreConfiguration.Eventing.ServiceBus.ConnectionString))
         {
             return;
         }
@@ -656,46 +393,39 @@ defaults: coreConfiguration, connectionStrings: connectionStrings, settings: set
 
         services.AddAzureServiceBusEventing(configure: options =>
         {
-            options.ConnectionString = coreConfiguration.ServiceBusConnectionString;
-            options.MaxConcurrency = coreConfiguration.MaxConcurrency;
+            options.ConnectionString = coreConfiguration.Eventing.ServiceBus.ConnectionString;
+            options.MaxConcurrency = coreConfiguration.Eventing.ServiceBus.MaxConcurrency;
         });
     }
 
     private void UseConfiguredExternalEventing(CoreConfiguration configuration)
     {
-        if (configuration.EnableServiceBusEventing)
+        if (IsServiceBusEventProvider(configuration: configuration.Eventing))
         {
             UseServiceBusEventing();
             return;
         }
 
-        if (configuration.EnableHttpEventing || !string.IsNullOrWhiteSpace(value: configuration.HttpEventHubUrl))
+        if (IsHttpEventProvider(configuration: configuration.Eventing))
         {
             UseHttpEventing();
         }
     }
 
-    private static Data.Config CreateRuntimeConfiguration(CoreConfiguration configuration) =>
-        CoreConfigurationMapper.CreateRuntimeConfiguration(configuration: configuration);
+    private static bool IsHttpEventProvider(EventingConfiguration configuration) =>
+        string.Equals(
+            a: configuration.ProviderType,
+            b: "Http",
+            comparisonType: StringComparison.OrdinalIgnoreCase);
+
+    private static bool IsServiceBusEventProvider(EventingConfiguration configuration) =>
+        string.Equals(
+            a: configuration.ProviderType,
+            b: "ServiceBus",
+            comparisonType: StringComparison.OrdinalIgnoreCase);
 
     private CoreConfiguration EnsureCoreConfiguration() =>
         coreConfiguration ??= new CoreConfiguration();
 
-    private void ApplyMailDefaults(MailConfiguration configuration)
-    {
-        if (coreConfiguration is null)
-        {
-            return;
-        }
-
-        SetIfPresent(value: coreConfiguration.MailGraphTenantId, apply: value => configuration.MicrosoftGraph.TenantId = value);
-        SetIfPresent(value: coreConfiguration.MailGraphClientId, apply: value => configuration.MicrosoftGraph.ClientId = value);
-        SetIfPresent(value: coreConfiguration.MailGraphClientSecret, apply: value => configuration.MicrosoftGraph.ClientSecret = value);
-        SetIfPresent(value: coreConfiguration.MailGraphBaseUrl, apply: value => configuration.MicrosoftGraph.GraphBaseUrl = value);
-        SetIfPresent(value: coreConfiguration.MailGraphLoginBaseUrl, apply: value => configuration.MicrosoftGraph.LoginBaseUrl = value);
-        SetIfPresent(value: coreConfiguration.MailGraphReceiveUser, apply: value => configuration.MicrosoftGraph.ReceiveUser = value);
-        SetIfPresent(value: coreConfiguration.MailDefaultSenderProviderName, apply: value => configuration.DefaultSenderProviderName = value);
-        SetIfPresent(value: coreConfiguration.MailDefaultReceiverProviderName, apply: value => configuration.DefaultReceiverProviderName = value);
-    }
 
 }

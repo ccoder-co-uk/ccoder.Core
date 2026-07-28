@@ -70,16 +70,16 @@
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
   <ItemGroup Condition="'$(UseLocalAppSecurity)' == 'true'">
-    <ProjectReference Include="$(LocalAppSecurityProject)" AdditionalProperties="UseLocalData=$(UseLocalData);UseLocalSecurity=$(UseLocalSecurity)" />
+    <ProjectReference Include="$(LocalAppSecurityProject)" AdditionalProperties="UseLocalData=$(UseLocalData);UseLocalSecurity=$(UseLocalSecurity);UseLocalEventing=$(UseLocalEventing)" />
   </ItemGroup>
   <ItemGroup Condition="'$(UseLocalData)' == 'true'">
-    <ProjectReference Include="$(LocalDataProject)" AdditionalProperties="UseLocalSecurityData=$(UseLocalSecurity)" />
+    <ProjectReference Include="$(LocalDataProject)" AdditionalProperties="UseLocalSecurityData=$(UseLocalSecurity);UseLocalEventing=$(UseLocalEventing)" />
   </ItemGroup>
   <ItemGroup Condition="'$(UseLocalContentManagement)' == 'true'">
-    <ProjectReference Include="$(LocalContentManagementProject)" AdditionalProperties="UseLocalData=$(UseLocalData)" />
+    <ProjectReference Include="$(LocalContentManagementProject)" AdditionalProperties="UseLocalData=$(UseLocalData);UseLocalEventing=$(UseLocalEventing)" />
   </ItemGroup>
   <ItemGroup Condition="'$(UseLocalDocumentManagement)' == 'true'">
-    <ProjectReference Include="$(LocalDocumentManagementProject)" AdditionalProperties="UseLocalData=$(UseLocalData)" />
+    <ProjectReference Include="$(LocalDocumentManagementProject)" AdditionalProperties="UseLocalData=$(UseLocalData);UseLocalEventing=$(UseLocalEventing)" />
   </ItemGroup>
   <ItemGroup Condition="'$(UseLocalEventing)' == 'true'">
     <ProjectReference Include="$(LocalEventingProject)" />
@@ -87,20 +87,20 @@
     <ProjectReference Include="$(LocalEventingAzureServiceBusProject)" />
   </ItemGroup>
   <ItemGroup Condition="'$(UseLocalLogging)' == 'true'">
-    <ProjectReference Include="$(LocalLoggingProject)" AdditionalProperties="UseLocalData=$(UseLocalData)" />
+    <ProjectReference Include="$(LocalLoggingProject)" AdditionalProperties="UseLocalData=$(UseLocalData);UseLocalEventing=$(UseLocalEventing)" />
   </ItemGroup>
   <ItemGroup Condition="'$(UseLocalMail)' == 'true'">
-    <ProjectReference Include="$(LocalMailProject)" AdditionalProperties="UseLocalData=$(UseLocalData)" />
+    <ProjectReference Include="$(LocalMailProject)" AdditionalProperties="UseLocalData=$(UseLocalData);UseLocalEventing=$(UseLocalEventing)" />
   </ItemGroup>
   <ItemGroup Condition="'$(UseLocalPackaging)' == 'true'">
-    <ProjectReference Include="$(LocalPackagingProject)" AdditionalProperties="UseLocalData=$(UseLocalData)" />
+    <ProjectReference Include="$(LocalPackagingProject)" AdditionalProperties="UseLocalData=$(UseLocalData);UseLocalEventing=$(UseLocalEventing)" />
   </ItemGroup>
   <ItemGroup Condition="'$(UseLocalSecurity)' == 'true'">
-    <ProjectReference Include="$(LocalSecurityProject)" />
+    <ProjectReference Include="$(LocalSecurityProject)" AdditionalProperties="UseLocalEventing=$(UseLocalEventing)" />
     <ProjectReference Include="$(LocalSecurityDataProject)" />
   </ItemGroup>
   <ItemGroup Condition="'$(UseLocalWorkflow)' == 'true'">
-    <ProjectReference Include="$(LocalWorkflowProject)" AdditionalProperties="UseLocalData=$(UseLocalData);UseLocalSecurity=$(UseLocalSecurity)" />
+    <ProjectReference Include="$(LocalWorkflowProject)" AdditionalProperties="UseLocalData=$(UseLocalData);UseLocalSecurity=$(UseLocalSecurity);UseLocalEventing=$(UseLocalEventing)" />
     <ProjectReference Include="$(LocalWorkflowActivitiesProject)" AdditionalProperties="UseLocalData=$(UseLocalData);UseLocalSecurity=$(UseLocalSecurity)" />
     <ProjectReference Include="$(LocalWorkflowEngineProject)" AdditionalProperties="UseLocalData=$(UseLocalData);UseLocalSecurity=$(UseLocalSecurity)" />
   </ItemGroup>

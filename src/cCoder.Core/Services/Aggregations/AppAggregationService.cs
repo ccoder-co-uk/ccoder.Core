@@ -92,8 +92,8 @@ internal sealed partial class AppAggregationService(
         {
             ValidateAppOnDelete(appId: appId);
 
-            if (configuration.EnableHttpEventing
-                || configuration.EnableServiceBusEventing)
+            if (!string.IsNullOrWhiteSpace(
+                value: configuration.Eventing.ProviderType))
             {
                 await contentManagementAppService.DeleteAppAsync(
                     appId: appId);

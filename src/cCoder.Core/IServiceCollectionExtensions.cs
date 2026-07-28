@@ -3,6 +3,12 @@
 // ---------------------------------------------------------------
 
 using cCoder.Core.Models;
+using cCoder.AppSecurity;
+using cCoder.ContentManagement;
+using cCoder.DocumentManagement;
+using cCoder.Logging;
+using cCoder.Mail;
+using cCoder.Workflow;
 using cCoder.Core.Brokers.AppSecurity;
 using cCoder.Core.Brokers.ContentManagement;
 using cCoder.Core.Brokers.DocumentManagement;
@@ -65,27 +71,54 @@ namespace cCoder.Core;
 public static partial class IServiceCollectionExtensions
 {
     public static void AddCoreWeb(
-        this IServiceCollection services,
-        Action<CoreApiBuilderOptions> configure = null) =>
-        AddCoreWebExposures(
-            services: services,
-            configure: configure);
-
-    private static void AddCoreWebExposures(
         IServiceCollection services,
-        Action<CoreApiBuilderOptions> configure)
+        CoreConfiguration configuration) =>
+        AddCoreWebServices(services, configuration);
+
+    private static void AddCoreWebServices(
+        IServiceCollection services,
+        CoreConfiguration configuration)
     {
-        ConfigureDefaultLogging(services: services, configuration: GetRequiredConfiguration(services: services));
-        AddCoreApi(services: services, setupAction: configure ?? (_ => { }));
+        ArgumentNullException.ThrowIfNull(configuration);
+        services.AddSingleton(configuration);
+        ConfigureDefaultLogging(services, GetRequiredConfiguration(services));
+
+        CoreApiBuilderOptions core = new(services);
+        services.AddSecurityApi(configuration.Security);
+        core.AddAppSecurityApi(configuration.AppSecurity);
+        core.AddContentManagementApi(configuration.ContentManagement);
+        core.AddDocumentManagementApi(configuration.DocumentManagement);
+        core.AddLoggingApi(configuration.Logging);
+        core.AddMailApi(configuration.Mail);
+        core.AddWorkflowApi(configuration.Workflow);
+        core.UseLegacyCoreApi();
+        core.ConfigureEventing(configuration.Eventing);
+        core.Apply();
+
+        services.AddPackaging(configuration.Packaging);
         AddCoreFirstTimeSetup(services: services);
     }
 
     public static void AddCoreHostedServices(
         this IServiceCollection services,
-        Action<CoreBuilderOptions> configure = null)
+        CoreConfiguration configuration)
     {
-        ConfigureDefaultLogging(services: services, configuration: GetRequiredConfiguration(services: services));
-        AddCore(services: services, setupAction: configure ?? (_ => { }));
+        ArgumentNullException.ThrowIfNull(configuration);
+        services.AddSingleton(configuration);
+        ConfigureDefaultLogging(services, GetRequiredConfiguration(services));
+
+        services.AddSecurityHostedServices(configuration.Security);
+        services.AddAppSecurityHostedServices(configuration.AppSecurity);
+        services.AddContentManagementHostedServices(configuration.ContentManagement);
+        services.AddDocumentManagementHostedServices(configuration.DocumentManagement);
+        services.AddLoggingHostedServices(configuration.Logging);
+        services.AddMailHostedServices(configuration.Mail);
+        services.AddWorkflowHostedServices(configuration.Workflow);
+        services.AddPackaging(configuration.Packaging);
+
+        CoreBuilderOptions core = new(services);
+        core.ConfigureCoreServices(configuration);
+        core.Apply();
         AddCoreAspNetExposures(services: services);
     }
 
@@ -287,43 +320,19 @@ predicate: (documentName, apiDescription) =>
             .OfType<CoreConfiguration>()
             .LastOrDefault();
 
-        Config runtimeConfiguration = services
-            .Where(predicate: descriptor => descriptor.ServiceType == typeof(Config))
-            .Select(selector: descriptor => descriptor.ImplementationInstance)
-            .OfType<Config>()
-            .LastOrDefault();
-
         string securityConnectionString =
-            coreConfiguration?.SecurityConnectionString ?? string.Empty;
+            coreConfiguration?.Security.ConnectionString ?? string.Empty;
 
         string decryptionKey =
-            coreConfiguration?.DecryptionKey ?? string.Empty;
-
-        if (string.IsNullOrWhiteSpace(value: securityConnectionString)
-            && runtimeConfiguration?.ConnectionStrings?.TryGetValue(
-                key: "SSO",
-                value: out string configuredSecurityConnection) == true)
-        {
-            securityConnectionString = configuredSecurityConnection;
-        }
-
-        if (string.IsNullOrWhiteSpace(value: decryptionKey)
-            && runtimeConfiguration?.Settings?.TryGetValue(
-                key: "DecryptionKey",
-                value: out string configuredDecryptionKey) == true)
-        {
-            decryptionKey = configuredDecryptionKey;
-        }
+            coreConfiguration?.Security.DecryptionKey ?? string.Empty;
 
         cCoder.Security.IServiceCollectionExtensions.AddSecurity(
             services: services,
             configAction: (securityServices, securityConfig) =>
             {
                 securityConfig.RootPath = null;
-
-                securityConfig.AddMSSQLModelProvider(
-                    services: securityServices,
-                    connectionString: securityConnectionString ?? string.Empty);
+                securityConfig.ConnectionString =
+                    securityConnectionString ?? string.Empty;
 
                 securityConfig.UseAESHMMACPasswordEncryption(
                     services: securityServices,
@@ -441,7 +450,13 @@ predicate: (documentName, apiDescription) =>
                     ?? NoOpSession.Instance;
             });
 
-        services.AddSession();
+        services.AddSession(configure: options =>
+        {
+            options.Cookie.HttpOnly = true;
+            options.Cookie.SameSite = SameSiteMode.Lax;
+            options.Cookie.SecurePolicy =
+                CookieSecurePolicy.Always;
+        });
 
         services.AddHsts(configureOptions: options =>
         {
@@ -457,7 +472,7 @@ predicate: (documentName, apiDescription) =>
             options.OutputFormatters.Add(item: new CsvFormatter());
             options.OutputFormatters.Add(item: new ExcelFormatter());
 
-            if (coreConfiguration?.AggregateDomains != true)
+            if (coreConfiguration?.AppSecurity.AggregateDomains != true)
             {
                 options.Conventions.Add(
                     actionModelConvention:
@@ -549,7 +564,7 @@ predicate: (documentName, apiDescription) =>
         services.PostConfigure<ODataOptions>(
             configureOptions: options =>
             {
-                if (coreConfiguration?.AggregateDomains != true)
+                if (coreConfiguration?.AppSecurity.AggregateDomains != true)
                 {
                     return;
                 }
