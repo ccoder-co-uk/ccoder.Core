@@ -1,0 +1,21 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Apps/">
+    <Project Path="Apps/cCoder.IntegrationTests/cCoder.IntegrationTests.csproj" />
+    <Project Path="Apps/HostedServices.AcceptanceTests/HostedServices.AcceptanceTests.csproj" />
+    <Project Path="Apps/HostedServices/HostedServices.csproj" />
+    <Project Path="Apps/Web.AcceptanceTests/Web.AcceptanceTests.csproj" />
+    <Project Path="Apps/Web/Web.csproj" />
+    <Project Path="Apps/Workflow/Workflow.csproj" />
+  </Folder>
+  <Project Path="cCoder.Core.FrontEnd/cCoder.Core.FrontEnd.esproj">
+    <Platform Project="AnyCPU" />
+    <Build />
+  </Project>
+  <Project Path="cCoder.Core.Tests/cCoder.Core.Tests.csproj" />
+  <Project Path="cCoder.Core/cCoder.Core.csproj" />
+</Solution>
