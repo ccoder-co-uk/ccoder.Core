@@ -30,9 +30,14 @@ internal sealed class HostedServicesAcceptanceFactory(AcceptanceSettings setting
         {
             config.AddInMemoryCollection(
 initialData: [
-                new KeyValuePair<string, string>("ConnectionStrings:Core", settings.CoreConnectionString),
-                new KeyValuePair<string, string>("ConnectionStrings:SSO", settings.SsoConnectionString),
-                new KeyValuePair<string, string>("Settings:DecryptionKey", settings.DecryptionKey),
+                new KeyValuePair<string, string>("AppSecurity:ConnectionString", settings.CoreConnectionString),
+                new KeyValuePair<string, string>("Security:ConnectionString", settings.SsoConnectionString),
+                new KeyValuePair<string, string>("Security:DecryptionKey", settings.DecryptionKey),
+                new KeyValuePair<string, string>("ContentManagement:ConnectionString", settings.CoreConnectionString),
+                new KeyValuePair<string, string>("DocumentManagement:ConnectionString", settings.CoreConnectionString),
+                new KeyValuePair<string, string>("Logging:ConnectionString", settings.CoreConnectionString),
+                new KeyValuePair<string, string>("Mail:ConnectionString", settings.CoreConnectionString),
+                new KeyValuePair<string, string>("Workflow:ConnectionString", settings.CoreConnectionString),
                 new KeyValuePair<string, string>("Eventing:Http:HubUrl", string.Empty),
             ]);
         });

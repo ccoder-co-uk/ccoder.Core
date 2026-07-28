@@ -161,4 +161,33 @@ public sealed partial class AllowedOriginStoreProcessingServiceTests
         unsupportedOriginIsAllowed.Should()
             .BeFalse();
     }
+
+    [Theory]
+    [InlineData("null")]
+    [InlineData("https://app.example.com.attacker.invalid")]
+    [InlineData("https://app.example.com@attacker.invalid")]
+    [InlineData("https://attacker.invalid?origin=https://app.example.com")]
+    [InlineData("https://attacker.invalid/#https://app.example.com")]
+    public async Task IsCoreAllowedOriginAllowedAsyncRejectsSpoofedOrigins(
+        string origin)
+    {
+        // Given
+        Mock<IAllowedOriginStoreService> allowedOriginStoreServiceMock = new();
+
+        allowedOriginStoreServiceMock
+            .Setup(expression: service => service.GetAllowedOriginsAsync())
+            .ReturnsAsync(value: ["app.example.com"]);
+
+        AllowedOriginStoreProcessingService service = new(
+            allowedOriginStoreService: allowedOriginStoreServiceMock.Object);
+
+        // When
+        bool originIsAllowed =
+            await service.IsCoreAllowedOriginAllowedAsync(
+                origin: origin);
+
+        // Then
+        originIsAllowed.Should()
+            .BeFalse();
+    }
 }

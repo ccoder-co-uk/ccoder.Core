@@ -19,6 +19,35 @@
 - `src/Apps/cCoder.IntegrationTests`
   Full-process integration coverage across the aggregate hosts.
 
+## Run Locally
+
+The application configuration binds directly from `appsettings.json`, the
+environment-specific appsettings file, and environment variables into
+`CoreConfiguration`. Values left empty in appsettings are secrets that must be
+defined as user-level or machine-level environment variables.
+
+For a normal local SQL Server setup, define:
+
+```text
+AppSecurity__ConnectionString
+Security__ConnectionString
+Security__DecryptionKey
+ContentManagement__ConnectionString
+DocumentManagement__ConnectionString
+Logging__ConnectionString
+Mail__ConnectionString
+Workflow__ConnectionString
+```
+
+Optional provider credentials, such as Mail or Azure Service Bus credentials,
+use the same `Section__Property` naming shown by the matching appsettings
+section.
+
+After setting those variables, restart Visual Studio so it receives the updated
+environment, select the Web and HostedServices startup projects, and press F5.
+There is no configuration conversion step and no local secrets file to
+generate.
+
 ## Build And Test
 
 ```powershell

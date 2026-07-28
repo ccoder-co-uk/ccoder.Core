@@ -40,7 +40,7 @@ public partial class CoreApiBuilderOptions
         bool includeLegacyCoreContext,
         Action<ODataConventionModelBuilder> configureModel)
     {
-        if (coreConfiguration?.AggregateDomains == true)
+        if (coreConfiguration?.AppSecurity.AggregateDomains == true)
         {
             RegisterContext(routePath: "Api/Core", configureModel: configureModel);
             return;
@@ -120,7 +120,7 @@ public partial class CoreApiBuilderOptions
         string rootPath = defaults.RootPath.Trim()
             .TrimEnd(trimChar: '/');
 
-        string routePath = coreConfiguration?.AggregateDomains == true
+        string routePath = coreConfiguration?.AppSecurity.AggregateDomains == true
             ? $"{rootPath}/Core"
             : $"{rootPath}/{domainName}";
 

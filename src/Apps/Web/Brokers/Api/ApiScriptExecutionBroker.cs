@@ -4,11 +4,12 @@
 
 using System.Net;
 using System.Text;
+using cCoder.Core.Models;
 
 namespace Web.Brokers.Api;
 
 internal sealed class ApiScriptExecutionBroker(
-    IConfiguration configuration)
+    CoreConfiguration configuration)
     : IApiScriptExecutionBroker
 {
     public async ValueTask<string> ExecuteScriptAsync(
@@ -23,8 +24,7 @@ internal sealed class ApiScriptExecutionBroker(
             })
         {
             BaseAddress = new Uri(
-                uriString: configuration[
-                    "Services:Workflow"]!),
+                uriString: configuration.Workflow.ServiceUrl),
             Timeout = TimeSpan.FromMinutes(
                 value: 10)
         };

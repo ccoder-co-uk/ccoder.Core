@@ -36,6 +36,7 @@ public static partial class WebApplicationExtensions
 
         app.EnsureCoreDatabasesMigrated(log: log);
         app.UseHttpsRedirection();
+        app.UseCoreSecurityHeaders();
         app.UseCoreApi(log: log);
 
         return app;
@@ -63,6 +64,7 @@ public static partial class WebApplicationExtensions
             ?? NullLogger.Instance;
 
         app.EnsureCoreDatabasesMigrated(log: log);
+        app.UseCoreSecurityHeaders();
 
         IHostedService[] hostedServices = [.. app.Services.GetServices<IHostedService>()];
 

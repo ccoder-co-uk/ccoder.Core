@@ -2,65 +2,63 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using System.Text.Json;
-using cCoder.AppSecurity.Api.OData;
-using cCoder.AppSecurity.Brokers.Metadata;
-using cCoder.ContentManagement.Api.OData;
-using cCoder.Data.Exposures;
-using cCoder.Security.Objects.Entities;
-
 namespace cCoder.Core;
 
 public static partial class WebApplicationExtensions
 {
-    private const string SecurityMetadataScope = "Security";
-
-    private static WebApplication UseCoreSecurityExposure(
-        this WebApplication app,
-        ILogger log = null)
+    private static WebApplication UseCoreSecurityHeaders(
+        this WebApplication app)
     {
-        log?.LogInformation(message: "Initialising Security");
+        Models.CoreConfiguration configuration =
+            app.Services.GetService<Models.CoreConfiguration>();
 
-        IMetadataTypeCache metadataTypeCache = app.Services.GetRequiredService<IMetadataTypeCache>();
+        bool exposeApiMetadata =
+            ShouldExposeApiSurface(
+                configuredValue:
+                    configuration?.Api?.ExposeMetadata,
+                isProduction: app.Environment.IsProduction());
 
-        if (!metadataTypeCache.Contains(scope: SecurityMetadataScope))
+        if (!app.Environment.IsDevelopment())
         {
-            metadataTypeCache.Set(
-scope: SecurityMetadataScope, typeSetPayloads: [
-                    JsonSerializer.Serialize(value: new MetadataContainerSet
-                    {
-                        Name = SecurityMetadataScope,
-                        UriBase = SecurityMetadataScope,
-                        Types =
-                        [
-                            SecurityEntity<SSOUser>(),
-                            SecurityEntity<SSORole>(),
-                            SecurityEntity<SSOPrivilege>(),
-                            SecurityEntity<Tenant>(),
-                            SecurityEntity<TenantAnalysis>(),
-                            SecurityEntity<UserEvent>(),
-                            SecurityEntity<SSOUserRole>(),
-                        ],
-                    }),
-                ]);
+            app.UseHsts();
         }
+
+        app.Use(middleware: async (context, next) =>
+        {
+            if (!exposeApiMetadata
+                && context.Request.Path.Value?.EndsWith(
+                    value: "/$metadata",
+                    comparisonType:
+                        StringComparison.OrdinalIgnoreCase) == true)
+            {
+                context.Response.StatusCode =
+                    StatusCodes.Status404NotFound;
+
+                return;
+            }
+
+            context.Response.OnStarting(callback: () =>
+            {
+                context.Response.Headers["X-Content-Type-Options"] =
+                    "nosniff";
+                context.Response.Headers["Referrer-Policy"] =
+                    "no-referrer";
+
+                _ = context.Response.Headers.Remove(key: "Server");
+                _ = context.Response.Headers.Remove(
+                    key: "X-Powered-By");
+
+                return Task.CompletedTask;
+            });
+
+            await next();
+        });
 
         return app;
     }
 
-    private static ExtendedMetadataContainer SecurityEntity<T>() =>
-        CreateSecurityEntity(type: typeof(T));
-
-    private static ExtendedMetadataContainer CreateSecurityEntity(Type type)
-    {
-        ExtendedMetadataContainer metadata =
-            MetadataBroker.CreateExtendedMetadataContainer(
-                type: type,
-                isEntity: true,
-                hasEndpoint: true);
-
-        metadata.Category = SecurityMetadataScope;
-
-        return metadata;
-    }
+    internal static bool ShouldExposeApiSurface(
+        bool? configuredValue,
+        bool isProduction) =>
+        configuredValue ?? !isProduction;
 }

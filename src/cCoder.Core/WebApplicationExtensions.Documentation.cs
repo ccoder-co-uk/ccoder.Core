@@ -3,6 +3,7 @@
 // ---------------------------------------------------------------
 
 using cCoder.Data.Models;
+using cCoder.Core.Models;
 using Microsoft.AspNetCore.OData;
 
 namespace cCoder.Core;
@@ -11,6 +12,20 @@ public static partial class WebApplicationExtensions
 {
     internal static WebApplication UseCoreApiDocumentation(this WebApplication app)
     {
+        CoreConfiguration configuration =
+            app.Services.GetService<CoreConfiguration>();
+
+        bool exposeApiDocumentation =
+            ShouldExposeApiSurface(
+                configuredValue:
+                    configuration?.Api?.ExposeDocumentation,
+                isProduction: app.Environment.IsProduction());
+
+        if (!exposeApiDocumentation)
+        {
+            return app;
+        }
+
         string[] contexts = ["Core", .. app.Services
             .GetServices<ApiInfo>()
             .Where(predicate: info => string.Equals(a: info.Kind,b: "Context",comparisonType: StringComparison.OrdinalIgnoreCase))
