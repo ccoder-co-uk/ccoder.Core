@@ -22,9 +22,9 @@
 ## Build And Test
 
 ```powershell
-dotnet restore src\cCoder.Core.sln --source https://api.nuget.org/v3/index.json --no-cache
-dotnet build src\cCoder.Core.sln -c Release --no-restore
-dotnet test src\cCoder.Core.sln -c Release --no-build --settings src\cCoder.Core.runsettings
+dotnet restore src\cCoder.Core.slnx --source https://api.nuget.org/v3/index.json --no-cache
+dotnet build src\cCoder.Core.slnx -c Release --no-restore
+dotnet test src\cCoder.Core.slnx -c Release --no-build --settings src\cCoder.Core.runsettings
 ```
 
 The full solution test suite requires the acceptance infrastructure connection strings:
@@ -45,7 +45,7 @@ dotnet test src\Apps\cCoder.IntegrationTests\cCoder.IntegrationTests.csproj /p:U
 
 The local assembly version override is only needed while downstream packages still reference the currently published Security assembly version. Once the package chain has been republished, consume the published package versions and run without the override.
 
-The publish workflow runs on a self-hosted runner and always restores, builds, and tests `src/cCoder.Core.sln` before packing.
+The publish workflow runs on a self-hosted runner and always restores, builds, and tests `src/cCoder.Core.slnx` before packing.
 
 ## Platform Functionality
 

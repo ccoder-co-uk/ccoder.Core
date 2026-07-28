@@ -1,4 +1,4 @@
-// ---------------------------------------------------------------
+﻿// ---------------------------------------------------------------
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
@@ -82,7 +82,7 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
                     "EVENT_LIBRARY_AZURE_SERVICE_BUS_CONNECTION_STRING"
                 ]),
             ServiceBusMaxConcurrency = ResolveIntSetting(
-primaryName:                 "CCODER_INTEGRATION_SERVICE_BUS_MAX_CONCURRENCY",secondaryName:                 "Eventing__ServiceBus__MaxConcurrency",fallback:                 1)
+primaryName: "CCODER_INTEGRATION_SERVICE_BUS_MAX_CONCURRENCY", secondaryName: "Eventing__ServiceBus__MaxConcurrency", fallback: 1)
         };
 
         if (Settings.UseServiceBusEventing)
@@ -95,12 +95,12 @@ primaryName:                 "CCODER_INTEGRATION_SERVICE_BUS_MAX_CONCURRENCY",se
         int workflowHttpPort = FindFreePort();
 
         acceptanceArtifactsRoot = Path.Combine(
-path1:             repositoryRoot,path2:             "artifacts",path3:             "integration-tests",path4:             Guid.NewGuid()
+path1: repositoryRoot, path2: "artifacts", path3: "integration-tests", path4: Guid.NewGuid()
             .ToString(format: "N"));
 
-        workflowOutputDirectory = Path.Combine(path1: acceptanceArtifactsRoot,path2: "Workflow");
-        hostedServicesOutputDirectory = Path.Combine(path1: acceptanceArtifactsRoot,path2: "HostedServices");
-        webOutputDirectory = Path.Combine(path1: acceptanceArtifactsRoot,path2: "Web");
+        workflowOutputDirectory = Path.Combine(path1: acceptanceArtifactsRoot, path2: "Workflow");
+        hostedServicesOutputDirectory = Path.Combine(path1: acceptanceArtifactsRoot, path2: "HostedServices");
+        webOutputDirectory = Path.Combine(path1: acceptanceArtifactsRoot, path2: "Web");
 
         Directory.CreateDirectory(path: workflowOutputDirectory);
         Directory.CreateDirectory(path: hostedServicesOutputDirectory);
@@ -125,27 +125,27 @@ path1:             repositoryRoot,path2:             "artifacts",path3:         
         Console.WriteLine(value: "Integration fixture: baseline data seeded.");
 
         await BuildApplicationAsync(
-projectPath:             "src\\Apps\\Workflow\\Workflow.csproj",msbuildProperties:             string.Empty,outputDirectory:             workflowOutputDirectory,intermediateDirectory:             Path.Combine(path1: acceptanceArtifactsRoot,path2: "obj",path3: "Workflow"));
+projectPath: "src\\Apps\\Workflow\\Workflow.csproj", msbuildProperties: string.Empty, outputDirectory: workflowOutputDirectory, intermediateDirectory: Path.Combine(path1: acceptanceArtifactsRoot, path2: "obj", path3: "Workflow"));
 
         Console.WriteLine(value: "Integration fixture: Workflow built.");
 
         await BuildApplicationAsync(
-projectPath:             "src\\Apps\\HostedServices\\HostedServices.csproj",msbuildProperties:             string.Empty,outputDirectory:             hostedServicesOutputDirectory,intermediateDirectory:             Path.Combine(path1: acceptanceArtifactsRoot,path2: "obj",path3: "HostedServices"));
+projectPath: "src\\Apps\\HostedServices\\HostedServices.csproj", msbuildProperties: string.Empty, outputDirectory: hostedServicesOutputDirectory, intermediateDirectory: Path.Combine(path1: acceptanceArtifactsRoot, path2: "obj", path3: "HostedServices"));
 
         Console.WriteLine(value: "Integration fixture: HostedServices built.");
 
         await BuildApplicationAsync(
-projectPath:             "src\\Apps\\Web\\Web.csproj",msbuildProperties:             string.Empty,outputDirectory:             webOutputDirectory,intermediateDirectory:             Path.Combine(path1: acceptanceArtifactsRoot,path2: "obj",path3: "Web"));
+projectPath: "src\\Apps\\Web\\Web.csproj", msbuildProperties: string.Empty, outputDirectory: webOutputDirectory, intermediateDirectory: Path.Combine(path1: acceptanceArtifactsRoot, path2: "obj", path3: "Web"));
 
         Console.WriteLine(value: "Integration fixture: Web built.");
 
         workflowApplication = new ExternalProcessApplication("Workflow");
 
         await workflowApplication.StartAsync(
-fileName:             ResolveFuncExecutablePath(),arguments:             $"start --port {workflowHttpPort} --csharp --no-build",workingDirectory:             workflowOutputDirectory,environmentVariables:             new Dictionary<string, string>
-            {
-                ["FUNCTIONS_WORKER_RUNTIME"] = "dotnet-isolated"
-            },            readinessProbe: () => ProbeHealthAsync(baseAddress: WorkflowBaseAddress),            timeout: TimeSpan.FromMinutes(minutes: 2),            readinessDiagnostics: GetHealthProbeDiagnostics);
+fileName: ResolveFuncExecutablePath(), arguments: $"start --port {workflowHttpPort} --csharp --no-build", workingDirectory: workflowOutputDirectory, environmentVariables: new Dictionary<string, string>
+{
+    ["FUNCTIONS_WORKER_RUNTIME"] = "dotnet-isolated"
+}, readinessProbe: () => ProbeHealthAsync(baseAddress: WorkflowBaseAddress), timeout: TimeSpan.FromMinutes(minutes: 2), readinessDiagnostics: GetHealthProbeDiagnostics);
 
         Console.WriteLine(value: "Integration fixture: Workflow started.");
 
@@ -161,12 +161,12 @@ fileName:             ResolveFuncExecutablePath(),arguments:             $"start
         webApplication = new ExternalProcessApplication("Web");
 
         await webApplication.StartAsync(
-fileName:             "dotnet",arguments:             $"\"{Path.Combine(path1: webOutputDirectory,path2: "Web.dll")}\"",workingDirectory:             webOutputDirectory,environmentVariables:             webEnvironment,            readinessProbe: () => ProbeHealthAsync(baseAddress: WebBaseAddress,useInsecureHandler: true),            timeout: TimeSpan.FromMinutes(minutes: 2),            readinessDiagnostics: GetHealthProbeDiagnostics);
+fileName: "dotnet", arguments: $"\"{Path.Combine(path1: webOutputDirectory, path2: "Web.dll")}\"", workingDirectory: webOutputDirectory, environmentVariables: webEnvironment, readinessProbe: () => ProbeHealthAsync(baseAddress: WebBaseAddress, useInsecureHandler: true), timeout: TimeSpan.FromMinutes(minutes: 2), readinessDiagnostics: GetHealthProbeDiagnostics);
 
         Console.WriteLine(value: "Integration fixture: Web started.");
 
-        WebClient = CreateClient(baseAddress: WebBaseAddress,useInsecureHandler: true);
-        HostedServicesClient = CreateClient(baseAddress: HostedServicesBaseAddress,useInsecureHandler: false);
+        WebClient = CreateClient(baseAddress: WebBaseAddress, useInsecureHandler: true);
+        HostedServicesClient = CreateClient(baseAddress: HostedServicesBaseAddress, useInsecureHandler: false);
     }
 
     public async Task RestartHostedServicesAsync()
@@ -220,7 +220,7 @@ fileName:             "dotnet",arguments:             $"\"{Path.Combine(path1: w
                 && !string.IsNullOrWhiteSpace(value: acceptanceArtifactsRoot)
                 && Directory.Exists(path: acceptanceArtifactsRoot))
             {
-                Directory.Delete(path: acceptanceArtifactsRoot,recursive: true);
+                Directory.Delete(path: acceptanceArtifactsRoot, recursive: true);
             }
         }
         catch
@@ -249,7 +249,7 @@ fileName:             "dotnet",arguments:             $"\"{Path.Combine(path1: w
 
     private async Task<bool> ProbeAsync(Uri uri, bool useInsecureHandler = false)
     {
-        using HttpClient client = CreateClient(baseAddress: new Uri($"{uri.Scheme}://{uri.Authority}/"),useInsecureHandler: useInsecureHandler);
+        using HttpClient client = CreateClient(baseAddress: new Uri($"{uri.Scheme}://{uri.Authority}/"), useInsecureHandler: useInsecureHandler);
 
         try
         {
@@ -271,8 +271,8 @@ fileName:             "dotnet",arguments:             $"\"{Path.Combine(path1: w
         string localBuildProperties = ResolveLocalBuildProperties();
 
         string outputProperties =
-            $"-p:OutputPath=\"{FormatMsBuildPath(path: outputDirectory,trailingSlash: false)}\" " +
-            $"-p:IntermediateOutputPath=\"{FormatMsBuildPath(path: intermediateDirectory,trailingSlash: true)}\"";
+            $"-p:OutputPath=\"{FormatMsBuildPath(path: outputDirectory, trailingSlash: false)}\" " +
+            $"-p:IntermediateOutputPath=\"{FormatMsBuildPath(path: intermediateDirectory, trailingSlash: true)}\"";
 
         string combinedProperties = CombineMsBuildProperties(
             values: [localBuildProperties, msbuildProperties, outputProperties]);
@@ -280,31 +280,31 @@ fileName:             "dotnet",arguments:             $"\"{Path.Combine(path1: w
         Console.WriteLine(value: $"Integration fixture: building {projectPath} with properties: {combinedProperties}");
 
         await RunCommandAsync(
-fileName:             "dotnet",arguments:             $"restore {projectPath} {combinedProperties}");
+fileName: "dotnet", arguments: $"restore {projectPath} {combinedProperties}");
 
         await RunCommandAsync(
-fileName:             "dotnet",arguments:             $"build {projectPath} --no-restore -m:1 -p:BuildInParallel=false -p:UseSharedCompilation=false {combinedProperties}");
+fileName: "dotnet", arguments: $"build {projectPath} --no-restore -m:1 -p:BuildInParallel=false -p:UseSharedCompilation=false {combinedProperties}");
     }
 
     private string ResolveLocalBuildProperties()
     {
         bool useLocalWorkflow = string.Equals(
-a:             Environment.GetEnvironmentVariable(variable: "CCODER_INTEGRATION_USE_LOCAL_WORKFLOW"),b:             "true",comparisonType:             StringComparison.OrdinalIgnoreCase);
+a: Environment.GetEnvironmentVariable(variable: "CCODER_INTEGRATION_USE_LOCAL_WORKFLOW"), b: "true", comparisonType: StringComparison.OrdinalIgnoreCase);
 
         bool useLocalSecurity = string.Equals(
-a:             Environment.GetEnvironmentVariable(variable: "CCODER_INTEGRATION_USE_LOCAL_SECURITY"),b:             "true",comparisonType:             StringComparison.OrdinalIgnoreCase);
+a: Environment.GetEnvironmentVariable(variable: "CCODER_INTEGRATION_USE_LOCAL_SECURITY"), b: "true", comparisonType: StringComparison.OrdinalIgnoreCase);
 
         bool useLocalAppSecurity = string.Equals(
-a:             Environment.GetEnvironmentVariable(variable: "CCODER_INTEGRATION_USE_LOCAL_APPSECURITY"),b:             "true",comparisonType:             StringComparison.OrdinalIgnoreCase);
+a: Environment.GetEnvironmentVariable(variable: "CCODER_INTEGRATION_USE_LOCAL_APPSECURITY"), b: "true", comparisonType: StringComparison.OrdinalIgnoreCase);
 
         bool useLocalData = string.Equals(
-a:             Environment.GetEnvironmentVariable(variable: "CCODER_INTEGRATION_USE_LOCAL_DATA"),b:             "true",comparisonType:             StringComparison.OrdinalIgnoreCase);
+a: Environment.GetEnvironmentVariable(variable: "CCODER_INTEGRATION_USE_LOCAL_DATA"), b: "true", comparisonType: StringComparison.OrdinalIgnoreCase);
 
         string localSecurityAssemblyVersion = ResolveOptionalSetting(
-variableNames:             "CCODER_INTEGRATION_LOCAL_SECURITY_ASSEMBLY_VERSION");
+variableNames: "CCODER_INTEGRATION_LOCAL_SECURITY_ASSEMBLY_VERSION");
 
         string localAppSecurityProject = Path.GetFullPath(
-path:             Path.Combine(
+path: Path.Combine(
                 paths:
                 [
                     repositoryRoot,
@@ -316,7 +316,7 @@ path:             Path.Combine(
                 ]));
 
         string localDataProject = Path.GetFullPath(
-path:             Path.Combine(
+path: Path.Combine(
                 paths:
                 [
                     repositoryRoot,
@@ -328,7 +328,7 @@ path:             Path.Combine(
                 ]));
 
         string localWorkflowProject = Path.GetFullPath(
-path:             Path.Combine(
+path: Path.Combine(
                 paths:
                 [
                     repositoryRoot,
@@ -340,7 +340,7 @@ path:             Path.Combine(
                 ]));
 
         string localSecurityProject = Path.GetFullPath(
-path:             Path.Combine(
+path: Path.Combine(
                 paths:
                 [
                     repositoryRoot,
@@ -388,15 +388,15 @@ path:             Path.Combine(
             properties.Add(item: $"-p:FileVersion={localSecurityAssemblyVersion}");
         }
 
-        return string.Join(separator: " ",values: properties);
+        return string.Join(separator: " ", values: properties);
     }
 
     private static string CombineMsBuildProperties(params string[] values) =>
-        string.Join(separator: " ",values: values.Where(predicate: value => !string.IsNullOrWhiteSpace(value: value)));
+        string.Join(separator: " ", values: values.Where(predicate: value => !string.IsNullOrWhiteSpace(value: value)));
 
     private static string FormatMsBuildPath(string path, bool trailingSlash)
     {
-        string formattedPath = path.Replace(oldChar: '\\',newChar: '/');
+        string formattedPath = path.Replace(oldChar: '\\', newChar: '/');
 
         if (trailingSlash && !formattedPath.EndsWith(value: '/'))
         {
@@ -485,8 +485,8 @@ path:             Path.Combine(
     {
         string connectionString =
             Environment.GetEnvironmentVariable(variable: variableName)
-            ?? Environment.GetEnvironmentVariable(variable: variableName,target: EnvironmentVariableTarget.User)
-            ?? Environment.GetEnvironmentVariable(variable: variableName,target: EnvironmentVariableTarget.Machine);
+            ?? Environment.GetEnvironmentVariable(variable: variableName, target: EnvironmentVariableTarget.User)
+            ?? Environment.GetEnvironmentVariable(variable: variableName, target: EnvironmentVariableTarget.Machine);
 
         if (!string.IsNullOrWhiteSpace(value: connectionString))
         {
@@ -503,7 +503,7 @@ path:             Path.Combine(
 
         while (directory is not null)
         {
-            if (File.Exists(path: Path.Combine(path1: directory.FullName,path2: "src",path3: "cCoder.Core.sln")))
+            if (File.Exists(path: Path.Combine(path1: directory.FullName, path2: "src", path3: "cCoder.Core.slnx")))
             {
                 return directory.FullName;
             }
@@ -523,14 +523,14 @@ path:             Path.Combine(
         hostedServicesApplication = new ExternalProcessApplication("HostedServices");
 
         await hostedServicesApplication.StartAsync(
-fileName:             "dotnet",arguments:             $"\"{Path.Combine(path1: hostedServicesOutputDirectory,path2: "HostedServices.dll")}\"",workingDirectory:             hostedServicesOutputDirectory,environmentVariables:             hostedServicesEnvironment,            readinessProbe: () => ProbeHealthAsync(baseAddress: HostedServicesBaseAddress),            timeout: TimeSpan.FromMinutes(minutes: 2),            readinessDiagnostics: GetHealthProbeDiagnostics);
+fileName: "dotnet", arguments: $"\"{Path.Combine(path1: hostedServicesOutputDirectory, path2: "HostedServices.dll")}\"", workingDirectory: hostedServicesOutputDirectory, environmentVariables: hostedServicesEnvironment, readinessProbe: () => ProbeHealthAsync(baseAddress: HostedServicesBaseAddress), timeout: TimeSpan.FromMinutes(minutes: 2), readinessDiagnostics: GetHealthProbeDiagnostics);
 
         Console.WriteLine(value: "Integration fixture: HostedServices started.");
     }
 
     private async Task<bool> ProbeHealthAsync(Uri baseAddress, bool useInsecureHandler = false)
     {
-        using HttpClient client = CreateClient(baseAddress: baseAddress,useInsecureHandler: useInsecureHandler);
+        using HttpClient client = CreateClient(baseAddress: baseAddress, useInsecureHandler: useInsecureHandler);
         Uri healthUri = new(baseAddress, "Health");
 
         try
@@ -539,7 +539,7 @@ fileName:             "dotnet",arguments:             $"\"{Path.Combine(path1: h
             string content = await response.Content.ReadAsStringAsync();
 
             if (response.IsSuccessStatusCode
-                && string.Equals(a: content,b: "OK",comparisonType: StringComparison.Ordinal))
+                && string.Equals(a: content, b: "OK", comparisonType: StringComparison.Ordinal))
             {
                 lastHealthProbeFailure = null;
                 return true;
@@ -569,7 +569,7 @@ fileName:             "dotnet",arguments:             $"\"{Path.Combine(path1: h
             messages.Add(item: $"{current.GetType().FullName}: {current.Message}");
         }
 
-        return string.Join(separator: " ---> ",values: messages);
+        return string.Join(separator: " ---> ", values: messages);
     }
 
     private Dictionary<string, string> CreateCommonApplicationEnvironment()
@@ -587,19 +587,19 @@ fileName:             "dotnet",arguments:             $"\"{Path.Combine(path1: h
             ["Eventing__Http__MaxConcurrency"] = "1"
         };
 
-        AddOptionalEnvironment(environment: environment,variableName: "CCODER_MAIL_GRAPH_TENANT_ID");
-        AddOptionalEnvironment(environment: environment,variableName: "CCODER_MAIL_GRAPH_CLIENT_ID");
-        AddOptionalEnvironment(environment: environment,variableName: "CCODER_MAIL_GRAPH_CLIENT_SECRET");
-        AddOptionalEnvironment(environment: environment,variableName: "CCODER_MAIL_GRAPH_BASE_URL");
-        AddOptionalEnvironment(environment: environment,variableName: "CCODER_MAIL_GRAPH_LOGIN_BASE_URL");
-        AddOptionalEnvironment(environment: environment,variableName: "CCODER_MAIL_INTEGRATION_SEND_HOST");
-        AddOptionalEnvironment(environment: environment,variableName: "CCODER_MAIL_INTEGRATION_SEND_USER");
-        AddOptionalEnvironment(environment: environment,variableName: "CCODER_MAIL_INTEGRATION_SMTP_USER");
-        AddOptionalEnvironment(environment: environment,variableName: "CCODER_MAIL_INTEGRATION_SMTP_FROM");
-        AddOptionalEnvironment(environment: environment,variableName: "CCODER_MAIL_INTEGRATION_RECEIVE_USER");
-        AddOptionalEnvironment(environment: environment,variableName: "CCODER_MAIL_INTEGRATION_TO");
-        AddOptionalEnvironment(environment: environment,variableName: "CCODER_MAIL_DEFAULT_SENDER_PROVIDER");
-        AddOptionalEnvironment(environment: environment,variableName: "CCODER_MAIL_DEFAULT_RECEIVER_PROVIDER");
+        AddOptionalEnvironment(environment: environment, variableName: "CCODER_MAIL_GRAPH_TENANT_ID");
+        AddOptionalEnvironment(environment: environment, variableName: "CCODER_MAIL_GRAPH_CLIENT_ID");
+        AddOptionalEnvironment(environment: environment, variableName: "CCODER_MAIL_GRAPH_CLIENT_SECRET");
+        AddOptionalEnvironment(environment: environment, variableName: "CCODER_MAIL_GRAPH_BASE_URL");
+        AddOptionalEnvironment(environment: environment, variableName: "CCODER_MAIL_GRAPH_LOGIN_BASE_URL");
+        AddOptionalEnvironment(environment: environment, variableName: "CCODER_MAIL_INTEGRATION_SEND_HOST");
+        AddOptionalEnvironment(environment: environment, variableName: "CCODER_MAIL_INTEGRATION_SEND_USER");
+        AddOptionalEnvironment(environment: environment, variableName: "CCODER_MAIL_INTEGRATION_SMTP_USER");
+        AddOptionalEnvironment(environment: environment, variableName: "CCODER_MAIL_INTEGRATION_SMTP_FROM");
+        AddOptionalEnvironment(environment: environment, variableName: "CCODER_MAIL_INTEGRATION_RECEIVE_USER");
+        AddOptionalEnvironment(environment: environment, variableName: "CCODER_MAIL_INTEGRATION_TO");
+        AddOptionalEnvironment(environment: environment, variableName: "CCODER_MAIL_DEFAULT_SENDER_PROVIDER");
+        AddOptionalEnvironment(environment: environment, variableName: "CCODER_MAIL_DEFAULT_RECEIVER_PROVIDER");
 
         if (Settings.UseServiceBusEventing)
         {
@@ -626,7 +626,7 @@ fileName:             "dotnet",arguments:             $"\"{Path.Combine(path1: h
 
     private void AddHttpsCertificateEnvironment(Dictionary<string, string> environment)
     {
-        string certificatePath = Path.Combine(path1: acceptanceArtifactsRoot,path2: "localhost-https.pfx");
+        string certificatePath = Path.Combine(path1: acceptanceArtifactsRoot, path2: "localhost-https.pfx");
 
         string certificatePassword = Guid.NewGuid()
             .ToString(format: "N");
@@ -647,26 +647,26 @@ fileName:             "dotnet",arguments:             $"\"{Path.Combine(path1: h
         request.CertificateExtensions.Add(item: subjectAlternativeNameBuilder.Build());
 
         request.CertificateExtensions.Add(
-item:             new X509BasicConstraintsExtension(
+item: new X509BasicConstraintsExtension(
                 certificateAuthority: false,
                 hasPathLengthConstraint: false,
                 pathLengthConstraint: 0,
                 critical: false));
 
         request.CertificateExtensions.Add(
-item:             new X509KeyUsageExtension(
+item: new X509KeyUsageExtension(
                 X509KeyUsageFlags.DigitalSignature | X509KeyUsageFlags.KeyEncipherment,
                 critical: true));
 
         request.CertificateExtensions.Add(
-item:             new X509EnhancedKeyUsageExtension(
+item: new X509EnhancedKeyUsageExtension(
                 [new Oid("1.3.6.1.5.5.7.3.1")],
                 critical: false));
 
         using X509Certificate2 certificate = request.CreateSelfSigned(
-notBefore:             DateTimeOffset.UtcNow.AddMinutes(minutes: -5),notAfter:             DateTimeOffset.UtcNow.AddDays(days: 1));
+notBefore: DateTimeOffset.UtcNow.AddMinutes(minutes: -5), notAfter: DateTimeOffset.UtcNow.AddDays(days: 1));
 
-        File.WriteAllBytes(path: certificatePath,bytes: certificate.Export(contentType: X509ContentType.Pkcs12,password: certificatePassword));
+        File.WriteAllBytes(path: certificatePath, bytes: certificate.Export(contentType: X509ContentType.Pkcs12, password: certificatePassword));
 
         environment["ASPNETCORE_Kestrel__Certificates__Default__Path"] = certificatePath;
         environment["ASPNETCORE_Kestrel__Certificates__Default__Password"] = certificatePassword;
@@ -709,7 +709,7 @@ notBefore:             DateTimeOffset.UtcNow.AddMinutes(minutes: -5),notAfter:  
             while (true)
             {
                 IReadOnlyList<ServiceBusReceivedMessage> messages =
-                    await receiver.ReceiveMessagesAsync(maxMessages: 100,maxWaitTime: TimeSpan.FromSeconds(seconds: 1));
+                    await receiver.ReceiveMessagesAsync(maxMessages: 100, maxWaitTime: TimeSpan.FromSeconds(seconds: 1));
 
                 if (messages.Count == 0)
                 {
@@ -733,7 +733,7 @@ notBefore:             DateTimeOffset.UtcNow.AddMinutes(minutes: -5),notAfter:  
 
     private static bool ShouldKeepArtifacts() =>
         string.Equals(
-a:             Environment.GetEnvironmentVariable(variable: "CCODER_INTEGRATION_KEEP_ARTIFACTS"),b:             "true",comparisonType:             StringComparison.OrdinalIgnoreCase);
+a: Environment.GetEnvironmentVariable(variable: "CCODER_INTEGRATION_KEEP_ARTIFACTS"), b: "true", comparisonType: StringComparison.OrdinalIgnoreCase);
 
     private static int ResolveIntSetting(
         string primaryName,
@@ -742,7 +742,7 @@ a:             Environment.GetEnvironmentVariable(variable: "CCODER_INTEGRATION_
     {
         string raw = ResolveOptionalSetting(variableNames: [primaryName, secondaryName]);
 
-        return int.TryParse(s: raw,result: out int value)
+        return int.TryParse(s: raw, result: out int value)
             ? value
             : fallback;
     }
@@ -753,8 +753,8 @@ a:             Environment.GetEnvironmentVariable(variable: "CCODER_INTEGRATION_
         {
             string value =
                 Environment.GetEnvironmentVariable(variable: variableName)
-                ?? Environment.GetEnvironmentVariable(variable: variableName,target: EnvironmentVariableTarget.User)
-                ?? Environment.GetEnvironmentVariable(variable: variableName,target: EnvironmentVariableTarget.Machine);
+                ?? Environment.GetEnvironmentVariable(variable: variableName, target: EnvironmentVariableTarget.User)
+                ?? Environment.GetEnvironmentVariable(variable: variableName, target: EnvironmentVariableTarget.Machine);
 
             if (!string.IsNullOrWhiteSpace(value: value))
             {
@@ -801,7 +801,7 @@ a:             Environment.GetEnvironmentVariable(variable: "CCODER_INTEGRATION_
         }
 
         string roamingNpmFunc = Path.Combine(
-path1:             Environment.GetFolderPath(folder: Environment.SpecialFolder.ApplicationData),path2:             "npm",path3:             "func.cmd");
+path1: Environment.GetFolderPath(folder: Environment.SpecialFolder.ApplicationData), path2: "npm", path3: "func.cmd");
 
         if (File.Exists(path: roamingNpmFunc))
         {
