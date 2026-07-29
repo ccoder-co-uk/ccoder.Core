@@ -7,7 +7,7 @@ using Xunit;
 
 namespace cCoder.Core.Tests;
 
-public sealed class ApiExposureTests
+public sealed partial class ApiExposureTests
 {
     [Theory]
     [InlineData(null, false, true)]
@@ -19,6 +19,8 @@ public sealed class ApiExposureTests
         bool isProduction,
         bool expected)
     {
+        // Given
+
         // When
         bool result =
             WebApplicationExtensions.ShouldExposeApiSurface(

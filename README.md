@@ -36,12 +36,23 @@ ContentManagement__ConnectionString
 DocumentManagement__ConnectionString
 Logging__ConnectionString
 Mail__ConnectionString
+Packaging__ConnectionString
 Workflow__ConnectionString
 ```
 
 Optional provider credentials, such as Mail or Azure Service Bus credentials,
-use the same `Section__Property` naming shown by the matching appsettings
-section.
+and AI provider API keys use the same `Section__Property` naming shown by the
+matching appsettings section.
+
+The Microsoft Graph integration path requires:
+
+```text
+Mail__MicrosoftGraph__TenantId
+Mail__MicrosoftGraph__ClientId
+Mail__MicrosoftGraph__ClientSecret
+Mail__MicrosoftGraph__SendUser
+Mail__MicrosoftGraph__ReceiveUser
+```
 
 After setting those variables, restart Visual Studio so it receives the updated
 environment, select the Web and HostedServices startup projects, and press F5.
@@ -56,19 +67,20 @@ dotnet build src\cCoder.Core.slnx -c Release --no-restore
 dotnet test src\cCoder.Core.slnx -c Release --no-build --settings src\cCoder.Core.runsettings
 ```
 
-The full solution test suite requires the acceptance infrastructure connection strings:
-
-```powershell
-$env:CCODER_ACCEPTANCE_CORE_CONNECTION_STRING = "Server=...;Database=Core;..."
-$env:CCODER_ACCEPTANCE_SSO_CONNECTION_STRING = "Server=...;Database=Security;..."
-```
-
-The acceptance and integration tests append suite-specific suffixes to the configured database names, reset those databases before running, and drop them during cleanup. The integration suite defaults to HTTP eventing; set `CCODER_INTEGRATION_EVENT_PROVIDER=ServiceBus` plus `CCODER_INTEGRATION_SERVICE_BUS_CONNECTION_STRING` to exercise Azure Service Bus eventing.
+The acceptance and integration tests use the same
+`AppSecurity__ConnectionString`, `Security__ConnectionString`, and
+`Security__DecryptionKey` variables as the applications. A single shared test
+configuration source appends `-acceptance-{guid}` to both database names,
+resets those isolated databases before running, and drops them during cleanup.
+The integration suite defaults to HTTP eventing. Set
+`Eventing__ProviderType=ServiceBus` and
+`Eventing__ServiceBus__ConnectionString` to exercise Azure Service Bus
+eventing.
 
 When validating local changes across unpublished Security/AppSecurity repositories, the integration fixture can build against sibling local repositories:
 
 ```powershell
-$env:CCODER_INTEGRATION_LOCAL_SECURITY_ASSEMBLY_VERSION = "2026.4.29.2038"
+$env:CoreIntegrationTests__LocalSecurityAssemblyVersion = "2026.4.29.2038"
 dotnet test src\Apps\cCoder.IntegrationTests\cCoder.IntegrationTests.csproj /p:UseLocalSecurity=true /p:UseLocalAppSecurity=true
 ```
 

@@ -23,6 +23,7 @@ public static class IServiceCollectionExtensions
         CoreConfiguration configuration = new();
         applicationConfiguration.Bind(configuration);
         configure?.Invoke(configuration);
+        services.AddApplicationLogging(applicationConfiguration);
         services.AddDependencies(configuration);
         services.AddOrchestrations();
         services.AddExposures();
@@ -33,6 +34,26 @@ public static class IServiceCollectionExtensions
 
         return services;
     }
+
+    private static void AddApplicationLogging(
+        this IServiceCollection services,
+        IConfiguration applicationConfiguration) =>
+        services.AddLogging(configure: logBuilder =>
+        {
+            logBuilder.ClearProviders();
+            logBuilder.AddFilter(
+                levelFilter: level => level >= LogLevel.Debug);
+
+            logBuilder.AddSimpleConsole(configure: options =>
+            {
+                options.TimestampFormat = "yyyy-MM-ddTHH:mm:ss ";
+                options.SingleLine = true;
+            });
+
+            logBuilder.AddConfiguration(
+                configuration:
+                    applicationConfiguration.GetSection(key: "Logging"));
+        });
 
     private static void AddDependencies(
         this IServiceCollection services,

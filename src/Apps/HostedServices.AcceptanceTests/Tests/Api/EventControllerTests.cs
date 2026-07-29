@@ -449,7 +449,7 @@ condition: () =>
     }
 
     [Fact]
-    public async Task Post_GivenAppDeleteEvent_ShouldRemoveCrossDomainChildrenButKeepRootApp()
+    public async Task Post_GivenAppDeleteEvent_ShouldRemoveAppAfterCrossDomainChildren()
     {
         // Given
         int appId = await CreateAppAsync();
@@ -482,10 +482,10 @@ condition: () =>
                         .GetRequiredService<ICoreContextFactory>()
                         .CreateCoreContext();
 
-                    return !waitCore.Set<Role>()
+                    return !waitCore.Set<AppEntity>()
                         .IgnoreQueryFilters()
-                        .Any(predicate: role => role.AppId == appId);
-                }, because: "app_delete should remove cross-domain children");
+                        .Any(predicate: app => app.Id == appId);
+                }, because: "app_delete should remove the app after its cross-domain children");
 
             using IServiceScope scope = fixture.Factory.Services.CreateScope();
 
@@ -500,7 +500,7 @@ condition: () =>
                 .IgnoreQueryFilters()
                 .Any(predicate: app => app.Id == appId)
                 .Should()
-                .BeTrue();
+                .BeFalse();
 
             core.Set<Role>()
                 .IgnoreQueryFilters()

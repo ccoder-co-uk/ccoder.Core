@@ -3,6 +3,7 @@
 // ---------------------------------------------------------------
 
 using cCoder.AppSecurity.Models;
+using cCoder.AI.Models.Configurations;
 using cCoder.ContentManagement.Models;
 using cCoder.DocumentManagement.Models;
 using cCoder.Eventing.Models;
@@ -18,6 +19,7 @@ public sealed class CoreConfiguration
 {
     public CoreConfiguration()
     {
+        AI = new AIConfiguration();
         AppSecurity = new AppSecurityConfiguration();
         ContentManagement = new ContentManagementConfiguration();
         DocumentManagement = new DocumentManagementConfiguration();
@@ -30,6 +32,7 @@ public sealed class CoreConfiguration
         Api = new ApiConfiguration();
     }
 
+    public AIConfiguration AI { get; set; }
     public AppSecurityConfiguration AppSecurity { get; set; }
     public ContentManagementConfiguration ContentManagement { get; set; }
     public DocumentManagementConfiguration DocumentManagement { get; set; }

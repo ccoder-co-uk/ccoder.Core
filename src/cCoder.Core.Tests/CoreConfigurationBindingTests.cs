@@ -14,10 +14,18 @@ public sealed partial class CoreConfigurationBindingTests
     [Fact]
     public void CoreConfiguration_ShouldOnlyExposeDomainConfigurationObjects()
     {
-        typeof(CoreConfiguration)
-            .GetProperties()
+        // Given
+        Type configurationType = typeof(CoreConfiguration);
+
+        // When
+        System.Reflection.PropertyInfo[] properties =
+            configurationType.GetProperties();
+
+        // Then
+        properties
             .Should()
-            .OnlyContain(property => property.PropertyType.IsClass);
+            .OnlyContain(
+                predicate: property => property.PropertyType.IsClass);
     }
 
     [Fact]

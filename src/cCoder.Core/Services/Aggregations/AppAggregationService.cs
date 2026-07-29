@@ -92,8 +92,7 @@ internal sealed partial class AppAggregationService(
         {
             ValidateAppOnDelete(appId: appId);
 
-            if (!string.IsNullOrWhiteSpace(
-                value: configuration.Eventing.ProviderType))
+            if (HasExternalEventProvider(configuration: configuration))
             {
                 await contentManagementAppService.DeleteAppAsync(
                     appId: appId);
@@ -108,6 +107,21 @@ internal sealed partial class AppAggregationService(
             await contentManagementAppService.DeleteAppAsync(appId: appId);
             await appSecurityAppService.DeleteAppAsync(appId: appId);
         });
+
+    private static bool HasExternalEventProvider(
+        CoreConfiguration configuration) =>
+        string.Equals(
+            a: configuration.Eventing.ProviderType,
+            b: "Http",
+            comparisonType: StringComparison.OrdinalIgnoreCase)
+        && !string.IsNullOrWhiteSpace(
+            value: configuration.Eventing.Http.HubUrl)
+        || string.Equals(
+            a: configuration.Eventing.ProviderType,
+            b: "ServiceBus",
+            comparisonType: StringComparison.OrdinalIgnoreCase)
+        && !string.IsNullOrWhiteSpace(
+            value: configuration.Eventing.ServiceBus.ConnectionString);
 
     private static App MergeAppGraph(App source, App target)
     {

@@ -407,7 +407,7 @@ class PieChart extends Widget {
                 labels: {
                     visible: true,
                     background: "transparent",
-                    template: "#= category #: \n #= kendo.toString(value, type.aggregateMoneyFormat)#",
+                    template: "#= category #: #= kendo.toString(value, type.aggregateMoneyFormat)#",
                 }
             },
             legend: {
@@ -430,6 +430,7 @@ class PieChart extends Widget {
         this.kendoObject.refresh();
     }
 }
+
 ﻿class ConfirmDialog extends Dialog {
 
     init(callback) {

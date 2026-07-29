@@ -35,7 +35,6 @@ public sealed partial class ApiRootControllerTests
         typeNames.Should()
             .Contain(
 expected:         [
-            "SSORole",
             "Role",
             "Privilege",
             "User",
@@ -74,7 +73,6 @@ expected:         [
         contextTypes.Should()
             .Contain(
 expected:         [
-            "Security/SSORole",
             "Workflow/FlowDefinition",
         ]);
 
