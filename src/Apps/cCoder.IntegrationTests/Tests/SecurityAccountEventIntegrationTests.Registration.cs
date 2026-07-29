@@ -17,6 +17,7 @@ public sealed partial class SecurityAccountEventIntegrationTests
     public async Task Registration_SendsConfirmationEmailAndCompletesRegistration()
     {
         // Given
+        ValidateExternalMailConfiguration();
         await EnsureMailSenderAsync();
         RegisterUser user = CreateRegisterUser(purpose: "registration");
         await CleanupAccountAsync(email: user.Email);
