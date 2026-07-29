@@ -17,6 +17,7 @@ public sealed partial class SecurityAccountEventIntegrationTests
     public async Task Invitation_CreatesAppUserQueuesInvitationEmailAndAllowsAcceptedLogin()
     {
         // Given
+        ValidateExternalMailConfiguration();
         await EnsureMailSenderAsync();
         RegisterUser user = CreateRegisterUser(purpose: "invitation");
         await CleanupAccountAsync(email: user.Email);

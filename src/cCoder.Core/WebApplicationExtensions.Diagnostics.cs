@@ -4,8 +4,9 @@
 
 using System.Security;
 using System.Web;
-using cCoder.Core.Services.Foundations.ContentManagement;
 using cCoder.Data;
+using cCoder.Core.Services.Foundations.ContentManagement;
+using cCoder.Core.Models;
 using cCoder.Security.Data.EF;
 using cCoder.Security.Data.EF.Dependencies;
 using cCoder.Security.Objects.Entities;
@@ -61,7 +62,8 @@ text: "{ \"error\": \"" + exception.Message.Replace(oldValue: "\"", newValue: "\
             return;
         }
 
-        Config config = context.RequestServices.GetRequiredService<Config>();
+        CoreConfiguration configuration =
+            context.RequestServices.GetRequiredService<CoreConfiguration>();
         string ssoUserId = "Guest";
 
         string url = HttpUtility.UrlDecode(str: request.GetDisplayUrl());
@@ -69,8 +71,10 @@ text: "{ \"error\": \"" + exception.Message.Replace(oldValue: "\"", newValue: "\
         string logEntry =
             $"{context.Connection.RemoteIpAddress} as {ssoUserId}: {request.Method} - {url}";
 
-        if (config.ConnectionStrings?.TryGetValue(key: "SSO", value: out string ssoConnectionString) == true
-            && !string.IsNullOrWhiteSpace(value: ssoConnectionString)
+        string ssoConnectionString =
+            configuration.Security.ConnectionString;
+
+        if (!string.IsNullOrWhiteSpace(value: ssoConnectionString)
             && await SqlTableExistsAsync(connectionString: ssoConnectionString, schema: "dbo", table: "Sessions", cancellationToken: context.RequestAborted)
             && await SqlTableExistsAsync(connectionString: ssoConnectionString, schema: "dbo", table: "UserEvents", cancellationToken: context.RequestAborted))
         {
@@ -88,8 +92,15 @@ text: "{ \"error\": \"" + exception.Message.Replace(oldValue: "\"", newValue: "\
 
                 string tenantId = null;
 
-                if (config.ConnectionStrings?.TryGetValue(key: "Core", value: out string coreConnectionString) == true
-                    && await SqlTableExistsAsync(connectionString: coreConnectionString, schema: "CMS", table: "Apps", cancellationToken: context.RequestAborted))
+                string contentManagementConnectionString =
+                    configuration.ContentManagement.ConnectionString;
+
+                if (!string.IsNullOrWhiteSpace(value: contentManagementConnectionString)
+                    && await SqlTableExistsAsync(
+                        connectionString: contentManagementConnectionString,
+                        schema: "CMS",
+                        table: "Apps",
+                        cancellationToken: context.RequestAborted))
                 {
                     tenantId = appService.GetAppByDomain(
                         domain: request.Host.Host,

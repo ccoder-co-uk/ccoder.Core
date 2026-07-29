@@ -44,19 +44,46 @@ public sealed partial class SecurityAccountEventIntegrationTests(IntegrationAcce
 
     private readonly IntegrationAcceptanceFixture fixture = fixture;
 
+    private void ValidateExternalMailConfiguration()
+    {
+        string[] missingVariables =
+        [
+            .. new Dictionary<string, string>
+            {
+                ["Mail__MicrosoftGraph__TenantId"] =
+                    fixture.Settings.MailTenantId,
+                ["Mail__MicrosoftGraph__ClientId"] =
+                    fixture.Settings.MailClientId,
+                ["Mail__MicrosoftGraph__ClientSecret"] =
+                    fixture.Settings.MailClientSecret,
+                ["Mail__MicrosoftGraph__SendUser"] =
+                    fixture.Settings.MailSendUser,
+                ["Mail__MicrosoftGraph__ReceiveUser"] =
+                    fixture.Settings.MailReceiveUser,
+            }
+            .Where(predicate:
+                pair => string.IsNullOrWhiteSpace(
+                    value: pair.Value))
+            .Select(selector: pair => pair.Key)
+        ];
+
+        if (missingVariables.Length > 0)
+        {
+            throw new InvalidOperationException(
+                "External mail integration requires: "
+                + string.Join(
+                    separator: ", ",
+                    value: missingVariables));
+        }
+    }
+
     private async Task EnsureMailSenderAsync()
     {
         await using CoreDataContext core = CreateCoreContext();
 
-        string sendUser = ReadMailSetting(
-            names:
-            [
-                "CCODER_MAIL_INTEGRATION_SEND_USER",
-                "CCODER_MAIL_INTEGRATION_SMTP_USER"
-            ]);
-
-        string from = TryReadMailSetting(names: "CCODER_MAIL_INTEGRATION_SMTP_FROM") ?? sendUser;
-        string sendHost = TryReadMailSetting(names: "CCODER_MAIL_INTEGRATION_SEND_HOST") ?? "graph.microsoft.com";
+        string sendUser = fixture.Settings.MailSendUser;
+        string from = sendUser;
+        string sendHost = "graph.microsoft.com";
 
         bool hasMailSender = await core.Set<MailSender>()
             .IgnoreQueryFilters()
@@ -309,13 +336,7 @@ content:                     $"Timed out waiting for the default Users role assi
     {
         DateTimeOffset deadline = DateTimeOffset.UtcNow.AddMinutes(minutes: 3);
 
-        string receiveUser = ReadMailSetting(
-            names:
-            [
-                "CCODER_MAIL_INTEGRATION_RECEIVE_USER",
-                "CCODER_MAIL_INTEGRATION_SEND_USER",
-                "CCODER_MAIL_INTEGRATION_SMTP_USER"
-            ]);
+        string receiveUser = fixture.Settings.MailReceiveUser;
 
         while (DateTimeOffset.UtcNow < deadline)
         {
@@ -525,55 +546,17 @@ entities:             await core.Set<ReceivedEmail>()
         return tokenId;
     }
 
-    private static RegisterUser CreateRegisterUser(string purpose) =>
+    private RegisterUser CreateRegisterUser(string purpose) =>
         new()
         {
             DisplayName = $"Core {purpose} User",
-            Email = ReadMailSetting(
-                names:
-                [
-                    "CCODER_MAIL_INTEGRATION_TO",
-                    "CCODER_MAIL_INTEGRATION_RECEIVE_USER",
-                    "CCODER_MAIL_INTEGRATION_SEND_USER",
-                    "CCODER_MAIL_INTEGRATION_SMTP_USER"
-                ]),
+            Email = fixture.Settings.MailReceiveUser,
             Password = DefaultPassword,
             Culture = "en-GB",
             PhoneNumber = "01234567890",
             AppId = BaselineAppId,
             TenantId = "acceptance"
         };
-
-    private static string ReadMailSetting(params string[] names)
-    {
-        string value = TryReadMailSetting(names: names);
-
-        if (!string.IsNullOrWhiteSpace(value: value))
-        {
-            return value;
-        }
-
-        throw new InvalidOperationException(
-            $"Missing mail integration environment variable. Checked: {string.Join(separator: ", ",value: names)}.");
-    }
-
-    private static string TryReadMailSetting(params string[] names)
-    {
-        foreach (string name in names)
-        {
-            string value =
-                Environment.GetEnvironmentVariable(variable: name)
-                ?? Environment.GetEnvironmentVariable(variable: name,target: EnvironmentVariableTarget.User)
-                ?? Environment.GetEnvironmentVariable(variable: name,target: EnvironmentVariableTarget.Machine);
-
-            if (!string.IsNullOrWhiteSpace(value: value))
-            {
-                return value;
-            }
-        }
-
-        return null;
-    }
 
     private static async Task WaitUntilAsync(
         Func<Task<bool>> predicate,

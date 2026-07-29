@@ -17,7 +17,8 @@ internal static class Program
             FunctionsApplication.CreateBuilder(args: []);
 
         builder.ConfigureFunctionsWebApplication();
-        builder.Services.AddWorkflowApplication();
+        builder.Services.AddWorkflow(
+            configuration: builder.Configuration);
 
         await builder
             .Build()

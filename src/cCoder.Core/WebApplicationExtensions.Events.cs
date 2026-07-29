@@ -30,7 +30,6 @@ public static partial class WebApplicationExtensions
     private static WebApplication ListenToExternalEvents(this WebApplication app)
     {
         app.UseAppSecurityHostedServiceAddEventHandlers();
-        app.StartContentManagementHostedServices();
         app.StartDocumentManagementHostedServices();
         app.StartLoggingHostedServices();
         app.StartMailHostedServices();
@@ -38,6 +37,7 @@ public static partial class WebApplicationExtensions
         app.UseCoreEventHandlers();
         app.UseMailHostedServiceEventHandlers();
         app.UseHostedServicesServiceBusEventBridge();
+        app.StartContentManagementHostedServices();
         app.UseAppSecurityHostedServiceUpdateEventHandlers();
         app.UseAppSecurityHostedServiceDeleteEventHandlers();
         return app;
@@ -57,13 +57,13 @@ public static partial class WebApplicationExtensions
         IEventHub eventHub = scope.ServiceProvider.GetRequiredService<IEventHub>();
 
         eventHub.ListenToEvent<SecurityAccountEvent, ISecurityAccountEmailAggregationService>(
-name: SecurityAccountEventNames.RegistrationCreated, handler: static (service, accountEvent) => service.QueueRegistrationCreatedSecurityAccountEventEmailAsync(accountEvent: accountEvent));
+name: SecurityAccountEventKind.RegistrationCreated.ToEventName(), handler: static (service, accountEvent) => service.QueueRegistrationCreatedSecurityAccountEventEmailAsync(accountEvent: accountEvent));
 
         eventHub.ListenToEvent<SecurityAccountEvent, ISecurityAccountEmailAggregationService>(
-name: SecurityAccountEventNames.InvitationCreated, handler: static (service, accountEvent) => service.QueueInvitationCreatedSecurityAccountEventEmailAsync(accountEvent: accountEvent));
+name: SecurityAccountEventKind.InvitationCreated.ToEventName(), handler: static (service, accountEvent) => service.QueueInvitationCreatedSecurityAccountEventEmailAsync(accountEvent: accountEvent));
 
         eventHub.ListenToEvent<SecurityAccountEvent, ISecurityAccountEmailAggregationService>(
-name: SecurityAccountEventNames.PasswordResetRequested, handler: static (service, accountEvent) => service.QueuePasswordResetRequestedSecurityAccountEventEmailAsync(accountEvent: accountEvent));
+name: SecurityAccountEventKind.PasswordResetRequested.ToEventName(), handler: static (service, accountEvent) => service.QueuePasswordResetRequestedSecurityAccountEventEmailAsync(accountEvent: accountEvent));
 
         return app;
     }

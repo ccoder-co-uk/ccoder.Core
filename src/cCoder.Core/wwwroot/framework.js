@@ -527,7 +527,7 @@ class PieChart extends Widget {
                 labels: {
                     visible: true,
                     background: "transparent",
-                    template: "#= category #: \n #= kendo.toString(value, type.aggregateMoneyFormat)#",
+                    template: "#= category #: #= kendo.toString(value, type.aggregateMoneyFormat)#",
                 }
             },
             legend: {
@@ -550,6 +550,7 @@ class PieChart extends Widget {
         this.kendoObject.refresh();
     }
 }
+
 ﻿class ConfirmDialog extends Dialog {
 
     init(callback) {
@@ -972,15 +973,19 @@ class ConsoleDialog extends Dialog {
             that.enableMultiselectFilteringOn(that.columns[i]);
         }
 
+        if (that.searchable && that.search == null) {
+            that.search = {
+                fields: that.columns
+                    .filter(column => column.field && (column.type === "string" || column.Type === "string"))
+                    .map(column => column.field)
+            };
+        }
+
         await that.buildConfig.apply(that);
 
         if (that.searchable) {
             if (that.config.toolbar == null) { that.config.toolbar = []; }
             that.config.toolbar.push({ name: "search" });
-
-            that.search = that.search != null
-                ? that.search
-                : { fields: that.columns.filter(x => x.Type == "string").map(c => c.field) };
         }
 
         if (that.exports) {
@@ -1020,6 +1025,30 @@ class ConsoleDialog extends Dialog {
     
     postInit() {
         let that = this;
+
+        if (that.searchable) {
+            let searchInput = $(".k-grid-search input", that.gridElement);
+            let searchName = (that.gridName || "grid").replace(/[^a-zA-Z0-9_-]/g, "") + "-grid-search";
+
+            searchInput
+                .attr("name", searchName)
+                .attr("type", "search")
+                .attr("autocomplete", "off")
+                .attr("autocapitalize", "none")
+                .attr("spellcheck", "false")
+                .attr("data-1p-ignore", "true")
+                .attr("data-lpignore", "true")
+                .prop("readonly", true)
+                .one("focus pointerdown", function () {
+                    $(this).prop("readonly", false);
+                });
+
+            // Credential managers can populate the generated Kendo input before
+            // GridWidget gets a chance to identify it as a search control.
+            if (searchInput.val()) {
+                searchInput.val("").trigger("input");
+            }
+        }
 
         if (that.headerTooltip) {
             let gridHead = that.kendoObject.thead;
@@ -1274,6 +1303,7 @@ class ConsoleDialog extends Dialog {
         }
     }
 }
+
 ﻿class ContextMenuWidget extends Widget {
     constructor(element) {
         super(element);
@@ -3758,8 +3788,7 @@ class Flow {
 ﻿class WorkflowDesigner {
     constructor(container, flow) {
 
-        //TODO: handle this not being available for some reason
-        window.flowTheme = session.app.Config.Themes[session.theme];
+        window.flowTheme = resolveWorkflowTheme(session.app, session.theme);
 
         this.stepTypes = window.knownTypes.filter(ctx => ctx.Name === "Workflow")[0].Types;
         this.workspace = $(".workspace", container);
@@ -4070,4 +4099,28 @@ class Flow {
             window.removeEventListener('keydown', this.listenForEsc);
         }
     }
+}
+
+function resolveWorkflowTheme(app, themeName) {
+    const themes = app?.Config?.Themes;
+    const themeEntries = themes && typeof themes === "object"
+        ? Object.entries(themes)
+        : [];
+    const requestedTheme = themeName?.toLowerCase();
+    const defaultTheme = app?.DefaultTheme?.toLowerCase();
+    const candidates = [
+        themes?.[themeName],
+        themeEntries.find(([name]) => name.toLowerCase() === requestedTheme)?.[1],
+        themeEntries.find(([name]) => name.toLowerCase() === defaultTheme)?.[1],
+        themes?.Default,
+        ...themeEntries.map(([, theme]) => theme)
+    ];
+
+    return candidates.find(theme =>
+        theme?.colours?.primary && theme?.colours?.secondary) ?? {
+        colours: {
+            primary: "#142A48",
+            secondary: "#52BCFF"
+        }
+    };
 }
