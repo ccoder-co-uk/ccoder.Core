@@ -12,6 +12,7 @@ using cCoder.Security.Objects.Entities;
 using cCoder.Workflow.Activities.Models;
 using cCoder.Workflow.Brokers;
 using cCoder.Workflow.Services.Processings;
+using cCoder.Core.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace HostedServices;
@@ -20,7 +21,7 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
     IWorkflowInstanceManagementBroker workflowInstanceManagementBroker,
     ICoreContextFactory coreContextFactory,
     IServiceProvider serviceProvider,
-    IConfiguration configuration,
+    CoreConfiguration configuration,
     ILogger<HostedServicesWorkflowInstanceManagementOrchestrationService> log)
     : IWorkflowInstanceProcessingService
 {
@@ -142,9 +143,9 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
 
     private TimeSpan GetQueuePollingInterval()
     {
-        int pollingIntervalMilliseconds = configuration.GetValue(
-            key: "Workflow:QueueInstanceManagement:PollingIntervalMilliseconds",
-            defaultValue: 60000);
+        int pollingIntervalMilliseconds =
+            configuration.Workflow.QueueInstanceManagement
+                .PollingIntervalMilliseconds;
 
         return TimeSpan.FromMilliseconds(
             value: pollingIntervalMilliseconds);
@@ -224,7 +225,7 @@ message:                 "Requeued {Count} Workflow instances that were still ex
 
             WorkflowRequest request = new()
             {
-                Api = $"https://{dbInstance.FlowDefinition.App.Domain}:{configuration["Settings:sslPort"] ?? "443"}/Api/",
+                Api = $"https://{dbInstance.FlowDefinition.App.Domain}:{configuration.Workflow.SslPort}/Api/",
                 FlowId = dbInstance.FlowDefinition.Id,
                 AuthToken = token.Id,
                 InstanceId = dbInstance.Id
@@ -270,7 +271,7 @@ instanceId:                 dbInstance.Id,context:                 $"Workflow ex
             AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
         })
         {
-            BaseAddress = new Uri(configuration["Services:Workflow"])
+            BaseAddress = new Uri(configuration.Workflow.ServiceUrl)
         };
 
         return await api.PostAsync(

@@ -18,6 +18,29 @@ internal sealed class AcceptanceSettings
 
     public int ServiceBusMaxConcurrency { get; init; } = 1;
 
+    public string MailTenantId { get; init; } = string.Empty;
+
+    public string MailClientId { get; init; } = string.Empty;
+
+    public string MailClientSecret { get; init; } = string.Empty;
+
+    public string MailSendUser { get; init; } = string.Empty;
+
+    public string MailReceiveUser { get; init; } = string.Empty;
+
+    public bool KeepArtifacts { get; init; }
+
+    public bool UseLocalWorkflow { get; init; }
+
+    public bool UseLocalSecurity { get; init; }
+
+    public bool UseLocalAppSecurity { get; init; }
+
+    public bool UseLocalData { get; init; }
+
+    public string LocalSecurityAssemblyVersion { get; init; } =
+        string.Empty;
+
     public bool UseServiceBusEventing =>
         string.Equals(a: EventProviderType,b: "ServiceBus",comparisonType: StringComparison.OrdinalIgnoreCase);
 }

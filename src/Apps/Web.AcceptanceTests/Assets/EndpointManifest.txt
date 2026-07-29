@@ -22,8 +22,6 @@ DELETE Api/ContentManagement/Resource({key})
 DELETE Api/ContentManagement/Script({key})
 DELETE Api/ContentManagement/Submission({key})
 DELETE Api/ContentManagement/Template({key})
-DELETE Api/Core/Package({key})
-DELETE Api/Core/PackageItem({key})
 DELETE Api/DocumentManagement/File({key})
 DELETE Api/DocumentManagement/FileContent({key})
 DELETE Api/DocumentManagement/Folder({key})
@@ -112,19 +110,7 @@ GET Api/ContentManagement/Submission/$count
 GET Api/ContentManagement/Template
 GET Api/ContentManagement/Template({key})
 GET Api/ContentManagement/Template/$count
-GET Api/Core
-GET Api/Core/$metadata
-GET Api/Core/MailProviders
-GET Api/Core/MailProviders/Receivers
-GET Api/Core/MailProviders/Senders
-GET Api/Core/Package
-GET Api/Core/Package({key})
-GET Api/Core/Package/$count
 GET Api/Core/Package/Export
-GET Api/Core/PackageItem
-GET Api/Core/PackageItem({key})
-GET Api/Core/PackageItem/$count
-GET Api/Core/ReceivedEmail/ReceiveTop/{count:int}
 GET Api/DocumentManagement
 GET Api/DocumentManagement/$metadata
 GET Api/DocumentManagement/File
@@ -170,6 +156,7 @@ GET Api/Mail/ReceivedEmail/ReceiveTop/{count:int}
 GET Api/Mail/SentEmail
 GET Api/Mail/SentEmail({key})
 GET Api/Mail/SentEmail/$count
+GET Api/Model/Providers/{provider}/Available
 GET Api/Packaging
 GET Api/Packaging/$metadata
 GET Api/Packaging/Package
@@ -242,8 +229,6 @@ PATCH Api/ContentManagement/Resource({key})
 PATCH Api/ContentManagement/Script({key})
 PATCH Api/ContentManagement/Submission({key})
 PATCH Api/ContentManagement/Template({key})
-PATCH Api/Core/Package({key})
-PATCH Api/Core/PackageItem({key})
 PATCH Api/DocumentManagement/File({key})
 PATCH Api/DocumentManagement/FileContent({key})
 PATCH Api/DocumentManagement/Folder({key})
@@ -262,6 +247,11 @@ PATCH Api/Workflow/FlowInstanceData({key})
 PATCH Api/Workflow/ScheduledTask({key})
 PATCH Api/Workflow/WorkflowEvent({key})
 POST Api
+POST Api/AI/Agents
+POST Api/AI/Agents/Stream
+POST Api/AI/Chat
+POST Api/AI/Chat/Stream
+POST Api/AI/Completions
 POST Api/Account/AcceptInvite
 POST Api/Account/ConfirmForgotPassword
 POST Api/Account/ConfirmRegistration
@@ -294,12 +284,9 @@ POST Api/ContentManagement/Submission
 POST Api/ContentManagement/Template
 POST Api/ContentManagement/Template/HtmlToPdf
 POST Api/ContentManagement/Template/Render
-POST Api/Core/Package
 POST Api/Core/Package/Import
 POST Api/Core/Package/ImportThis
-POST Api/Core/PackageItem
 POST Api/Core/QueuedEmail/AddTemplatedEmail()
-POST Api/Core/ReceivedEmail/Receive
 POST Api/DocumentManagement/File
 POST Api/DocumentManagement/FileContent
 POST Api/DocumentManagement/Folder
@@ -317,6 +304,7 @@ POST Api/Mail/QueuedEmail
 POST Api/Mail/ReceivedEmail
 POST Api/Mail/ReceivedEmail/Receive
 POST Api/Mail/SentEmail
+POST Api/Model/Providers/{provider}/Import
 POST Api/Packaging/Package
 POST Api/Packaging/PackageItem
 POST Api/Security/SSORole
@@ -349,8 +337,6 @@ PUT Api/ContentManagement/Resource({key})
 PUT Api/ContentManagement/Script({key})
 PUT Api/ContentManagement/Submission({key})
 PUT Api/ContentManagement/Template({key})
-PUT Api/Core/Package({key})
-PUT Api/Core/PackageItem({key})
 PUT Api/DocumentManagement/File({key})
 PUT Api/DocumentManagement/FileContent({key})
 PUT Api/DocumentManagement/Folder({key})

@@ -115,7 +115,26 @@
       "Name": "HostedServices.IServiceCollectionExtensions",
       "StandardElementType": "App",
       "Properties": [],
-      "Methods": []
+      "Methods": [
+        {
+          "Name": "AddHostedServices",
+          "Inputs": [
+            {
+              "Name": "services",
+              "Type": "IServiceCollection"
+            },
+            {
+              "Name": "applicationConfiguration",
+              "Type": "IConfiguration"
+            },
+            {
+              "Name": "configure",
+              "Type": "System.Action\u003CcCoder.Core.Models.CoreConfiguration\u003E"
+            }
+          ],
+          "ReturnType": "IServiceCollection"
+        }
+      ]
     },
     {
       "Name": "HostedServices.Program",

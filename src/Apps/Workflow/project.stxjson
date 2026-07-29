@@ -76,6 +76,36 @@
       "Name": "Workflow.IServiceCollectionExtensions",
       "StandardElementType": "App",
       "Properties": [],
+      "Methods": [
+        {
+          "Name": "AddWorkflow",
+          "Inputs": [
+            {
+              "Name": "services",
+              "Type": "Microsoft.Extensions.DependencyInjection.IServiceCollection"
+            },
+            {
+              "Name": "configuration",
+              "Type": "Microsoft.Extensions.Configuration.IConfiguration"
+            },
+            {
+              "Name": "configure",
+              "Type": "System.Action\u003CWorkflow.Models.WorkflowConfiguration\u003E"
+            }
+          ],
+          "ReturnType": "Microsoft.Extensions.DependencyInjection.IServiceCollection"
+        }
+      ]
+    },
+    {
+      "Name": "Workflow.Models.WorkflowConfiguration",
+      "StandardElementType": "Model",
+      "Properties": [
+        {
+          "Name": "Data",
+          "Type": "cCoder.Data.Models.DataConfiguration"
+        }
+      ],
       "Methods": []
     },
     {
