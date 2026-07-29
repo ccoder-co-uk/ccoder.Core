@@ -44,6 +44,39 @@ public sealed partial class SecurityAccountEventIntegrationTests(IntegrationAcce
 
     private readonly IntegrationAcceptanceFixture fixture = fixture;
 
+    private void ValidateExternalMailConfiguration()
+    {
+        string[] missingVariables =
+        [
+            .. new Dictionary<string, string>
+            {
+                ["Mail__MicrosoftGraph__TenantId"] =
+                    fixture.Settings.MailTenantId,
+                ["Mail__MicrosoftGraph__ClientId"] =
+                    fixture.Settings.MailClientId,
+                ["Mail__MicrosoftGraph__ClientSecret"] =
+                    fixture.Settings.MailClientSecret,
+                ["Mail__MicrosoftGraph__SendUser"] =
+                    fixture.Settings.MailSendUser,
+                ["Mail__MicrosoftGraph__ReceiveUser"] =
+                    fixture.Settings.MailReceiveUser,
+            }
+            .Where(predicate:
+                pair => string.IsNullOrWhiteSpace(
+                    value: pair.Value))
+            .Select(selector: pair => pair.Key)
+        ];
+
+        if (missingVariables.Length > 0)
+        {
+            throw new InvalidOperationException(
+                "External mail integration requires: "
+                + string.Join(
+                    separator: ", ",
+                    value: missingVariables));
+        }
+    }
+
     private async Task EnsureMailSenderAsync()
     {
         await using CoreDataContext core = CreateCoreContext();

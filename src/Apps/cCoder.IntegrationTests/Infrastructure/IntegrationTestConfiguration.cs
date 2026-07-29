@@ -27,22 +27,27 @@ internal sealed class IntegrationTestConfiguration
                     "Eventing__ServiceBus__MaxConcurrency",
                 fallback: 1);
         MailTenantId =
-            AcceptanceTestConfiguration.ReadRequiredValue(
-                variableName: "Mail__MicrosoftGraph__TenantId");
+            AcceptanceTestConfiguration.ReadOptionalValue(
+                variableName: "Mail__MicrosoftGraph__TenantId")
+            ?? string.Empty;
         MailClientId =
-            AcceptanceTestConfiguration.ReadRequiredValue(
-                variableName: "Mail__MicrosoftGraph__ClientId");
+            AcceptanceTestConfiguration.ReadOptionalValue(
+                variableName: "Mail__MicrosoftGraph__ClientId")
+            ?? string.Empty;
         MailClientSecret =
-            AcceptanceTestConfiguration.ReadRequiredValue(
+            AcceptanceTestConfiguration.ReadOptionalValue(
                 variableName:
-                    "Mail__MicrosoftGraph__ClientSecret");
+                    "Mail__MicrosoftGraph__ClientSecret")
+            ?? string.Empty;
         MailSendUser =
-            AcceptanceTestConfiguration.ReadRequiredValue(
-                variableName: "Mail__MicrosoftGraph__SendUser");
+            AcceptanceTestConfiguration.ReadOptionalValue(
+                variableName: "Mail__MicrosoftGraph__SendUser")
+            ?? string.Empty;
         MailReceiveUser =
-            AcceptanceTestConfiguration.ReadRequiredValue(
+            AcceptanceTestConfiguration.ReadOptionalValue(
                 variableName:
-                    "Mail__MicrosoftGraph__ReceiveUser");
+                    "Mail__MicrosoftGraph__ReceiveUser")
+            ?? string.Empty;
         KeepArtifacts =
             AcceptanceTestConfiguration.ReadOptionalBool(
                 variableName:
