@@ -57,6 +57,9 @@ jobs:
 
       - name: Pack
         run: |
+          if (Test-Path -LiteralPath "${{ env.NUGET_DIRECTORY }}") {
+            Remove-Item -LiteralPath "${{ env.NUGET_DIRECTORY }}" -Recurse -Force
+          }
           New-Item -ItemType Directory -Path "${{ env.NUGET_DIRECTORY }}" -Force | Out-Null
           dotnet pack ccoder.Core/src/cCoder.Core/cCoder.Core.csproj -c Release --no-build --output "${{ env.NUGET_DIRECTORY }}" /p:Version="${{ steps.version.outputs.value }}"
 
