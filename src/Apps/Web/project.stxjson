@@ -283,7 +283,26 @@
       "Name": "Web.IServiceCollectionExtensions",
       "StandardElementType": "App",
       "Properties": [],
-      "Methods": []
+      "Methods": [
+        {
+          "Name": "AddWeb",
+          "Inputs": [
+            {
+              "Name": "services",
+              "Type": "IServiceCollection"
+            },
+            {
+              "Name": "applicationConfiguration",
+              "Type": "IConfiguration"
+            },
+            {
+              "Name": "configure",
+              "Type": "System.Action\u003CcCoder.Core.Models.CoreConfiguration\u003E"
+            }
+          ],
+          "ReturnType": "IServiceCollection"
+        }
+      ]
     },
     {
       "Name": "Web.Models.ApiScriptRequest",

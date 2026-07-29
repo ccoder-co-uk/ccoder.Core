@@ -1,4 +1,4 @@
-﻿// ---------------------------------------------------------------
+// ---------------------------------------------------------------
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
@@ -9,8 +9,8 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using Azure.Messaging.ServiceBus;
 using Azure.Messaging.ServiceBus.Administration;
-using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.DependencyInjection;
+using cCoder.Core.Testing;
 using cCoder.IntegrationTests.Models;
 using Xunit;
 
@@ -18,7 +18,6 @@ namespace cCoder.IntegrationTests.Infrastructure;
 
 public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
 {
-    private const string DecryptionKey = "000000000000000000000000000000000000000000000000";
     private static readonly string[] ServiceBusEventQueues =
     [
         "app_add",
@@ -68,21 +67,35 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
 
     public async Task InitializeAsync()
     {
+        IntegrationTestConfiguration configuration =
+            IntegrationTestConfiguration.Load();
+
         Settings = new AcceptanceSettings
         {
-            CoreConnectionString = AddDatabaseSuffix(variableName: "ConnectionStrings__Core"),
-            SsoConnectionString = AddDatabaseSuffix(variableName: "ConnectionStrings__SSO"),
-            DecryptionKey = DecryptionKey,
-            EventProviderType = ResolveEventProviderType(),
-            ServiceBusConnectionString = ResolveOptionalSetting(
-                variableNames:
-                [
-                    "CCODER_INTEGRATION_SERVICE_BUS_CONNECTION_STRING",
-                    "ConnectionStrings__ServiceBus",
-                    "EVENT_LIBRARY_AZURE_SERVICE_BUS_CONNECTION_STRING"
-                ]),
-            ServiceBusMaxConcurrency = ResolveIntSetting(
-primaryName: "CCODER_INTEGRATION_SERVICE_BUS_MAX_CONCURRENCY", secondaryName: "Eventing__ServiceBus__MaxConcurrency", fallback: 1)
+            CoreConnectionString =
+                configuration.Acceptance.CoreConnectionString,
+            SsoConnectionString =
+                configuration.Acceptance.SecurityConnectionString,
+            DecryptionKey =
+                configuration.Acceptance.DecryptionKey,
+            EventProviderType = configuration.EventProviderType,
+            ServiceBusConnectionString =
+                configuration.ServiceBusConnectionString,
+            ServiceBusMaxConcurrency =
+                configuration.ServiceBusMaxConcurrency,
+            MailTenantId = configuration.MailTenantId,
+            MailClientId = configuration.MailClientId,
+            MailClientSecret = configuration.MailClientSecret,
+            MailSendUser = configuration.MailSendUser,
+            MailReceiveUser = configuration.MailReceiveUser,
+            KeepArtifacts = configuration.KeepArtifacts,
+            UseLocalWorkflow = configuration.UseLocalWorkflow,
+            UseLocalSecurity = configuration.UseLocalSecurity,
+            UseLocalAppSecurity =
+                configuration.UseLocalAppSecurity,
+            UseLocalData = configuration.UseLocalData,
+            LocalSecurityAssemblyVersion =
+                configuration.LocalSecurityAssemblyVersion
         };
 
         if (Settings.UseServiceBusEventing)
@@ -154,9 +167,12 @@ fileName: ResolveFuncExecutablePath(), arguments: $"start --port {workflowHttpPo
         Dictionary<string, string> webEnvironment = CreateCommonApplicationEnvironment();
         AddHttpsCertificateEnvironment(environment: webEnvironment);
         webEnvironment["ASPNETCORE_URLS"] = WebBaseAddress.ToString();
-        webEnvironment["Settings__sslPort"] = webHttpsPort.ToString();
-        webEnvironment["Settings__enableExternalEventing"] = "true";
-        webEnvironment["Services__HostedServices"] = HostedServicesBaseAddress.ToString();
+
+        webEnvironment["Eventing__Http__HubUrl"] =
+            new Uri(
+                baseUri: HostedServicesBaseAddress,
+                relativeUri: "Api/Eventing")
+            .ToString();
 
         webApplication = new ExternalProcessApplication("Web");
 
@@ -216,7 +232,7 @@ fileName: "dotnet", arguments: $"\"{Path.Combine(path1: webOutputDirectory, path
                 await DrainServiceBusQueuesAsync();
             }
 
-            if (!ShouldKeepArtifacts()
+            if (!Settings.KeepArtifacts
                 && !string.IsNullOrWhiteSpace(value: acceptanceArtifactsRoot)
                 && Directory.Exists(path: acceptanceArtifactsRoot))
             {
@@ -288,20 +304,13 @@ fileName: "dotnet", arguments: $"build {projectPath} --no-restore -m:1 -p:BuildI
 
     private string ResolveLocalBuildProperties()
     {
-        bool useLocalWorkflow = string.Equals(
-a: Environment.GetEnvironmentVariable(variable: "CCODER_INTEGRATION_USE_LOCAL_WORKFLOW"), b: "true", comparisonType: StringComparison.OrdinalIgnoreCase);
+        bool useLocalWorkflow = Settings.UseLocalWorkflow;
+        bool useLocalSecurity = Settings.UseLocalSecurity;
+        bool useLocalAppSecurity = Settings.UseLocalAppSecurity;
+        bool useLocalData = Settings.UseLocalData;
 
-        bool useLocalSecurity = string.Equals(
-a: Environment.GetEnvironmentVariable(variable: "CCODER_INTEGRATION_USE_LOCAL_SECURITY"), b: "true", comparisonType: StringComparison.OrdinalIgnoreCase);
-
-        bool useLocalAppSecurity = string.Equals(
-a: Environment.GetEnvironmentVariable(variable: "CCODER_INTEGRATION_USE_LOCAL_APPSECURITY"), b: "true", comparisonType: StringComparison.OrdinalIgnoreCase);
-
-        bool useLocalData = string.Equals(
-a: Environment.GetEnvironmentVariable(variable: "CCODER_INTEGRATION_USE_LOCAL_DATA"), b: "true", comparisonType: StringComparison.OrdinalIgnoreCase);
-
-        string localSecurityAssemblyVersion = ResolveOptionalSetting(
-variableNames: "CCODER_INTEGRATION_LOCAL_SECURITY_ASSEMBLY_VERSION");
+        string localSecurityAssemblyVersion =
+            Settings.LocalSecurityAssemblyVersion;
 
         string localAppSecurityProject = Path.GetFullPath(
 path: Path.Combine(
@@ -460,43 +469,6 @@ path: Path.Combine(
         }
     }
 
-    private static string AddDatabaseSuffix(string variableName)
-    {
-        string connectionString = ReadRequiredConnectionString(variableName: variableName);
-
-        SqlConnectionStringBuilder builder = new(connectionString)
-        {
-            Encrypt = true,
-            TrustServerCertificate = true
-        };
-
-        string databaseName = builder.InitialCatalog ?? string.Empty;
-
-        if (string.IsNullOrWhiteSpace(value: databaseName))
-        {
-            return connectionString;
-        }
-
-        builder.InitialCatalog = $"{databaseName}-acceptance-{Guid.NewGuid():N}";
-        return builder.ConnectionString;
-    }
-
-    private static string ReadRequiredConnectionString(string variableName)
-    {
-        string connectionString =
-            Environment.GetEnvironmentVariable(variable: variableName)
-            ?? Environment.GetEnvironmentVariable(variable: variableName, target: EnvironmentVariableTarget.User)
-            ?? Environment.GetEnvironmentVariable(variable: variableName, target: EnvironmentVariableTarget.Machine);
-
-        if (!string.IsNullOrWhiteSpace(value: connectionString))
-        {
-            return connectionString;
-        }
-
-        throw new InvalidOperationException(
-            $"Acceptance connection string environment variable '{variableName}' was not found.");
-    }
-
     private static string FindRepositoryRoot()
     {
         DirectoryInfo directory = new(AppContext.BaseDirectory);
@@ -518,7 +490,6 @@ path: Path.Combine(
     {
         Dictionary<string, string> hostedServicesEnvironment = CreateCommonApplicationEnvironment();
         hostedServicesEnvironment["ASPNETCORE_URLS"] = HostedServicesBaseAddress.ToString();
-        hostedServicesEnvironment["Settings__sslPort"] = WebBaseAddress.Port.ToString();
 
         hostedServicesApplication = new ExternalProcessApplication("HostedServices");
 
@@ -577,51 +548,49 @@ fileName: "dotnet", arguments: $"\"{Path.Combine(path1: hostedServicesOutputDire
         Dictionary<string, string> environment = new()
         {
             ["ASPNETCORE_ENVIRONMENT"] = "Acceptance",
-            ["ConnectionStrings__Core"] = Settings.CoreConnectionString,
-            ["ConnectionStrings__SSO"] = Settings.SsoConnectionString,
-            ["Settings__DecryptionKey"] = Settings.DecryptionKey,
-            ["Settings__AggregateDomains"] = "false",
-            ["Services__Workflow"] = WorkflowBaseAddress.ToString(),
+            ["AppSecurity__ConnectionString"] = Settings.CoreConnectionString,
+            ["Security__ConnectionString"] = Settings.SsoConnectionString,
+            ["Security__DecryptionKey"] = Settings.DecryptionKey,
+            ["AppSecurity__AggregateDomains"] = "false",
+            ["ContentManagement__ConnectionString"] = Settings.CoreConnectionString,
+            ["ContentManagement__WorkflowServiceUrl"] = WorkflowBaseAddress.ToString(),
+            ["DocumentManagement__ConnectionString"] = Settings.CoreConnectionString,
+            ["Logging__ConnectionString"] = Settings.CoreConnectionString,
+            ["Mail__ConnectionString"] = Settings.CoreConnectionString,
+            ["Packaging__ConnectionString"] = Settings.CoreConnectionString,
+            ["Workflow__ConnectionString"] = Settings.CoreConnectionString,
+            ["Workflow__ServiceUrl"] = WorkflowBaseAddress.ToString(),
+            ["Workflow__SslPort"] = WebBaseAddress.Port.ToString(),
             ["Workflow__QueueInstanceManagement__PollingIntervalMilliseconds"] = "250",
             ["Eventing__ProviderType"] = Settings.EventProviderType,
             ["Eventing__Http__MaxConcurrency"] = "1"
         };
 
-        AddOptionalEnvironment(environment: environment, variableName: "CCODER_MAIL_GRAPH_TENANT_ID");
-        AddOptionalEnvironment(environment: environment, variableName: "CCODER_MAIL_GRAPH_CLIENT_ID");
-        AddOptionalEnvironment(environment: environment, variableName: "CCODER_MAIL_GRAPH_CLIENT_SECRET");
-        AddOptionalEnvironment(environment: environment, variableName: "CCODER_MAIL_GRAPH_BASE_URL");
-        AddOptionalEnvironment(environment: environment, variableName: "CCODER_MAIL_GRAPH_LOGIN_BASE_URL");
-        AddOptionalEnvironment(environment: environment, variableName: "CCODER_MAIL_INTEGRATION_SEND_HOST");
-        AddOptionalEnvironment(environment: environment, variableName: "CCODER_MAIL_INTEGRATION_SEND_USER");
-        AddOptionalEnvironment(environment: environment, variableName: "CCODER_MAIL_INTEGRATION_SMTP_USER");
-        AddOptionalEnvironment(environment: environment, variableName: "CCODER_MAIL_INTEGRATION_SMTP_FROM");
-        AddOptionalEnvironment(environment: environment, variableName: "CCODER_MAIL_INTEGRATION_RECEIVE_USER");
-        AddOptionalEnvironment(environment: environment, variableName: "CCODER_MAIL_INTEGRATION_TO");
-        AddOptionalEnvironment(environment: environment, variableName: "CCODER_MAIL_DEFAULT_SENDER_PROVIDER");
-        AddOptionalEnvironment(environment: environment, variableName: "CCODER_MAIL_DEFAULT_RECEIVER_PROVIDER");
+        environment["Mail__MicrosoftGraph__TenantId"] =
+            Settings.MailTenantId;
+
+        environment["Mail__MicrosoftGraph__ClientId"] =
+            Settings.MailClientId;
+
+        environment["Mail__MicrosoftGraph__ClientSecret"] =
+            Settings.MailClientSecret;
+
+        environment["Mail__MicrosoftGraph__SendUser"] =
+            Settings.MailSendUser;
+
+        environment["Mail__MicrosoftGraph__ReceiveUser"] =
+            Settings.MailReceiveUser;
 
         if (Settings.UseServiceBusEventing)
         {
-            environment["ConnectionStrings__ServiceBus"] = Settings.ServiceBusConnectionString;
+            environment["Eventing__ServiceBus__ConnectionString"] =
+                Settings.ServiceBusConnectionString;
 
             environment["Eventing__ServiceBus__MaxConcurrency"] =
                 Settings.ServiceBusMaxConcurrency.ToString();
         }
 
         return environment;
-    }
-
-    private static void AddOptionalEnvironment(
-        IDictionary<string, string> environment,
-        string variableName)
-    {
-        string value = ResolveOptionalSetting(variableNames: variableName);
-
-        if (!string.IsNullOrWhiteSpace(value: value))
-        {
-            environment[variableName] = value;
-        }
     }
 
     private void AddHttpsCertificateEnvironment(Dictionary<string, string> environment)
@@ -677,7 +646,7 @@ notBefore: DateTimeOffset.UtcNow.AddMinutes(minutes: -5), notAfter: DateTimeOffs
         if (string.IsNullOrWhiteSpace(value: Settings.ServiceBusConnectionString))
         {
             throw new InvalidOperationException(
-                "Service Bus integration mode requires CCODER_INTEGRATION_SERVICE_BUS_CONNECTION_STRING or ConnectionStrings__ServiceBus.");
+                "Service Bus integration mode requires Eventing__ServiceBus__ConnectionString.");
         }
 
         ServiceBusAdministrationClient administrationClient = new(Settings.ServiceBusConnectionString);
@@ -724,45 +693,6 @@ notBefore: DateTimeOffset.UtcNow.AddMinutes(minutes: -5), notAfter: DateTimeOffs
 
             await receiver.DisposeAsync();
         }
-    }
-
-    private static string ResolveEventProviderType() =>
-        ResolveOptionalSetting(
-            variableNames: ["CCODER_INTEGRATION_EVENT_PROVIDER", "Eventing__ProviderType"])
-        ?? "Http";
-
-    private static bool ShouldKeepArtifacts() =>
-        string.Equals(
-a: Environment.GetEnvironmentVariable(variable: "CCODER_INTEGRATION_KEEP_ARTIFACTS"), b: "true", comparisonType: StringComparison.OrdinalIgnoreCase);
-
-    private static int ResolveIntSetting(
-        string primaryName,
-        string secondaryName,
-        int fallback)
-    {
-        string raw = ResolveOptionalSetting(variableNames: [primaryName, secondaryName]);
-
-        return int.TryParse(s: raw, result: out int value)
-            ? value
-            : fallback;
-    }
-
-    private static string ResolveOptionalSetting(params string[] variableNames)
-    {
-        foreach (string variableName in variableNames)
-        {
-            string value =
-                Environment.GetEnvironmentVariable(variable: variableName)
-                ?? Environment.GetEnvironmentVariable(variable: variableName, target: EnvironmentVariableTarget.User)
-                ?? Environment.GetEnvironmentVariable(variable: variableName, target: EnvironmentVariableTarget.Machine);
-
-            if (!string.IsNullOrWhiteSpace(value: value))
-            {
-                return value;
-            }
-        }
-
-        return null;
     }
 
     private static string ResolveFuncExecutablePath()

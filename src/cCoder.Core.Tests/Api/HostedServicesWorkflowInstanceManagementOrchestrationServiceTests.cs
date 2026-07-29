@@ -4,10 +4,10 @@
 
 using cCoder.Data;
 using cCoder.Data.Models.Workflow;
+using cCoder.Core.Models;
 using cCoder.Workflow.Brokers;
 using FluentAssertions;
 using HostedServices;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
@@ -57,7 +57,7 @@ public sealed partial class HostedServicesWorkflowInstanceManagementOrchestratio
             brokerMock.Object,
             Mock.Of<ICoreContextFactory>(),
             Mock.Of<IServiceProvider>(),
-            new ConfigurationBuilder().Build(),
+            new CoreConfiguration(),
             NullLogger<HostedServicesWorkflowInstanceManagementOrchestrationService>.Instance);
 
         // When

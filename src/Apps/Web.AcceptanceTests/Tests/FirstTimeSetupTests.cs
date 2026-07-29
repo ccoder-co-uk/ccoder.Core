@@ -1,4 +1,4 @@
-﻿// ---------------------------------------------------------------
+// ---------------------------------------------------------------
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
@@ -12,13 +12,13 @@ using cCoder.Data.Models;
 using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.Packaging;
 using cCoder.Data.Models.Security;
+using cCoder.Core.Testing;
 using cCoder.Security.Data.EF.Interfaces;
 using cCoder.Security.Data.Models;
 using cCoder.Security.Objects.DTOs;
 using cCoder.Security.Objects.Entities;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Web.AcceptanceTests.Infrastructure;
@@ -152,7 +152,7 @@ public sealed partial class FirstTimeSetupTests
             .SingleAsync();
 
         tenant.Id.Should()
-            .Be(expected: "Default");
+            .Be(expected: "default");
 
         tenant.Name.Should()
             .Be(expected: "Acceptance Platform");
@@ -546,19 +546,15 @@ public sealed partial class FirstTimeSetupTests
 
         public static async Task<SetupHarness> CreateAsync()
         {
-            string suffix = Guid.NewGuid()
-                .ToString(format: "N")[..8];
+            AcceptanceTestConfiguration configuration =
+                AcceptanceTestConfiguration.Load();
 
             AcceptanceSettings settings = new()
             {
-                CoreConnectionString = AddDatabaseSuffix(
-                    variableName: "ConnectionStrings__Core",
-                    suffix: suffix),
-                SsoConnectionString = AddDatabaseSuffix(
-                    variableName: "ConnectionStrings__SSO",
-                    suffix: suffix),
-                DecryptionKey =
-                    "000000000000000000000000000000000000000000000000",
+                CoreConnectionString = configuration.CoreConnectionString,
+                SsoConnectionString =
+                    configuration.SecurityConnectionString,
+                DecryptionKey = configuration.DecryptionKey,
             };
 
             WebAcceptanceFactory factory = new(settings: settings);
@@ -599,41 +595,6 @@ public sealed partial class FirstTimeSetupTests
             {
                 await databaseManager.DropDatabasesAsync();
             }
-        }
-
-        private static string AddDatabaseSuffix(
-            string variableName,
-            string suffix)
-        {
-            string connectionString =
-                Environment.GetEnvironmentVariable(variable: variableName)
-                ?? Environment.GetEnvironmentVariable(
-                    variable: variableName,
-                    target: EnvironmentVariableTarget.User)
-                ?? Environment.GetEnvironmentVariable(
-                    variable: variableName,
-                    target: EnvironmentVariableTarget.Machine)
-                ?? string.Empty;
-
-            if (string.IsNullOrWhiteSpace(value: connectionString))
-            {
-                return string.Empty;
-            }
-
-            SqlConnectionStringBuilder builder = new(
-                connectionString: connectionString)
-            {
-                Encrypt = true,
-                TrustServerCertificate = true,
-            };
-
-            if (!string.IsNullOrWhiteSpace(value: builder.InitialCatalog))
-            {
-                builder.InitialCatalog =
-                    $"{builder.InitialCatalog}-acceptance-setup-{suffix}";
-            }
-
-            return builder.ConnectionString;
         }
     }
 }

@@ -6,6 +6,7 @@ using cCoder.Core;
 using cCoder.Core.Models;
 using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.DMS;
+using cCoder.Data.Models.Planning;
 using cCoder.Data.Models.Workflow;
 using cCoder.Eventing.AzureServiceBus;
 using cCoder.Eventing.AzureServiceBus.Models;
@@ -55,14 +56,42 @@ public class Program
 
     private static EventProvider[] CreateHttpEventProviders() =>
         [
-            CreateHttpEventProvider<App>(
-                ["app_add", "app_update", "app_delete"]),
+            CreateHttpAppEventProvider(),
             CreateHttpEventProvider<Folder>(["folder_delete"]),
             CreateHttpEventProvider<ScheduledTask>(
                 ["scheduled_task_execute"]),
             CreateHttpEventProvider<FlowInstanceData>(
                 ["flow_instance_data_add"])
         ];
+
+    private static EventProvider<App> CreateHttpAppEventProvider() =>
+        new()
+        {
+            Events = ["app_add", "app_update", "app_delete"],
+            SendHandler = async (serviceProvider, eventName, message) =>
+            {
+                IHttpEventHub eventHub =
+                    serviceProvider.GetRequiredService<IHttpEventHub>();
+
+                EventMessage<App> outgoingMessage =
+                    eventName == "app_delete"
+                        ? new EventMessage<App>
+                        {
+                            AuthInfo = message.AuthInfo,
+                            Data = new App
+                            {
+                                Id = message.Data.Id,
+                                Domain = message.Data.Domain,
+                                TenantId = message.Data.TenantId
+                            }
+                        }
+                        : message;
+
+                await eventHub.RaiseEventAsync(
+                    eventName,
+                    outgoingMessage);
+            }
+        };
 
     private static EventProvider[] CreateServiceBusEventProviders() =>
         [

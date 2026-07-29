@@ -4,7 +4,7 @@
 
 using cCoder.Workflow.Activities.Models;
 using cCoder.Workflow.Engine.Exposures;
-using cCoder.Workflow.Engine.Support;
+using cCoder.Workflow.Engine.Extensions;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -29,7 +29,7 @@ internal sealed partial class WorkflowFunctionsProcessingService(
             WorkflowRequest workflowRequest =
                 JsonConvert.DeserializeObject<WorkflowRequest>(
                     value: json,
-                    settings: WorkflowJson.GetJsonSettings())
+                    settings: WorkflowJsonExtensions.GetJsonSettings())
                 ?? throw new InvalidOperationException(
                     message:
                         "Workflow request payload could not be deserialized.");

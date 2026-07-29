@@ -436,428 +436,27 @@
       ]
     },
     {
-      "Name": "cCoder.Core.CoreApiBuilderOptions",
-      "StandardElementType": "App",
-      "Properties": [],
-      "Methods": [
-        {
-          "Name": "AddAllDomains",
-          "Inputs": [
-            {
-              "Name": "connection",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
-        },
-        {
-          "Name": "AddAllDomains",
-          "Inputs": [
-            {
-              "Name": "configure",
-              "Type": "System.Action\u003CcCoder.Core.Models.CoreDomainsConfig\u003E"
-            }
-          ],
-          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
-        },
-        {
-          "Name": "AddAppSecurityApi",
-          "Inputs": [
-            {
-              "Name": "configure",
-              "Type": "System.Action\u003CAppSecurityConfiguration\u003E"
-            }
-          ],
-          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
-        },
-        {
-          "Name": "AddContentManagementApi",
-          "Inputs": [
-            {
-              "Name": "configure",
-              "Type": "System.Action\u003CContentManagementConfiguration\u003E"
-            }
-          ],
-          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
-        },
-        {
-          "Name": "AddDocumentManagementApi",
-          "Inputs": [
-            {
-              "Name": "configure",
-              "Type": "System.Action\u003CDocumentManagementConfiguration\u003E"
-            }
-          ],
-          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
-        },
-        {
-          "Name": "AddLoggingApi",
-          "Inputs": [
-            {
-              "Name": "configure",
-              "Type": "System.Action\u003CLoggingConfiguration\u003E"
-            }
-          ],
-          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
-        },
-        {
-          "Name": "AddMailApi",
-          "Inputs": [
-            {
-              "Name": "configure",
-              "Type": "System.Action\u003CMailConfiguration\u003E"
-            }
-          ],
-          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
-        },
-        {
-          "Name": "AddSecurityApi",
-          "Inputs": [
-            {
-              "Name": "configure",
-              "Type": "System.Action\u003CIServiceCollection, SecurityConfiguration\u003E"
-            }
-          ],
-          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
-        },
-        {
-          "Name": "AddStorage",
-          "Inputs": [
-            {
-              "Name": "connectionString",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
-        },
-        {
-          "Name": "AddWorkflowApi",
-          "Inputs": [
-            {
-              "Name": "configure",
-              "Type": "System.Action\u003CWorkflowConfiguration\u003E"
-            }
-          ],
-          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
-        },
-        {
-          "Name": "ConfigureDomainsWith",
-          "Inputs": [
-            {
-              "Name": "configure",
-              "Type": "System.Action\u003CcCoder.Core.Models.CoreConfiguration\u003E"
-            }
-          ],
-          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
-        },
-        {
-          "Name": "UseAll",
-          "Inputs": [
-            {
-              "Name": "configure",
-              "Type": "System.Action\u003CcCoder.Core.Models.CoreConfiguration\u003E"
-            }
-          ],
-          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
-        },
-        {
-          "Name": "UseHttpEventing",
-          "Inputs": [
-            {
-              "Name": "hubUrl",
-              "Type": "System.String"
-            },
-            {
-              "Name": "configure",
-              "Type": "System.Action\u003CHttpEventingOptions\u003E"
-            }
-          ],
-          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
-        },
-        {
-          "Name": "UseLegacyCoreApi",
-          "Inputs": [
-            {
-              "Name": "routePath",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
-        },
-        {
-          "Name": "UseLegacyCoreContext",
-          "Inputs": [
-            {
-              "Name": "routePath",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
-        },
-        {
-          "Name": "UseServiceBusEventing",
-          "Inputs": [
-            {
-              "Name": "connectionString",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
-        },
-        {
-          "Name": "WithCoreConfiguration",
-          "Inputs": [
-            {
-              "Name": "configure",
-              "Type": "System.Action\u003CcCoder.Core.Models.CoreConfiguration\u003E"
-            }
-          ],
-          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
-        },
-        {
-          "Name": "WithCoreConfiguration",
-          "Inputs": [
-            {
-              "Name": "configuration",
-              "Type": "Data.Config"
-            }
-          ],
-          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
-        },
-        {
-          "Name": "WithEventProviders",
-          "Inputs": [
-            {
-              "Name": "eventProviders",
-              "Type": "EventProvider[]"
-            }
-          ],
-          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
-        },
-        {
-          "Name": "WithSecurity",
-          "Inputs": [
-            {
-              "Name": "connectionString",
-              "Type": "System.String"
-            },
-            {
-              "Name": "decryptionKey",
-              "Type": "System.String"
-            },
-            {
-              "Name": "rootPath",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
-        },
-        {
-          "Name": "WithSessionCache",
-          "Inputs": [
-            {
-              "Name": "connectionString",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "cCoder.Core.CoreApiBuilderOptions"
-        }
-      ]
-    },
-    {
-      "Name": "cCoder.Core.CoreBuilderOptions",
-      "StandardElementType": "App",
-      "Properties": [],
-      "Methods": [
-        {
-          "Name": "AddStorage",
-          "Inputs": [
-            {
-              "Name": "connectionString",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "cCoder.Core.CoreBuilderOptions"
-        },
-        {
-          "Name": "AuthorizeUsersWith",
-          "Inputs": [],
-          "ReturnType": "cCoder.Core.CoreBuilderOptions"
-        },
-        {
-          "Name": "ConfigureDomainsWith",
-          "Inputs": [
-            {
-              "Name": "configure",
-              "Type": "System.Action\u003CcCoder.Core.Models.CoreConfiguration\u003E"
-            }
-          ],
-          "ReturnType": "cCoder.Core.CoreBuilderOptions"
-        },
-        {
-          "Name": "UseAll",
-          "Inputs": [
-            {
-              "Name": "configure",
-              "Type": "System.Action\u003CcCoder.Core.Models.CoreConfiguration\u003E"
-            }
-          ],
-          "ReturnType": "cCoder.Core.CoreBuilderOptions"
-        },
-        {
-          "Name": "UseApiDocumentation",
-          "Inputs": [],
-          "ReturnType": "cCoder.Core.CoreBuilderOptions"
-        },
-        {
-          "Name": "UseAppSecurity",
-          "Inputs": [
-            {
-              "Name": "configure",
-              "Type": "System.Action\u003CAppSecurityConfiguration\u003E"
-            }
-          ],
-          "ReturnType": "cCoder.Core.CoreBuilderOptions"
-        },
-        {
-          "Name": "UseContentManagement",
-          "Inputs": [
-            {
-              "Name": "configure",
-              "Type": "System.Action\u003CContentManagementConfiguration\u003E"
-            },
-            {
-              "Name": "map",
-              "Type": "System.Collections.Generic.IDictionary\u003CSystem.String, IEdmModel\u003E"
-            },
-            {
-              "Name": "servicesOnly",
-              "Type": "System.Boolean"
-            }
-          ],
-          "ReturnType": "cCoder.Core.CoreBuilderOptions"
-        },
-        {
-          "Name": "UseDocumentManagement",
-          "Inputs": [
-            {
-              "Name": "configure",
-              "Type": "System.Action\u003CDocumentManagementConfiguration\u003E"
-            }
-          ],
-          "ReturnType": "cCoder.Core.CoreBuilderOptions"
-        },
-        {
-          "Name": "UseHttpEventing",
-          "Inputs": [],
-          "ReturnType": "cCoder.Core.CoreBuilderOptions"
-        },
-        {
-          "Name": "UseLogging",
-          "Inputs": [
-            {
-              "Name": "configure",
-              "Type": "System.Action\u003CLoggingConfiguration\u003E"
-            }
-          ],
-          "ReturnType": "cCoder.Core.CoreBuilderOptions"
-        },
-        {
-          "Name": "UseMSSQLProvider",
-          "Inputs": [
-            {
-              "Name": "connectionString",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "cCoder.Core.CoreBuilderOptions"
-        },
-        {
-          "Name": "UseMail",
-          "Inputs": [
-            {
-              "Name": "configure",
-              "Type": "System.Action\u003CMailConfiguration\u003E"
-            }
-          ],
-          "ReturnType": "cCoder.Core.CoreBuilderOptions"
-        },
-        {
-          "Name": "UseServiceBusEventing",
-          "Inputs": [],
-          "ReturnType": "cCoder.Core.CoreBuilderOptions"
-        },
-        {
-          "Name": "UseWorkflow",
-          "Inputs": [
-            {
-              "Name": "configure",
-              "Type": "System.Action\u003CWorkflowConfiguration\u003E"
-            }
-          ],
-          "ReturnType": "cCoder.Core.CoreBuilderOptions"
-        },
-        {
-          "Name": "WithCoreConfiguration",
-          "Inputs": [
-            {
-              "Name": "configure",
-              "Type": "System.Action\u003CcCoder.Core.Models.CoreConfiguration\u003E"
-            }
-          ],
-          "ReturnType": "cCoder.Core.CoreBuilderOptions"
-        },
-        {
-          "Name": "WithCoreConfiguration",
-          "Inputs": [
-            {
-              "Name": "configuration",
-              "Type": "Data.Config"
-            }
-          ],
-          "ReturnType": "cCoder.Core.CoreBuilderOptions"
-        },
-        {
-          "Name": "WithEventProviders",
-          "Inputs": [
-            {
-              "Name": "eventProviders",
-              "Type": "EventProvider[]"
-            }
-          ],
-          "ReturnType": "cCoder.Core.CoreBuilderOptions"
-        },
-        {
-          "Name": "WithSecurity",
-          "Inputs": [
-            {
-              "Name": "connectionString",
-              "Type": "System.String"
-            },
-            {
-              "Name": "decryptionKey",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "cCoder.Core.CoreBuilderOptions"
-        },
-        {
-          "Name": "WithSessionCache",
-          "Inputs": [
-            {
-              "Name": "connectionString",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "cCoder.Core.CoreBuilderOptions"
-        }
-      ]
-    },
-    {
-      "Name": "cCoder.Core.CoreConfigurationMapper",
-      "StandardElementType": "App",
+      "Name": "cCoder.Core.CoreServiceCollectionExtensions",
+      "StandardElementType": "Exposure",
       "Properties": [],
       "Methods": []
+    },
+    {
+      "Name": "cCoder.Core.CoreServiceCollectionExtensions.SplitDomainApplicationModelConvention",
+      "StandardElementType": "Dependency",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "Apply",
+          "Inputs": [
+            {
+              "Name": "action",
+              "Type": "ActionModel"
+            }
+          ],
+          "ReturnType": "System.Void"
+        }
+      ]
     },
     {
       "Name": "cCoder.Core.Dependencies.Eventing.ServiceBusEventingDependency",
@@ -2028,33 +1627,6 @@
       ]
     },
     {
-      "Name": "cCoder.Core.HttpEventHubUrlResolver",
-      "StandardElementType": "App",
-      "Properties": [],
-      "Methods": [
-        {
-          "Name": "Normalize",
-          "Inputs": [
-            {
-              "Name": "value",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.String"
-        },
-        {
-          "Name": "Resolve",
-          "Inputs": [
-            {
-              "Name": "configuration",
-              "Type": "Microsoft.Extensions.Configuration.IConfiguration"
-            }
-          ],
-          "ReturnType": "System.String"
-        }
-      ]
-    },
-    {
       "Name": "cCoder.Core.IAppBuilderExtensions",
       "StandardElementType": "Exposure",
       "Properties": [],
@@ -2074,10 +1646,24 @@
             },
             {
               "Name": "configure",
-              "Type": "System.Action\u003CcCoder.Core.CoreBuilderOptions\u003E"
+              "Type": "System.Action\u003CcCoder.Core.Models.CoreConfiguration\u003E"
             }
           ],
-          "ReturnType": "System.Void"
+          "ReturnType": "IServiceCollection"
+        },
+        {
+          "Name": "AddCoreHostedServices",
+          "Inputs": [
+            {
+              "Name": "services",
+              "Type": "IServiceCollection"
+            },
+            {
+              "Name": "configuration",
+              "Type": "cCoder.Core.Models.CoreConfiguration"
+            }
+          ],
+          "ReturnType": "IServiceCollection"
         },
         {
           "Name": "AddCoreWeb",
@@ -2088,29 +1674,41 @@
             },
             {
               "Name": "configure",
-              "Type": "System.Action\u003CcCoder.Core.CoreApiBuilderOptions\u003E"
+              "Type": "System.Action\u003CcCoder.Core.Models.CoreConfiguration\u003E"
             }
           ],
-          "ReturnType": "System.Void"
+          "ReturnType": "IServiceCollection"
+        },
+        {
+          "Name": "AddCoreWeb",
+          "Inputs": [
+            {
+              "Name": "services",
+              "Type": "IServiceCollection"
+            },
+            {
+              "Name": "configuration",
+              "Type": "cCoder.Core.Models.CoreConfiguration"
+            }
+          ],
+          "ReturnType": "IServiceCollection"
         }
       ]
     },
     {
-      "Name": "cCoder.Core.IServiceCollectionExtensions.SplitDomainApplicationModelConvention",
-      "StandardElementType": "Dependency",
-      "Properties": [],
-      "Methods": [
+      "Name": "cCoder.Core.Models.ApiConfiguration",
+      "StandardElementType": "Model",
+      "Properties": [
         {
-          "Name": "Apply",
-          "Inputs": [
-            {
-              "Name": "action",
-              "Type": "ActionModel"
-            }
-          ],
-          "ReturnType": "System.Void"
+          "Name": "ExposeDocumentation",
+          "Type": "System.Boolean?"
+        },
+        {
+          "Name": "ExposeMetadata",
+          "Type": "System.Boolean?"
         }
-      ]
+      ],
+      "Methods": []
     },
     {
       "Name": "cCoder.Core.Models.AuditResultByProperty",
@@ -2389,124 +1987,48 @@
       "StandardElementType": "Model",
       "Properties": [
         {
-          "Name": "AggregateDomains",
-          "Type": "System.Boolean"
+          "Name": "AI",
+          "Type": "AIConfiguration"
         },
         {
-          "Name": "CacheExpiry",
-          "Type": "System.Int32?"
+          "Name": "Api",
+          "Type": "cCoder.Core.Models.ApiConfiguration"
         },
         {
-          "Name": "CacheSource",
-          "Type": "System.String"
+          "Name": "AppSecurity",
+          "Type": "AppSecurityConfiguration"
         },
         {
-          "Name": "CacheSourceAppId",
-          "Type": "System.Int32?"
+          "Name": "ContentManagement",
+          "Type": "ContentManagementConfiguration"
         },
         {
-          "Name": "ConnectionStrings",
-          "Type": "System.Collections.Generic.IDictionary\u003CSystem.String, System.String\u003E"
+          "Name": "DocumentManagement",
+          "Type": "DocumentManagementConfiguration"
         },
         {
-          "Name": "CoreConnectionString",
-          "Type": "System.String"
+          "Name": "Eventing",
+          "Type": "EventingConfiguration"
         },
         {
-          "Name": "DebugInfo",
-          "Type": "System.Boolean"
+          "Name": "Logging",
+          "Type": "LoggingConfiguration"
         },
         {
-          "Name": "DecryptionKey",
-          "Type": "System.String"
+          "Name": "Mail",
+          "Type": "MailConfiguration"
         },
         {
-          "Name": "EnableHttpEventing",
-          "Type": "System.Boolean"
+          "Name": "Packaging",
+          "Type": "PackagingConfiguration"
         },
         {
-          "Name": "EnableServiceBusEventing",
-          "Type": "System.Boolean"
+          "Name": "Security",
+          "Type": "SecurityConfiguration"
         },
         {
-          "Name": "EventProviderType",
-          "Type": "System.String"
-        },
-        {
-          "Name": "EventProviders",
-          "Type": "EventProvider[]"
-        },
-        {
-          "Name": "HttpEventHubUrl",
-          "Type": "System.String"
-        },
-        {
-          "Name": "LogSQL",
-          "Type": "System.Boolean"
-        },
-        {
-          "Name": "MailDefaultReceiverProviderName",
-          "Type": "System.String"
-        },
-        {
-          "Name": "MailDefaultSenderProviderName",
-          "Type": "System.String"
-        },
-        {
-          "Name": "MailGraphBaseUrl",
-          "Type": "System.String"
-        },
-        {
-          "Name": "MailGraphClientId",
-          "Type": "System.String"
-        },
-        {
-          "Name": "MailGraphClientSecret",
-          "Type": "System.String"
-        },
-        {
-          "Name": "MailGraphLoginBaseUrl",
-          "Type": "System.String"
-        },
-        {
-          "Name": "MailGraphReceiveUser",
-          "Type": "System.String"
-        },
-        {
-          "Name": "MailGraphTenantId",
-          "Type": "System.String"
-        },
-        {
-          "Name": "MaxConcurrency",
-          "Type": "System.Int32"
-        },
-        {
-          "Name": "SecurityConnectionString",
-          "Type": "System.String"
-        },
-        {
-          "Name": "SecurityRootPath",
-          "Type": "System.String"
-        },
-        {
-          "Name": "ServiceBusConnectionString",
-          "Type": "System.String"
-        },
-        {
-          "Name": "Services",
-          "Type": "System.Collections.Generic.IDictionary\u003CSystem.String, System.String\u003E"
-        },
-        {
-          "Name": "Settings",
-          "Type": "System.Collections.Generic.IDictionary\u003CSystem.String, System.String\u003E"
-        },
-        {
-          "Name": "SslPort",
-          "Type": "System.Int32?"
-        },
-        {
-          "Name": "WorkflowServiceUrl",
-          "Type": "System.String"
+          "Name": "Workflow",
+          "Type": "WorkflowConfiguration"
         }
       ],
       "Methods": []
@@ -2623,6 +2145,10 @@
       "Name": "cCoder.Core.Models.FirstTimeSetupViewModel",
       "StandardElementType": "Model",
       "Properties": [
+        {
+          "Name": "AssetsRoot",
+          "Type": "System.String"
+        },
         {
           "Name": "Domain",
           "Type": "System.String"
@@ -3917,6 +3443,10 @@
     {
       "FromType": "cCoder.Core.Exposures.Controllers.SetupController",
       "ToType": "cCoder.Core.Exposures.Setup.SetupRequestHostManager"
+    },
+    {
+      "FromType": "cCoder.Core.Exposures.Controllers.SetupController",
+      "ToType": "cCoder.Core.Models.CoreConfiguration"
     },
     {
       "FromType": "cCoder.Core.Exposures.Controllers.TemplatedEmailController",
