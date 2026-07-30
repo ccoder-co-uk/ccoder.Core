@@ -129,28 +129,29 @@ public static partial class WebApplicationExtensions
         string coreConnectionString = coreContext.Database.GetConnectionString();
         string securityConnectionString = securityContext.Database.GetConnectionString();
 
+        using IDisposable migrationLock =
+            AcquireStartupMigrationLock(
+                coreConnectionString: coreConnectionString,
+                securityConnectionString: securityConnectionString);
+
+        securityContext.Migrate();
+        coreContext.Migrate();
+
         if (log?.IsEnabled(logLevel: LogLevel.Information) == true)
         {
             log.LogInformation(
-                message: "Applying startup database migrations. Core={CoreDatabase}; Security={SecurityDatabase}",
+                message: "Applied startup database migrations. Core={CoreDatabase}; Security={SecurityDatabase}",
                 args:
                 [
                     ResolveDatabaseName(connectionString: coreConnectionString),
                     ResolveDatabaseName(connectionString: securityConnectionString)
                 ]);
         }
-
-        using IDisposable migrationLock =
-            AcquireStartupMigrationLock(coreConnectionString: coreConnectionString, securityConnectionString: securityConnectionString, log: log);
-
-        securityContext.Migrate();
-        coreContext.Migrate();
     }
 
     private static IDisposable AcquireStartupMigrationLock(
         string coreConnectionString,
-        string securityConnectionString,
-        ILogger log)
+        string securityConnectionString)
     {
         string lockName = BuildStartupMigrationLockName(coreConnectionString: coreConnectionString, securityConnectionString: securityConnectionString);
         Mutex mutex = new(false, lockName);
@@ -165,18 +166,9 @@ public static partial class WebApplicationExtensions
         }
         catch (AbandonedMutexException)
         {
-            log?.LogWarning(
-message: "Recovered abandoned startup migration lock {LockName}. Continuing with database migration.", args: lockName);
         }
 
-        if (log?.IsEnabled(logLevel: LogLevel.Debug) == true)
-        {
-            log.LogDebug(
-                message: "Acquired startup migration lock {LockName}.",
-                args: lockName);
-        }
-
-        return new StartupMigrationLock(mutex, lockName, log);
+        return new StartupMigrationLock(mutex);
     }
 
     private static string BuildStartupMigrationLockName(
@@ -216,19 +208,13 @@ message: "Recovered abandoned startup migration lock {LockName}. Continuing with
         }
     }
 
-    private sealed class StartupMigrationLock(Mutex mutex, string lockName, ILogger log) : IDisposable
+    private sealed class StartupMigrationLock(Mutex mutex) : IDisposable
     {
         public void Dispose()
         {
             try
             {
                 mutex.ReleaseMutex();
-                if (log?.IsEnabled(logLevel: LogLevel.Debug) == true)
-                {
-                    log.LogDebug(
-                        message: "Released startup migration lock {LockName}.",
-                        args: lockName);
-                }
             }
             finally
             {
