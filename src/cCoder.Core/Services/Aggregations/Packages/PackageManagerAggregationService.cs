@@ -4,7 +4,7 @@
 
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using cCoder.ContentManagement.Services.Orchestrations;
+using cCoder.ContentManagement.Exposures;
 using cCoder.Core.Models.Packaging;
 using cCoder.Data;
 using cCoder.Data.Models.CMS;
@@ -19,11 +19,11 @@ namespace cCoder.Core.Services.Aggregations.Packages;
 
 internal sealed partial class PackageManagerAggregationService(
     IPackageBroker packageBroker,
-    IComponentOrchestrationService componentOrchestrationService,
-    ILayoutOrchestrationService layoutOrchestrationService,
-    IResourceOrchestrationService resourceOrchestrationService,
-    IScriptOrchestrationService scriptOrchestrationService,
-    ITemplateOrchestrationService templateOrchestrationService,
+    IComponentManager componentOrchestrationService,
+    ILayoutManager layoutOrchestrationService,
+    IResourceManager resourceOrchestrationService,
+    IScriptManager scriptOrchestrationService,
+    ITemplateManager templateOrchestrationService,
     ICoreContextFactory coreContextFactory
 ) : IPackageManagerAggregationService
 {

@@ -8,10 +8,10 @@ using System.Text.Json;
 using cCoder.Data;
 using cCoder.Data.Models.Workflow;
 using cCoder.Security.Exposures;
-using cCoder.Security.Objects.Entities;
+using cCoder.Security.Models.Entities;
 using cCoder.Workflow.Activities.Models;
 using cCoder.Workflow.Brokers;
-using cCoder.Workflow.Services.Processings;
+using cCoder.Workflow.Exposures;
 using cCoder.Core.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,7 +23,7 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
     IServiceProvider serviceProvider,
     CoreConfiguration configuration,
     ILogger<HostedServicesWorkflowInstanceManagementOrchestrationService> log)
-    : IWorkflowInstanceProcessingService
+    : IWorkflowInstanceManager
 {
     public async Task RunAsync(CancellationToken cancellationToken = default)
     {

@@ -4,7 +4,7 @@
 
 using System.ComponentModel.DataAnnotations;
 using cCoder.Core.Models.Exceptions;
-using cCoder.Security.Objects.Events;
+using cCoder.Security.Models.Events;
 
 namespace cCoder.Core.Services.Aggregations;
 

@@ -6,7 +6,7 @@ using cCoder.Data.Models.CMS;
 
 namespace cCoder.Core.Services.Foundations.DocumentManagement;
 
-public interface IDocumentManagementAppService
+internal interface IDocumentManagementAppService
 {
     ValueTask AddAppAsync(App newApp);
     ValueTask UpdateAppAsync(App updatedApp);

@@ -5,12 +5,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
-using Workflow.Services.Processings.WorkflowFunctions;
+using Workflow.Exposures;
 
 namespace Workflow.Exposures;
 
 public sealed class ExecuteScript(
-    IWorkflowFunctionsProcessingService workflowFunctionsProcessingService)
+    IWorkflowFunctionsManager workflowFunctionsProcessingService)
 {
     [Function(nameof(ExecuteScript))]
     public Task<HttpResponseData> Run(

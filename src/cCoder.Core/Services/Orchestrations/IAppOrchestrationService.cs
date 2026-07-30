@@ -7,7 +7,7 @@ using cCoder.Core.Services.Aggregations;
 
 namespace cCoder.Core.Services.Orchestrations;
 
-public interface IAppOrchestrationService : IAppAggregationService
+internal interface IAppOrchestrationService : IAppAggregationService
 {
     ValueTask<App> AddAsync(App app) =>
         AddAppAsync(newApp: app);

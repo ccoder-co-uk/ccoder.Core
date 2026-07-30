@@ -566,19 +566,19 @@ fileName: "dotnet", arguments: $"\"{Path.Combine(path1: hostedServicesOutputDire
             ["Eventing__Http__MaxConcurrency"] = "1"
         };
 
-        environment["Mail__MicrosoftGraph__TenantId"] =
+        environment["Mail__Providers__3__MicrosoftGraph__TenantId"] =
             Settings.MailTenantId;
 
-        environment["Mail__MicrosoftGraph__ClientId"] =
+        environment["Mail__Providers__3__MicrosoftGraph__ClientId"] =
             Settings.MailClientId;
 
-        environment["Mail__MicrosoftGraph__ClientSecret"] =
+        environment["Mail__Providers__3__MicrosoftGraph__ClientSecret"] =
             Settings.MailClientSecret;
 
-        environment["Mail__MicrosoftGraph__SendUser"] =
+        environment["CoreIntegrationTests__MailSendUser"] =
             Settings.MailSendUser;
 
-        environment["Mail__MicrosoftGraph__ReceiveUser"] =
+        environment["CoreIntegrationTests__MailReceiveUser"] =
             Settings.MailReceiveUser;
 
         if (Settings.UseServiceBusEventing)
@@ -740,11 +740,4 @@ path1: Environment.GetFolderPath(folder: Environment.SpecialFolder.ApplicationDa
 
         return "func";
     }
-}
-
-[CollectionDefinition(Name)]
-public sealed class IntegrationAcceptanceCollection
-    : ICollectionFixture<IntegrationAcceptanceFixture>
-{
-    public const string Name = "Integration acceptance";
 }

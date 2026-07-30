@@ -30,6 +30,30 @@
       ]
     },
     {
+      "Name": "Web.Brokers.Api.CommonObjectCacheBroker",
+      "StandardElementType": "Broker",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "Refresh",
+          "Inputs": [],
+          "ReturnType": "System.Void"
+        }
+      ]
+    },
+    {
+      "Name": "Web.Brokers.Api.MetadataCacheBroker",
+      "StandardElementType": "Broker",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "Rebuild",
+          "Inputs": [],
+          "ReturnType": "System.Void"
+        }
+      ]
+    },
+    {
       "Name": "Web.Controllers.Api.ApiRootController",
       "StandardElementType": "Exposure",
       "Properties": [],
@@ -140,6 +164,23 @@
         }
       ],
       "Methods": []
+    },
+    {
+      "Name": "Web.Dependencies.Api.ApiScriptExecutionDependency",
+      "StandardElementType": "Unknown",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "ExecuteScriptAsync",
+          "Inputs": [
+            {
+              "Name": "script",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CSystem.String\u003E"
+        }
+      ]
     },
     {
       "Name": "Web.Dependencies.Filters.HomeDefaultsActionFilter",
@@ -551,6 +592,10 @@
   ],
   "Links": [
     {
+      "FromType": "Web.Brokers.Api.ApiScriptExecutionBroker",
+      "ToType": "Web.Dependencies.Api.ApiScriptExecutionDependency"
+    },
+    {
       "FromType": "Web.Controllers.Api.ApiRootController",
       "ToType": "Web.Exposures.ApiContextManager"
     },
@@ -585,6 +630,14 @@
     {
       "FromType": "Web.Exposures.HomeSessionManager",
       "ToType": "Web.Services.Processings.HomeSessionProcessingService"
+    },
+    {
+      "FromType": "Web.Services.Aggregations.ApiCacheAggregationService",
+      "ToType": "Web.Brokers.Api.CommonObjectCacheBroker"
+    },
+    {
+      "FromType": "Web.Services.Aggregations.ApiCacheAggregationService",
+      "ToType": "Web.Brokers.Api.MetadataCacheBroker"
     },
     {
       "FromType": "Web.Services.Foundations.Api.ApiContextService",

@@ -6,7 +6,7 @@ using cCoder.Data.Models.CMS;
 
 namespace cCoder.Core.Services.Foundations.Workflow;
 
-public interface IWorkflowAppService
+internal interface IWorkflowAppService
 {
     ValueTask AddAppAsync(App newApp);
     ValueTask UpdateAppAsync(App updatedApp);

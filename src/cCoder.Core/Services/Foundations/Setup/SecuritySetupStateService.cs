@@ -3,7 +3,7 @@
 // ---------------------------------------------------------------
 
 using cCoder.Core.Brokers.Setup;
-using cCoder.Security.Objects.Entities;
+using cCoder.Security.Models.Entities;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 

@@ -6,7 +6,7 @@ using cCoder.Core.Dependencies.Middleware;
 
 namespace cCoder.Core;
 
-internal static class IAppBuilderExtensions
+internal static class IApplicationBuilderExtensions
 {
     internal static IApplicationBuilder UseCoreFormatters(
         this IApplicationBuilder app) =>

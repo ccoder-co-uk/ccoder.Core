@@ -2,26 +2,26 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.Core.Dependencies.Packaging;
 using cCoder.Data.Models.Packaging;
+using cCoder.Packaging.Exposures;
 
 namespace cCoder.Core.Brokers.Packaging;
 
 internal sealed class PackageBroker(
-    IPackageManagerDependency packageManagerDependency
+    IPackageTransferManager packageManager
 ) : IPackageBroker
 {
     public Package ExportPackage(
         int appId,
         string packageName) =>
-        packageManagerDependency.ExportPackage(
+        packageManager.ExportPackage(
             appId: appId,
             packageName: packageName);
 
     public ValueTask ImportPackageAsync(
         int appId,
         Package package) =>
-        packageManagerDependency.ImportPackageAsync(
+        packageManager.ImportPackageAsync(
             appId: appId,
             package: package);
 }

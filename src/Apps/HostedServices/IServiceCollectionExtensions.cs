@@ -8,8 +8,8 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using cCoder.Security.Data.EF;
 using cCoder.Security.Data.EF.Dependencies;
 using cCoder.Security.Data.EF.Interfaces;
-using cCoder.Security.Objects;
-using cCoder.Workflow.Services.Processings;
+using cCoder.Security.Models.Configurations;
+using cCoder.Workflow.Exposures;
 
 namespace HostedServices;
 
@@ -72,10 +72,10 @@ public static class IServiceCollectionExtensions
     private static void AddOrchestrations(
         this IServiceCollection services)
     {
-        services.RemoveAll<IWorkflowInstanceProcessingService>();
+        services.RemoveAll<IWorkflowInstanceManager>();
 
         services.AddTransient<
-            IWorkflowInstanceProcessingService,
+            IWorkflowInstanceManager,
             HostedServicesWorkflowInstanceManagementOrchestrationService>();
     }
 

@@ -7,7 +7,7 @@ using cCoder.ContentManagement.Models;
 using cCoder.Data;
 using cCoder.Core.Models;
 using cCoder.Core.Exposures.Setup;
-using cCoder.Core.Services.Setup;
+using cCoder.Core.Exposures;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Web.Dependencies.Filters;
@@ -20,12 +20,12 @@ namespace Web.Controllers
 {
     public sealed class HomeController(
         IPageRenderer pageRenderer,
-        IFirstTimeSetupStateService setupStateService,
+        IFirstTimeSetupManager setupStateService,
         ISetupRequestHostManager setupRequestHostManager,
         IHomeSessionManager homeSessionManager) : Controller
     {
         private readonly IPageRenderer pageRenderer = pageRenderer;
-        private readonly IFirstTimeSetupStateService setupStateService = setupStateService;
+        private readonly IFirstTimeSetupManager setupStateService = setupStateService;
         private readonly ISetupRequestHostManager setupRequestHostManager = setupRequestHostManager;
         private readonly IHomeSessionManager homeSessionManager = homeSessionManager;
 

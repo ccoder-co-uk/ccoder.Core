@@ -6,7 +6,7 @@ using cCoder.Data.Models.CMS;
 
 namespace cCoder.Core.Services.Foundations.Planning;
 
-public interface IPlanningAppService
+internal interface IPlanningAppService
 {
     ValueTask AddAppAsync(App newApp);
     ValueTask UpdateAppAsync(App updatedApp);

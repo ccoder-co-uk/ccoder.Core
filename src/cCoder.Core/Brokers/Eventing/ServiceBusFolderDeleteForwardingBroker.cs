@@ -3,21 +3,23 @@
 // ---------------------------------------------------------------
 
 using cCoder.Data.Models.DMS;
-using cCoder.Core.Dependencies.Eventing;
+using cCoder.Eventing.AzureServiceBus;
 using cCoder.Eventing.AzureServiceBus.Models;
+using cCoder.Security.Models.Configurations;
 
 namespace cCoder.Core.Brokers.Eventing;
 
 internal sealed class ServiceBusFolderDeleteForwardingBroker(
-    IServiceBusEventingBroker serviceBusEventingDependency)
+    IAzureServiceBusEventHub serviceBusEventHub,
+    ISSOAuthInfo authInfo)
     : IServiceBusFolderDeleteForwardingBroker
 {
     public string GetCurrentSsoUserId() =>
-        serviceBusEventingDependency.GetCurrentSsoUserId();
+        authInfo.SSOUserId ?? string.Empty;
 
     public ValueTask RaiseFolderDeleteEventAsync(
         ServiceBusEventMessage<Folder> message) =>
-        serviceBusEventingDependency.RaiseEventAsync(
+        serviceBusEventHub.RaiseEventAsync(
             name: "folder_delete",
             message: message);
 }

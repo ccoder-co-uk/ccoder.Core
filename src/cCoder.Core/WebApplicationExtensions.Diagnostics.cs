@@ -9,7 +9,7 @@ using cCoder.Core.Services.Foundations.ContentManagement;
 using cCoder.Core.Models;
 using cCoder.Security.Data.EF;
 using cCoder.Security.Data.EF.Dependencies;
-using cCoder.Security.Objects.Entities;
+using cCoder.Security.Models.Entities;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Data.SqlClient;

@@ -11,6 +11,7 @@ using Web.Services.Aggregations;
 using Web.Brokers.Api;
 using Web.Services.Foundations.Api;
 using Web.Services.Orchestrations.Api;
+using Web.Dependencies.Api;
 
 namespace Web;
 
@@ -61,6 +62,9 @@ public static class IServiceCollectionExtensions
 
     private static void AddBrokers(this IServiceCollection services)
     {
+        services.AddScoped<ApiScriptExecutionDependency>();
+        services.AddScoped<ICommonObjectCacheBroker, CommonObjectCacheBroker>();
+        services.AddScoped<IMetadataCacheBroker, MetadataCacheBroker>();
         services.AddScoped<IApiScriptExecutionBroker, ApiScriptExecutionBroker>();
         services.AddScoped<IApiContextBroker, ApiContextBroker>();
     }

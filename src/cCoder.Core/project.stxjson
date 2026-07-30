@@ -436,83 +436,6 @@
       ]
     },
     {
-      "Name": "cCoder.Core.CoreServiceCollectionExtensions",
-      "StandardElementType": "Exposure",
-      "Properties": [],
-      "Methods": []
-    },
-    {
-      "Name": "cCoder.Core.CoreServiceCollectionExtensions.SplitDomainApplicationModelConvention",
-      "StandardElementType": "Dependency",
-      "Properties": [],
-      "Methods": [
-        {
-          "Name": "Apply",
-          "Inputs": [
-            {
-              "Name": "action",
-              "Type": "ActionModel"
-            }
-          ],
-          "ReturnType": "System.Void"
-        }
-      ]
-    },
-    {
-      "Name": "cCoder.Core.Dependencies.Eventing.ServiceBusEventingDependency",
-      "StandardElementType": "Dependency",
-      "Properties": [],
-      "Methods": [
-        {
-          "Name": "GetCurrentSsoUserId",
-          "Inputs": [],
-          "ReturnType": "System.String"
-        },
-        {
-          "Name": "ListenToEvent",
-          "Inputs": [
-            {
-              "Name": "name",
-              "Type": "System.String"
-            },
-            {
-              "Name": "handler",
-              "Type": "System.Func\u003CSystem.IServiceProvider, T, System.Threading.Tasks.ValueTask\u003E"
-            }
-          ],
-          "ReturnType": "System.Void"
-        },
-        {
-          "Name": "RaiseEventAsync",
-          "Inputs": [
-            {
-              "Name": "name",
-              "Type": "System.String"
-            },
-            {
-              "Name": "message",
-              "Type": "ServiceBusEventMessage\u003CT\u003E"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask"
-        },
-        {
-          "Name": "RaiseEventsAsync",
-          "Inputs": [
-            {
-              "Name": "name",
-              "Type": "System.String"
-            },
-            {
-              "Name": "messages",
-              "Type": "ServiceBusEventMessage\u003CT\u003E[]"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask"
-        }
-      ]
-    },
-    {
       "Name": "cCoder.Core.Dependencies.Formatters.CsvFormatter",
       "StandardElementType": "Dependency",
       "Properties": [],
@@ -720,12 +643,6 @@
       ]
     },
     {
-      "Name": "cCoder.Core.Dependencies.OData.ControllerReadDependency",
-      "StandardElementType": "Dependency",
-      "Properties": [],
-      "Methods": []
-    },
-    {
       "Name": "cCoder.Core.Dependencies.OData.CoreAggregateApiModelDependency",
       "StandardElementType": "Dependency",
       "Properties": [],
@@ -782,229 +699,19 @@
       ]
     },
     {
-      "Name": "cCoder.Core.Dependencies.Packaging.AppDomainProvider",
+      "Name": "cCoder.Core.Dependencies.OData.SplitDomainApplicationModelConvention",
       "StandardElementType": "Dependency",
       "Properties": [],
       "Methods": [
         {
-          "Name": "GetDomain",
+          "Name": "Apply",
           "Inputs": [
             {
-              "Name": "appId",
-              "Type": "System.Int32"
+              "Name": "action",
+              "Type": "ActionModel"
             }
           ],
-          "ReturnType": "System.String"
-        }
-      ]
-    },
-    {
-      "Name": "cCoder.Core.Dependencies.Packaging.AppSecurityPackageManagerBroker",
-      "StandardElementType": "Dependency",
-      "Properties": [],
-      "Methods": [
-        {
-          "Name": "ExportPackage",
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "packageName",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "Package"
-        },
-        {
-          "Name": "ImportPackageAsync",
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "package",
-              "Type": "Package"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask"
-        }
-      ]
-    },
-    {
-      "Name": "cCoder.Core.Dependencies.Packaging.ContentManagementPackageManagerBroker",
-      "StandardElementType": "Dependency",
-      "Properties": [],
-      "Methods": [
-        {
-          "Name": "ExportPackage",
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "packageName",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "Package"
-        },
-        {
-          "Name": "ImportPackageAsync",
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "package",
-              "Type": "Package"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask"
-        }
-      ]
-    },
-    {
-      "Name": "cCoder.Core.Dependencies.Packaging.DocumentManagementPackageManagerBroker",
-      "StandardElementType": "Dependency",
-      "Properties": [],
-      "Methods": [
-        {
-          "Name": "ExportPackage",
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "packageName",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "Package"
-        },
-        {
-          "Name": "ImportPackageAsync",
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "package",
-              "Type": "Package"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask"
-        }
-      ]
-    },
-    {
-      "Name": "cCoder.Core.Dependencies.Packaging.PackageManagerDependency",
-      "StandardElementType": "Dependency",
-      "Properties": [],
-      "Methods": [
-        {
-          "Name": "ExportPackage",
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "packageName",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "Package"
-        },
-        {
-          "Name": "ImportPackageAsync",
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "package",
-              "Type": "Package"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask"
-        }
-      ]
-    },
-    {
-      "Name": "cCoder.Core.Dependencies.Packaging.SchedulingPackageManagerBroker",
-      "StandardElementType": "Dependency",
-      "Properties": [],
-      "Methods": [
-        {
-          "Name": "ExportPackage",
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "packageName",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "Package"
-        },
-        {
-          "Name": "ImportPackageAsync",
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "package",
-              "Type": "Package"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask"
-        }
-      ]
-    },
-    {
-      "Name": "cCoder.Core.Dependencies.Packaging.WorkflowPackageManagerBroker",
-      "StandardElementType": "Dependency",
-      "Properties": [],
-      "Methods": [
-        {
-          "Name": "ExportPackage",
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "packageName",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "Package"
-        },
-        {
-          "Name": "ImportPackageAsync",
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "package",
-              "Type": "Package"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask"
+          "ReturnType": "System.Void"
         }
       ]
     },
@@ -1257,18 +964,6 @@
       ]
     },
     {
-      "Name": "cCoder.Core.Exposures.CoreAggregateApiModelBuilderExtensions",
-      "StandardElementType": "Exposure",
-      "Properties": [],
-      "Methods": []
-    },
-    {
-      "Name": "cCoder.Core.Exposures.CoreSecurityApiModelBuilderExtensions",
-      "StandardElementType": "Exposure",
-      "Properties": [],
-      "Methods": []
-    },
-    {
       "Name": "cCoder.Core.Exposures.Cors.CoreAllowedOriginStore",
       "StandardElementType": "Exposure",
       "Properties": [],
@@ -1286,7 +981,7 @@
       ]
     },
     {
-      "Name": "cCoder.Core.Exposures.Formatters.FormatterExportExtensions",
+      "Name": "cCoder.Core.Exposures.Formatters.ObjectExtensions",
       "StandardElementType": "Exposure",
       "Properties": [],
       "Methods": [
@@ -1525,27 +1220,6 @@
       ]
     },
     {
-      "Name": "cCoder.Core.Exposures.OData.ControllerReadExtensions",
-      "StandardElementType": "Exposure",
-      "Properties": [],
-      "Methods": [
-        {
-          "Name": "ResolveKeyedGet",
-          "Inputs": [
-            {
-              "Name": "controller",
-              "Type": "ControllerBase"
-            },
-            {
-              "Name": "get",
-              "Type": "System.Func\u003CTEntity\u003E"
-            }
-          ],
-          "ReturnType": "IActionResult"
-        }
-      ]
-    },
-    {
       "Name": "cCoder.Core.Exposures.OData.CoreModelBuilder",
       "StandardElementType": "Exposure",
       "Properties": [],
@@ -1593,6 +1267,204 @@
       ]
     },
     {
+      "Name": "cCoder.Core.Exposures.ODataConventionModelBuilderExtensions",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": []
+    },
+    {
+      "Name": "cCoder.Core.Exposures.PackageManagers.AppDomainManager",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "GetDomain",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            }
+          ],
+          "ReturnType": "System.String"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Exposures.PackageManagers.AppSecurityPackageManager",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "ExportPackage",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "packageName",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "Package"
+        },
+        {
+          "Name": "ImportPackageAsync",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "package",
+              "Type": "Package"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Exposures.PackageManagers.ContentManagementPackageManager",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "ExportPackage",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "packageName",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "Package"
+        },
+        {
+          "Name": "ImportPackageAsync",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "package",
+              "Type": "Package"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Exposures.PackageManagers.DocumentManagementPackageManager",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "ExportPackage",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "packageName",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "Package"
+        },
+        {
+          "Name": "ImportPackageAsync",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "package",
+              "Type": "Package"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Exposures.PackageManagers.SchedulingPackageManager",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "ExportPackage",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "packageName",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "Package"
+        },
+        {
+          "Name": "ImportPackageAsync",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "package",
+              "Type": "Package"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Exposures.PackageManagers.WorkflowPackageManager",
+      "StandardElementType": "Exposure",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "ExportPackage",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "packageName",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "Package"
+        },
+        {
+          "Name": "ImportPackageAsync",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "package",
+              "Type": "Package"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        }
+      ]
+    },
+    {
       "Name": "cCoder.Core.Exposures.Setup.FirstTimeSetupStateManager",
       "StandardElementType": "Exposure",
       "Properties": [],
@@ -1627,7 +1499,7 @@
       ]
     },
     {
-      "Name": "cCoder.Core.IAppBuilderExtensions",
+      "Name": "cCoder.Core.IApplicationBuilderExtensions",
       "StandardElementType": "Exposure",
       "Properties": [],
       "Methods": []
@@ -3347,6 +3219,181 @@
       ]
     },
     {
+      "Name": "cCoder.Core.Services.Processings.Packages.AppSecurityPackageProcessingService",
+      "StandardElementType": "ProcessingService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "ExportPackage",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "packageName",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "Package"
+        },
+        {
+          "Name": "ImportPackageAsync",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "package",
+              "Type": "Package"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Processings.Packages.ContentManagementPackageProcessingService",
+      "StandardElementType": "ProcessingService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "ExportPackage",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "packageName",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "Package"
+        },
+        {
+          "Name": "ImportPackageAsync",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "package",
+              "Type": "Package"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Processings.Packages.DocumentManagementPackageProcessingService",
+      "StandardElementType": "ProcessingService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "ExportPackage",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "packageName",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "Package"
+        },
+        {
+          "Name": "ImportPackageAsync",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "package",
+              "Type": "Package"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Processings.Packages.SchedulingPackageProcessingService",
+      "StandardElementType": "ProcessingService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "ExportPackage",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "packageName",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "Package"
+        },
+        {
+          "Name": "ImportPackageAsync",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "package",
+              "Type": "Package"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Processings.Packages.WorkflowPackageProcessingService",
+      "StandardElementType": "ProcessingService",
+      "Properties": [],
+      "Methods": [
+        {
+          "Name": "ExportPackage",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "packageName",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "Package"
+        },
+        {
+          "Name": "ImportPackageAsync",
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "package",
+              "Type": "Package"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask"
+        }
+      ]
+    },
+    {
       "Name": "cCoder.Core.Services.Processings.Setup.SetupRequestHostProcessingService",
       "StandardElementType": "ProcessingService",
       "Properties": [],
@@ -3405,18 +3452,6 @@
   ],
   "Links": [
     {
-      "FromType": "cCoder.Core.Brokers.Eventing.ServiceBusAppDeleteForwardingBroker",
-      "ToType": "cCoder.Core.Dependencies.Eventing.ServiceBusEventingDependency"
-    },
-    {
-      "FromType": "cCoder.Core.Brokers.Eventing.ServiceBusFolderDeleteForwardingBroker",
-      "ToType": "cCoder.Core.Dependencies.Eventing.ServiceBusEventingDependency"
-    },
-    {
-      "FromType": "cCoder.Core.Brokers.Packaging.PackageBroker",
-      "ToType": "cCoder.Core.Dependencies.Packaging.PackageManagerDependency"
-    },
-    {
       "FromType": "cCoder.Core.Dependencies.Formatters.CsvFormatter",
       "ToType": "cCoder.Core.Services.Processings.Formatters.FormatterODataProcessingService"
     },
@@ -3463,6 +3498,26 @@
     {
       "FromType": "cCoder.Core.Exposures.Managers.UserRegistrationManager",
       "ToType": "cCoder.Core.Services.Aggregations.UserRegistrationAggregationService"
+    },
+    {
+      "FromType": "cCoder.Core.Exposures.PackageManagers.AppSecurityPackageManager",
+      "ToType": "cCoder.Core.Services.Processings.Packages.AppSecurityPackageProcessingService"
+    },
+    {
+      "FromType": "cCoder.Core.Exposures.PackageManagers.ContentManagementPackageManager",
+      "ToType": "cCoder.Core.Services.Processings.Packages.ContentManagementPackageProcessingService"
+    },
+    {
+      "FromType": "cCoder.Core.Exposures.PackageManagers.DocumentManagementPackageManager",
+      "ToType": "cCoder.Core.Services.Processings.Packages.DocumentManagementPackageProcessingService"
+    },
+    {
+      "FromType": "cCoder.Core.Exposures.PackageManagers.SchedulingPackageManager",
+      "ToType": "cCoder.Core.Services.Processings.Packages.SchedulingPackageProcessingService"
+    },
+    {
+      "FromType": "cCoder.Core.Exposures.PackageManagers.WorkflowPackageManager",
+      "ToType": "cCoder.Core.Services.Processings.Packages.WorkflowPackageProcessingService"
     },
     {
       "FromType": "cCoder.Core.Exposures.Setup.FirstTimeSetupStateManager",
@@ -3622,6 +3677,20 @@
     }
   ],
   "AnalysisItems": [
+    {
+      "Code": "STXB001",
+      "Description": "A broker may have at most one external or exposure dependency.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Brokers.Eventing.ServiceBusAppDeleteForwardingBroker",
+      "LineNumber": 12
+    },
+    {
+      "Code": "STXB001",
+      "Description": "A broker may have at most one external or exposure dependency.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Brokers.Eventing.ServiceBusFolderDeleteForwardingBroker",
+      "LineNumber": 12
+    },
     {
       "Code": "STXAPI001",
       "Description": "An API controller must have exactly one business dependency.",

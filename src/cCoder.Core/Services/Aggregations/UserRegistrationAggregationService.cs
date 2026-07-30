@@ -3,14 +3,14 @@
 // ---------------------------------------------------------------
 
 using cCoder.Core.Models;
-using cCoder.Security.Services.Aggregations.Interfaces;
+using cCoder.Security.Exposures;
 
 namespace cCoder.Core.Services.Aggregations;
 
 internal sealed partial class UserRegistrationAggregationService(
-    IAuthenticationAggregationService authenticationAggregationService,
-    IRegistrationAggregationService registrationAggregationService,
-    ICurrentUserAggregationService currentUserAggregationService
+    IAuthenticationManager authenticationAggregationService,
+    IRegistrationManager registrationAggregationService,
+    ISecurityCurrentUserManager currentUserAggregationService
 ) : IUserRegistrationAggregationService
 {
     public ValueTask<UserRegistrationOperation>

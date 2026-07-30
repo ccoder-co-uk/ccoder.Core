@@ -3,18 +3,8 @@
 // ---------------------------------------------------------------
 
 using Microsoft.Azure.Functions.Worker.Http;
+using Workflow.Exposures;
 
 namespace Workflow.Services.Processings.WorkflowFunctions;
 
-public interface IWorkflowFunctionsProcessingService
-{
-    Task<HttpResponseData> ProcessExecuteAsync(HttpRequestData request);
-
-    Task<HttpResponseData> ProcessExecuteScriptAsync(
-        HttpRequestData request,
-        bool useDetails);
-
-    Task<HttpResponseData> ProcessHealthAsync(HttpRequestData request);
-
-    Task ProcessServiceBusMessageAsync(string message);
-}
+internal interface IWorkflowFunctionsProcessingService : IWorkflowFunctionsManager { }

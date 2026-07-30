@@ -2,14 +2,14 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.Workflow.Services.Processings;
+using cCoder.Workflow.Exposures;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HostedServices.Controllers;
 
 [Route("Workflow")]
 public sealed class WorkflowController(
-    IWorkflowInstanceProcessingService workflowInstanceProcessingService,
+    IWorkflowInstanceManager workflowInstanceProcessingService,
     ILogger<WorkflowController> log)
     : Controller
 {

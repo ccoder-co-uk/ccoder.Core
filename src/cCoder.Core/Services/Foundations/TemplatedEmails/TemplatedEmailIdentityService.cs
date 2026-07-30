@@ -5,13 +5,13 @@
 using cCoder.AppSecurity.Brokers;
 using cCoder.Core.Models;
 using cCoder.Data.Models.Mail;
-using cCoder.Mail.Services.Processings;
+using cCoder.Mail.Exposures;
 
 namespace cCoder.Core.Services.Foundations.TemplatedEmails;
 
 internal sealed partial class TemplatedEmailIdentityService(
     IAuthorizationBroker authorizationBroker,
-    IMailSenderProcessingService mailSenderProcessingService
+    IMailSenderManager mailSenderProcessingService
 ) : ITemplatedEmailIdentityService
 {
     public TemplatedEmailOperation ResolveTemplatedEmailOperationIdentity(

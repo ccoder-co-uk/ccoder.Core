@@ -2,16 +2,13 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using ContentManagementCommonObjectCache =
-    cCoder.ContentManagement.Exposures.Caching.ICommonObjectCache;
-using ContentManagementMetadataCache =
-    cCoder.ContentManagement.Exposures.Caching.IMetadataCache;
+using Web.Brokers.Api;
 
 namespace Web.Services.Aggregations;
 
 internal sealed partial class ApiCacheAggregationService(
-    ContentManagementCommonObjectCache commonObjectCache,
-    ContentManagementMetadataCache metadataCache)
+    ICommonObjectCacheBroker commonObjectCacheBroker,
+    IMetadataCacheBroker metadataCacheBroker)
     : IApiCacheAggregationService
 {
     public void RefreshCaches() =>
@@ -19,7 +16,7 @@ internal sealed partial class ApiCacheAggregationService(
         {
             ValidateCachesOnRefresh();
 
-            commonObjectCache.Refresh();
-            metadataCache.Rebuild();
+            commonObjectCacheBroker.Refresh();
+            metadataCacheBroker.Rebuild();
         });
 }

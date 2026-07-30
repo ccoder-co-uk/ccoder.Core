@@ -8,7 +8,7 @@ using TemplatedEmailDetails = cCoder.Mail.Models.TemplatedEmailDetails;
 
 namespace cCoder.Core.Exposures.Managers;
 
-internal interface ITemplatedEmailManager
+public interface ITemplatedEmailManager
 {
     ValueTask<QueuedEmail> QueueAppTemplatedEmailAsync(
         CoreApp app,

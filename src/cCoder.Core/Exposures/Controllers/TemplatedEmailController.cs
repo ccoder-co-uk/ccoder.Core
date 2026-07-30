@@ -3,6 +3,7 @@
 // ---------------------------------------------------------------
 
 using cCoder.Core.Services.Orchestrations;
+using cCoder.Core.Exposures.Managers;
 using cCoder.Mail.Models;
 using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.Mail;
@@ -13,7 +14,7 @@ namespace cCoder.Core.Exposures.Controllers;
 
 [ApiController]
 public class TemplatedEmailController(
-    ITemplatedEmailOrchestrationService templatedEmailOrchestrationService) : ControllerBase
+    ITemplatedEmailManager templatedEmailOrchestrationService) : ControllerBase
 {
     [HttpPost("Api/Core/QueuedEmail/AddTemplatedEmail()")]
     public async Task<IActionResult> Post(
@@ -25,7 +26,7 @@ public class TemplatedEmailController(
         }
 
         return Ok(
-            value: await templatedEmailOrchestrationService.QueueAsync(
+            value: await templatedEmailOrchestrationService.QueueTemplatedEmailDetailsAsync(
                 details: newTemplatedEmailDetails));
     }
 }

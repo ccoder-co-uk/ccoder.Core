@@ -120,7 +120,12 @@ public sealed partial class AppEventIntegrationTests
                     && await core.Set<FlowDefinition>()
                     .IgnoreQueryFilters()
                     .AnyAsync(predicate: flow => flow.AppId == appId && flow.Name == flowName);
-            });
+            },
+            diagnosticsFactory: () => BuildEventDiagnosticsAsync(
+                appId: appId,
+                rootFolderId: Guid.Empty,
+                childFolderId: Guid.Empty,
+                fileId: Guid.Empty));
 
             await using CoreDataContext verification = CreateCoreContext();
 

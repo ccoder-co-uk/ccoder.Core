@@ -11,7 +11,7 @@ namespace cCoder.Core.Exposures.Controllers;
 
 [Route("Setup")]
 public sealed class SetupController(
-    IFirstTimeSetupStateService setupStateService,
+    IFirstTimeSetupManager setupStateService,
     ISetupRequestHostManager setupRequestHostManager,
     CoreConfiguration configuration)
     : Controller

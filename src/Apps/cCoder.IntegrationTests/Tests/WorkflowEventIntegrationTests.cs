@@ -11,12 +11,12 @@ using cCoder.Data.Models.Planning;
 using cCoder.Data.Models.Workflow;
 using cCoder.IntegrationTests.Infrastructure;
 using cCoder.Security.Data.EF.Interfaces;
-using cCoder.Security.Objects.Entities;
+using cCoder.Security.Models.Entities;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
-using SsoToken = cCoder.Security.Objects.Entities.Token;
+using SsoToken = cCoder.Security.Models.Entities.Token;
 
 namespace cCoder.IntegrationTests.Tests;
 
@@ -164,7 +164,7 @@ workflowEvents: [.. core.Set<WorkflowEvent>()
             .GetRequiredService<ISecurityDbContextFactory>()
             .CreateDbContext(ignoreAuthInfo: true);
 
-        sso.Add(entity: new cCoder.Security.Objects.Entities.SSOUser
+        sso.Add(entity: new cCoder.Security.Models.Entities.SSOUser
         {
             Id = userId,
             DisplayName = "Scheduled Execute Only",
@@ -226,7 +226,7 @@ workflowEvents: [.. core.Set<WorkflowEvent>()
                 .GetRequiredService<ISecurityDbContextFactory>()
                 .CreateDbContext(ignoreAuthInfo: true);
 
-            cCoder.Security.Objects.Entities.Token[] tokens = await sso.Set<cCoder.Security.Objects.Entities.Token>()
+            cCoder.Security.Models.Entities.Token[] tokens = await sso.Set<cCoder.Security.Models.Entities.Token>()
                 .IgnoreQueryFilters()
                 .Where(predicate: found => found.UserName == userId)
                 .ToArrayAsync();

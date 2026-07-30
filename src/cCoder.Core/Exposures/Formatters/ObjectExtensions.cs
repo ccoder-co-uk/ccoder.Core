@@ -8,7 +8,7 @@ using cCoder.Core.Services.Processings.Formatters;
 
 namespace cCoder.Core.Exposures.Formatters;
 
-internal static class FormatterExportExtensions
+internal static class ObjectExtensions
 {
     public static string ToCsv(
         this object source,

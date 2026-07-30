@@ -10,7 +10,7 @@ using cCoder.Data.Models.Planning;
 using cCoder.Data.Models.Workflow;
 using cCoder.Eventing;
 using cCoder.Eventing.Models;
-using cCoder.Workflow.Services.Processings;
+using cCoder.Workflow.Exposures;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 namespace HostedServices;
@@ -98,9 +98,9 @@ public class Program
                     return;
                 }
 
-                IWorkflowInstanceProcessingService processingService =
+                IWorkflowInstanceManager processingService =
                     serviceProvider.GetRequiredService<
-                        IWorkflowInstanceProcessingService>();
+                        IWorkflowInstanceManager>();
 
                 await processingService
                     .ExecuteWaitingQueuedInstanceByIdAsync(
