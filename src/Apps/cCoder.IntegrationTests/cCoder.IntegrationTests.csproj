@@ -15,7 +15,7 @@
     <Compile Include="..\Shared\Testing\AcceptanceTestConfiguration.cs"
              Link="Shared\Testing\AcceptanceTestConfiguration.cs" />
     <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.20.2" />
-    <PackageReference Include="cCoder.Security.Data" Version="2026.7.30.1718" Condition="'$(UseLocalSecurity)' != 'true'" />
+    <PackageReference Include="cCoder.Security.Data" Version="2026.7.30.2059" Condition="'$(UseLocalSecurity)' != 'true'" />
     <PackageReference Include="cCoder.Mail.Providers" Version="2026.7.30.1837" />
     <PackageReference Include="FluentAssertions" Version="8.10.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.10" />
