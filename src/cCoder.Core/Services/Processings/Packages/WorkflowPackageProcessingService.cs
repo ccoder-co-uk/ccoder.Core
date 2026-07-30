@@ -6,24 +6,36 @@ using cCoder.Packaging.Models;
 using cCoder.Data.Models.Packaging;
 using cCoder.Workflow.Exposures;
 using cCoder.Workflow.Models;
-using PackagingBroker = cCoder.Packaging.Brokers.ISchedulingPackageManagerBroker;
+using cCoder.Data.Models.CMS;
+using cCoder.Data.Models.Security;
+using cCoder.Data.Models.Workflow;
 
 
-namespace cCoder.Core.Dependencies.Packaging;
+namespace cCoder.Core.Services.Processings.Packages;
 
-internal class SchedulingPackageManagerBroker(
+internal sealed partial class WorkflowPackageProcessingService(
     IWorkflowPackageManager workflowPackageManager = null
-) : PackagingBroker
+) : IWorkflowPackageProcessingService
 {
     public ValueTask ImportPackageAsync(int appId, Package package) =>
-        workflowPackageManager == null
-            ? ValueTask.CompletedTask
-            : workflowPackageManager.ImportPackageAsync(appId: appId, package: ToExternalPackage(package: package));
+        TryCatch(operation: () =>
+        {
+            ValidatePackageOnImport(appId: appId, package: package);
+
+            return workflowPackageManager == null
+                ? ValueTask.CompletedTask
+                : workflowPackageManager.ImportPackageAsync(appId: appId, package: ToExternalPackage(package: package));
+        });
 
     public Package ExportPackage(int appId, string packageName) =>
-        workflowPackageManager == null
-            ? null
-            : ToLocalPackage(package: workflowPackageManager.ExportPackage(appId: appId, packageName: packageName));
+        TryCatch(operation: () =>
+        {
+            ValidatePackageOnExport(appId: appId, packageName: packageName);
+
+            return workflowPackageManager == null
+                ? null
+                : ToLocalPackage(package: workflowPackageManager.ExportPackage(appId: appId, packageName: packageName));
+        });
 
     private static WorkflowPackage ToExternalPackage(Package package) =>
         package == null ? null : new WorkflowPackage(package.Name)

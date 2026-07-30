@@ -5,8 +5,8 @@
 using cCoder.Core.Models;
 using cCoder.Core.Services.Aggregations;
 using cCoder.Core.Services.Orchestrations;
-using cCoder.Security.Objects.DTOs;
-using cCoder.Security.Objects.Entities;
+using cCoder.Security.Models.DTOs;
+using cCoder.Security.Models.Entities;
 
 namespace cCoder.Core.Exposures.Managers;
 

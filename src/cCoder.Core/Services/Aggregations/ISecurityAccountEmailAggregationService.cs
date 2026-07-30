@@ -2,11 +2,11 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.Security.Objects.Events;
+using cCoder.Security.Models.Events;
 
 namespace cCoder.Core.Services.Aggregations;
 
-public interface ISecurityAccountEmailAggregationService
+internal interface ISecurityAccountEmailAggregationService
 {
     ValueTask QueueRegistrationCreatedSecurityAccountEventEmailAsync(
         SecurityAccountEvent accountEvent);

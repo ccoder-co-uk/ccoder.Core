@@ -12,17 +12,18 @@ using cCoder.Data;
 using cCoder.Data.Models.Mail;
 using cCoder.Data.Models.Security;
 using cCoder.Mail.Models;
+using cCoder.Mail.Providers.Models;
 using cCoder.IntegrationTests.Infrastructure;
 using cCoder.Security.Data.EF.Interfaces;
-using cCoder.Security.Objects.DTOs;
-using cCoder.Security.Objects.Entities;
+using cCoder.Security.Models.DTOs;
+using cCoder.Security.Models.Entities;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Xunit.Sdk;
 using CoreUser = cCoder.Data.Models.Security.User;
-using SsoToken = cCoder.Security.Objects.Entities.Token;
+using SsoToken = cCoder.Security.Models.Entities.Token;
 
 namespace cCoder.IntegrationTests.Tests;
 
@@ -50,15 +51,15 @@ public sealed partial class SecurityAccountEventIntegrationTests(IntegrationAcce
         [
             .. new Dictionary<string, string>
             {
-                ["Mail__MicrosoftGraph__TenantId"] =
+                ["Mail__Providers__3__MicrosoftGraph__TenantId"] =
                     fixture.Settings.MailTenantId,
-                ["Mail__MicrosoftGraph__ClientId"] =
+                ["Mail__Providers__3__MicrosoftGraph__ClientId"] =
                     fixture.Settings.MailClientId,
-                ["Mail__MicrosoftGraph__ClientSecret"] =
+                ["Mail__Providers__3__MicrosoftGraph__ClientSecret"] =
                     fixture.Settings.MailClientSecret,
-                ["Mail__MicrosoftGraph__SendUser"] =
+                ["CoreIntegrationTests__MailSendUser"] =
                     fixture.Settings.MailSendUser,
-                ["Mail__MicrosoftGraph__ReceiveUser"] =
+                ["CoreIntegrationTests__MailReceiveUser"] =
                     fixture.Settings.MailReceiveUser,
             }
             .Where(predicate:
@@ -338,11 +339,15 @@ content:                     $"Timed out waiting for the default Users role assi
 
         string receiveUser = fixture.Settings.MailReceiveUser;
 
+        Guid mailReceiverId = await EnsureMailReceiverAsync(
+            receiveUser: receiveUser);
+
         while (DateTimeOffset.UtcNow < deadline)
         {
             using HttpResponseMessage response = await fixture.WebClient.PostAsJsonAsync(
 requestUri:                 "/Api/Mail/ReceivedEmail/Receive",value:                 new MailboxReceiveRequest
                 {
+                    MailReceiverId = mailReceiverId,
                     User = receiveUser,
                     From = from.AddMinutes(minutes: -1),
                     To = DateTimeOffset.UtcNow.AddMinutes(minutes: 5),
@@ -370,6 +375,44 @@ requestUri:                 "/Api/Mail/ReceivedEmail/Receive",value:            
         }
 
         throw new TimeoutException($"Timed out waiting to receive '{subjectFragment}' email for {user.Email}.");
+    }
+
+    private async Task<Guid> EnsureMailReceiverAsync(
+        string receiveUser)
+    {
+        await using CoreDataContext core = CreateCoreContext();
+
+        MailReceiver mailReceiver = await core.Set<MailReceiver>()
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(predicate: receiver =>
+                receiver.AppId == BaselineAppId
+                && receiver.ProviderName
+                    == MailProviderNames.MicrosoftGraph
+                && receiver.User == receiveUser);
+
+        if (mailReceiver is not null)
+        {
+            return mailReceiver.Id;
+        }
+
+        mailReceiver = new()
+        {
+            AppId = BaselineAppId,
+            Name = "Default",
+            ProviderName = MailProviderNames.MicrosoftGraph,
+            User = receiveUser,
+            Password = string.Empty,
+            Host = "graph.microsoft.com",
+            Port = 443,
+            EnableSSL = true,
+            IsEnabled = true,
+        };
+
+        await core.Set<MailReceiver>()
+            .AddAsync(entity: mailReceiver);
+
+        await core.SaveChangesAsync();
+        return mailReceiver.Id;
     }
 
     private static string ExtractTokenFromEmail(ReceivedEmail email)

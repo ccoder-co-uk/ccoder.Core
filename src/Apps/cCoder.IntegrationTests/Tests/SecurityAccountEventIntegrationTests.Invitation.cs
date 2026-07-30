@@ -3,8 +3,8 @@
 // ---------------------------------------------------------------
 
 using cCoder.Data.Models.Mail;
-using cCoder.Security.Objects.DTOs;
-using cCoder.Security.Objects.Entities;
+using cCoder.Security.Models.DTOs;
+using cCoder.Security.Models.Entities;
 using FluentAssertions;
 using Xunit;
 

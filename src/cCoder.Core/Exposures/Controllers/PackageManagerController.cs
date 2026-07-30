@@ -14,7 +14,7 @@ namespace cCoder.Core.Exposures.Controllers;
 [ApiController]
 [Route("Api/Core/Package")]
 public class PackageManagerController(
-    IPackageManagerAggregationService packageManagerAggregationService)
+    IPackageManager packageManagerAggregationService)
     : ControllerBase
 {
     private static readonly JsonSerializerOptions JsonOptions = new()

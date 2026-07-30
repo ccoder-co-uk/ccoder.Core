@@ -8,11 +8,11 @@ using cCoder.Data.Models;
 using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.Security;
 using cCoder.Security.Data.EF.Interfaces;
-using cCoder.Security.Objects.Entities;
+using cCoder.Security.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using CoreUser = cCoder.Data.Models.Security.User;
-using SsoUser = cCoder.Security.Objects.Entities.SSOUser;
+using SsoUser = cCoder.Security.Models.Entities.SSOUser;
 
 namespace cCoder.IntegrationTests.Infrastructure;
 

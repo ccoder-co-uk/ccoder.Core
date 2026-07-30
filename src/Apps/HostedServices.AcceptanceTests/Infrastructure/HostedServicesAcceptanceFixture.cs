@@ -73,10 +73,3 @@ public sealed class HostedServicesAcceptanceFixture : IAsyncLifetime
         }
     }
 }
-
-[CollectionDefinition(Name)]
-public sealed class HostedServicesAcceptanceCollection
-    : ICollectionFixture<HostedServicesAcceptanceFixture>
-{
-    public const string Name = "HostedServices acceptance";
-}

@@ -7,8 +7,8 @@ using System.Web;
 using cCoder.Core.Services.Foundations.ContentManagement;
 using cCoder.Core.Exposures.Managers;
 using cCoder.Data.Models.CMS;
-using cCoder.Security.Objects.Entities;
-using cCoder.Security.Objects.Events;
+using cCoder.Security.Models.Entities;
+using cCoder.Security.Models.Events;
 using Microsoft.EntityFrameworkCore;
 
 namespace cCoder.Core.Services.Aggregations;

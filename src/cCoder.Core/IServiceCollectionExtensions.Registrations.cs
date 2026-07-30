@@ -19,14 +19,14 @@ using cCoder.Core.Brokers.Mail;
 using cCoder.Core.Brokers.Planning;
 using cCoder.Core.Brokers.Packaging;
 using cCoder.Core.Brokers.Workflow;
-using cCoder.Core.Dependencies.Eventing;
-using cCoder.Core.Dependencies.Packaging;
 using cCoder.Core.Exposures.Managers;
+using cCoder.Core.Exposures.PackageManagers;
 using cCoder.Core.Exposures.Controllers;
 using cCoder.Core.Exposures.Cors;
 using cCoder.Core.Exposures.Setup;
 using cCoder.Core.Dependencies.Formatters;
 using cCoder.Core.Dependencies.Middleware;
+using cCoder.Core.Dependencies.OData;
 using cCoder.Core.Dependencies.Sessions;
 using cCoder.Core.Exposures;
 using cCoder.Core.Services.Aggregations;
@@ -41,6 +41,7 @@ using cCoder.Core.Services.Foundations.Planning;
 using cCoder.Core.Services.Foundations.Workflow;
 using cCoder.Core.Services.Orchestrations;
 using cCoder.Core.Services.Processings.AllowedOrigins;
+using cCoder.Core.Services.Processings.Packages;
 using cCoder.Core.Services.Processings.Setup;
 using cCoder.Core.Services.Foundations.Setup;
 using cCoder.Core.Services.Foundations.TemplatedEmails;
@@ -54,7 +55,7 @@ using cCoder.Eventing.AzureServiceBus;
 using cCoder.Eventing.Http;
 using cCoder.Eventing.Models;
 using cCoder.Packaging;
-using cCoder.Security.Objects.Events;
+using cCoder.Security.Models.Events;
 using cCoder.Security;
 using cCoder.Security.Data.EF;
 using cCoder.Security.Exposures;
@@ -72,10 +73,10 @@ using Microsoft.OData.ModelBuilder;
 
 namespace cCoder.Core;
 
-internal static class CoreServiceCollectionExtensions
+public static partial class IServiceCollectionExtensions
 {
-    internal static IServiceCollection AddCoreWeb(
-        IServiceCollection services,
+    public static IServiceCollection AddCoreWeb(
+        this IServiceCollection services,
         CoreConfiguration configuration)
     {
         ArgumentNullException.ThrowIfNull(argument: configuration);
@@ -118,7 +119,16 @@ internal static class CoreServiceCollectionExtensions
         services.AddConfiguredWebEventing(
             configuration: configuration.Eventing);
 
+        services.AddBrokers();
+        services.AddFoundations();
+        services.AddProcessings();
+        services.AddAggregations();
+        services.AddOrchestrations();
         services.AddExposures();
+
+        services.AddServiceBusEventForwarding(
+            configuration: configuration.Eventing);
+
         services.AddCoreApiContexts();
 
         services.AddCoreApiDocumentation(
@@ -168,8 +178,8 @@ internal static class CoreServiceCollectionExtensions
         }
     }
 
-    internal static IServiceCollection AddCoreHostedServices(
-        IServiceCollection services,
+    public static IServiceCollection AddCoreHostedServices(
+        this IServiceCollection services,
         CoreConfiguration configuration)
     {
         ArgumentNullException.ThrowIfNull(argument: configuration);
@@ -203,23 +213,38 @@ internal static class CoreServiceCollectionExtensions
         services.AddConfiguredHostedServicesEventing(
             configuration: configuration.Eventing);
 
+        services.AddBrokers();
+        services.AddFoundations();
+        services.AddProcessings();
+        services.AddAggregations();
+        services.AddOrchestrations();
         services.AddExposures();
+
+        services.AddServiceBusEventForwarding(
+            configuration: configuration.Eventing);
 
         return services;
     }
 
     internal static IServiceCollection AddCoreApi(
         this IServiceCollection services,
-        IEnumerable<CoreApiRouteDefinition> routeDefinitions = null) =>
-        AddExposures(
-            services: services,
+        IEnumerable<CoreApiRouteDefinition> routeDefinitions = null)
+    {
+        services.AddBrokers();
+        services.AddFoundations();
+        services.AddProcessings();
+        services.AddAggregations();
+        services.AddOrchestrations();
+
+        return services.AddExposures(
             routeDefinitions: routeDefinitions);
+    }
 
     internal static IServiceCollection AddCoreApiDocumentation(
         this IServiceCollection services,
         params string[] apiContexts)
     {
-        CoreApiRouteDefinition[] routes = GetRouteDefinitions(apiContexts: apiContexts);
+        CoreApiRouteDefinition[] routes = services.GetRouteDefinitions(apiContexts: apiContexts);
         return services.AddCoreApiDocumentation(routes: routes);
     }
 
@@ -227,17 +252,17 @@ internal static class CoreServiceCollectionExtensions
         this IServiceCollection services,
         IEnumerable<CoreApiRouteDefinition> routes)
     {
-        CoreApiRouteDefinition[] definitions = GetRouteDefinitions(routes: routes);
+        CoreApiRouteDefinition[] definitions = services.GetRouteDefinitions(routes: routes);
 
         services.AddSwaggerGen(setupAction: c =>
         {
             c.ResolveConflictingActions(resolver: apiDescriptions => apiDescriptions.First());
             c.CustomSchemaIds(schemaIdSelector: type => type.FullName?.Replace(oldChar: '+', newChar: '.') ?? type.Name);
-            AddSwaggerDocuments(options: c, routes: definitions);
+            services.AddSwaggerDocuments(options: c, routes: definitions);
 
             c.DocInclusionPredicate(
 predicate: (documentName, apiDescription) =>
-                    ShouldIncludeInDocument(documentName: documentName, relativePath: apiDescription.RelativePath, routes: definitions));
+                    services.ShouldIncludeInDocument(documentName: documentName, relativePath: apiDescription.RelativePath, routes: definitions));
 
             c.AddSecurityDefinition(name: "bearer", securityScheme: new OpenApiSecurityScheme
             {
@@ -356,29 +381,20 @@ predicate: (documentName, apiDescription) =>
         services.AddTransient<IWorkflowAppBroker, WorkflowAppBroker>();
         services.AddTransient<IMailAppBroker, MailAppBroker>();
         services.AddTransient<IMailManagerBroker, MailManagerBroker>();
-        services.AddTransient<IServiceBusEventingBroker, ServiceBusEventingDependency>();
 
-        services.AddTransient<
-            IServiceBusAppDeleteForwardingBroker,
-            ServiceBusAppDeleteForwardingBroker>();
-
-        services.AddTransient<
-            IServiceBusFolderDeleteForwardingBroker,
-            ServiceBusFolderDeleteForwardingBroker>();
-
-        services.TryAddTransient<cCoder.Packaging.Brokers.IAppDomainProvider, AppDomainProvider>();
-        services.TryAddTransient<cCoder.Packaging.Brokers.IAppSecurityPackageManagerBroker, AppSecurityPackageManagerBroker>();
+        services.TryAddTransient<cCoder.Packaging.Exposures.PackageManagers.IAppDomainManager, AppDomainManager>();
+        services.TryAddTransient<cCoder.Packaging.Exposures.PackageManagers.IAppSecurityPackageManager, AppSecurityPackageManager>();
 
         services.TryAddTransient<
-            cCoder.Packaging.Brokers.IContentManagementPackageManagerBroker,
-            ContentManagementPackageManagerBroker>();
+            cCoder.Packaging.Exposures.PackageManagers.IContentManagementPackageManager,
+            ContentManagementPackageManager>();
 
         services.TryAddTransient<
-            cCoder.Packaging.Brokers.IDocumentManagementPackageManagerBroker,
-            DocumentManagementPackageManagerBroker>();
+            cCoder.Packaging.Exposures.PackageManagers.IDocumentManagementPackageManager,
+            DocumentManagementPackageManager>();
 
-        services.TryAddTransient<cCoder.Packaging.Brokers.ISchedulingPackageManagerBroker, SchedulingPackageManagerBroker>();
-        services.TryAddTransient<cCoder.Packaging.Brokers.IWorkflowPackageManagerBroker, WorkflowPackageManagerBroker>();
+        services.TryAddTransient<cCoder.Packaging.Exposures.PackageManagers.ISchedulingPackageManager, SchedulingPackageManager>();
+        services.TryAddTransient<cCoder.Packaging.Exposures.PackageManagers.IWorkflowPackageManager, WorkflowPackageManager>();
     }
 
     private static void AddFoundations(
@@ -398,9 +414,6 @@ predicate: (documentName, apiDescription) =>
         services.AddTransient<IWorkflowAppService, WorkflowAppService>();
         services.AddTransient<IMailAppService, MailAppService>();
         services.AddTransient<IMailManagerService, MailManagerService>();
-        services.AddTransient<ServiceBusAppDeleteForwardingService>();
-        services.AddTransient<ServiceBusFolderDeleteForwardingService>();
-        services.AddTransient<IPackageManagerDependency, PackageManagerDependency>();
         services.AddTransient<IPackageBroker, PackageBroker>();
 
         services.AddTransient<
@@ -416,20 +429,73 @@ predicate: (documentName, apiDescription) =>
             TemplatedEmailQueueService>();
     }
 
+    private static void AddServiceBusEventForwarding(
+        this IServiceCollection services,
+        EventingConfiguration configuration)
+    {
+        if (!string.Equals(
+                a: configuration.ProviderType,
+                b: "ServiceBus",
+                comparisonType: StringComparison.OrdinalIgnoreCase)
+            || string.IsNullOrWhiteSpace(
+                value: configuration.ServiceBus.ConnectionString))
+        {
+            return;
+        }
+
+        services.AddTransient<
+            IServiceBusAppDeleteForwardingBroker,
+            ServiceBusAppDeleteForwardingBroker>();
+
+        services.AddTransient<
+            IServiceBusFolderDeleteForwardingBroker,
+            ServiceBusFolderDeleteForwardingBroker>();
+
+        services.AddTransient<ServiceBusAppDeleteForwardingService>();
+        services.AddTransient<ServiceBusFolderDeleteForwardingService>();
+    }
+
     private static void AddProcessings(
-        this IServiceCollection services) =>
+        this IServiceCollection services)
+    {
         services.AddTransient<
             IAllowedOriginStoreProcessingService,
             AllowedOriginStoreProcessingService>();
+
+        services.AddTransient<
+            IAppSecurityPackageProcessingService,
+            AppSecurityPackageProcessingService>();
+
+        services.AddTransient<
+            IContentManagementPackageProcessingService,
+            ContentManagementPackageProcessingService>();
+
+        services.AddTransient<
+            IDocumentManagementPackageProcessingService,
+            DocumentManagementPackageProcessingService>();
+
+        services.AddTransient<
+            ISchedulingPackageProcessingService,
+            SchedulingPackageProcessingService>();
+
+        services.AddTransient<
+            IWorkflowPackageProcessingService,
+            WorkflowPackageProcessingService>();
+    }
 
     private static void AddAggregations(
         this IServiceCollection services)
     {
         services.AddTransient<IAppAggregationService, AppAggregationService>();
+        services.AddTransient<ICoreAppManager, AppAggregationService>();
         services.AddTransient<IUserRegistrationAggregationService, UserRegistrationAggregationService>();
 
         services.AddTransient<
             IPackageManagerAggregationService,
+            PackageManagerAggregationService>();
+
+        services.AddTransient<
+            IPackageManager,
             PackageManagerAggregationService>();
 
         services.AddTransient<
@@ -469,6 +535,7 @@ predicate: (documentName, apiDescription) =>
             FirstTimeSetupStateOrchestrationService>();
 
         services.AddScoped<IFirstTimeSetupStateService, FirstTimeSetupStateManager>();
+        services.AddScoped<IFirstTimeSetupManager, FirstTimeSetupStateManager>();
         services.AddScoped<ISetupRequestHostProcessingService, SetupRequestHostProcessingService>();
         services.AddScoped<ISetupRequestHostManager, SetupRequestHostManager>();
         IMvcBuilder mvcBuilder = services.AddMvc();
@@ -517,12 +584,7 @@ predicate: (documentName, apiDescription) =>
         this IServiceCollection services,
         IEnumerable<CoreApiRouteDefinition> routeDefinitions = null)
     {
-        AddCoreAspNetExposures(services: services);
-        AddBrokers(services: services);
-        AddFoundations(services: services);
-        AddProcessings(services: services);
-        AddAggregations(services: services);
-        AddOrchestrations(services: services);
+        services.AddCoreAspNetExposures();
 
         services.AddTransient<
             ITemplatedEmailManager,
@@ -551,7 +613,7 @@ predicate: (documentName, apiDescription) =>
         this IServiceCollection services)
     {
         CoreConfiguration coreConfiguration =
-            GetRegisteredCoreConfiguration(services: services);
+            services.GetRegisteredCoreConfiguration();
 
         services.AddRouting();
         services.AddResponseCompression();
@@ -563,7 +625,7 @@ predicate: (documentName, apiDescription) =>
         services.AddScoped(
             serviceType: typeof(HttpContext),
             implementationFactory: context =>
-                CreateHttpContext(
+                services.CreateHttpContext(
                     httpContext: context
                         .GetService<IHttpContextAccessor>()
                         ?.HttpContext));
@@ -696,7 +758,7 @@ predicate: (documentName, apiDescription) =>
         this IServiceCollection services)
     {
         CoreConfiguration coreConfiguration =
-            GetRegisteredCoreConfiguration(services: services);
+            services.GetRegisteredCoreConfiguration();
 
         services.PostConfigure<ODataOptions>(
             configureOptions: options =>
@@ -724,7 +786,7 @@ predicate: (documentName, apiDescription) =>
     }
 
     private static CoreConfiguration GetRegisteredCoreConfiguration(
-        IServiceCollection services) =>
+        this IServiceCollection services) =>
         services
             .Where(predicate: descriptor =>
                 descriptor.ServiceType == typeof(CoreConfiguration))
@@ -734,6 +796,7 @@ predicate: (documentName, apiDescription) =>
             .LastOrDefault();
 
     private static HttpContext CreateHttpContext(
+        this IServiceCollection services,
         HttpContext httpContext)
     {
         if (httpContext is not null)
@@ -749,37 +812,10 @@ predicate: (documentName, apiDescription) =>
         return fallbackContext;
     }
 
-    private sealed class SplitDomainApplicationModelConvention
-        : IActionModelConvention
-    {
-        public void Apply(ActionModel action)
-        {
-            if (!string.Equals(
-                    a: action.Controller.ControllerName,
-                    b: "App",
-                    comparisonType: StringComparison.Ordinal))
-            {
-                return;
-            }
-
-            for (int index = action.Selectors.Count - 1; index >= 0; index--)
-            {
-                string template =
-                    action.Selectors[index].AttributeRouteModel?.Template;
-
-                if (template?.StartsWith(
-                        value: "Api/Core/App",
-                        comparisonType:
-                            StringComparison.OrdinalIgnoreCase) == true)
-                {
-                    action.Selectors.RemoveAt(index: index);
-                }
-            }
-        }
-    }
-
-    private static CoreApiRouteDefinition[] GetRouteDefinitions(IEnumerable<string> apiContexts) =>
-        GetRouteDefinitions(routes: (apiContexts ?? [])
+    private static CoreApiRouteDefinition[] GetRouteDefinitions(
+        this IServiceCollection services,
+        IEnumerable<string> apiContexts) =>
+        services.GetRouteDefinitions(routes: (apiContexts ?? [])
             .Where(predicate: context => !string.IsNullOrWhiteSpace(value: context))
             .Select(selector: context => new CoreApiRouteDefinition(
                 context,
@@ -787,6 +823,7 @@ predicate: (documentName, apiDescription) =>
                 null)));
 
     private static CoreApiRouteDefinition[] GetRouteDefinitions(
+        this IServiceCollection services,
         IEnumerable<CoreApiRouteDefinition> routes)
     {
         CoreApiRouteDefinition coreRoute = new("Core", "Api/Core", null);
@@ -799,6 +836,7 @@ predicate: (documentName, apiDescription) =>
     }
 
     private static void AddSwaggerDocuments(
+        this IServiceCollection services,
         Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenOptions options,
         IEnumerable<CoreApiRouteDefinition> routes)
     {
@@ -819,6 +857,7 @@ predicate: (documentName, apiDescription) =>
     }
 
     private static bool ShouldIncludeInDocument(
+        this IServiceCollection services,
         string documentName,
         string relativePath,
         IEnumerable<CoreApiRouteDefinition> routes)
@@ -833,22 +872,25 @@ predicate: (documentName, apiDescription) =>
             documentName = "Core";
         }
 
-        string path = NormalizePath(relativePath: relativePath);
+        string path = services.NormalizePath(relativePath: relativePath);
 
         if (string.Equals(a: documentName, b: "Core", comparisonType: StringComparison.OrdinalIgnoreCase))
         {
-            return IsCoreRoute(path: path, routes: routes);
+            return services.IsCoreRoute(path: path, routes: routes);
         }
 
         CoreApiRouteDefinition route = routes.FirstOrDefault(predicate: candidate =>
             string.Equals(a: candidate.Name, b: documentName, comparisonType: StringComparison.OrdinalIgnoreCase));
 
-        return route is not null && MatchesRoutePath(path: path, routePath: route.RoutePath);
+        return route is not null && services.MatchesRoutePath(path: path, routePath: route.RoutePath);
     }
 
-    private static bool IsCoreRoute(string path, IEnumerable<CoreApiRouteDefinition> routes)
+    private static bool IsCoreRoute(
+        this IServiceCollection services,
+        string path,
+        IEnumerable<CoreApiRouteDefinition> routes)
     {
-        if (MatchesContextRoute(path: path, context: "Core"))
+        if (services.MatchesContextRoute(path: path, context: "Core"))
         {
             return true;
         }
@@ -863,7 +905,7 @@ predicate: (documentName, apiDescription) =>
                      !string.Equals(a: route.Name, b: "Core", comparisonType: StringComparison.OrdinalIgnoreCase)
                      && !string.Equals(a: route.Name, b: "v1", comparisonType: StringComparison.OrdinalIgnoreCase)))
         {
-            if (MatchesRoutePath(path: path, routePath: route.RoutePath))
+            if (services.MatchesRoutePath(path: path, routePath: route.RoutePath))
             {
                 return false;
             }
@@ -872,15 +914,21 @@ predicate: (documentName, apiDescription) =>
         return true;
     }
 
-    private static bool MatchesRoutePath(string path, string routePath)
+    private static bool MatchesRoutePath(
+        this IServiceCollection services,
+        string path,
+        string routePath)
     {
-        string prefix = NormalizePath(relativePath: routePath);
+        string prefix = services.NormalizePath(relativePath: routePath);
 
         return path.Equals(value: prefix, comparisonType: StringComparison.OrdinalIgnoreCase)
             || path.StartsWith(value: $"{prefix}/", comparisonType: StringComparison.OrdinalIgnoreCase);
     }
 
-    private static bool MatchesContextRoute(string path, string context)
+    private static bool MatchesContextRoute(
+        this IServiceCollection services,
+        string path,
+        string context)
     {
         string prefix = $"/Api/{context}";
 
@@ -888,6 +936,8 @@ predicate: (documentName, apiDescription) =>
             || path.StartsWith(value: $"{prefix}/", comparisonType: StringComparison.OrdinalIgnoreCase);
     }
 
-    private static string NormalizePath(string relativePath) =>
+    private static string NormalizePath(
+        this IServiceCollection services,
+        string relativePath) =>
         relativePath.StartsWith(value: '/') ? relativePath : $"/{relativePath}";
 }

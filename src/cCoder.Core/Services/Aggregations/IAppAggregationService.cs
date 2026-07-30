@@ -4,13 +4,8 @@
 
 using cCoder.Data.Models.CMS;
 
+using cCoder.Core.Exposures;
+
 namespace cCoder.Core.Services.Aggregations;
 
-public interface IAppAggregationService
-{
-    ValueTask<App> AddAppAsync(App newApp);
-
-    ValueTask<App> UpdateAppAsync(App updatedApp);
-
-    ValueTask DeleteAppAsync(int appId);
-}
+internal interface IAppAggregationService : ICoreAppManager { }

@@ -2,12 +2,12 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using Workflow.Services.Processings.WorkflowFunctions;
+using Workflow.Exposures;
 
 namespace Workflow.Exposures;
 
 public sealed class ExecuteFromServiceBus(
-    IWorkflowFunctionsProcessingService workflowFunctionsProcessingService)
+    IWorkflowFunctionsManager workflowFunctionsProcessingService)
 {
     public Task RunAsync(string message) =>
         workflowFunctionsProcessingService.ProcessServiceBusMessageAsync(

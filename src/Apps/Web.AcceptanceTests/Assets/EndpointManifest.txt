@@ -152,7 +152,7 @@ GET Api/Mail/QueuedEmail/$count
 GET Api/Mail/ReceivedEmail
 GET Api/Mail/ReceivedEmail({key})
 GET Api/Mail/ReceivedEmail/$count
-GET Api/Mail/ReceivedEmail/ReceiveTop/{count:int}
+GET Api/Mail/ReceivedEmail/ReceiveTop/{mailReceiverId:guid}/{count:int}
 GET Api/Mail/SentEmail
 GET Api/Mail/SentEmail({key})
 GET Api/Mail/SentEmail/$count

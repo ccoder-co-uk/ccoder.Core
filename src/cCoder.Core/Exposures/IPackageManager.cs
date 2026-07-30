@@ -4,15 +4,16 @@
 
 using cCoder.Data.Models.Packaging;
 
-namespace cCoder.Core.Dependencies.Packaging;
+namespace cCoder.Core.Exposures;
 
-internal interface IPackageManagerDependency
+public interface IPackageManager
 {
-    Package ExportPackage(
+    ValueTask<Package[]> ExportPackagesAsync(
         int appId,
-        string packageName);
+        string[] packageNames,
+        string sourceApi);
 
-    ValueTask ImportPackageAsync(
+    ValueTask ImportPackagesAsync(
         int appId,
-        Package package);
+        IEnumerable<Package> packages);
 }
