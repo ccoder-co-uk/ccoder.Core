@@ -633,10 +633,7 @@
                         Key: record.ResourceKey
                             ?? record.Key
                             ?? setupPackage.Category,
-                        // Common-object rendering still identifies the content
-                        // management resource families by their established
-                        // cache type names. Package routes remain domain based.
-                        Type: `Core/${item.Type.split("/").pop()}`,
+                        Type: item.Type,
                         Json: JSON.stringify(record),
                         Culture: record.Culture ?? "",
                     }));
