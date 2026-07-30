@@ -160,6 +160,10 @@
 
         await that.buildConfig.apply(that);
 
+        if (that.config.toolbar != null && !Array.isArray(that.config.toolbar)) {
+            that.config.toolbar = [{ template: that.config.toolbar }];
+        }
+
         if (that.searchable) {
             if (that.config.toolbar == null) { that.config.toolbar = []; }
             that.config.toolbar.push({ name: "search" });
