@@ -85,7 +85,9 @@ public static partial class IServiceCollectionExtensions
         ODataConventionModelBuilder domainModelBuilder = new();
 
         services.AddAIWeb(configuration: configuration.AI);
-        services.AddSecurityWeb(configuration: configuration.Security);
+        services.AddSecurityWeb(
+            configuration: configuration.Security,
+            builder: domainModelBuilder);
 
         services.AddAppSecurityWeb(
             configuration: configuration.AppSecurity,
