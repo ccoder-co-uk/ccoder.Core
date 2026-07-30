@@ -104,7 +104,7 @@ public sealed partial class FirstTimeSetupTests
             .Contain(expected: "\"/Api/Packaging/PackageItem\"");
 
         content.Should()
-            .Contain(expected: "Type: `Core/${item.Type.split(\"/\").pop()}`");
+            .Contain(expected: "Type: item.Type");
 
         content.Should()
             .Contain(expected: "\"/Api/RefreshCache\"");
