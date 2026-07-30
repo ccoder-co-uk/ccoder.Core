@@ -2,10 +2,17 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using cCoder.ContentManagement.Models.OData;
+using cCoder.Data.Exposures;
+using cCoder.Security.Models.Entities;
+using System.Text.Json;
+
 namespace cCoder.Core;
 
 public static partial class WebApplicationExtensions
 {
+    private const string SecurityMetadataScope = "Security";
+
     private static WebApplication UseCoreSecurityHeaders(
         this WebApplication app)
     {
@@ -61,4 +68,48 @@ public static partial class WebApplicationExtensions
         bool? configuredValue,
         bool isProduction) =>
         configuredValue ?? !isProduction;
+
+    private static void PopulateSecurityMetadataTypeCache(
+        this WebApplication app)
+    {
+        IMetadataTypeCache metadataTypeCache =
+            app.Services.GetRequiredService<IMetadataTypeCache>();
+
+        if (metadataTypeCache.Contains(
+            scope: SecurityMetadataScope))
+        {
+            return;
+        }
+
+        metadataTypeCache.Set(
+            scope: SecurityMetadataScope,
+            typeSetPayloads:
+            [
+                JsonSerializer.Serialize(
+                    value: new MetadataContainerSet
+                    {
+                        Name = SecurityMetadataScope,
+                        UriBase = SecurityMetadataScope,
+                        Types =
+                        [
+                            SecurityEntity<SSOUser>(),
+                            SecurityEntity<SSORole>(),
+                            SecurityEntity<SSOPrivilege>(),
+                            SecurityEntity<Tenant>(),
+                            SecurityEntity<TenantAnalysis>(),
+                            SecurityEntity<UserEvent>(),
+                            SecurityEntity<SSOUserRole>(),
+                        ],
+                    })
+            ]);
+    }
+
+    private static ExtendedMetadataContainer SecurityEntity<TEntity>() =>
+        new(
+            type: typeof(TEntity),
+            isEntity: true,
+            hasEndpoint: true)
+        {
+            Category = SecurityMetadataScope,
+        };
 }

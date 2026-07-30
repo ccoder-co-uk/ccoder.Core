@@ -25,6 +25,7 @@ public static partial class WebApplicationExtensions
         app.StartWorkflowWeb(log: log);
         app.StartAppSecurityWeb(log: log);
         app.StartLoggingWeb(log: log);
+        app.PopulateSecurityMetadataTypeCache();
         app.StartContentManagementWeb(onRequest: LogRequest, log: log);
         app.UseCoreDefaultCors();
         app.UseCoreExceptionHandling(errorHandler: HandleUnhandledException);
