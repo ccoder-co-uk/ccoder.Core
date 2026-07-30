@@ -11,7 +11,7 @@ using cCoder.Security.Data.EF.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ContentMetadataCache = cCoder.ContentManagement.Exposures.Caching.IMetadataCache;
-using SsoUser = cCoder.Security.Objects.Entities.SSOUser;
+using SsoUser = cCoder.Security.Models.Entities.SSOUser;
 
 namespace HostedServices.AcceptanceTests.Infrastructure;
 

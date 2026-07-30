@@ -15,14 +15,14 @@ using cCoder.Data.Models.Security;
 using cCoder.Data.Models.Workflow;
 using cCoder.IntegrationTests.Infrastructure;
 using cCoder.Security.Data.EF.Interfaces;
-using cCoder.Security.Objects.Entities;
+using cCoder.Security.Models.Entities;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using AppEntity = cCoder.Data.Models.CMS.App;
 using DmsFile = cCoder.Data.Models.DMS.File;
-using SsoToken = cCoder.Security.Objects.Entities.Token;
+using SsoToken = cCoder.Security.Models.Entities.Token;
 
 namespace cCoder.IntegrationTests.Tests;
 
@@ -435,20 +435,76 @@ roles: [.. core.Set<Role>()
                 $"{file.Id}: Folder={file.FolderId}, Name={file.Name}, Path={file.Path}")
             .ToArrayAsync();
 
+        string[] roles = await core.Set<Role>()
+            .IgnoreQueryFilters()
+            .Where(predicate: role => role.AppId == appId)
+            .Select(selector: role => role.Name)
+            .ToArrayAsync();
+
+        string[] administratorPrivileges = await core.Set<Role>()
+            .IgnoreQueryFilters()
+            .Where(predicate: role =>
+                role.AppId == appId
+                && role.Name == "Administrators")
+            .SelectMany(selector: role => role.Privileges)
+            .ToArrayAsync();
+
+        string[] cultures = await core.Set<AppCulture>()
+            .IgnoreQueryFilters()
+            .Where(predicate: culture => culture.AppId == appId)
+            .Select(selector: culture => culture.CultureId)
+            .ToArrayAsync();
+
+        string[] mailServers = await core.Set<MailServer>()
+            .IgnoreQueryFilters()
+            .Where(predicate: server => server.AppId == appId)
+            .Select(selector: server => server.Name)
+            .ToArrayAsync();
+
+        string[] calendars = await core.Set<Calendar>()
+            .IgnoreQueryFilters()
+            .Where(predicate: calendar => calendar.AppId == appId)
+            .Select(selector: calendar => calendar.Name)
+            .ToArrayAsync();
+
+        string[] flows = await core.Set<FlowDefinition>()
+            .IgnoreQueryFilters()
+            .Where(predicate: flow => flow.AppId == appId)
+            .Select(selector: flow => flow.Name)
+            .ToArrayAsync();
+
         return $"""
             App event state:
             Folders:
             {string.Join(separator: Environment.NewLine, values: folders)}
             Files:
             {string.Join(separator: Environment.NewLine, values: files)}
+            Roles: {string.Join(separator: ", ", values: roles)}
+            Administrator privileges: {string.Join(separator: ", ", values: administratorPrivileges)}
+            Cultures: {string.Join(separator: ", ", values: cultures)}
+            Mail servers: {string.Join(separator: ", ", values: mailServers)}
+            Calendars: {string.Join(separator: ", ", values: calendars)}
+            Flows: {string.Join(separator: ", ", values: flows)}
 
             Web output:
+            {ImportantLines(value: fixture.WebOutput)}
             {Tail(value: fixture.WebOutput)}
 
             HostedServices output:
+            {ImportantLines(value: fixture.HostedServicesOutput)}
             {Tail(value: fixture.HostedServicesOutput)}
             """;
     }
+
+    private static string ImportantLines(string value) =>
+        string.Join(
+            separator: Environment.NewLine,
+            values: (value ?? string.Empty)
+                .Split(separator: ['\r', '\n'], options: StringSplitOptions.RemoveEmptyEntries)
+                .Where(predicate: line =>
+                    line.Contains(value: "fail:", comparisonType: StringComparison.OrdinalIgnoreCase)
+                    || line.Contains(value: "error", comparisonType: StringComparison.OrdinalIgnoreCase)
+                    || line.Contains(value: "exception", comparisonType: StringComparison.OrdinalIgnoreCase)));
 
     private static string Tail(string value, int length = 30000)
     {

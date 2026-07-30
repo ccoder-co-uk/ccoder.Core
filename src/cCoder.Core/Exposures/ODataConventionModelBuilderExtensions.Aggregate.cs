@@ -7,9 +7,9 @@ using Microsoft.OData.ModelBuilder;
 
 namespace cCoder.Core.Exposures;
 
-internal static class CoreSecurityApiModelBuilderExtensions
+internal static partial class ODataConventionModelBuilderExtensions
 {
-    internal static void ConfigureCoreSecurityApiModel(this ODataConventionModelBuilder builder) =>
-        new CoreSecurityApiModelDependency()
+    internal static void ConfigureCoreAggregateApiModel(this ODataConventionModelBuilder builder) =>
+        new CoreAggregateApiModelDependency()
             .Configure(options: builder);
 }

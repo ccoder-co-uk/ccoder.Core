@@ -11,12 +11,12 @@ using cCoder.Data.Models.DMS;
 using cCoder.Data.Models.Workflow;
 using cCoder.IntegrationTests.Infrastructure;
 using cCoder.Security.Data.EF.Interfaces;
-using cCoder.Security.Objects.Entities;
+using cCoder.Security.Models.Entities;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
-using SsoToken = cCoder.Security.Objects.Entities.Token;
+using SsoToken = cCoder.Security.Models.Entities.Token;
 
 namespace cCoder.IntegrationTests.Tests;
 

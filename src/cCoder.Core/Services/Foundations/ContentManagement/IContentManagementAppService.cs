@@ -6,7 +6,7 @@ using cCoder.Data.Models.CMS;
 
 namespace cCoder.Core.Services.Foundations.ContentManagement;
 
-public interface IContentManagementAppService
+internal interface IContentManagementAppService
 {
     App GetApp(int appId, bool ignoreFilters = false);
     App GetAppByDomain(string domain, bool ignoreFilters = false);

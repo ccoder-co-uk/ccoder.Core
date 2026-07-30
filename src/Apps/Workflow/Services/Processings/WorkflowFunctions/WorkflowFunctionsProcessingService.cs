@@ -9,6 +9,8 @@ using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Net;
+using System.Text;
+using Workflow.Dependencies;
 
 namespace Workflow.Services.Processings.WorkflowFunctions;
 
@@ -23,13 +25,12 @@ internal sealed partial class WorkflowFunctionsProcessingService(
         {
             ValidateInputs(inputs: [request]);
 
-            string json = await new StreamReader(request.Body)
-                .ReadToEndAsync();
+            string json = await ReadBodyAsync(request: request);
 
             WorkflowRequest workflowRequest =
                 JsonConvert.DeserializeObject<WorkflowRequest>(
                     value: json,
-                    settings: WorkflowJsonExtensions.GetJsonSettings())
+                    settings: ObjectExtensions.GetJsonSettings())
                 ?? throw new InvalidOperationException(
                     message:
                         "Workflow request payload could not be deserialized.");
@@ -48,8 +49,7 @@ internal sealed partial class WorkflowFunctionsProcessingService(
         {
             ValidateInputs(inputs: [request, useDetails]);
 
-            string payload = await new StreamReader(request.Body)
-                .ReadToEndAsync();
+            string payload = await ReadBodyAsync(request: request);
 
             string result = await scriptExecutionService.ExecuteAsync(
                 payload: payload,
@@ -92,5 +92,13 @@ internal sealed partial class WorkflowFunctionsProcessingService(
         await response.WriteStringAsync(value: content);
 
         return response;
+    }
+
+    private static async ValueTask<string> ReadBodyAsync(
+        HttpRequestData request)
+    {
+        using WorkflowFunctionStreamDependency content = new();
+        await request.Body.CopyToAsync(destination: content);
+        return Encoding.UTF8.GetString(bytes: content.ToArray());
     }
 }

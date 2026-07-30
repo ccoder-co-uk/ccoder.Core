@@ -7,8 +7,8 @@ using cCoder.Core.Services.Aggregations;
 using cCoder.Core.Exposures.Managers;
 using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.Mail;
-using cCoder.Security.Objects.Entities;
-using cCoder.Security.Objects.Events;
+using cCoder.Security.Models.Entities;
+using cCoder.Security.Models.Events;
 using FluentAssertions;
 using Moq;
 

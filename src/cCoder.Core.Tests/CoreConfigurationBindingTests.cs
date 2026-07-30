@@ -39,7 +39,8 @@ public sealed partial class CoreConfigurationBindingTests
             ["Security:DecryptionKey"] = "key",
             ["ContentManagement:ConnectionString"] = "content",
             ["ContentManagement:RootPath"] = "Api/Content",
-            ["Mail:MicrosoftGraph:TenantId"] = "tenant",
+            ["Mail:Providers:0:Name"] = "MicrosoftGraph",
+            ["Mail:Providers:0:MicrosoftGraph:TenantId"] = "tenant",
             ["Eventing:ProviderType"] = "ServiceBus",
             ["Eventing:ServiceBus:ConnectionString"] = "events",
             ["Eventing:ServiceBus:MaxConcurrency"] = "8",
@@ -75,7 +76,7 @@ public sealed partial class CoreConfigurationBindingTests
             .Should()
             .Be(expected: "Api/Content");
 
-        result.Mail.MicrosoftGraph.TenantId
+        result.Mail.Providers[0].MicrosoftGraph.TenantId
             .Should()
             .Be(expected: "tenant");
 

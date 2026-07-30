@@ -3,12 +3,12 @@
 // ---------------------------------------------------------------
 
 using cCoder.AppSecurity.Models;
-using cCoder.Security.Objects.DTOs;
-using cCoder.Security.Objects.Entities;
+using cCoder.Security.Models.DTOs;
+using cCoder.Security.Models.Entities;
 
 namespace cCoder.Core.Services.Orchestrations;
 
-public interface IUserRegistrationOrchestrationService
+internal interface IUserRegistrationOrchestrationService
 {
     ValueTask ConfirmRegistrationAsync(string token);
     ValueTask<Token> LoginAsync(string username, string password);

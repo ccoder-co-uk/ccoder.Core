@@ -96,11 +96,6 @@ public sealed partial class HostedServicesRegistrationTests
         services.Should()
             .Contain(predicate: descriptor =>
                 descriptor.ServiceType ==
-                    typeof(IServiceBusEventingBroker));
-
-        services.Should()
-            .Contain(predicate: descriptor =>
-                descriptor.ServiceType ==
                     typeof(IServiceBusAppDeleteForwardingBroker));
 
         services.Should()

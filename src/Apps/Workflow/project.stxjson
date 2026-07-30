@@ -1,6 +1,12 @@
 {
   "Classes": [
     {
+      "Name": "Workflow.Dependencies.WorkflowFunctionStreamDependency",
+      "StandardElementType": "Dependency",
+      "Properties": [],
+      "Methods": []
+    },
+    {
       "Name": "Workflow.Exposures.Execute",
       "StandardElementType": "Exposure",
       "Properties": [],

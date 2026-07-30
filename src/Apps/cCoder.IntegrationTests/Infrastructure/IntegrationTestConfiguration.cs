@@ -28,25 +28,27 @@ internal sealed class IntegrationTestConfiguration
                 fallback: 1);
         MailTenantId =
             AcceptanceTestConfiguration.ReadOptionalValue(
-                variableName: "Mail__MicrosoftGraph__TenantId")
+                variableName:
+                    "Mail__Providers__3__MicrosoftGraph__TenantId")
             ?? string.Empty;
         MailClientId =
             AcceptanceTestConfiguration.ReadOptionalValue(
-                variableName: "Mail__MicrosoftGraph__ClientId")
+                variableName:
+                    "Mail__Providers__3__MicrosoftGraph__ClientId")
             ?? string.Empty;
         MailClientSecret =
             AcceptanceTestConfiguration.ReadOptionalValue(
                 variableName:
-                    "Mail__MicrosoftGraph__ClientSecret")
+                    "Mail__Providers__3__MicrosoftGraph__ClientSecret")
             ?? string.Empty;
         MailSendUser =
             AcceptanceTestConfiguration.ReadOptionalValue(
-                variableName: "Mail__MicrosoftGraph__SendUser")
+                variableName: "CoreIntegrationTests__MailSendUser")
             ?? string.Empty;
         MailReceiveUser =
             AcceptanceTestConfiguration.ReadOptionalValue(
                 variableName:
-                    "Mail__MicrosoftGraph__ReceiveUser")
+                    "CoreIntegrationTests__MailReceiveUser")
             ?? string.Empty;
         KeepArtifacts =
             AcceptanceTestConfiguration.ReadOptionalBool(

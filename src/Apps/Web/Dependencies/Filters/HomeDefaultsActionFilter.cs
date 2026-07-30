@@ -2,16 +2,16 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.ContentManagement.Services.Processings;
-using cCoder.Core.Services.Setup;
+using cCoder.ContentManagement.Exposures;
+using cCoder.Core.Exposures;
 using Microsoft.AspNetCore.Mvc.Filters;
 using App = cCoder.Data.Models.CMS.App;
 
 namespace Web.Dependencies.Filters;
 
 internal sealed class HomeDefaultsActionFilter(
-    IAppProcessingService appProcessingService,
-    IFirstTimeSetupStateService setupStateService,
+    IAppManager appProcessingService,
+    IFirstTimeSetupManager setupStateService,
     ILogger<HomeDefaultsActionFilter> log)
     : IAsyncActionFilter
 {
@@ -36,7 +36,7 @@ internal sealed class HomeDefaultsActionFilter(
                 .ToLowerInvariant();
 
             App app = appProcessingService
-                .GetAllApp(ignoreFilters: true)
+                .GetAll(ignoreFilters: true)
                 .Where(predicate: candidate =>
                     candidate.Domain == host)
                 .Select(selector: candidate => new App

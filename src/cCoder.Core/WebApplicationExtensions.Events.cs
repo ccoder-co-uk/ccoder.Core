@@ -11,16 +11,16 @@ using cCoder.Eventing.AzureServiceBus.Models;
 using cCoder.Eventing.Models;
 using cCoder.Logging;
 using cCoder.Mail;
+using cCoder.Mail.Exposures.EventHandlers;
 using cCoder.Core.Services.Aggregations;
 using cCoder.Security;
-using cCoder.Security.Objects.Events;
+using cCoder.Security.Models.Events;
 using cCoder.Workflow;
 using cCoder.Core.Services.Foundations.Eventing;
 using cCoder.Core.Services.Orchestrations;
 using cCoder.Data.Models.DMS;
 using cCoder.Data.Models.Workflow;
-using AppSecurityAppOrchestrationService = cCoder.AppSecurity.Services.Orchestrations.IAppOrchestrationService;
-using MailEventHandlerService = cCoder.Mail.Services.Foundations.Events.IEventHandlerService;
+using AppSecurityAppOrchestrationService = cCoder.AppSecurity.Exposures.IAppSecurityAppExposure;
 using CmsApp = cCoder.Data.Models.CMS.App;
 
 namespace cCoder.Core;
@@ -112,7 +112,7 @@ name: "folder_delete", handler: static (service, entity) => service.ForwardFolde
         IEventHub eventHub = scope.ServiceProvider.GetRequiredService<IEventHub>();
 
         eventHub.ListenToEvent<CmsApp, AppSecurityAppOrchestrationService>(
-name: "app_update", handler: static (service, entity) => service.UpdateAppAsync(app: entity));
+name: "app_update", handler: static (service, entity) => service.UpdateAsync(app: entity));
 
         return app;
     }
@@ -133,7 +133,7 @@ name: "app_delete", handler: static (service, entity) => service.DeleteAsync(app
         using IServiceScope scope = app.Services.CreateScope();
         IServiceProvider services = scope.ServiceProvider;
 
-        foreach (MailEventHandlerService handlers in services.GetServices<MailEventHandlerService>())
+        foreach (IMailEventHandlers handlers in services.GetServices<IMailEventHandlers>())
         {
             handlers.ListenToAllEvents();
         }

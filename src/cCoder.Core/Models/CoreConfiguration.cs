@@ -10,7 +10,7 @@ using cCoder.Eventing.Models;
 using cCoder.Logging.Models;
 using cCoder.Mail.Models;
 using cCoder.Packaging.Models;
-using cCoder.Security.Objects;
+using cCoder.Security.Models;
 using cCoder.Workflow.Models;
 
 namespace cCoder.Core.Models;

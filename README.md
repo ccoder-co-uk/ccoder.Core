@@ -47,11 +47,11 @@ matching appsettings section.
 The Microsoft Graph integration path requires:
 
 ```text
-Mail__MicrosoftGraph__TenantId
-Mail__MicrosoftGraph__ClientId
-Mail__MicrosoftGraph__ClientSecret
-Mail__MicrosoftGraph__SendUser
-Mail__MicrosoftGraph__ReceiveUser
+Mail__Providers__3__MicrosoftGraph__TenantId
+Mail__Providers__3__MicrosoftGraph__ClientId
+Mail__Providers__3__MicrosoftGraph__ClientSecret
+CoreIntegrationTests__MailSendUser
+CoreIntegrationTests__MailReceiveUser
 ```
 
 After setting those variables, restart Visual Studio so it receives the updated

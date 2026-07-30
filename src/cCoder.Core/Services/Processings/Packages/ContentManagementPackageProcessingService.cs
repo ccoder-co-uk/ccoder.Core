@@ -5,22 +5,31 @@
 using cCoder.ContentManagement.Exposures;
 using cCoder.Packaging.Models;
 using cCoder.Data.Models.Packaging;
-using PackagingBroker = cCoder.Packaging.Brokers.IContentManagementPackageManagerBroker;
 using DataPackage = cCoder.Data.Models.Packaging.Package;
 using DataPackageItem = cCoder.Data.Models.Packaging.PackageItem;
 
 
-namespace cCoder.Core.Dependencies.Packaging;
+namespace cCoder.Core.Services.Processings.Packages;
 
-internal class ContentManagementPackageManagerBroker(
+internal sealed partial class ContentManagementPackageProcessingService(
     IContentManagementPackageManager contentManagementPackageManager
-) : PackagingBroker
+) : IContentManagementPackageProcessingService
 {
     public ValueTask ImportPackageAsync(int appId, Package package) =>
-        contentManagementPackageManager.ImportPackageAsync(appId: appId, package: ToExternalPackage(package: package));
+        TryCatch(operation: () =>
+        {
+            ValidatePackageOnImport(appId: appId, package: package);
+
+            return contentManagementPackageManager.ImportPackageAsync(appId: appId, package: ToExternalPackage(package: package));
+        });
 
     public Package ExportPackage(int appId, string packageName) =>
-        ToLocalPackage(package: contentManagementPackageManager.ExportPackage(appId: appId, packageName: packageName));
+        TryCatch(operation: () =>
+        {
+            ValidatePackageOnExport(appId: appId, packageName: packageName);
+
+            return ToLocalPackage(package: contentManagementPackageManager.ExportPackage(appId: appId, packageName: packageName));
+        });
 
     private static DataPackage ToExternalPackage(Package package) =>
         package == null ? null : new DataPackage(package.Name)
