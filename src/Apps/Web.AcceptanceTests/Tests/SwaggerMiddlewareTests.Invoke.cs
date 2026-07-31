@@ -21,7 +21,6 @@ public sealed partial class SwaggerMiddlewareTests
     [InlineData("/swagger/Packaging/swagger.json")]
     [InlineData("/swagger/Security/swagger.json")]
     [InlineData("/swagger/Workflow/swagger.json")]
-    [InlineData("/swagger/v1/swagger.json")]
     public async Task Invoke_ReturnsSwaggerDefinition(string baseUrl)
     {
         // Given
@@ -33,5 +32,19 @@ public sealed partial class SwaggerMiddlewareTests
         // Then
         actualStatusCode.Should()
             .Be(expected: (int)HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task Invoke_ReturnsNotFoundForLegacyV1SwaggerDefinition()
+    {
+        // Given
+        const string baseUrl = "/swagger/v1/swagger.json";
+
+        // When
+        using HttpResponseMessage response = await Client.GetAsync(requestUri: baseUrl);
+
+        // Then
+        response.StatusCode.Should()
+            .Be(expected: HttpStatusCode.NotFound);
     }
 }
