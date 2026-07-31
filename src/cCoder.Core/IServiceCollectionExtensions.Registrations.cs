@@ -843,12 +843,6 @@ predicate: (documentName, apiDescription) =>
                 Version = route.Name,
             });
         }
-
-        options.SwaggerDoc(name: "v1", info: new OpenApiInfo
-        {
-            Title = "Corporate LinX V7 API definition",
-            Version = "v1",
-        });
     }
 
     private static bool ShouldIncludeInDocument(
@@ -860,11 +854,6 @@ predicate: (documentName, apiDescription) =>
         if (string.IsNullOrWhiteSpace(value: relativePath))
         {
             return false;
-        }
-
-        if (string.Equals(a: documentName, b: "v1", comparisonType: StringComparison.OrdinalIgnoreCase))
-        {
-            documentName = "Core";
         }
 
         string path = services.NormalizePath(relativePath: relativePath);
@@ -897,8 +886,7 @@ predicate: (documentName, apiDescription) =>
         }
 
         foreach (CoreApiRouteDefinition route in routes.Where(predicate: route =>
-                     !string.Equals(a: route.Name, b: "Core", comparisonType: StringComparison.OrdinalIgnoreCase)
-                     && !string.Equals(a: route.Name, b: "v1", comparisonType: StringComparison.OrdinalIgnoreCase)))
+                     !string.Equals(a: route.Name, b: "Core", comparisonType: StringComparison.OrdinalIgnoreCase)))
         {
             if (services.MatchesRoutePath(path: path, routePath: route.RoutePath))
             {
