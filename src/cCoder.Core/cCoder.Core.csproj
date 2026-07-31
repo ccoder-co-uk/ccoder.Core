@@ -113,7 +113,7 @@
   <ItemGroup>
     <PackageReference Include="cCoder.AI" Version="2026.7.30.1717" Condition="'$(UseLocalAI)' != 'true'" />
     <PackageReference Include="cCoder.AppSecurity" Version="2026.7.30.1717" Condition="'$(UseLocalAppSecurity)' != 'true'" />
-    <PackageReference Include="cCoder.ContentManagement" Version="2026.7.30.1811" Condition="'$(UseLocalContentManagement)' != 'true'" />
+    <PackageReference Include="cCoder.ContentManagement" Version="2026.7.31.101" Condition="'$(UseLocalContentManagement)' != 'true'" />
     <PackageReference Include="cCoder.Data" Version="2026.7.30.1720" Condition="'$(UseLocalData)' != 'true'" />
     <PackageReference Include="cCoder.DocumentManagement" Version="2026.7.30.2314" Condition="'$(UseLocalDocumentManagement)' != 'true'" />
     <PackageReference Include="cCoder.Eventing" Version="2026.7.30.1719" Condition="'$(UseLocalEventing)' != 'true'" />
