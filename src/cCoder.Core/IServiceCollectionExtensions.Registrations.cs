@@ -142,6 +142,7 @@ public static partial class IServiceCollectionExtensions
                 "DocumentManagement",
                 "Logging",
                 "Mail",
+                "Packaging",
                 "Security",
                 "Workflow",
             ]);
@@ -162,6 +163,7 @@ public static partial class IServiceCollectionExtensions
             "DocumentManagement",
             "Logging",
             "Mail",
+            "Packaging",
             "Security",
             "Workflow",
         ];

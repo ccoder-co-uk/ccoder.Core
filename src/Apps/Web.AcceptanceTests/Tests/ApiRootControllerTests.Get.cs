@@ -38,6 +38,9 @@ public sealed partial class ApiRootControllerTests
             .Contain(expected: "\"name\":\"Mail\"");
 
         actualContent.Should()
+            .Contain(expected: "\"name\":\"Packaging\"");
+
+        actualContent.Should()
             .Contain(expected: "\"name\":\"Security\"");
 
         actualContent.Should()
@@ -57,6 +60,9 @@ public sealed partial class ApiRootControllerTests
 
         actualContent.Should()
             .Contain(expected: "\"swaggerDef\":\"/swagger/Mail/swagger.json\"");
+
+        actualContent.Should()
+            .Contain(expected: "\"swaggerDef\":\"/swagger/Packaging/swagger.json\"");
 
         actualContent.Should()
             .Contain(expected: "\"swaggerDef\":\"/swagger/Security/swagger.json\"");
