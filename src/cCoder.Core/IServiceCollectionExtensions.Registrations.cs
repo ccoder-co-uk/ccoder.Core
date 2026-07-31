@@ -152,12 +152,11 @@ public static partial class IServiceCollectionExtensions
         return services;
     }
 
-    private static void AddCoreApiContexts(
+    internal static void AddCoreApiContexts(
         this IServiceCollection services)
     {
         string[] contextNames =
         [
-            "Core",
             "AppSecurity",
             "ContentManagement",
             "DocumentManagement",
@@ -695,7 +694,7 @@ predicate: (documentName, apiDescription) =>
         services.AddSignalR();
     }
 
-    private static void AddCoreODataExposures(
+    internal static void AddCoreODataExposures(
         this IServiceCollection services,
         IEnumerable<CoreApiRouteDefinition> routeDefinitions)
     {
@@ -712,14 +711,6 @@ predicate: (documentName, apiDescription) =>
             .Where(predicate: route =>
                 route is not null
                 && (string.Equals(
-                        a: route.Name,
-                        b: "Core",
-                        comparisonType: StringComparison.OrdinalIgnoreCase)
-                    || string.Equals(
-                        a: route.RoutePath,
-                        b: "Api/Core",
-                        comparisonType: StringComparison.OrdinalIgnoreCase)
-                    || string.Equals(
                         a: route.Name,
                         b: "Security",
                         comparisonType: StringComparison.OrdinalIgnoreCase)
