@@ -181,7 +181,7 @@ public sealed partial class AppDeleteCascadeTests(WebAcceptanceFixture fixture)
 
             // Then
             actualStatusCode.Should()
-                .Be(expected: 200);
+                .Be(expected: 204);
 
             verifyCore.Set<App>()
                 .IgnoreQueryFilters()
