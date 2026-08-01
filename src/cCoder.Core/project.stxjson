@@ -4835,9 +4835,15 @@
               "IsDependencyBoundary": false
             }
           ],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
+          "PossibleExceptionTypes": [
+            "System.InvalidOperationException"
+          ],
+          "IncomingExceptionTypes": [
+            "System.InvalidOperationException"
+          ],
+          "ThrowsExceptionTypes": [
+            "System.InvalidOperationException"
+          ],
           "HttpMethods": [],
           "HttpResponses": [],
           "IsHttpRequestHandler": false,
@@ -4850,7 +4856,7 @@
         {
           "Id": "cCoder.Core.IServiceCollectionExtensions.AddCoreHostedServices(IServiceCollection,cCoder.Core.Models.CoreConfiguration)",
           "Name": "AddCoreHostedServices",
-          "LineNumber": 211,
+          "LineNumber": 251,
           "Inputs": [
             {
               "Name": "services",
@@ -4870,11 +4876,24 @@
               "MethodId": "System.ArgumentNullException.ThrowIfNull(System.Object?,System.String?)",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "System.InvalidOperationException",
+              "MethodName": ".ctor",
+              "MethodId": "System.InvalidOperationException..ctor(System.String?)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
             }
           ],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
+          "PossibleExceptionTypes": [
+            "System.InvalidOperationException"
+          ],
+          "IncomingExceptionTypes": [
+            "System.InvalidOperationException"
+          ],
+          "ThrowsExceptionTypes": [
+            "System.InvalidOperationException"
+          ],
           "HttpMethods": [],
           "HttpResponses": [],
           "IsHttpRequestHandler": false,
@@ -4916,9 +4935,15 @@
               "IsDependencyBoundary": false
             }
           ],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
+          "PossibleExceptionTypes": [
+            "System.InvalidOperationException"
+          ],
+          "IncomingExceptionTypes": [
+            "System.InvalidOperationException"
+          ],
+          "ThrowsExceptionTypes": [
+            "System.InvalidOperationException"
+          ],
           "HttpMethods": [],
           "HttpResponses": [],
           "IsHttpRequestHandler": false,
@@ -4931,7 +4956,7 @@
         {
           "Id": "cCoder.Core.IServiceCollectionExtensions.AddCoreWeb(IServiceCollection,cCoder.Core.Models.CoreConfiguration)",
           "Name": "AddCoreWeb",
-          "LineNumber": 79,
+          "LineNumber": 81,
           "Inputs": [
             {
               "Name": "services",
@@ -4953,6 +4978,13 @@
               "IsDependencyBoundary": true
             },
             {
+              "TypeName": "System.InvalidOperationException",
+              "MethodName": ".ctor",
+              "MethodId": "System.InvalidOperationException..ctor(System.String?)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
               "TypeName": "System.Linq.Enumerable",
               "MethodName": "Select",
               "MethodId": "System.Linq.Enumerable.Select(System.Collections.Generic.IEnumerable\u003CTSource\u003E,System.Func\u003CTSource, TResult\u003E)",
@@ -4967,9 +4999,15 @@
               "IsDependencyBoundary": true
             }
           ],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
+          "PossibleExceptionTypes": [
+            "System.InvalidOperationException"
+          ],
+          "IncomingExceptionTypes": [
+            "System.InvalidOperationException"
+          ],
+          "ThrowsExceptionTypes": [
+            "System.InvalidOperationException"
+          ],
           "HttpMethods": [],
           "HttpResponses": [],
           "IsHttpRequestHandler": false,
@@ -5502,7 +5540,7 @@
     {
       "Name": "cCoder.Core.Models.CoreConfiguration",
       "StandardElementType": "Model",
-      "LineNumber": 19,
+      "LineNumber": 21,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -5519,6 +5557,14 @@
         {
           "Name": "AppSecurity",
           "Type": "AppSecurityConfiguration"
+        },
+        {
+          "Name": "ApplicationConfiguration",
+          "Type": "Microsoft.Extensions.Configuration.IConfiguration"
+        },
+        {
+          "Name": "CRM",
+          "Type": "cCoder.ClientRelationshipManagement.Platform.Models.Configuration.CRMConfiguration"
         },
         {
           "Name": "ContentManagement",
@@ -10244,7 +10290,7 @@
     {
       "Name": "cCoder.Core.WebApplicationExtensions",
       "StandardElementType": "App",
-      "LineNumber": 20,
+      "LineNumber": 21,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -10254,7 +10300,7 @@
         {
           "Id": "cCoder.Core.WebApplicationExtensions.StartCoreHostedServices(WebApplication)",
           "Name": "StartCoreHostedServices",
-          "LineNumber": 59,
+          "LineNumber": 61,
           "Inputs": [
             {
               "Name": "app",
@@ -10306,7 +10352,7 @@
         {
           "Id": "cCoder.Core.WebApplicationExtensions.StartCoreWeb(WebApplication)",
           "Name": "StartCoreWeb",
-          "LineNumber": 25,
+          "LineNumber": 26,
           "Inputs": [
             {
               "Name": "app",
@@ -10345,7 +10391,7 @@
     {
       "Name": "cCoder.Core.WebApplicationExtensions.StartupMigrationLock",
       "StandardElementType": "Dependency",
-      "LineNumber": 229,
+      "LineNumber": 250,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -10366,7 +10412,7 @@
         {
           "Id": "cCoder.Core.WebApplicationExtensions.StartupMigrationLock.Dispose()",
           "Name": "Dispose",
-          "LineNumber": 231,
+          "LineNumber": 252,
           "Inputs": [],
           "ReturnType": "System.Void",
           "Implements": [

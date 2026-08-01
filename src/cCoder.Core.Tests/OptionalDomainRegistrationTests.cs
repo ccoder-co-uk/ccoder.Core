@@ -5,6 +5,7 @@
 using cCoder.Core.Models;
 using cCoder.AppSecurity.Models;
 using cCoder.ContentManagement.Models;
+using cCoder.ClientRelationshipManagement.Platform.Models.Configuration;
 using cCoder.Data.Models;
 using cCoder.DocumentManagement.Models;
 using cCoder.Logging.Models;
@@ -55,6 +56,7 @@ public sealed partial class OptionalDomainRegistrationTests
         [
             typeof(AppSecurityConfiguration),
             typeof(ContentManagementConfiguration),
+            typeof(CRMConfiguration),
             typeof(DocumentManagementConfiguration),
             typeof(LoggingConfiguration),
             typeof(MailConfiguration),
@@ -146,5 +148,72 @@ public sealed partial class OptionalDomainRegistrationTests
         oDataOptions.RouteComponents.Keys
             .Should()
             .Contain(expected: "Api/Packaging");
+    }
+
+    [Fact]
+    public void AddCoreWeb_ShouldComposeEnabledCrmDomain()
+    {
+        // Given
+        IConfiguration applicationConfiguration = new ConfigurationBuilder()
+            .AddInMemoryCollection(initialData: new Dictionary<string, string>
+            {
+                ["CRM:ConnectionString"] = "Server=(localdb)\\mssqllocaldb;Database=crm-tests;Trusted_Connection=True;",
+                ["CRM:AdminConnectionString"] = "Server=(localdb)\\mssqllocaldb;Database=crm-tests;Trusted_Connection=True;",
+                ["Security:ConnectionString"] = "Server=(localdb)\\mssqllocaldb;Database=sso-tests;Trusted_Connection=True;",
+                ["Security:DecryptionKey"] = "test-key"
+            })
+            .Build();
+
+        CoreConfiguration configuration =
+            new(applicationConfiguration);
+
+        IServiceCollection services = new ServiceCollection();
+
+        services.AddSingleton<IWebHostEnvironment>(
+            implementationInstance: Mock.Of<IWebHostEnvironment>());
+
+        // When
+        services.AddCoreWeb(configuration: configuration);
+
+        // Then
+        services
+            .Should()
+            .Contain(predicate: descriptor =>
+                descriptor.ServiceType == typeof(CRMConfiguration));
+
+        string[] apiContextNames =
+        [.. services.Where(predicate: descriptor =>
+                descriptor.ServiceType == typeof(ApiInfo))
+            .Select(selector: descriptor => descriptor.ImplementationInstance)
+            .OfType<ApiInfo>()
+            .Select(selector: info => info.Name)];
+
+        apiContextNames
+            .Should()
+            .Equal(
+                expected:
+                [
+                    "ClientRelationshipManagement",
+                    "Security"
+                ]);
+
+        using ServiceProvider serviceProvider =
+            services.BuildServiceProvider();
+
+        SwaggerGeneratorOptions swaggerOptions = serviceProvider
+            .GetRequiredService<IOptions<SwaggerGeneratorOptions>>()
+            .Value;
+
+        swaggerOptions.SwaggerDocs.Keys
+            .Should()
+            .Contain(expected: "ClientRelationshipManagement");
+
+        ODataOptions oDataOptions = serviceProvider
+            .GetRequiredService<IOptions<ODataOptions>>()
+            .Value;
+
+        oDataOptions.RouteComponents.Keys
+            .Should()
+            .Contain(expected: "Api/ClientRelationshipManagement");
     }
 }
