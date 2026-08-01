@@ -44,6 +44,13 @@ Optional provider credentials, such as Mail or Azure Service Bus credentials,
 and AI provider API keys use the same `Section__Property` naming shown by the
 matching appsettings section.
 
+Domain sections are opt-in. When a child-domain section is absent, Core does
+not register that domain's services or hosted services and does not advertise
+its Swagger document, API context, OData route, metadata, or migrations. To
+compose a smaller application, remove the complete section rather than leaving
+an empty section behind. A section that is present but cannot be bound to its
+typed configuration fails during application composition.
+
 The Microsoft Graph integration path requires:
 
 ```text

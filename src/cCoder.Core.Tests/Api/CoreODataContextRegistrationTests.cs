@@ -22,7 +22,7 @@ public sealed partial class CoreODataContextRegistrationTests
         ServiceCollection services = new();
 
         // When
-        services.AddCoreApiContexts();
+        services.AddCoreApiContexts(contextNames: []);
 
         // Then
         services.BuildServiceProvider(

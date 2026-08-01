@@ -72,7 +72,7 @@ text: "{ \"error\": \"" + exception.Message.Replace(oldValue: "\"", newValue: "\
             $"{context.Connection.RemoteIpAddress} as {ssoUserId}: {request.Method} - {url}";
 
         string ssoConnectionString =
-            configuration.Security.ConnectionString;
+            configuration.Security?.ConnectionString;
 
         if (!string.IsNullOrWhiteSpace(value: ssoConnectionString)
             && await SqlTableExistsAsync(connectionString: ssoConnectionString, schema: "dbo", table: "Sessions", cancellationToken: context.RequestAborted)
@@ -93,7 +93,7 @@ text: "{ \"error\": \"" + exception.Message.Replace(oldValue: "\"", newValue: "\
                 string tenantId = null;
 
                 string contentManagementConnectionString =
-                    configuration.ContentManagement.ConnectionString;
+                    configuration.ContentManagement?.ConnectionString;
 
                 if (!string.IsNullOrWhiteSpace(value: contentManagementConnectionString)
                     && await SqlTableExistsAsync(
