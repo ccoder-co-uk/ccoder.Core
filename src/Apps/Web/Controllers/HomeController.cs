@@ -134,9 +134,18 @@ request:                     new PageRenderRequest
                 viewResult.StatusCode = page.StatusCode;
                 return viewResult;
             }
-            catch
+            catch (Exception exception) when (
+                exception.GetType().Name.Contains(
+                    value: "Validation",
+                    comparisonType: StringComparison.OrdinalIgnoreCase))
             {
-                throw;
+                return BadRequest(error: "The page request is invalid.");
+            }
+            catch (Exception)
+            {
+                return StatusCode(
+                    statusCode: StatusCodes.Status500InternalServerError,
+                    value: "The page could not be rendered.");
             }
         }
 
