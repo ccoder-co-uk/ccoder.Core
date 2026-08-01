@@ -319,7 +319,7 @@ public sealed partial class AppDeleteCascadeTests(WebAcceptanceFixture fixture)
         string content = await response.Content.ReadAsStringAsync();
 
         response.StatusCode.Should()
-            .Be(expected: HttpStatusCode.OK,because: content);
+            .Be(expected: HttpStatusCode.NoContent,because: content);
 
         return (int)response.StatusCode;
     }
