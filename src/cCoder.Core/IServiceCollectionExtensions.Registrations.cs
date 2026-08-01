@@ -203,6 +203,7 @@ public static partial class IServiceCollectionExtensions
         [
             .. new (string Name, bool IsConfigured)[]
             {
+                ("AI", configuration.AI is not null),
                 ("AppSecurity", configuration.AppSecurity is not null),
                 ("ContentManagement", configuration.ContentManagement is not null),
                 ("ClientRelationshipManagement", configuration.CRM is not null),
