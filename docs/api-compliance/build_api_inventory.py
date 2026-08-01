@@ -74,11 +74,17 @@ def format_sheet(ws, widths):
 
 def main():
     RAW_DIR.mkdir(parents=True, exist_ok=True)
+
+    for pattern in ("api-root.json", "swagger-*.json", "odata-*.xml"):
+        for stale_file in RAW_DIR.glob(pattern):
+            stale_file.unlink()
+
     generated = datetime.now(timezone.utc).isoformat()
 
     confirmed_by_operation = {}
     advertised_codes = set()
     sources = []
+    context_summary = {}
     api_root_bytes, api_root_type, api_root_status = fetch(API_ROOT_PATH)
     (RAW_DIR / "api-root.json").write_bytes(api_root_bytes)
     api_root = json.loads(api_root_bytes)
@@ -93,10 +99,12 @@ def main():
         (RAW_DIR / f"swagger-{safe_name}.json").write_bytes(swagger_bytes)
         sources.append(["Swagger", swagger_path, swagger_status, swagger_type, len(swagger_bytes), generated, "Captured"])
         swagger = json.loads(swagger_bytes)
+        operation_count = 0
         for path, path_item in swagger.get("paths", {}).items():
             for method, operation in path_item.items():
                 if method.lower() not in HTTP_METHODS:
                     continue
+                operation_count += 1
                 identity = (path.lower(), method.lower())
                 responses = operation.get("responses", {})
                 advertised = ", ".join(responses.keys())
@@ -112,6 +120,14 @@ def main():
                     operation.get("operationId", ""), "Swagger confirmed", swagger_path,
                     advertised, expected, basis, "", "", "", "", "Not assessed"
                 ]
+        context_summary[definition] = {
+            "swagger_path": swagger_path,
+            "swagger_status": swagger_status,
+            "operations": operation_count,
+            "metadata_path": "Not applicable" if definition == "Core" else f"/Api/{definition}/$metadata",
+            "metadata_status": "Not applicable" if definition == "Core" else "Not requested",
+            "entity_sets": 0,
+        }
 
     confirmed = list(confirmed_by_operation.values())
 
@@ -129,9 +145,11 @@ def main():
             xml_bytes, content_type, status = fetch(path)
         except urllib.error.HTTPError as error:
             sources.append(["OData metadata", path, error.code, "", 0, generated, "Unavailable"])
+            context_summary[service]["metadata_status"] = error.code
             continue
         (RAW_DIR / f"odata-{service}.xml").write_bytes(xml_bytes)
         sources.append(["OData metadata", path, status, content_type, len(xml_bytes), generated, "Captured"])
+        context_summary[service]["metadata_status"] = status
         root = ET.fromstring(xml_bytes)
         schemas = root.findall(f".//{{{edm_ns}}}Schema")
         type_keys = {}
@@ -146,6 +164,7 @@ def main():
                 entity_type = entity_set.get("EntityType", "")
                 key = type_keys.get(entity_type, "")
                 model_rows.append([service, "EntitySet", name, entity_type, key, path])
+                context_summary[service]["entity_sets"] += 1
                 base = f"/Api/{service}/{name}"
                 patterns = [
                     (base, "GET", "200", "Read collection"),
@@ -205,6 +224,29 @@ def main():
     add_table(ws, "SourceDocuments")
     format_sheet(ws, {"A": 20, "B": 45, "C": 14, "D": 30, "E": 14, "F": 30, "G": 18})
 
+    duplicate_operations = [
+        row for row in confirmed
+        if len([name for name in row[3].split(", ") if name]) > 1
+    ]
+
+    ws = wb.create_sheet("API Contexts")
+    ws.append([
+        "Context", "Swagger URL", "Swagger Status", "Advertised Operations",
+        "OData Metadata URL", "Metadata Status", "Entity Sets"
+    ])
+    for context_name, summary in sorted(context_summary.items()):
+        ws.append([
+            context_name,
+            summary["swagger_path"],
+            summary["swagger_status"],
+            summary["operations"],
+            summary["metadata_path"],
+            summary["metadata_status"],
+            summary["entity_sets"],
+        ])
+    add_table(ws, "ApiContexts")
+    format_sheet(ws, {"A": 34, "B": 48, "C": 16, "D": 24, "E": 56, "F": 18, "G": 16})
+
     ws = wb.create_sheet("Read Me")
     notes = [
         ["Item", "Value"],
@@ -214,6 +256,7 @@ def main():
         ["Confirmed endpoints", len(confirmed)],
         ["OData model members", len(model_rows)],
         ["OData candidate operations", len(candidate_rows)],
+        ["Swagger operations advertised by multiple definitions", len(duplicate_operations)],
         ["Important", "OData candidates are inferred from entity sets. They are not proof that the route/verb is implemented."],
         ["Good response codes", "Provisional planning values only. They require an agreed cCoder API policy and scenario-specific review."],
         ["Next step", "Verify candidates against routing, then define good/error scenarios, headers, body rules, and existing test coverage."],
@@ -230,7 +273,7 @@ def main():
         str(OUTPUT_DIR / "cCoder.Core API Inventory.xlsx")))
     wb.save(output)
     checked = load_workbook(output, read_only=True, data_only=False)
-    assert len(checked.sheetnames) == 5
+    assert len(checked.sheetnames) == 6
     assert checked["Confirmed Endpoints"].max_row == len(confirmed) + 1
     print(json.dumps({
         "output": str(output), "confirmed_operations": len(confirmed),
