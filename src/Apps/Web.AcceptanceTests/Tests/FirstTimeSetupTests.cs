@@ -322,7 +322,7 @@ public sealed partial class FirstTimeSetupTests
 
         string appContent = await appResponse.Content.ReadAsStringAsync();
 
-        if (appResponse.StatusCode != HttpStatusCode.OK)
+        if (appResponse.StatusCode != HttpStatusCode.Created)
         {
             string[] appState = await core.Set<App>()
                 .IgnoreQueryFilters()
@@ -334,7 +334,7 @@ public sealed partial class FirstTimeSetupTests
         }
 
         appResponse.StatusCode.Should()
-            .Be(expected: HttpStatusCode.OK, because: appContent);
+            .Be(expected: HttpStatusCode.Created, because: appContent);
 
         App app = await appResponse.Content.ReadFromJsonAsync<App>();
 
