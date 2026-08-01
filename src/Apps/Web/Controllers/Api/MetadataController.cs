@@ -15,9 +15,20 @@ public sealed class MetadataController(
 {
     [HttpGet("GetMetadata")]
     public IActionResult GetMetadata(
-        string culture = "") =>
-        Content(
-            content: metadataCache.GetAll(
-                culture: culture),
-            contentType: "application/json");
+        string culture = "")
+    {
+        try
+        {
+            return Content(
+                content: metadataCache.GetAll(
+                    culture: culture),
+                contentType: "application/json");
+        }
+        catch (Exception)
+        {
+            return StatusCode(
+                statusCode: StatusCodes.Status500InternalServerError,
+                value: "The metadata could not be loaded.");
+        }
+    }
 }

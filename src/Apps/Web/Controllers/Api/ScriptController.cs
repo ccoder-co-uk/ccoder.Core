@@ -5,6 +5,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Web.Exposures;
 using Web.Models;
+using Web.Models.Exceptions;
 
 namespace Web.Controllers.Api;
 
@@ -16,18 +17,31 @@ public sealed class ScriptController(
     [HttpPost("ExecuteScript")]
     public async Task<IActionResult> PostExecuteScript()
     {
-        using StreamReader reader = new(
-            stream: Request.Body);
-
-        ApiScriptRequest request = new()
+        try
         {
-            Script = await reader.ReadToEndAsync()
-        };
+            using StreamReader reader = new(
+                stream: Request.Body);
 
-        string response =
-            await apiScriptManager.ExecuteApiScriptRequestAsync(
-                request: request);
+            ApiScriptRequest request = new()
+            {
+                Script = await reader.ReadToEndAsync()
+            };
 
-        return Ok(value: response);
+            string response =
+                await apiScriptManager.ExecuteApiScriptRequestAsync(
+                    request: request);
+
+            return Ok(value: response);
+        }
+        catch (ApiScriptOrchestrationValidationException)
+        {
+            return BadRequest(error: "The script request is invalid.");
+        }
+        catch (Exception)
+        {
+            return StatusCode(
+                statusCode: StatusCodes.Status500InternalServerError,
+                value: "The script could not be executed.");
+        }
     }
 }
