@@ -37,22 +37,22 @@
       "Properties": [],
       "Methods": [
         {
-          "Id": "Workflow.Exposures.Execute.Run(HttpRequestData)",
+          "Id": "Workflow.Exposures.Execute.Run(Microsoft.Azure.Functions.Worker.Http.HttpRequestData)",
           "Name": "Run",
           "LineNumber": 15,
           "Inputs": [
             {
               "Name": "request",
-              "Type": "HttpRequestData"
+              "Type": "Microsoft.Azure.Functions.Worker.Http.HttpRequestData"
             }
           ],
-          "ReturnType": "System.Threading.Tasks.Task\u003CHttpResponseData\u003E",
+          "ReturnType": "System.Threading.Tasks.Task\u003CMicrosoft.Azure.Functions.Worker.Http.HttpResponseData\u003E",
           "Implements": [],
           "Calls": [
             {
               "TypeName": "Workflow.Exposures.IWorkflowFunctionsManager",
               "MethodName": "ProcessExecuteAsync",
-              "MethodId": "Workflow.Exposures.IWorkflowFunctionsManager.ProcessExecuteAsync(HttpRequestData)",
+              "MethodId": "Workflow.Exposures.IWorkflowFunctionsManager.ProcessExecuteAsync(Microsoft.Azure.Functions.Worker.Http.HttpRequestData)",
               "StandardElementType": "Exposure",
               "IsDependencyBoundary": false
             }
@@ -60,19 +60,19 @@
           "PossibleExceptionTypes": [
             "System.ComponentModel.DataAnnotations.ValidationException",
             "System.InvalidOperationException",
-            "WorkflowEngineDependencyException",
-            "WorkflowEngineServiceException",
-            "WorkflowEngineValidationException"
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineDependencyException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineServiceException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineValidationException"
           ],
           "IncomingExceptionTypes": [
-            "WorkflowEngineDependencyException",
-            "WorkflowEngineServiceException",
-            "WorkflowEngineValidationException"
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineDependencyException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineServiceException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineValidationException"
           ],
           "ThrowsExceptionTypes": [
-            "WorkflowEngineDependencyException",
-            "WorkflowEngineServiceException",
-            "WorkflowEngineValidationException"
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineDependencyException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineServiceException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineValidationException"
           ],
           "HttpMethods": [],
           "HttpResponses": [],
@@ -118,19 +118,19 @@
           ],
           "PossibleExceptionTypes": [
             "System.ComponentModel.DataAnnotations.ValidationException",
-            "WorkflowEngineDependencyException",
-            "WorkflowEngineServiceException",
-            "WorkflowEngineValidationException"
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineDependencyException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineServiceException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineValidationException"
           ],
           "IncomingExceptionTypes": [
-            "WorkflowEngineDependencyException",
-            "WorkflowEngineServiceException",
-            "WorkflowEngineValidationException"
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineDependencyException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineServiceException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineValidationException"
           ],
           "ThrowsExceptionTypes": [
-            "WorkflowEngineDependencyException",
-            "WorkflowEngineServiceException",
-            "WorkflowEngineValidationException"
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineDependencyException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineServiceException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineValidationException"
           ],
           "HttpMethods": [],
           "HttpResponses": [],
@@ -154,45 +154,45 @@
       "Properties": [],
       "Methods": [
         {
-          "Id": "Workflow.Exposures.ExecuteScript.Run(HttpRequestData,System.Boolean)",
+          "Id": "Workflow.Exposures.ExecuteScript.Run(Microsoft.Azure.Functions.Worker.Http.HttpRequestData,System.Boolean)",
           "Name": "Run",
           "LineNumber": 16,
           "Inputs": [
             {
               "Name": "request",
-              "Type": "HttpRequestData"
+              "Type": "Microsoft.Azure.Functions.Worker.Http.HttpRequestData"
             },
             {
               "Name": "useDetails",
               "Type": "System.Boolean"
             }
           ],
-          "ReturnType": "System.Threading.Tasks.Task\u003CHttpResponseData\u003E",
+          "ReturnType": "System.Threading.Tasks.Task\u003CMicrosoft.Azure.Functions.Worker.Http.HttpResponseData\u003E",
           "Implements": [],
           "Calls": [
             {
               "TypeName": "Workflow.Exposures.IWorkflowFunctionsManager",
               "MethodName": "ProcessExecuteScriptAsync",
-              "MethodId": "Workflow.Exposures.IWorkflowFunctionsManager.ProcessExecuteScriptAsync(HttpRequestData,System.Boolean)",
+              "MethodId": "Workflow.Exposures.IWorkflowFunctionsManager.ProcessExecuteScriptAsync(Microsoft.Azure.Functions.Worker.Http.HttpRequestData,System.Boolean)",
               "StandardElementType": "Exposure",
               "IsDependencyBoundary": false
             }
           ],
           "PossibleExceptionTypes": [
             "System.ComponentModel.DataAnnotations.ValidationException",
-            "WorkflowEngineDependencyException",
-            "WorkflowEngineServiceException",
-            "WorkflowEngineValidationException"
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineDependencyException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineServiceException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineValidationException"
           ],
           "IncomingExceptionTypes": [
-            "WorkflowEngineDependencyException",
-            "WorkflowEngineServiceException",
-            "WorkflowEngineValidationException"
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineDependencyException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineServiceException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineValidationException"
           ],
           "ThrowsExceptionTypes": [
-            "WorkflowEngineDependencyException",
-            "WorkflowEngineServiceException",
-            "WorkflowEngineValidationException"
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineDependencyException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineServiceException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineValidationException"
           ],
           "HttpMethods": [],
           "HttpResponses": [],
@@ -216,41 +216,41 @@
       "Properties": [],
       "Methods": [
         {
-          "Id": "Workflow.Exposures.Health.Run(HttpRequestData)",
+          "Id": "Workflow.Exposures.Health.Run(Microsoft.Azure.Functions.Worker.Http.HttpRequestData)",
           "Name": "Run",
           "LineNumber": 15,
           "Inputs": [
             {
               "Name": "request",
-              "Type": "HttpRequestData"
+              "Type": "Microsoft.Azure.Functions.Worker.Http.HttpRequestData"
             }
           ],
-          "ReturnType": "System.Threading.Tasks.Task\u003CHttpResponseData\u003E",
+          "ReturnType": "System.Threading.Tasks.Task\u003CMicrosoft.Azure.Functions.Worker.Http.HttpResponseData\u003E",
           "Implements": [],
           "Calls": [
             {
               "TypeName": "Workflow.Exposures.IWorkflowFunctionsManager",
               "MethodName": "ProcessHealthAsync",
-              "MethodId": "Workflow.Exposures.IWorkflowFunctionsManager.ProcessHealthAsync(HttpRequestData)",
+              "MethodId": "Workflow.Exposures.IWorkflowFunctionsManager.ProcessHealthAsync(Microsoft.Azure.Functions.Worker.Http.HttpRequestData)",
               "StandardElementType": "Exposure",
               "IsDependencyBoundary": false
             }
           ],
           "PossibleExceptionTypes": [
             "System.ComponentModel.DataAnnotations.ValidationException",
-            "WorkflowEngineDependencyException",
-            "WorkflowEngineServiceException",
-            "WorkflowEngineValidationException"
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineDependencyException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineServiceException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineValidationException"
           ],
           "IncomingExceptionTypes": [
-            "WorkflowEngineDependencyException",
-            "WorkflowEngineServiceException",
-            "WorkflowEngineValidationException"
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineDependencyException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineServiceException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineValidationException"
           ],
           "ThrowsExceptionTypes": [
-            "WorkflowEngineDependencyException",
-            "WorkflowEngineServiceException",
-            "WorkflowEngineValidationException"
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineDependencyException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineServiceException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineValidationException"
           ],
           "HttpMethods": [],
           "HttpResponses": [],
@@ -307,6 +307,20 @@
               "MethodId": "System.Action\u003CT\u003E.Invoke(T)",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "cCoder.Data.IServiceCollectionExtensions",
+              "MethodName": "AddData",
+              "MethodId": "cCoder.Data.IServiceCollectionExtensions.AddData(Microsoft.Extensions.DependencyInjection.IServiceCollection,cCoder.Data.Models.DataConfiguration)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "cCoder.Workflow.Engine.IServiceCollectionExtensions",
+              "MethodName": "AddWorkflowEngineHostedServices",
+              "MethodId": "cCoder.Workflow.Engine.IServiceCollectionExtensions.AddWorkflowEngineHostedServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
             }
           ],
           "PossibleExceptionTypes": [],
@@ -334,7 +348,7 @@
       "Properties": [
         {
           "Name": "Data",
-          "Type": "DataConfiguration"
+          "Type": "cCoder.Data.Models.DataConfiguration"
         }
       ],
       "Methods": []
@@ -372,24 +386,24 @@
       "Properties": [],
       "Methods": [
         {
-          "Id": "Workflow.Services.Processings.WorkflowFunctions.WorkflowFunctionsProcessingService.ProcessExecuteAsync(HttpRequestData)",
+          "Id": "Workflow.Services.Processings.WorkflowFunctions.WorkflowFunctionsProcessingService.ProcessExecuteAsync(Microsoft.Azure.Functions.Worker.Http.HttpRequestData)",
           "Name": "ProcessExecuteAsync",
           "LineNumber": 23,
           "Inputs": [
             {
               "Name": "request",
-              "Type": "HttpRequestData"
+              "Type": "Microsoft.Azure.Functions.Worker.Http.HttpRequestData"
             }
           ],
-          "ReturnType": "System.Threading.Tasks.Task\u003CHttpResponseData\u003E",
+          "ReturnType": "System.Threading.Tasks.Task\u003CMicrosoft.Azure.Functions.Worker.Http.HttpResponseData\u003E",
           "Implements": [
-            "Workflow.Exposures.IWorkflowFunctionsManager.ProcessExecuteAsync(HttpRequestData)"
+            "Workflow.Exposures.IWorkflowFunctionsManager.ProcessExecuteAsync(Microsoft.Azure.Functions.Worker.Http.HttpRequestData)"
           ],
           "Calls": [
             {
               "TypeName": "Newtonsoft.Json.JsonConvert",
               "MethodName": "DeserializeObject",
-              "MethodId": "Newtonsoft.Json.JsonConvert.DeserializeObject(System.String)",
+              "MethodId": "Newtonsoft.Json.JsonConvert.DeserializeObject(System.String,Newtonsoft.Json.JsonSerializerSettings?)",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
             },
@@ -399,26 +413,40 @@
               "MethodId": "System.InvalidOperationException..ctor(System.String?)",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "cCoder.Workflow.Engine.Exposures.IFlowRunner",
+              "MethodName": "RunAsync",
+              "MethodId": "cCoder.Workflow.Engine.Exposures.IFlowRunner.RunAsync(cCoder.Workflow.Activities.Models.WorkflowRequest)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "cCoder.Workflow.Engine.Extensions.ObjectExtensions",
+              "MethodName": "GetJsonSettings",
+              "MethodId": "cCoder.Workflow.Engine.Extensions.ObjectExtensions.GetJsonSettings()",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
             }
           ],
           "PossibleExceptionTypes": [
             "System.ComponentModel.DataAnnotations.ValidationException",
             "System.InvalidOperationException",
-            "WorkflowEngineDependencyException",
-            "WorkflowEngineServiceException",
-            "WorkflowEngineValidationException"
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineDependencyException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineServiceException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineValidationException"
           ],
           "IncomingExceptionTypes": [
             "System.ComponentModel.DataAnnotations.ValidationException",
             "System.InvalidOperationException",
-            "WorkflowEngineDependencyException",
-            "WorkflowEngineServiceException",
-            "WorkflowEngineValidationException"
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineDependencyException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineServiceException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineValidationException"
           ],
           "ThrowsExceptionTypes": [
-            "WorkflowEngineDependencyException",
-            "WorkflowEngineServiceException",
-            "WorkflowEngineValidationException"
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineDependencyException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineServiceException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineValidationException"
           ],
           "HttpMethods": [],
           "HttpResponses": [],
@@ -430,40 +458,48 @@
           "HasTryCatch": false
         },
         {
-          "Id": "Workflow.Services.Processings.WorkflowFunctions.WorkflowFunctionsProcessingService.ProcessExecuteScriptAsync(HttpRequestData,System.Boolean)",
+          "Id": "Workflow.Services.Processings.WorkflowFunctions.WorkflowFunctionsProcessingService.ProcessExecuteScriptAsync(Microsoft.Azure.Functions.Worker.Http.HttpRequestData,System.Boolean)",
           "Name": "ProcessExecuteScriptAsync",
           "LineNumber": 45,
           "Inputs": [
             {
               "Name": "request",
-              "Type": "HttpRequestData"
+              "Type": "Microsoft.Azure.Functions.Worker.Http.HttpRequestData"
             },
             {
               "Name": "useDetails",
               "Type": "System.Boolean"
             }
           ],
-          "ReturnType": "System.Threading.Tasks.Task\u003CHttpResponseData\u003E",
+          "ReturnType": "System.Threading.Tasks.Task\u003CMicrosoft.Azure.Functions.Worker.Http.HttpResponseData\u003E",
           "Implements": [
-            "Workflow.Exposures.IWorkflowFunctionsManager.ProcessExecuteScriptAsync(HttpRequestData,System.Boolean)"
+            "Workflow.Exposures.IWorkflowFunctionsManager.ProcessExecuteScriptAsync(Microsoft.Azure.Functions.Worker.Http.HttpRequestData,System.Boolean)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Workflow.Engine.Exposures.IWorkflowScriptExecutionService",
+              "MethodName": "ExecuteAsync",
+              "MethodId": "cCoder.Workflow.Engine.Exposures.IWorkflowScriptExecutionService.ExecuteAsync(System.String,System.Boolean)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [
             "System.ComponentModel.DataAnnotations.ValidationException",
-            "WorkflowEngineDependencyException",
-            "WorkflowEngineServiceException",
-            "WorkflowEngineValidationException"
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineDependencyException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineServiceException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineValidationException"
           ],
           "IncomingExceptionTypes": [
             "System.ComponentModel.DataAnnotations.ValidationException",
-            "WorkflowEngineDependencyException",
-            "WorkflowEngineServiceException",
-            "WorkflowEngineValidationException"
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineDependencyException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineServiceException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineValidationException"
           ],
           "ThrowsExceptionTypes": [
-            "WorkflowEngineDependencyException",
-            "WorkflowEngineServiceException",
-            "WorkflowEngineValidationException"
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineDependencyException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineServiceException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineValidationException"
           ],
           "HttpMethods": [],
           "HttpResponses": [],
@@ -475,36 +511,36 @@
           "HasTryCatch": false
         },
         {
-          "Id": "Workflow.Services.Processings.WorkflowFunctions.WorkflowFunctionsProcessingService.ProcessHealthAsync(HttpRequestData)",
+          "Id": "Workflow.Services.Processings.WorkflowFunctions.WorkflowFunctionsProcessingService.ProcessHealthAsync(Microsoft.Azure.Functions.Worker.Http.HttpRequestData)",
           "Name": "ProcessHealthAsync",
           "LineNumber": 63,
           "Inputs": [
             {
               "Name": "request",
-              "Type": "HttpRequestData"
+              "Type": "Microsoft.Azure.Functions.Worker.Http.HttpRequestData"
             }
           ],
-          "ReturnType": "System.Threading.Tasks.Task\u003CHttpResponseData\u003E",
+          "ReturnType": "System.Threading.Tasks.Task\u003CMicrosoft.Azure.Functions.Worker.Http.HttpResponseData\u003E",
           "Implements": [
-            "Workflow.Exposures.IWorkflowFunctionsManager.ProcessHealthAsync(HttpRequestData)"
+            "Workflow.Exposures.IWorkflowFunctionsManager.ProcessHealthAsync(Microsoft.Azure.Functions.Worker.Http.HttpRequestData)"
           ],
           "Calls": [],
           "PossibleExceptionTypes": [
             "System.ComponentModel.DataAnnotations.ValidationException",
-            "WorkflowEngineDependencyException",
-            "WorkflowEngineServiceException",
-            "WorkflowEngineValidationException"
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineDependencyException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineServiceException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineValidationException"
           ],
           "IncomingExceptionTypes": [
             "System.ComponentModel.DataAnnotations.ValidationException",
-            "WorkflowEngineDependencyException",
-            "WorkflowEngineServiceException",
-            "WorkflowEngineValidationException"
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineDependencyException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineServiceException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineValidationException"
           ],
           "ThrowsExceptionTypes": [
-            "WorkflowEngineDependencyException",
-            "WorkflowEngineServiceException",
-            "WorkflowEngineValidationException"
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineDependencyException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineServiceException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineValidationException"
           ],
           "HttpMethods": [],
           "HttpResponses": [],
@@ -540,20 +576,20 @@
           ],
           "PossibleExceptionTypes": [
             "System.ComponentModel.DataAnnotations.ValidationException",
-            "WorkflowEngineDependencyException",
-            "WorkflowEngineServiceException",
-            "WorkflowEngineValidationException"
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineDependencyException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineServiceException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineValidationException"
           ],
           "IncomingExceptionTypes": [
             "System.ComponentModel.DataAnnotations.ValidationException",
-            "WorkflowEngineDependencyException",
-            "WorkflowEngineServiceException",
-            "WorkflowEngineValidationException"
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineDependencyException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineServiceException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineValidationException"
           ],
           "ThrowsExceptionTypes": [
-            "WorkflowEngineDependencyException",
-            "WorkflowEngineServiceException",
-            "WorkflowEngineValidationException"
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineDependencyException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineServiceException",
+            "cCoder.Workflow.Engine.Models.Exceptions.WorkflowEngineValidationException"
           ],
           "HttpMethods": [],
           "HttpResponses": [],
@@ -579,16 +615,16 @@
       "Properties": [],
       "Methods": [
         {
-          "Id": "Workflow.Exposures.IWorkflowFunctionsManager.ProcessExecuteAsync(HttpRequestData)",
+          "Id": "Workflow.Exposures.IWorkflowFunctionsManager.ProcessExecuteAsync(Microsoft.Azure.Functions.Worker.Http.HttpRequestData)",
           "Name": "ProcessExecuteAsync",
           "LineNumber": 11,
           "Inputs": [
             {
               "Name": "request",
-              "Type": "HttpRequestData"
+              "Type": "Microsoft.Azure.Functions.Worker.Http.HttpRequestData"
             }
           ],
-          "ReturnType": "System.Threading.Tasks.Task\u003CHttpResponseData\u003E",
+          "ReturnType": "System.Threading.Tasks.Task\u003CMicrosoft.Azure.Functions.Worker.Http.HttpResponseData\u003E",
           "Implements": [],
           "Calls": [],
           "PossibleExceptionTypes": [],
@@ -604,20 +640,20 @@
           "HasTryCatch": false
         },
         {
-          "Id": "Workflow.Exposures.IWorkflowFunctionsManager.ProcessExecuteScriptAsync(HttpRequestData,System.Boolean)",
+          "Id": "Workflow.Exposures.IWorkflowFunctionsManager.ProcessExecuteScriptAsync(Microsoft.Azure.Functions.Worker.Http.HttpRequestData,System.Boolean)",
           "Name": "ProcessExecuteScriptAsync",
           "LineNumber": 13,
           "Inputs": [
             {
               "Name": "request",
-              "Type": "HttpRequestData"
+              "Type": "Microsoft.Azure.Functions.Worker.Http.HttpRequestData"
             },
             {
               "Name": "useDetails",
               "Type": "System.Boolean"
             }
           ],
-          "ReturnType": "System.Threading.Tasks.Task\u003CHttpResponseData\u003E",
+          "ReturnType": "System.Threading.Tasks.Task\u003CMicrosoft.Azure.Functions.Worker.Http.HttpResponseData\u003E",
           "Implements": [],
           "Calls": [],
           "PossibleExceptionTypes": [],
@@ -633,16 +669,16 @@
           "HasTryCatch": false
         },
         {
-          "Id": "Workflow.Exposures.IWorkflowFunctionsManager.ProcessHealthAsync(HttpRequestData)",
+          "Id": "Workflow.Exposures.IWorkflowFunctionsManager.ProcessHealthAsync(Microsoft.Azure.Functions.Worker.Http.HttpRequestData)",
           "Name": "ProcessHealthAsync",
           "LineNumber": 17,
           "Inputs": [
             {
               "Name": "request",
-              "Type": "HttpRequestData"
+              "Type": "Microsoft.Azure.Functions.Worker.Http.HttpRequestData"
             }
           ],
-          "ReturnType": "System.Threading.Tasks.Task\u003CHttpResponseData\u003E",
+          "ReturnType": "System.Threading.Tasks.Task\u003CMicrosoft.Azure.Functions.Worker.Http.HttpResponseData\u003E",
           "Implements": [],
           "Calls": [],
           "PossibleExceptionTypes": [],

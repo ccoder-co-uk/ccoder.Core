@@ -193,7 +193,7 @@ workflowEvents: [.. core.Set<WorkflowEvent>()
         string content = await response.Content.ReadAsStringAsync();
 
         response.StatusCode.Should()
-            .Be(expected: HttpStatusCode.OK,because: content);
+            .Be(expected: HttpStatusCode.Created,because: content);
 
         return JsonSerializer.Deserialize(json: content, returnType: responseType, options: JsonOptions)
             ?? throw new InvalidOperationException($"Expected payload for {relativeUrl}.");

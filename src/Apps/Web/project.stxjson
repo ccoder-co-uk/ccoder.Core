@@ -515,7 +515,7 @@
           "IsHttpRequestHandler": true,
           "IsODataControllerAction": false,
           "HasFromBodyParameter": false,
-          "HasKeyParameter": true,
+          "HasKeyParameter": false,
           "HandlesNullWithNotFound": false,
           "HasTryCatch": true
         }
@@ -784,7 +784,7 @@
           "IsHttpRequestHandler": true,
           "IsODataControllerAction": false,
           "HasFromBodyParameter": false,
-          "HasKeyParameter": true,
+          "HasKeyParameter": false,
           "HandlesNullWithNotFound": false,
           "HasTryCatch": true
         }
