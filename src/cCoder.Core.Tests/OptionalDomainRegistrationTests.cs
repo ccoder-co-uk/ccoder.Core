@@ -308,4 +308,37 @@ public sealed partial class OptionalDomainRegistrationTests
             .Should()
             .Contain(expected: "Api/ClientRelationshipManagement");
     }
+
+    [Fact]
+    public void AddCoreWeb_ShouldFailWhenCrmDependenciesAreMissing()
+    {
+        // Given
+        IConfiguration applicationConfiguration = new ConfigurationBuilder()
+            .AddInMemoryCollection(initialData: new Dictionary<string, string>
+            {
+                ["CRM:ConnectionString"] = "crm",
+                ["CRM:AdminConnectionString"] = "crm-admin"
+            })
+            .Build();
+
+        CoreConfiguration configuration =
+            new(applicationConfiguration);
+
+        IServiceCollection services = new ServiceCollection();
+
+        services.AddSingleton<IWebHostEnvironment>(
+            implementationInstance: Mock.Of<IWebHostEnvironment>());
+
+        // When
+        Action action = () =>
+            services.AddCoreWeb(configuration: configuration);
+
+        // Then
+        action
+            .Should()
+            .Throw<InvalidOperationException>()
+            .WithMessage(
+                expectedWildcardPattern:
+                    "*CRM domain requires the Security configuration section*");
+    }
 }
