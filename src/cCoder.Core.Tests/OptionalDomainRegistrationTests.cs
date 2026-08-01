@@ -168,7 +168,9 @@ public sealed partial class OptionalDomainRegistrationTests
         services.AddCoreWeb(configuration: configuration);
 
         // Then
-        configuration.CRM.Should().BeNull();
+        configuration.CRM
+            .Should()
+            .BeNull();
 
         services
             .Should()
@@ -179,8 +181,8 @@ public sealed partial class OptionalDomainRegistrationTests
             .Should()
             .NotContain(predicate: descriptor =>
                 descriptor.ServiceType == typeof(ApiInfo)
-                && descriptor.ImplementationInstance is ApiInfo apiInfo
-                && apiInfo.Name == "ClientRelationshipManagement");
+                && ((ApiInfo)descriptor.ImplementationInstance).Name
+                    == "ClientRelationshipManagement");
     }
 
     [Fact]

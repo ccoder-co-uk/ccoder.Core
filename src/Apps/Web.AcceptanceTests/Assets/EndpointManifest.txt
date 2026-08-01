@@ -44,6 +44,7 @@ DELETE Api/Workflow/ScheduledTask({key})
 DELETE Api/Workflow/WorkflowEvent({key})
 GET Api
 GET Api/Account/Me
+GET Api/AI/Model/Providers/{provider}/Available
 GET Api/AppSecurity
 GET Api/AppSecurity/$metadata
 GET Api/AppSecurity/App
@@ -252,6 +253,7 @@ POST Api/AI/Agents/Stream
 POST Api/AI/Chat
 POST Api/AI/Chat/Stream
 POST Api/AI/Completions
+POST Api/AI/Model/Providers/{provider}/Import
 POST Api/Account/AcceptInvite
 POST Api/Account/ConfirmForgotPassword
 POST Api/Account/ConfirmRegistration

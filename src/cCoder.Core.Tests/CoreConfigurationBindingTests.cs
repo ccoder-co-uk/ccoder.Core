@@ -19,8 +19,8 @@ public sealed partial class CoreConfigurationBindingTests
         IConfiguration applicationConfiguration = new ConfigurationBuilder()
             .AddInMemoryCollection(initialData: new Dictionary<string, string>
             {
-                ["AI:Providers:Ollama:CompletionProvider:Mode"] =
-                    "NotAProviderMode"
+                ["AI:Agent:MaxIterations"] =
+                    "NotAnInteger"
             })
             .Build();
 

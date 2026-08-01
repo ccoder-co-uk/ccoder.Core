@@ -2770,7 +2770,7 @@
           "IsHttpRequestHandler": true,
           "IsODataControllerAction": false,
           "HasFromBodyParameter": false,
-          "HasKeyParameter": true,
+          "HasKeyParameter": false,
           "HandlesNullWithNotFound": false,
           "HasTryCatch": true
         },
@@ -3011,7 +3011,7 @@
           "IsHttpRequestHandler": true,
           "IsODataControllerAction": false,
           "HasFromBodyParameter": false,
-          "HasKeyParameter": true,
+          "HasKeyParameter": false,
           "HandlesNullWithNotFound": false,
           "HasTryCatch": true
         }
@@ -4856,7 +4856,7 @@
         {
           "Id": "cCoder.Core.IServiceCollectionExtensions.AddCoreHostedServices(IServiceCollection,cCoder.Core.Models.CoreConfiguration)",
           "Name": "AddCoreHostedServices",
-          "LineNumber": 251,
+          "LineNumber": 252,
           "Inputs": [
             {
               "Name": "services",
@@ -5564,7 +5564,7 @@
         },
         {
           "Name": "CRM",
-          "Type": "cCoder.ClientRelationshipManagement.Platform.Models.Configuration.CRMConfiguration"
+          "Type": "CRMConfiguration"
         },
         {
           "Name": "ContentManagement",
@@ -10290,7 +10290,7 @@
     {
       "Name": "cCoder.Core.WebApplicationExtensions",
       "StandardElementType": "App",
-      "LineNumber": 21,
+      "LineNumber": 22,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -10300,7 +10300,7 @@
         {
           "Id": "cCoder.Core.WebApplicationExtensions.StartCoreHostedServices(WebApplication)",
           "Name": "StartCoreHostedServices",
-          "LineNumber": 61,
+          "LineNumber": 62,
           "Inputs": [
             {
               "Name": "app",
@@ -10352,7 +10352,7 @@
         {
           "Id": "cCoder.Core.WebApplicationExtensions.StartCoreWeb(WebApplication)",
           "Name": "StartCoreWeb",
-          "LineNumber": 26,
+          "LineNumber": 27,
           "Inputs": [
             {
               "Name": "app",
@@ -10391,7 +10391,7 @@
     {
       "Name": "cCoder.Core.WebApplicationExtensions.StartupMigrationLock",
       "StandardElementType": "Dependency",
-      "LineNumber": 250,
+      "LineNumber": 251,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -10412,7 +10412,7 @@
         {
           "Id": "cCoder.Core.WebApplicationExtensions.StartupMigrationLock.Dispose()",
           "Name": "Dispose",
-          "LineNumber": 252,
+          "LineNumber": 253,
           "Inputs": [],
           "ReturnType": "System.Void",
           "Implements": [
@@ -14407,13 +14407,6 @@
       "Severity": "Warning",
       "Type": "cCoder.Core.Dependencies.Middleware.CoreFormatterMiddleware",
       "LineNumber": 14
-    },
-    {
-      "Code": "ODATA0001",
-      "Description": "An OData entity creation must return the created resource in a 201 response.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.Exposures.Controllers.AppController",
-      "LineNumber": 19
     },
     {
       "Code": "STXAPI005",
