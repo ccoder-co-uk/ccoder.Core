@@ -14,6 +14,7 @@ using Web.Dependencies.Filters;
 using Web.Exposures;
 using App = cCoder.Data.Models.CMS.App;
 using RenderResult = cCoder.ContentManagement.Models.RenderResult;
+using System.ComponentModel.DataAnnotations;
 
 
 namespace Web.Controllers
@@ -134,12 +135,16 @@ request:                     new PageRenderRequest
                 viewResult.StatusCode = page.StatusCode;
                 return viewResult;
             }
+            catch (ValidationException)
+            {
+                return BadRequest(error: "The page request is invalid.");
+            }
             catch (Exception exception) when (
                 exception.GetType().Name.Contains(
                     value: "Validation",
                     comparisonType: StringComparison.OrdinalIgnoreCase))
             {
-                return BadRequest(error: "The page request is invalid.");
+                throw;
             }
             catch (Exception)
             {
