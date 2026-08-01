@@ -3,6 +3,7 @@
 // ---------------------------------------------------------------
 
 using cCoder.Core.Models;
+using cCoder.AI.Models.Configurations;
 using cCoder.AppSecurity.Models;
 using cCoder.ContentManagement.Models;
 using cCoder.ClientRelationshipManagement.Platform.Models.Configuration;
@@ -54,6 +55,7 @@ public sealed partial class OptionalDomainRegistrationTests
 
         Type[] domainConfigurationTypes =
         [
+            typeof(AIConfiguration),
             typeof(AppSecurityConfiguration),
             typeof(ContentManagementConfiguration),
             typeof(CRMConfiguration),
@@ -89,6 +91,96 @@ public sealed partial class OptionalDomainRegistrationTests
         oDataOptions.RouteComponents.Keys
             .Should()
             .NotContain(unexpected: "Api/Packaging");
+    }
+
+    [Fact]
+    public void AddCoreWeb_ShouldAdvertiseEnabledAiDomain()
+    {
+        // Given
+        IConfiguration applicationConfiguration = new ConfigurationBuilder()
+            .AddInMemoryCollection(initialData: new Dictionary<string, string>
+            {
+                ["AI:DefaultProvider"] = "Ollama"
+            })
+            .Build();
+
+        CoreConfiguration configuration =
+            new(applicationConfiguration);
+
+        IServiceCollection services = new ServiceCollection();
+
+        services.AddSingleton<IWebHostEnvironment>(
+            implementationInstance: Mock.Of<IWebHostEnvironment>());
+
+        // When
+        services.AddCoreWeb(configuration: configuration);
+
+        // Then
+        services
+            .Should()
+            .Contain(predicate: descriptor =>
+                descriptor.ServiceType == typeof(AIConfiguration));
+
+        string[] apiContextNames =
+        [.. services.Where(predicate: descriptor =>
+                descriptor.ServiceType == typeof(ApiInfo))
+            .Select(selector: descriptor => descriptor.ImplementationInstance)
+            .OfType<ApiInfo>()
+            .Select(selector: info => info.Name)];
+
+        apiContextNames
+            .Should()
+            .Equal(expected: ["AI"]);
+
+        using ServiceProvider serviceProvider =
+            services.BuildServiceProvider();
+
+        SwaggerGeneratorOptions swaggerOptions = serviceProvider
+            .GetRequiredService<IOptions<SwaggerGeneratorOptions>>()
+            .Value;
+
+        swaggerOptions.SwaggerDocs.Keys
+            .Should()
+            .Equal(expected: ["Core", "AI"]);
+    }
+
+    [Fact]
+    public void AddCoreWeb_ShouldNotEnableCrmFromConnectionStringAliases()
+    {
+        // Given
+        IConfiguration applicationConfiguration = new ConfigurationBuilder()
+            .AddInMemoryCollection(initialData: new Dictionary<string, string>
+            {
+                ["ConnectionStrings:CRM"] = "crm",
+                ["ConnectionStrings:CRMAdmin"] = "crm-admin"
+            })
+            .Build();
+
+        CoreConfiguration configuration =
+            new(applicationConfiguration);
+
+        IServiceCollection services = new ServiceCollection();
+
+        services.AddSingleton<IWebHostEnvironment>(
+            implementationInstance: Mock.Of<IWebHostEnvironment>());
+
+        // When
+        services.AddCoreWeb(configuration: configuration);
+
+        // Then
+        configuration.CRM.Should().BeNull();
+
+        services
+            .Should()
+            .NotContain(predicate: descriptor =>
+                descriptor.ServiceType == typeof(CRMConfiguration));
+
+        services
+            .Should()
+            .NotContain(predicate: descriptor =>
+                descriptor.ServiceType == typeof(ApiInfo)
+                && descriptor.ImplementationInstance is ApiInfo apiInfo
+                && apiInfo.Name == "ClientRelationshipManagement");
     }
 
     [Fact]
