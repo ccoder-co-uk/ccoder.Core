@@ -433,7 +433,7 @@ public sealed partial class FirstTimeSetupTests
 
             response.StatusCode.Should()
                 .Be(
-                    expected: HttpStatusCode.OK,
+                    expected: HttpStatusCode.Created,
                     because: $"{content}; {response.Headers}");
         }
     }

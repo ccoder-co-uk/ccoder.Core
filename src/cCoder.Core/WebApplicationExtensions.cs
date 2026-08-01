@@ -3,6 +3,8 @@
 // ---------------------------------------------------------------
 
 using cCoder.Data;
+using cCoder.ClientRelationshipManagement.Runtime;
+using cCoder.ClientRelationshipManagement.Runtime.Services.Migration;
 using cCoder.Logging;
 using cCoder.Security.Data.EF;
 using cCoder.Security.Data.EF.Interfaces;
@@ -14,7 +16,6 @@ using Microsoft.Extensions.Logging.Abstractions;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
-using ClientRelationshipManagement.Web.Services.Migration;
 
 namespace cCoder.Core;
 

@@ -7,6 +7,7 @@ using cCoder.AI;
 using cCoder.AppSecurity;
 using cCoder.ContentManagement;
 using cCoder.ClientRelationshipManagement.Api;
+using cCoder.ClientRelationshipManagement.Runtime;
 using cCoder.DocumentManagement;
 using cCoder.Logging;
 using cCoder.Mail;
@@ -72,7 +73,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
 using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
-using ClientRelationshipManagement.Web;
 
 namespace cCoder.Core;
 
@@ -159,7 +159,7 @@ public static partial class IServiceCollectionExtensions
             }
 
             services.AddCrmApplication(
-                configuration: applicationConfiguration,
+                rootConfiguration: applicationConfiguration,
                 crmConnection: configuration.CRM.ConnectionString,
                 crmAdminConnection:
                     configuration.CRM.AdminConnectionString,
@@ -315,7 +315,7 @@ public static partial class IServiceCollectionExtensions
             }
 
             services.AddCrmApplication(
-                configuration: applicationConfiguration,
+                rootConfiguration: applicationConfiguration,
                 crmConnection: configuration.CRM.ConnectionString,
                 crmAdminConnection:
                     configuration.CRM.AdminConnectionString,
