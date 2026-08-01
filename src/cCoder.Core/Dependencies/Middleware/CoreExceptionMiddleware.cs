@@ -3,6 +3,7 @@
 // ---------------------------------------------------------------
 
 using System.Security;
+using cCoder.Core.Models.Exceptions;
 
 namespace cCoder.Core.Dependencies.Middleware;
 
@@ -17,23 +18,32 @@ internal sealed class CoreExceptionMiddleware(
         {
             await next(context: context);
         }
+        catch (CoreProcessingValidationException exception)
+        {
+            context.Response.StatusCode =
+                StatusCodes.Status400BadRequest;
+
+            log.LogWarning(
+                exception: exception,
+                message: "Request validation failed.");
+        }
+        catch (SecurityException exception)
+        {
+            context.Response.StatusCode =
+                StatusCodes.Status401Unauthorized;
+
+            log.LogWarning(
+                exception: exception,
+                message: "Request authentication failed.");
+        }
         catch (Exception exception)
         {
             context.Response.StatusCode =
-                exception is SecurityException ? 401 : 500;
+                StatusCodes.Status500InternalServerError;
 
-            context.Response.ContentType = "application/json";
             log.LogError(
                 exception: exception,
-                message: "Unhandled request exception: {ErrorMessage}",
-                args: exception.Message);
-
-            await context.Response.WriteAsync(
-                text: "{ \"error\": \""
-                    + exception.Message.Replace(
-                        oldValue: "\"",
-                        newValue: "\'")
-                    + "\" }");
+                message: "Unhandled request exception.");
         }
     }
 }

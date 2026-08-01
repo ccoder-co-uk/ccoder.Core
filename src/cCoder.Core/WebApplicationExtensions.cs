@@ -117,25 +117,43 @@ public static partial class WebApplicationExtensions
     {
         using IServiceScope scope = app.Services.CreateScope();
 
+        Models.CoreConfiguration configuration =
+            scope.ServiceProvider.GetRequiredService<Models.CoreConfiguration>();
+
         ICoreContextFactory coreContextFactory =
             scope.ServiceProvider.GetRequiredService<ICoreContextFactory>();
 
-        ISecurityDbContextFactory securityDbContextFactory =
-            scope.ServiceProvider.GetRequiredService<ISecurityDbContextFactory>();
-
         using CoreDataContext coreContext = coreContextFactory.CreateCoreContext();
-        using SecurityDbContext securityContext = securityDbContextFactory.CreateDbContext(ignoreAuthInfo: true);
 
         string coreConnectionString = coreContext.Database.GetConnectionString();
-        string securityConnectionString = securityContext.Database.GetConnectionString();
+        string securityConnectionString = null;
+        SecurityDbContext securityContext = null;
 
-        using IDisposable migrationLock =
-            AcquireStartupMigrationLock(
-                coreConnectionString: coreConnectionString,
-                securityConnectionString: securityConnectionString);
+        if (configuration.Security is not null)
+        {
+            ISecurityDbContextFactory securityDbContextFactory =
+                scope.ServiceProvider
+                    .GetRequiredService<ISecurityDbContextFactory>();
 
-        securityContext.Migrate();
-        coreContext.Migrate();
+            securityContext =
+                securityDbContextFactory.CreateDbContext(
+                    ignoreAuthInfo: true);
+
+            securityConnectionString =
+                securityContext.Database.GetConnectionString();
+
+        }
+
+        using (securityContext)
+        {
+            using IDisposable migrationLock =
+                AcquireStartupMigrationLock(
+                    coreConnectionString: coreConnectionString,
+                    securityConnectionString: securityConnectionString);
+
+            securityContext?.Migrate();
+            coreContext.Migrate();
+        }
 
         if (log?.IsEnabled(logLevel: LogLevel.Information) == true)
         {

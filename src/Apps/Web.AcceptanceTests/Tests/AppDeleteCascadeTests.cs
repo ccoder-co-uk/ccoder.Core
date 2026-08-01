@@ -181,7 +181,7 @@ public sealed partial class AppDeleteCascadeTests(WebAcceptanceFixture fixture)
 
             // Then
             actualStatusCode.Should()
-                .Be(expected: 200);
+                .Be(expected: 204);
 
             verifyCore.Set<App>()
                 .IgnoreQueryFilters()
@@ -319,7 +319,7 @@ public sealed partial class AppDeleteCascadeTests(WebAcceptanceFixture fixture)
         string content = await response.Content.ReadAsStringAsync();
 
         response.StatusCode.Should()
-            .Be(expected: HttpStatusCode.OK,because: content);
+            .Be(expected: HttpStatusCode.NoContent,because: content);
 
         return (int)response.StatusCode;
     }

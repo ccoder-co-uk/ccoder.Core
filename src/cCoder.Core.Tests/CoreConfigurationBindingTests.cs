@@ -53,7 +53,8 @@ public sealed partial class CoreConfigurationBindingTests
             .Build();
 
         // When
-        CoreConfiguration result = configuration.Get<CoreConfiguration>();
+        CoreConfiguration result =
+            new(configuration);
 
         // Then
         result.AppSecurity.ConnectionString
@@ -103,5 +104,69 @@ public sealed partial class CoreConfigurationBindingTests
         result.Api.ExposeMetadata
             .Should()
             .BeFalse();
+    }
+
+    [Fact]
+    public void FromConfiguration_ShouldOmitUnconfiguredDomains()
+    {
+        // Given
+        IConfiguration configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(initialData: new Dictionary<string, string>
+            {
+                ["Api:ExposeDocumentation"] = "true"
+            })
+            .Build();
+
+        // When
+        CoreConfiguration result =
+            new(configuration);
+
+        // Then
+        object[] domains =
+        [
+            result.AI,
+            result.AppSecurity,
+            result.ContentManagement,
+            result.DocumentManagement,
+            result.Logging,
+            result.Mail,
+            result.Packaging,
+            result.Security,
+            result.Workflow
+        ];
+
+        domains
+            .Should()
+            .OnlyContain(predicate: domain => domain == null);
+
+        result.Api.ExposeDocumentation
+            .Should()
+            .BeTrue();
+    }
+
+    [Fact]
+    public void FromConfiguration_GivenInvalidConfiguredDomain_ShouldFailClearly()
+    {
+        // Given
+        IConfiguration configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(initialData: new Dictionary<string, string>
+            {
+                ["Workflow:SslPort"] = "not-a-port"
+            })
+            .Build();
+
+        // When
+        Action action = () =>
+            _ = new CoreConfiguration(configuration: configuration);
+
+        // Then
+        InvalidOperationException exception = action
+            .Should()
+            .Throw<InvalidOperationException>()
+            .Which;
+
+        exception.Message
+            .Should()
+            .Contain(expected: "Workflow:SslPort");
     }
 }

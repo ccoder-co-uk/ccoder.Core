@@ -12,6 +12,7 @@ using cCoder.Mail.Models;
 using cCoder.Packaging.Models;
 using cCoder.Security.Models;
 using cCoder.Workflow.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace cCoder.Core.Models;
 
@@ -19,17 +20,79 @@ public sealed class CoreConfiguration
 {
     public CoreConfiguration()
     {
-        AI = new AIConfiguration();
-        AppSecurity = new AppSecurityConfiguration();
-        ContentManagement = new ContentManagementConfiguration();
-        DocumentManagement = new DocumentManagementConfiguration();
-        Logging = new LoggingConfiguration();
-        Mail = new MailConfiguration();
-        Packaging = new PackagingConfiguration();
-        Security = new SecurityConfiguration();
-        Workflow = new WorkflowConfiguration();
         Eventing = new EventingConfiguration();
         Api = new ApiConfiguration();
+    }
+
+    public CoreConfiguration(IConfiguration configuration)
+        : this()
+    {
+        ArgumentNullException.ThrowIfNull(argument: configuration);
+
+        IConfigurationSection ai =
+            configuration.GetSection(key: nameof(AI));
+
+        IConfigurationSection appSecurity =
+            configuration.GetSection(key: nameof(AppSecurity));
+
+        IConfigurationSection contentManagement =
+            configuration.GetSection(key: nameof(ContentManagement));
+
+        IConfigurationSection documentManagement =
+            configuration.GetSection(key: nameof(DocumentManagement));
+
+        IConfigurationSection logging =
+            configuration.GetSection(key: nameof(Logging));
+
+        IConfigurationSection mail =
+            configuration.GetSection(key: nameof(Mail));
+
+        IConfigurationSection packaging =
+            configuration.GetSection(key: nameof(Packaging));
+
+        IConfigurationSection security =
+            configuration.GetSection(key: nameof(Security));
+
+        IConfigurationSection workflow =
+            configuration.GetSection(key: nameof(Workflow));
+
+        AI = ai.Exists() ? ai.Get<AIConfiguration>() : null;
+
+        AppSecurity = appSecurity.Exists()
+            ? appSecurity.Get<AppSecurityConfiguration>()
+            : null;
+
+        ContentManagement = contentManagement.Exists()
+            ? contentManagement.Get<ContentManagementConfiguration>()
+            : null;
+
+        DocumentManagement = documentManagement.Exists()
+            ? documentManagement.Get<DocumentManagementConfiguration>()
+            : null;
+
+        Logging = logging.Exists()
+            ? logging.Get<LoggingConfiguration>()
+            : null;
+
+        Mail = mail.Exists() ? mail.Get<MailConfiguration>() : null;
+
+        Packaging = packaging.Exists()
+            ? packaging.Get<PackagingConfiguration>()
+            : null;
+
+        Security = security.Exists()
+            ? security.Get<SecurityConfiguration>()
+            : null;
+
+        Workflow = workflow.Exists()
+            ? workflow.Get<WorkflowConfiguration>()
+            : null;
+
+        configuration.GetSection(key: nameof(Eventing))
+            .Bind(instance: Eventing);
+
+        configuration.GetSection(key: nameof(Api))
+            .Bind(instance: Api);
     }
 
     public AIConfiguration AI { get; set; }

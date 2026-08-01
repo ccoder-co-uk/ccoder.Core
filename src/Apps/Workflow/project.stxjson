@@ -1,90 +1,282 @@
 {
+  "SchemaVersion": 2,
+  "Project": {
+    "Id": "Workflow",
+    "Name": "Workflow",
+    "AssemblyName": "Workflow"
+  },
   "Classes": [
     {
       "Name": "Workflow.Dependencies.WorkflowFunctionStreamDependency",
       "StandardElementType": "Dependency",
+      "LineNumber": 7,
+      "IsPublic": false,
+      "Kind": "Class",
+      "BaseType": {
+        "Id": "System.Private.CoreLib:System.IO.MemoryStream",
+        "FullName": "System.IO.MemoryStream",
+        "Name": "MemoryStream",
+        "Namespace": "System.IO",
+        "AssemblyName": "System.Private.CoreLib",
+        "Kind": "Class",
+        "IsInCurrentProject": false,
+        "StandardElementType": "Dependency"
+      },
+      "Interfaces": [],
       "Properties": [],
       "Methods": []
     },
     {
       "Name": "Workflow.Exposures.Execute",
       "StandardElementType": "Exposure",
+      "LineNumber": 11,
+      "IsPublic": true,
+      "Kind": "Class",
+      "BaseType": null,
+      "Interfaces": [],
       "Properties": [],
       "Methods": [
         {
+          "Id": "Workflow.Exposures.Execute.Run(HttpRequestData)",
           "Name": "Run",
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "request",
-              "Type": "Microsoft.Azure.Functions.Worker.Http.HttpRequestData"
+              "Type": "HttpRequestData"
             }
           ],
-          "ReturnType": "System.Threading.Tasks.Task\u003CMicrosoft.Azure.Functions.Worker.Http.HttpResponseData\u003E"
+          "ReturnType": "System.Threading.Tasks.Task\u003CHttpResponseData\u003E",
+          "Implements": [],
+          "Calls": [
+            {
+              "TypeName": "Workflow.Exposures.IWorkflowFunctionsManager",
+              "MethodName": "ProcessExecuteAsync",
+              "MethodId": "Workflow.Exposures.IWorkflowFunctionsManager.ProcessExecuteAsync(HttpRequestData)",
+              "StandardElementType": "Exposure",
+              "IsDependencyBoundary": false
+            }
+          ],
+          "PossibleExceptionTypes": [
+            "System.ComponentModel.DataAnnotations.ValidationException",
+            "System.InvalidOperationException",
+            "WorkflowEngineDependencyException",
+            "WorkflowEngineServiceException",
+            "WorkflowEngineValidationException"
+          ],
+          "IncomingExceptionTypes": [
+            "WorkflowEngineDependencyException",
+            "WorkflowEngineServiceException",
+            "WorkflowEngineValidationException"
+          ],
+          "ThrowsExceptionTypes": [
+            "WorkflowEngineDependencyException",
+            "WorkflowEngineServiceException",
+            "WorkflowEngineValidationException"
+          ],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
         }
       ]
     },
     {
       "Name": "Workflow.Exposures.ExecuteFromServiceBus",
       "StandardElementType": "Exposure",
+      "LineNumber": 9,
+      "IsPublic": true,
+      "Kind": "Class",
+      "BaseType": null,
+      "Interfaces": [],
       "Properties": [],
       "Methods": [
         {
+          "Id": "Workflow.Exposures.ExecuteFromServiceBus.RunAsync(System.String)",
           "Name": "RunAsync",
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "message",
               "Type": "System.String"
             }
           ],
-          "ReturnType": "System.Threading.Tasks.Task"
+          "ReturnType": "System.Threading.Tasks.Task",
+          "Implements": [],
+          "Calls": [
+            {
+              "TypeName": "Workflow.Exposures.IWorkflowFunctionsManager",
+              "MethodName": "ProcessServiceBusMessageAsync",
+              "MethodId": "Workflow.Exposures.IWorkflowFunctionsManager.ProcessServiceBusMessageAsync(System.String)",
+              "StandardElementType": "Exposure",
+              "IsDependencyBoundary": false
+            }
+          ],
+          "PossibleExceptionTypes": [
+            "System.ComponentModel.DataAnnotations.ValidationException",
+            "WorkflowEngineDependencyException",
+            "WorkflowEngineServiceException",
+            "WorkflowEngineValidationException"
+          ],
+          "IncomingExceptionTypes": [
+            "WorkflowEngineDependencyException",
+            "WorkflowEngineServiceException",
+            "WorkflowEngineValidationException"
+          ],
+          "ThrowsExceptionTypes": [
+            "WorkflowEngineDependencyException",
+            "WorkflowEngineServiceException",
+            "WorkflowEngineValidationException"
+          ],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
         }
       ]
     },
     {
       "Name": "Workflow.Exposures.ExecuteScript",
       "StandardElementType": "Exposure",
+      "LineNumber": 12,
+      "IsPublic": true,
+      "Kind": "Class",
+      "BaseType": null,
+      "Interfaces": [],
       "Properties": [],
       "Methods": [
         {
+          "Id": "Workflow.Exposures.ExecuteScript.Run(HttpRequestData,System.Boolean)",
           "Name": "Run",
+          "LineNumber": 16,
           "Inputs": [
             {
               "Name": "request",
-              "Type": "Microsoft.Azure.Functions.Worker.Http.HttpRequestData"
+              "Type": "HttpRequestData"
             },
             {
               "Name": "useDetails",
               "Type": "System.Boolean"
             }
           ],
-          "ReturnType": "System.Threading.Tasks.Task\u003CMicrosoft.Azure.Functions.Worker.Http.HttpResponseData\u003E"
+          "ReturnType": "System.Threading.Tasks.Task\u003CHttpResponseData\u003E",
+          "Implements": [],
+          "Calls": [
+            {
+              "TypeName": "Workflow.Exposures.IWorkflowFunctionsManager",
+              "MethodName": "ProcessExecuteScriptAsync",
+              "MethodId": "Workflow.Exposures.IWorkflowFunctionsManager.ProcessExecuteScriptAsync(HttpRequestData,System.Boolean)",
+              "StandardElementType": "Exposure",
+              "IsDependencyBoundary": false
+            }
+          ],
+          "PossibleExceptionTypes": [
+            "System.ComponentModel.DataAnnotations.ValidationException",
+            "WorkflowEngineDependencyException",
+            "WorkflowEngineServiceException",
+            "WorkflowEngineValidationException"
+          ],
+          "IncomingExceptionTypes": [
+            "WorkflowEngineDependencyException",
+            "WorkflowEngineServiceException",
+            "WorkflowEngineValidationException"
+          ],
+          "ThrowsExceptionTypes": [
+            "WorkflowEngineDependencyException",
+            "WorkflowEngineServiceException",
+            "WorkflowEngineValidationException"
+          ],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
         }
       ]
     },
     {
       "Name": "Workflow.Exposures.Health",
       "StandardElementType": "Exposure",
+      "LineNumber": 11,
+      "IsPublic": true,
+      "Kind": "Class",
+      "BaseType": null,
+      "Interfaces": [],
       "Properties": [],
       "Methods": [
         {
+          "Id": "Workflow.Exposures.Health.Run(HttpRequestData)",
           "Name": "Run",
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "request",
-              "Type": "Microsoft.Azure.Functions.Worker.Http.HttpRequestData"
+              "Type": "HttpRequestData"
             }
           ],
-          "ReturnType": "System.Threading.Tasks.Task\u003CMicrosoft.Azure.Functions.Worker.Http.HttpResponseData\u003E"
+          "ReturnType": "System.Threading.Tasks.Task\u003CHttpResponseData\u003E",
+          "Implements": [],
+          "Calls": [
+            {
+              "TypeName": "Workflow.Exposures.IWorkflowFunctionsManager",
+              "MethodName": "ProcessHealthAsync",
+              "MethodId": "Workflow.Exposures.IWorkflowFunctionsManager.ProcessHealthAsync(HttpRequestData)",
+              "StandardElementType": "Exposure",
+              "IsDependencyBoundary": false
+            }
+          ],
+          "PossibleExceptionTypes": [
+            "System.ComponentModel.DataAnnotations.ValidationException",
+            "WorkflowEngineDependencyException",
+            "WorkflowEngineServiceException",
+            "WorkflowEngineValidationException"
+          ],
+          "IncomingExceptionTypes": [
+            "WorkflowEngineDependencyException",
+            "WorkflowEngineServiceException",
+            "WorkflowEngineValidationException"
+          ],
+          "ThrowsExceptionTypes": [
+            "WorkflowEngineDependencyException",
+            "WorkflowEngineServiceException",
+            "WorkflowEngineValidationException"
+          ],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
         }
       ]
     },
     {
       "Name": "Workflow.IServiceCollectionExtensions",
       "StandardElementType": "App",
+      "LineNumber": 15,
+      "IsPublic": false,
+      "Kind": "Class",
+      "BaseType": null,
+      "Interfaces": [],
       "Properties": [],
       "Methods": [
         {
+          "Id": "Workflow.IServiceCollectionExtensions.AddWorkflow(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration,System.Action\u003CWorkflow.Models.WorkflowConfiguration\u003E)",
           "Name": "AddWorkflow",
+          "LineNumber": 17,
           "Inputs": [
             {
               "Name": "services",
@@ -99,17 +291,50 @@
               "Type": "System.Action\u003CWorkflow.Models.WorkflowConfiguration\u003E"
             }
           ],
-          "ReturnType": "Microsoft.Extensions.DependencyInjection.IServiceCollection"
+          "ReturnType": "Microsoft.Extensions.DependencyInjection.IServiceCollection",
+          "Implements": [],
+          "Calls": [
+            {
+              "TypeName": "Microsoft.Extensions.Configuration.ConfigurationBinder",
+              "MethodName": "Bind",
+              "MethodId": "Microsoft.Extensions.Configuration.ConfigurationBinder.Bind(Microsoft.Extensions.Configuration.IConfiguration,System.Object?)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "System.Action\u003CT\u003E",
+              "MethodName": "Invoke",
+              "MethodId": "System.Action\u003CT\u003E.Invoke(T)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
         }
       ]
     },
     {
       "Name": "Workflow.Models.WorkflowConfiguration",
       "StandardElementType": "Model",
+      "LineNumber": 9,
+      "IsPublic": true,
+      "Kind": "Class",
+      "BaseType": null,
+      "Interfaces": [],
       "Properties": [
         {
           "Name": "Data",
-          "Type": "cCoder.Data.Models.DataConfiguration"
+          "Type": "DataConfiguration"
         }
       ],
       "Methods": []
@@ -117,59 +342,369 @@
     {
       "Name": "Workflow.Program",
       "StandardElementType": "App",
+      "LineNumber": 12,
+      "IsPublic": false,
+      "Kind": "Class",
+      "BaseType": null,
+      "Interfaces": [],
       "Properties": [],
       "Methods": []
     },
     {
       "Name": "Workflow.Services.Processings.WorkflowFunctions.WorkflowFunctionsProcessingService",
       "StandardElementType": "ProcessingService",
+      "LineNumber": 17,
+      "IsPublic": false,
+      "Kind": "Class",
+      "BaseType": null,
+      "Interfaces": [
+        {
+          "Id": "Workflow:Workflow.Services.Processings.WorkflowFunctions.IWorkflowFunctionsProcessingService",
+          "FullName": "Workflow.Services.Processings.WorkflowFunctions.IWorkflowFunctionsProcessingService",
+          "Name": "IWorkflowFunctionsProcessingService",
+          "Namespace": "Workflow.Services.Processings.WorkflowFunctions",
+          "AssemblyName": "Workflow",
+          "Kind": "Interface",
+          "IsInCurrentProject": true,
+          "StandardElementType": "ProcessingService"
+        }
+      ],
       "Properties": [],
       "Methods": [
         {
+          "Id": "Workflow.Services.Processings.WorkflowFunctions.WorkflowFunctionsProcessingService.ProcessExecuteAsync(HttpRequestData)",
           "Name": "ProcessExecuteAsync",
+          "LineNumber": 23,
           "Inputs": [
             {
               "Name": "request",
-              "Type": "Microsoft.Azure.Functions.Worker.Http.HttpRequestData"
+              "Type": "HttpRequestData"
             }
           ],
-          "ReturnType": "System.Threading.Tasks.Task\u003CMicrosoft.Azure.Functions.Worker.Http.HttpResponseData\u003E"
+          "ReturnType": "System.Threading.Tasks.Task\u003CHttpResponseData\u003E",
+          "Implements": [
+            "Workflow.Exposures.IWorkflowFunctionsManager.ProcessExecuteAsync(HttpRequestData)"
+          ],
+          "Calls": [
+            {
+              "TypeName": "Newtonsoft.Json.JsonConvert",
+              "MethodName": "DeserializeObject",
+              "MethodId": "Newtonsoft.Json.JsonConvert.DeserializeObject(System.String)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "System.InvalidOperationException",
+              "MethodName": ".ctor",
+              "MethodId": "System.InvalidOperationException..ctor(System.String?)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
+          "PossibleExceptionTypes": [
+            "System.ComponentModel.DataAnnotations.ValidationException",
+            "System.InvalidOperationException",
+            "WorkflowEngineDependencyException",
+            "WorkflowEngineServiceException",
+            "WorkflowEngineValidationException"
+          ],
+          "IncomingExceptionTypes": [
+            "System.ComponentModel.DataAnnotations.ValidationException",
+            "System.InvalidOperationException",
+            "WorkflowEngineDependencyException",
+            "WorkflowEngineServiceException",
+            "WorkflowEngineValidationException"
+          ],
+          "ThrowsExceptionTypes": [
+            "WorkflowEngineDependencyException",
+            "WorkflowEngineServiceException",
+            "WorkflowEngineValidationException"
+          ],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
         },
         {
+          "Id": "Workflow.Services.Processings.WorkflowFunctions.WorkflowFunctionsProcessingService.ProcessExecuteScriptAsync(HttpRequestData,System.Boolean)",
           "Name": "ProcessExecuteScriptAsync",
+          "LineNumber": 45,
           "Inputs": [
             {
               "Name": "request",
-              "Type": "Microsoft.Azure.Functions.Worker.Http.HttpRequestData"
+              "Type": "HttpRequestData"
             },
             {
               "Name": "useDetails",
               "Type": "System.Boolean"
             }
           ],
-          "ReturnType": "System.Threading.Tasks.Task\u003CMicrosoft.Azure.Functions.Worker.Http.HttpResponseData\u003E"
+          "ReturnType": "System.Threading.Tasks.Task\u003CHttpResponseData\u003E",
+          "Implements": [
+            "Workflow.Exposures.IWorkflowFunctionsManager.ProcessExecuteScriptAsync(HttpRequestData,System.Boolean)"
+          ],
+          "Calls": [],
+          "PossibleExceptionTypes": [
+            "System.ComponentModel.DataAnnotations.ValidationException",
+            "WorkflowEngineDependencyException",
+            "WorkflowEngineServiceException",
+            "WorkflowEngineValidationException"
+          ],
+          "IncomingExceptionTypes": [
+            "System.ComponentModel.DataAnnotations.ValidationException",
+            "WorkflowEngineDependencyException",
+            "WorkflowEngineServiceException",
+            "WorkflowEngineValidationException"
+          ],
+          "ThrowsExceptionTypes": [
+            "WorkflowEngineDependencyException",
+            "WorkflowEngineServiceException",
+            "WorkflowEngineValidationException"
+          ],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
         },
         {
+          "Id": "Workflow.Services.Processings.WorkflowFunctions.WorkflowFunctionsProcessingService.ProcessHealthAsync(HttpRequestData)",
           "Name": "ProcessHealthAsync",
+          "LineNumber": 63,
           "Inputs": [
             {
               "Name": "request",
-              "Type": "Microsoft.Azure.Functions.Worker.Http.HttpRequestData"
+              "Type": "HttpRequestData"
             }
           ],
-          "ReturnType": "System.Threading.Tasks.Task\u003CMicrosoft.Azure.Functions.Worker.Http.HttpResponseData\u003E"
+          "ReturnType": "System.Threading.Tasks.Task\u003CHttpResponseData\u003E",
+          "Implements": [
+            "Workflow.Exposures.IWorkflowFunctionsManager.ProcessHealthAsync(HttpRequestData)"
+          ],
+          "Calls": [],
+          "PossibleExceptionTypes": [
+            "System.ComponentModel.DataAnnotations.ValidationException",
+            "WorkflowEngineDependencyException",
+            "WorkflowEngineServiceException",
+            "WorkflowEngineValidationException"
+          ],
+          "IncomingExceptionTypes": [
+            "System.ComponentModel.DataAnnotations.ValidationException",
+            "WorkflowEngineDependencyException",
+            "WorkflowEngineServiceException",
+            "WorkflowEngineValidationException"
+          ],
+          "ThrowsExceptionTypes": [
+            "WorkflowEngineDependencyException",
+            "WorkflowEngineServiceException",
+            "WorkflowEngineValidationException"
+          ],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
         },
         {
+          "Id": "Workflow.Services.Processings.WorkflowFunctions.WorkflowFunctionsProcessingService.ProcessServiceBusMessageAsync(System.String)",
           "Name": "ProcessServiceBusMessageAsync",
+          "LineNumber": 73,
           "Inputs": [
             {
               "Name": "message",
               "Type": "System.String"
             }
           ],
-          "ReturnType": "System.Threading.Tasks.Task"
+          "ReturnType": "System.Threading.Tasks.Task",
+          "Implements": [
+            "Workflow.Exposures.IWorkflowFunctionsManager.ProcessServiceBusMessageAsync(System.String)"
+          ],
+          "Calls": [
+            {
+              "TypeName": "Microsoft.Extensions.Logging.LoggerExtensions",
+              "MethodName": "LogInformation",
+              "MethodId": "Microsoft.Extensions.Logging.LoggerExtensions.LogInformation(Microsoft.Extensions.Logging.ILogger,System.String?,System.Object?[])",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
+          "PossibleExceptionTypes": [
+            "System.ComponentModel.DataAnnotations.ValidationException",
+            "WorkflowEngineDependencyException",
+            "WorkflowEngineServiceException",
+            "WorkflowEngineValidationException"
+          ],
+          "IncomingExceptionTypes": [
+            "System.ComponentModel.DataAnnotations.ValidationException",
+            "WorkflowEngineDependencyException",
+            "WorkflowEngineServiceException",
+            "WorkflowEngineValidationException"
+          ],
+          "ThrowsExceptionTypes": [
+            "WorkflowEngineDependencyException",
+            "WorkflowEngineServiceException",
+            "WorkflowEngineValidationException"
+          ],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
         }
       ]
+    }
+  ],
+  "Interfaces": [
+    {
+      "Name": "Workflow.Exposures.IWorkflowFunctionsManager",
+      "StandardElementType": "Exposure",
+      "LineNumber": 9,
+      "IsPublic": true,
+      "Kind": "Interface",
+      "BaseType": null,
+      "Interfaces": [],
+      "Properties": [],
+      "Methods": [
+        {
+          "Id": "Workflow.Exposures.IWorkflowFunctionsManager.ProcessExecuteAsync(HttpRequestData)",
+          "Name": "ProcessExecuteAsync",
+          "LineNumber": 11,
+          "Inputs": [
+            {
+              "Name": "request",
+              "Type": "HttpRequestData"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task\u003CHttpResponseData\u003E",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "Workflow.Exposures.IWorkflowFunctionsManager.ProcessExecuteScriptAsync(HttpRequestData,System.Boolean)",
+          "Name": "ProcessExecuteScriptAsync",
+          "LineNumber": 13,
+          "Inputs": [
+            {
+              "Name": "request",
+              "Type": "HttpRequestData"
+            },
+            {
+              "Name": "useDetails",
+              "Type": "System.Boolean"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task\u003CHttpResponseData\u003E",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "Workflow.Exposures.IWorkflowFunctionsManager.ProcessHealthAsync(HttpRequestData)",
+          "Name": "ProcessHealthAsync",
+          "LineNumber": 17,
+          "Inputs": [
+            {
+              "Name": "request",
+              "Type": "HttpRequestData"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task\u003CHttpResponseData\u003E",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "Workflow.Exposures.IWorkflowFunctionsManager.ProcessServiceBusMessageAsync(System.String)",
+          "Name": "ProcessServiceBusMessageAsync",
+          "LineNumber": 19,
+          "Inputs": [
+            {
+              "Name": "message",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        }
+      ]
+    },
+    {
+      "Name": "Workflow.Services.Processings.WorkflowFunctions.IWorkflowFunctionsProcessingService",
+      "StandardElementType": "ProcessingService",
+      "LineNumber": 10,
+      "IsPublic": false,
+      "Kind": "Interface",
+      "BaseType": null,
+      "Interfaces": [
+        {
+          "Id": "Workflow:Workflow.Exposures.IWorkflowFunctionsManager",
+          "FullName": "Workflow.Exposures.IWorkflowFunctionsManager",
+          "Name": "IWorkflowFunctionsManager",
+          "Namespace": "Workflow.Exposures",
+          "AssemblyName": "Workflow",
+          "Kind": "Interface",
+          "IsInCurrentProject": true,
+          "StandardElementType": "Exposure"
+        }
+      ],
+      "Properties": [],
+      "Methods": []
     }
   ],
   "Links": [
