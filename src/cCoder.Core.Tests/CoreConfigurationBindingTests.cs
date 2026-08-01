@@ -13,6 +13,28 @@ namespace cCoder.Core.Tests;
 public sealed partial class CoreConfigurationBindingTests
 {
     [Fact]
+    public void CoreConfiguration_ShouldFailForMalformedAiSection()
+    {
+        // Given
+        IConfiguration applicationConfiguration = new ConfigurationBuilder()
+            .AddInMemoryCollection(initialData: new Dictionary<string, string>
+            {
+                ["AI:Providers:Ollama:CompletionProvider:Mode"] =
+                    "NotAProviderMode"
+            })
+            .Build();
+
+        // When
+        Action action = () =>
+            _ = new CoreConfiguration(applicationConfiguration);
+
+        // Then
+        action
+            .Should()
+            .Throw<InvalidOperationException>();
+    }
+
+    [Fact]
     public void CoreConfiguration_ShouldOnlyExposeDomainConfigurationObjects()
     {
         // Given
