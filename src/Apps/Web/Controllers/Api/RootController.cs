@@ -19,29 +19,70 @@ namespace Web.Controllers.Api
         [HttpGet()]
         public IActionResult Get()
         {
-            var result = new
+            try
             {
-                value = apiContextManager.GetApiInfos()
-            };
+                var result = new
+                {
+                    value = apiContextManager.GetApiInfos()
+                };
 
-            return Ok(value: result);
+                return Ok(value: result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(
+                    statusCode: StatusCodes.Status500InternalServerError,
+                    value: "The API contexts could not be loaded.");
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> Post()
         {
-            using StreamReader reader = new(Request.Body);
-            string response = await reader.ReadToEndAsync();
-            return new RawResult(response);
+            try
+            {
+                using StreamReader reader = new(Request.Body);
+                string response = await reader.ReadToEndAsync();
+
+                return new RawResult(response);
+            }
+            catch (Exception)
+            {
+                return StatusCode(
+                    statusCode: StatusCodes.Status500InternalServerError,
+                    value: "The API request could not be processed.");
+            }
         }
 
         [HttpPut]
-        public Task<IActionResult> Put() =>
-            Post();
+        public async Task<IActionResult> Put()
+        {
+            try
+            {
+                return await Post();
+            }
+            catch (Exception)
+            {
+                return StatusCode(
+                    statusCode: StatusCodes.Status500InternalServerError,
+                    value: "The API request could not be processed.");
+            }
+        }
 
         [HttpGet("Time")]
-        public IActionResult GetTime() =>
-            Ok(value: new { DateTimeOffset.UtcNow });
+        public IActionResult GetTime()
+        {
+            try
+            {
+                return Ok(value: new { DateTimeOffset.UtcNow });
+            }
+            catch (Exception)
+            {
+                return StatusCode(
+                    statusCode: StatusCodes.Status500InternalServerError,
+                    value: "The server time could not be loaded.");
+            }
+        }
 
     }
 }

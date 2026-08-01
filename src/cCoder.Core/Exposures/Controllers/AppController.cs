@@ -3,7 +3,9 @@
 // ---------------------------------------------------------------
 
 using cCoder.Core.Services.Aggregations;
+using cCoder.Core.Models.Exceptions;
 using cCoder.Data.Models.CMS;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Routing.Attributes;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
@@ -16,12 +18,37 @@ public class AppController(
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] App newApp)
     {
-        if (!ModelState.IsValid)
+        try
         {
-            return BadRequest(modelState: ModelState);
-        }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(modelState: ModelState);
+            }
 
-        return Ok(value: await service.AddAppAsync(newApp: newApp));
+            return StatusCode(
+                statusCode: StatusCodes.Status201Created,
+                value: await service.AddAppAsync(newApp: newApp));
+        }
+        catch (CoreOrchestrationValidationException)
+        {
+            return BadRequest(error: "The app request is invalid.");
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return Conflict(error: "The app changed before the request completed.");
+        }
+        catch (System.Security.SecurityException)
+        {
+            return StatusCode(
+                statusCode: StatusCodes.Status403Forbidden,
+                value: "The app operation is forbidden.");
+        }
+        catch (Exception)
+        {
+            return StatusCode(
+                statusCode: StatusCodes.Status500InternalServerError,
+                value: "The app operation failed.");
+        }
     }
 
     [HttpPut]
@@ -29,31 +56,104 @@ public class AppController(
         [FromRoute] int key,
         [FromBody] App updatedApp)
     {
-        if (!ModelState.IsValid)
+        try
         {
-            return BadRequest(modelState: ModelState);
-        }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(modelState: ModelState);
+            }
 
-        updatedApp.Id = key;
-        return Ok(value: await service.UpdateAppAsync(updatedApp: updatedApp));
+            updatedApp.Id = key;
+
+            return Ok(
+                value: await service.UpdateAppAsync(
+                    updatedApp: updatedApp));
+        }
+        catch (CoreOrchestrationValidationException)
+        {
+            return BadRequest(error: "The app request is invalid.");
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return Conflict(error: "The app changed before the request completed.");
+        }
+        catch (System.Security.SecurityException)
+        {
+            return StatusCode(
+                statusCode: StatusCodes.Status403Forbidden,
+                value: "The app operation is forbidden.");
+        }
+        catch (Exception)
+        {
+            return StatusCode(
+                statusCode: StatusCodes.Status500InternalServerError,
+                value: "The app operation failed.");
+        }
     }
 
     [ODataIgnored]
     [HttpPut("Api/Core/App({key})", Order = -1)]
-    public Task<IActionResult> PutAggregateRoute(
+    public async Task<IActionResult> PutAggregateRoute(
         [FromRoute] int key,
-        [FromBody] App updatedApp) =>
-        Put(key: key, updatedApp: updatedApp);
+        [FromBody] App updatedApp)
+    {
+        try
+        {
+            return await Put(key: key, updatedApp: updatedApp);
+        }
+        catch (Exception)
+        {
+            return StatusCode(
+                statusCode: StatusCodes.Status500InternalServerError,
+                value: "The app operation failed.");
+        }
+    }
 
     [ODataIgnored]
     [HttpDelete("Api/Core/App({key})", Order = -1)]
-    public Task<IActionResult> DeleteAggregateRoute([FromRoute] int key) =>
-        Delete(key: key);
+    public async Task<IActionResult> DeleteAggregateRoute(
+        [FromRoute] int key)
+    {
+        try
+        {
+            return await Delete(key: key);
+        }
+        catch (Exception)
+        {
+            return StatusCode(
+                statusCode: StatusCodes.Status500InternalServerError,
+                value: "The app operation failed.");
+        }
+    }
 
     [HttpDelete]
     public async Task<IActionResult> Delete([FromRoute] int key)
     {
-        await service.DeleteAppAsync(appId: key);
-        return Ok();
+        try
+        {
+            await service.DeleteAppAsync(appId: key);
+
+            return NoContent();
+        }
+        catch (CoreOrchestrationValidationException)
+        {
+            return BadRequest(error: "The app request is invalid.");
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return Conflict(error: "The app changed before the request completed.");
+        }
+        catch (System.Security.SecurityException)
+        {
+            return StatusCode(
+                statusCode: StatusCodes.Status403Forbidden,
+                value: "The app operation is forbidden.");
+        }
+        catch (Exception)
+        {
+            return StatusCode(
+                statusCode: StatusCodes.Status500InternalServerError,
+                value: "The app operation failed.");
+        }
     }
 }

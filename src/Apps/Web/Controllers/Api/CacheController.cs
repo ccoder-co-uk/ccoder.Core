@@ -4,6 +4,7 @@
 
 using Microsoft.AspNetCore.Mvc;
 using Web.Exposures;
+using Web.Models.Exceptions;
 
 namespace Web.Controllers.Api;
 
@@ -15,8 +16,21 @@ public sealed class CacheController(
     [HttpGet("RefreshCache")]
     public IActionResult GetRefreshCache()
     {
-        apiCacheManager.RefreshCaches();
+        try
+        {
+            apiCacheManager.RefreshCaches();
 
-        return Ok();
+            return Ok();
+        }
+        catch (ApiCacheValidationException)
+        {
+            return BadRequest(error: "The cache refresh request is invalid.");
+        }
+        catch (Exception)
+        {
+            return StatusCode(
+                statusCode: StatusCodes.Status500InternalServerError,
+                value: "The caches could not be refreshed.");
+        }
     }
 }

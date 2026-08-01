@@ -2,49 +2,34 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using Microsoft.Extensions.Primitives;
+using cCoder.Core.Services.Processings.Middleware;
+using cCoder.Core.Models.Exceptions;
 
 namespace cCoder.Core.Dependencies.Middleware;
 
-internal sealed class CoreFormatterMiddleware : IMiddleware
+internal sealed class CoreFormatterMiddleware(
+    ICoreFormatterMiddlewareProcessingService processingService)
+    : IMiddleware
 {
     public async Task InvokeAsync(
         HttpContext context,
         RequestDelegate next)
     {
-        Dictionary<string, StringValues> query =
-            Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(
-                queryString: context.Request.QueryString.Value);
-
-        if (query.TryGetValue(key: "t", value: out StringValues token))
+        try
         {
-            context.Request.Headers.Authorization =
-                $"bearer {token[0]}";
+            await processingService.ProcessAsync(
+                context: context,
+                next: next);
         }
-
-        if (query.TryGetValue(
-            key: "$format",
-            value: out StringValues value))
+        catch (CoreProcessingValidationException)
         {
-            context.Request.Headers.Accept = value[0] switch
-            {
-                "xml" => "application/xml",
-                "csv" => "text/csv",
-                "excel" =>
-                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                _ => context.Request.Headers.ContentType,
-            };
-
-            context.Response.Headers.ContentDisposition =
-                value[0] switch
-                {
-                    "xml" => "attachment; filename=export.xml",
-                    "csv" => "attachment; filename=export.csv",
-                    "excel" => "attachment; filename=export.xlsx",
-                    _ => "attachment; filename=export.json",
-                };
+            context.Response.StatusCode =
+                StatusCodes.Status400BadRequest;
         }
-
-        await next(context: context);
+        catch (Exception)
+        {
+            context.Response.StatusCode =
+                StatusCodes.Status500InternalServerError;
+        }
     }
 }

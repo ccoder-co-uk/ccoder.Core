@@ -22,8 +22,8 @@ public static class IServiceCollectionExtensions
         IConfiguration applicationConfiguration,
         Action<CoreConfiguration> configure = null)
     {
-        CoreConfiguration configuration = new();
-        applicationConfiguration.Bind(configuration);
+        CoreConfiguration configuration =
+            new(applicationConfiguration);
         configure?.Invoke(configuration);
         services.AddApplicationLogging(applicationConfiguration);
         services.AddBrokers();

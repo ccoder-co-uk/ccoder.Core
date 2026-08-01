@@ -4,6 +4,7 @@
 
 using System.Text.Json;
 using cCoder.Core.Services.Aggregations.Packages;
+using cCoder.Core.Models.Exceptions;
 using cCoder.Data.Models.Packaging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Routing.Attributes;
@@ -27,15 +28,34 @@ public class PackageManagerController(
         [FromQuery] int appId,
         [FromQuery] string[] packageNames = null)
     {
-        string sourceApi = $"{Request.Scheme}://{Request.Host}";
+        try
+        {
+            string sourceApi = $"{Request.Scheme}://{Request.Host}";
 
-        Package[] packages =
-            await packageManagerAggregationService.ExportPackagesAsync(
-                appId: appId,
-                packageNames: packageNames,
-                sourceApi: sourceApi);
+            Package[] packages =
+                await packageManagerAggregationService.ExportPackagesAsync(
+                    appId: appId,
+                    packageNames: packageNames,
+                    sourceApi: sourceApi);
 
-        return Ok(value: packages);
+            return Ok(value: packages);
+        }
+        catch (CoreOrchestrationValidationException)
+        {
+            return BadRequest(error: "The package request is invalid.");
+        }
+        catch (System.Security.SecurityException)
+        {
+            return StatusCode(
+                statusCode: StatusCodes.Status403Forbidden,
+                value: "The package operation is forbidden.");
+        }
+        catch (Exception)
+        {
+            return StatusCode(
+                statusCode: StatusCodes.Status500InternalServerError,
+                value: "The package operation failed.");
+        }
     }
 
     [HttpPost("Import")]
@@ -43,41 +63,79 @@ public class PackageManagerController(
         [FromQuery] int appId,
         [FromBody] Package newPackage)
     {
-        if (!ModelState.IsValid)
+        try
         {
-            return BadRequest(modelState: ModelState);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(modelState: ModelState);
+            }
+
+            await packageManagerAggregationService.ImportPackagesAsync(
+                appId: appId,
+                packages: [newPackage]);
+
+            return Ok();
         }
-
-        await packageManagerAggregationService.ImportPackagesAsync(
-            appId: appId,
-            packages: [newPackage]);
-
-        return Ok();
+        catch (CoreOrchestrationValidationException)
+        {
+            return BadRequest(error: "The package request is invalid.");
+        }
+        catch (System.Security.SecurityException)
+        {
+            return StatusCode(
+                statusCode: StatusCodes.Status403Forbidden,
+                value: "The package operation is forbidden.");
+        }
+        catch (Exception)
+        {
+            return StatusCode(
+                statusCode: StatusCodes.Status500InternalServerError,
+                value: "The package operation failed.");
+        }
     }
 
     [HttpPost("ImportThis")]
     public async Task<IActionResult> PostThis([FromQuery] int appId)
     {
-        if (!ModelState.IsValid)
+        try
         {
-            return BadRequest(modelState: ModelState);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(modelState: ModelState);
+            }
+
+            using JsonDocument document =
+                await JsonDocument.ParseAsync(utf8Json: Request.Body);
+
+            JsonElement body = document.RootElement;
+
+            Package[] packages = body.ValueKind == JsonValueKind.Array
+                ? body.Deserialize<Package[]>(options: JsonOptions) ?? []
+                : body.Deserialize<Package>(options: JsonOptions) is Package package
+                    ? [package]
+                    : [];
+
+            await packageManagerAggregationService.ImportPackagesAsync(
+                appId: appId,
+                packages: packages);
+
+            return Ok();
         }
-
-        using JsonDocument document =
-            await JsonDocument.ParseAsync(utf8Json: Request.Body);
-
-        JsonElement body = document.RootElement;
-
-        Package[] packages = body.ValueKind == JsonValueKind.Array
-            ? body.Deserialize<Package[]>(options: JsonOptions) ?? []
-            : body.Deserialize<Package>(options: JsonOptions) is Package package
-                ? [package]
-                : [];
-
-        await packageManagerAggregationService.ImportPackagesAsync(
-            appId: appId,
-            packages: packages);
-
-        return Ok();
+        catch (CoreOrchestrationValidationException)
+        {
+            return BadRequest(error: "The package request is invalid.");
+        }
+        catch (System.Security.SecurityException)
+        {
+            return StatusCode(
+                statusCode: StatusCodes.Status403Forbidden,
+                value: "The package operation is forbidden.");
+        }
+        catch (Exception)
+        {
+            return StatusCode(
+                statusCode: StatusCodes.Status500InternalServerError,
+                value: "The package operation failed.");
+        }
     }
 }
