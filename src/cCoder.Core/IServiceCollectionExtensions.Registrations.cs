@@ -84,36 +84,64 @@ public static partial class IServiceCollectionExtensions
 
         ODataConventionModelBuilder domainModelBuilder = new();
 
-        services.AddAIWeb(configuration: configuration.AI);
-        services.AddSecurityWeb(
-            configuration: configuration.Security,
-            builder: domainModelBuilder);
+        if (configuration.AI is not null)
+        {
+            services.AddAIWeb(configuration: configuration.AI);
+        }
 
-        services.AddAppSecurityWeb(
-            configuration: configuration.AppSecurity,
-            builder: domainModelBuilder);
+        if (configuration.Security is not null)
+        {
+            services.AddSecurityWeb(
+                configuration: configuration.Security,
+                builder: domainModelBuilder);
+        }
 
-        services.AddDocumentManagementWeb(
-            configuration: configuration.DocumentManagement,
-            builder: domainModelBuilder);
+        if (configuration.AppSecurity is not null)
+        {
+            services.AddAppSecurityWeb(
+                configuration: configuration.AppSecurity,
+                builder: domainModelBuilder);
+        }
 
-        services.AddLoggingWeb(
-            configuration: configuration.Logging,
-            builder: domainModelBuilder);
+        if (configuration.DocumentManagement is not null)
+        {
+            services.AddDocumentManagementWeb(
+                configuration: configuration.DocumentManagement,
+                builder: domainModelBuilder);
+        }
 
-        services.AddMailWeb(
-            configuration: configuration.Mail,
-            builder: domainModelBuilder);
+        if (configuration.Logging is not null)
+        {
+            services.AddLoggingWeb(
+                configuration: configuration.Logging,
+                builder: domainModelBuilder);
+        }
 
-        services.AddWorkflowWeb(
-            configuration: configuration.Workflow,
-            builder: domainModelBuilder);
+        if (configuration.Mail is not null)
+        {
+            services.AddMailWeb(
+                configuration: configuration.Mail,
+                builder: domainModelBuilder);
+        }
 
-        services.AddContentManagementWeb(
-            configuration: configuration.ContentManagement,
-            builder: domainModelBuilder);
+        if (configuration.Workflow is not null)
+        {
+            services.AddWorkflowWeb(
+                configuration: configuration.Workflow,
+                builder: domainModelBuilder);
+        }
 
-        services.AddPackaging(configuration: configuration.Packaging);
+        if (configuration.ContentManagement is not null)
+        {
+            services.AddContentManagementWeb(
+                configuration: configuration.ContentManagement,
+                builder: domainModelBuilder);
+        }
+
+        if (configuration.Packaging is not null)
+        {
+            services.AddPackaging(configuration: configuration.Packaging);
+        }
 
         services.AddCoreEventing(
             eventProviders: configuration.Eventing.EventProviders);
@@ -131,42 +159,40 @@ public static partial class IServiceCollectionExtensions
         services.AddServiceBusEventForwarding(
             configuration: configuration.Eventing);
 
-        services.AddCoreApiContexts();
+        string[] apiContexts =
+        [
+            .. new (string Name, bool IsConfigured)[]
+            {
+                ("AppSecurity", configuration.AppSecurity is not null),
+                ("ContentManagement", configuration.ContentManagement is not null),
+                ("DocumentManagement", configuration.DocumentManagement is not null),
+                ("Logging", configuration.Logging is not null),
+                ("Mail", configuration.Mail is not null),
+                ("Packaging", configuration.Packaging is not null),
+                ("Security", configuration.Security is not null),
+                ("Workflow", configuration.Workflow is not null)
+            }
+            .Where(predicate: context => context.IsConfigured)
+            .Select(selector: context => context.Name)
+        ];
+        services.AddCoreApiContexts(contextNames: apiContexts);
 
         services.AddCoreApiDocumentation(
-            apiContexts:
-            [
-                "Core",
-                "AppSecurity",
-                "ContentManagement",
-                "DocumentManagement",
-                "Logging",
-                "Mail",
-                "Packaging",
-                "Security",
-                "Workflow",
-            ]);
+            apiContexts: ["Core", .. apiContexts]);
 
-        services.AddCoreFirstTimeSetup();
+        if (configuration.Security is not null
+            && configuration.AppSecurity is not null)
+        {
+            services.AddCoreFirstTimeSetup();
+        }
 
         return services;
     }
 
     internal static void AddCoreApiContexts(
-        this IServiceCollection services)
+        this IServiceCollection services,
+        IEnumerable<string> contextNames)
     {
-        string[] contextNames =
-        [
-            "AppSecurity",
-            "ContentManagement",
-            "DocumentManagement",
-            "Logging",
-            "Mail",
-            "Packaging",
-            "Security",
-            "Workflow",
-        ];
-
         foreach (string contextName in contextNames)
         {
             services.AddSingleton(
@@ -188,27 +214,51 @@ public static partial class IServiceCollectionExtensions
         ArgumentNullException.ThrowIfNull(argument: configuration);
         services.AddSingleton(implementationInstance: configuration);
 
-        services.AddSecurityHostedServices(
-            configuration: configuration.Security);
+        if (configuration.Security is not null)
+        {
+            services.AddSecurityHostedServices(
+                configuration: configuration.Security);
+        }
 
-        services.AddAppSecurityHostedServices(
-            configuration: configuration.AppSecurity);
+        if (configuration.AppSecurity is not null)
+        {
+            services.AddAppSecurityHostedServices(
+                configuration: configuration.AppSecurity);
+        }
 
-        services.AddDocumentManagementHostedServices(
-            configuration: configuration.DocumentManagement);
+        if (configuration.DocumentManagement is not null)
+        {
+            services.AddDocumentManagementHostedServices(
+                configuration: configuration.DocumentManagement);
+        }
 
-        services.AddLoggingHostedServices(
-            configuration: configuration.Logging);
+        if (configuration.Logging is not null)
+        {
+            services.AddLoggingHostedServices(
+                configuration: configuration.Logging);
+        }
 
-        services.AddMailHostedServices(configuration: configuration.Mail);
+        if (configuration.Mail is not null)
+        {
+            services.AddMailHostedServices(configuration: configuration.Mail);
+        }
 
-        services.AddWorkflowHostedServices(
-            configuration: configuration.Workflow);
+        if (configuration.Workflow is not null)
+        {
+            services.AddWorkflowHostedServices(
+                configuration: configuration.Workflow);
+        }
 
-        services.AddContentManagementHostedServices(
-            configuration: configuration.ContentManagement);
+        if (configuration.ContentManagement is not null)
+        {
+            services.AddContentManagementHostedServices(
+                configuration: configuration.ContentManagement);
+        }
 
-        services.AddPackaging(configuration: configuration.Packaging);
+        if (configuration.Packaging is not null)
+        {
+            services.AddPackaging(configuration: configuration.Packaging);
+        }
 
         services.AddCoreEventing(
             eventProviders: configuration.Eventing.EventProviders);
@@ -674,7 +724,7 @@ predicate: (documentName, apiDescription) =>
             options.OutputFormatters.Add(item: new CsvFormatter());
             options.OutputFormatters.Add(item: new ExcelFormatter());
 
-            if (coreConfiguration?.AppSecurity.AggregateDomains != true)
+            if (coreConfiguration?.AppSecurity?.AggregateDomains != true)
             {
                 options.Conventions.Add(
                     actionModelConvention:
@@ -699,13 +749,8 @@ predicate: (documentName, apiDescription) =>
         IEnumerable<CoreApiRouteDefinition> routeDefinitions)
     {
         DefaultODataBatchHandler batchHandler = new();
-        ODataConventionModelBuilder packagingModelBuilder = new();
-
-        packagingModelBuilder.EntitySet<Package>(name: nameof(Package));
-        packagingModelBuilder.EntitySet<PackageItem>(name: nameof(PackageItem));
-        packagingModelBuilder.Namespace = string.Empty;
-
-        IEdmModel packagingModel = packagingModelBuilder.GetEdmModel();
+        CoreConfiguration configuration =
+            services.GetRegisteredCoreConfiguration();
 
         CoreApiRouteDefinition[] definitions = [.. (routeDefinitions ?? [])
             .Where(predicate: route =>
@@ -734,10 +779,18 @@ predicate: (documentName, apiDescription) =>
                 .OrderBy()
                 .SetMaxTop(maxTopValue: 1000);
 
-            _ = options.AddRouteComponents(
-                routePrefix: "Api/Packaging",
-                model: packagingModel,
-                batchHandler: batchHandler);
+            if (configuration?.Packaging is not null)
+            {
+                ODataConventionModelBuilder packagingModelBuilder = new();
+                packagingModelBuilder.EntitySet<Package>(name: nameof(Package));
+                packagingModelBuilder.EntitySet<PackageItem>(name: nameof(PackageItem));
+                packagingModelBuilder.Namespace = string.Empty;
+
+                _ = options.AddRouteComponents(
+                    routePrefix: "Api/Packaging",
+                    model: packagingModelBuilder.GetEdmModel(),
+                    batchHandler: batchHandler);
+            }
 
             foreach (CoreApiRouteDefinition routeDefinition in definitions)
             {
@@ -758,7 +811,7 @@ predicate: (documentName, apiDescription) =>
         services.PostConfigure<ODataOptions>(
             configureOptions: options =>
             {
-                if (coreConfiguration?.AppSecurity.AggregateDomains != true)
+                if (coreConfiguration?.AppSecurity?.AggregateDomains != true)
                 {
                     return;
                 }

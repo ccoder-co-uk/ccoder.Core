@@ -29,14 +29,16 @@ public sealed partial class HostedServicesRegistrationTests
                 ["Security:ConnectionString"] = "Server=(localdb)\\mssqllocaldb;Database=sso-tests;Trusted_Connection=True;TrustServerCertificate=True;",
                 ["Security:DecryptionKey"] = "000000000000000000000000000000000000000000000000",
                 ["ContentManagement:WorkflowServiceUrl"] = "http://localhost:7071/api/",
-                ["ContentManagement:RootPath"] = "Api/BoundContent"
+                ["ContentManagement:RootPath"] = "Api/BoundContent",
+                ["Workflow:ServiceUrl"] = "https://localhost:7100/"
             })
             .Build();
 
         IServiceCollection services = new ServiceCollection();
         services.AddSingleton(implementationInstance: configuration);
-        CoreConfiguration coreConfiguration = new();
-        configuration.Bind(instance: coreConfiguration);
+
+        CoreConfiguration coreConfiguration =
+            new(configuration: configuration);
 
         // When
         services.AddCoreHostedServices(
@@ -73,14 +75,17 @@ public sealed partial class HostedServicesRegistrationTests
                 ["Security:ConnectionString"] = "Server=(localdb)\\mssqllocaldb;Database=sso-tests;Trusted_Connection=True;TrustServerCertificate=True;",
                 ["Eventing:ServiceBus:ConnectionString"] = "Endpoint=sb://acceptance.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=abc123=",
                 ["Security:DecryptionKey"] = "000000000000000000000000000000000000000000000000",
-                ["ContentManagement:WorkflowServiceUrl"] = "http://localhost:7071/api/"
+                ["ContentManagement:WorkflowServiceUrl"] = "http://localhost:7071/api/",
+                ["Workflow:ServiceUrl"] = "https://localhost:7100/"
             })
             .Build();
 
         IServiceCollection services = new ServiceCollection();
         services.AddSingleton(implementationInstance: configuration);
-        CoreConfiguration coreConfiguration = new();
-        configuration.Bind(instance: coreConfiguration);
+
+        CoreConfiguration coreConfiguration =
+            new(configuration: configuration);
+
         coreConfiguration.Eventing.ProviderType = "ServiceBus";
         coreConfiguration.Eventing.ServiceBus.MaxConcurrency = 3;
 
