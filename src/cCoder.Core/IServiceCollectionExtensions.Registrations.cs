@@ -29,6 +29,7 @@ using cCoder.Core.Exposures.Setup;
 using cCoder.Core.Dependencies.Formatters;
 using cCoder.Core.Dependencies.Middleware;
 using cCoder.Core.Dependencies.OData;
+using cCoder.Core.Dependencies.OpenApi;
 using cCoder.Core.Dependencies.Sessions;
 using cCoder.Core.Exposures;
 using cCoder.Core.Services.Aggregations;
@@ -385,6 +386,7 @@ public static partial class IServiceCollectionExtensions
 
         services.AddSwaggerGen(setupAction: c =>
         {
+            c.OperationFilter<HttpResponseContractOperationFilter>();
             c.ResolveConflictingActions(resolver: apiDescriptions => apiDescriptions.First());
             c.CustomSchemaIds(schemaIdSelector: type => type.FullName?.Replace(oldChar: '+', newChar: '.') ?? type.Name);
             services.AddSwaggerDocuments(options: c, routes: definitions);

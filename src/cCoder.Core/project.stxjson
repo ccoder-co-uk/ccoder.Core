@@ -2114,6 +2114,71 @@
       ]
     },
     {
+      "Name": "cCoder.Core.Dependencies.OpenApi.HttpResponseContractOperationFilter",
+      "StandardElementType": "Dependency",
+      "LineNumber": 12,
+      "IsPublic": false,
+      "Kind": "Class",
+      "BaseType": {
+        "Id": "cCoder.Core:IOperationFilter",
+        "FullName": "IOperationFilter",
+        "Name": "IOperationFilter",
+        "Namespace": "\u003Cglobal namespace\u003E",
+        "AssemblyName": "cCoder.Core",
+        "Kind": "Class",
+        "IsInCurrentProject": true,
+        "StandardElementType": "Dependency"
+      },
+      "Interfaces": [],
+      "Properties": [],
+      "Methods": [
+        {
+          "Id": "cCoder.Core.Dependencies.OpenApi.HttpResponseContractOperationFilter.Apply(OpenApiOperation,OperationFilterContext)",
+          "Name": "Apply",
+          "LineNumber": 14,
+          "Inputs": [
+            {
+              "Name": "operation",
+              "Type": "OpenApiOperation"
+            },
+            {
+              "Name": "context",
+              "Type": "OperationFilterContext"
+            }
+          ],
+          "ReturnType": "System.Void",
+          "Implements": [],
+          "Calls": [
+            {
+              "TypeName": "System.ArgumentNullException",
+              "MethodName": "ThrowIfNull",
+              "MethodId": "System.ArgumentNullException.ThrowIfNull(System.Object?,System.String?)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "System.String",
+              "MethodName": "Contains",
+              "MethodId": "System.String.Contains(System.String,System.StringComparison)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        }
+      ]
+    },
+    {
       "Name": "cCoder.Core.Dependencies.Sessions.NoOpSession",
       "StandardElementType": "Dependency",
       "LineNumber": 8,
@@ -4856,7 +4921,7 @@
         {
           "Id": "cCoder.Core.IServiceCollectionExtensions.AddCoreHostedServices(IServiceCollection,cCoder.Core.Models.CoreConfiguration)",
           "Name": "AddCoreHostedServices",
-          "LineNumber": 252,
+          "LineNumber": 253,
           "Inputs": [
             {
               "Name": "services",
@@ -4956,7 +5021,7 @@
         {
           "Id": "cCoder.Core.IServiceCollectionExtensions.AddCoreWeb(IServiceCollection,cCoder.Core.Models.CoreConfiguration)",
           "Name": "AddCoreWeb",
-          "LineNumber": 81,
+          "LineNumber": 82,
           "Inputs": [
             {
               "Name": "services",
