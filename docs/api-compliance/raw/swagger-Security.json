@@ -496,7 +496,7 @@
             "name": "queryOptions",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Security.Models.Entities.SSOPrivilege, cCoder.Security.Data, Version=2026.7.30.2059, Culture=neutral, PublicKeyToken=null]]"
+              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Security.Models.Entities.SSOPrivilege, cCoder.Security.Data, Version=2026.8.1.1419, Culture=neutral, PublicKeyToken=null]]"
             }
           }
         ],
@@ -518,7 +518,7 @@
             "name": "queryOptions",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Security.Models.Entities.SSOPrivilege, cCoder.Security.Data, Version=2026.7.30.2059, Culture=neutral, PublicKeyToken=null]]"
+              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Security.Models.Entities.SSOPrivilege, cCoder.Security.Data, Version=2026.8.1.1419, Culture=neutral, PublicKeyToken=null]]"
             }
           }
         ],
@@ -563,7 +563,7 @@
             "name": "queryOptions",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Security.Models.Entities.SSORole, cCoder.Security.Data, Version=2026.7.30.2059, Culture=neutral, PublicKeyToken=null]]"
+              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Security.Models.Entities.SSORole, cCoder.Security.Data, Version=2026.8.1.1419, Culture=neutral, PublicKeyToken=null]]"
             }
           }
         ],
@@ -800,7 +800,7 @@
             "name": "queryOptions",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Security.Models.Entities.SSORole, cCoder.Security.Data, Version=2026.7.30.2059, Culture=neutral, PublicKeyToken=null]]"
+              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Security.Models.Entities.SSORole, cCoder.Security.Data, Version=2026.8.1.1419, Culture=neutral, PublicKeyToken=null]]"
             }
           }
         ],
@@ -1094,7 +1094,7 @@
             "name": "queryOptions",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Security.Models.Entities.SSOUser, cCoder.Security.Data, Version=2026.7.30.2059, Culture=neutral, PublicKeyToken=null]]"
+              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Security.Models.Entities.SSOUser, cCoder.Security.Data, Version=2026.8.1.1419, Culture=neutral, PublicKeyToken=null]]"
             }
           }
         ],
@@ -1116,7 +1116,7 @@
             "name": "queryOptions",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Security.Models.Entities.SSOUser, cCoder.Security.Data, Version=2026.7.30.2059, Culture=neutral, PublicKeyToken=null]]"
+              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Security.Models.Entities.SSOUser, cCoder.Security.Data, Version=2026.8.1.1419, Culture=neutral, PublicKeyToken=null]]"
             }
           }
         ],
@@ -1414,7 +1414,7 @@
             "name": "queryOptions",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Security.Models.Entities.SSOUserRole, cCoder.Security.Data, Version=2026.7.30.2059, Culture=neutral, PublicKeyToken=null]]"
+              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Security.Models.Entities.SSOUserRole, cCoder.Security.Data, Version=2026.8.1.1419, Culture=neutral, PublicKeyToken=null]]"
             }
           }
         ],
@@ -1651,7 +1651,7 @@
             "name": "queryOptions",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Security.Models.Entities.SSOUserRole, cCoder.Security.Data, Version=2026.7.30.2059, Culture=neutral, PublicKeyToken=null]]"
+              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Security.Models.Entities.SSOUserRole, cCoder.Security.Data, Version=2026.8.1.1419, Culture=neutral, PublicKeyToken=null]]"
             }
           }
         ],
@@ -1673,7 +1673,7 @@
             "name": "queryOptions",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Security.Models.Entities.Tenant, cCoder.Security.Data, Version=2026.7.30.2059, Culture=neutral, PublicKeyToken=null]]"
+              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Security.Models.Entities.Tenant, cCoder.Security.Data, Version=2026.8.1.1419, Culture=neutral, PublicKeyToken=null]]"
             }
           }
         ],
@@ -1910,7 +1910,7 @@
             "name": "queryOptions",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Security.Models.Entities.Tenant, cCoder.Security.Data, Version=2026.7.30.2059, Culture=neutral, PublicKeyToken=null]]"
+              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Security.Models.Entities.Tenant, cCoder.Security.Data, Version=2026.8.1.1419, Culture=neutral, PublicKeyToken=null]]"
             }
           }
         ],
@@ -2251,7 +2251,7 @@
             "name": "queryOptions",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Security.Models.Entities.UserEvent, cCoder.Security.Data, Version=2026.7.30.2059, Culture=neutral, PublicKeyToken=null]]"
+              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Security.Models.Entities.UserEvent, cCoder.Security.Data, Version=2026.8.1.1419, Culture=neutral, PublicKeyToken=null]]"
             }
           }
         ],
@@ -2273,7 +2273,7 @@
             "name": "queryOptions",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Security.Models.Entities.UserEvent, cCoder.Security.Data, Version=2026.7.30.2059, Culture=neutral, PublicKeyToken=null]]"
+              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Security.Models.Entities.UserEvent, cCoder.Security.Data, Version=2026.8.1.1419, Culture=neutral, PublicKeyToken=null]]"
             }
           }
         ],
@@ -2738,7 +2738,7 @@
         },
         "additionalProperties": false
       },
-      "Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Security.Models.Entities.SSOPrivilege, cCoder.Security.Data, Version=2026.7.30.2059, Culture=neutral, PublicKeyToken=null]]": {
+      "Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Security.Models.Entities.SSOPrivilege, cCoder.Security.Data, Version=2026.8.1.1419, Culture=neutral, PublicKeyToken=null]]": {
         "type": "object",
         "properties": {
           "isWellFormed": {
@@ -2756,7 +2756,7 @@
         },
         "additionalProperties": false
       },
-      "Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Security.Models.Entities.SSORole, cCoder.Security.Data, Version=2026.7.30.2059, Culture=neutral, PublicKeyToken=null]]": {
+      "Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Security.Models.Entities.SSORole, cCoder.Security.Data, Version=2026.8.1.1419, Culture=neutral, PublicKeyToken=null]]": {
         "type": "object",
         "properties": {
           "isWellFormed": {
@@ -2774,7 +2774,7 @@
         },
         "additionalProperties": false
       },
-      "Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Security.Models.Entities.SSOUser, cCoder.Security.Data, Version=2026.7.30.2059, Culture=neutral, PublicKeyToken=null]]": {
+      "Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Security.Models.Entities.SSOUser, cCoder.Security.Data, Version=2026.8.1.1419, Culture=neutral, PublicKeyToken=null]]": {
         "type": "object",
         "properties": {
           "isWellFormed": {
@@ -2792,7 +2792,7 @@
         },
         "additionalProperties": false
       },
-      "Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Security.Models.Entities.SSOUserRole, cCoder.Security.Data, Version=2026.7.30.2059, Culture=neutral, PublicKeyToken=null]]": {
+      "Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Security.Models.Entities.SSOUserRole, cCoder.Security.Data, Version=2026.8.1.1419, Culture=neutral, PublicKeyToken=null]]": {
         "type": "object",
         "properties": {
           "isWellFormed": {
@@ -2810,7 +2810,7 @@
         },
         "additionalProperties": false
       },
-      "Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Security.Models.Entities.Tenant, cCoder.Security.Data, Version=2026.7.30.2059, Culture=neutral, PublicKeyToken=null]]": {
+      "Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Security.Models.Entities.Tenant, cCoder.Security.Data, Version=2026.8.1.1419, Culture=neutral, PublicKeyToken=null]]": {
         "type": "object",
         "properties": {
           "isWellFormed": {
@@ -2828,7 +2828,7 @@
         },
         "additionalProperties": false
       },
-      "Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Security.Models.Entities.UserEvent, cCoder.Security.Data, Version=2026.7.30.2059, Culture=neutral, PublicKeyToken=null]]": {
+      "Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Security.Models.Entities.UserEvent, cCoder.Security.Data, Version=2026.8.1.1419, Culture=neutral, PublicKeyToken=null]]": {
         "type": "object",
         "properties": {
           "isWellFormed": {
@@ -2899,7 +2899,7 @@
         },
         "additionalProperties": false
       },
-      "Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Security.Models.Entities.SSOPrivilege, cCoder.Security.Data, Version=2026.7.30.2059, Culture=neutral, PublicKeyToken=null]]": {
+      "Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Security.Models.Entities.SSOPrivilege, cCoder.Security.Data, Version=2026.8.1.1419, Culture=neutral, PublicKeyToken=null]]": {
         "type": "object",
         "properties": {
           "request": {
@@ -2945,15 +2945,15 @@
             "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.Validator.IODataQueryValidator"
           },
           "ifMatch": {
-            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Security.Models.Entities.SSOPrivilege, cCoder.Security.Data, Version=2026.7.30.2059, Culture=neutral, PublicKeyToken=null]]"
+            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Security.Models.Entities.SSOPrivilege, cCoder.Security.Data, Version=2026.8.1.1419, Culture=neutral, PublicKeyToken=null]]"
           },
           "ifNoneMatch": {
-            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Security.Models.Entities.SSOPrivilege, cCoder.Security.Data, Version=2026.7.30.2059, Culture=neutral, PublicKeyToken=null]]"
+            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Security.Models.Entities.SSOPrivilege, cCoder.Security.Data, Version=2026.8.1.1419, Culture=neutral, PublicKeyToken=null]]"
           }
         },
         "additionalProperties": false
       },
-      "Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Security.Models.Entities.SSORole, cCoder.Security.Data, Version=2026.7.30.2059, Culture=neutral, PublicKeyToken=null]]": {
+      "Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Security.Models.Entities.SSORole, cCoder.Security.Data, Version=2026.8.1.1419, Culture=neutral, PublicKeyToken=null]]": {
         "type": "object",
         "properties": {
           "request": {
@@ -2999,15 +2999,15 @@
             "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.Validator.IODataQueryValidator"
           },
           "ifMatch": {
-            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Security.Models.Entities.SSORole, cCoder.Security.Data, Version=2026.7.30.2059, Culture=neutral, PublicKeyToken=null]]"
+            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Security.Models.Entities.SSORole, cCoder.Security.Data, Version=2026.8.1.1419, Culture=neutral, PublicKeyToken=null]]"
           },
           "ifNoneMatch": {
-            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Security.Models.Entities.SSORole, cCoder.Security.Data, Version=2026.7.30.2059, Culture=neutral, PublicKeyToken=null]]"
+            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Security.Models.Entities.SSORole, cCoder.Security.Data, Version=2026.8.1.1419, Culture=neutral, PublicKeyToken=null]]"
           }
         },
         "additionalProperties": false
       },
-      "Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Security.Models.Entities.SSOUser, cCoder.Security.Data, Version=2026.7.30.2059, Culture=neutral, PublicKeyToken=null]]": {
+      "Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Security.Models.Entities.SSOUser, cCoder.Security.Data, Version=2026.8.1.1419, Culture=neutral, PublicKeyToken=null]]": {
         "type": "object",
         "properties": {
           "request": {
@@ -3053,15 +3053,15 @@
             "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.Validator.IODataQueryValidator"
           },
           "ifMatch": {
-            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Security.Models.Entities.SSOUser, cCoder.Security.Data, Version=2026.7.30.2059, Culture=neutral, PublicKeyToken=null]]"
+            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Security.Models.Entities.SSOUser, cCoder.Security.Data, Version=2026.8.1.1419, Culture=neutral, PublicKeyToken=null]]"
           },
           "ifNoneMatch": {
-            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Security.Models.Entities.SSOUser, cCoder.Security.Data, Version=2026.7.30.2059, Culture=neutral, PublicKeyToken=null]]"
+            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Security.Models.Entities.SSOUser, cCoder.Security.Data, Version=2026.8.1.1419, Culture=neutral, PublicKeyToken=null]]"
           }
         },
         "additionalProperties": false
       },
-      "Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Security.Models.Entities.SSOUserRole, cCoder.Security.Data, Version=2026.7.30.2059, Culture=neutral, PublicKeyToken=null]]": {
+      "Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Security.Models.Entities.SSOUserRole, cCoder.Security.Data, Version=2026.8.1.1419, Culture=neutral, PublicKeyToken=null]]": {
         "type": "object",
         "properties": {
           "request": {
@@ -3107,15 +3107,15 @@
             "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.Validator.IODataQueryValidator"
           },
           "ifMatch": {
-            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Security.Models.Entities.SSOUserRole, cCoder.Security.Data, Version=2026.7.30.2059, Culture=neutral, PublicKeyToken=null]]"
+            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Security.Models.Entities.SSOUserRole, cCoder.Security.Data, Version=2026.8.1.1419, Culture=neutral, PublicKeyToken=null]]"
           },
           "ifNoneMatch": {
-            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Security.Models.Entities.SSOUserRole, cCoder.Security.Data, Version=2026.7.30.2059, Culture=neutral, PublicKeyToken=null]]"
+            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Security.Models.Entities.SSOUserRole, cCoder.Security.Data, Version=2026.8.1.1419, Culture=neutral, PublicKeyToken=null]]"
           }
         },
         "additionalProperties": false
       },
-      "Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Security.Models.Entities.Tenant, cCoder.Security.Data, Version=2026.7.30.2059, Culture=neutral, PublicKeyToken=null]]": {
+      "Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Security.Models.Entities.Tenant, cCoder.Security.Data, Version=2026.8.1.1419, Culture=neutral, PublicKeyToken=null]]": {
         "type": "object",
         "properties": {
           "request": {
@@ -3161,15 +3161,15 @@
             "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.Validator.IODataQueryValidator"
           },
           "ifMatch": {
-            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Security.Models.Entities.Tenant, cCoder.Security.Data, Version=2026.7.30.2059, Culture=neutral, PublicKeyToken=null]]"
+            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Security.Models.Entities.Tenant, cCoder.Security.Data, Version=2026.8.1.1419, Culture=neutral, PublicKeyToken=null]]"
           },
           "ifNoneMatch": {
-            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Security.Models.Entities.Tenant, cCoder.Security.Data, Version=2026.7.30.2059, Culture=neutral, PublicKeyToken=null]]"
+            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Security.Models.Entities.Tenant, cCoder.Security.Data, Version=2026.8.1.1419, Culture=neutral, PublicKeyToken=null]]"
           }
         },
         "additionalProperties": false
       },
-      "Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Security.Models.Entities.UserEvent, cCoder.Security.Data, Version=2026.7.30.2059, Culture=neutral, PublicKeyToken=null]]": {
+      "Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Security.Models.Entities.UserEvent, cCoder.Security.Data, Version=2026.8.1.1419, Culture=neutral, PublicKeyToken=null]]": {
         "type": "object",
         "properties": {
           "request": {
@@ -3215,10 +3215,10 @@
             "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.Validator.IODataQueryValidator"
           },
           "ifMatch": {
-            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Security.Models.Entities.UserEvent, cCoder.Security.Data, Version=2026.7.30.2059, Culture=neutral, PublicKeyToken=null]]"
+            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Security.Models.Entities.UserEvent, cCoder.Security.Data, Version=2026.8.1.1419, Culture=neutral, PublicKeyToken=null]]"
           },
           "ifNoneMatch": {
-            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Security.Models.Entities.UserEvent, cCoder.Security.Data, Version=2026.7.30.2059, Culture=neutral, PublicKeyToken=null]]"
+            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Security.Models.Entities.UserEvent, cCoder.Security.Data, Version=2026.8.1.1419, Culture=neutral, PublicKeyToken=null]]"
           }
         },
         "additionalProperties": false

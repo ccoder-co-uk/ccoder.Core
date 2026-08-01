@@ -16,7 +16,7 @@
             "name": "queryOptions",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
             }
           }
         ],
@@ -253,7 +253,7 @@
             "name": "queryOptions",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
             }
           }
         ],
@@ -533,202 +533,202 @@
           "content": {
             "application/json;odata.metadata=minimal;odata.streaming=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=minimal;odata.streaming=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=minimal": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=full;odata.streaming=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=full;odata.streaming=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=full": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=none;odata.streaming=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=none;odata.streaming=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=none": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.streaming=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.streaming=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=minimal;odata.streaming=false;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=minimal;odata.streaming=false;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=minimal;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=minimal;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=full;odata.streaming=true;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=full;odata.streaming=true;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=full;odata.streaming=false;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=full;odata.streaming=false;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=full;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=full;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=none;odata.streaming=true;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=none;odata.streaming=true;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=none;odata.streaming=false;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=none;odata.streaming=false;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=none;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=none;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.streaming=true;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.streaming=true;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.streaming=false;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.streaming=false;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/xml": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "text/plain": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             }
           }
@@ -1253,7 +1253,7 @@
             "name": "queryOptions",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
             }
           }
         ],
@@ -1490,7 +1490,7 @@
             "name": "queryOptions",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
             }
           }
         ],
@@ -1767,202 +1767,202 @@
           "content": {
             "application/json;odata.metadata=minimal;odata.streaming=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=minimal;odata.streaming=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=minimal": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=full;odata.streaming=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=full;odata.streaming=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=full": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=none;odata.streaming=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=none;odata.streaming=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=none": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.streaming=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.streaming=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=minimal;odata.streaming=false;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=minimal;odata.streaming=false;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=minimal;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=minimal;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=full;odata.streaming=true;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=full;odata.streaming=true;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=full;odata.streaming=false;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=full;odata.streaming=false;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=full;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=full;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=none;odata.streaming=true;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=none;odata.streaming=true;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=none;odata.streaming=false;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=none;odata.streaming=false;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=none;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=none;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.streaming=true;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.streaming=true;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.streaming=false;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.streaming=false;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/xml": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "text/plain": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             }
           }
@@ -2006,7 +2006,7 @@
             "name": "queryOptions",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
             }
           }
         ],
@@ -2243,7 +2243,7 @@
             "name": "queryOptions",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
             }
           }
         ],
@@ -2523,202 +2523,202 @@
           "content": {
             "application/json;odata.metadata=minimal;odata.streaming=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=minimal;odata.streaming=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=minimal": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=full;odata.streaming=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=full;odata.streaming=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=full": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=none;odata.streaming=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=none;odata.streaming=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=none": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.streaming=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.streaming=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=minimal;odata.streaming=false;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=minimal;odata.streaming=false;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=minimal;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=minimal;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=full;odata.streaming=true;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=full;odata.streaming=true;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=full;odata.streaming=false;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=full;odata.streaming=false;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=full;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=full;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=none;odata.streaming=true;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=none;odata.streaming=true;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=none;odata.streaming=false;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=none;odata.streaming=false;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=none;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=none;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.streaming=true;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.streaming=true;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.streaming=false;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.streaming=false;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/xml": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "text/plain": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             }
           }
@@ -2776,7 +2776,7 @@
             "name": "queryOptions",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
             }
           }
         ],
@@ -3013,7 +3013,7 @@
             "name": "queryOptions",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+              "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
             }
           }
         ],
@@ -3290,202 +3290,202 @@
           "content": {
             "application/json;odata.metadata=minimal;odata.streaming=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=minimal;odata.streaming=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=minimal": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=full;odata.streaming=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=full;odata.streaming=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=full": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=none;odata.streaming=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=none;odata.streaming=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=none": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.streaming=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.streaming=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=minimal;odata.streaming=false;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=minimal;odata.streaming=false;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=minimal;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=minimal;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=full;odata.streaming=true;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=full;odata.streaming=true;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=full;odata.streaming=false;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=full;odata.streaming=false;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=full;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=full;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=none;odata.streaming=true;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=none;odata.streaming=true;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=none;odata.streaming=false;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=none;odata.streaming=false;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=none;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.metadata=none;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.streaming=true;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.streaming=true;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.streaming=false;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;odata.streaming=false;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;IEEE754Compatible=false": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/json;IEEE754Compatible=true": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/xml": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "text/plain": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+                "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
               }
             }
           }
@@ -4124,7 +4124,7 @@
         "type": "integer",
         "format": "int32"
       },
-      "Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]": {
+      "Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]": {
         "type": "object",
         "properties": {
           "kind": {
@@ -4151,7 +4151,7 @@
         },
         "additionalProperties": false
       },
-      "Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]": {
+      "Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]": {
         "type": "object",
         "properties": {
           "kind": {
@@ -4178,7 +4178,7 @@
         },
         "additionalProperties": false
       },
-      "Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]": {
+      "Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]": {
         "type": "object",
         "properties": {
           "kind": {
@@ -4205,7 +4205,7 @@
         },
         "additionalProperties": false
       },
-      "Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]": {
+      "Microsoft.AspNetCore.OData.Deltas.Delta`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]": {
         "type": "object",
         "properties": {
           "kind": {
@@ -4340,7 +4340,7 @@
         },
         "additionalProperties": false
       },
-      "Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]": {
+      "Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]": {
         "type": "object",
         "properties": {
           "isWellFormed": {
@@ -4358,7 +4358,7 @@
         },
         "additionalProperties": false
       },
-      "Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]": {
+      "Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]": {
         "type": "object",
         "properties": {
           "isWellFormed": {
@@ -4376,7 +4376,7 @@
         },
         "additionalProperties": false
       },
-      "Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]": {
+      "Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]": {
         "type": "object",
         "properties": {
           "isWellFormed": {
@@ -4394,7 +4394,7 @@
         },
         "additionalProperties": false
       },
-      "Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]": {
+      "Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]": {
         "type": "object",
         "properties": {
           "isWellFormed": {
@@ -4465,7 +4465,7 @@
         },
         "additionalProperties": false
       },
-      "Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]": {
+      "Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]": {
         "type": "object",
         "properties": {
           "request": {
@@ -4511,15 +4511,15 @@
             "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.Validator.IODataQueryValidator"
           },
           "ifMatch": {
-            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
           },
           "ifNoneMatch": {
-            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Data.Models.CMS.App, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
           }
         },
         "additionalProperties": false
       },
-      "Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]": {
+      "Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]": {
         "type": "object",
         "properties": {
           "request": {
@@ -4565,15 +4565,15 @@
             "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.Validator.IODataQueryValidator"
           },
           "ifMatch": {
-            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
           },
           "ifNoneMatch": {
-            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Data.Models.Security.Privilege, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
           }
         },
         "additionalProperties": false
       },
-      "Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]": {
+      "Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]": {
         "type": "object",
         "properties": {
           "request": {
@@ -4619,15 +4619,15 @@
             "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.Validator.IODataQueryValidator"
           },
           "ifMatch": {
-            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
           },
           "ifNoneMatch": {
-            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Data.Models.Security.Role, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
           }
         },
         "additionalProperties": false
       },
-      "Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]": {
+      "Microsoft.AspNetCore.OData.Query.ODataQueryOptions`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]": {
         "type": "object",
         "properties": {
           "request": {
@@ -4673,10 +4673,10 @@
             "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.Validator.IODataQueryValidator"
           },
           "ifMatch": {
-            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
           },
           "ifNoneMatch": {
-            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.7.30.1720, Culture=neutral, PublicKeyToken=null]]"
+            "$ref": "#/components/schemas/Microsoft.AspNetCore.OData.Query.ETag`1[[cCoder.Data.Models.Security.User, cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
           }
         },
         "additionalProperties": false
