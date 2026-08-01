@@ -3,6 +3,7 @@
 // ---------------------------------------------------------------
 
 using cCoder.Core.Services.Orchestrations;
+using cCoder.Core.Models.Exceptions;
 using cCoder.Core.Exposures.Managers;
 using cCoder.Mail.Models;
 using cCoder.Data.Models.CMS;
@@ -20,13 +21,33 @@ public class TemplatedEmailController(
     public async Task<IActionResult> Post(
         [FromBody] TemplatedEmailDetails newTemplatedEmailDetails)
     {
-        if (!ModelState.IsValid)
+        try
         {
-            return BadRequest(modelState: ModelState);
-        }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(modelState: ModelState);
+            }
 
-        return Ok(
-            value: await templatedEmailOrchestrationService.QueueTemplatedEmailDetailsAsync(
-                details: newTemplatedEmailDetails));
+            return Ok(
+                value: await templatedEmailOrchestrationService
+                    .QueueTemplatedEmailDetailsAsync(
+                        details: newTemplatedEmailDetails));
+        }
+        catch (CoreOrchestrationValidationException)
+        {
+            return BadRequest(error: "The email request is invalid.");
+        }
+        catch (System.Security.SecurityException)
+        {
+            return StatusCode(
+                statusCode: StatusCodes.Status403Forbidden,
+                value: "The email operation is forbidden.");
+        }
+        catch (Exception)
+        {
+            return StatusCode(
+                statusCode: StatusCodes.Status500InternalServerError,
+                value: "The email operation failed.");
+        }
     }
 }

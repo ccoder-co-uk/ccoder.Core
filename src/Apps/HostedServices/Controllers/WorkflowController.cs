@@ -14,8 +14,21 @@ public sealed class WorkflowController(
     : Controller
 {
     [HttpGet("")]
-    public IActionResult Get() =>
-        View(viewName: "Index");
+    public IActionResult Get()
+    {
+        try
+        {
+            Response.StatusCode = StatusCodes.Status200OK;
+
+            return View(viewName: "Index");
+        }
+        catch (Exception)
+        {
+            return StatusCode(
+                statusCode: StatusCodes.Status500InternalServerError,
+                value: "The workflow page could not be displayed.");
+        }
+    }
 
     [HttpPost("ExecuteNextFlowInstanceInQueue")]
     public async Task<IActionResult> Post(Guid flowId)
@@ -32,19 +45,27 @@ public sealed class WorkflowController(
                 message: "Workflow execution failed: {ErrorMessage}",
                 args: ex.Message);
 
-            if (ex.InnerException is not null)
-            {
-                log.LogError(
-                    exception: ex.InnerException,
-                    message: "Inner workflow execution failure: {ErrorMessage}",
-                    args: ex.InnerException.Message);
-            }
+            return StatusCode(
+                statusCode: StatusCodes.Status500InternalServerError,
+                value: "The workflow execution failed.");
         }
 
         return Ok();
     }
 
     [HttpGet("GetStats")]
-    public IActionResult GetStats() =>
-        Json(data: workflowInstanceProcessingService.GetStats());
+    public IActionResult GetStats()
+    {
+        try
+        {
+            return Json(
+                data: workflowInstanceProcessingService.GetStats());
+        }
+        catch (Exception)
+        {
+            return StatusCode(
+                statusCode: StatusCodes.Status500InternalServerError,
+                value: "The workflow statistics could not be loaded.");
+        }
+    }
 }

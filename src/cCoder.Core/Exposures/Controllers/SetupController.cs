@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using cCoder.Core.Models;
 using cCoder.Core.Services.Setup;
 using cCoder.Core.Exposures.Setup;
+using cCoder.Core.Models.Exceptions;
 
 namespace cCoder.Core.Exposures.Controllers;
 
@@ -19,15 +20,34 @@ public sealed class SetupController(
     [HttpGet("")]
     public async Task<IActionResult> Get(CancellationToken cancellationToken)
     {
-        if (await setupStateService.IsInitializedAsync(
-            cancellationToken: cancellationToken))
+        try
         {
-            return Redirect(url: "/");
-        }
+            if (await setupStateService.IsInitializedAsync(
+                cancellationToken: cancellationToken))
+            {
+                return Redirect(url: "/");
+            }
 
-        return View(
-            viewName: "Index",
-            model: CreateFirstTimeSetupViewModel());
+            return View(
+                viewName: "Index",
+                model: CreateFirstTimeSetupViewModel());
+        }
+        catch (CoreOrchestrationValidationException)
+        {
+            return BadRequest(error: "The setup request is invalid.");
+        }
+        catch (System.Security.SecurityException)
+        {
+            return StatusCode(
+                statusCode: StatusCodes.Status403Forbidden,
+                value: "The setup operation is forbidden.");
+        }
+        catch (Exception)
+        {
+            return StatusCode(
+                statusCode: StatusCodes.Status500InternalServerError,
+                value: "The setup operation failed.");
+        }
     }
 
     private FirstTimeSetupViewModel CreateFirstTimeSetupViewModel() =>

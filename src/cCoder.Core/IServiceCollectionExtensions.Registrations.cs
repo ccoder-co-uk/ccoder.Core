@@ -42,6 +42,7 @@ using cCoder.Core.Services.Foundations.Workflow;
 using cCoder.Core.Services.Orchestrations;
 using cCoder.Core.Services.Processings.AllowedOrigins;
 using cCoder.Core.Services.Processings.Packages;
+using cCoder.Core.Services.Processings.Middleware;
 using cCoder.Core.Services.Processings.Setup;
 using cCoder.Core.Services.Foundations.Setup;
 using cCoder.Core.Services.Foundations.TemplatedEmails;
@@ -511,6 +512,10 @@ predicate: (documentName, apiDescription) =>
     private static void AddProcessings(
         this IServiceCollection services)
     {
+        services.AddTransient<
+            ICoreFormatterMiddlewareProcessingService,
+            CoreFormatterMiddlewareProcessingService>();
+
         services.AddTransient<
             IAllowedOriginStoreProcessingService,
             AllowedOriginStoreProcessingService>();
