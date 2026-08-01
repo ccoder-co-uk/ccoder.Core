@@ -26,6 +26,7 @@ public sealed partial class ApiDocumentationTests
 
         CoreApiRouteDefinition[] routes =
         [
+            new(Name: "AI", RoutePath: "Api/AI", RouteModel: null),
             new(Name: "Core", RoutePath: "Api/Core", RouteModel: null),
             new(Name: "ContentManagement", RoutePath: "Api/ContentManagement", RouteModel: null),
         ];
@@ -41,7 +42,7 @@ public sealed partial class ApiDocumentationTests
 
         // Then
         options.SwaggerDocs.Keys.Should()
-            .BeEquivalentTo(expectation: ["Core", "ContentManagement"]);
+            .BeEquivalentTo(expectation: ["AI", "Core", "ContentManagement"]);
 
         options.SwaggerDocs.Keys.Should()
             .NotContain(unexpected: "v1");
@@ -58,6 +59,7 @@ public sealed partial class ApiDocumentationTests
 
         CoreApiRouteDefinition[] routes =
         [
+            new(Name: "AI", RoutePath: "Api/AI", RouteModel: null),
             new(Name: "Core", RoutePath: "Api/Core", RouteModel: null),
             new(Name: "ContentManagement", RoutePath: "Api/ContentManagement", RouteModel: null),
         ];
@@ -75,6 +77,14 @@ public sealed partial class ApiDocumentationTests
             arg1: "Core",
             arg2: new() { RelativePath = "Api/Core/App" });
 
+        bool aiIncludesModelOperation = options.DocInclusionPredicate.Invoke(
+            arg1: "AI",
+            arg2: new() { RelativePath = "Api/AI/Model/Providers/Ollama/Available" });
+
+        bool coreIncludesAiOperation = options.DocInclusionPredicate.Invoke(
+            arg1: "Core",
+            arg2: new() { RelativePath = "Api/AI/Model/Providers/Ollama/Available" });
+
         bool coreIncludesContentManagementOperation = options.DocInclusionPredicate.Invoke(
             arg1: "Core",
             arg2: new() { RelativePath = "Api/ContentManagement/Page" });
@@ -87,6 +97,14 @@ public sealed partial class ApiDocumentationTests
         coreIncludesCoreOperation
             .Should()
             .BeTrue();
+
+        aiIncludesModelOperation
+            .Should()
+            .BeTrue();
+
+        coreIncludesAiOperation
+            .Should()
+            .BeFalse();
 
         coreIncludesContentManagementOperation
             .Should()

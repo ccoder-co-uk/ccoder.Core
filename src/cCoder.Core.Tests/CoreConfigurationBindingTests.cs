@@ -5,12 +5,35 @@
 using cCoder.Core.Models;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
+using System.Text.Json.Serialization;
 using Xunit;
 
 namespace cCoder.Core.Tests;
 
 public sealed partial class CoreConfigurationBindingTests
 {
+    [Fact]
+    public void CoreConfiguration_ShouldFailForMalformedAiSection()
+    {
+        // Given
+        IConfiguration applicationConfiguration = new ConfigurationBuilder()
+            .AddInMemoryCollection(initialData: new Dictionary<string, string>
+            {
+                ["AI:Agent:MaxIterations"] =
+                    "NotAnInteger"
+            })
+            .Build();
+
+        // When
+        Action action = () =>
+            _ = new CoreConfiguration(applicationConfiguration);
+
+        // Then
+        action
+            .Should()
+            .Throw<InvalidOperationException>();
+    }
+
     [Fact]
     public void CoreConfiguration_ShouldOnlyExposeDomainConfigurationObjects()
     {
@@ -25,7 +48,11 @@ public sealed partial class CoreConfigurationBindingTests
         properties
             .Should()
             .OnlyContain(
-                predicate: property => property.PropertyType.IsClass);
+                predicate: property =>
+                    property.PropertyType.IsClass
+                    || Attribute.IsDefined(
+                        element: property,
+                        attributeType: typeof(JsonIgnoreAttribute)));
     }
 
     [Fact]
@@ -39,6 +66,8 @@ public sealed partial class CoreConfigurationBindingTests
             ["Security:DecryptionKey"] = "key",
             ["ContentManagement:ConnectionString"] = "content",
             ["ContentManagement:RootPath"] = "Api/Content",
+            ["CRM:ConnectionString"] = "crm",
+            ["CRM:AdminConnectionString"] = "crm-admin",
             ["Mail:Providers:0:Name"] = "MicrosoftGraph",
             ["Mail:Providers:0:MicrosoftGraph:TenantId"] = "tenant",
             ["Eventing:ProviderType"] = "ServiceBus",
@@ -76,6 +105,14 @@ public sealed partial class CoreConfigurationBindingTests
         result.ContentManagement.RootPath
             .Should()
             .Be(expected: "Api/Content");
+
+        result.CRM.ConnectionString
+            .Should()
+            .Be(expected: "crm");
+
+        result.CRM.AdminConnectionString
+            .Should()
+            .Be(expected: "crm-admin");
 
         result.Mail.Providers[0].MicrosoftGraph.TenantId
             .Should()
@@ -127,6 +164,7 @@ public sealed partial class CoreConfigurationBindingTests
             result.AI,
             result.AppSecurity,
             result.ContentManagement,
+            result.CRM,
             result.DocumentManagement,
             result.Logging,
             result.Mail,

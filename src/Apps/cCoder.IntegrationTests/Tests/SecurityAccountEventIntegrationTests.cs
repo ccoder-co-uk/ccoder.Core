@@ -181,7 +181,7 @@ requestUri:             "/Api/Account/Login",value:             new Auth
 
         string content = await response.Content.ReadAsStringAsync();
 
-        if (response.StatusCode != HttpStatusCode.OK)
+        if (response.StatusCode != HttpStatusCode.Created)
         {
             throw new XunitException(BuildFailureMessage(content: content));
         }
@@ -357,7 +357,7 @@ requestUri:                 "/Api/Mail/ReceivedEmail/Receive",value:            
             string content = await response.Content.ReadAsStringAsync();
 
             response.StatusCode.Should()
-                .Be(expected: HttpStatusCode.OK,because: BuildFailureMessage(content: content));
+                .Be(expected: HttpStatusCode.Created,because: BuildFailureMessage(content: content));
 
             ReceivedEmail[] receivedEmails = JsonSerializer.Deserialize<ReceivedEmail[]>(json: content,options: JsonOptions)
                 ?? throw new InvalidOperationException("Expected received email payload.");
