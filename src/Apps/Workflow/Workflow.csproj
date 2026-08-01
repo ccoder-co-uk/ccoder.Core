@@ -7,7 +7,7 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="cCoder.Data" Version="2026.7.30.1720" />
+    <PackageReference Include="cCoder.Data" Version="2026.8.1.108" />
     <PackageReference Include="cCoder.Workflow.Activities" Version="2026.7.30.2213" />
     <PackageReference Include="cCoder.Workflow.Engine" Version="2026.7.30.2213" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="2.52.0" />
