@@ -10,6 +10,7 @@ using cCoder.Data.Models.Planning;
 using cCoder.Data.Models.Workflow;
 using cCoder.Eventing;
 using cCoder.Eventing.Models;
+using cCoder.Security.Models.Events;
 using cCoder.Workflow.Exposures;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
@@ -48,6 +49,15 @@ public class Program
             CreateExternalReceiveProvider<ScheduledTask>(
                 ["scheduled_task_execute"]),
             CreateQueuedFlowInstanceReceiveProvider(),
+            CreateExternalReceiveProvider<SecurityAccountEvent>(
+                CreateSecurityAccountEventNames()),
+        ];
+
+    private static string[] CreateSecurityAccountEventNames() =>
+        [
+            SecurityAccountEventKind.RegistrationCreated.ToEventName(),
+            SecurityAccountEventKind.InvitationCreated.ToEventName(),
+            SecurityAccountEventKind.PasswordResetRequested.ToEventName()
         ];
 
     private static EventProvider<T> CreateExternalReceiveProvider<T>(

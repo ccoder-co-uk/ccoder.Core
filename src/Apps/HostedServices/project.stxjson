@@ -532,7 +532,7 @@
     {
       "Name": "HostedServices.Program",
       "StandardElementType": "App",
-      "LineNumber": 18,
+      "LineNumber": 19,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -542,7 +542,7 @@
         {
           "Id": "HostedServices.Program.Main(System.String[])",
           "Name": "Main",
-          "LineNumber": 20,
+          "LineNumber": 21,
           "Inputs": [
             {
               "Name": "args",
