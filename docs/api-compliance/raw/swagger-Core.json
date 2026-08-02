@@ -5,50 +5,6 @@
     "version": "Core"
   },
   "paths": {
-    "/Api": {
-      "get": {
-        "tags": [
-          "ApiRoot"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "ApiRoot"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "ApiRoot"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/Api/Time": {
-      "get": {
-        "tags": [
-          "ApiRoot"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/Api/Account/Login": {
       "post": {
         "tags": [
@@ -261,6 +217,15 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
           }
         }
       }
@@ -273,18 +238,9 @@
         "responses": {
           "200": {
             "description": "OK"
-          }
-        }
-      }
-    },
-    "/Api/RefreshCache": {
-      "get": {
-        "tags": [
-          "Cache"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -501,6 +457,15 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
           }
         }
       }
@@ -513,6 +478,12 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -729,6 +700,15 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
           }
         }
       }
@@ -945,6 +925,15 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
           }
         }
       }
@@ -1161,28 +1150,37 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
           }
         }
       }
     },
-    "/Api/GetMetadata": {
+    "/Api": {
       "get": {
         "tags": [
-          "Metadata"
-        ],
-        "parameters": [
-          {
-            "name": "culture",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "default": ""
-            }
-          }
+          "InventoryHost"
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/<>f__AnonymousType0`1[[cCoder.Data.Models.ApiInfo[], cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -1215,6 +1213,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -1441,6 +1442,15 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
           }
         }
       }
@@ -1463,6 +1473,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -1679,6 +1692,15 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
           }
         }
       }
@@ -1700,6 +1722,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -1916,6 +1941,15 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
           }
         }
       }
@@ -1937,6 +1971,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -2169,18 +2206,15 @@
         "responses": {
           "200": {
             "description": "OK"
-          }
-        }
-      }
-    },
-    "/Api/ExecuteScript": {
-      "post": {
-        "tags": [
-          "Script"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
           }
         }
       }
@@ -2397,6 +2431,15 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
           }
         }
       }
@@ -2613,6 +2656,15 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
           }
         }
       }
@@ -2620,6 +2672,41 @@
   },
   "components": {
     "schemas": {
+      "<>f__AnonymousType0`1[[cCoder.Data.Models.ApiInfo[], cCoder.Data, Version=2026.8.1.1442, Culture=neutral, PublicKeyToken=null]]": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/cCoder.Data.Models.ApiInfo"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "cCoder.Data.Models.ApiInfo": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "kind": {
+            "type": "string",
+            "nullable": true
+          },
+          "url": {
+            "type": "string",
+            "nullable": true
+          },
+          "swaggerDef": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "cCoder.Data.Models.Packaging.Package": {
         "type": "object",
         "properties": {
@@ -3152,7 +3239,7 @@
     "securitySchemes": {
       "bearer": {
         "type": "apiKey",
-        "description": "Authorization header using the Bearer scheme. \\r\\n\\r\\n \r\n                        Enter 'Bearer' [space] and then your token in the text input below.\r\n                        \\r\\n\\r\\nExample: 'bearer 12345abcdef'",
+        "description": "Authorization header using the Bearer scheme. \\r\\n\\r\\n \n                        Enter 'Bearer' [space] and then your token in the text input below.\n                        \\r\\n\\r\\nExample: 'bearer 12345abcdef'",
         "name": "Authorization",
         "in": "header"
       }
@@ -3160,13 +3247,7 @@
   },
   "tags": [
     {
-      "name": "ApiRoot"
-    },
-    {
       "name": "Authentication"
-    },
-    {
-      "name": "Cache"
     },
     {
       "name": "ConfirmForgotPassword"
@@ -3181,16 +3262,13 @@
       "name": "HttpEvent"
     },
     {
-      "name": "Metadata"
+      "name": "InventoryHost"
     },
     {
       "name": "PackageManager"
     },
     {
       "name": "Registration"
-    },
-    {
-      "name": "Script"
     },
     {
       "name": "Setup"
