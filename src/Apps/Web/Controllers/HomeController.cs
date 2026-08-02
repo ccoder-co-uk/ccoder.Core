@@ -2,6 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System.Security;
 using cCoder.ContentManagement.Exposures;
 using cCoder.ContentManagement.Models;
 using cCoder.Data;
@@ -46,16 +47,6 @@ namespace Web.Controllers
         {
             try
             {
-                if (!await setupStateService.IsInitializedAsync(cancellationToken: cancellationToken))
-                {
-                    return View(
-viewName:                         "~/Views/Setup/Index.cshtml",model:                         new FirstTimeSetupViewModel
-                        {
-                            Domain = setupRequestHostManager.NormalizeHost(
-                                host: Request.Host.Host),
-                        });
-                }
-
                 if (path?.ToLower()
                     .EndsWith(value: ".php") ?? false)
                 {
@@ -144,6 +135,22 @@ request:                     new PageRenderRequest
                     value: "Validation",
                     comparisonType: StringComparison.OrdinalIgnoreCase))
             {
+                return BadRequest(error: "The page request is invalid.");
+            }
+            catch (SecurityException)
+            {
+                if (!await setupStateService.IsInitializedAsync(
+                    cancellationToken: cancellationToken))
+                {
+                    return View(
+                        viewName: "~/Views/Setup/Index.cshtml",
+                        model: new FirstTimeSetupViewModel
+                        {
+                            Domain = setupRequestHostManager.NormalizeHost(
+                                host: Request.Host.Host),
+                        });
+                }
+
                 throw;
             }
             catch (Exception)

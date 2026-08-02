@@ -11,7 +11,6 @@ namespace Web.Dependencies.Filters;
 
 internal sealed class HomeDefaultsActionFilter(
     IAppManager appProcessingService,
-    IFirstTimeSetupManager setupStateService,
     ILogger<HomeDefaultsActionFilter> log)
     : IAsyncActionFilter
 {
@@ -21,14 +20,6 @@ internal sealed class HomeDefaultsActionFilter(
     {
         try
         {
-            if (!await setupStateService.IsInitializedAsync(
-                cancellationToken:
-                    context.HttpContext.RequestAborted))
-            {
-                await next();
-                return;
-            }
-
             string host = context.HttpContext.Request.Host.Host
                 .Replace(
                     oldValue: "www.",
