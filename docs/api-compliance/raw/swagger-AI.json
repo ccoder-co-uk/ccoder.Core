@@ -217,6 +217,15 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
           }
         }
       }
@@ -433,6 +442,15 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
           }
         }
       }
@@ -649,6 +667,15 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
           }
         }
       }
@@ -865,6 +892,15 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
           }
         }
       }
@@ -1081,6 +1117,15 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
           }
         }
       }
@@ -1103,6 +1148,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -1329,6 +1377,15 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
           }
         }
       }
@@ -1484,7 +1541,7 @@
     "securitySchemes": {
       "bearer": {
         "type": "apiKey",
-        "description": "Authorization header using the Bearer scheme. \\r\\n\\r\\n \r\n                        Enter 'Bearer' [space] and then your token in the text input below.\r\n                        \\r\\n\\r\\nExample: 'bearer 12345abcdef'",
+        "description": "Authorization header using the Bearer scheme. \\r\\n\\r\\n \n                        Enter 'Bearer' [space] and then your token in the text input below.\n                        \\r\\n\\r\\nExample: 'bearer 12345abcdef'",
         "name": "Authorization",
         "in": "header"
       }

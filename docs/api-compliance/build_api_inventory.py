@@ -18,6 +18,8 @@ OUTPUT_DIR = Path(__file__).resolve().parent
 RAW_DIR = OUTPUT_DIR / "raw"
 API_ROOT_PATH = "/Api"
 CORE_SWAGGER_PATH = "/swagger/Core/swagger.json"
+CORE_PACKAGE_VERSION = os.environ.get("CCODER_CORE_PACKAGE_VERSION", "Not recorded")
+CAPTURE_PROFILE = os.environ.get("CCODER_API_CAPTURE_PROFILE", "Configured aggregate")
 
 HTTP_METHODS = {"get", "head", "post", "put", "patch", "delete", "options", "trace"}
 
@@ -82,6 +84,7 @@ def main():
     generated = datetime.now(timezone.utc).isoformat()
 
     confirmed_by_operation = {}
+    advertised_operation_count = 0
     advertised_codes = set()
     sources = []
     context_summary = {}
@@ -105,6 +108,7 @@ def main():
                 if method.lower() not in HTTP_METHODS:
                     continue
                 operation_count += 1
+                advertised_operation_count += 1
                 identity = (path.lower(), method.lower())
                 responses = operation.get("responses", {})
                 advertised = ", ".join(responses.keys())
@@ -185,6 +189,20 @@ def main():
                 entity_type = singleton.get("Type", "")
                 model_rows.append([service, "Singleton", name, entity_type, type_keys.get(entity_type, ""), path])
 
+    core_metadata_path = "/Api/Core/$metadata"
+    try:
+        core_metadata_bytes, core_metadata_type, core_metadata_status = fetch(core_metadata_path)
+        sources.append([
+            "Core OData negative check", core_metadata_path, core_metadata_status,
+            core_metadata_type, len(core_metadata_bytes), generated, "Unexpectedly available"
+        ])
+    except urllib.error.HTTPError as error:
+        core_metadata_status = error.code
+        sources.append([
+            "Core OData negative check", core_metadata_path, error.code,
+            "", 0, generated, "Correctly unavailable" if error.code == 404 else "Unavailable"
+        ])
+
     headers = [
         "Host", "Relative Path", "HTTP Verb", "Domain / Tag", "Operation ID",
         "Discovery Confidence", "Source Document", "Advertised Response Codes",
@@ -229,6 +247,36 @@ def main():
         if len([name for name in row[3].split(", ") if name]) > 1
     ]
 
+    response_coverage = {
+        code: sum(
+            1 for row in confirmed
+            if code in [item.strip() for item in (row[7] or "").split(",")]
+        )
+        for code in ("200", "201", "204", "400", "401", "403", "404", "409", "412", "415", "500")
+    }
+    only_200_operations = sum(1 for row in confirmed if (row[7] or "").strip() == "200")
+
+    ws = wb.create_sheet("Contract Summary")
+    ws.append(["Measure", "Value", "Assessment"])
+    contract_rows = [
+        ["Core package version", CORE_PACKAGE_VERSION, "Capture provenance"],
+        ["Capture profile", CAPTURE_PROFILE, "Capture provenance"],
+        ["Swagger documents", len(swagger_documents), "Core plus configured child contexts"],
+        ["Advertised operations", advertised_operation_count, "Before path and verb de-duplication"],
+        ["Unique path and verb pairs", len(confirmed), "Aggregate contract surface"],
+        ["Duplicate path and verb pairs", len(duplicate_operations), "Expected: 0"],
+        ["Operations advertising only 200", only_200_operations, "Expected: 0"],
+        ["Core OData metadata status", core_metadata_status, "Expected: 404; Core owns no OData context"],
+    ]
+    contract_rows.extend([
+        [f"Operations advertising {code}", count, "Response contract coverage"]
+        for code, count in response_coverage.items()
+    ])
+    for row in contract_rows:
+        ws.append(row)
+    add_table(ws, "ContractSummary")
+    format_sheet(ws, {"A": 42, "B": 34, "C": 58})
+
     ws = wb.create_sheet("API Contexts")
     ws.append([
         "Context", "Swagger URL", "Swagger Status", "Advertised Operations",
@@ -251,6 +299,8 @@ def main():
     notes = [
         ["Item", "Value"],
         ["Purpose", "Initial inventory for planning RFC 9110 and OData compliance tests."],
+        ["Core package version", CORE_PACKAGE_VERSION],
+        ["Capture profile", CAPTURE_PROFILE],
         ["Live host", BASE_URL],
         ["Generated UTC", generated],
         ["Confirmed endpoints", len(confirmed)],
@@ -273,12 +323,18 @@ def main():
         str(OUTPUT_DIR / "cCoder.Core API Inventory.xlsx")))
     wb.save(output)
     checked = load_workbook(output, read_only=True, data_only=False)
-    assert len(checked.sheetnames) == 6
+    assert len(checked.sheetnames) == 7
     assert checked["Confirmed Endpoints"].max_row == len(confirmed) + 1
     print(json.dumps({
         "output": str(output), "confirmed_operations": len(confirmed),
         "odata_model_members": len(model_rows), "odata_candidates": len(candidate_rows),
-        "advertised_response_codes": sorted(advertised_codes), "sources": len(sources)
+        "advertised_response_codes": sorted(advertised_codes), "sources": len(sources),
+        "swagger_documents": len(swagger_documents),
+        "advertised_operations": advertised_operation_count,
+        "duplicate_path_verb_pairs": len(duplicate_operations),
+        "only_200_operations": only_200_operations,
+        "core_metadata_status": core_metadata_status,
+        "response_coverage": response_coverage,
     }, indent=2))
 
 
