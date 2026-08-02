@@ -12,6 +12,7 @@ using cCoder.Eventing.AzureServiceBus;
 using cCoder.Eventing.AzureServiceBus.Models;
 using cCoder.Eventing.Http;
 using cCoder.Eventing.Models;
+using cCoder.Security.Models.Events;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 namespace Web;
@@ -61,7 +62,9 @@ public class Program
             CreateHttpEventProvider<ScheduledTask>(
                 ["scheduled_task_execute"]),
             CreateHttpEventProvider<FlowInstanceData>(
-                ["flow_instance_data_add"])
+                ["flow_instance_data_add"]),
+            CreateHttpEventProvider<SecurityAccountEvent>(
+                CreateSecurityAccountEventNames())
         ];
 
     private static EventProvider<App> CreateHttpAppEventProvider() =>
@@ -99,7 +102,16 @@ public class Program
             CreateServiceBusEventProvider<ScheduledTask>(
                 ["scheduled_task_execute"]),
             CreateServiceBusEventProvider<FlowInstanceData>(
-                ["flow_instance_data_add"])
+                ["flow_instance_data_add"]),
+            CreateServiceBusEventProvider<SecurityAccountEvent>(
+                CreateSecurityAccountEventNames())
+        ];
+
+    private static string[] CreateSecurityAccountEventNames() =>
+        [
+            SecurityAccountEventKind.RegistrationCreated.ToEventName(),
+            SecurityAccountEventKind.InvitationCreated.ToEventName(),
+            SecurityAccountEventKind.PasswordResetRequested.ToEventName()
         ];
 
     private static EventProvider<T> CreateHttpEventProvider<T>(
