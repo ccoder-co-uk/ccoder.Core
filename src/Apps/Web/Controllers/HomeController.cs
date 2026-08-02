@@ -130,13 +130,6 @@ request:                     new PageRenderRequest
             {
                 return BadRequest(error: "The page request is invalid.");
             }
-            catch (Exception exception) when (
-                exception.GetType().Name.Contains(
-                    value: "Validation",
-                    comparisonType: StringComparison.OrdinalIgnoreCase))
-            {
-                return BadRequest(error: "The page request is invalid.");
-            }
             catch (SecurityException)
             {
                 if (!await setupStateService.IsInitializedAsync(
