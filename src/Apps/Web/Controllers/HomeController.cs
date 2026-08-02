@@ -5,6 +5,7 @@
 using System.Security;
 using cCoder.ContentManagement.Exposures;
 using cCoder.ContentManagement.Models;
+using cCoder.ContentManagement.Models.Exceptions;
 using cCoder.Data;
 using cCoder.Core.Models;
 using cCoder.Core.Exposures.Setup;
@@ -131,6 +132,22 @@ request:                     new PageRenderRequest
                 return BadRequest(error: "The page request is invalid.");
             }
             catch (SecurityException)
+            {
+                if (!await setupStateService.IsInitializedAsync(
+                    cancellationToken: cancellationToken))
+                {
+                    return View(
+                        viewName: "~/Views/Setup/Index.cshtml",
+                        model: new FirstTimeSetupViewModel
+                        {
+                            Domain = setupRequestHostManager.NormalizeHost(
+                                host: Request.Host.Host),
+                        });
+                }
+
+                throw;
+            }
+            catch (ContentManagementDependencyException)
             {
                 if (!await setupStateService.IsInitializedAsync(
                     cancellationToken: cancellationToken))
