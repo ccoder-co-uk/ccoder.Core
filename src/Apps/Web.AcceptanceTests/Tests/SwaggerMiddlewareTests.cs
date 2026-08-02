@@ -13,7 +13,13 @@ namespace Web.AcceptanceTests.Tests.Api;
 [Collection(WebAcceptanceCollection.Name)]
 public sealed partial class SwaggerMiddlewareTests(WebAcceptanceFixture fixture)
 {
-    private HttpClient Client { get; } = fixture.Client;
+    private HttpClient Client { get; } =
+        fixture.CreateMetadataClient();
+
+    private WebAcceptanceFixture Fixture { get; } = fixture;
+
+    private HttpClient CreateClient() =>
+        Fixture.Factory.CreateClient();
 
     private async Task<int> InvokeAsync(string baseUrl)
     {

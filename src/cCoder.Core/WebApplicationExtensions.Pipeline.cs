@@ -24,6 +24,7 @@ public static partial class WebApplicationExtensions
         app.UseCoreFormatters();
         app.StartSecurityWeb(log: log);
         app.UseAuthorization();
+        app.UseCoreMetadataAuthorization();
         app.UseCoreApiDocumentation();
         app.StartMailWeb(log: log);
         app.StartDocumentManagementWeb(log: log);

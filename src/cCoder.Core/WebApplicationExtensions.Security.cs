@@ -4,7 +4,12 @@
 
 using cCoder.ContentManagement.Models.OData;
 using cCoder.Data.Exposures;
+using cCoder.Data.Models;
+using cCoder.Security.Exposures;
+using cCoder.Security.Models.Configurations;
 using cCoder.Security.Models.Entities;
+using cCoder.Security.Models.Exceptions;
+using System.Security;
 using System.Text.Json;
 
 namespace cCoder.Core;
@@ -16,15 +21,6 @@ public static partial class WebApplicationExtensions
     private static WebApplication UseCoreSecurityHeaders(
         this WebApplication app)
     {
-        Models.CoreConfiguration configuration =
-            app.Services.GetService<Models.CoreConfiguration>();
-
-        bool exposeApiMetadata =
-            ShouldExposeApiSurface(
-                configuredValue:
-                    configuration?.Api?.ExposeMetadata,
-                isProduction: app.Environment.IsProduction());
-
         if (!app.Environment.IsDevelopment())
         {
             app.UseHsts();
@@ -32,18 +28,6 @@ public static partial class WebApplicationExtensions
 
         app.Use(middleware: async (context, next) =>
         {
-            if (!exposeApiMetadata
-                && context.Request.Path.Value?.EndsWith(
-                    value: "/$metadata",
-                    comparisonType:
-                        StringComparison.OrdinalIgnoreCase) == true)
-            {
-                context.Response.StatusCode =
-                    StatusCodes.Status404NotFound;
-
-                return;
-            }
-
             context.Response.OnStarting(callback: () =>
             {
                 context.Response.Headers["X-Content-Type-Options"] =
@@ -62,6 +46,150 @@ public static partial class WebApplicationExtensions
         });
 
         return app;
+    }
+
+    private static WebApplication UseCoreMetadataAuthorization(
+        this WebApplication app)
+    {
+        Models.CoreConfiguration configuration =
+            app.Services.GetService<Models.CoreConfiguration>();
+
+        bool exposeApiMetadata =
+            ShouldExposeApiSurface(
+                configuredValue:
+                    configuration?.Api?.ExposeMetadata,
+                isProduction: app.Environment.IsProduction());
+
+        bool exposeApiDocumentation =
+            ShouldExposeApiSurface(
+                configuredValue:
+                    configuration?.Api?.ExposeDocumentation,
+                isProduction: app.Environment.IsProduction());
+
+        HashSet<string> oDataServiceDocumentPaths =
+            new(
+                collection: app.Services
+                    .GetServices<ApiInfo>()
+                    .Where(predicate: info => string.Equals(
+                        a: info.Kind,
+                        b: "Context",
+                        comparisonType:
+                            StringComparison.OrdinalIgnoreCase))
+                    .Select(selector: info =>
+                        $"/Api/{info.Name}"),
+                comparer: StringComparer.OrdinalIgnoreCase);
+
+        app.Use(middleware: async (context, next) =>
+        {
+            bool isMetadataRequest =
+                context.Request.Path.Value?.EndsWith(
+                    value: "/$metadata",
+                    comparisonType:
+                        StringComparison.OrdinalIgnoreCase) == true;
+
+            bool isODataServiceDocumentRequest =
+                oDataServiceDocumentPaths.Contains(
+                    item: context.Request.Path.Value?
+                        .TrimEnd(trimChar: '/')
+                        ?? string.Empty);
+
+            bool isDocumentationRequest =
+                context.Request.Path.StartsWithSegments(
+                    other: "/swagger",
+                    comparisonType:
+                        StringComparison.OrdinalIgnoreCase);
+
+            if (((isMetadataRequest
+                    || isODataServiceDocumentRequest)
+                    && !exposeApiMetadata)
+                || (isDocumentationRequest
+                    && !exposeApiDocumentation))
+            {
+                context.Response.StatusCode =
+                    StatusCodes.Status404NotFound;
+
+                return;
+            }
+
+            if (((isMetadataRequest
+                    || isODataServiceDocumentRequest)
+                    && exposeApiMetadata)
+                || (isDocumentationRequest
+                    && exposeApiDocumentation))
+            {
+                bool isAuthorized =
+                    AuthorizeApiMetadataRequest(
+                        context: context);
+
+                if (!isAuthorized)
+                {
+                    return;
+                }
+
+                context.Response.Headers.CacheControl =
+                    "private, no-store";
+                context.Response.Headers.Pragma = "no-cache";
+            }
+
+            await next();
+        });
+
+        return app;
+    }
+
+    internal static bool AuthorizeApiMetadataRequest(
+        HttpContext context)
+    {
+        ISSOAuthInfo authentication =
+            context.RequestServices
+                .GetService<ISSOAuthInfo>();
+
+        if (authentication is null
+            || string.IsNullOrWhiteSpace(
+                value: authentication.SSOUserId)
+            || string.Equals(
+                a: authentication.SSOUserId,
+                b: "Guest",
+                comparisonType:
+                    StringComparison.OrdinalIgnoreCase))
+        {
+            context.Response.StatusCode =
+                StatusCodes.Status401Unauthorized;
+            context.Response.Headers.WWWAuthenticate =
+                "Bearer";
+
+            return false;
+        }
+
+        try
+        {
+            IApiMetadataAuthorizationManager
+                authorizationManager =
+                context.RequestServices
+                    .GetRequiredService<
+                        IApiMetadataAuthorizationManager>();
+
+            authorizationManager
+                .EnsureUserCanReadApiMetadata();
+
+            return true;
+        }
+        catch (SecurityException)
+        {
+            context.Response.StatusCode =
+                StatusCodes.Status403Forbidden;
+
+            return false;
+        }
+        catch (SecurityServiceException exception)
+            when (exception.GetBaseException()
+                is SecurityException)
+        {
+            context.Response.StatusCode =
+                StatusCodes.Status403Forbidden;
+
+            return false;
+        }
     }
 
     internal static bool ShouldExposeApiSurface(
