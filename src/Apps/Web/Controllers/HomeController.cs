@@ -2,8 +2,10 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System.Security;
 using cCoder.ContentManagement.Exposures;
 using cCoder.ContentManagement.Models;
+using cCoder.ContentManagement.Models.Exceptions;
 using cCoder.Data;
 using cCoder.Core.Models;
 using cCoder.Core.Exposures.Setup;
@@ -46,16 +48,6 @@ namespace Web.Controllers
         {
             try
             {
-                if (!await setupStateService.IsInitializedAsync(cancellationToken: cancellationToken))
-                {
-                    return View(
-viewName:                         "~/Views/Setup/Index.cshtml",model:                         new FirstTimeSetupViewModel
-                        {
-                            Domain = setupRequestHostManager.NormalizeHost(
-                                host: Request.Host.Host),
-                        });
-                }
-
                 if (path?.ToLower()
                     .EndsWith(value: ".php") ?? false)
                 {
@@ -139,11 +131,36 @@ request:                     new PageRenderRequest
             {
                 return BadRequest(error: "The page request is invalid.");
             }
-            catch (Exception exception) when (
-                exception.GetType().Name.Contains(
-                    value: "Validation",
-                    comparisonType: StringComparison.OrdinalIgnoreCase))
+            catch (SecurityException)
             {
+                if (!await setupStateService.IsInitializedAsync(
+                    cancellationToken: cancellationToken))
+                {
+                    return View(
+                        viewName: "~/Views/Setup/Index.cshtml",
+                        model: new FirstTimeSetupViewModel
+                        {
+                            Domain = setupRequestHostManager.NormalizeHost(
+                                host: Request.Host.Host),
+                        });
+                }
+
+                throw;
+            }
+            catch (ContentManagementDependencyException)
+            {
+                if (!await setupStateService.IsInitializedAsync(
+                    cancellationToken: cancellationToken))
+                {
+                    return View(
+                        viewName: "~/Views/Setup/Index.cshtml",
+                        model: new FirstTimeSetupViewModel
+                        {
+                            Domain = setupRequestHostManager.NormalizeHost(
+                                host: Request.Host.Host),
+                        });
+                }
+
                 throw;
             }
             catch (Exception)
