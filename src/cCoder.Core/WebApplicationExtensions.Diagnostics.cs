@@ -12,7 +12,6 @@ using cCoder.Security.Data.EF.Dependencies;
 using cCoder.Security.Models.Entities;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace cCoder.Core;
@@ -74,9 +73,7 @@ text: "{ \"error\": \"" + exception.Message.Replace(oldValue: "\"", newValue: "\
         string ssoConnectionString =
             configuration.Security?.ConnectionString;
 
-        if (!string.IsNullOrWhiteSpace(value: ssoConnectionString)
-            && await SqlTableExistsAsync(connectionString: ssoConnectionString, schema: "dbo", table: "Sessions", cancellationToken: context.RequestAborted)
-            && await SqlTableExistsAsync(connectionString: ssoConnectionString, schema: "dbo", table: "UserEvents", cancellationToken: context.RequestAborted))
+        if (!string.IsNullOrWhiteSpace(value: ssoConnectionString))
         {
             try
             {
@@ -92,20 +89,9 @@ text: "{ \"error\": \"" + exception.Message.Replace(oldValue: "\"", newValue: "\
 
                 string tenantId = null;
 
-                string contentManagementConnectionString =
-                    configuration.ContentManagement?.ConnectionString;
-
-                if (!string.IsNullOrWhiteSpace(value: contentManagementConnectionString)
-                    && await SqlTableExistsAsync(
-                        connectionString: contentManagementConnectionString,
-                        schema: "CMS",
-                        table: "Apps",
-                        cancellationToken: context.RequestAborted))
-                {
-                    tenantId = appService.GetAppByDomain(
-                        domain: request.Host.Host,
-                        ignoreFilters: true)?.TenantId;
-                }
+                tenantId = appService.GetAppByDomain(
+                    domain: request.Host.Host,
+                    ignoreFilters: true)?.TenantId;
 
                 using SecurityDbContext sso = new MSSQLSecurityDbContextFactory(ssoConnectionString)
                     .CreateDbContext();
@@ -156,32 +142,4 @@ message: "Unable to persist request log entry to SSO. {Message}", args: ex.Messa
         }
     }
 
-    private static async Task<bool> SqlTableExistsAsync(
-        string connectionString,
-        string schema,
-        string table,
-        CancellationToken cancellationToken)
-    {
-        try
-        {
-            SqlConnectionStringBuilder builder = new(connectionString)
-            {
-                ConnectTimeout = 2,
-            };
-
-            await using SqlConnection connection = new(builder.ConnectionString);
-            await connection.OpenAsync(cancellationToken: cancellationToken);
-            await using SqlCommand command = connection.CreateCommand();
-            command.CommandTimeout = 2;
-            command.CommandText = "SELECT OBJECT_ID(@tableName, 'U')";
-            command.Parameters.AddWithValue(parameterName: "@tableName", value: $"{schema}.{table}");
-
-            object result = await command.ExecuteScalarAsync(cancellationToken: cancellationToken);
-            return result is not null and not DBNull;
-        }
-        catch (Exception)
-        {
-            return false;
-        }
-    }
 }
