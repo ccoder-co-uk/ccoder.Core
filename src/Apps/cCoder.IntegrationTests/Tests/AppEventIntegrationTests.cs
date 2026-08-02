@@ -396,7 +396,7 @@ roles: [.. core.Set<Role>()
         string content = await response.Content.ReadAsStringAsync();
 
         response.StatusCode.Should()
-            .Be(expected: HttpStatusCode.OK,because: BuildFailureMessage(content: content));
+            .Be(expected: HttpStatusCode.NoContent,because: BuildFailureMessage(content: content));
     }
 
     private string BuildFailureMessage(string content) =>
