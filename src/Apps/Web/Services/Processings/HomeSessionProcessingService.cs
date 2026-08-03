@@ -40,9 +40,11 @@ internal sealed partial class HomeSessionProcessingService
                     newValue: string.Empty)
                 .ToLowerInvariant();
 
+            int? port = context.Request.Host.Port;
+
             result.apiRoot =
-                context.Request.Host.Port is not 443 and not 80
-                    ? $"{context.Request.Scheme}://{host}:{context.Request.Host.Port}/Api/"
+                port.HasValue && port.Value is not 443 and not 80
+                    ? $"{context.Request.Scheme}://{host}:{port.Value}/Api/"
                     : $"{context.Request.Scheme}://{host}/Api/";
 
             ICoreAuthInfo authInfo = context.RequestServices
