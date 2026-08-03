@@ -544,26 +544,8 @@ roles: [.. core.Set<Role>()
         fixture.DatabaseServices.GetRequiredService<ICoreContextFactory>()
             .CreateCoreContext();
 
-    private async Task<string> CreateAuthTokenAsync(string userId)
-    {
-        await using DbContext sso = fixture.DatabaseServices
-            .GetRequiredService<ISecurityDbContextFactory>()
-            .CreateDbContext(ignoreAuthInfo: true);
-
-        string tokenId = Guid.NewGuid()
-            .ToString(format: "N");
-
-        sso.Add(entity: new SsoToken
-        {
-            Id = tokenId,
-            Reason = (int)TokenUse.Auth,
-            Expires = DateTimeOffset.UtcNow.AddHours(hours: 1),
-            UserName = userId
-        });
-
-        await sso.SaveChangesAsync();
-        return tokenId;
-    }
+    private Task<string> CreateAuthTokenAsync(string userId) =>
+        fixture.CreateAuthTokenAsync(userId: userId);
 
     private static string Unique(string prefix) =>
         $"{prefix}-{Guid.NewGuid():N}";

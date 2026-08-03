@@ -312,7 +312,11 @@ workflowEvents: [.. core.Set<WorkflowEvent>()
     private Task PostAsync(string relativeUrl) =>
         SendWithOptionalHostAsync(method: HttpMethod.Post,relativeUrl: relativeUrl);
 
-    private async Task PostRawAsync(string relativeUrl, string body, string host = null)
+    private async Task PostRawAsync(
+        string relativeUrl,
+        string body,
+        string host = null,
+        string authToken = null)
     {
         using HttpRequestMessage request = new(HttpMethod.Post, relativeUrl)
         {
@@ -322,6 +326,14 @@ workflowEvents: [.. core.Set<WorkflowEvent>()
         if (!string.IsNullOrWhiteSpace(value: host))
         {
             request.Headers.Host = host;
+        }
+
+        if (!string.IsNullOrWhiteSpace(value: authToken))
+        {
+            request.Headers.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue(
+                    scheme: "bearer",
+                    parameter: authToken);
         }
 
         using HttpResponseMessage response = await fixture.WebClient.SendAsync(request: request);
@@ -443,26 +455,8 @@ separator:             Environment.NewLine + Environment.NewLine,value:         
         fixture.DatabaseServices.GetRequiredService<ICoreContextFactory>()
             .CreateCoreContext();
 
-    private async Task<string> CreateAuthTokenAsync(string userId)
-    {
-        await using DbContext sso = fixture.DatabaseServices
-            .GetRequiredService<ISecurityDbContextFactory>()
-            .CreateDbContext(ignoreAuthInfo: true);
-
-        string tokenId = Guid.NewGuid()
-            .ToString(format: "N");
-
-        sso.Add(entity: new SsoToken
-        {
-            Id = tokenId,
-            Reason = (int)TokenUse.Auth,
-            Expires = DateTimeOffset.UtcNow.AddHours(hours: 1),
-            UserName = userId
-        });
-
-        await sso.SaveChangesAsync();
-        return tokenId;
-    }
+    private Task<string> CreateAuthTokenAsync(string userId) =>
+        fixture.CreateAuthTokenAsync(userId: userId);
 
     private static string Unique(string prefix) =>
         $"{prefix}-{Guid.NewGuid():N}";

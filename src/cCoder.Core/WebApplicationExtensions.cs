@@ -3,8 +3,6 @@
 // ---------------------------------------------------------------
 
 using cCoder.Data;
-using cCoder.ClientRelationshipManagement.Runtime;
-using cCoder.ClientRelationshipManagement.Runtime.Services.Migration;
 using cCoder.Logging;
 using cCoder.Security.Data.EF;
 using cCoder.Security.Data.EF.Interfaces;
@@ -37,7 +35,6 @@ public static partial class WebApplicationExtensions
             ?? NullLogger.Instance;
 
         app.EnsureCoreDatabasesMigrated(log: log);
-        app.EnsureCrmDatabaseInitialised();
         app.UseHttpsRedirection();
         app.UseCoreSecurityHeaders();
         app.UseCoreApi(log: log);
@@ -67,7 +64,6 @@ public static partial class WebApplicationExtensions
             ?? NullLogger.Instance;
 
         app.EnsureCoreDatabasesMigrated(log: log);
-        app.EnsureCrmDatabaseInitialised();
         app.UseCoreSecurityHeaders();
 
         IHostedService[] hostedServices = [.. app.Services.GetServices<IHostedService>()];
@@ -169,24 +165,6 @@ public static partial class WebApplicationExtensions
                     ResolveDatabaseName(connectionString: securityConnectionString)
                 ]);
         }
-    }
-
-    private static void EnsureCrmDatabaseInitialised(
-        this WebApplication app)
-    {
-        Models.CoreConfiguration configuration =
-            app.Services.GetRequiredService<Models.CoreConfiguration>();
-
-        if (configuration.CRM is null)
-        {
-            return;
-        }
-
-        app.Services
-            .InitialiseCrmApplicationAsync()
-            .AsTask()
-            .GetAwaiter()
-            .GetResult();
     }
 
     private static IDisposable AcquireStartupMigrationLock(

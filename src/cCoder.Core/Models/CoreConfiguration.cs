@@ -5,7 +5,6 @@
 using cCoder.AppSecurity.Models;
 using cCoder.AI.Models.Configurations;
 using cCoder.ContentManagement.Models;
-using cCoder.ClientRelationshipManagement.Platform.Models.Configuration;
 using cCoder.DocumentManagement.Models;
 using cCoder.Eventing.Models;
 using cCoder.Logging.Models;
@@ -40,9 +39,6 @@ public sealed class CoreConfiguration
         IConfigurationSection contentManagement =
             configuration.GetSection(key: nameof(ContentManagement));
 
-        IConfigurationSection crm =
-            configuration.GetSection(key: nameof(CRM));
-
         IConfigurationSection documentManagement =
             configuration.GetSection(key: nameof(DocumentManagement));
 
@@ -69,10 +65,6 @@ public sealed class CoreConfiguration
 
         ContentManagement = contentManagement.Exists()
             ? contentManagement.Get<ContentManagementConfiguration>()
-            : null;
-
-        CRM = crm.Exists()
-            ? crm.Get<CRMConfiguration>()
             : null;
 
         DocumentManagement = documentManagement.Exists()
@@ -109,7 +101,6 @@ public sealed class CoreConfiguration
     public AIConfiguration AI { get; set; }
     public AppSecurityConfiguration AppSecurity { get; set; }
     public ContentManagementConfiguration ContentManagement { get; set; }
-    public CRMConfiguration CRM { get; set; }
     public DocumentManagementConfiguration DocumentManagement { get; set; }
     public LoggingConfiguration Logging { get; set; }
     public MailConfiguration Mail { get; set; }
