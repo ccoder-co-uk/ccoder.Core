@@ -29,17 +29,17 @@ internal sealed class IntegrationTestConfiguration
         MailTenantId =
             AcceptanceTestConfiguration.ReadOptionalValue(
                 variableName:
-                    "Mail__Providers__3__MicrosoftGraph__TenantId")
+                    "Mail__Providers__MicrosoftGraph__TenantId")
             ?? string.Empty;
         MailClientId =
             AcceptanceTestConfiguration.ReadOptionalValue(
                 variableName:
-                    "Mail__Providers__3__MicrosoftGraph__ClientId")
+                    "Mail__Providers__MicrosoftGraph__ClientId")
             ?? string.Empty;
         MailClientSecret =
             AcceptanceTestConfiguration.ReadOptionalValue(
                 variableName:
-                    "Mail__Providers__3__MicrosoftGraph__ClientSecret")
+                    "Mail__Providers__MicrosoftGraph__ClientSecret")
             ?? string.Empty;
         MailSendUser =
             AcceptanceTestConfiguration.ReadOptionalValue(
