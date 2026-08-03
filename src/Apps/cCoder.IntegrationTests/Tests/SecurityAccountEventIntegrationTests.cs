@@ -51,11 +51,11 @@ public sealed partial class SecurityAccountEventIntegrationTests(IntegrationAcce
         [
             .. new Dictionary<string, string>
             {
-                ["Mail__Providers__3__MicrosoftGraph__TenantId"] =
+                ["Mail__Providers__MicrosoftGraph__TenantId"] =
                     fixture.Settings.MailTenantId,
-                ["Mail__Providers__3__MicrosoftGraph__ClientId"] =
+                ["Mail__Providers__MicrosoftGraph__ClientId"] =
                     fixture.Settings.MailClientId,
-                ["Mail__Providers__3__MicrosoftGraph__ClientSecret"] =
+                ["Mail__Providers__MicrosoftGraph__ClientSecret"] =
                     fixture.Settings.MailClientSecret,
                 ["CoreIntegrationTests__MailSendUser"] =
                     fixture.Settings.MailSendUser,
