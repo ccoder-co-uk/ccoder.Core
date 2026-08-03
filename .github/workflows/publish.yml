@@ -14,6 +14,13 @@ env:
   DOTNET_NOLOGO: true
   NUGET_DIRECTORY: ${{ github.workspace }}/artifacts/nuget
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
 defaults:
   run:
     shell: pwsh
@@ -21,6 +28,7 @@ defaults:
 jobs:
   build-test-pack:
     runs-on: [self-hosted, Windows, X64, test]
+    timeout-minutes: 20
     defaults:
       run:
         shell: powershell
@@ -36,24 +44,18 @@ jobs:
         run: |
           "value=$(Get-Date -Format 'yyyy.M.d.HHmm')" >> $env:GITHUB_OUTPUT
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: 24
-          package-manager-cache: false
-
       - name: Restore
-        run: dotnet restore ccoder.Core/src/cCoder.Core.slnx --source https://api.nuget.org/v3/index.json --no-cache
+        run: dotnet restore ccoder.Core/src/cCoder.Core.slnx --source https://api.nuget.org/v3/index.json
 
       - name: Build
-        run: dotnet build ccoder.Core/src/cCoder.Core.slnx -c Release --no-restore /p:Version="${{ steps.version.outputs.value }}"
+        run: dotnet build ccoder.Core/src/cCoder.Core.slnx -c Release --no-restore -m /p:BuildInParallel=true /p:UseSharedCompilation=true /p:Version="${{ steps.version.outputs.value }}"
 
       - name: Test frontend
         working-directory: ccoder.Core/src/cCoder.Core.FrontEnd
         run: npm test
 
       - name: Test
-        run: dotnet test ccoder.Core/src/cCoder.Core.slnx -c Release --no-build --settings ccoder.Core/src/cCoder.Core.runsettings --filter "Category!=ExternalIntegration"
+        run: dotnet test ccoder.Core/src/cCoder.Core.slnx -c Release --no-build --no-restore -m --settings ccoder.Core/src/cCoder.Core.runsettings --filter "Category!=ExternalIntegration"
 
       - name: Pack
         run: |
@@ -61,12 +63,13 @@ jobs:
             Remove-Item -LiteralPath "${{ env.NUGET_DIRECTORY }}" -Recurse -Force
           }
           New-Item -ItemType Directory -Path "${{ env.NUGET_DIRECTORY }}" -Force | Out-Null
-          dotnet pack ccoder.Core/src/cCoder.Core/cCoder.Core.csproj -c Release --no-build --output "${{ env.NUGET_DIRECTORY }}" /p:Version="${{ steps.version.outputs.value }}"
+          dotnet pack ccoder.Core/src/cCoder.Core/cCoder.Core.csproj -c Release --no-build --no-restore --output "${{ env.NUGET_DIRECTORY }}" /p:Version="${{ steps.version.outputs.value }}"
 
       - name: Upload package artifacts
         uses: actions/upload-artifact@v7
         with:
           name: nuget
+          compression-level: 0
           if-no-files-found: error
           retention-days: 7
           path: |

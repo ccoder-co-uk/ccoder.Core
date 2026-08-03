@@ -17,9 +17,9 @@ internal sealed class HomeExceptionFilter(
     IPageRenderer pageRenderer,
     IHomeSessionManager homeSessionManager,
     ILogger<HomeExceptionFilter> log)
-    : IExceptionFilter
+    : IAsyncExceptionFilter
 {
-    public void OnException(
+    public async Task OnExceptionAsync(
         ExceptionContext context)
     {
         Exception exception = context.Exception;
@@ -48,7 +48,7 @@ internal sealed class HomeExceptionFilter(
                     key: "culture");
 
             PageRenderResponse response =
-                pageRenderer.RenderError(
+                await pageRenderer.RenderErrorAsync(
                     request: new PageRenderRequest
                     {
                         Host = host,

@@ -20,7 +20,6 @@ using cCoder.Core.Services.Foundations.Eventing;
 using cCoder.Core.Services.Orchestrations;
 using cCoder.Data.Models.DMS;
 using cCoder.Data.Models.Workflow;
-using AppSecurityAppOrchestrationService = cCoder.AppSecurity.Exposures.IAppSecurityAppExposure;
 using CmsApp = cCoder.Data.Models.CMS.App;
 
 namespace cCoder.Core;
@@ -29,7 +28,8 @@ public static partial class WebApplicationExtensions
 {
     private static WebApplication ListenToExternalEvents(this WebApplication app)
     {
-        app.UseAppSecurityHostedServiceAddEventHandlers();
+        app.StartContentManagementHostedServices();
+        app.StartAppSecurityHostedServices();
         app.StartDocumentManagementHostedServices();
         app.StartLoggingHostedServices();
         app.StartMailHostedServices();
@@ -37,9 +37,7 @@ public static partial class WebApplicationExtensions
         app.UseCoreEventHandlers();
         app.UseMailHostedServiceEventHandlers();
         app.UseHostedServicesServiceBusEventBridge();
-        app.StartContentManagementHostedServices();
-        app.UseAppSecurityHostedServiceUpdateEventHandlers();
-        app.UseAppSecurityHostedServiceDeleteEventHandlers();
+        app.StartContentManagementFinalAppDeleteEventHandler();
         return app;
     }
 
@@ -87,43 +85,6 @@ name: "app_delete", handler: static (service, entity) => service.ForwardAppDelet
 
         eventHub.ListenToEvent<Folder, ServiceBusFolderDeleteForwardingService>(
 name: "folder_delete", handler: static (service, entity) => service.ForwardFolderDeleteAsync(folder: entity));
-
-        return app;
-    }
-
-    private static WebApplication UseAppSecurityHostedServiceAddEventHandlers(this WebApplication app)
-    {
-        using IServiceScope scope = app.Services.CreateScope();
-        IEventHub eventHub = scope.ServiceProvider.GetRequiredService<IEventHub>();
-
-        eventHub.ListenToEvent<
-            CmsApp,
-            IHostedServicesAppSecurityAppAddOrchestrationService>(
-            name: "app_add",
-            handler: static (service, entity) =>
-                service.HandleAppAsync(app: entity));
-
-        return app;
-    }
-
-    private static WebApplication UseAppSecurityHostedServiceUpdateEventHandlers(this WebApplication app)
-    {
-        using IServiceScope scope = app.Services.CreateScope();
-        IEventHub eventHub = scope.ServiceProvider.GetRequiredService<IEventHub>();
-
-        eventHub.ListenToEvent<CmsApp, AppSecurityAppOrchestrationService>(
-name: "app_update", handler: static (service, entity) => service.UpdateAsync(app: entity));
-
-        return app;
-    }
-
-    private static WebApplication UseAppSecurityHostedServiceDeleteEventHandlers(this WebApplication app)
-    {
-        using IServiceScope scope = app.Services.CreateScope();
-        IEventHub eventHub = scope.ServiceProvider.GetRequiredService<IEventHub>();
-
-        eventHub.ListenToEvent<CmsApp, AppSecurityAppOrchestrationService>(
-name: "app_delete", handler: static (service, entity) => service.DeleteAsync(appId: entity.Id));
 
         return app;
     }
