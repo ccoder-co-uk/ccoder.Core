@@ -54,9 +54,9 @@ typed configuration fails during application composition.
 The Microsoft Graph integration path requires:
 
 ```text
-Mail__Providers__3__MicrosoftGraph__TenantId
-Mail__Providers__3__MicrosoftGraph__ClientId
-Mail__Providers__3__MicrosoftGraph__ClientSecret
+Mail__Providers__MicrosoftGraph__TenantId
+Mail__Providers__MicrosoftGraph__ClientId
+Mail__Providers__MicrosoftGraph__ClientSecret
 CoreIntegrationTests__MailSendUser
 CoreIntegrationTests__MailReceiveUser
 ```
