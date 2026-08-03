@@ -91,7 +91,7 @@
               "TypeName": "Web.Dependencies.Api.ApiScriptExecutionDependency",
               "MethodName": "ExecuteScriptAsync",
               "MethodId": "Web.Dependencies.Api.ApiScriptExecutionDependency.ExecuteScriptAsync(System.String)",
-              "StandardElementType": "Unknown",
+              "StandardElementType": "Dependency",
               "IsDependencyBoundary": false
             }
           ],
@@ -619,7 +619,7 @@
     {
       "Name": "Web.Controllers.HomeController",
       "StandardElementType": "HttpExposure",
-      "LineNumber": 22,
+      "LineNumber": 24,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -638,7 +638,7 @@
         {
           "Id": "Web.Controllers.HomeController.Index(System.String,System.String,System.String,System.Boolean,System.Threading.CancellationToken)",
           "Name": "Index",
-          "LineNumber": 40,
+          "LineNumber": 42,
           "Inputs": [
             {
               "Name": "path",
@@ -664,20 +664,6 @@
           "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E",
           "Implements": [],
           "Calls": [
-            {
-              "TypeName": "System.Exception",
-              "MethodName": "GetType",
-              "MethodId": "System.Exception.GetType()",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "System.String",
-              "MethodName": "Contains",
-              "MethodId": "System.String.Contains(System.String,System.StringComparison)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
             {
               "TypeName": "System.String",
               "MethodName": "EndsWith",
@@ -708,8 +694,8 @@
             },
             {
               "TypeName": "cCoder.ContentManagement.Exposures.IPageRenderer",
-              "MethodName": "Render",
-              "MethodId": "cCoder.ContentManagement.Exposures.IPageRenderer.Render(cCoder.ContentManagement.Models.PageRenderRequest)",
+              "MethodName": "RenderAsync",
+              "MethodId": "cCoder.ContentManagement.Exposures.IPageRenderer.RenderAsync(cCoder.ContentManagement.Models.PageRenderRequest)",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
             },
@@ -753,11 +739,7 @@
             "Web.Models.Exceptions.HomeSessionProcessingServiceException",
             "Web.Models.Exceptions.HomeSessionProcessingValidationException"
           ],
-          "ThrowsExceptionTypes": [
-            "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
-            "Web.Models.Exceptions.HomeSessionProcessingServiceException",
-            "Web.Models.Exceptions.HomeSessionProcessingValidationException"
-          ],
+          "ThrowsExceptionTypes": [],
           "HttpMethods": [
             "GET"
           ],
@@ -819,7 +801,7 @@
     },
     {
       "Name": "Web.Dependencies.Api.ApiScriptExecutionDependency",
-      "StandardElementType": "Unknown",
+      "StandardElementType": "Dependency",
       "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
@@ -926,7 +908,7 @@
         {
           "Id": "Web.Dependencies.Filters.HomeDefaultsActionFilter.OnActionExecutionAsync(ActionExecutingContext,ActionExecutionDelegate)",
           "Name": "OnActionExecutionAsync",
-          "LineNumber": 18,
+          "LineNumber": 17,
           "Inputs": [
             {
               "Name": "context",
@@ -969,13 +951,6 @@
               "IsDependencyBoundary": true
             },
             {
-              "TypeName": "cCoder.Core.Exposures.IFirstTimeSetupManager",
-              "MethodName": "IsInitializedAsync",
-              "MethodId": "cCoder.Core.Exposures.IFirstTimeSetupManager.IsInitializedAsync(System.Threading.CancellationToken)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
               "TypeName": "cCoder.Data.Models.CMS.App",
               "MethodName": ".ctor",
               "MethodId": "cCoder.Data.Models.CMS.App..ctor()",
@@ -1004,9 +979,9 @@
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
-        "Id": "Web:IExceptionFilter",
-        "FullName": "IExceptionFilter",
-        "Name": "IExceptionFilter",
+        "Id": "Web:IAsyncExceptionFilter",
+        "FullName": "IAsyncExceptionFilter",
+        "Name": "IAsyncExceptionFilter",
         "Namespace": "\u003Cglobal namespace\u003E",
         "AssemblyName": "Web",
         "Kind": "Class",
@@ -1017,8 +992,8 @@
       "Properties": [],
       "Methods": [
         {
-          "Id": "Web.Dependencies.Filters.HomeExceptionFilter.OnException(ExceptionContext)",
-          "Name": "OnException",
+          "Id": "Web.Dependencies.Filters.HomeExceptionFilter.OnExceptionAsync(ExceptionContext)",
+          "Name": "OnExceptionAsync",
           "LineNumber": 22,
           "Inputs": [
             {
@@ -1026,7 +1001,7 @@
               "Type": "ExceptionContext"
             }
           ],
-          "ReturnType": "System.Void",
+          "ReturnType": "System.Threading.Tasks.Task",
           "Implements": [],
           "Calls": [
             {
@@ -1038,8 +1013,8 @@
             },
             {
               "TypeName": "cCoder.ContentManagement.Exposures.IPageRenderer",
-              "MethodName": "RenderError",
-              "MethodId": "cCoder.ContentManagement.Exposures.IPageRenderer.RenderError(cCoder.ContentManagement.Models.PageRenderRequest)",
+              "MethodName": "RenderErrorAsync",
+              "MethodId": "cCoder.ContentManagement.Exposures.IPageRenderer.RenderErrorAsync(cCoder.ContentManagement.Models.PageRenderRequest)",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
             },
@@ -3236,21 +3211,21 @@
       "Description": "An API controller must have exactly one business dependency.",
       "Severity": "Warning",
       "Type": "Web.Controllers.HomeController",
-      "LineNumber": 22
+      "LineNumber": 24
     },
     {
       "Code": "STXAPI004",
       "Description": "API controller methods must use HTTP nouns: Get, Post, Put, or Delete.",
       "Severity": "Warning",
       "Type": "Web.Controllers.HomeController",
-      "LineNumber": 37
+      "LineNumber": 39
     },
     {
       "Code": "STXAPI005",
       "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
       "Severity": "Warning",
       "Type": "Web.Controllers.HomeController",
-      "LineNumber": 40
+      "LineNumber": 42
     }
   ]
 }

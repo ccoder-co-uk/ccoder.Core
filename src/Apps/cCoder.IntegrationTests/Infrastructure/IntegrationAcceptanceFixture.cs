@@ -9,7 +9,11 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using Azure.Messaging.ServiceBus;
 using Azure.Messaging.ServiceBus.Administration;
+using cCoder.Security.Data.EF.Interfaces;
+using cCoder.Security.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.WebUtilities;
 using cCoder.Core.Testing;
 using cCoder.IntegrationTests.Models;
 using Xunit;
@@ -64,6 +68,33 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
     public string HostedServicesOutput => hostedServicesApplication?.Output ?? string.Empty;
 
     public string WorkflowOutput => workflowApplication?.Output ?? string.Empty;
+
+    internal async Task<string> CreateAuthTokenAsync(string userId)
+    {
+        string selector = WebEncoders.Base64UrlEncode(
+            input: RandomNumberGenerator.GetBytes(count: 16));
+
+        string secret = WebEncoders.Base64UrlEncode(
+            input: RandomNumberGenerator.GetBytes(count: 32));
+
+        await using DbContext sso = DatabaseServices
+            .GetRequiredService<ISecurityDbContextFactory>()
+            .CreateDbContext(ignoreAuthInfo: true);
+
+        sso.Add(entity: new Token
+        {
+            Id = selector,
+            SecretHash = Convert.ToHexString(
+                inArray: SHA256.HashData(
+                    source: Encoding.UTF8.GetBytes(s: secret))),
+            Reason = (int)TokenUse.Auth,
+            Expires = DateTimeOffset.UtcNow.AddHours(hours: 1),
+            UserName = userId
+        });
+
+        await sso.SaveChangesAsync();
+        return $"{selector}.{secret}";
+    }
 
     public async Task InitializeAsync()
     {

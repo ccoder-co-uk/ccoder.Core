@@ -39,14 +39,22 @@ public sealed partial class AppEventIntegrationTests
             // When
             await SendWithOptionalHostAsync(method: HttpMethod.Delete,relativeUrl: $"/Api/ContentManagement/App({appId})",host: appDomain);
 
-            await WaitUntilAsync(predicate: async () =>
-            {
-                await using CoreDataContext core = CreateCoreContext();
+            await WaitUntilAsync(
+                predicate: async () =>
+                {
+                    await using CoreDataContext core = CreateCoreContext();
 
-                return !await core.Set<Role>()
-                    .IgnoreQueryFilters()
-                    .AnyAsync(predicate: role => role.AppId == appId);
-            });
+                    return !await core.Set<AppEntity>()
+                        .IgnoreQueryFilters()
+                        .AnyAsync(predicate: app => app.Id == appId);
+                },
+                diagnosticsFactory: () => Task.FromResult(result: $"""
+                    Web output:
+                    {ImportantLines(value: fixture.WebOutput)}
+
+                    Hosted Services output:
+                    {ImportantLines(value: fixture.HostedServicesOutput)}
+                    """));
 
             await using CoreDataContext verification = CreateCoreContext();
 
