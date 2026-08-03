@@ -6,8 +6,6 @@ using cCoder.Core.Models;
 using cCoder.AI;
 using cCoder.AppSecurity;
 using cCoder.ContentManagement;
-using cCoder.ClientRelationshipManagement.Api;
-using cCoder.ClientRelationshipManagement.Runtime;
 using cCoder.DocumentManagement;
 using cCoder.Logging;
 using cCoder.Mail;
@@ -142,43 +140,6 @@ public static partial class IServiceCollectionExtensions
                 builder: domainModelBuilder);
         }
 
-        if (configuration.CRM is not null)
-        {
-            if (configuration.Security is null)
-            {
-                throw new InvalidOperationException(
-                    "The CRM domain requires the Security configuration section.");
-            }
-
-            IConfiguration applicationConfiguration =
-                configuration.ApplicationConfiguration;
-
-            if (applicationConfiguration is null)
-            {
-                throw new InvalidOperationException(
-                    "The CRM domain requires the application configuration source.");
-            }
-
-            services.AddCrmApplication(
-                rootConfiguration: applicationConfiguration,
-                crmConnection: configuration.CRM.ConnectionString,
-                crmAdminConnection:
-                    configuration.CRM.AdminConnectionString,
-                ssoConnection: configuration.Security.ConnectionString,
-                decryptionKey: configuration.Security.DecryptionKey,
-                configure: options =>
-                {
-                    options.IncludeAI = false;
-                    options.IncludeApiDocumentation = false;
-                    options.IncludeHostedServices = false;
-                    options.IncludeMvc = false;
-                    options.IncludeSecurity = false;
-                });
-
-            IMvcBuilder crmMvcBuilder = services.AddControllers();
-            crmMvcBuilder.AddClientRelationshipManagementApi();
-        }
-
         if (configuration.Packaging is not null)
         {
             services.AddPackaging(configuration: configuration.Packaging);
@@ -207,7 +168,6 @@ public static partial class IServiceCollectionExtensions
                 ("AI", configuration.AI is not null),
                 ("AppSecurity", configuration.AppSecurity is not null),
                 ("ContentManagement", configuration.ContentManagement is not null),
-                ("ClientRelationshipManagement", configuration.CRM is not null),
                 ("DocumentManagement", configuration.DocumentManagement is not null),
                 ("Logging", configuration.Logging is not null),
                 ("Mail", configuration.Mail is not null),
@@ -296,40 +256,6 @@ public static partial class IServiceCollectionExtensions
         {
             services.AddContentManagementHostedServices(
                 configuration: configuration.ContentManagement);
-        }
-
-        if (configuration.CRM is not null)
-        {
-            if (configuration.Security is null)
-            {
-                throw new InvalidOperationException(
-                    "The CRM domain requires the Security configuration section.");
-            }
-
-            IConfiguration applicationConfiguration =
-                configuration.ApplicationConfiguration;
-
-            if (applicationConfiguration is null)
-            {
-                throw new InvalidOperationException(
-                    "The CRM domain requires the application configuration source.");
-            }
-
-            services.AddCrmApplication(
-                rootConfiguration: applicationConfiguration,
-                crmConnection: configuration.CRM.ConnectionString,
-                crmAdminConnection:
-                    configuration.CRM.AdminConnectionString,
-                ssoConnection: configuration.Security.ConnectionString,
-                decryptionKey: configuration.Security.DecryptionKey,
-                configure: options =>
-                {
-                    options.IncludeAI = false;
-                    options.IncludeApiDocumentation = false;
-                    options.IncludeHostedServices = true;
-                    options.IncludeMvc = false;
-                    options.IncludeSecurity = false;
-                });
         }
 
         if (configuration.Packaging is not null)

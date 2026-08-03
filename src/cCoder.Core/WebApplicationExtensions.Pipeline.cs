@@ -8,6 +8,7 @@ using cCoder.DocumentManagement;
 using cCoder.Logging;
 using cCoder.Mail;
 using cCoder.Packaging;
+using cCoder.Security;
 using cCoder.Workflow;
 
 namespace cCoder.Core;
@@ -18,15 +19,19 @@ public static partial class WebApplicationExtensions
         this WebApplication app,
         ILogger log = null)
     {
+        app.UseRouting();
+        app.UseCoreFormatters();
+        app.StartSecurityWeb(log: log);
+        app.UseAuthorization();
         app.UseCoreApiDocumentation();
         app.StartMailWeb(log: log);
         app.StartDocumentManagementWeb(log: log);
         app.UsePackagingExposure(log: log);
         app.StartWorkflowWeb(log: log);
+        app.StartContentManagementWeb(log: log);
         app.StartAppSecurityWeb(log: log);
         app.StartLoggingWeb(log: log);
         app.PopulateSecurityMetadataTypeCache();
-        app.StartContentManagementWeb(onRequest: LogRequest, log: log);
         app.UseCoreDefaultCors();
         app.UseCoreExceptionHandling(errorHandler: HandleUnhandledException);
         app.UseCoreEventHandlers();

@@ -21,8 +21,33 @@ public sealed partial class WorkflowEventIntegrationTests
             flowId = await CreateFlowDefinitionAsync(appId: BaselineAppId,name: Unique(prefix: "Manual Flow"));
             string authToken = await CreateAuthTokenAsync(userId: AdminUserId);
 
+            using HttpRequestMessage currentUserRequest =
+                new(HttpMethod.Get, "/Api/Account/Me");
+
+            currentUserRequest.Headers.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue(
+                    scheme: "bearer",
+                    parameter: authToken);
+
+            using HttpResponseMessage currentUserResponse =
+                await fixture.WebClient.SendAsync(
+                    request: currentUserRequest);
+
+            string currentUserContent =
+                await currentUserResponse.Content.ReadAsStringAsync();
+
+            currentUserResponse.StatusCode.Should()
+                .Be(expected: System.Net.HttpStatusCode.OK,
+                    because: currentUserContent);
+
+            currentUserContent.Should()
+                .Contain(expected: AdminUserId);
+
             // When
-            await PostRawAsync(relativeUrl: $"/Api/Workflow/FlowDefinition({flowId})/Execute?t={authToken}",body: "{}");
+            await PostRawAsync(
+                relativeUrl: $"/Api/Workflow/FlowDefinition({flowId})/Execute",
+                body: "{}",
+                authToken: authToken);
 
             await WaitUntilAsync(predicate: async () => await HasAnyFlowInstanceAsync(flowId: flowId));
 

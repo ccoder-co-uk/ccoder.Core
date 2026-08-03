@@ -98,8 +98,8 @@ namespace Web.Controllers
                         ?? string.Empty;
                 }
 
-                PageRenderResponse response = pageRenderer.Render(
-request:                     new PageRenderRequest
+                PageRenderResponse response = await pageRenderer.RenderAsync(
+                    request: new PageRenderRequest
                     {
                         Host = GetHost(),
                         Path = path,

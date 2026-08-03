@@ -18,6 +18,7 @@ DELETE Api/ContentManagement/Culture({key})
 DELETE Api/ContentManagement/Layout({key})
 DELETE Api/ContentManagement/Page({key})
 DELETE Api/ContentManagement/PageInfo({key})
+DELETE Api/ContentManagement/PageRenderCache({key})
 DELETE Api/ContentManagement/Resource({key})
 DELETE Api/ContentManagement/Script({key})
 DELETE Api/ContentManagement/Submission({key})
@@ -99,6 +100,9 @@ GET Api/ContentManagement/PageInfo({key})
 GET Api/ContentManagement/PageInfo/$count
 GET Api/ContentManagement/PageRole
 GET Api/ContentManagement/PageRole/$count
+GET Api/ContentManagement/PageRenderCache
+GET Api/ContentManagement/PageRenderCache({key})
+GET Api/ContentManagement/PageRenderCache/$count
 GET Api/ContentManagement/Resource
 GET Api/ContentManagement/Resource({key})
 GET Api/ContentManagement/Resource/$count
@@ -280,6 +284,9 @@ POST Api/ContentManagement/Layout
 POST Api/ContentManagement/Page
 POST Api/ContentManagement/PageInfo
 POST Api/ContentManagement/PageRole
+POST Api/ContentManagement/PageRenderCache
+POST Api/ContentManagement/PageRenderCache/RebuildApp
+POST Api/ContentManagement/PageRenderCache/RebuildPage
 POST Api/ContentManagement/Resource
 POST Api/ContentManagement/Script
 POST Api/ContentManagement/Submission
@@ -335,6 +342,7 @@ PUT Api/ContentManagement/Culture({key})
 PUT Api/ContentManagement/Layout({key})
 PUT Api/ContentManagement/Page({key})
 PUT Api/ContentManagement/PageInfo({key})
+PUT Api/ContentManagement/PageRenderCache({key})
 PUT Api/ContentManagement/Resource({key})
 PUT Api/ContentManagement/Script({key})
 PUT Api/ContentManagement/Submission({key})
