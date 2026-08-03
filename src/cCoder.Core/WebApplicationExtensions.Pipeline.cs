@@ -20,6 +20,7 @@ public static partial class WebApplicationExtensions
         ILogger log = null)
     {
         app.UseRouting();
+        app.UseSession();
         app.UseCoreFormatters();
         app.StartSecurityWeb(log: log);
         app.UseAuthorization();
