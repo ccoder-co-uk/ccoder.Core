@@ -44,17 +44,12 @@ jobs:
         run: |
           "value=$(Get-Date -Format 'yyyy.M.d.HHmm')" >> $env:GITHUB_OUTPUT
 
-      - name: Use preinstalled Node.js
-        run: |
-          $nodeDirectory = 'C:\Program Files\nodejs'
-          $nodeExecutable = Join-Path $nodeDirectory 'node.exe'
-
-          if (-not (Test-Path -LiteralPath $nodeExecutable)) {
-            throw "The preinstalled Node.js runtime was not found at $nodeExecutable."
-          }
-
-          $nodeDirectory >> $env:GITHUB_PATH
-          & $nodeExecutable --version
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: ccoder.Core/src/cCoder.Core.FrontEnd/package-lock.json
 
       - name: Restore
         run: dotnet restore ccoder.Core/src/cCoder.Core.slnx --source https://api.nuget.org/v3/index.json
