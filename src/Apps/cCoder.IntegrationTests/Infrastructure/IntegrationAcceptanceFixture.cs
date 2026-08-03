@@ -597,13 +597,13 @@ fileName: "dotnet", arguments: $"\"{Path.Combine(path1: hostedServicesOutputDire
             ["Eventing__Http__MaxConcurrency"] = "1"
         };
 
-        environment["Mail__Providers__3__MicrosoftGraph__TenantId"] =
+        environment["Mail__Providers__MicrosoftGraph__TenantId"] =
             Settings.MailTenantId;
 
-        environment["Mail__Providers__3__MicrosoftGraph__ClientId"] =
+        environment["Mail__Providers__MicrosoftGraph__ClientId"] =
             Settings.MailClientId;
 
-        environment["Mail__Providers__3__MicrosoftGraph__ClientSecret"] =
+        environment["Mail__Providers__MicrosoftGraph__ClientSecret"] =
             Settings.MailClientSecret;
 
         environment["CoreIntegrationTests__MailSendUser"] =
