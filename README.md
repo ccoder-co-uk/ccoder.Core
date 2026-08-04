@@ -38,6 +38,7 @@ Logging__ConnectionString
 Mail__ConnectionString
 Packaging__ConnectionString
 Workflow__ConnectionString
+Data__ConnectionString
 ```
 
 Optional provider credentials, such as Mail or Azure Service Bus credentials,
@@ -62,7 +63,8 @@ CoreIntegrationTests__MailReceiveUser
 ```
 
 After setting those variables, restart Visual Studio so it receives the updated
-environment, select the Web and HostedServices startup projects, and press F5.
+environment, select the Web, HostedServices, and Workflow startup projects,
+and press F5.
 There is no configuration conversion step and no local secrets file to
 generate.
 
