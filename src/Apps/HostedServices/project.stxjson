@@ -191,7 +191,7 @@
         {
           "Id": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService.ExecuteWaitingQueuedInstanceByIdAsync(System.Guid)",
           "Name": "ExecuteWaitingQueuedInstanceByIdAsync",
-          "LineNumber": 58,
+          "LineNumber": 62,
           "Inputs": [
             {
               "Name": "id",
@@ -222,9 +222,44 @@
           "HasTryCatch": false
         },
         {
+          "Id": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService.GetAll(System.Boolean)",
+          "Name": "GetAll",
+          "LineNumber": 29,
+          "Inputs": [
+            {
+              "Name": "ignoreFilters",
+              "Type": "System.Boolean"
+            }
+          ],
+          "ReturnType": "System.Linq.IQueryable\u003CcCoder.Data.Models.Workflow.FlowInstanceData\u003E",
+          "Implements": [
+            "cCoder.Workflow.Exposures.IWorkflowInstanceManager.GetAll(System.Boolean)"
+          ],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Workflow.Exposures.IFlowInstanceDataManager",
+              "MethodName": "GetAll",
+              "MethodId": "cCoder.Workflow.Exposures.IFlowInstanceDataManager.GetAll(System.Boolean)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
           "Id": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService.GetStats()",
           "Name": "GetStats",
-          "LineNumber": 55,
+          "LineNumber": 59,
           "Inputs": [],
           "ReturnType": "System.Object[]",
           "Implements": [
@@ -254,7 +289,7 @@
         {
           "Id": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService.RunAsync(System.Threading.CancellationToken)",
           "Name": "RunAsync",
-          "LineNumber": 28,
+          "LineNumber": 32,
           "Inputs": [
             {
               "Name": "cancellationToken",
@@ -298,7 +333,7 @@
         {
           "Id": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService.RunInstanceMaintenanceAsync(System.Threading.CancellationToken)",
           "Name": "RunInstanceMaintenanceAsync",
-          "LineNumber": 76,
+          "LineNumber": 80,
           "Inputs": [
             {
               "Name": "cancellationToken",
@@ -325,7 +360,7 @@
         {
           "Id": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService.RunInstanceMaintenanceContinuouslyAsync(System.Threading.CancellationToken)",
           "Name": "RunInstanceMaintenanceContinuouslyAsync",
-          "LineNumber": 63,
+          "LineNumber": 67,
           "Inputs": [
             {
               "Name": "cancellationToken",
@@ -381,7 +416,7 @@
         {
           "Id": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService.RunQueueInstanceBackgroundServiceDependencyAsync(System.Threading.CancellationToken)",
           "Name": "RunQueueInstanceBackgroundServiceDependencyAsync",
-          "LineNumber": 116,
+          "LineNumber": 120,
           "Inputs": [
             {
               "Name": "cancellationToken",
@@ -412,7 +447,7 @@
         {
           "Id": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService.RunQueueInstanceBackgroundServiceDependencyContinuouslyAsync(System.Threading.CancellationToken)",
           "Name": "RunQueueInstanceBackgroundServiceDependencyContinuouslyAsync",
-          "LineNumber": 102,
+          "LineNumber": 106,
           "Inputs": [
             {
               "Name": "cancellationToken",
