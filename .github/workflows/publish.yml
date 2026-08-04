@@ -14,6 +14,7 @@ env:
   DOTNET_NOLOGO: true
   NUGET_DIRECTORY: ${{ github.workspace }}/artifacts/nuget
   APPLICATION_DIRECTORY: ${{ github.workspace }}/artifacts/applications
+  TEST_RESULTS_DIRECTORY: ${{ github.workspace }}/artifacts/test-results
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -65,7 +66,7 @@ jobs:
         run: npm test
 
       - name: Test
-        run: dotnet test ccoder.Core/src/cCoder.Core.slnx -c Release --no-build --no-restore -m --settings ccoder.Core/src/cCoder.Core.runsettings --filter "Category!=ExternalIntegration"
+        run: dotnet test ccoder.Core/src/cCoder.Core.slnx -c Release --no-build --no-restore -m --settings ccoder.Core/src/cCoder.Core.runsettings --filter "Category!=ExternalIntegration" --results-directory "${{ env.TEST_RESULTS_DIRECTORY }}" --logger trx --collect:"XPlat Code Coverage"
 
       - name: Pack
         run: |
@@ -78,7 +79,7 @@ jobs:
       - name: Publish applications
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
-          & ccoder.Core/deploy/release/Publish-Applications.ps1 `
+          & ccoder.Core/.github/workflows/Publish-Applications.ps1 `
             -Version "${{ steps.version.outputs.value }}" `
             -OutputRoot "${{ env.APPLICATION_DIRECTORY }}" `
             -Commit "${{ github.sha }}" `
@@ -105,6 +106,16 @@ jobs:
           if-no-files-found: error
           retention-days: 14
           path: ${{ env.APPLICATION_DIRECTORY }}
+
+      - name: Upload test and coverage results
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-results
+          compression-level: 6
+          if-no-files-found: error
+          retention-days: 14
+          path: ${{ env.TEST_RESULTS_DIRECTORY }}
 
   publish-nuget:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'

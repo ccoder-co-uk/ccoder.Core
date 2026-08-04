@@ -35,7 +35,7 @@ docker compose pull
 docker compose up --wait
 ```
 
-Open `https://localhost`, or an application subdomain such as `https://app2.localhost`. The generated self-signed certificate covers both `localhost` and `*.localhost`; browsers will warn until it is trusted locally.
+Open `https://localhost`, or an application subdomain such as `https://app2.localhost`. On first startup, the Application container generates a self-signed certificate covering `localhost` and `*.localhost` in a Docker-managed volume shared with Workflow. Browsers will display the expected self-signed certificate warning.
 
 To stop the applications:
 
@@ -43,4 +43,13 @@ To stop the applications:
 docker compose down
 ```
 
+To discard the generated local certificate as well, run `docker compose down --volumes`.
+
 `pull_policy: always` ensures each start checks GHCR for the current `latest` application and workflow images.
+
+## Folder layout
+
+The files at this folder's top level are the local harness. The remaining Docker-specific implementation is kept here as well so it does not spill into the normal source tree:
+
+- `build`: Dockerfiles and startup scripts used by the image pipeline
+- `ci`: the pipeline-only integration environment, including disposable SQL Server and Azurite services

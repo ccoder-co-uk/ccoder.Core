@@ -22,10 +22,10 @@ Starting the SQL Server container accepts Microsoft's SQL Server container licen
 From the repository root:
 
 ```powershell
-./deploy/compose/Initialize.ps1
-docker compose --env-file deploy/compose/.env --file deploy/compose/compose.yml pull
-docker compose --env-file deploy/compose/.env --file deploy/compose/compose.yml up --wait
-./deploy/compose/Smoke-Test.ps1
+./Docker/ci/Initialize.ps1
+docker compose --env-file Docker/ci/.env --file Docker/ci/compose.yml pull
+docker compose --env-file Docker/ci/.env --file Docker/ci/compose.yml up --wait
+./Docker/ci/Smoke-Test.ps1
 ```
 
 Open:
@@ -46,7 +46,7 @@ Optional provider settings such as Microsoft Graph, Azure Service Bus, and AI cr
 ## Stop and retain data
 
 ```powershell
-docker compose --env-file deploy/compose/.env --file deploy/compose/compose.yml down
+docker compose --env-file Docker/ci/.env --file Docker/ci/compose.yml down
 ```
 
 ## Reset all local Compose data
@@ -54,7 +54,7 @@ docker compose --env-file deploy/compose/.env --file deploy/compose/compose.yml 
 The following command permanently removes the Compose SQL Server databases and Azurite data:
 
 ```powershell
-docker compose --env-file deploy/compose/.env --file deploy/compose/compose.yml down --volumes
+docker compose --env-file Docker/ci/.env --file Docker/ci/compose.yml down --volumes
 ```
 
 Run `Initialize.ps1 -Force` only when you also intend to replace the local development secrets. Data encrypted using the previous key may no longer be readable.
@@ -66,6 +66,6 @@ Edit only the port values in the ignored `.env` file. Container-to-container con
 ## Diagnostic commands
 
 ```powershell
-docker compose --env-file deploy/compose/.env --file deploy/compose/compose.yml ps
-docker compose --env-file deploy/compose/.env --file deploy/compose/compose.yml logs --follow
+docker compose --env-file Docker/ci/.env --file Docker/ci/compose.yml ps
+docker compose --env-file Docker/ci/.env --file Docker/ci/compose.yml logs --follow
 ```

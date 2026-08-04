@@ -11,12 +11,12 @@ LABEL org.opencontainers.image.source="https://github.com/ccoder-co-uk/cCoder.Co
 WORKDIR /app
 
 RUN apt-get update \
-    && apt-get install --yes --no-install-recommends curl tini \
+    && apt-get install --yes --no-install-recommends curl openssl tini \
     && rm -rf /var/lib/apt/lists/*
 
 COPY Web/ /app/Web/
 COPY HostedServices/ /app/HostedServices/
-COPY deploy/docker/start-application.sh /app/start-application.sh
+COPY start-application.sh /app/start-application.sh
 
 RUN chmod +x /app/start-application.sh
 
