@@ -146,4 +146,35 @@ public sealed partial class SampleAppConfigurationTests
             .Should()
             .Be(expected: Uri.UriSchemeHttps);
     }
+
+    [Fact]
+    public void SuppliedWorkflowApp_ShouldDeclareRequiredConfiguration()
+    {
+        // Given
+        IConfiguration configuration = new ConfigurationBuilder()
+            .SetBasePath(basePath: AppContext.BaseDirectory)
+            .AddJsonFile(
+                path: Path.Combine(
+                    path1: "Configuration",
+                    path2: "Workflow.local.settings.json"),
+                optional: false)
+            .Build();
+
+        // When
+        string[] missingKeys =
+        [
+            "Values:Data__ConnectionString",
+            "Values:Data__DebugInfo",
+            "Values:Data__LogSQL"
+        ];
+
+        missingKeys = missingKeys
+            .Where(predicate: key => configuration[key] is null)
+            .ToArray();
+
+        // Then
+        missingKeys
+            .Should()
+            .BeEmpty();
+    }
 }
