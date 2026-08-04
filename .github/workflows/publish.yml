@@ -67,7 +67,7 @@ jobs:
 
       - name: Test with coverage
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: dotnet test ccoder.Core/src/cCoder.Core.slnx -c Release --no-build --no-restore -m --settings ccoder.Core/src/cCoder.Core.runsettings --filter "Category!=ExternalIntegration" --results-directory "${{ env.TEST_RESULTS_DIRECTORY }}" --logger trx --collect:"XPlat Code Coverage"
+        run: dotnet test ccoder.Core/src/cCoder.Core.slnx -c Release --no-build --no-restore -m --settings ccoder.Core/src/cCoder.Core.coverage.runsettings --filter "Category!=ExternalIntegration" --results-directory "${{ env.TEST_RESULTS_DIRECTORY }}" --logger trx --collect:"XPlat Code Coverage"
 
       - name: Test
         if: github.event_name != 'push' || github.ref != 'refs/heads/main'

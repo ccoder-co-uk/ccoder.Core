@@ -38,7 +38,7 @@ internal sealed partial class DocumentManagementPackageProcessingService(
         });
 
     private static DocumentManagementPackage ToExternalPackage(Package package) =>
-        package == null ? null : new DocumentManagementPackage(package.Name)
+        package == null ? null : new DocumentManagementPackage
         {
             Id = package.Id,
             Name = package.Name,

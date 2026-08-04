@@ -38,7 +38,7 @@ internal sealed partial class WorkflowPackageProcessingService(
         });
 
     private static WorkflowPackage ToExternalPackage(Package package) =>
-        package == null ? null : new WorkflowPackage(package.Name)
+        package == null ? null : new WorkflowPackage
         {
             Id = package.Id,
             Name = package.Name,

@@ -38,7 +38,8 @@ public sealed partial class HostedServicesRegistrationTests
         services.AddSingleton(implementationInstance: configuration);
 
         CoreConfiguration coreConfiguration =
-            new(configuration: configuration);
+            CoreConfigurationFactory.Create(
+                configuration: configuration);
 
         // When
         services.AddCoreHostedServices(
@@ -84,7 +85,8 @@ public sealed partial class HostedServicesRegistrationTests
         services.AddSingleton(implementationInstance: configuration);
 
         CoreConfiguration coreConfiguration =
-            new(configuration: configuration);
+            CoreConfigurationFactory.Create(
+                configuration: configuration);
 
         coreConfiguration.Eventing.ProviderType = "ServiceBus";
         coreConfiguration.Eventing.ServiceBus.MaxConcurrency = 3;

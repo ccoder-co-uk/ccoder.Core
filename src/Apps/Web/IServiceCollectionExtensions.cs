@@ -23,7 +23,7 @@ public static class IServiceCollectionExtensions
         Action<CoreConfiguration> configure = null)
     {
         CoreConfiguration configuration =
-            new(applicationConfiguration);
+            CoreConfigurationFactory.Create(applicationConfiguration);
         configure?.Invoke(configuration);
         services.AddApplicationLogging(applicationConfiguration);
         services.AddBrokers();

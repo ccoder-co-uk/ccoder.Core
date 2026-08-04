@@ -46,8 +46,8 @@ public sealed partial class CoreODataContextRegistrationTests
 
         CoreApiRouteDefinition[] routeDefinitions =
         [
-            new(Name: "Core", RoutePath: "Api/Core", RouteModel: model),
-            new(Name: "Security", RoutePath: "Api/Security", RouteModel: model),
+            new() { Name = "Core", RoutePath = "Api/Core", RouteModel = model },
+            new() { Name = "Security", RoutePath = "Api/Security", RouteModel = model },
         ];
 
         // When

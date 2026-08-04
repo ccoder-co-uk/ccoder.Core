@@ -26,9 +26,9 @@ public sealed partial class ApiDocumentationTests
 
         CoreApiRouteDefinition[] routes =
         [
-            new(Name: "AI", RoutePath: "Api/AI", RouteModel: null),
-            new(Name: "Core", RoutePath: "Api/Core", RouteModel: null),
-            new(Name: "ContentManagement", RoutePath: "Api/ContentManagement", RouteModel: null),
+            new() { Name = "AI", RoutePath = "Api/AI", RouteModel = null },
+            new() { Name = "Core", RoutePath = "Api/Core", RouteModel = null },
+            new() { Name = "ContentManagement", RoutePath = "Api/ContentManagement", RouteModel = null },
         ];
 
         // When
@@ -59,9 +59,9 @@ public sealed partial class ApiDocumentationTests
 
         CoreApiRouteDefinition[] routes =
         [
-            new(Name: "AI", RoutePath: "Api/AI", RouteModel: null),
-            new(Name: "Core", RoutePath: "Api/Core", RouteModel: null),
-            new(Name: "ContentManagement", RoutePath: "Api/ContentManagement", RouteModel: null),
+            new() { Name = "AI", RoutePath = "Api/AI", RouteModel = null },
+            new() { Name = "Core", RoutePath = "Api/Core", RouteModel = null },
+            new() { Name = "ContentManagement", RoutePath = "Api/ContentManagement", RouteModel = null },
         ];
 
         services.AddCoreApiDocumentation(routes: routes);

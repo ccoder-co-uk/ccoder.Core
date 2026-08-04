@@ -873,16 +873,23 @@ predicate: (documentName, apiDescription) =>
         IEnumerable<string> apiContexts) =>
         services.GetRouteDefinitions(routes: (apiContexts ?? [])
             .Where(predicate: context => !string.IsNullOrWhiteSpace(value: context))
-            .Select(selector: context => new CoreApiRouteDefinition(
-                context,
-                $"Api/{context}",
-                null)));
+            .Select(selector: context => new CoreApiRouteDefinition
+            {
+                Name = context,
+                RoutePath = $"Api/{context}",
+                RouteModel = null,
+            }));
 
     private static CoreApiRouteDefinition[] GetRouteDefinitions(
         this IServiceCollection services,
         IEnumerable<CoreApiRouteDefinition> routes)
     {
-        CoreApiRouteDefinition coreRoute = new("Core", "Api/Core", null);
+        CoreApiRouteDefinition coreRoute = new()
+        {
+            Name = "Core",
+            RoutePath = "Api/Core",
+            RouteModel = null,
+        };
 
         return [coreRoute, .. (routes ?? [])
             .Where(predicate: route => route is not null && !string.IsNullOrWhiteSpace(value: route.Name))

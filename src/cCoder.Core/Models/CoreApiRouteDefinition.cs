@@ -6,8 +6,9 @@ using Microsoft.OData.Edm;
 
 namespace cCoder.Core.Models;
 
-internal sealed record CoreApiRouteDefinition(
-    string Name,
-    string RoutePath,
-    IEdmModel RouteModel
-);
+internal sealed class CoreApiRouteDefinition
+{
+    public string Name { get; set; }
+    public string RoutePath { get; set; }
+    public IEdmModel RouteModel { get; set; }
+}

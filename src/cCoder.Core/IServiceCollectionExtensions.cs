@@ -12,7 +12,7 @@ public static partial class IServiceCollectionExtensions
         this IServiceCollection services,
         Action<CoreConfiguration> configure = null)
     {
-        CoreConfiguration configuration = new();
+        CoreConfiguration configuration = CoreConfigurationFactory.Create();
         configure?.Invoke(obj: configuration);
 
         return services.AddCoreWeb(
@@ -23,7 +23,7 @@ public static partial class IServiceCollectionExtensions
         this IServiceCollection services,
         Action<CoreConfiguration> configure = null)
     {
-        CoreConfiguration configuration = new();
+        CoreConfiguration configuration = CoreConfigurationFactory.Create();
         configure?.Invoke(obj: configuration);
 
         return services.AddCoreHostedServices(

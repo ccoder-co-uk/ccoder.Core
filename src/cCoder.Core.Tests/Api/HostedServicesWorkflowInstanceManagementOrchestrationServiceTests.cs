@@ -59,7 +59,7 @@ public sealed partial class HostedServicesWorkflowInstanceManagementOrchestratio
             Mock.Of<IFlowInstanceDataManager>(),
             Mock.Of<ICoreContextFactory>(),
             Mock.Of<IServiceProvider>(),
-            new CoreConfiguration(),
+            CoreConfigurationFactory.Create(),
             NullLogger<HostedServicesWorkflowInstanceManagementOrchestrationService>.Instance);
 
         // When

@@ -32,7 +32,9 @@ public sealed partial class AppAggregationServiceTests
         Mock<IMailAppService> mailAppServiceMock = new(MockBehavior.Strict);
         Mock<IAppGraphEventService> appGraphEventServiceMock = new(MockBehavior.Strict);
         MockSequence sequence = new();
-        CoreConfiguration configuration = new();
+
+        CoreConfiguration configuration =
+            CoreConfigurationFactory.Create();
 
         planningAppServiceMock
             .InSequence(sequence: sequence)

@@ -3,6 +3,7 @@
 // ---------------------------------------------------------------
 
 using cCoder.Core.Models.Metadata;
+using cCoder.Core.Dependencies.Metadata;
 using cCoder.Data.Extensions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
@@ -99,7 +100,13 @@ internal sealed partial class EdmModelProcessingService
         bool hasEndpoint = true
     )
     {
-        ExtendedMetadataContainer result = new(type, true, hasEndpoint) { Category = context };
+        ExtendedMetadataContainer result =
+            MetadataContainerDependency.CreateExtendedMetadataContainer(
+                type: type,
+                isEntity: true,
+                hasEndpoint: hasEndpoint);
+
+        result.Category = context;
 
         IEdmEntitySet set = model.EntityContainer.FindEntitySet(setName: type.Name);
 
@@ -145,7 +152,10 @@ internal sealed partial class EdmModelProcessingService
 
             if (cSharpType != null)
             {
-                return new MetadataContainer(cSharpType, true, true);
+                return MetadataContainerDependency.CreateMetadataContainer(
+                    type: cSharpType,
+                    isEntity: true,
+                    hasEndpoint: true);
             }
         }
 
