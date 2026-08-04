@@ -1,10 +1,9 @@
 # Docker Compose development environment
 
-This optional environment runs the cCoder.Core reference applications in Linux containers:
+This optional environment runs the cCoder.Core reference applications in two Linux application containers plus their data dependencies:
 
-- Web
-- HostedServices
-- Workflow
+- Application: public Web process with HostedServices available only over container loopback
+- Workflow: privately addressable from the Application container and published on its requested host ports
 - SQL Server 2025 Developer Edition
 - Azurite storage for the local Azure Functions host
 
@@ -24,20 +23,25 @@ From the repository root:
 
 ```powershell
 ./deploy/compose/Initialize.ps1
-docker compose --env-file deploy/compose/.env --file deploy/compose/compose.yml up --build --wait
+docker compose --env-file deploy/compose/.env --file deploy/compose/compose.yml pull
+docker compose --env-file deploy/compose/.env --file deploy/compose/compose.yml up --wait
 ./deploy/compose/Smoke-Test.ps1
 ```
 
 Open:
 
-- Web: `http://localhost:5099`
-- HostedServices: `http://localhost:5100`
-- Workflow: `http://localhost:7071`
+- Web: `http://localhost:80`
+- Web: `https://localhost:443`
+- App subdomains: for example, `https://app2.localhost`
+- Workflow: `http://localhost:800`
+- Workflow: `https://localhost:4433`
 - SQL Server: `localhost,1433`
 
 `Initialize.ps1` creates an ignored `.env` file containing random development-only SQL and encryption secrets. No real credentials or secrets are committed to the repository. The application configuration continues to use the same `Section__Property` environment-variable names documented in the main repository README.
 
-Optional provider settings such as Microsoft Graph, Azure Service Bus, and AI credentials are deliberately omitted. The Compose environment uses local HTTP eventing.
+Optional provider settings such as Microsoft Graph, Azure Service Bus, and AI credentials are deliberately omitted. The Compose environment uses local HTTP eventing. The application services deliberately use the rolling `latest` images produced from the pipeline's tested `publish/latest` output.
+
+`Initialize.ps1` creates an ignored wildcard development certificate containing SANs for `localhost`, `*.localhost`, `127.0.0.1`, and `::1`. This allows host-based cCoder apps such as `app2.localhost` to use the same container certificate. The certificate is self-signed and must be trusted locally before browsers stop displaying a warning. Production deployments must mount a trusted certificate covering the root domain and its application subdomains; certificates and private keys are never included in the images.
 
 ## Stop and retain data
 
