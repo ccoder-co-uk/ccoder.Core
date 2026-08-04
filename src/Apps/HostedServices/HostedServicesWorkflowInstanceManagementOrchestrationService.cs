@@ -19,12 +19,16 @@ namespace HostedServices;
 
 internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationService(
     IWorkflowInstanceManagementBroker workflowInstanceManagementBroker,
+    IFlowInstanceDataManager flowInstanceDataManager,
     ICoreContextFactory coreContextFactory,
     IServiceProvider serviceProvider,
     CoreConfiguration configuration,
     ILogger<HostedServicesWorkflowInstanceManagementOrchestrationService> log)
     : IWorkflowInstanceManager
 {
+    public IQueryable<FlowInstanceData> GetAll(bool ignoreFilters = false) =>
+        flowInstanceDataManager.GetAll(ignoreFilters: ignoreFilters);
+
     public async Task RunAsync(CancellationToken cancellationToken = default)
     {
         try
