@@ -18,6 +18,28 @@ stop_processes() {
 
 trap stop_processes EXIT INT TERM
 
+if [[ "${CCODER_GENERATE_LOCAL_CERTIFICATE:-false}" == "true" ]]; then
+    certificate_path="${CCODER_CERTIFICATE_PATH:-/https/ccoder-localhost.crt}"
+    certificate_key_path="${CCODER_CERTIFICATE_KEY_PATH:-/https/ccoder-localhost.key}"
+
+    if [[ ! -f "${certificate_path}" || ! -f "${certificate_key_path}" ]]; then
+        mkdir -p "$(dirname "${certificate_path}")"
+        openssl req \
+            -x509 \
+            -nodes \
+            -newkey rsa:2048 \
+            -sha256 \
+            -days 825 \
+            -subj "/CN=localhost" \
+            -addext "subjectAltName=DNS:localhost,DNS:*.localhost" \
+            -addext "extendedKeyUsage=serverAuth" \
+            -keyout "${certificate_key_path}" \
+            -out "${certificate_path}"
+        chmod 600 "${certificate_key_path}"
+        chmod 644 "${certificate_path}"
+    fi
+fi
+
 dotnet /app/HostedServices/HostedServices.dll \
     --urls "${CCODER_HOSTED_SERVICES_URLS}" &
 hosted_services_pid=$!

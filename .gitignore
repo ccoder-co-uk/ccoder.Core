@@ -11,10 +11,9 @@
 *.sln.docstates
 
 # Local Docker Compose secrets
-deploy/compose/.env
-deploy/compose/.https/
+Docker/ci/.env
+Docker/ci/.https/
 Docker/.env
-Docker/.https/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -27,8 +26,7 @@ mono_crash.*
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
-!deploy/release/
-!deploy/release/**
+!.github/workflows/Publish-Applications.ps1
 x64/
 x86/
 [Ww][Ii][Nn]32/

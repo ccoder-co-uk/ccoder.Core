@@ -66,19 +66,18 @@ jobs:
         run: |
           set -euo pipefail
           context="${APPLICATION_DIRECTORY}/publish/latest"
-          mkdir -p "${context}/deploy/docker"
-          cp ccoder.Core/deploy/docker/start-application.sh \
-            "${context}/deploy/docker/start-application.sh"
+          cp ccoder.Core/Docker/build/start-application.sh \
+            "${context}/start-application.sh"
 
           docker build \
-            --file ccoder.Core/deploy/docker/Dockerfile.application \
+            --file ccoder.Core/Docker/build/Dockerfile.application \
             --build-arg VERSION="${VERSION}" \
             --build-arg COMMIT="${SOURCE_COMMIT}" \
             --tag "${IMAGE_PREFIX}-application:${VERSION}" \
             "${context}"
 
           docker build \
-            --file ccoder.Core/deploy/docker/Dockerfile.workflow \
+            --file ccoder.Core/Docker/build/Dockerfile.workflow \
             --build-arg VERSION="${VERSION}" \
             --build-arg COMMIT="${SOURCE_COMMIT}" \
             --tag "${IMAGE_PREFIX}-workflow:${VERSION}" \
@@ -90,10 +89,10 @@ jobs:
       - name: Smoke-test two-container topology
         run: |
           set -euo pipefail
-          pwsh -File ccoder.Core/deploy/compose/Initialize.ps1
+          pwsh -File ccoder.Core/Docker/ci/Initialize.ps1
           docker compose \
-            --env-file ccoder.Core/deploy/compose/.env \
-            --file ccoder.Core/deploy/compose/compose.yml \
+            --env-file ccoder.Core/Docker/ci/.env \
+            --file ccoder.Core/Docker/ci/compose.yml \
             up --detach --wait --wait-timeout 240
           curl --fail --insecure \
             --resolve localhost:443:127.0.0.1 \
@@ -106,16 +105,16 @@ jobs:
         if: failure()
         run: |
           docker compose \
-            --env-file ccoder.Core/deploy/compose/.env \
-            --file ccoder.Core/deploy/compose/compose.yml \
+            --env-file ccoder.Core/Docker/ci/.env \
+            --file ccoder.Core/Docker/ci/compose.yml \
             logs --no-color
 
       - name: Stop smoke-test environment
         if: always()
         run: |
           docker compose \
-            --env-file ccoder.Core/deploy/compose/.env \
-            --file ccoder.Core/deploy/compose/compose.yml \
+            --env-file ccoder.Core/Docker/ci/.env \
+            --file ccoder.Core/Docker/ci/compose.yml \
             down --volumes
 
       - name: Publish versioned and latest images

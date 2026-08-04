@@ -2,15 +2,15 @@ name: ccoder-core
 
 x-ccoder-environment: &ccoder-environment
   ASPNETCORE_ENVIRONMENT: Development
-  AppSecurity__ConnectionString: &core-connection-string Server=sqlserver,1433;Database=cCoder-Core;User Id=sa;Password=${CCODER_SQL_PASSWORD:?Run deploy/compose/Initialize.ps1};Encrypt=True;TrustServerCertificate=True
+  AppSecurity__ConnectionString: &core-connection-string Server=sqlserver,1433;Database=cCoder-Core;User Id=sa;Password=${CCODER_SQL_PASSWORD:?Run Docker/ci/Initialize.ps1};Encrypt=True;TrustServerCertificate=True
   ContentManagement__ConnectionString: *core-connection-string
   DocumentManagement__ConnectionString: *core-connection-string
   Logging__ConnectionString: *core-connection-string
   Mail__ConnectionString: *core-connection-string
   Packaging__ConnectionString: *core-connection-string
   Workflow__ConnectionString: *core-connection-string
-  Security__ConnectionString: Server=sqlserver,1433;Database=cCoder-SSO;User Id=sa;Password=${CCODER_SQL_PASSWORD:?Run deploy/compose/Initialize.ps1};Encrypt=True;TrustServerCertificate=True
-  Security__DecryptionKey: ${CCODER_DECRYPTION_KEY:?Run deploy/compose/Initialize.ps1}
+  Security__ConnectionString: Server=sqlserver,1433;Database=cCoder-SSO;User Id=sa;Password=${CCODER_SQL_PASSWORD:?Run Docker/ci/Initialize.ps1};Encrypt=True;TrustServerCertificate=True
+  Security__DecryptionKey: ${CCODER_DECRYPTION_KEY:?Run Docker/ci/Initialize.ps1}
   Eventing__ProviderType: Http
   Eventing__Http__HubUrl: http://localhost:5100
   ContentManagement__WorkflowServiceUrl: http://localhost:5100/api/
@@ -22,7 +22,7 @@ services:
     environment:
       ACCEPT_EULA: Y
       MSSQL_PID: Developer
-      MSSQL_SA_PASSWORD: ${CCODER_SQL_PASSWORD:?Run deploy/compose/Initialize.ps1}
+      MSSQL_SA_PASSWORD: ${CCODER_SQL_PASSWORD:?Run Docker/ci/Initialize.ps1}
     ports:
       - "${CCODER_SQL_PORT:-1433}:1433"
     volumes:
@@ -49,11 +49,11 @@ services:
       FUNCTIONS_WORKER_RUNTIME: dotnet-isolated
       Data__ConnectionString: *core-connection-string
       Workflow__ConnectionString: *core-connection-string
-      Security__ConnectionString: Server=sqlserver,1433;Database=cCoder-SSO;User Id=sa;Password=${CCODER_SQL_PASSWORD:?Run deploy/compose/Initialize.ps1};Encrypt=True;TrustServerCertificate=True
-      Security__DecryptionKey: ${CCODER_DECRYPTION_KEY:?Run deploy/compose/Initialize.ps1}
+      Security__ConnectionString: Server=sqlserver,1433;Database=cCoder-SSO;User Id=sa;Password=${CCODER_SQL_PASSWORD:?Run Docker/ci/Initialize.ps1};Encrypt=True;TrustServerCertificate=True
+      Security__DecryptionKey: ${CCODER_DECRYPTION_KEY:?Run Docker/ci/Initialize.ps1}
       ASPNETCORE_URLS: http://+:800;https://+:4433
       ASPNETCORE_Kestrel__Certificates__Default__Path: /https/ccoder-localhost.pfx
-      ASPNETCORE_Kestrel__Certificates__Default__Password: ${CCODER_HTTPS_PASSWORD:?Run deploy/compose/Initialize.ps1}
+      ASPNETCORE_Kestrel__Certificates__Default__Password: ${CCODER_HTTPS_PASSWORD:?Run Docker/ci/Initialize.ps1}
     depends_on:
       azurite:
         condition: service_started
@@ -71,7 +71,7 @@ services:
       <<: *ccoder-environment
       CCODER_WEB_URLS: http://+:80;https://+:443
       ASPNETCORE_Kestrel__Certificates__Default__Path: /https/ccoder-localhost.pfx
-      ASPNETCORE_Kestrel__Certificates__Default__Password: ${CCODER_HTTPS_PASSWORD:?Run deploy/compose/Initialize.ps1}
+      ASPNETCORE_Kestrel__Certificates__Default__Password: ${CCODER_HTTPS_PASSWORD:?Run Docker/ci/Initialize.ps1}
     depends_on:
       sqlserver:
         condition: service_healthy

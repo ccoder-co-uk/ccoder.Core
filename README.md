@@ -2,6 +2,8 @@
 
 `cCoder.Core` is the aggregate package for the cCoder platform. It composes the domain packages published from the separate `cCoder.*` repositories and is the package used by the aggregate sample applications in this repository.
 
+[View the latest code coverage report](https://ccoder-co-uk.github.io/ccoder.Core/)
+
 ## What This Repo Contains
 
 - `src/cCoder.Core`
@@ -68,35 +70,30 @@ and press F5.
 There is no configuration conversion step and no local secrets file to
 generate.
 
-## Optional Docker Compose Environment
+## Optional local Docker harness
 
-Contributors who prefer a container-based environment can run the Web,
-HostedServices, and Workflow reference applications with local SQL Server and
-Azurite dependencies. Docker remains optional and the containers use the same
-environment-variable configuration contract described above.
+Contributors who prefer containers can run the latest Web, HostedServices, and
+Workflow reference applications against their existing development SQL Server.
+Docker remains optional and uses the same environment-variable configuration
+contract described above.
 
-See [the Docker Compose development environment](deploy/compose/README.md) for
-setup, startup, smoke-test, and clean-reset instructions. The setup script
-generates development-only secrets in an ignored local file; the repository
-does not contain working credentials.
+See [the self-contained Docker harness](Docker/README.md) for setup and startup
+instructions. Docker image-build and CI support files are also isolated beneath
+that folder.
 
-## Application Releases
+## CI application artifacts
 
-The application release publisher creates immutable versioned output and a
-`latest` copy from the same successfully published files:
+The CI publishing helper creates versioned application artifacts and a `latest`
+copy from the same successfully tested files:
 
 ```powershell
-./deploy/release/Publish-Applications.ps1 -Version 2026.8.4.1530
+./.github/workflows/Publish-Applications.ps1 -Version 2026.8.4.1530
 ```
 
-Output is written beneath `artifacts/applications`, including separate Web,
-HostedServices, and Workflow directories, versioned and `latest` ZIP archives,
-release manifests, and SHA-256 checksums. The GitHub workflow uses this same
-publisher and builds two Docker images from the identical `latest` copy. The
-Application image contains public Web and loopback-only HostedServices
-processes, while the Workflow image is independently addressable;
-the application archives and containers therefore contain the same compiled
-release.
+Output is written beneath the workflow's `artifacts/applications` directory and
+is not committed to the repository. The image workflow builds the Application
+and Workflow images from the identical `latest` artifact. These are CI
+implementation details; local Docker users only need the root `Docker` folder.
 
 ## Build And Test
 
