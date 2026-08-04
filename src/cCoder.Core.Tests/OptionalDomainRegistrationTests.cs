@@ -6,6 +6,7 @@ using cCoder.Core.Models;
 using cCoder.AI.Models.Configurations;
 using cCoder.AppSecurity.Models;
 using cCoder.ContentManagement.Models;
+using cCoder.ClientRelationshipManagement.Platform.Models.Configuration;
 using cCoder.Data.Models;
 using cCoder.DocumentManagement.Models;
 using cCoder.Logging.Models;
@@ -201,4 +202,111 @@ public sealed partial class OptionalDomainRegistrationTests
             .Contain(expected: "Api/Packaging");
     }
 
+    [Fact]
+    public void AddCoreWeb_ShouldNotEnableCrmFromConnectionStringAliases()
+    {
+        // Given
+        IConfiguration applicationConfiguration = new ConfigurationBuilder()
+            .AddInMemoryCollection(initialData: new Dictionary<string, string>
+            {
+                ["ConnectionStrings:CRM"] = "crm",
+                ["ConnectionStrings:CRMAdmin"] = "crm-admin"
+            })
+            .Build();
+
+        CoreConfiguration configuration = new(applicationConfiguration);
+        IServiceCollection services = new ServiceCollection();
+
+        // When
+        services.AddCoreWeb(configuration: configuration);
+
+        // Then
+        configuration.CRM
+            .Should()
+            .BeNull();
+
+        services
+            .Should()
+            .NotContain(predicate: descriptor =>
+                descriptor.ServiceType == typeof(CRMConfiguration));
+
+        services
+            .Should()
+            .NotContain(predicate: descriptor =>
+                descriptor.ServiceType == typeof(ApiInfo)
+                && ((ApiInfo)descriptor.ImplementationInstance).Name
+                    == "ClientRelationshipManagement");
+    }
+
+    [Fact]
+    public void AddCoreWeb_ShouldComposeEnabledCrmDomain()
+    {
+        // Given
+        IConfiguration applicationConfiguration = new ConfigurationBuilder()
+            .AddInMemoryCollection(initialData: new Dictionary<string, string>
+            {
+                ["CRM:ConnectionString"] = "Server=(localdb)\\mssqllocaldb;Database=crm-tests;Trusted_Connection=True;",
+                ["CRM:AdminConnectionString"] = "Server=(localdb)\\mssqllocaldb;Database=crm-tests;Trusted_Connection=True;",
+                ["Security:ConnectionString"] = "Server=(localdb)\\mssqllocaldb;Database=sso-tests;Trusted_Connection=True;",
+                ["Security:DecryptionKey"] = "test-key"
+            })
+            .Build();
+
+        CoreConfiguration configuration = new(applicationConfiguration);
+        IServiceCollection services = new ServiceCollection();
+
+        services.AddSingleton<IWebHostEnvironment>(
+            implementationInstance: Mock.Of<IWebHostEnvironment>());
+
+        // When
+        services.AddCoreWeb(configuration: configuration);
+
+        // Then
+        services
+            .Should()
+            .Contain(predicate: descriptor =>
+                descriptor.ServiceType == typeof(CRMConfiguration));
+
+        using ServiceProvider serviceProvider = services.BuildServiceProvider();
+
+        serviceProvider
+            .GetRequiredService<IOptions<SwaggerGeneratorOptions>>()
+            .Value.SwaggerDocs.Keys
+            .Should()
+            .Contain(expected: "ClientRelationshipManagement");
+
+        serviceProvider
+            .GetRequiredService<IOptions<ODataOptions>>()
+            .Value.RouteComponents.Keys
+            .Should()
+            .Contain(expected: "Api/ClientRelationshipManagement");
+    }
+
+    [Fact]
+    public void AddCoreWeb_ShouldFailWhenCrmDependenciesAreMissing()
+    {
+        // Given
+        IConfiguration applicationConfiguration = new ConfigurationBuilder()
+            .AddInMemoryCollection(initialData: new Dictionary<string, string>
+            {
+                ["CRM:ConnectionString"] = "crm",
+                ["CRM:AdminConnectionString"] = "crm-admin"
+            })
+            .Build();
+
+        CoreConfiguration configuration = new(applicationConfiguration);
+        IServiceCollection services = new ServiceCollection();
+
+        // When
+        Action action = () =>
+            services.AddCoreWeb(configuration: configuration);
+
+        // Then
+        action
+            .Should()
+            .Throw<InvalidOperationException>()
+            .WithMessage(
+                expectedWildcardPattern:
+                    "*CRM domain requires the Security configuration section*");
+    }
 }

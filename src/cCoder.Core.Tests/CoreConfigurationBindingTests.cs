@@ -66,6 +66,8 @@ public sealed partial class CoreConfigurationBindingTests
             ["Security:DecryptionKey"] = "key",
             ["ContentManagement:ConnectionString"] = "content",
             ["ContentManagement:RootPath"] = "Api/Content",
+            ["CRM:ConnectionString"] = "crm",
+            ["CRM:AdminConnectionString"] = "crm-admin",
             ["Mail:Providers:MicrosoftGraph:TenantId"] = "tenant",
             ["Eventing:ProviderType"] = "ServiceBus",
             ["Eventing:ServiceBus:ConnectionString"] = "events",
@@ -102,6 +104,14 @@ public sealed partial class CoreConfigurationBindingTests
         result.ContentManagement.RootPath
             .Should()
             .Be(expected: "Api/Content");
+
+        result.CRM.ConnectionString
+            .Should()
+            .Be(expected: "crm");
+
+        result.CRM.AdminConnectionString
+            .Should()
+            .Be(expected: "crm-admin");
 
         result.Mail.Providers["MicrosoftGraph"].TenantId
             .Should()
@@ -153,6 +163,7 @@ public sealed partial class CoreConfigurationBindingTests
             result.AI,
             result.AppSecurity,
             result.ContentManagement,
+            result.CRM,
             result.DocumentManagement,
             result.Logging,
             result.Mail,
