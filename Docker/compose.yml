@@ -1,0 +1,58 @@
+name: ccoder-core
+
+x-core-environment: &core-environment
+  ASPNETCORE_ENVIRONMENT: Development
+  AppSecurity__ConnectionString: ${CCODER_CORE_CONNECTION_STRING:?Set CCODER_CORE_CONNECTION_STRING in Docker/.env}
+  ContentManagement__ConnectionString: ${CCODER_CORE_CONNECTION_STRING:?Set CCODER_CORE_CONNECTION_STRING in Docker/.env}
+  DocumentManagement__ConnectionString: ${CCODER_CORE_CONNECTION_STRING:?Set CCODER_CORE_CONNECTION_STRING in Docker/.env}
+  Logging__ConnectionString: ${CCODER_CORE_CONNECTION_STRING:?Set CCODER_CORE_CONNECTION_STRING in Docker/.env}
+  Mail__ConnectionString: ${CCODER_CORE_CONNECTION_STRING:?Set CCODER_CORE_CONNECTION_STRING in Docker/.env}
+  Packaging__ConnectionString: ${CCODER_CORE_CONNECTION_STRING:?Set CCODER_CORE_CONNECTION_STRING in Docker/.env}
+  Workflow__ConnectionString: ${CCODER_CORE_CONNECTION_STRING:?Set CCODER_CORE_CONNECTION_STRING in Docker/.env}
+  Security__ConnectionString: ${CCODER_SECURITY_CONNECTION_STRING:?Set CCODER_SECURITY_CONNECTION_STRING in Docker/.env}
+  Security__DecryptionKey: ${CCODER_DECRYPTION_KEY:?Run Docker/Initialize.ps1}
+  Eventing__ProviderType: Http
+  Eventing__Http__HubUrl: http://localhost:5100
+  ContentManagement__WorkflowServiceUrl: http://localhost:5100/api/
+  Workflow__ServiceUrl: http://workflow:800/
+
+services:
+  workflow:
+    image: ghcr.io/ccoder-co-uk/ccoder-core-workflow:latest
+    pull_policy: always
+    environment:
+      AzureWebJobsStorage: ${CCODER_AZURE_WEBJOBS_STORAGE:?Set CCODER_AZURE_WEBJOBS_STORAGE in Docker/.env}
+      FUNCTIONS_WORKER_RUNTIME: dotnet-isolated
+      Data__ConnectionString: ${CCODER_CORE_CONNECTION_STRING}
+      Workflow__ConnectionString: ${CCODER_CORE_CONNECTION_STRING}
+      Security__ConnectionString: ${CCODER_SECURITY_CONNECTION_STRING}
+      Security__DecryptionKey: ${CCODER_DECRYPTION_KEY}
+      ASPNETCORE_URLS: http://+:800;https://+:4433
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/ccoder-localhost.pfx
+      ASPNETCORE_Kestrel__Certificates__Default__Password: ${CCODER_HTTPS_PASSWORD:?Run Docker/Initialize.ps1}
+    ports:
+      - "${CCODER_WORKFLOW_HTTP_PORT:-800}:800"
+      - "${CCODER_WORKFLOW_HTTPS_PORT:-4433}:4433"
+    volumes:
+      - ./.https/ccoder-localhost.pfx:/https/ccoder-localhost.pfx:ro
+    extra_hosts:
+      - host.docker.internal:host-gateway
+
+  application:
+    image: ghcr.io/ccoder-co-uk/ccoder-core-application:latest
+    pull_policy: always
+    environment:
+      <<: *core-environment
+      CCODER_WEB_URLS: http://+:80;https://+:443
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/ccoder-localhost.pfx
+      ASPNETCORE_Kestrel__Certificates__Default__Password: ${CCODER_HTTPS_PASSWORD:?Run Docker/Initialize.ps1}
+    depends_on:
+      workflow:
+        condition: service_started
+    ports:
+      - "${CCODER_WEB_HTTP_PORT:-80}:80"
+      - "${CCODER_WEB_HTTPS_PORT:-443}:443"
+    volumes:
+      - ./.https/ccoder-localhost.pfx:/https/ccoder-localhost.pfx:ro
+    extra_hosts:
+      - host.docker.internal:host-gateway
