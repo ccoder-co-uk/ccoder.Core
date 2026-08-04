@@ -80,6 +80,24 @@ setup, startup, smoke-test, and clean-reset instructions. The setup script
 generates development-only secrets in an ignored local file; the repository
 does not contain working credentials.
 
+## Application Releases
+
+The application release publisher creates immutable versioned output and a
+`latest` copy from the same successfully published files:
+
+```powershell
+./deploy/release/Publish-Applications.ps1 -Version 2026.8.4.1530
+```
+
+Output is written beneath `artifacts/applications`, including separate Web,
+HostedServices, and Workflow directories, versioned and `latest` ZIP archives,
+release manifests, and SHA-256 checksums. The GitHub workflow uses this same
+publisher and builds two Docker images from the identical `latest` copy. The
+Application image contains public Web and loopback-only HostedServices
+processes, while the Workflow image is independently addressable;
+the application archives and containers therefore contain the same compiled
+release.
+
 ## Build And Test
 
 ```powershell

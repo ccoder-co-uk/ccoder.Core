@@ -1,0 +1,30 @@
+FROM mcr.microsoft.com/dotnet/aspnet:10.0
+
+ARG VERSION
+ARG COMMIT
+
+LABEL org.opencontainers.image.title="cCoder.Core Application"
+LABEL org.opencontainers.image.version="${VERSION}"
+LABEL org.opencontainers.image.revision="${COMMIT}"
+LABEL org.opencontainers.image.source="https://github.com/ccoder-co-uk/cCoder.Core"
+
+WORKDIR /app
+
+RUN apt-get update \
+    && apt-get install --yes --no-install-recommends curl tini \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY Web/ /app/Web/
+COPY HostedServices/ /app/HostedServices/
+COPY deploy/docker/start-application.sh /app/start-application.sh
+
+RUN chmod +x /app/start-application.sh
+
+ENV CCODER_WEB_URLS=http://+:80
+ENV CCODER_HOSTED_SERVICES_URLS=http://localhost:5100
+EXPOSE 80 443
+
+HEALTHCHECK --interval=10s --timeout=5s --retries=20 --start-period=30s \
+    CMD curl --fail --silent http://localhost:80/Health || exit 1
+
+ENTRYPOINT ["/usr/bin/tini", "--", "/app/start-application.sh"]

@@ -1,0 +1,149 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+
+name: application-release
+
+on:
+  workflow_run:
+    workflows:
+      - publish
+    types:
+      - completed
+    branches:
+      - main
+
+concurrency:
+  group: application-release-main
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  actions: read
+  packages: write
+
+env:
+  APPLICATION_DIRECTORY: ${{ github.workspace }}/artifacts/applications
+  IMAGE_PREFIX: ghcr.io/ccoder-co-uk/ccoder-core
+
+jobs:
+  publish-application-release:
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout released source
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          path: ccoder.Core
+
+      - name: Download application artifacts
+        uses: actions/download-artifact@v8
+        with:
+          name: applications
+          path: ${{ env.APPLICATION_DIRECTORY }}
+          repository: ${{ github.repository }}
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Read release metadata
+        id: release
+        shell: pwsh
+        run: |
+          $manifest = Get-Content `
+            -Raw `
+            -LiteralPath "${{ env.APPLICATION_DIRECTORY }}/publish/latest/Web/release-manifest.json" |
+            ConvertFrom-Json
+          "version=$($manifest.version)" >> $env:GITHUB_OUTPUT
+
+      - name: Build application images
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+          SOURCE_COMMIT: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          set -euo pipefail
+          context="${APPLICATION_DIRECTORY}/publish/latest"
+          mkdir -p "${context}/deploy/docker"
+          cp ccoder.Core/deploy/docker/start-application.sh \
+            "${context}/deploy/docker/start-application.sh"
+
+          docker build \
+            --file ccoder.Core/deploy/docker/Dockerfile.application \
+            --build-arg VERSION="${VERSION}" \
+            --build-arg COMMIT="${SOURCE_COMMIT}" \
+            --tag "${IMAGE_PREFIX}-application:${VERSION}" \
+            "${context}"
+
+          docker build \
+            --file ccoder.Core/deploy/docker/Dockerfile.workflow \
+            --build-arg VERSION="${VERSION}" \
+            --build-arg COMMIT="${SOURCE_COMMIT}" \
+            --tag "${IMAGE_PREFIX}-workflow:${VERSION}" \
+            "${context}"
+
+          docker tag "${IMAGE_PREFIX}-application:${VERSION}" "${IMAGE_PREFIX}-application:latest"
+          docker tag "${IMAGE_PREFIX}-workflow:${VERSION}" "${IMAGE_PREFIX}-workflow:latest"
+
+      - name: Smoke-test two-container topology
+        run: |
+          set -euo pipefail
+          pwsh -File ccoder.Core/deploy/compose/Initialize.ps1
+          docker compose \
+            --env-file ccoder.Core/deploy/compose/.env \
+            --file ccoder.Core/deploy/compose/compose.yml \
+            up --detach --wait --wait-timeout 240
+          curl --fail --insecure \
+            --resolve localhost:443:127.0.0.1 \
+            https://localhost/Health
+          curl --fail --insecure \
+            --resolve app2.localhost:443:127.0.0.1 \
+            https://app2.localhost/Health
+          curl --fail --insecure https://localhost:4433/api/Health
+
+      - name: Show container logs after failure
+        if: failure()
+        run: |
+          docker compose \
+            --env-file ccoder.Core/deploy/compose/.env \
+            --file ccoder.Core/deploy/compose/compose.yml \
+            logs --no-color
+
+      - name: Stop smoke-test environment
+        if: always()
+        run: |
+          docker compose \
+            --env-file ccoder.Core/deploy/compose/.env \
+            --file ccoder.Core/deploy/compose/compose.yml \
+            down --volumes
+
+      - name: Publish versioned and latest images
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          set -euo pipefail
+          echo "${GH_TOKEN}" | docker login ghcr.io --username "${{ github.actor }}" --password-stdin
+
+          for application in application workflow; do
+            docker push "${IMAGE_PREFIX}-${application}:${VERSION}"
+            docker push "${IMAGE_PREFIX}-${application}:latest"
+          done
+
+      - name: Create GitHub application release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.release.outputs.version }}
+          SOURCE_COMMIT: ${{ github.event.workflow_run.head_sha }}
+        shell: pwsh
+        run: |
+          gh release create "${{ env.VERSION }}" `
+            --repo "${{ github.repository }}" `
+            --target "${{ env.SOURCE_COMMIT }}" `
+            --title "cCoder.Core ${{ env.VERSION }}" `
+            --generate-notes `
+            --latest `
+            "${{ env.APPLICATION_DIRECTORY }}/archives/"*.zip `
+            "${{ env.APPLICATION_DIRECTORY }}/archives/SHA256SUMS.txt"

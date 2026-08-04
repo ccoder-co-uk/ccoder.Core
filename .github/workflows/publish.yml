@@ -13,6 +13,7 @@ env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
   DOTNET_NOLOGO: true
   NUGET_DIRECTORY: ${{ github.workspace }}/artifacts/nuget
+  APPLICATION_DIRECTORY: ${{ github.workspace }}/artifacts/applications
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -28,7 +29,9 @@ defaults:
 jobs:
   build-test-pack:
     runs-on: [self-hosted, Windows, X64, test]
-    timeout-minutes: 20
+    timeout-minutes: 30
+    outputs:
+      version: ${{ steps.version.outputs.value }}
     defaults:
       run:
         shell: powershell
@@ -72,7 +75,17 @@ jobs:
           New-Item -ItemType Directory -Path "${{ env.NUGET_DIRECTORY }}" -Force | Out-Null
           dotnet pack ccoder.Core/src/cCoder.Core/cCoder.Core.csproj -c Release --no-build --no-restore --output "${{ env.NUGET_DIRECTORY }}" /p:Version="${{ steps.version.outputs.value }}"
 
+      - name: Publish applications
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          & ccoder.Core/deploy/release/Publish-Applications.ps1 `
+            -Version "${{ steps.version.outputs.value }}" `
+            -OutputRoot "${{ env.APPLICATION_DIRECTORY }}" `
+            -Commit "${{ github.sha }}" `
+            -NoBuild
+
       - name: Upload package artifacts
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/upload-artifact@v7
         with:
           name: nuget
@@ -83,7 +96,17 @@ jobs:
             ${{ env.NUGET_DIRECTORY }}/*.nupkg
             !${{ env.NUGET_DIRECTORY }}/*.snupkg
 
-  publish:
+      - name: Upload application artifacts
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v7
+        with:
+          name: applications
+          compression-level: 0
+          if-no-files-found: error
+          retention-days: 14
+          path: ${{ env.APPLICATION_DIRECTORY }}
+
+  publish-nuget:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     needs: build-test-pack

@@ -1,7 +1,6 @@
 [CmdletBinding()]
 param(
-    [int] $WebPort = 5099,
-    [int] $HostedServicesPort = 5100,
+    [int] $WebPort = 80,
     [int] $Attempts = 30,
     [int] $DelaySeconds = 2
 )
@@ -37,4 +36,3 @@ function Wait-ForHealth {
 }
 
 Wait-ForHealth -Name "Web" -Uri "http://localhost:$WebPort/Health"
-Wait-ForHealth -Name "HostedServices" -Uri "http://localhost:$HostedServicesPort/Health"
