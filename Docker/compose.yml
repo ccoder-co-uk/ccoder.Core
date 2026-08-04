@@ -21,7 +21,6 @@ services:
     image: ghcr.io/ccoder-co-uk/ccoder-core-workflow:latest
     pull_policy: always
     environment:
-      AzureWebJobsStorage: ${CCODER_AZURE_WEBJOBS_STORAGE:?Set CCODER_AZURE_WEBJOBS_STORAGE in Docker/.env}
       FUNCTIONS_WORKER_RUNTIME: dotnet-isolated
       Data__ConnectionString: ${CCODER_CORE_CONNECTION_STRING}
       Workflow__ConnectionString: ${CCODER_CORE_CONNECTION_STRING}

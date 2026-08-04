@@ -79,7 +79,6 @@ $content = @"
 # SQL on the host is normally Server=host.docker.internal,1433.
 CCODER_CORE_CONNECTION_STRING=
 CCODER_SECURITY_CONNECTION_STRING=
-CCODER_AZURE_WEBJOBS_STORAGE=
 CCODER_DECRYPTION_KEY=$decryptionKey
 CCODER_HTTPS_PASSWORD=$certificatePassword
 CCODER_WEB_HTTP_PORT=80
@@ -95,4 +94,4 @@ CCODER_WORKFLOW_HTTPS_PORT=4433
 
 Write-Host "Created local Docker configuration at $environmentPath"
 Write-Host "Created a localhost and *.localhost development certificate at $certificatePath"
-Write-Host "Set the three blank connection settings in .env, then run: docker compose pull; docker compose up"
+Write-Host "Set the two blank SQL connection strings in .env, then run: docker compose pull; docker compose up"
