@@ -1,0 +1,96 @@
+name: ccoder-core
+
+x-ccoder-environment: &ccoder-environment
+  ASPNETCORE_ENVIRONMENT: Development
+  AppSecurity__ConnectionString: &core-connection-string Server=sqlserver,1433;Database=cCoder-Core;User Id=sa;Password=${CCODER_SQL_PASSWORD:?Run deploy/compose/Initialize.ps1};Encrypt=True;TrustServerCertificate=True
+  ContentManagement__ConnectionString: *core-connection-string
+  DocumentManagement__ConnectionString: *core-connection-string
+  Logging__ConnectionString: *core-connection-string
+  Mail__ConnectionString: *core-connection-string
+  Packaging__ConnectionString: *core-connection-string
+  Workflow__ConnectionString: *core-connection-string
+  Security__ConnectionString: Server=sqlserver,1433;Database=cCoder-SSO;User Id=sa;Password=${CCODER_SQL_PASSWORD:?Run deploy/compose/Initialize.ps1};Encrypt=True;TrustServerCertificate=True
+  Security__DecryptionKey: ${CCODER_DECRYPTION_KEY:?Run deploy/compose/Initialize.ps1}
+  Eventing__ProviderType: Http
+  Eventing__Http__HubUrl: http://hosted-services:8080
+  ContentManagement__WorkflowServiceUrl: http://hosted-services:8080/api/
+  Workflow__ServiceUrl: http://workflow:80/
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2025-latest
+    environment:
+      ACCEPT_EULA: Y
+      MSSQL_PID: Developer
+      MSSQL_SA_PASSWORD: ${CCODER_SQL_PASSWORD:?Run deploy/compose/Initialize.ps1}
+    ports:
+      - "${CCODER_SQL_PORT:-1433}:1433"
+    volumes:
+      - sql-data:/var/opt/mssql
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$$MSSQL_SA_PASSWORD" -C -Q "SELECT 1" || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite:3.35.0
+    command: azurite --blobHost 0.0.0.0 --queueHost 0.0.0.0 --tableHost 0.0.0.0
+    volumes:
+      - azurite-data:/data
+
+  workflow:
+    build:
+      context: ../..
+      dockerfile: src/Apps/Workflow/Dockerfile
+    environment:
+      AzureWebJobsStorage: DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://azurite:10000/devstoreaccount1;QueueEndpoint=http://azurite:10001/devstoreaccount1;TableEndpoint=http://azurite:10002/devstoreaccount1
+      FUNCTIONS_WORKER_RUNTIME: dotnet-isolated
+      Data__ConnectionString: *core-connection-string
+      Workflow__ConnectionString: *core-connection-string
+      Security__ConnectionString: Server=sqlserver,1433;Database=cCoder-SSO;User Id=sa;Password=${CCODER_SQL_PASSWORD:?Run deploy/compose/Initialize.ps1};Encrypt=True;TrustServerCertificate=True
+      Security__DecryptionKey: ${CCODER_DECRYPTION_KEY:?Run deploy/compose/Initialize.ps1}
+    depends_on:
+      azurite:
+        condition: service_started
+      sqlserver:
+        condition: service_healthy
+    ports:
+      - "${CCODER_WORKFLOW_PORT:-7071}:80"
+
+  hosted-services:
+    build:
+      context: ../..
+      dockerfile: src/Apps/HostedServices/Dockerfile
+    environment:
+      <<: *ccoder-environment
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      workflow:
+        condition: service_started
+    ports:
+      - "${CCODER_HOSTED_SERVICES_PORT:-5100}:8080"
+
+  web:
+    build:
+      context: ../..
+      dockerfile: src/Apps/Web/Dockerfile
+    environment:
+      <<: *ccoder-environment
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      workflow:
+        condition: service_started
+      hosted-services:
+        condition: service_healthy
+    ports:
+      - "${CCODER_WEB_PORT:-5099}:8080"
+
+volumes:
+  azurite-data:
+  sql-data:
