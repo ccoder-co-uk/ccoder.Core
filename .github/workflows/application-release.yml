@@ -137,11 +137,23 @@ jobs:
           SOURCE_COMMIT: ${{ github.event.workflow_run.head_sha }}
         shell: pwsh
         run: |
-          gh release create "${{ env.VERSION }}" `
-            --repo "${{ github.repository }}" `
-            --target "${{ env.SOURCE_COMMIT }}" `
-            --title "cCoder.Core ${{ env.VERSION }}" `
-            --generate-notes `
-            --latest `
-            "${{ env.APPLICATION_DIRECTORY }}/archives/"*.zip `
+          $releaseAssets = @(
+            Get-ChildItem `
+              -LiteralPath "${{ env.APPLICATION_DIRECTORY }}/archives" `
+              -Filter "*.zip" |
+              Sort-Object Name |
+              Select-Object -ExpandProperty FullName
+          )
+          $releaseAssets += `
             "${{ env.APPLICATION_DIRECTORY }}/archives/SHA256SUMS.txt"
+
+          $releaseArguments = @(
+            "release", "create", "${{ env.VERSION }}",
+            "--repo", "${{ github.repository }}",
+            "--target", "${{ env.SOURCE_COMMIT }}",
+            "--title", "cCoder.Core ${{ env.VERSION }}",
+            "--generate-notes",
+            "--latest"
+          )
+
+          gh @releaseArguments @releaseAssets
