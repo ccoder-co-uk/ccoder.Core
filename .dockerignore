@@ -1,0 +1,10 @@
+**/bin
+**/obj
+**/node_modules
+**/.vs
+**/TestResults
+.git
+.github
+deploy/compose/.env
+artifacts
+docs
