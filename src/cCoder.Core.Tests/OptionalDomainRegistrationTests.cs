@@ -15,6 +15,8 @@ using cCoder.Security.Models;
 using cCoder.Workflow.Models;
 using FluentAssertions;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Antiforgery;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.OData;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,6 +29,40 @@ namespace cCoder.Core.Tests;
 
 public sealed partial class OptionalDomainRegistrationTests
 {
+    [Fact]
+    public void AddCoreWeb_ShouldSecureAntiforgeryCookies()
+    {
+        // Given
+        IServiceCollection services = new ServiceCollection();
+
+        services.AddSingleton<IWebHostEnvironment>(
+            implementationInstance: Mock.Of<IWebHostEnvironment>());
+
+        // When
+        services.AddCoreWeb(
+            configuration: CoreConfigurationFactory.Create());
+
+        using ServiceProvider serviceProvider =
+            services.BuildServiceProvider();
+
+        AntiforgeryOptions options = serviceProvider
+            .GetRequiredService<IOptions<AntiforgeryOptions>>()
+            .Value;
+
+        // Then
+        options.Cookie.HttpOnly
+            .Should()
+            .BeTrue();
+
+        options.Cookie.SameSite
+            .Should()
+            .Be(expected: SameSiteMode.Lax);
+
+        options.Cookie.SecurePolicy
+            .Should()
+            .Be(expected: CookieSecurePolicy.Always);
+    }
+
     [Fact]
     public void AddCoreWeb_ShouldNotAdvertiseOmittedDomains()
     {
