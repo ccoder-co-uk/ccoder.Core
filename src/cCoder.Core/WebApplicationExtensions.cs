@@ -92,11 +92,6 @@ public static partial class WebApplicationExtensions
         {
             context.Response.OnStarting(callback: () =>
             {
-                if (context.Request.Query["edit"] != "true")
-                {
-                    context.Response.Headers.Append(key: "X-Frame-Options", value: "DENY");
-                }
-
                 _ = context.Response.Headers.Remove(key: "X-AspNet-Version");
                 _ = context.Response.Headers.Remove(key: "X-AspNetMvc-Version");
                 _ = context.Response.Headers.Remove(key: "X-Sourcefiles");
