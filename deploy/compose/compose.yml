@@ -12,9 +12,9 @@ x-ccoder-environment: &ccoder-environment
   Security__ConnectionString: Server=sqlserver,1433;Database=cCoder-SSO;User Id=sa;Password=${CCODER_SQL_PASSWORD:?Run deploy/compose/Initialize.ps1};Encrypt=True;TrustServerCertificate=True
   Security__DecryptionKey: ${CCODER_DECRYPTION_KEY:?Run deploy/compose/Initialize.ps1}
   Eventing__ProviderType: Http
-  Eventing__Http__HubUrl: http://hosted-services:8080
-  ContentManagement__WorkflowServiceUrl: http://hosted-services:8080/api/
-  Workflow__ServiceUrl: http://workflow:80/
+  Eventing__Http__HubUrl: http://localhost:5100
+  ContentManagement__WorkflowServiceUrl: http://localhost:5100/api/
+  Workflow__ServiceUrl: http://workflow:800/
 
 services:
   sqlserver:
@@ -43,9 +43,7 @@ services:
       - azurite-data:/data
 
   workflow:
-    build:
-      context: ../..
-      dockerfile: src/Apps/Workflow/Dockerfile
+    image: ghcr.io/ccoder-co-uk/ccoder-core-workflow:latest
     environment:
       AzureWebJobsStorage: DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://azurite:10000/devstoreaccount1;QueueEndpoint=http://azurite:10001/devstoreaccount1;TableEndpoint=http://azurite:10002/devstoreaccount1
       FUNCTIONS_WORKER_RUNTIME: dotnet-isolated
@@ -53,43 +51,37 @@ services:
       Workflow__ConnectionString: *core-connection-string
       Security__ConnectionString: Server=sqlserver,1433;Database=cCoder-SSO;User Id=sa;Password=${CCODER_SQL_PASSWORD:?Run deploy/compose/Initialize.ps1};Encrypt=True;TrustServerCertificate=True
       Security__DecryptionKey: ${CCODER_DECRYPTION_KEY:?Run deploy/compose/Initialize.ps1}
+      ASPNETCORE_URLS: http://+:800;https://+:4433
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/ccoder-localhost.pfx
+      ASPNETCORE_Kestrel__Certificates__Default__Password: ${CCODER_HTTPS_PASSWORD:?Run deploy/compose/Initialize.ps1}
     depends_on:
       azurite:
         condition: service_started
       sqlserver:
         condition: service_healthy
     ports:
-      - "${CCODER_WORKFLOW_PORT:-7071}:80"
+      - "${CCODER_WORKFLOW_HTTP_PORT:-800}:800"
+      - "${CCODER_WORKFLOW_HTTPS_PORT:-4433}:4433"
+    volumes:
+      - ./.https/ccoder-localhost.pfx:/https/ccoder-localhost.pfx:ro
 
-  hosted-services:
-    build:
-      context: ../..
-      dockerfile: src/Apps/HostedServices/Dockerfile
+  application:
+    image: ghcr.io/ccoder-co-uk/ccoder-core-application:latest
     environment:
       <<: *ccoder-environment
+      CCODER_WEB_URLS: http://+:80;https://+:443
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/ccoder-localhost.pfx
+      ASPNETCORE_Kestrel__Certificates__Default__Password: ${CCODER_HTTPS_PASSWORD:?Run deploy/compose/Initialize.ps1}
     depends_on:
       sqlserver:
         condition: service_healthy
       workflow:
         condition: service_started
     ports:
-      - "${CCODER_HOSTED_SERVICES_PORT:-5100}:8080"
-
-  web:
-    build:
-      context: ../..
-      dockerfile: src/Apps/Web/Dockerfile
-    environment:
-      <<: *ccoder-environment
-    depends_on:
-      sqlserver:
-        condition: service_healthy
-      workflow:
-        condition: service_started
-      hosted-services:
-        condition: service_healthy
-    ports:
-      - "${CCODER_WEB_PORT:-5099}:8080"
+      - "${CCODER_WEB_HTTP_PORT:-80}:80"
+      - "${CCODER_WEB_HTTPS_PORT:-443}:443"
+    volumes:
+      - ./.https/ccoder-localhost.pfx:/https/ccoder-localhost.pfx:ro
 
 volumes:
   azurite-data:
