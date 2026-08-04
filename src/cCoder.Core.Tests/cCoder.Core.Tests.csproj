@@ -36,5 +36,8 @@
     <None Include="..\Apps\HostedServices\appsettings.json"
           Link="Configuration\HostedServices.appsettings.json"
           CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\Apps\Workflow\local.settings.json"
+          Link="Configuration\Workflow.local.settings.json"
+          CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>
