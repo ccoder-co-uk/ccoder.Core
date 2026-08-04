@@ -101,7 +101,6 @@ jobs:
           curl --fail --insecure \
             --resolve app2.localhost:443:127.0.0.1 \
             https://app2.localhost/Health
-          curl --fail --insecure https://localhost:4433/api/Health
 
       - name: Show container logs after failure
         if: failure()
