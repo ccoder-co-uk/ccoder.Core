@@ -1,0 +1,24 @@
+{
+  "AllowedHosts": "*",
+  "Logging": {
+    "LogLevel": {
+      "Default": "Debug",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information",
+      "Microsoft.AspNetCore": "Warning",
+      "EventLibrary": "Warning"
+    }
+  },
+  "ConnectionStrings": {
+    "SSO": "",
+    "Core": ""
+  },
+  "Settings": {
+    "DecryptionKey": "",
+    "sslPort": 7099
+  },
+  "Services": {
+    "SSO": "https://localhost:7099/api/Security/",
+    "Workflow": "http://localhost:7071/api/"
+  }
+}
