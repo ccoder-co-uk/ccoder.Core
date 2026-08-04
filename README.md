@@ -68,6 +68,18 @@ and press F5.
 There is no configuration conversion step and no local secrets file to
 generate.
 
+## Optional Docker Compose Environment
+
+Contributors who prefer a container-based environment can run the Web,
+HostedServices, and Workflow reference applications with local SQL Server and
+Azurite dependencies. Docker remains optional and the containers use the same
+environment-variable configuration contract described above.
+
+See [the Docker Compose development environment](deploy/compose/README.md) for
+setup, startup, smoke-test, and clean-reset instructions. The setup script
+generates development-only secrets in an ignored local file; the repository
+does not contain working credentials.
+
 ## Build And Test
 
 ```powershell
