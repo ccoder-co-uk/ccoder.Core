@@ -6,16 +6,6 @@ namespace cCoder.Core.Models;
 
 public sealed class FirstTimeSetupRequest
 {
-    public FirstTimeSetupRequest()
-    {
-        Domain = string.Empty;
-        TenantName = string.Empty;
-        DisplayName = string.Empty;
-        Email = string.Empty;
-        Password = string.Empty;
-        ConfirmPassword = string.Empty;
-    }
-
     public string Domain { get; set; }
 
     public string TenantName { get; set; }

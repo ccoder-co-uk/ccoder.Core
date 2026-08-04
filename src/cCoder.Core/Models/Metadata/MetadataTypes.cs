@@ -2,48 +2,10 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using System.Collections;
-using cCoder.Data.Extensions;
-
 namespace cCoder.Core.Models.Metadata;
 
 public class MetadataContainer
 {
-    private static readonly Dictionary<Type, string> TypeLookup = new()
-    {
-        { typeof(short), "number" },
-        { typeof(int), "number" },
-        { typeof(long), "number" },
-        { typeof(short?), "number" },
-        { typeof(int?), "number" },
-        { typeof(long?), "number" },
-        { typeof(ushort), "number" },
-        { typeof(uint), "number" },
-        { typeof(ulong), "number" },
-        { typeof(ushort?), "number" },
-        { typeof(uint?), "number" },
-        { typeof(ulong?), "number" },
-        { typeof(byte), "number" },
-        { typeof(byte?), "number" },
-        { typeof(decimal), "number" },
-        { typeof(decimal?), "number" },
-        { typeof(string), "string" },
-        { typeof(DateTime), "date" },
-        { typeof(DateTime?), "date" },
-        { typeof(TimeSpan), "time" },
-        { typeof(TimeSpan?), "time" },
-        { typeof(DateTimeOffset), "date" },
-        { typeof(DateTimeOffset?), "date" },
-        { typeof(Guid), "guid" },
-        { typeof(Guid?), "guid" },
-        { typeof(bool), "bool" },
-        { typeof(bool?), "bool" },
-        { typeof(double), "number" },
-        { typeof(double?), "number" },
-        { typeof(float), "number" },
-        { typeof(float?), "number" },
-    };
-
     public string Type { get; set; }
     public string ServerTypeName { get; set; }
     public bool IsValueType { get; set; }
@@ -57,37 +19,5 @@ public class MetadataContainer
     public string Description { get; set; }
     public string ServerType { get; set; }
     public IEnumerable<PropertyContainer> Properties { get; set; }
-
-    public MetadataContainer()
-    {
-    }
-
-    public MetadataContainer(Type type)
-    {
-        IsValueType = type.IsValueType || type == typeof(string);
-
-        Type = type == typeof(string)
-            ? "string"
-            : typeof(IEnumerable).IsAssignableFrom(c: type)
-                ? "array"
-                : TypeLookup.TryGetValue(key: type, value: out string typeName)
-                    ? typeName
-                    : "object";
-
-        Name = type.Name;
-        DisplayName = type.Name;
-        Description = type.Name;
-        ServerType = type.AssemblyQualifiedName ?? type.FullName ?? type.Name;
-        ServerTypeName = type.FullName ?? type.Name;
-        Properties = [];
-    }
-
-    public MetadataContainer(Type type, bool isEntity, bool hasEndpoint)
-        : this(type)
-    {
-        IsEntity = isEntity;
-        IsJoinEntity = isEntity && type.IsJoinType();
-        HasEndpoint = hasEndpoint;
-    }
 
 }

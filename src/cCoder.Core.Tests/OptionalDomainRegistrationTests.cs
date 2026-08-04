@@ -36,7 +36,8 @@ public sealed partial class OptionalDomainRegistrationTests
                 .Build();
 
         CoreConfiguration configuration =
-            new(applicationConfiguration);
+            CoreConfigurationFactory.Create(
+                configuration: applicationConfiguration);
 
         IServiceCollection services = new ServiceCollection();
 
@@ -103,7 +104,8 @@ public sealed partial class OptionalDomainRegistrationTests
             .Build();
 
         CoreConfiguration configuration =
-            new(applicationConfiguration);
+            CoreConfigurationFactory.Create(
+                configuration: applicationConfiguration);
 
         IServiceCollection services = new ServiceCollection();
 
@@ -154,7 +156,8 @@ public sealed partial class OptionalDomainRegistrationTests
             .Build();
 
         CoreConfiguration configuration =
-            new(applicationConfiguration);
+            CoreConfigurationFactory.Create(
+                configuration: applicationConfiguration);
 
         IServiceCollection services = new ServiceCollection();
 

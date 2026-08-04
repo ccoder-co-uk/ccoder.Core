@@ -26,7 +26,8 @@ public sealed partial class CoreConfigurationBindingTests
 
         // When
         Action action = () =>
-            _ = new CoreConfiguration(applicationConfiguration);
+            _ = CoreConfigurationFactory.Create(
+                configuration: applicationConfiguration);
 
         // Then
         action
@@ -80,7 +81,8 @@ public sealed partial class CoreConfigurationBindingTests
 
         // When
         CoreConfiguration result =
-            new(configuration);
+            CoreConfigurationFactory.Create(
+                configuration: configuration);
 
         // Then
         result.AppSecurity.ConnectionString
@@ -145,7 +147,8 @@ public sealed partial class CoreConfigurationBindingTests
 
         // When
         CoreConfiguration result =
-            new(configuration);
+            CoreConfigurationFactory.Create(
+                configuration: configuration);
 
         // Then
         object[] domains =
@@ -183,7 +186,7 @@ public sealed partial class CoreConfigurationBindingTests
 
         // When
         Action action = () =>
-            _ = new CoreConfiguration(configuration: configuration);
+            _ = CoreConfigurationFactory.Create(configuration: configuration);
 
         // Then
         InvalidOperationException exception = action

@@ -536,16 +536,16 @@
               "IsDependencyBoundary": true
             },
             {
-              "TypeName": "cCoder.Core.IServiceCollectionExtensions",
-              "MethodName": "AddCoreHostedServices",
-              "MethodId": "cCoder.Core.IServiceCollectionExtensions.AddCoreHostedServices(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action\u003CcCoder.Core.Models.CoreConfiguration\u003E)",
+              "TypeName": "cCoder.Core.CoreConfigurationFactory",
+              "MethodName": "Create",
+              "MethodId": "cCoder.Core.CoreConfigurationFactory.Create()",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
             },
             {
-              "TypeName": "cCoder.Core.Models.CoreConfiguration",
-              "MethodName": ".ctor",
-              "MethodId": "cCoder.Core.Models.CoreConfiguration..ctor()",
+              "TypeName": "cCoder.Core.IServiceCollectionExtensions",
+              "MethodName": "AddCoreHostedServices",
+              "MethodId": "cCoder.Core.IServiceCollectionExtensions.AddCoreHostedServices(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action\u003CcCoder.Core.Models.CoreConfiguration\u003E)",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
             }

@@ -3,6 +3,7 @@
 // ---------------------------------------------------------------
 
 using cCoder.ContentManagement.Models.OData;
+using cCoder.Data.Extensions;
 using cCoder.Data.Exposures;
 using cCoder.Data.Models;
 using cCoder.Security.Exposures;
@@ -11,6 +12,9 @@ using cCoder.Security.Models.Entities;
 using cCoder.Security.Models.Exceptions;
 using System.Security;
 using System.Text.Json;
+using System.Collections;
+using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 
 namespace cCoder.Core;
 
@@ -270,11 +274,104 @@ public static partial class WebApplicationExtensions
     }
 
     private static ExtendedMetadataContainer SecurityEntity<TEntity>() =>
-        new(
-            type: typeof(TEntity),
-            isEntity: true,
-            hasEndpoint: true)
+        CreateSecurityExtendedMetadataContainer(type: typeof(TEntity));
+
+    private static ExtendedMetadataContainer CreateSecurityExtendedMetadataContainer(
+        Type type)
+    {
+        bool isValueType = type.IsValueType || type == typeof(string);
+
+        return new ExtendedMetadataContainer
         {
+            IsValueType = isValueType,
+            Type = GetSecurityMetadataTypeName(type: type),
+            Name = type.Name,
+            DisplayName = type.Name,
+            Description = type.Name,
+            ServerType = type.AssemblyQualifiedName,
+            ServerTypeName = GetSecurityCSharpTypeName(type: type),
+            Properties = isValueType
+                ? []
+                : type.GetProperties()
+                    .Select(selector: CreateSecurityPropertyContainer)
+                    .ToArray(),
+            IsEntity = true,
+            IsJoinEntity = type.IsJoinType(),
+            HasEndpoint = true,
             Category = SecurityMetadataScope,
         };
+    }
+
+    private static PropertyContainer CreateSecurityPropertyContainer(
+        PropertyInfo property) =>
+        new()
+        {
+            Name = property.Name,
+            Type = GetSecurityMetadataTypeName(type: property.PropertyType),
+            ServerType = property.PropertyType.ToString(),
+            ServerTypeName = GetSecurityCSharpTypeName(type: property.PropertyType),
+            IsValueType = property.PropertyType.IsValueType
+                || property.PropertyType == typeof(string),
+            DisplayName = property.Name,
+            ShortDisplayName = property.Name,
+            Description = property.Name,
+            IsReadOnly = !property.CanWrite,
+            Template = property.GetCustomAttribute<KeyAttribute>() is not null
+                || property.Name == "Id"
+                    ? "key"
+                    : property.Name,
+            IsRequired = (!(property.PropertyType.IsGenericType
+                    && property.PropertyType.GetGenericTypeDefinition()
+                        == typeof(Nullable<>))
+                && property.PropertyType.IsValueType)
+                || property.GetCustomAttribute<RequiredAttribute>() is not null,
+        };
+
+    private static string GetSecurityCSharpTypeName(Type type)
+    {
+        if (!type.IsGenericType)
+        {
+            return type.Name;
+        }
+
+        IEnumerable<string> genericNames = type.GenericTypeArguments
+            .Select(selector: GetSecurityCSharpTypeName);
+
+        return $"{type.Name.Split(separator: '`')[0]}<{string.Join(separator: ",", values: genericNames)}>"
+            .Replace(oldValue: "System.Object", newValue: "dynamic");
+    }
+
+    private static string GetSecurityMetadataTypeName(Type type)
+    {
+        if (type == typeof(string))
+        {
+            return "string";
+        }
+
+        if (typeof(IEnumerable).IsAssignableFrom(c: type))
+        {
+            return "array";
+        }
+
+        return Type.GetTypeCode(type: Nullable.GetUnderlyingType(nullableType: type) ?? type) switch
+        {
+            TypeCode.Boolean => "bool",
+            TypeCode.DateTime => "date",
+            TypeCode.Decimal => "number",
+            TypeCode.Double => "number",
+            TypeCode.Int16 => "number",
+            TypeCode.Int32 => "number",
+            TypeCode.Int64 => "number",
+            TypeCode.Byte => "number",
+            TypeCode.SByte => "number",
+            TypeCode.Single => "number",
+            TypeCode.UInt16 => "number",
+            TypeCode.UInt32 => "number",
+            TypeCode.UInt64 => "number",
+            _ when type == typeof(Guid) || type == typeof(Guid?) => "guid",
+            _ when type == typeof(TimeSpan) || type == typeof(TimeSpan?) => "time",
+            _ when type == typeof(DateTimeOffset) || type == typeof(DateTimeOffset?) => "date",
+            _ => "object",
+        };
+    }
 }

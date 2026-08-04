@@ -1260,6 +1260,99 @@
       ]
     },
     {
+      "Name": "cCoder.Core.CoreConfigurationFactory",
+      "StandardElementType": "Unknown",
+      "LineNumber": 20,
+      "IsPublic": true,
+      "Kind": "Class",
+      "BaseType": null,
+      "Interfaces": [],
+      "Properties": [],
+      "Methods": [
+        {
+          "Id": "cCoder.Core.CoreConfigurationFactory.Create()",
+          "Name": "Create",
+          "LineNumber": 22,
+          "Inputs": [],
+          "ReturnType": "cCoder.Core.Models.CoreConfiguration",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.CoreConfigurationFactory.Create(Microsoft.Extensions.Configuration.IConfiguration)",
+          "Name": "Create",
+          "LineNumber": 29,
+          "Inputs": [
+            {
+              "Name": "configuration",
+              "Type": "Microsoft.Extensions.Configuration.IConfiguration"
+            }
+          ],
+          "ReturnType": "cCoder.Core.Models.CoreConfiguration",
+          "Implements": [],
+          "Calls": [
+            {
+              "TypeName": "Microsoft.Extensions.Configuration.ConfigurationBinder",
+              "MethodName": "Bind",
+              "MethodId": "Microsoft.Extensions.Configuration.ConfigurationBinder.Bind(Microsoft.Extensions.Configuration.IConfiguration,System.Object?)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "Microsoft.Extensions.Configuration.ConfigurationBinder",
+              "MethodName": "Bind",
+              "MethodId": "Microsoft.Extensions.Configuration.ConfigurationBinder.Bind(Microsoft.Extensions.Configuration.IConfiguration,System.String,System.Object?)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "Microsoft.Extensions.Configuration.IConfiguration",
+              "MethodName": "GetSection",
+              "MethodId": "Microsoft.Extensions.Configuration.IConfiguration.GetSection(System.String)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "System.ArgumentNullException",
+              "MethodName": "ThrowIfNull",
+              "MethodId": "System.ArgumentNullException.ThrowIfNull(System.Object?,System.String?)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "cCoder.Core.CoreConfigurationFactory",
+              "MethodName": "Create",
+              "MethodId": "cCoder.Core.CoreConfigurationFactory.Create()",
+              "StandardElementType": "Unknown",
+              "IsDependencyBoundary": false
+            }
+          ],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        }
+      ]
+    },
+    {
       "Name": "cCoder.Core.Dependencies.Formatters.CsvFormatter",
       "StandardElementType": "Dependency",
       "LineNumber": 17,
@@ -1758,6 +1851,17 @@
           "HasTryCatch": false
         }
       ]
+    },
+    {
+      "Name": "cCoder.Core.Dependencies.Metadata.MetadataContainerDependency",
+      "StandardElementType": "Dependency",
+      "LineNumber": 11,
+      "IsPublic": false,
+      "Kind": "Class",
+      "BaseType": null,
+      "Interfaces": [],
+      "Properties": [],
+      "Methods": []
     },
     {
       "Name": "cCoder.Core.Dependencies.Middleware.CoreExceptionMiddleware",
@@ -4893,6 +4997,13 @@
               "IsDependencyBoundary": true
             },
             {
+              "TypeName": "cCoder.Core.CoreConfigurationFactory",
+              "MethodName": "Create",
+              "MethodId": "cCoder.Core.CoreConfigurationFactory.Create()",
+              "StandardElementType": "Unknown",
+              "IsDependencyBoundary": false
+            },
+            {
               "TypeName": "cCoder.Core.IServiceCollectionExtensions",
               "MethodName": "AddCoreHostedServices",
               "MethodId": "cCoder.Core.IServiceCollectionExtensions.AddCoreHostedServices(IServiceCollection,cCoder.Core.Models.CoreConfiguration)",
@@ -4972,6 +5083,13 @@
               "MethodId": "System.Action\u003CT\u003E.Invoke(T)",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "cCoder.Core.CoreConfigurationFactory",
+              "MethodName": "Create",
+              "MethodId": "cCoder.Core.CoreConfigurationFactory.Create()",
+              "StandardElementType": "Unknown",
+              "IsDependencyBoundary": false
             },
             {
               "TypeName": "cCoder.Core.IServiceCollectionExtensions",
@@ -5209,18 +5327,7 @@
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
-      "Interfaces": [
-        {
-          "Id": "System.Private.CoreLib:System.IEquatable\u003CcCoder.Core.Models.CoreAllowedOriginSnapshot\u003E",
-          "FullName": "System.IEquatable\u003CcCoder.Core.Models.CoreAllowedOriginSnapshot\u003E",
-          "Name": "IEquatable",
-          "Namespace": "System",
-          "AssemblyName": "System.Private.CoreLib",
-          "Kind": "Interface",
-          "IsInCurrentProject": false,
-          "StandardElementType": "Dependency"
-        }
-      ],
+      "Interfaces": [],
       "Properties": [
         {
           "Name": "Authorities",
@@ -5235,153 +5342,7 @@
           "Type": "System.Collections.Generic.IReadOnlySet\u003CSystem.String\u003E"
         }
       ],
-      "Methods": [
-        {
-          "Id": "cCoder.Core.Models.CoreAllowedOriginSnapshot.\u003CClone\u003E$()",
-          "Name": "\u003CClone\u003E$",
-          "LineNumber": 7,
-          "Inputs": [],
-          "ReturnType": "cCoder.Core.Models.CoreAllowedOriginSnapshot",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Models.CoreAllowedOriginSnapshot.Deconstruct(System.Collections.Generic.IReadOnlySet\u003CSystem.String\u003E,System.Collections.Generic.IReadOnlySet\u003CSystem.String\u003E,System.Collections.Generic.IReadOnlySet\u003CSystem.String\u003E)",
-          "Name": "Deconstruct",
-          "LineNumber": 7,
-          "Inputs": [
-            {
-              "Name": "ExactOrigins",
-              "Type": "System.Collections.Generic.IReadOnlySet\u003CSystem.String\u003E"
-            },
-            {
-              "Name": "Authorities",
-              "Type": "System.Collections.Generic.IReadOnlySet\u003CSystem.String\u003E"
-            },
-            {
-              "Name": "Hosts",
-              "Type": "System.Collections.Generic.IReadOnlySet\u003CSystem.String\u003E"
-            }
-          ],
-          "ReturnType": "System.Void",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Models.CoreAllowedOriginSnapshot.Equals(System.Object?)",
-          "Name": "Equals",
-          "LineNumber": 7,
-          "Inputs": [
-            {
-              "Name": "obj",
-              "Type": "System.Object?"
-            }
-          ],
-          "ReturnType": "System.Boolean",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Models.CoreAllowedOriginSnapshot.Equals(cCoder.Core.Models.CoreAllowedOriginSnapshot?)",
-          "Name": "Equals",
-          "LineNumber": 7,
-          "Inputs": [
-            {
-              "Name": "other",
-              "Type": "cCoder.Core.Models.CoreAllowedOriginSnapshot?"
-            }
-          ],
-          "ReturnType": "System.Boolean",
-          "Implements": [
-            "System.IEquatable\u003CcCoder.Core.Models.CoreAllowedOriginSnapshot\u003E.Equals(cCoder.Core.Models.CoreAllowedOriginSnapshot?)"
-          ],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Models.CoreAllowedOriginSnapshot.GetHashCode()",
-          "Name": "GetHashCode",
-          "LineNumber": 7,
-          "Inputs": [],
-          "ReturnType": "System.Int32",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Models.CoreAllowedOriginSnapshot.ToString()",
-          "Name": "ToString",
-          "LineNumber": 7,
-          "Inputs": [],
-          "ReturnType": "System.String",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        }
-      ]
+      "Methods": []
     },
     {
       "Name": "cCoder.Core.Models.CoreApiRouteDefinition",
@@ -5390,18 +5351,7 @@
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
-      "Interfaces": [
-        {
-          "Id": "System.Private.CoreLib:System.IEquatable\u003CcCoder.Core.Models.CoreApiRouteDefinition\u003E",
-          "FullName": "System.IEquatable\u003CcCoder.Core.Models.CoreApiRouteDefinition\u003E",
-          "Name": "IEquatable",
-          "Namespace": "System",
-          "AssemblyName": "System.Private.CoreLib",
-          "Kind": "Interface",
-          "IsInCurrentProject": false,
-          "StandardElementType": "Dependency"
-        }
-      ],
+      "Interfaces": [],
       "Properties": [
         {
           "Name": "Name",
@@ -5416,158 +5366,12 @@
           "Type": "System.String"
         }
       ],
-      "Methods": [
-        {
-          "Id": "cCoder.Core.Models.CoreApiRouteDefinition.\u003CClone\u003E$()",
-          "Name": "\u003CClone\u003E$",
-          "LineNumber": 9,
-          "Inputs": [],
-          "ReturnType": "cCoder.Core.Models.CoreApiRouteDefinition",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Models.CoreApiRouteDefinition.Deconstruct(System.String,System.String,IEdmModel)",
-          "Name": "Deconstruct",
-          "LineNumber": 9,
-          "Inputs": [
-            {
-              "Name": "Name",
-              "Type": "System.String"
-            },
-            {
-              "Name": "RoutePath",
-              "Type": "System.String"
-            },
-            {
-              "Name": "RouteModel",
-              "Type": "IEdmModel"
-            }
-          ],
-          "ReturnType": "System.Void",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Models.CoreApiRouteDefinition.Equals(System.Object?)",
-          "Name": "Equals",
-          "LineNumber": 9,
-          "Inputs": [
-            {
-              "Name": "obj",
-              "Type": "System.Object?"
-            }
-          ],
-          "ReturnType": "System.Boolean",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Models.CoreApiRouteDefinition.Equals(cCoder.Core.Models.CoreApiRouteDefinition?)",
-          "Name": "Equals",
-          "LineNumber": 9,
-          "Inputs": [
-            {
-              "Name": "other",
-              "Type": "cCoder.Core.Models.CoreApiRouteDefinition?"
-            }
-          ],
-          "ReturnType": "System.Boolean",
-          "Implements": [
-            "System.IEquatable\u003CcCoder.Core.Models.CoreApiRouteDefinition\u003E.Equals(cCoder.Core.Models.CoreApiRouteDefinition?)"
-          ],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Models.CoreApiRouteDefinition.GetHashCode()",
-          "Name": "GetHashCode",
-          "LineNumber": 9,
-          "Inputs": [],
-          "ReturnType": "System.Int32",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Models.CoreApiRouteDefinition.ToString()",
-          "Name": "ToString",
-          "LineNumber": 9,
-          "Inputs": [],
-          "ReturnType": "System.String",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        }
-      ]
+      "Methods": []
     },
     {
       "Name": "cCoder.Core.Models.CoreConfiguration",
       "StandardElementType": "Model",
-      "LineNumber": 20,
+      "LineNumber": 19,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -5920,7 +5724,7 @@
     {
       "Name": "cCoder.Core.Models.Metadata.MetadataContainer",
       "StandardElementType": "Model",
-      "LineNumber": 10,
+      "LineNumber": 7,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -9546,7 +9350,7 @@
     {
       "Name": "cCoder.Core.Services.Processings.Metadata.EdmModelProcessingService",
       "StandardElementType": "ProcessingService",
-      "LineNumber": 13,
+      "LineNumber": 14,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -9567,7 +9371,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Metadata.EdmModelProcessingService.GetEdmModelMetadata(IEdmModel,System.String)",
           "Name": "GetEdmModelMetadata",
-          "LineNumber": 16,
+          "LineNumber": 17,
           "Inputs": [
             {
               "Name": "model",
@@ -9606,7 +9410,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Metadata.EdmModelProcessingService.GetExtendedMetadataContainer(IEdmModel,System.String,System.Type,System.Boolean)",
           "Name": "GetExtendedMetadataContainer",
-          "LineNumber": 30,
+          "LineNumber": 31,
           "Inputs": [
             {
               "Name": "model",
@@ -10414,7 +10218,7 @@
     {
       "Name": "cCoder.Core.WebApplicationExtensions.StartupMigrationLock",
       "StandardElementType": "Dependency",
-      "LineNumber": 229,
+      "LineNumber": 224,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -10435,7 +10239,7 @@
         {
           "Id": "cCoder.Core.WebApplicationExtensions.StartupMigrationLock.Dispose()",
           "Name": "Dispose",
-          "LineNumber": 231,
+          "LineNumber": 226,
           "Inputs": [],
           "ReturnType": "System.Void",
           "Implements": [
@@ -14254,14 +14058,6 @@
       "ToType": "cCoder.Core.Services.Processings.Setup.SetupRequestHostProcessingService"
     },
     {
-      "FromType": "cCoder.Core.Models.CoreAllowedOriginSnapshot",
-      "ToType": "cCoder.Core.Models.CoreAllowedOriginSnapshot"
-    },
-    {
-      "FromType": "cCoder.Core.Models.CoreApiRouteDefinition",
-      "ToType": "cCoder.Core.Models.CoreApiRouteDefinition"
-    },
-    {
       "FromType": "cCoder.Core.Services.Aggregations.AppAggregationService",
       "ToType": "cCoder.Core.Models.CoreConfiguration"
     },
@@ -14416,6 +14212,13 @@
       "Severity": "Warning",
       "Type": "cCoder.Core.Brokers.Eventing.ServiceBusFolderDeleteForwardingBroker",
       "LineNumber": 12
+    },
+    {
+      "Code": "STX0001",
+      "Description": "The type is not a valid Standard element type.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.CoreConfigurationFactory",
+      "LineNumber": 20
     },
     {
       "Code": "STXAPI005",

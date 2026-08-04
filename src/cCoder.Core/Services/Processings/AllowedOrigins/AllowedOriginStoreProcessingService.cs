@@ -34,60 +34,62 @@ internal sealed partial class AllowedOriginStoreProcessingService(
     private static CoreAllowedOriginSnapshot CreateCoreAllowedOriginSnapshot(
         IEnumerable<string> configuredOrigins)
     {
-            HashSet<string> exactOrigins = new(Comparer);
-            HashSet<string> authorities = new(Comparer);
-            HashSet<string> hosts = new(Comparer);
+        HashSet<string> exactOrigins = new(Comparer);
+        HashSet<string> authorities = new(Comparer);
+        HashSet<string> hosts = new(Comparer);
 
-            foreach (string configuredOrigin in configuredOrigins)
+        foreach (string configuredOrigin in configuredOrigins)
+        {
+            string candidate = configuredOrigin?.Trim();
+
+            if (string.IsNullOrWhiteSpace(value: candidate))
             {
-                string candidate = configuredOrigin?.Trim();
-
-                if (string.IsNullOrWhiteSpace(value: candidate))
-                {
-                    continue;
-                }
-
-                candidate = candidate.TrimEnd(trimChar: '/');
-
-                if (candidate.Contains(
-                        value: "://",
-                        comparisonType: StringComparison.Ordinal)
-                    && Uri.TryCreate(
-                        uriString: candidate,
-                        uriKind: UriKind.Absolute,
-                        result: out Uri absoluteUri))
-                {
-                    if (IsSupportedScheme(uri: absoluteUri))
-                    {
-                        exactOrigins.Add(
-                            item: NormalizeOrigin(uri: absoluteUri));
-                    }
-
-                    continue;
-                }
-
-                if (Uri.CheckHostName(name: candidate.Split(separator: ':')[0])
-                    == UriHostNameType.Unknown)
-                {
-                    continue;
-                }
-
-                if (candidate.Contains(
-                        value: ':',
-                        comparisonType: StringComparison.Ordinal))
-                {
-                    authorities.Add(item: candidate.ToLowerInvariant());
-                }
-                else
-                {
-                    hosts.Add(item: candidate.ToLowerInvariant());
-                }
+                continue;
             }
 
-            return new CoreAllowedOriginSnapshot(
-                exactOrigins,
-                authorities,
-                hosts);
+            candidate = candidate.TrimEnd(trimChar: '/');
+
+            if (candidate.Contains(
+                    value: "://",
+                    comparisonType: StringComparison.Ordinal)
+                && Uri.TryCreate(
+                    uriString: candidate,
+                    uriKind: UriKind.Absolute,
+                    result: out Uri absoluteUri))
+            {
+                if (IsSupportedScheme(uri: absoluteUri))
+                {
+                    exactOrigins.Add(
+                        item: NormalizeOrigin(uri: absoluteUri));
+                }
+
+                continue;
+            }
+
+            if (Uri.CheckHostName(name: candidate.Split(separator: ':')[0])
+                == UriHostNameType.Unknown)
+            {
+                continue;
+            }
+
+            if (candidate.Contains(
+                    value: ':',
+                    comparisonType: StringComparison.Ordinal))
+            {
+                authorities.Add(item: candidate.ToLowerInvariant());
+            }
+            else
+            {
+                hosts.Add(item: candidate.ToLowerInvariant());
+            }
+        }
+
+        return new CoreAllowedOriginSnapshot
+        {
+            ExactOrigins = exactOrigins,
+            Authorities = authorities,
+            Hosts = hosts,
+        };
     }
 
     private static bool IsCoreAllowedOriginSnapshotAllowed(
