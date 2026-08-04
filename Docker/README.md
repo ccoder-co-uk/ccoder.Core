@@ -5,7 +5,7 @@ This folder starts the latest cCoder.Core applications for local testing. It cre
 - `application`: Web on ports 80/443 plus loopback-only HostedServices
 - `workflow`: Workflow on ports 800/4433, reachable privately as `http://workflow:800`
 
-SQL Server and Azure Storage are deliberately not bundled. Point the harness at development services you already run.
+SQL Server is deliberately not bundled. Point the harness at the development SQL Server you already run.
 
 ## Set up
 
@@ -19,7 +19,6 @@ Edit the generated `.env` and set:
 
 - `CCODER_CORE_CONNECTION_STRING`: the shared Core-domain database
 - `CCODER_SECURITY_CONNECTION_STRING`: the separate Security database
-- `CCODER_AZURE_WEBJOBS_STORAGE`: storage used by the Workflow Functions host
 
 The addresses must be reachable from inside a container. If SQL Server exposes port 1433 on the Docker host, use `host.docker.internal,1433`, for example:
 
