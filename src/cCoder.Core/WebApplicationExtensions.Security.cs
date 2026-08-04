@@ -30,10 +30,27 @@ public static partial class WebApplicationExtensions
         {
             context.Response.OnStarting(callback: () =>
             {
+                bool allowEditorFraming =
+                    context.Request.Query["edit"] == "true";
+
                 context.Response.Headers["X-Content-Type-Options"] =
                     "nosniff";
                 context.Response.Headers["Referrer-Policy"] =
                     "no-referrer";
+                context.Response.Headers["Content-Security-Policy"] =
+                    CreateContentSecurityPolicy(
+                        allowEditorFraming: allowEditorFraming);
+
+                if (allowEditorFraming)
+                {
+                    _ = context.Response.Headers.Remove(
+                        key: "X-Frame-Options");
+                }
+                else
+                {
+                    context.Response.Headers["X-Frame-Options"] =
+                        "DENY";
+                }
 
                 _ = context.Response.Headers.Remove(key: "Server");
                 _ = context.Response.Headers.Remove(
@@ -46,6 +63,26 @@ public static partial class WebApplicationExtensions
         });
 
         return app;
+    }
+
+    private static string CreateContentSecurityPolicy(
+        bool allowEditorFraming)
+    {
+        const string policy =
+            "default-src 'self'; " +
+            "base-uri 'self'; " +
+            "object-src 'none'; " +
+            "form-action 'self'; " +
+            "img-src 'self' data: blob: https:; " +
+            "font-src 'self' data: https:; " +
+            "style-src 'self' 'unsafe-inline' https:; " +
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; " +
+            "connect-src 'self' https: wss:; " +
+            "frame-src 'self' https:;";
+
+        return allowEditorFraming
+            ? policy
+            : policy + " frame-ancestors 'none';";
     }
 
     private static WebApplication UseCoreMetadataAuthorization(
