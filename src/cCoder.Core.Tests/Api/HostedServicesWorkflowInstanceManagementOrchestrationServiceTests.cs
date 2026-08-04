@@ -6,6 +6,7 @@ using cCoder.Data;
 using cCoder.Data.Models.Workflow;
 using cCoder.Core.Models;
 using cCoder.Workflow.Brokers;
+using cCoder.Workflow.Exposures;
 using FluentAssertions;
 using HostedServices;
 using Microsoft.Extensions.Logging;
@@ -55,6 +56,7 @@ public sealed partial class HostedServicesWorkflowInstanceManagementOrchestratio
 
         HostedServicesWorkflowInstanceManagementOrchestrationService service = new(
             brokerMock.Object,
+            Mock.Of<IFlowInstanceDataManager>(),
             Mock.Of<ICoreContextFactory>(),
             Mock.Of<IServiceProvider>(),
             new CoreConfiguration(),
