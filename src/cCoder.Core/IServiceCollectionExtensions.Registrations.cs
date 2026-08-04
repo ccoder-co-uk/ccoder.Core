@@ -718,6 +718,15 @@ predicate: (documentName, apiDescription) =>
                 CookieSecurePolicy.Always;
         });
 
+        services.AddAntiforgery(setupAction: options =>
+        {
+            options.Cookie.HttpOnly = true;
+            options.Cookie.SameSite = SameSiteMode.Lax;
+
+            options.Cookie.SecurePolicy =
+                CookieSecurePolicy.Always;
+        });
+
         services.AddHsts(configureOptions: options =>
         {
             options.Preload = true;
