@@ -6,6 +6,8 @@ using cCoder.Data;
 using cCoder.Data.Models;
 using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.Security;
+using cCoder.Security.Data.EF.Interfaces;
+using cCoder.Security.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
@@ -16,9 +18,20 @@ namespace Web.AcceptanceTests.Infrastructure;
 
 internal sealed class AcceptanceApplicationSeeder(IServiceProvider services)
 {
+    internal const string MetadataAdministratorToken =
+        "metadata-administrator-token";
+
+    internal const string MetadataOrdinaryUserToken =
+        "metadata-ordinary-user-token";
+
     private const int AppId = 1;
     private const string AppDomain = "localhost";
     private const string AcceptanceAdminRoleName = "Acceptance Administrators";
+    private const string MetadataAdministratorUserId =
+        "metadata.administrator";
+
+    private const string MetadataOrdinaryUserId =
+        "metadata.ordinary";
     private const string AcceptanceAdminPrivileges =
         "app_admin,"
         + "app_read,"
@@ -47,12 +60,166 @@ internal sealed class AcceptanceApplicationSeeder(IServiceProvider services)
             .GetRequiredService<cCoder.Data.ICoreContextFactory>()
             .CreateCoreContext();
 
+        using DbContext security = scope.ServiceProvider
+            .GetRequiredService<ISecurityDbContextFactory>()
+            .CreateDbContext(ignoreAuthInfo: true);
+
         await EnsureAppAsync(core: core);
         await EnsureGuestUserAsync(core: core);
+
+        await EnsureMetadataUsersAsync(
+            core: core,
+            security: security);
+
         await EnsureGuestAdminAsync(core: core);
         await SeedCapturedAppDataAsync(core: core);
         await SeedCommonObjectsAsync(core: core);
         RefreshCaches(services: scope.ServiceProvider);
+    }
+
+    private static async Task EnsureMetadataUsersAsync(
+        DbContext core,
+        DbContext security)
+    {
+        await EnsureSecurityUserAndTokenAsync(
+            security: security,
+            userId: MetadataAdministratorUserId,
+            tokenId: MetadataAdministratorToken);
+
+        await EnsureSecurityUserAndTokenAsync(
+            security: security,
+            userId: MetadataOrdinaryUserId,
+            tokenId: MetadataOrdinaryUserToken);
+
+        await EnsureMetadataSecurityRoleAsync(
+            security: security);
+
+        foreach (string userId in new[]
+        {
+            MetadataAdministratorUserId,
+            MetadataOrdinaryUserId,
+        })
+        {
+            bool hasUser = await core.Set<User>()
+                .AnyAsync(predicate: user => user.Id == userId);
+
+            if (!hasUser)
+            {
+                core.Add(entity: new User
+                {
+                    Id = userId,
+                    DefaultCultureId = string.Empty,
+                    DisplayName = userId,
+                    Email = $"{userId}@example.test",
+                    IsActive = true,
+                });
+            }
+        }
+
+        await core.SaveChangesAsync();
+    }
+
+    private static async Task EnsureMetadataSecurityRoleAsync(
+        DbContext security)
+    {
+        const string tenantId = "acceptance";
+        const string roleName = "Acceptance Tenant Admins";
+
+        Tenant tenant = await security.Set<Tenant>()
+            .FirstOrDefaultAsync(predicate: item =>
+                item.Id == tenantId);
+
+        if (tenant is null)
+        {
+            DateTimeOffset now = DateTimeOffset.UtcNow;
+
+            tenant = new Tenant
+            {
+                Id = tenantId,
+                Name = "Acceptance",
+                Description = "Acceptance tenant",
+                CreatedBy = MetadataAdministratorUserId,
+                LastUpdatedBy = MetadataAdministratorUserId,
+                CreatedOn = now,
+                LastUpdated = now,
+            };
+
+            security.Add(entity: tenant);
+            await security.SaveChangesAsync();
+        }
+
+        SSORole role = await security.Set<SSORole>()
+            .FirstOrDefaultAsync(predicate: item =>
+                item.TenantId == tenantId
+                && item.Name == roleName);
+
+        if (role is null)
+        {
+            role = new SSORole
+            {
+                Id = Guid.NewGuid(),
+                TenantId = tenantId,
+                Name = roleName,
+                Description = "Acceptance tenant administrators",
+                Privs = "api_metadata_read,tenant_admin,tenant_read",
+                UsersArePortalAdmins = false,
+            };
+
+            security.Add(entity: role);
+            await security.SaveChangesAsync();
+        }
+
+        bool hasRole = await security.Set<SSOUserRole>()
+            .AnyAsync(predicate: item =>
+                item.RoleId == role.Id
+                && item.UserId == MetadataAdministratorUserId);
+
+        if (!hasRole)
+        {
+            security.Add(entity: new SSOUserRole
+            {
+                RoleId = role.Id,
+                UserId = MetadataAdministratorUserId,
+            });
+
+            await security.SaveChangesAsync();
+        }
+    }
+
+    private static async Task EnsureSecurityUserAndTokenAsync(
+        DbContext security,
+        string userId,
+        string tokenId)
+    {
+        bool hasUser = await security.Set<SSOUser>()
+            .AnyAsync(predicate: user => user.Id == userId);
+
+        if (!hasUser)
+        {
+            security.Add(entity: new SSOUser
+            {
+                Id = userId,
+                DisplayName = userId,
+                Email = $"{userId}@example.test",
+                EmailConfirmed = true,
+            });
+        }
+
+        bool hasToken = await security.Set<Token>()
+            .AnyAsync(predicate: token => token.Id == tokenId);
+
+        if (!hasToken)
+        {
+            security.Add(entity: new Token
+            {
+                Id = tokenId,
+                UserName = userId,
+                Reason = (int)TokenUse.Auth,
+                Expires = DateTimeOffset.UtcNow.AddHours(hours: 1),
+            });
+        }
+
+        await security.SaveChangesAsync();
     }
 
     private static async Task EnsureAppAsync(DbContext core)
@@ -113,6 +280,24 @@ entity:                 new App
         if (!hasGuestRole)
         {
             core.Add(entity: new UserRole { RoleId = role.Id, UserId = "Guest" });
+            await core.SaveChangesAsync();
+        }
+
+        bool hasMetadataAdministratorRole =
+            await core.Set<UserRole>()
+                .AnyAsync(predicate: existing =>
+                    existing.RoleId == role.Id
+                    && existing.UserId ==
+                        MetadataAdministratorUserId);
+
+        if (!hasMetadataAdministratorRole)
+        {
+            core.Add(entity: new UserRole
+            {
+                RoleId = role.Id,
+                UserId = MetadataAdministratorUserId,
+            });
+
             await core.SaveChangesAsync();
         }
     }

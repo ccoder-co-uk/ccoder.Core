@@ -5,6 +5,7 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using cCoder.Core.Testing;
 using Web.AcceptanceTests.Models;
+using System.Net.Http.Headers;
 using Xunit;
 
 
@@ -47,6 +48,20 @@ public sealed class WebAcceptanceFixture : IAsyncLifetime
             AllowAutoRedirect = false,
             BaseAddress = new Uri("https://localhost"),
         });
+
+    }
+
+    internal HttpClient CreateMetadataClient()
+    {
+        HttpClient client = Factory.CreateClient();
+
+        client.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue(
+                scheme: "Bearer",
+                parameter: AcceptanceApplicationSeeder
+                    .MetadataAdministratorToken);
+
+        return client;
     }
 
     public async Task DisposeAsync()
