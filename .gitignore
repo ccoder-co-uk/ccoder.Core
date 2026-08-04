@@ -13,6 +13,8 @@
 # Local Docker Compose secrets
 deploy/compose/.env
 deploy/compose/.https/
+Docker/.env
+Docker/.https/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
