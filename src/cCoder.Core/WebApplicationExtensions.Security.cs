@@ -2,6 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using cCoder.ContentManagement.Models;
 using cCoder.ContentManagement.Models.OData;
 using cCoder.Data.Extensions;
 using cCoder.Data.Exposures;
@@ -38,7 +39,7 @@ public static partial class WebApplicationExtensions
                     inArray: RandomNumberGenerator.GetBytes(
                         count: 32));
 
-            context.Items[ContentSecurityPolicyNonce.HttpContextItemKey] =
+            context.Items[ContentSecurityPolicyNonceContract.HttpContextItemKey] =
                 contentSecurityPolicyNonce;
 
             context.Response.OnStarting(callback: () =>
@@ -91,7 +92,7 @@ public static partial class WebApplicationExtensions
             "img-src 'self' data: blob:; " +
             "font-src 'self' data:; " +
             $"style-src 'self' 'nonce-{nonce}'; " +
-            "style-src-attr 'none'; " +
+            "style-src-attr 'unsafe-inline'; " +
             $"script-src 'self' 'nonce-{nonce}'; " +
             "script-src-attr 'none'; " +
             "connect-src 'self'; " +

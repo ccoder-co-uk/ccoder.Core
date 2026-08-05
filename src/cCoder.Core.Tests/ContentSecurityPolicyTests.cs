@@ -10,7 +10,7 @@ namespace cCoder.Core.Tests;
 public sealed partial class ContentSecurityPolicyTests
 {
     [Fact]
-    public void CreateContentSecurityPolicy_ShouldUseNonceWithoutUnsafeSources()
+    public void CreateContentSecurityPolicy_ShouldUseNonceWithoutUnsafeScriptSources()
     {
         // Given
         const string nonce = "test-nonce";
@@ -32,13 +32,10 @@ public sealed partial class ContentSecurityPolicyTests
             .Contain(expected: "script-src-attr 'none'");
 
         policy.Should()
-            .Contain(expected: "style-src-attr 'none'");
+            .Contain(expected: "style-src-attr 'unsafe-inline'");
 
         policy.Should()
             .Contain(expected: "frame-ancestors 'none'");
-
-        policy.Should()
-            .NotContain(unexpected: "unsafe-inline");
 
         policy.Should()
             .NotContain(unexpected: "unsafe-eval");

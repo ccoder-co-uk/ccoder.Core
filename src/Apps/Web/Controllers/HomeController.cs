@@ -12,7 +12,6 @@ using cCoder.Core.Exposures.Setup;
 using cCoder.Core.Exposures;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using Web.Dependencies.Filters;
 using Web.Exposures;
 using App = cCoder.Data.Models.CMS.App;
 using RenderResult = cCoder.ContentManagement.Models.RenderResult;
@@ -25,20 +24,15 @@ namespace Web.Controllers
         IPageRenderer pageRenderer,
         IFirstTimeSetupManager setupStateService,
         ISetupRequestHostManager setupRequestHostManager,
-        IHomeSessionManager homeSessionManager) : Controller
+        IHomeSessionManager homeSessionManager,
+        ILogger<HomeController> logger) : Controller
     {
         private readonly IPageRenderer pageRenderer = pageRenderer;
         private readonly IFirstTimeSetupManager setupStateService = setupStateService;
         private readonly ISetupRequestHostManager setupRequestHostManager = setupRequestHostManager;
         private readonly IHomeSessionManager homeSessionManager = homeSessionManager;
 
-        private string GetHost() =>
-            Request.Host.Host.Replace(oldValue: "www.",newValue: "")
-                .ToLowerInvariant();
-
         [HttpGet]
-        [ServiceFilter(typeof(HomeDefaultsActionFilter))]
-        [ServiceFilter(typeof(HomeExceptionFilter))]
         public async Task<IActionResult> Index(
             string path = null,
             string theme = null,
@@ -57,57 +51,10 @@ namespace Web.Controllers
 
                 if (path?.ToLower() == "robots.txt")
                 {
-                    return Content(content: "User-agent: * Allow: *",contentType: "text/plain");
+                    return Content(content: "User-agent: * Allow: *", contentType: "text/plain");
                 }
 
-                path ??= string.Empty;
-
-                culture = Response.HttpContext.Request.Query.ContainsKey(key: "culture")
-                    ? Response.HttpContext.Request.Query["culture"].ToString()
-                    : null;
-
-                if (culture != null)
-                {
-                    homeSessionManager.SetSessionValue(
-                        context: HttpContext,
-                        key: "culture",
-                        value: culture);
-                }
-                else
-                {
-                    culture =
-                        homeSessionManager.GetSessionValue(
-                            context: HttpContext,
-                            key: "culture")
-                        ?? string.Empty;
-                }
-
-                if (theme != null)
-                {
-                    homeSessionManager.SetSessionValue(
-                        context: HttpContext,
-                        key: "theme",
-                        value: theme);
-                }
-                else
-                {
-                    theme =
-                        homeSessionManager.GetSessionValue(
-                            context: HttpContext,
-                            key: "theme")
-                        ?? string.Empty;
-                }
-
-                PageRenderResponse response = await pageRenderer.RenderAsync(
-                    request: new PageRenderRequest
-                    {
-                        Host = GetHost(),
-                        Path = path,
-                        Theme = theme,
-                        Culture = culture,
-                        Edit = edit,
-                        RequestUrl = Request.GetEncodedUrl()
-                    });
+                PageRenderResponse response = await pageRenderer.RenderAsync();
 
                 homeSessionManager.SetSessionValue(
                     context: HttpContext,
@@ -121,7 +68,10 @@ namespace Web.Controllers
 
                 RenderResult page = response.Page;
 
-                SetupViewBag(edit: edit,app: response.App,page: page);
+                SetupViewBag(
+                    edit: response.Edit,
+                    app: response.App,
+                    page: page);
 
                 ViewResult viewResult = View(model: page);
                 viewResult.StatusCode = page.StatusCode;
@@ -130,6 +80,45 @@ namespace Web.Controllers
             catch (ValidationException)
             {
                 return BadRequest(error: "The page request is invalid.");
+            }
+            catch (PageAccessSecurityException)
+            {
+                string returnUrl = Request.PathBase + Request.Path
+                    + Request.QueryString;
+
+                if (!Url.IsLocalUrl(url: returnUrl))
+                {
+                    returnUrl = "/";
+                }
+
+                return RedirectToAction(
+                    actionName: nameof(Index),
+                    routeValues: new
+                    {
+                        path = "Login",
+                        returnUrl
+                    });
+            }
+            catch (PageNotFoundException exception)
+            {
+                logger.LogWarning(
+                    exception: exception,
+                    message: "Page render request was not found for {Path}.",
+                    args: [Request.Path]);
+
+                if (!await setupStateService.IsInitializedAsync(
+                    cancellationToken: cancellationToken))
+                {
+                    return View(
+                        viewName: "~/Views/Setup/Index.cshtml",
+                        model: new FirstTimeSetupViewModel
+                        {
+                            Domain = setupRequestHostManager.NormalizeHost(
+                                host: Request.Host.Host),
+                        });
+                }
+
+                return NotFound(value: "The requested page was not found.");
             }
             catch (SecurityException)
             {

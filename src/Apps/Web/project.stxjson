@@ -619,7 +619,7 @@
     {
       "Name": "Web.Controllers.HomeController",
       "StandardElementType": "HttpExposure",
-      "LineNumber": 24,
+      "LineNumber": 23,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -638,7 +638,7 @@
         {
           "Id": "Web.Controllers.HomeController.Index(System.String,System.String,System.String,System.Boolean,System.Threading.CancellationToken)",
           "Name": "Index",
-          "LineNumber": 42,
+          "LineNumber": 36,
           "Inputs": [
             {
               "Name": "path",
@@ -680,13 +680,6 @@
             },
             {
               "TypeName": "Web.Exposures.IHomeSessionManager",
-              "MethodName": "GetSessionValue",
-              "MethodId": "Web.Exposures.IHomeSessionManager.GetSessionValue(HttpContext,System.String)",
-              "StandardElementType": "Exposure",
-              "IsDependencyBoundary": false
-            },
-            {
-              "TypeName": "Web.Exposures.IHomeSessionManager",
               "MethodName": "SetSessionValue",
               "MethodId": "Web.Exposures.IHomeSessionManager.SetSessionValue(HttpContext,System.String,System.String)",
               "StandardElementType": "Exposure",
@@ -695,14 +688,7 @@
             {
               "TypeName": "cCoder.ContentManagement.Exposures.IPageRenderer",
               "MethodName": "RenderAsync",
-              "MethodId": "cCoder.ContentManagement.Exposures.IPageRenderer.RenderAsync(cCoder.ContentManagement.Models.PageRenderRequest)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "cCoder.ContentManagement.Models.PageRenderRequest",
-              "MethodName": ".ctor",
-              "MethodId": "cCoder.ContentManagement.Models.PageRenderRequest..ctor()",
+              "MethodId": "cCoder.ContentManagement.Exposures.IPageRenderer.RenderAsync()",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
             },
@@ -757,6 +743,15 @@
               "StatusCode": 400,
               "ResultMethod": "BadRequest",
               "ExceptionType": "System.ComponentModel.DataAnnotations.ValidationException",
+              "IsExceptionPath": true,
+              "IsNullPath": false,
+              "HasBody": true,
+              "ExposesExceptionDetails": false
+            },
+            {
+              "StatusCode": 404,
+              "ResultMethod": "NotFound",
+              "ExceptionType": "cCoder.ContentManagement.Models.Exceptions.PageNotFoundException",
               "IsExceptionPath": true,
               "IsNullPath": false,
               "HasBody": true,
@@ -883,169 +878,6 @@
           "HasKeyParameter": false,
           "HandlesNullWithNotFound": false,
           "HasTryCatch": false
-        }
-      ]
-    },
-    {
-      "Name": "Web.Dependencies.Filters.HomeDefaultsActionFilter",
-      "StandardElementType": "Dependency",
-      "LineNumber": 12,
-      "IsPublic": false,
-      "Kind": "Class",
-      "BaseType": {
-        "Id": "Web:IAsyncActionFilter",
-        "FullName": "IAsyncActionFilter",
-        "Name": "IAsyncActionFilter",
-        "Namespace": "\u003Cglobal namespace\u003E",
-        "AssemblyName": "Web",
-        "Kind": "Class",
-        "IsInCurrentProject": true,
-        "StandardElementType": "Dependency"
-      },
-      "Interfaces": [],
-      "Properties": [],
-      "Methods": [
-        {
-          "Id": "Web.Dependencies.Filters.HomeDefaultsActionFilter.OnActionExecutionAsync(ActionExecutingContext,ActionExecutionDelegate)",
-          "Name": "OnActionExecutionAsync",
-          "LineNumber": 17,
-          "Inputs": [
-            {
-              "Name": "context",
-              "Type": "ActionExecutingContext"
-            },
-            {
-              "Name": "next",
-              "Type": "ActionExecutionDelegate"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.Task",
-          "Implements": [],
-          "Calls": [
-            {
-              "TypeName": "System.Linq.Queryable",
-              "MethodName": "FirstOrDefault",
-              "MethodId": "System.Linq.Queryable.FirstOrDefault(System.Linq.IQueryable\u003CTSource\u003E)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "System.Linq.Queryable",
-              "MethodName": "Select",
-              "MethodId": "System.Linq.Queryable.Select(System.Linq.IQueryable\u003CTSource\u003E,System.Linq.Expressions.Expression\u003CSystem.Func\u003CTSource, TResult\u003E\u003E)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "System.Linq.Queryable",
-              "MethodName": "Where",
-              "MethodId": "System.Linq.Queryable.Where(System.Linq.IQueryable\u003CTSource\u003E,System.Linq.Expressions.Expression\u003CSystem.Func\u003CTSource, System.Boolean\u003E\u003E)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "cCoder.ContentManagement.Exposures.IAppManager",
-              "MethodName": "GetAll",
-              "MethodId": "cCoder.ContentManagement.Exposures.IAppManager.GetAll(System.Boolean)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "cCoder.Data.Models.CMS.App",
-              "MethodName": ".ctor",
-              "MethodId": "cCoder.Data.Models.CMS.App..ctor()",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            }
-          ],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": true
-        }
-      ]
-    },
-    {
-      "Name": "Web.Dependencies.Filters.HomeExceptionFilter",
-      "StandardElementType": "Dependency",
-      "LineNumber": 16,
-      "IsPublic": false,
-      "Kind": "Class",
-      "BaseType": {
-        "Id": "Web:IAsyncExceptionFilter",
-        "FullName": "IAsyncExceptionFilter",
-        "Name": "IAsyncExceptionFilter",
-        "Namespace": "\u003Cglobal namespace\u003E",
-        "AssemblyName": "Web",
-        "Kind": "Class",
-        "IsInCurrentProject": true,
-        "StandardElementType": "Dependency"
-      },
-      "Interfaces": [],
-      "Properties": [],
-      "Methods": [
-        {
-          "Id": "Web.Dependencies.Filters.HomeExceptionFilter.OnExceptionAsync(ExceptionContext)",
-          "Name": "OnExceptionAsync",
-          "LineNumber": 22,
-          "Inputs": [
-            {
-              "Name": "context",
-              "Type": "ExceptionContext"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.Task",
-          "Implements": [],
-          "Calls": [
-            {
-              "TypeName": "Web.Exposures.IHomeSessionManager",
-              "MethodName": "GetSessionValue",
-              "MethodId": "Web.Exposures.IHomeSessionManager.GetSessionValue(HttpContext,System.String)",
-              "StandardElementType": "Exposure",
-              "IsDependencyBoundary": false
-            },
-            {
-              "TypeName": "cCoder.ContentManagement.Exposures.IPageRenderer",
-              "MethodName": "RenderErrorAsync",
-              "MethodId": "cCoder.ContentManagement.Exposures.IPageRenderer.RenderErrorAsync(cCoder.ContentManagement.Models.PageRenderRequest)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "cCoder.ContentManagement.Models.PageRenderRequest",
-              "MethodName": ".ctor",
-              "MethodId": "cCoder.ContentManagement.Models.PageRenderRequest..ctor()",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            }
-          ],
-          "PossibleExceptionTypes": [
-            "System.ArgumentException",
-            "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
-            "Web.Models.Exceptions.HomeSessionProcessingServiceException",
-            "Web.Models.Exceptions.HomeSessionProcessingValidationException"
-          ],
-          "IncomingExceptionTypes": [
-            "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
-            "Web.Models.Exceptions.HomeSessionProcessingServiceException",
-            "Web.Models.Exceptions.HomeSessionProcessingValidationException"
-          ],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": true
         }
       ]
     },
@@ -1471,7 +1303,7 @@
     {
       "Name": "Web.IServiceCollectionExtensions",
       "StandardElementType": "App",
-      "LineNumber": 18,
+      "LineNumber": 17,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -1481,7 +1313,7 @@
         {
           "Id": "Web.IServiceCollectionExtensions.AddWeb(IServiceCollection,IConfiguration,System.Action\u003CcCoder.Core.Models.CoreConfiguration\u003E)",
           "Name": "AddWeb",
-          "LineNumber": 20,
+          "LineNumber": 19,
           "Inputs": [
             {
               "Name": "services",
@@ -3112,10 +2944,6 @@
       "ToType": "Web.Exposures.HomeSessionManager"
     },
     {
-      "FromType": "Web.Dependencies.Filters.HomeExceptionFilter",
-      "ToType": "Web.Exposures.HomeSessionManager"
-    },
-    {
       "FromType": "Web.Exposures.ApiCacheManager",
       "ToType": "Web.Services.Aggregations.ApiCacheAggregationService"
     },
@@ -3211,21 +3039,21 @@
       "Description": "An API controller must have exactly one business dependency.",
       "Severity": "Warning",
       "Type": "Web.Controllers.HomeController",
-      "LineNumber": 24
+      "LineNumber": 23
     },
     {
       "Code": "STXAPI004",
       "Description": "API controller methods must use HTTP nouns: Get, Post, Put, or Delete.",
       "Severity": "Warning",
       "Type": "Web.Controllers.HomeController",
-      "LineNumber": 39
+      "LineNumber": 35
     },
     {
       "Code": "STXAPI005",
       "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
       "Severity": "Warning",
       "Type": "Web.Controllers.HomeController",
-      "LineNumber": 42
+      "LineNumber": 36
     }
   ]
 }
