@@ -41,6 +41,7 @@ if [[ "${CCODER_GENERATE_LOCAL_CERTIFICATE:-false}" == "true" ]]; then
 fi
 
 dotnet /app/HostedServices/HostedServices.dll \
+    --contentRoot /app/HostedServices \
     --urls "${CCODER_HOSTED_SERVICES_URLS}" &
 hosted_services_pid=$!
 
@@ -62,7 +63,9 @@ for attempt in {1..60}; do
     sleep 1
 done
 
-dotnet /app/Web/Web.dll --urls "${CCODER_WEB_URLS}" &
+dotnet /app/Web/Web.dll \
+    --contentRoot /app/Web \
+    --urls "${CCODER_WEB_URLS}" &
 web_pid=$!
 
 set +e

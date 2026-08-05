@@ -56,7 +56,7 @@ jobs:
           cache-dependency-path: ccoder.Core/src/cCoder.Core.FrontEnd/package-lock.json
 
       - name: Restore
-        run: dotnet restore ccoder.Core/src/cCoder.Core.slnx --source https://api.nuget.org/v3/index.json
+        run: dotnet restore ccoder.Core/src/cCoder.Core.slnx --source https://api.nuget.org/v3/index.json --no-http-cache
 
       - name: Build
         run: dotnet build ccoder.Core/src/cCoder.Core.slnx -c Release --no-restore -m /p:BuildInParallel=true /p:UseSharedCompilation=true /p:Version="${{ steps.version.outputs.value }}"
