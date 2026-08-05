@@ -1,13 +1,2 @@
 @model RenderResult
-@{
-    string contentSecurityPolicyNonce =
-        Context.Items[cCoder.Core.ContentSecurityPolicyNonce.HttpContextItemKey]
-            ?.ToString()
-        ?? string.Empty;
-
-    string bodyHtml = Model.BodyHtml.Replace(
-        oldValue: cCoder.ContentManagement.Models.ContentSecurityPolicyNonceContract.Placeholder,
-        newValue: contentSecurityPolicyNonce,
-        comparisonType: StringComparison.Ordinal);
-}
-@Html.Raw(bodyHtml)
+@Html.Raw(Model.BodyHtml)

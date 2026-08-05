@@ -145,7 +145,15 @@
           "Implements": [
             "cCoder.Core.Brokers.ContentManagement.IContentManagementAppBroker.AddAppAsync(cCoder.Data.Models.CMS.App)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.ContentManagement.Exposures.IAppManager",
+              "MethodName": "AddAsync",
+              "MethodId": "cCoder.ContentManagement.Exposures.IAppManager.AddAsync(cCoder.Data.Models.CMS.App)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -172,7 +180,15 @@
           "Implements": [
             "cCoder.Core.Brokers.ContentManagement.IContentManagementAppBroker.DeleteAppAsync(System.Int32)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.ContentManagement.Exposures.IAppManager",
+              "MethodName": "DeleteAsync",
+              "MethodId": "cCoder.ContentManagement.Exposures.IAppManager.DeleteAsync(System.Int32)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -199,7 +215,15 @@
           "Implements": [
             "cCoder.Core.Brokers.ContentManagement.IContentManagementAppBroker.GetAllApps(System.Boolean)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.ContentManagement.Exposures.IAppManager",
+              "MethodName": "GetAll",
+              "MethodId": "cCoder.ContentManagement.Exposures.IAppManager.GetAll(System.Boolean)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -230,7 +254,15 @@
           "Implements": [
             "cCoder.Core.Brokers.ContentManagement.IContentManagementAppBroker.GetApp(System.Int32,System.Boolean)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.ContentManagement.Exposures.IAppManager",
+              "MethodName": "Get",
+              "MethodId": "cCoder.ContentManagement.Exposures.IAppManager.Get(System.Int32,System.Boolean)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -261,7 +293,15 @@
           "Implements": [
             "cCoder.Core.Brokers.ContentManagement.IContentManagementAppBroker.GetAppByDomain(System.String,System.Boolean)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.ContentManagement.Exposures.IAppManager",
+              "MethodName": "GetByDomain",
+              "MethodId": "cCoder.ContentManagement.Exposures.IAppManager.GetByDomain(System.String,System.Boolean)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -288,7 +328,15 @@
           "Implements": [
             "cCoder.Core.Brokers.ContentManagement.IContentManagementAppBroker.UpdateAppAsync(cCoder.Data.Models.CMS.App)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.ContentManagement.Exposures.IAppManager",
+              "MethodName": "UpdateAsync",
+              "MethodId": "cCoder.ContentManagement.Exposures.IAppManager.UpdateAsync(cCoder.Data.Models.CMS.App)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -4243,7 +4291,15 @@
           ],
           "ReturnType": "System.String",
           "Implements": [],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.ContentManagement.Exposures.IAppManager",
+              "MethodName": "Get",
+              "MethodId": "cCoder.ContentManagement.Exposures.IAppManager.Get(System.Int32,System.Boolean)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -5395,7 +5451,7 @@
         },
         {
           "Name": "ContentManagement",
-          "Type": "ContentManagementConfiguration"
+          "Type": "cCoder.ContentManagement.Models.ContentManagementConfiguration"
         },
         {
           "Name": "DocumentManagement",
@@ -8437,7 +8493,15 @@
           "Implements": [
             "cCoder.Core.Services.Foundations.TemplatedEmails.ITemplatedEmailContentService.RenderTemplatedEmailOperationContent(cCoder.Core.Models.TemplatedEmailOperation)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.ContentManagement.Exposures.ITemplateRenderer",
+              "MethodName": "Render",
+              "MethodId": "cCoder.ContentManagement.Exposures.ITemplateRenderer.Render(System.Int32,System.String,System.String,dynamic)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [
             "cCoder.Core.Models.Exceptions.CoreDependencyException",
             "cCoder.Core.Models.Exceptions.CoreServiceException",
@@ -9666,7 +9730,15 @@
           "Implements": [
             "cCoder.Core.Services.Processings.Packages.IContentManagementPackageProcessingService.ExportPackage(System.Int32,System.String)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.ContentManagement.Exposures.IContentManagementPackageManager",
+              "MethodName": "ExportPackage",
+              "MethodId": "cCoder.ContentManagement.Exposures.IContentManagementPackageManager.ExportPackage(System.Int32,System.String)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [
             "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
             "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
@@ -9705,7 +9777,15 @@
           "Implements": [
             "cCoder.Core.Services.Processings.Packages.IContentManagementPackageProcessingService.ImportPackageAsync(System.Int32,Package)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.ContentManagement.Exposures.IContentManagementPackageManager",
+              "MethodName": "ImportPackageAsync",
+              "MethodId": "cCoder.ContentManagement.Exposures.IContentManagementPackageManager.ImportPackageAsync(System.Int32,cCoder.Data.Models.Packaging.Package)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [
             "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
             "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
@@ -14310,13 +14390,6 @@
       "Severity": "Warning",
       "Type": "cCoder.Core.Services.Foundations.AppSecurity.AppSecurityUserRoleService",
       "LineNumber": 11
-    },
-    {
-      "Code": "STXF002",
-      "Description": "A foundation service may only depend on brokers, exposures, or nothing.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.Services.Foundations.TemplatedEmails.TemplatedEmailContentService",
-      "LineNumber": 13
     },
     {
       "Code": "STXF002",

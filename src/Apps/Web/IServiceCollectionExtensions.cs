@@ -4,7 +4,6 @@
 
 using cCoder.Core;
 using cCoder.Core.Models;
-using Web.Dependencies.Filters;
 using Web.Services.Processings;
 using Web.Exposures;
 using Web.Services.Aggregations;
@@ -100,8 +99,6 @@ public static class IServiceCollectionExtensions
     private static void AddExposures(this IServiceCollection services)
     {
         services.AddHealthChecks();
-        services.AddScoped<HomeDefaultsActionFilter>();
-        services.AddScoped<HomeExceptionFilter>();
         services.AddScoped<IHomeSessionManager, HomeSessionManager>();
         services.AddScoped<IApiCacheManager, ApiCacheManager>();
         services.AddScoped<IApiScriptManager, ApiScriptManager>();
