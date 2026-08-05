@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>cCoder.Core setup</title>
-    <style>
+    <style nonce="@Context.Items[cCoder.Core.ContentSecurityPolicyNonce.HttpContextItemKey]">
         :root {
             color-scheme: light;
             --bg: #f3f9fc;
@@ -469,7 +469,7 @@
         </section>
     </dialog>
 
-    <script>
+    <script nonce="@Context.Items[cCoder.Core.ContentSecurityPolicyNonce.HttpContextItemKey]">
         (() => {
             const form = document.getElementById("setup-form");
             const button = document.getElementById("setup-button");

@@ -15,6 +15,7 @@ using System.Text.Json;
 using System.Collections;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
+using System.Security.Cryptography;
 
 namespace cCoder.Core;
 
@@ -32,6 +33,14 @@ public static partial class WebApplicationExtensions
 
         app.Use(middleware: async (context, next) =>
         {
+            string contentSecurityPolicyNonce =
+                Convert.ToBase64String(
+                    inArray: RandomNumberGenerator.GetBytes(
+                        count: 32));
+
+            context.Items[ContentSecurityPolicyNonce.HttpContextItemKey] =
+                contentSecurityPolicyNonce;
+
             context.Response.OnStarting(callback: () =>
             {
                 bool allowEditorFraming =
@@ -43,7 +52,8 @@ public static partial class WebApplicationExtensions
                     "no-referrer";
                 context.Response.Headers["Content-Security-Policy"] =
                     CreateContentSecurityPolicy(
-                        allowEditorFraming: allowEditorFraming);
+                        allowEditorFraming: allowEditorFraming,
+                        nonce: contentSecurityPolicyNonce);
 
                 if (allowEditorFraming)
                 {
@@ -69,20 +79,23 @@ public static partial class WebApplicationExtensions
         return app;
     }
 
-    private static string CreateContentSecurityPolicy(
-        bool allowEditorFraming)
+    internal static string CreateContentSecurityPolicy(
+        bool allowEditorFraming,
+        string nonce)
     {
-        const string policy =
+        string policy =
             "default-src 'self'; " +
             "base-uri 'self'; " +
             "object-src 'none'; " +
             "form-action 'self'; " +
-            "img-src 'self' data: blob: https:; " +
-            "font-src 'self' data: https:; " +
-            "style-src 'self' 'unsafe-inline' https:; " +
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; " +
-            "connect-src 'self' https: wss:; " +
-            "frame-src 'self' https:;";
+            "img-src 'self' data: blob:; " +
+            "font-src 'self' data:; " +
+            $"style-src 'self' 'nonce-{nonce}'; " +
+            "style-src-attr 'none'; " +
+            $"script-src 'self' 'nonce-{nonce}'; " +
+            "script-src-attr 'none'; " +
+            "connect-src 'self'; " +
+            "frame-src 'self';";
 
         return allowEditorFraming
             ? policy

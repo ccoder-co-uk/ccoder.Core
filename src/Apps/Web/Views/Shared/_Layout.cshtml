@@ -1,4 +1,15 @@
 @model cCoder.ContentManagement.Models.RenderResult
+@{
+    string contentSecurityPolicyNonce =
+        Context.Items[cCoder.Core.ContentSecurityPolicyNonce.HttpContextItemKey]
+            ?.ToString()
+        ?? string.Empty;
+
+    string headerHtml = Model.HeaderHtml.Replace(
+        oldValue: cCoder.ContentManagement.Models.ContentSecurityPolicyNonceContract.Placeholder,
+        newValue: contentSecurityPolicyNonce,
+        comparisonType: StringComparison.Ordinal);
+}
 <!DOCTYPE html>
 <html data-app-id="@(Model.AppId)" data-page-id="@(Model.PageId)" lang="@(Model.Culture?.Split('-')?.FirstOrDefault() ?? "en")" data-Layout="@(Model.Layout)" data-theme="@(Model.Theme)">
     <head>
@@ -9,16 +20,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="theme-color" content="#193855">
-        <script type="text/javascript">session = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewData["Session"]));</script>
-        @Html.Raw(Model.HeaderHtml)
+        <script nonce="@contentSecurityPolicyNonce" type="text/javascript">session = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewData["Session"]));</script>
+        @Html.Raw(headerHtml)
     </head>
     <body class="@Model.Layout">
         @RenderBody()
         @if (ViewData["Edit"] is true) 
         {
-            <script src="/editor.js"></script>
-            <script type="text/javascript">$(function () { parent.$("body").trigger("enablePageEditing", $("body")); })</script> 
+            <script nonce="@contentSecurityPolicyNonce" src="/editor.js"></script>
+            <script nonce="@contentSecurityPolicyNonce" type="text/javascript">$(function () { parent.$("body").trigger("enablePageEditing", $("body")); })</script>
         }
     </body>
 </html>
-

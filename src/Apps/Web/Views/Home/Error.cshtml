@@ -1,4 +1,4 @@
-﻿@model Exception
+@model Exception
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,7 +14,7 @@
     <h2>@Html.Raw(Model.Message)</h2>
     <textarea>@Html.Raw(Model.StackTrace)</textarea>
 
-    <style>
+    <style nonce="@Context.Items[cCoder.Core.ContentSecurityPolicyNonce.HttpContextItemKey]">
         textarea { width: 1000px; height: 500px; overflow: auto; }
     </style>
 </body>
