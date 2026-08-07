@@ -573,6 +573,8 @@ public sealed partial class FirstTimeSetupTests
                     BaseAddress = new Uri(uriString: "https://localhost"),
                 });
 
+            client.Timeout = TimeSpan.FromMinutes(value: 10);
+
             client.DefaultRequestHeaders.Accept.Add(
                 item: new MediaTypeWithQualityHeaderValue(
                     mediaType: "application/json"));
