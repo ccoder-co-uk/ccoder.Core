@@ -2430,6 +2430,12 @@ $(async function() {
 
     //setup notifcations 
     $(document.body).append("<div id='notif'></div>");
+    const notificationTemplate = function(data) {
+        return "<div class='notification'><p>"
+            + kendo.htmlEncode(data.content)
+            + "</p></div>";
+    };
+
     notification.popup = $("#notif").kendoNotification({
         autoHideAfter: 5000,
         stacking: 'up',
@@ -2437,10 +2443,10 @@ $(async function() {
         // these are not really needed as they basically put out the default
         // they are purely in place as a hook to say to me later "if you want to change notification rendering here's how".
         templates: [
-            { type: "success", template: $("<div><div class='notification'><p>#= data.content #</p></div></div>").html() },
-            { type: "info", template: $("<div><div class='notification'><p>#= data.content #</p></div></div>").html() },
-            { type: "warning", template: $("<div><div class='notification'><p>#= data.content #</p></div></div>").html() },
-            { type: "error", template: $("<div><div class='notification'><p>#= data.content #</p></div></div>").html() }
+            { type: "success", template: notificationTemplate },
+            { type: "info", template: notificationTemplate },
+            { type: "warning", template: notificationTemplate },
+            { type: "error", template: notificationTemplate }
         ]
     }).data("kendoNotification");
 });
