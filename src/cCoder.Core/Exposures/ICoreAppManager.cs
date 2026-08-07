@@ -12,5 +12,5 @@ public interface ICoreAppManager
 
     ValueTask<App> UpdateAppAsync(App updatedApp);
 
-    ValueTask DeleteAppAsync(int appId);
+    ValueTask<bool> DeleteAppAsync(int appId);
 }

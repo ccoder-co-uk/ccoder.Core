@@ -2576,6 +2576,15 @@
           ],
           "HttpResponses": [
             {
+              "StatusCode": 202,
+              "ResultMethod": "Accepted",
+              "ExceptionType": "",
+              "IsExceptionPath": false,
+              "IsNullPath": false,
+              "HasBody": false,
+              "ExposesExceptionDetails": false
+            },
+            {
               "StatusCode": 204,
               "ResultMethod": "NoContent",
               "ExceptionType": "",
@@ -6334,7 +6343,7 @@
               "Type": "System.Int32"
             }
           ],
-          "ReturnType": "System.Threading.Tasks.ValueTask",
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CSystem.Boolean\u003E",
           "Implements": [
             "cCoder.Core.Exposures.ICoreAppManager.DeleteAppAsync(System.Int32)"
           ],
@@ -11379,7 +11388,7 @@
               "Type": "System.Int32"
             }
           ],
-          "ReturnType": "System.Threading.Tasks.ValueTask",
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CSystem.Boolean\u003E",
           "Implements": [],
           "Calls": [],
           "PossibleExceptionTypes": [],
@@ -12977,7 +12986,7 @@
               "Type": "System.Int32"
             }
           ],
-          "ReturnType": "System.Threading.Tasks.ValueTask",
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CSystem.Boolean\u003E",
           "Implements": [],
           "Calls": [
             {

@@ -131,9 +131,11 @@ public class AppController(
     {
         try
         {
-            await service.DeleteAppAsync(appId: key);
+            bool accepted = await service.DeleteAppAsync(appId: key);
 
-            return NoContent();
+            return accepted
+                ? Accepted()
+                : NoContent();
         }
         catch (CoreOrchestrationValidationException)
         {
