@@ -87,7 +87,7 @@ internal sealed partial class AppAggregationService(
             return propagatedApp;
         });
 
-    public ValueTask DeleteAppAsync(int appId) =>
+    public ValueTask<bool> DeleteAppAsync(int appId) =>
         TryCatch(operation: async () =>
         {
             ValidateAppOnDelete(appId: appId);
@@ -97,7 +97,7 @@ internal sealed partial class AppAggregationService(
                 await contentManagementAppService.DeleteAppAsync(
                     appId: appId);
 
-                return;
+                return true;
             }
 
             await planningAppService.DeleteAppAsync(appId: appId);
@@ -106,6 +106,8 @@ internal sealed partial class AppAggregationService(
             await mailAppService.DeleteAppAsync(appId: appId);
             await contentManagementAppService.DeleteAppAsync(appId: appId);
             await appSecurityAppService.DeleteAppAsync(appId: appId);
+
+            return false;
         });
 
     private static bool HasExternalEventProvider(

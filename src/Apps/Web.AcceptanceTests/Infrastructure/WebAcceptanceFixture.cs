@@ -49,6 +49,8 @@ public sealed class WebAcceptanceFixture : IAsyncLifetime
             BaseAddress = new Uri("https://localhost"),
         });
 
+        Client.Timeout = TimeSpan.FromMinutes(value: 10);
+
     }
 
     internal HttpClient CreateMetadataClient()

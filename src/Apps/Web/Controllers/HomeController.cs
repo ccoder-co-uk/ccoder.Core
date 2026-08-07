@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Web.Exposures;
 using App = cCoder.Data.Models.CMS.App;
-using RenderResult = cCoder.ContentManagement.Models.RenderResult;
+using PageRenderResult = cCoder.ContentManagement.Models.PageRenderResult;
 using System.ComponentModel.DataAnnotations;
 
 
@@ -66,7 +66,7 @@ namespace Web.Controllers
                     key: "culture",
                     value: response.Culture);
 
-                RenderResult page = response.Page;
+                PageRenderResult page = response.Page;
 
                 SetupViewBag(
                     edit: response.Edit,
@@ -160,7 +160,7 @@ namespace Web.Controllers
             }
         }
 
-        private void SetupViewBag(bool edit, App app, RenderResult page)
+        private void SetupViewBag(bool edit, App app, PageRenderResult page)
         {
             dynamic session =
                 homeSessionManager.CreateExpandoObject(

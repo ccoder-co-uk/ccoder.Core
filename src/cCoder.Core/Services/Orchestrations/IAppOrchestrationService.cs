@@ -15,6 +15,6 @@ internal interface IAppOrchestrationService : IAppAggregationService
     ValueTask<App> UpdateAsync(App app) =>
         UpdateAppAsync(updatedApp: app);
 
-    ValueTask DeleteAsync(int appId) =>
+    ValueTask<bool> DeleteAsync(int appId) =>
         DeleteAppAsync(appId: appId);
 }

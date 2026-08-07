@@ -94,7 +94,6 @@ GET Api/ContentManagement/Page({key})
 GET Api/ContentManagement/Page({key})/Menu()
 GET Api/ContentManagement/Page({key})/RootFor()
 GET Api/ContentManagement/Page/$count
-GET Api/ContentManagement/Page/Render()
 GET Api/ContentManagement/PageInfo
 GET Api/ContentManagement/PageInfo({key})
 GET Api/ContentManagement/PageInfo/$count
@@ -292,7 +291,7 @@ POST Api/ContentManagement/Script
 POST Api/ContentManagement/Submission
 POST Api/ContentManagement/Template
 POST Api/ContentManagement/Template/HtmlToPdf
-POST Api/ContentManagement/Template/Render
+POST Api/ContentManagement/Template/Render()
 POST Api/Core/Package/Import
 POST Api/Core/Package/ImportThis
 POST Api/Core/QueuedEmail/AddTemplatedEmail()

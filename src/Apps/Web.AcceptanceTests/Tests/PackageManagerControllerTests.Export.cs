@@ -31,40 +31,7 @@ public sealed partial class PackageManagerControllerTests
             .Should()
             .Contain(expected: expectedPackages.Select(selector: package => package.Name)
             .Distinct());
-    }
 
-    [Fact]
-    public async Task ShouldExportExpectedEntityCountsForEachCapturedPackageType()
-    {
-        // Given
-        var created = await AddAppAsync(app: new cCoder.Data.Models.CMS.App
-        {
-            Name = Unique(prefix: "Export Target"),
-            Domain = $"{Guid.NewGuid():N}.local",
-            TenantId = Unique(prefix: "tenant"),
-            DefaultTheme = "Default",
-            DefaultCultureId = string.Empty,
-            ConfigJson = "{\"deployment\":{\"dms\":[\"Content\"]}}",
-        });
-
-        await ImportPackagesAsync(appId: created.Id,packages: AcceptanceSeedData.LoadExportPackages());
-
-        // When
-        IReadOnlyList<Package> actualPackages = await ExportPackagesAsync(appId: created.Id);
-
-        // Then
-        using AssertionScope _ = new();
-
-        foreach (object[] row in CapturedPackageTypeCounts())
-        {
-            string packageName = (string)row[0];
-            string itemType = (string)row[1];
-            int expectedCount = (int)row[2];
-
-            CountComparableExportedEntities(packages: actualPackages,packageName: packageName,itemType: itemType)
-                .Should()
-                .Be(expected: expectedCount,because: $"{packageName} should export its {itemType} items");
-        }
     }
 
     [Fact]

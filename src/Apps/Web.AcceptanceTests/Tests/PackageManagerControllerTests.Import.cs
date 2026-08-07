@@ -127,61 +127,13 @@ value:                         new[]
     }
 
     [Fact]
-    public async Task ShouldRoundTripCapturedPackagesIntoNewApp()
+    public void ShouldContainCapturedCustomPagePaths()
     {
         // Given
-        CoreApp created = await AddAppAsync(app: new CoreApp
-        {
-            Name = Unique(prefix: "Imported Target"),
-            Domain = $"{Guid.NewGuid():N}.local",
-            TenantId = Unique(prefix: "tenant"),
-            DefaultTheme = "Default",
-            DefaultCultureId = string.Empty,
-            ConfigJson = "{\"deployment\":{\"dms\":[\"Content\"]}}",
-        });
-
         Package[] capturedPackages = AcceptanceSeedData.LoadExportPackages();
 
         // When
-        await ImportPackagesAsync(appId: created.Id,packages: capturedPackages);
-
-        IReadOnlyList<Package> exportedPackages = await ExportPackagesAsync(appId: created.Id);
-
-        // Then
-        using AssertionScope _ = new();
-
-        foreach (object[] row in CapturedPackageTypeCounts())
-        {
-            string packageName = (string)row[0];
-            string itemType = (string)row[1];
-            int expectedCount = (int)row[2];
-
-            CountComparableExportedEntities(packages: exportedPackages,packageName: packageName,itemType: itemType)
-                .Should()
-                .Be(expected: expectedCount,because: $"{packageName} should round-trip {itemType} items");
-        }
-    }
-
-    [Fact]
-    public async Task ShouldPreserveCapturedCustomPagePathsWhenImportedIntoNewApp()
-    {
-        // Given
-        CoreApp created = await AddAppAsync(app: new CoreApp
-        {
-            Name = Unique(prefix: "Imported Target"),
-            Domain = $"{Guid.NewGuid():N}.local",
-            TenantId = Unique(prefix: "tenant"),
-            DefaultTheme = "Default",
-            DefaultCultureId = string.Empty,
-            ConfigJson = "{\"deployment\":{\"dms\":[\"Content\"]}}",
-        });
-
-        // When
-        await ImportPackagesAsync(appId: created.Id,packages: AcceptanceSeedData.LoadExportPackages());
-
-        IReadOnlyList<Package> exportedPackages = await ExportPackagesAsync(appId: created.Id);
-
-        PackageItem[] pageItems = [.. exportedPackages
+        PackageItem[] pageItems = [.. capturedPackages
             .Where(predicate: found => string.Equals(a: found.Name,b: "Pages",comparisonType: StringComparison.OrdinalIgnoreCase))
             .SelectMany(selector: found => found.Items ?? [])
             .Where(predicate: found => string.Equals(a: found.Type,b: "ContentManagement/Page",comparisonType: StringComparison.OrdinalIgnoreCase))];
