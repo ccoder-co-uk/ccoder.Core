@@ -66,7 +66,6 @@ jobs:
         run: npm test
 
       - name: Test with coverage
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           & ccoder.Core/.github/workflows/Invoke-Tests.ps1 `
             -RepositoryRoot "${{ github.workspace }}/ccoder.Core" `
@@ -74,13 +73,57 @@ jobs:
             -ResultsDirectory "${{ env.TEST_RESULTS_DIRECTORY }}" `
             -CollectCoverage
 
-      - name: Test
-        if: github.event_name != 'push' || github.ref != 'refs/heads/main'
+      - name: Enforce services and exposures coverage
         run: |
-          & ccoder.Core/.github/workflows/Invoke-Tests.ps1 `
-            -RepositoryRoot "${{ github.workspace }}/ccoder.Core" `
-            -SettingsPath "${{ github.workspace }}/ccoder.Core/src/cCoder.Core.runsettings" `
-            -ResultsDirectory "${{ env.TEST_RESULTS_DIRECTORY }}"
+          $coverageFiles = @(
+            Get-ChildItem "${{ env.TEST_RESULTS_DIRECTORY }}" -Recurse -Filter coverage.cobertura.xml
+          )
+
+          if ($coverageFiles.Count -eq 0) {
+            throw 'No Cobertura coverage reports were produced.'
+          }
+
+          $lines = @{}
+
+          foreach ($coverageFile in $coverageFiles) {
+            [xml] $coverage = Get-Content -LiteralPath $coverageFile.FullName
+
+            foreach ($class in $coverage.coverage.packages.package.classes.class) {
+              $sourceFile = ([string] $class.filename).Replace('\', '/')
+              $sourceFile = $sourceFile -replace '^cCoder\.Core/', ''
+
+              if ($sourceFile -notmatch '(^|/)(Services|Exposures)/') {
+                continue
+              }
+
+              foreach ($line in $class.lines.line) {
+                $key = "$sourceFile|$($line.number)"
+
+                if (-not $lines.ContainsKey($key)) {
+                  $lines[$key] = 0
+                }
+
+                if ([int] $line.hits -gt 0) {
+                  $lines[$key] = 1
+                }
+              }
+            }
+          }
+
+          if ($lines.Count -eq 0) {
+            throw 'No service or exposure source lines were found in the coverage reports.'
+          }
+
+          $coveredLines = @($lines.Values | Where-Object { $_ -eq 1 }).Count
+          $lineRate = $coveredLines / $lines.Count
+          $percentage = $lineRate.ToString('P3')
+
+          "Services and exposures line coverage: $coveredLines/$($lines.Count) ($percentage)" |
+            Write-Output
+
+          if ($lineRate -le 0.90) {
+            throw "Services and exposures line coverage must be greater than 90%; actual: $percentage."
+          }
 
       - name: Pack
         run: |
@@ -124,7 +167,7 @@ jobs:
             ${{ env.APPLICATION_DIRECTORY }}/archives
 
       - name: Upload test and coverage results
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: always()
         uses: actions/upload-artifact@v7
         with:
           name: test-results
