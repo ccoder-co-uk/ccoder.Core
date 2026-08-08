@@ -441,13 +441,18 @@ roles: [.. core.Set<Role>()
             .Select(selector: role => role.Name)
             .ToArrayAsync();
 
-        string[] administratorPrivileges = await core.Set<Role>()
+        Role[] administratorRoles = await core.Set<Role>()
             .IgnoreQueryFilters()
             .Where(predicate: role =>
                 role.AppId == appId
                 && role.Name == "Administrators")
-            .SelectMany(selector: role => role.Privileges)
             .ToArrayAsync();
+
+        string[] administratorPrivileges =
+        [
+            .. administratorRoles.SelectMany(
+                selector: role => role.Privileges)
+        ];
 
         string[] cultures = await core.Set<AppCulture>()
             .IgnoreQueryFilters()
