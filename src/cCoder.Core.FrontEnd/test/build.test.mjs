@@ -60,6 +60,20 @@ test("everything JavaScript is syntactically valid", async () => {
     assert.doesNotThrow(() => new vm.Script(everything));
 });
 
+test("build does not depend on the legacy Kendo icon font", async () => {
+    const everythingCss = await readFile(
+        path.join(stageDirectory, "everything.css"),
+        "utf8");
+
+    const workflow = await readFile(
+        path.join(stageDirectory, "workflow.js"),
+        "utf8");
+
+    assert.doesNotMatch(everythingCss, /kendo-font-icons\.ttf/i);
+    assert.doesNotMatch(everythingCss, /@font-face[^}]*WebComponentsIcons/is);
+    assert.doesNotMatch(workflow, /WebComponentsIcons/);
+});
+
 test("framework preserves the configured bundle order", async () => {
     const framework = await readFile(
         path.join(stageDirectory, "framework.js"),
