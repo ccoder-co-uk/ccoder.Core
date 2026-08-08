@@ -16,7 +16,7 @@ using System.Text.Json.Serialization;
 
 namespace cCoder.Core.Models;
 
-public sealed class CoreConfiguration
+public class CoreConfiguration
 {
     public AIConfiguration AI { get; set; }
     public AppSecurityConfiguration AppSecurity { get; set; }
