@@ -3343,9 +3343,7 @@ function getMonthlyDateRange(start, end, format) {
         }
 
         draw.enableShadows(ctx, this.x, this.y, this.w, this.h, "#111");
-        ctx.font = "30px WebComponentsIcons";
-        ctx.fillStyle = window.flowTheme.colours.primary;
-        ctx.fillText(this.getIcon(this.meta.category), this.x + 20, this.y + 73);
+        this.drawIcon(ctx);
 
         draw.disableShadows(ctx);
 
@@ -3353,26 +3351,46 @@ function getMonthlyDateRange(start, end, format) {
         draw.text(ctx, this.x + 60, this.y + 62, this.text);
     }
 
-    getIcon(forName) {
+    drawIcon(ctx) {
+        const centreX = this.x + 30;
+        const centreY = this.y + 62;
+        const label = this.getIconLabel(this.meta.category);
+
+        ctx.beginPath();
+        ctx.arc(centreX, centreY, 17, 0, 2 * Math.PI);
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = window.flowTheme.colours.primary;
+        ctx.stroke();
+
+        ctx.font = "bold 9px Arial";
+        ctx.fillStyle = window.flowTheme.colours.primary;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(label, centreX, centreY);
+        ctx.textAlign = "start";
+        ctx.textBaseline = "alphabetic";
+    }
+
+    getIconLabel(forName) {
         switch (forName) {
             case "ApiActivity":
-                return "\ue672";
+                return "API";
             case "DMSActivity":
-                return "\ue900";
+                return "DMS";
             case "SftpActivity":
-                return "\ue904";
+                return "SFTP";
             case "TransactionActivity":
-                return "\ue694";
+                return "TX";
             case "LogActivity":
-                return "\ue64a";
+                return "LOG";
             case "TransformationActivity":
-                return "\ue518"
+                return "MAP";
             case "FlowControlActivity":
-                return "\ue144";
+                return "FLOW";
             case "TemplatingActivity":
-                return "\ue647";
+                return "TPL";
             default:
-                return "\ue13a";
+                return "STEP";
         }
     }
 
@@ -3437,6 +3455,7 @@ function getMonthlyDateRange(start, end, format) {
         $(".flowConsole", dialog).append(messages);
     }
 }
+
 ﻿/// <reference path="workflowdesigner.js" />
 class Connector extends Collidable {
     constructor(parent, type) {

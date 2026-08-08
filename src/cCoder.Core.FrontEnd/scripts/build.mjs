@@ -165,19 +165,11 @@ const bootstrapSiteCss = await readFile(
 
 const dependencyCss = await readFiles([
     "dependencies/bootstrap/bootstrap.min.css",
-    "dependencies/kendo/kendo.v2024.2.514.bootstrap.css",
-    "bootstrap/css/kendo-font-icons.css"
+    "dependencies/kendo/kendo.v2024.2.514.bootstrap.css"
 ]);
 
-const kendoFont = await readFile(
-    path.join(assetsDirectory, "bootstrap/css/kendo-font-icons.ttf"));
-
-const selfContainedDependencyCss = dependencyCss.replace(
-    'url("/bootstrap/css/kendo-font-icons.ttf")',
-    `url("data:font/ttf;base64,${kendoFont.toString("base64")}")`);
-
 const everythingCss = [
-    selfContainedDependencyCss,
+    dependencyCss,
     await minify(bootstrapSiteCss, "css")
 ].join("\n");
 

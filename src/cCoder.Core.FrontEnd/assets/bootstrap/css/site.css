@@ -12,6 +12,11 @@
     width: 100%;
 }
 
+.k-grid-mobile .k-resize-handle-inner::before {
+    content: none;
+    font: inherit;
+}
+
 .container-xxl {
     max-width: 1920px;
     padding: 0;
