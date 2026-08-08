@@ -5,10 +5,13 @@
 using System.Net;
 using System.Text;
 using System.Text.Json;
+using cCoder.Data;
 using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.Packaging;
 using FluentAssertions;
 using FluentAssertions.Execution;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Web.AcceptanceTests.Infrastructure;
 using Xunit;
 using CoreApp = cCoder.Data.Models.CMS.App;
@@ -113,17 +116,23 @@ value:                         new[]
 
         // When
         int statusCode = await ImportPackageAsync(appId: 1,package: package);
-        IReadOnlyList<Package> exportedPackages = await ExportPackagesAsync(appId: 1);
+
+        await using DbContext core = fixture.Factory.Services
+            .GetRequiredService<ICoreContextFactory>()
+            .CreateCoreContext();
+
+        bool resourceWasImported = await core.Set<Resource>()
+            .IgnoreQueryFilters()
+            .AnyAsync(predicate: resource =>
+                resource.AppId == 1
+                && resource.Key == uniqueResourceKey);
 
         // Then
         statusCode.Should()
             .Be(expected: (int)HttpStatusCode.OK);
 
-        exportedPackages
-            .Where(predicate: found => string.Equals(a: found.Name,b: "Resources",comparisonType: StringComparison.OrdinalIgnoreCase))
-            .SelectMany(selector: found => found.Items ?? [])
-            .Should()
-            .Contain(predicate: item => item.Data.Contains(value: uniqueResourceKey,comparisonType: StringComparison.Ordinal));
+        resourceWasImported.Should()
+            .BeTrue();
     }
 
     [Fact]

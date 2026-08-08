@@ -35,78 +35,69 @@ public sealed partial class FirstTimeSetupTests
         "Packages/";
 
     [Fact]
-    public async Task ShouldRenderSetupExperienceWhenEnvironmentIsEmpty()
+    public async Task ShouldRenderSetupAndBrowserProgressExperienceWhenEnvironmentIsEmpty()
     {
         // Given
         await using SetupHarness harness = await SetupHarness.CreateAsync();
 
         // When
-        using HttpResponseMessage response =
+        using HttpResponseMessage rootResponse =
             await harness.Client.GetAsync(requestUri: "/");
 
-        string content = await response.Content.ReadAsStringAsync();
+        string rootContent = await rootResponse.Content.ReadAsStringAsync();
 
-        // Then
-        response.StatusCode.Should()
-            .Be(expected: HttpStatusCode.OK);
-
-        content.Should()
-            .Contain(expected: "Welcome to cCoder.Core platform setup");
-
-        content.Should()
-            .Contain(expected: "FirstAdminUserDetails");
-    }
-
-    [Fact]
-    public async Task ShouldExposeBrowserSetupProgressExperience()
-    {
-        // Given
-        await using SetupHarness harness = await SetupHarness.CreateAsync();
-
-        // When
-        using HttpResponseMessage response =
+        using HttpResponseMessage setupResponse =
             await harness.Client.GetAsync(requestUri: "/Setup");
 
-        string content = await response.Content.ReadAsStringAsync();
+        string setupContent = await setupResponse.Content.ReadAsStringAsync();
 
         // Then
-        response.StatusCode.Should()
+        rootResponse.StatusCode.Should()
             .Be(expected: HttpStatusCode.OK);
 
-        content.Should()
+        rootContent.Should()
+            .Contain(expected: "Welcome to cCoder.Core platform setup");
+
+        rootContent.Should()
+            .Contain(expected: "FirstAdminUserDetails");
+
+        setupResponse.StatusCode.Should()
+            .Be(expected: HttpStatusCode.OK);
+
+        setupContent.Should()
             .Contain(expected: "<dialog");
 
-        content.Should()
+        setupContent.Should()
             .Contain(expected: "setup-log");
 
-        content.Should()
+        setupContent.Should()
             .Contain(expected: "button.disabled = true");
 
-        content.Should()
+        setupContent.Should()
             .Contain(expected: "\"/Api/Setup\"");
 
-        content.Should()
+        setupContent.Should()
             .Contain(expected: "\"/Api/Account/Login\"");
 
-        content.Should()
+        setupContent.Should()
             .Contain(expected: "\"/Api/ContentManagement/App\"");
 
-        content.Should()
+        setupContent.Should()
             .Contain(expected: "common-cache");
 
-        content.Should()
+        setupContent.Should()
             .Contain(expected: "first-app");
 
-        content.Should()
+        setupContent.Should()
             .Contain(expected: "\"/Api/Packaging/Package\"");
 
-        content.Should()
+        setupContent.Should()
             .Contain(expected: "\"/Api/Packaging/PackageItem\"");
 
-        content.Should()
+        setupContent.Should()
             .Contain(expected: "Type: item.Type");
 
-        content.Should()
+        setupContent.Should()
             .Contain(expected: "\"/Api/RefreshCache\"");
     }
 

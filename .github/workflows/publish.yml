@@ -30,7 +30,7 @@ defaults:
 jobs:
   build-test-pack:
     runs-on: [self-hosted, Windows, X64, test]
-    timeout-minutes: 30
+    timeout-minutes: 60
     outputs:
       version: ${{ steps.version.outputs.value }}
     defaults:
@@ -67,11 +67,20 @@ jobs:
 
       - name: Test with coverage
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: dotnet test ccoder.Core/src/cCoder.Core.slnx -c Release --no-build --no-restore -m --settings ccoder.Core/src/cCoder.Core.coverage.runsettings --filter "Category!=ExternalIntegration" --results-directory "${{ env.TEST_RESULTS_DIRECTORY }}" --logger trx --collect:"XPlat Code Coverage"
+        run: |
+          & ccoder.Core/.github/workflows/Invoke-Tests.ps1 `
+            -RepositoryRoot "${{ github.workspace }}/ccoder.Core" `
+            -SettingsPath "${{ github.workspace }}/ccoder.Core/src/cCoder.Core.coverage.runsettings" `
+            -ResultsDirectory "${{ env.TEST_RESULTS_DIRECTORY }}" `
+            -CollectCoverage
 
       - name: Test
         if: github.event_name != 'push' || github.ref != 'refs/heads/main'
-        run: dotnet test ccoder.Core/src/cCoder.Core.slnx -c Release --no-build --no-restore -m --settings ccoder.Core/src/cCoder.Core.runsettings --filter "Category!=ExternalIntegration"
+        run: |
+          & ccoder.Core/.github/workflows/Invoke-Tests.ps1 `
+            -RepositoryRoot "${{ github.workspace }}/ccoder.Core" `
+            -SettingsPath "${{ github.workspace }}/ccoder.Core/src/cCoder.Core.runsettings" `
+            -ResultsDirectory "${{ env.TEST_RESULTS_DIRECTORY }}"
 
       - name: Pack
         run: |

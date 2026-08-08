@@ -2982,7 +2982,10 @@
             "System.InvalidOperationException",
             "cCoder.Core.Models.Exceptions.CoreOrchestrationDependencyException",
             "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationValidationException"
+            "cCoder.Core.Models.Exceptions.CoreOrchestrationValidationException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingValidationException"
           ],
           "IncomingExceptionTypes": [
             "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException"
@@ -3067,7 +3070,10 @@
             "System.InvalidOperationException",
             "cCoder.Core.Models.Exceptions.CoreOrchestrationDependencyException",
             "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationValidationException"
+            "cCoder.Core.Models.Exceptions.CoreOrchestrationValidationException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingValidationException"
           ],
           "IncomingExceptionTypes": [
             "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException"
@@ -6534,7 +6540,7 @@
         {
           "Id": "cCoder.Core.Services.Aggregations.Packages.PackageManagerAggregationService.ExportPackagesAsync(System.Int32,System.String[],System.String)",
           "Name": "ExportPackagesAsync",
-          "LineNumber": 55,
+          "LineNumber": 51,
           "Inputs": [
             {
               "Name": "appId",
@@ -6579,7 +6585,7 @@
         {
           "Id": "cCoder.Core.Services.Aggregations.Packages.PackageManagerAggregationService.ImportPackagesAsync(System.Int32,System.Collections.Generic.IEnumerable\u003CPackage\u003E)",
           "Name": "ImportPackagesAsync",
-          "LineNumber": 130,
+          "LineNumber": 126,
           "Inputs": [
             {
               "Name": "appId",
@@ -6600,12 +6606,16 @@
             "System.InvalidOperationException",
             "cCoder.Core.Models.Exceptions.CoreOrchestrationDependencyException",
             "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationValidationException"
+            "cCoder.Core.Models.Exceptions.CoreOrchestrationValidationException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingValidationException"
           ],
           "IncomingExceptionTypes": [
             "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException",
             "System.InvalidOperationException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException"
+            "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
           ],
           "ThrowsExceptionTypes": [
             "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException"
@@ -14101,6 +14111,10 @@
     {
       "FromType": "cCoder.Core.Services.Aggregations.Packages.PackageManagerAggregationService",
       "ToType": "cCoder.Core.Brokers.Packaging.PackageBroker"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Aggregations.Packages.PackageManagerAggregationService",
+      "ToType": "cCoder.Core.Services.Processings.Packages.ContentManagementPackageProcessingService"
     },
     {
       "FromType": "cCoder.Core.Services.Aggregations.SecurityAccountEmailAggregationService",

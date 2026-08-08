@@ -4,8 +4,8 @@
 
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using cCoder.ContentManagement.Exposures;
 using cCoder.Core.Models.Packaging;
+using cCoder.Core.Services.Processings.Packages;
 using cCoder.Data;
 using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.DMS;
@@ -19,11 +19,7 @@ namespace cCoder.Core.Services.Aggregations.Packages;
 
 internal sealed partial class PackageManagerAggregationService(
     IPackageBroker packageBroker,
-    IComponentManager componentOrchestrationService,
-    ILayoutManager layoutOrchestrationService,
-    IResourceManager resourceOrchestrationService,
-    IScriptManager scriptOrchestrationService,
-    ITemplateManager templateOrchestrationService,
+    IContentManagementPackageProcessingService contentManagementPackageProcessingService,
     ICoreContextFactory coreContextFactory
 ) : IPackageManagerAggregationService
 {
@@ -225,46 +221,19 @@ internal sealed partial class PackageManagerAggregationService(
         int appId,
         IEnumerable<PackageItem> packageItems)
     {
-        foreach (PackageItem packageItem in packageItems)
+        PackageItem[] items = [.. packageItems];
+
+        if (items.Length == 0)
         {
-            switch (packageItem.Type)
-            {
-                case "ContentManagement/Component":
-                    await componentOrchestrationService.ImportComponentsAsync(
-                        appId: appId,
-                        items: DeserializePackageItems<Component>(
-                            data: packageItem.Data));
-                    break;
-
-                case "ContentManagement/Layout":
-                    await layoutOrchestrationService.ImportLayoutsAsync(
-                        appId: appId,
-                        items: DeserializePackageItems<Layout>(
-                            data: packageItem.Data));
-                    break;
-
-                case "ContentManagement/Resource":
-                    await resourceOrchestrationService.ImportResourcesAsync(
-                        appId: appId,
-                        items: DeserializePackageItems<Resource>(
-                            data: packageItem.Data));
-                    break;
-
-                case "ContentManagement/Script":
-                    await scriptOrchestrationService.ImportScriptsAsync(
-                        appId: appId,
-                        items: DeserializePackageItems<Script>(
-                            data: packageItem.Data));
-                    break;
-
-                case "ContentManagement/Template":
-                    await templateOrchestrationService.ImportTemplatesAsync(
-                        appId: appId,
-                        items: DeserializePackageItems<Template>(
-                            data: packageItem.Data));
-                    break;
-            }
+            return;
         }
+
+        await contentManagementPackageProcessingService.ImportPackageAsync(
+            appId: appId,
+            package: new Package("ContentManagement")
+            {
+                Items = items
+            });
     }
 
     private async Task ImportPagesAsync(int appId, IEnumerable<PackageItem> pageItems)
