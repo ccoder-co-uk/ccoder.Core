@@ -13,6 +13,21 @@ namespace cCoder.Core.Tests;
 public sealed partial class CoreConfigurationBindingTests
 {
     [Fact]
+    public void CoreConfiguration_ShouldSupportExtension()
+    {
+        // Given
+        Type configurationType = typeof(CoreConfiguration);
+
+        // When
+        bool isSealed = configurationType.IsSealed;
+
+        // Then
+        isSealed
+            .Should()
+            .BeFalse();
+    }
+
+    [Fact]
     public void CoreConfiguration_ShouldFailForMalformedAiSection()
     {
         // Given
