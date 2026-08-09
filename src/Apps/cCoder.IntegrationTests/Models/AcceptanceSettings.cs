@@ -38,6 +38,11 @@ internal sealed class AcceptanceSettings
 
     public bool UseLocalData { get; init; }
 
+    public bool UseLocalContentManagement { get; init; }
+
+    public string LocalContentManagementProject { get; init; } =
+        string.Empty;
+
     public string LocalSecurityAssemblyVersion { get; init; } =
         string.Empty;
 

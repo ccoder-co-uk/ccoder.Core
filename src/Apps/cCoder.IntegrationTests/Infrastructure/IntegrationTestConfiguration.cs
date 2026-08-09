@@ -70,6 +70,15 @@ internal sealed class IntegrationTestConfiguration
             AcceptanceTestConfiguration.ReadOptionalBool(
                 variableName:
                     "CoreIntegrationTests__UseLocalData");
+        UseLocalContentManagement =
+            AcceptanceTestConfiguration.ReadOptionalBool(
+                variableName:
+                    "CoreIntegrationTests__UseLocalContentManagement");
+        LocalContentManagementProject =
+            AcceptanceTestConfiguration.ReadOptionalValue(
+                variableName:
+                    "CoreIntegrationTests__LocalContentManagementProject")
+            ?? string.Empty;
         LocalSecurityAssemblyVersion =
             AcceptanceTestConfiguration.ReadOptionalValue(
                 variableName:
@@ -104,6 +113,10 @@ internal sealed class IntegrationTestConfiguration
     internal bool UseLocalAppSecurity { get; }
 
     internal bool UseLocalData { get; }
+
+    internal bool UseLocalContentManagement { get; }
+
+    internal string LocalContentManagementProject { get; }
 
     internal string LocalSecurityAssemblyVersion { get; }
 

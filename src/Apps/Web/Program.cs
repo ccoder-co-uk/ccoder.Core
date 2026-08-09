@@ -4,9 +4,11 @@
 
 using cCoder.Core;
 using cCoder.Core.Models;
+using cCoder.ContentManagement.Models;
 using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.DMS;
 using cCoder.Data.Models.Planning;
+using cCoder.Data.Models.Packaging;
 using cCoder.Data.Models.Workflow;
 using cCoder.Eventing.AzureServiceBus;
 using cCoder.Eventing.AzureServiceBus.Models;
@@ -63,6 +65,10 @@ public class Program
                 ["scheduled_task_execute"]),
             CreateHttpEventProvider<FlowInstanceData>(
                 ["flow_instance_data_add"]),
+            CreateHttpEventProvider<PackageImportEvent>(
+                ["package_import_complete"]),
+            CreateHttpEventProvider<UncachedPageRenderEvent>(
+                ["uncached_page_render"]),
             CreateHttpEventProvider<SecurityAccountEvent>(
                 CreateSecurityAccountEventNames())
         ];

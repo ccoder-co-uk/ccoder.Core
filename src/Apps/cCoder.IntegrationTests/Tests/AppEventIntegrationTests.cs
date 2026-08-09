@@ -308,6 +308,49 @@ appCultures: [.. core.Set<AppCulture>()
             .IgnoreQueryFilters()
                 .Where(predicate: culture => culture.AppId == appId)]);
 
+        int[] pageIds =
+            [.. core.Set<Page>()
+            .IgnoreQueryFilters()
+                .Where(predicate: page => page.AppId == appId)
+                .Select(selector: page => page.Id)];
+
+        await core.DeleteAllAsync(
+pageRoles: [.. core.Set<PageRole>()
+            .IgnoreQueryFilters()
+                .Where(predicate: pageRole => pageIds.Contains(value: pageRole.PageId))]);
+
+        await core.DeleteAllAsync(
+contents: [.. core.Set<Content>()
+            .IgnoreQueryFilters()
+                .Where(predicate: content => pageIds.Contains(value: content.PageId))]);
+
+        await core.DeleteAllAsync(
+pageInfos: [.. core.Set<PageInfo>()
+            .IgnoreQueryFilters()
+                .Where(predicate: pageInfo => pageIds.Contains(value: pageInfo.PageId))]);
+
+        core.Set<PageRenderCache>()
+            .RemoveRange(entities: core.Set<PageRenderCache>()
+                .Where(predicate: cache => cache.AppId == appId));
+
+        await core.DeleteAllAsync(
+pages: [.. core.Set<Page>()
+            .IgnoreQueryFilters()
+                .Where(predicate: page => page.AppId == appId)
+                .OrderByDescending(keySelector: page => page.Path.Length)]);
+
+        core.Set<Layout>()
+            .RemoveRange(entities: core.Set<Layout>()
+                .IgnoreQueryFilters()
+                .Where(predicate: layout => layout.AppId == appId));
+
+        core.Set<Resource>()
+            .RemoveRange(entities: core.Set<Resource>()
+                .IgnoreQueryFilters()
+                .Where(predicate: resource => resource.AppId == appId));
+
+        _ = await core.SaveChangesAsync();
+
         await core.DeleteAllAsync(
 roles: [.. core.Set<Role>()
             .IgnoreQueryFilters()
