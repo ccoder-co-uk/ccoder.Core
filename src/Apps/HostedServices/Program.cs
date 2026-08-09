@@ -4,9 +4,11 @@
 
 using cCoder.Core;
 using cCoder.Core.Models;
+using cCoder.ContentManagement.Models;
 using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.DMS;
 using cCoder.Data.Models.Planning;
+using cCoder.Data.Models.Packaging;
 using cCoder.Data.Models.Workflow;
 using cCoder.Eventing;
 using cCoder.Eventing.Models;
@@ -49,6 +51,10 @@ public class Program
             CreateExternalReceiveProvider<ScheduledTask>(
                 ["scheduled_task_execute"]),
             CreateQueuedFlowInstanceReceiveProvider(),
+            CreateExternalReceiveProvider<PackageImportEvent>(
+                ["package_import_complete"]),
+            CreateExternalReceiveProvider<UncachedPageRenderEvent>(
+                ["uncached_page_render"]),
             CreateExternalReceiveProvider<SecurityAccountEvent>(
                 CreateSecurityAccountEventNames()),
         ];

@@ -125,6 +125,10 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
             UseLocalAppSecurity =
                 configuration.UseLocalAppSecurity,
             UseLocalData = configuration.UseLocalData,
+            UseLocalContentManagement =
+                configuration.UseLocalContentManagement,
+            LocalContentManagementProject =
+                configuration.LocalContentManagementProject,
             LocalSecurityAssemblyVersion =
                 configuration.LocalSecurityAssemblyVersion
         };
@@ -340,8 +344,28 @@ fileName: "dotnet", arguments: $"build {projectPath} --no-restore -m:1 -p:BuildI
         bool useLocalAppSecurity = Settings.UseLocalAppSecurity;
         bool useLocalData = Settings.UseLocalData;
 
+        bool useLocalContentManagement =
+            Settings.UseLocalContentManagement;
+
         string localSecurityAssemblyVersion =
             Settings.LocalSecurityAssemblyVersion;
+
+        string localContentManagementProject =
+            string.IsNullOrWhiteSpace(
+                value: Settings.LocalContentManagementProject)
+                ? Path.GetFullPath(
+                    path: Path.Combine(
+                        paths:
+                        [
+                            repositoryRoot,
+                            "..",
+                            "cCoder.ContentManagement",
+                            "src",
+                            "cCoder.ContentManagement",
+                            "cCoder.ContentManagement.csproj"
+                        ]))
+                : Path.GetFullPath(
+                    path: Settings.LocalContentManagementProject);
 
         string localAppSecurityProject = Path.GetFullPath(
 path: Path.Combine(
@@ -394,7 +418,8 @@ path: Path.Combine(
         if (!useLocalWorkflow
             && !useLocalSecurity
             && !useLocalAppSecurity
-            && !useLocalData)
+            && !useLocalData
+            && !useLocalContentManagement)
         {
             return string.Empty;
         }
@@ -409,6 +434,15 @@ path: Path.Combine(
         if (useLocalData && File.Exists(path: localDataProject))
         {
             properties.Add(item: "-p:UseLocalData=true");
+        }
+
+        if (useLocalContentManagement
+            && File.Exists(path: localContentManagementProject))
+        {
+            properties.Add(item: "-p:UseLocalContentManagement=true");
+
+            properties.Add(
+                item: $"-p:LocalContentManagementProject=\"{localContentManagementProject}\"");
         }
 
         if (useLocalSecurity && File.Exists(path: localSecurityProject))
