@@ -63,8 +63,6 @@ public class Program
                 ["package_import"]),
             CreateExternalReceiveProvider<WorkflowPackageImportEvent>(
                 ["package_import"]),
-            CreateExternalReceiveProvider<UncachedPageRenderEvent>(
-                ["uncached_page_render"]),
             CreateExternalReceiveProvider<SecurityAccountEvent>(
                 CreateSecurityAccountEventNames()),
         ];

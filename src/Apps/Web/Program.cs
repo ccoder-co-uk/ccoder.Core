@@ -71,8 +71,6 @@ public class Program
                 ["package_import"]),
             CreateHttpEventProvider<ContentManagementPackageImportEvent>(
                 ["package_import_complete", "content_pages_imported"]),
-            CreateHttpEventProvider<UncachedPageRenderEvent>(
-                ["uncached_page_render"]),
             CreateHttpEventProvider<SecurityAccountEvent>(
                 CreateSecurityAccountEventNames())
         ];
