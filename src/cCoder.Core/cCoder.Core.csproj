@@ -112,16 +112,16 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="cCoder.AI" Version="2026.8.5.30" Condition="'$(UseLocalAI)' != 'true'" />
-    <PackageReference Include="cCoder.AppSecurity" Version="2026.8.10.1714" Condition="'$(UseLocalAppSecurity)' != 'true'" />
-    <PackageReference Include="cCoder.ContentManagement" Version="2026.8.10.2113" Condition="'$(UseLocalContentManagement)' != 'true'" />
+    <PackageReference Include="cCoder.AppSecurity" Version="2026.8.10.1850" Condition="'$(UseLocalAppSecurity)' != 'true'" />
+    <PackageReference Include="cCoder.ContentManagement" Version="2026.8.10.2247" Condition="'$(UseLocalContentManagement)' != 'true'" />
     <PackageReference Include="cCoder.Data" Version="2026.8.10.1656" Condition="'$(UseLocalData)' != 'true'" />
     <PackageReference Include="cCoder.DocumentManagement" Version="2026.8.10.1854" Condition="'$(UseLocalDocumentManagement)' != 'true'" />
     <PackageReference Include="cCoder.Eventing" Version="2026.8.10.1536" Condition="'$(UseLocalEventing)' != 'true'" />
     <PackageReference Include="cCoder.Eventing.AzureServiceBus" Version="2026.8.10.1536" Condition="'$(UseLocalEventing)' != 'true'" />
     <PackageReference Include="cCoder.Eventing.Http" Version="2026.8.10.1536" Condition="'$(UseLocalEventing)' != 'true'" />
-    <PackageReference Include="cCoder.Logging" Version="2026.8.10.1815" Condition="'$(UseLocalLogging)' != 'true'" />
-    <PackageReference Include="cCoder.Mail" Version="2026.8.10.1958" Condition="'$(UseLocalMail)' != 'true'" />
-    <PackageReference Include="cCoder.Packaging" Version="2026.8.10.1713" Condition="'$(UseLocalPackaging)' != 'true'" />
+    <PackageReference Include="cCoder.Logging" Version="2026.8.5.127" Condition="'$(UseLocalLogging)' != 'true'" />
+    <PackageReference Include="cCoder.Mail" Version="2026.8.8.2050" Condition="'$(UseLocalMail)' != 'true'" />
+    <PackageReference Include="cCoder.Packaging" Version="2026.8.10.2016" Condition="'$(UseLocalPackaging)' != 'true'" />
     <PackageReference Include="cCoder.Security" Version="2026.8.10.1617" Condition="'$(UseLocalSecurity)' != 'true'" />
     <PackageReference Include="cCoder.Security.Data" Version="2026.8.10.1617" Condition="'$(UseLocalSecurity)' != 'true'" />
     <PackageReference Include="cCoder.Workflow" Version="2026.8.10.1950" Condition="'$(UseLocalWorkflow)' != 'true'" />

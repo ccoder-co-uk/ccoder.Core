@@ -155,28 +155,12 @@ internal sealed partial class PackageManagerAggregationService(
                 }
             }
 
-            PackageItem[] contentManagementItems = [.. (sanitizedPackage.Items ?? [])
-                .Where(predicate: item =>
-                    item.Type.StartsWith(
-                        value: "ContentManagement/",
-                        comparisonType: StringComparison.OrdinalIgnoreCase)
-                    && !string.Equals(a: item.Type, b: AppConfigurationItemType, comparisonType: StringComparison.OrdinalIgnoreCase)
-                    && !string.Equals(a: item.Type, b: "ContentManagement/Page", comparisonType: StringComparison.OrdinalIgnoreCase)
-                    && !string.Equals(a: item.Type, b: "ContentManagement/PageRole", comparisonType: StringComparison.OrdinalIgnoreCase))];
-
-            if (contentManagementItems.Length > 0)
-            {
-                await ImportContentManagementItemsAsync(
-                    appId: appId,
-                    packageItems: contentManagementItems);
-            }
-
             PackageItem[] remainingItems = [.. (sanitizedPackage.Items ?? [])
                 .Where(predicate: item =>
-                    !item.Type.StartsWith(
-                        value: "ContentManagement/",
-                        comparisonType: StringComparison.OrdinalIgnoreCase)
-                    && !string.Equals(a: item.Type, b: "DocumentManagement/FolderRole", comparisonType: StringComparison.OrdinalIgnoreCase))];
+                    !string.Equals(
+                        a: item.Type,
+                        b: AppConfigurationItemType,
+                        comparisonType: StringComparison.OrdinalIgnoreCase))];
 
             if (remainingItems.Length > 0)
             {
@@ -195,26 +179,6 @@ internal sealed partial class PackageManagerAggregationService(
                     package: remainingPackage);
             }
 
-            PackageItem[] pageItems = [.. (sanitizedPackage.Items ?? []).Where(predicate: item => string.Equals(a: item.Type, b: "ContentManagement/Page", comparisonType: StringComparison.OrdinalIgnoreCase))];
-
-            if (pageItems.Length > 0)
-            {
-                await ImportPagesAsync(appId: appId, pageItems: pageItems);
-            }
-
-            PackageItem[] pageRoleItems = [.. (sanitizedPackage.Items ?? []).Where(predicate: item => string.Equals(a: item.Type, b: "ContentManagement/PageRole", comparisonType: StringComparison.OrdinalIgnoreCase))];
-
-            if (pageRoleItems.Length > 0)
-            {
-                await ImportPageRolesAsync(appId: appId, pageRoleItems: pageRoleItems);
-            }
-
-            PackageItem[] folderRoleItems = [.. (sanitizedPackage.Items ?? []).Where(predicate: item => string.Equals(a: item.Type, b: "DocumentManagement/FolderRole", comparisonType: StringComparison.OrdinalIgnoreCase))];
-
-            if (folderRoleItems.Length > 0)
-            {
-                await ImportFolderRolesAsync(appId: appId, folderRoleItems: folderRoleItems);
-            }
         }
     }
 

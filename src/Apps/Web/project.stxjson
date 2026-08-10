@@ -1726,7 +1726,7 @@
     {
       "Name": "Web.Program",
       "StandardElementType": "App",
-      "LineNumber": 22,
+      "LineNumber": 24,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -1736,7 +1736,7 @@
         {
           "Id": "Web.Program.Main(System.String[])",
           "Name": "Main",
-          "LineNumber": 24,
+          "LineNumber": 26,
           "Inputs": [
             {
               "Name": "args",

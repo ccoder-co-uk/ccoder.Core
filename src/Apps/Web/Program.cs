@@ -16,6 +16,8 @@ using cCoder.Eventing.Http;
 using cCoder.Eventing.Models;
 using cCoder.Security.Models.Events;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using ContentManagementPackageImportEvent = cCoder.ContentManagement.Models.PackageImportEvent;
+using PackagingPackageImportEvent = cCoder.Packaging.Models.PackageImportEvent;
 
 namespace Web;
 
@@ -65,10 +67,10 @@ public class Program
                 ["scheduled_task_execute"]),
             CreateHttpEventProvider<FlowInstanceData>(
                 ["flow_instance_data_add"]),
-            CreateHttpEventProvider<PackageImportEvent>(
-                ["package_import_complete"]),
-            CreateHttpEventProvider<UncachedPageRenderEvent>(
-                ["uncached_page_render"]),
+            CreateHttpEventProvider<PackagingPackageImportEvent>(
+                ["package_import"]),
+            CreateHttpEventProvider<ContentManagementPackageImportEvent>(
+                ["package_import_complete", "content_pages_imported"]),
             CreateHttpEventProvider<SecurityAccountEvent>(
                 CreateSecurityAccountEventNames())
         ];

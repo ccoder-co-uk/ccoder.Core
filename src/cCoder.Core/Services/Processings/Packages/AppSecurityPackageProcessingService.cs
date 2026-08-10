@@ -58,10 +58,10 @@ internal sealed partial class AppSecurityPackageProcessingService(
         };
 
     private static Package ToLocalPackage(AppSecurityPackage package) =>
-        package == null ? null : new Package()
+        package == null ? null : new Package
         {
-            Id = package.Id,
             Name = package.Name,
+            Id = package.Id,
             Description = package.Description,
             Category = package.Category,
             SourceApi = package.SourceApi,

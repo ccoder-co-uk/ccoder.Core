@@ -56,10 +56,10 @@ internal sealed partial class SchedulingPackageProcessingService(
         };
 
     private static Package ToLocalPackage(WorkflowPackage package) =>
-        package == null ? null : new Package()
+        package == null ? null : new Package
         {
-            Id = package.Id,
             Name = package.Name,
+            Id = package.Id,
             Description = package.Description,
             Category = package.Category,
             SourceApi = package.SourceApi,

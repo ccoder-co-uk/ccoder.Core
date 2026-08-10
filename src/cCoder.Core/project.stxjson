@@ -3399,10 +3399,7 @@
             "System.InvalidOperationException",
             "cCoder.Core.Models.Exceptions.CoreOrchestrationDependencyException",
             "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationValidationException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingValidationException"
+            "cCoder.Core.Models.Exceptions.CoreOrchestrationValidationException"
           ],
           "IncomingExceptionTypes": [
             "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException"
@@ -3497,10 +3494,7 @@
             "System.InvalidOperationException",
             "cCoder.Core.Models.Exceptions.CoreOrchestrationDependencyException",
             "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationValidationException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingValidationException"
+            "cCoder.Core.Models.Exceptions.CoreOrchestrationValidationException"
           ],
           "IncomingExceptionTypes": [
             "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException"
@@ -7061,16 +7055,12 @@
             "System.InvalidOperationException",
             "cCoder.Core.Models.Exceptions.CoreOrchestrationDependencyException",
             "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationValidationException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingValidationException"
+            "cCoder.Core.Models.Exceptions.CoreOrchestrationValidationException"
           ],
           "IncomingExceptionTypes": [
             "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException",
             "System.InvalidOperationException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
+            "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException"
           ],
           "ThrowsExceptionTypes": [
             "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException"
@@ -10692,7 +10682,7 @@
     {
       "Name": "cCoder.Core.WebApplicationExtensions.StartupMigrationLock",
       "StandardElementType": "Dependency",
-      "LineNumber": 224,
+      "LineNumber": 225,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -10713,7 +10703,7 @@
         {
           "Id": "cCoder.Core.WebApplicationExtensions.StartupMigrationLock.Dispose()",
           "Name": "Dispose",
-          "LineNumber": 226,
+          "LineNumber": 227,
           "Inputs": [],
           "ReturnType": "System.Void",
           "Implements": [
