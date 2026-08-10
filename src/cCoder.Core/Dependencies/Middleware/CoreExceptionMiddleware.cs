@@ -3,12 +3,13 @@
 // ---------------------------------------------------------------
 
 using System.Security;
+using cCoder.Core.Brokers.Loggings;
 using cCoder.Core.Models.Exceptions;
 
 namespace cCoder.Core.Dependencies.Middleware;
 
 internal sealed class CoreExceptionMiddleware(
-    ILogger<CoreExceptionMiddleware> log) : IMiddleware
+    ILoggingBroker log) : IMiddleware
 {
     public async Task InvokeAsync(
         HttpContext context,

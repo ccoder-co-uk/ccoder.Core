@@ -2,6 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using cCoder.Core.Brokers.Loggings;
 using cCoder.Core.Exposures.OData.Responses;
 using cCoder.Data;
 using cCoder.Data.Models;
@@ -13,7 +14,8 @@ namespace Web.Controllers.Api
 {
     [Route("Api")]
     public class ApiRootController(
-        IApiContextManager apiContextManager)
+        IApiContextManager apiContextManager,
+        ILoggingBroker loggingBroker)
         : Controller
     {
         [HttpGet()]
@@ -28,8 +30,10 @@ namespace Web.Controllers.Api
 
                 return Ok(value: result);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
+                loggingBroker.LogError(exception: exception, message: "API context loading failed.");
+
                 return StatusCode(
                     statusCode: StatusCodes.Status500InternalServerError,
                     value: "The API contexts could not be loaded.");
@@ -46,8 +50,10 @@ namespace Web.Controllers.Api
 
                 return new RawResult(response);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
+                loggingBroker.LogError(exception: exception, message: "API request processing failed.");
+
                 return StatusCode(
                     statusCode: StatusCodes.Status500InternalServerError,
                     value: "The API request could not be processed.");
@@ -61,8 +67,10 @@ namespace Web.Controllers.Api
             {
                 return await Post();
             }
-            catch (Exception)
+            catch (Exception exception)
             {
+                loggingBroker.LogError(exception: exception, message: "API request processing failed.");
+
                 return StatusCode(
                     statusCode: StatusCodes.Status500InternalServerError,
                     value: "The API request could not be processed.");
@@ -76,8 +84,10 @@ namespace Web.Controllers.Api
             {
                 return Ok(value: new { DateTimeOffset.UtcNow });
             }
-            catch (Exception)
+            catch (Exception exception)
             {
+                loggingBroker.LogError(exception: exception, message: "Server time loading failed.");
+
                 return StatusCode(
                     statusCode: StatusCodes.Status500InternalServerError,
                     value: "The server time could not be loaded.");

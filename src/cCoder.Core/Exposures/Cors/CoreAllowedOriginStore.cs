@@ -3,12 +3,13 @@
 // ---------------------------------------------------------------
 
 using cCoder.Core.Services.Processings.AllowedOrigins;
+using cCoder.Core.Brokers.Loggings;
 
 namespace cCoder.Core.Exposures.Cors;
 
 internal sealed class CoreAllowedOriginStore(
     IAllowedOriginStoreProcessingService allowedOriginStoreProcessingService,
-    ILogger<CoreAllowedOriginStore> logger)
+    ILoggingBroker logger)
     : ICoreAllowedOriginStore
 {
     public async ValueTask<bool> IsAllowedAsync(string origin)

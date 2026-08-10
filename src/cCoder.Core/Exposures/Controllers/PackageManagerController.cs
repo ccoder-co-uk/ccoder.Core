@@ -2,6 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using cCoder.Core.Brokers.Loggings;
 using System.Text.Json;
 using cCoder.Core.Services.Aggregations.Packages;
 using cCoder.Core.Models.Exceptions;
@@ -15,7 +16,8 @@ namespace cCoder.Core.Exposures.Controllers;
 [ApiController]
 [Route("Api/Core/Package")]
 public class PackageManagerController(
-    IPackageManager packageManagerAggregationService)
+    IPackageManager packageManagerAggregationService,
+    ILoggingBroker loggingBroker)
     : ControllerBase
 {
     private static readonly JsonSerializerOptions JsonOptions = new()
@@ -40,18 +42,24 @@ public class PackageManagerController(
 
             return Ok(value: packages);
         }
-        catch (CoreOrchestrationValidationException)
+        catch (CoreOrchestrationValidationException exception)
         {
+            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+
             return BadRequest(error: "The package request is invalid.");
         }
-        catch (System.Security.SecurityException)
+        catch (System.Security.SecurityException exception)
         {
+            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+
             return StatusCode(
                 statusCode: StatusCodes.Status403Forbidden,
                 value: "The package operation is forbidden.");
         }
-        catch (Exception)
+        catch (Exception exception)
         {
+            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+
             return StatusCode(
                 statusCode: StatusCodes.Status500InternalServerError,
                 value: "The package operation failed.");
@@ -76,18 +84,24 @@ public class PackageManagerController(
 
             return Ok();
         }
-        catch (CoreOrchestrationValidationException)
+        catch (CoreOrchestrationValidationException exception)
         {
+            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+
             return BadRequest(error: "The package request is invalid.");
         }
-        catch (System.Security.SecurityException)
+        catch (System.Security.SecurityException exception)
         {
+            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+
             return StatusCode(
                 statusCode: StatusCodes.Status403Forbidden,
                 value: "The package operation is forbidden.");
         }
-        catch (Exception)
+        catch (Exception exception)
         {
+            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+
             return StatusCode(
                 statusCode: StatusCodes.Status500InternalServerError,
                 value: "The package operation failed.");
@@ -121,18 +135,24 @@ public class PackageManagerController(
 
             return Ok();
         }
-        catch (CoreOrchestrationValidationException)
+        catch (CoreOrchestrationValidationException exception)
         {
+            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+
             return BadRequest(error: "The package request is invalid.");
         }
-        catch (System.Security.SecurityException)
+        catch (System.Security.SecurityException exception)
         {
+            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+
             return StatusCode(
                 statusCode: StatusCodes.Status403Forbidden,
                 value: "The package operation is forbidden.");
         }
-        catch (Exception)
+        catch (Exception exception)
         {
+            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+
             return StatusCode(
                 statusCode: StatusCodes.Status500InternalServerError,
                 value: "The package operation failed.");

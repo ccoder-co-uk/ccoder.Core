@@ -719,6 +719,267 @@
       ]
     },
     {
+      "Name": "cCoder.Core.Brokers.Loggings.LoggingBroker",
+      "StandardElementType": "Broker",
+      "LineNumber": 7,
+      "IsPublic": false,
+      "Kind": "Class",
+      "BaseType": null,
+      "Interfaces": [
+        {
+          "Id": "cCoder.Core:cCoder.Core.Brokers.Loggings.ILoggingBroker",
+          "FullName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
+          "Name": "ILoggingBroker",
+          "Namespace": "cCoder.Core.Brokers.Loggings",
+          "AssemblyName": "cCoder.Core",
+          "Kind": "Interface",
+          "IsInCurrentProject": true,
+          "StandardElementType": "Broker"
+        }
+      ],
+      "Properties": [],
+      "Methods": [
+        {
+          "Id": "cCoder.Core.Brokers.Loggings.LoggingBroker.IsDebugEnabled()",
+          "Name": "IsDebugEnabled",
+          "LineNumber": 9,
+          "Inputs": [],
+          "ReturnType": "System.Boolean",
+          "Implements": [
+            "cCoder.Core.Brokers.Loggings.ILoggingBroker.IsDebugEnabled()"
+          ],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Brokers.Loggings.LoggingBroker.IsInformationEnabled()",
+          "Name": "IsInformationEnabled",
+          "LineNumber": 12,
+          "Inputs": [],
+          "ReturnType": "System.Boolean",
+          "Implements": [
+            "cCoder.Core.Brokers.Loggings.ILoggingBroker.IsInformationEnabled()"
+          ],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Brokers.Loggings.LoggingBroker.LogDebug(System.String,System.Object[])",
+          "Name": "LogDebug",
+          "LineNumber": 15,
+          "Inputs": [
+            {
+              "Name": "message",
+              "Type": "System.String"
+            },
+            {
+              "Name": "args",
+              "Type": "System.Object[]"
+            }
+          ],
+          "ReturnType": "System.Void",
+          "Implements": [
+            "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogDebug(System.String,System.Object[])"
+          ],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Brokers.Loggings.LoggingBroker.LogError(System.Exception,System.String,System.Object[])",
+          "Name": "LogError",
+          "LineNumber": 30,
+          "Inputs": [
+            {
+              "Name": "exception",
+              "Type": "System.Exception"
+            },
+            {
+              "Name": "message",
+              "Type": "System.String"
+            },
+            {
+              "Name": "args",
+              "Type": "System.Object[]"
+            }
+          ],
+          "ReturnType": "System.Void",
+          "Implements": [
+            "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])"
+          ],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Brokers.Loggings.LoggingBroker.LogError(System.String,System.Object[])",
+          "Name": "LogError",
+          "LineNumber": 27,
+          "Inputs": [
+            {
+              "Name": "message",
+              "Type": "System.String"
+            },
+            {
+              "Name": "args",
+              "Type": "System.Object[]"
+            }
+          ],
+          "ReturnType": "System.Void",
+          "Implements": [
+            "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.String,System.Object[])"
+          ],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Brokers.Loggings.LoggingBroker.LogInformation(System.String,System.Object[])",
+          "Name": "LogInformation",
+          "LineNumber": 18,
+          "Inputs": [
+            {
+              "Name": "message",
+              "Type": "System.String"
+            },
+            {
+              "Name": "args",
+              "Type": "System.Object[]"
+            }
+          ],
+          "ReturnType": "System.Void",
+          "Implements": [
+            "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogInformation(System.String,System.Object[])"
+          ],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Brokers.Loggings.LoggingBroker.LogWarning(System.Exception,System.String,System.Object[])",
+          "Name": "LogWarning",
+          "LineNumber": 24,
+          "Inputs": [
+            {
+              "Name": "exception",
+              "Type": "System.Exception"
+            },
+            {
+              "Name": "message",
+              "Type": "System.String"
+            },
+            {
+              "Name": "args",
+              "Type": "System.Object[]"
+            }
+          ],
+          "ReturnType": "System.Void",
+          "Implements": [
+            "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogWarning(System.Exception,System.String,System.Object[])"
+          ],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Brokers.Loggings.LoggingBroker.LogWarning(System.String,System.Object[])",
+          "Name": "LogWarning",
+          "LineNumber": 21,
+          "Inputs": [
+            {
+              "Name": "message",
+              "Type": "System.String"
+            },
+            {
+              "Name": "args",
+              "Type": "System.Object[]"
+            }
+          ],
+          "ReturnType": "System.Void",
+          "Implements": [
+            "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogWarning(System.String,System.Object[])"
+          ],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        }
+      ]
+    },
+    {
       "Name": "cCoder.Core.Brokers.Mail.MailAppBroker",
       "StandardElementType": "Broker",
       "LineNumber": 13,
@@ -1599,7 +1860,7 @@
     {
       "Name": "cCoder.Core.Dependencies.Hubs.NotificationHub",
       "StandardElementType": "Dependency",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -1618,7 +1879,7 @@
         {
           "Id": "cCoder.Core.Dependencies.Hubs.NotificationHub.ConsoleSend(System.String,System.String,System.String)",
           "Name": "ConsoleSend",
-          "LineNumber": 116,
+          "LineNumber": 117,
           "Inputs": [
             {
               "Name": "level",
@@ -1673,7 +1934,7 @@
         {
           "Id": "cCoder.Core.Dependencies.Hubs.NotificationHub.Join(System.String)",
           "Name": "Join",
-          "LineNumber": 47,
+          "LineNumber": 48,
           "Inputs": [
             {
               "Name": "thread",
@@ -1696,6 +1957,20 @@
               "MethodId": "System.Collections.Generic.IDictionary\u003CTKey, TValue\u003E.TryGetValue(TKey,TValue)",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "IsDebugEnabled",
+              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.IsDebugEnabled()",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
+            },
+            {
+              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "LogDebug",
+              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogDebug(System.String,System.Object[])",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
             }
           ],
           "PossibleExceptionTypes": [],
@@ -1713,7 +1988,7 @@
         {
           "Id": "cCoder.Core.Dependencies.Hubs.NotificationHub.Leave(System.String)",
           "Name": "Leave",
-          "LineNumber": 86,
+          "LineNumber": 87,
           "Inputs": [
             {
               "Name": "thread",
@@ -1729,6 +2004,20 @@
               "MethodId": "System.Collections.Generic.IDictionary\u003CTKey, TValue\u003E.Remove(TKey)",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "IsDebugEnabled",
+              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.IsDebugEnabled()",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
+            },
+            {
+              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "LogDebug",
+              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogDebug(System.String,System.Object[])",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
             }
           ],
           "PossibleExceptionTypes": [],
@@ -1746,11 +2035,26 @@
         {
           "Id": "cCoder.Core.Dependencies.Hubs.NotificationHub.OnConnectedAsync()",
           "Name": "OnConnectedAsync",
-          "LineNumber": 23,
+          "LineNumber": 24,
           "Inputs": [],
           "ReturnType": "System.Threading.Tasks.Task",
           "Implements": [],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "IsDebugEnabled",
+              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.IsDebugEnabled()",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
+            },
+            {
+              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "LogDebug",
+              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogDebug(System.String,System.Object[])",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -1766,7 +2070,7 @@
         {
           "Id": "cCoder.Core.Dependencies.Hubs.NotificationHub.OnDisconnectedAsync(System.Exception)",
           "Name": "OnDisconnectedAsync",
-          "LineNumber": 35,
+          "LineNumber": 36,
           "Inputs": [
             {
               "Name": "exception",
@@ -1775,7 +2079,22 @@
           ],
           "ReturnType": "System.Threading.Tasks.Task",
           "Implements": [],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "IsDebugEnabled",
+              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.IsDebugEnabled()",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
+            },
+            {
+              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "LogDebug",
+              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogDebug(System.String,System.Object[])",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -1791,7 +2110,7 @@
         {
           "Id": "cCoder.Core.Dependencies.Hubs.NotificationHub.Send(System.String,System.String,System.String)",
           "Name": "Send",
-          "LineNumber": 112,
+          "LineNumber": 113,
           "Inputs": [
             {
               "Name": "level",
@@ -1824,7 +2143,7 @@
         {
           "Id": "cCoder.Core.Dependencies.Hubs.NotificationHub.SendTest(System.String,System.String)",
           "Name": "SendTest",
-          "LineNumber": 130,
+          "LineNumber": 131,
           "Inputs": [
             {
               "Name": "message",
@@ -1866,7 +2185,7 @@
     {
       "Name": "cCoder.Core.Dependencies.Middleware.CoreExceptionMiddleware",
       "StandardElementType": "Dependency",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -1885,7 +2204,7 @@
         {
           "Id": "cCoder.Core.Dependencies.Middleware.CoreExceptionMiddleware.InvokeAsync(HttpContext,RequestDelegate)",
           "Name": "InvokeAsync",
-          "LineNumber": 13,
+          "LineNumber": 14,
           "Inputs": [
             {
               "Name": "context",
@@ -1898,7 +2217,22 @@
           ],
           "ReturnType": "System.Threading.Tasks.Task",
           "Implements": [],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "LogError",
+              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
+            },
+            {
+              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "LogWarning",
+              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogWarning(System.Exception,System.String,System.Object[])",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -2521,7 +2855,7 @@
     {
       "Name": "cCoder.Core.Exposures.Controllers.AppController",
       "StandardElementType": "HttpExposure",
-      "LineNumber": 15,
+      "LineNumber": 16,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -2540,7 +2874,7 @@
         {
           "Id": "cCoder.Core.Exposures.Controllers.AppController.Delete(System.Int32)",
           "Name": "Delete",
-          "LineNumber": 130,
+          "LineNumber": 152,
           "Inputs": [
             {
               "Name": "key",
@@ -2550,6 +2884,20 @@
           "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E",
           "Implements": [],
           "Calls": [
+            {
+              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "LogError",
+              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
+            },
+            {
+              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "LogError",
+              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.String,System.Object[])",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
+            },
             {
               "TypeName": "cCoder.Core.Exposures.ICoreAppManager",
               "MethodName": "DeleteAppAsync",
@@ -2582,7 +2930,8 @@
               "IsExceptionPath": false,
               "IsNullPath": false,
               "HasBody": false,
-              "ExposesExceptionDetails": false
+              "ExposesExceptionDetails": false,
+              "LogsException": false
             },
             {
               "StatusCode": 204,
@@ -2591,7 +2940,8 @@
               "IsExceptionPath": false,
               "IsNullPath": false,
               "HasBody": false,
-              "ExposesExceptionDetails": false
+              "ExposesExceptionDetails": false,
+              "LogsException": false
             },
             {
               "StatusCode": 400,
@@ -2600,7 +2950,8 @@
               "IsExceptionPath": true,
               "IsNullPath": false,
               "HasBody": true,
-              "ExposesExceptionDetails": false
+              "ExposesExceptionDetails": false,
+              "LogsException": true
             },
             {
               "StatusCode": 409,
@@ -2609,7 +2960,8 @@
               "IsExceptionPath": true,
               "IsNullPath": false,
               "HasBody": true,
-              "ExposesExceptionDetails": false
+              "ExposesExceptionDetails": false,
+              "LogsException": true
             }
           ],
           "IsHttpRequestHandler": true,
@@ -2622,7 +2974,7 @@
         {
           "Id": "cCoder.Core.Exposures.Controllers.AppController.DeleteAggregateRoute(System.Int32)",
           "Name": "DeleteAggregateRoute",
-          "LineNumber": 114,
+          "LineNumber": 134,
           "Inputs": [
             {
               "Name": "key",
@@ -2632,6 +2984,13 @@
           "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E",
           "Implements": [],
           "Calls": [
+            {
+              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "LogError",
+              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
+            },
             {
               "TypeName": "cCoder.Core.Exposures.Controllers.AppController",
               "MethodName": "Delete",
@@ -2664,7 +3023,7 @@
         {
           "Id": "cCoder.Core.Exposures.Controllers.AppController.Post(App)",
           "Name": "Post",
-          "LineNumber": 19,
+          "LineNumber": 21,
           "Inputs": [
             {
               "Name": "newApp",
@@ -2674,6 +3033,20 @@
           "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E",
           "Implements": [],
           "Calls": [
+            {
+              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "LogError",
+              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
+            },
+            {
+              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "LogError",
+              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.String,System.Object[])",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
+            },
             {
               "TypeName": "cCoder.Core.Exposures.ICoreAppManager",
               "MethodName": "AddAppAsync",
@@ -2706,7 +3079,8 @@
               "IsExceptionPath": false,
               "IsNullPath": false,
               "HasBody": true,
-              "ExposesExceptionDetails": false
+              "ExposesExceptionDetails": false,
+              "LogsException": false
             },
             {
               "StatusCode": 400,
@@ -2715,7 +3089,8 @@
               "IsExceptionPath": true,
               "IsNullPath": false,
               "HasBody": true,
-              "ExposesExceptionDetails": false
+              "ExposesExceptionDetails": false,
+              "LogsException": true
             },
             {
               "StatusCode": 409,
@@ -2724,7 +3099,8 @@
               "IsExceptionPath": true,
               "IsNullPath": false,
               "HasBody": true,
-              "ExposesExceptionDetails": false
+              "ExposesExceptionDetails": false,
+              "LogsException": true
             }
           ],
           "IsHttpRequestHandler": true,
@@ -2737,7 +3113,7 @@
         {
           "Id": "cCoder.Core.Exposures.Controllers.AppController.Put(System.Int32,App)",
           "Name": "Put",
-          "LineNumber": 55,
+          "LineNumber": 65,
           "Inputs": [
             {
               "Name": "key",
@@ -2751,6 +3127,20 @@
           "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E",
           "Implements": [],
           "Calls": [
+            {
+              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "LogError",
+              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
+            },
+            {
+              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "LogError",
+              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.String,System.Object[])",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
+            },
             {
               "TypeName": "cCoder.Core.Exposures.ICoreAppManager",
               "MethodName": "UpdateAppAsync",
@@ -2783,7 +3173,8 @@
               "IsExceptionPath": false,
               "IsNullPath": false,
               "HasBody": true,
-              "ExposesExceptionDetails": false
+              "ExposesExceptionDetails": false,
+              "LogsException": false
             },
             {
               "StatusCode": 400,
@@ -2792,7 +3183,8 @@
               "IsExceptionPath": false,
               "IsNullPath": false,
               "HasBody": true,
-              "ExposesExceptionDetails": false
+              "ExposesExceptionDetails": false,
+              "LogsException": false
             },
             {
               "StatusCode": 400,
@@ -2801,7 +3193,8 @@
               "IsExceptionPath": true,
               "IsNullPath": false,
               "HasBody": true,
-              "ExposesExceptionDetails": false
+              "ExposesExceptionDetails": false,
+              "LogsException": true
             },
             {
               "StatusCode": 409,
@@ -2810,7 +3203,8 @@
               "IsExceptionPath": true,
               "IsNullPath": false,
               "HasBody": true,
-              "ExposesExceptionDetails": false
+              "ExposesExceptionDetails": false,
+              "LogsException": true
             }
           ],
           "IsHttpRequestHandler": true,
@@ -2823,7 +3217,7 @@
         {
           "Id": "cCoder.Core.Exposures.Controllers.AppController.PutAggregateRoute(System.Int32,App)",
           "Name": "PutAggregateRoute",
-          "LineNumber": 96,
+          "LineNumber": 114,
           "Inputs": [
             {
               "Name": "key",
@@ -2837,6 +3231,13 @@
           "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E",
           "Implements": [],
           "Calls": [
+            {
+              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "LogError",
+              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
+            },
             {
               "TypeName": "cCoder.Core.Exposures.Controllers.AppController",
               "MethodName": "Put",
@@ -2871,7 +3272,7 @@
     {
       "Name": "cCoder.Core.Exposures.Controllers.PackageManagerController",
       "StandardElementType": "HttpExposure",
-      "LineNumber": 14,
+      "LineNumber": 15,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -2890,7 +3291,7 @@
         {
           "Id": "cCoder.Core.Exposures.Controllers.PackageManagerController.Get(System.Int32,System.String[])",
           "Name": "Get",
-          "LineNumber": 27,
+          "LineNumber": 29,
           "Inputs": [
             {
               "Name": "appId",
@@ -2904,6 +3305,13 @@
           "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E",
           "Implements": [],
           "Calls": [
+            {
+              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "LogError",
+              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
+            },
             {
               "TypeName": "cCoder.Core.Exposures.IPackageManager",
               "MethodName": "ExportPackagesAsync",
@@ -2933,7 +3341,8 @@
               "IsExceptionPath": false,
               "IsNullPath": false,
               "HasBody": true,
-              "ExposesExceptionDetails": false
+              "ExposesExceptionDetails": false,
+              "LogsException": false
             },
             {
               "StatusCode": 400,
@@ -2942,7 +3351,8 @@
               "IsExceptionPath": true,
               "IsNullPath": false,
               "HasBody": true,
-              "ExposesExceptionDetails": false
+              "ExposesExceptionDetails": false,
+              "LogsException": true
             }
           ],
           "IsHttpRequestHandler": true,
@@ -2955,7 +3365,7 @@
         {
           "Id": "cCoder.Core.Exposures.Controllers.PackageManagerController.Post(System.Int32,Package)",
           "Name": "Post",
-          "LineNumber": 62,
+          "LineNumber": 70,
           "Inputs": [
             {
               "Name": "appId",
@@ -2969,6 +3379,13 @@
           "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E",
           "Implements": [],
           "Calls": [
+            {
+              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "LogError",
+              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
+            },
             {
               "TypeName": "cCoder.Core.Exposures.IPackageManager",
               "MethodName": "ImportPackagesAsync",
@@ -3002,7 +3419,8 @@
               "IsExceptionPath": false,
               "IsNullPath": false,
               "HasBody": false,
-              "ExposesExceptionDetails": false
+              "ExposesExceptionDetails": false,
+              "LogsException": false
             },
             {
               "StatusCode": 400,
@@ -3011,7 +3429,8 @@
               "IsExceptionPath": false,
               "IsNullPath": false,
               "HasBody": true,
-              "ExposesExceptionDetails": false
+              "ExposesExceptionDetails": false,
+              "LogsException": false
             },
             {
               "StatusCode": 400,
@@ -3020,7 +3439,8 @@
               "IsExceptionPath": true,
               "IsNullPath": false,
               "HasBody": true,
-              "ExposesExceptionDetails": false
+              "ExposesExceptionDetails": false,
+              "LogsException": true
             }
           ],
           "IsHttpRequestHandler": true,
@@ -3033,7 +3453,7 @@
         {
           "Id": "cCoder.Core.Exposures.Controllers.PackageManagerController.PostThis(System.Int32)",
           "Name": "PostThis",
-          "LineNumber": 98,
+          "LineNumber": 112,
           "Inputs": [
             {
               "Name": "appId",
@@ -3058,6 +3478,13 @@
               "IsDependencyBoundary": true
             },
             {
+              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "LogError",
+              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
+            },
+            {
               "TypeName": "cCoder.Core.Exposures.IPackageManager",
               "MethodName": "ImportPackagesAsync",
               "MethodId": "cCoder.Core.Exposures.IPackageManager.ImportPackagesAsync(System.Int32,System.Collections.Generic.IEnumerable\u003CPackage\u003E)",
@@ -3090,7 +3517,8 @@
               "IsExceptionPath": false,
               "IsNullPath": false,
               "HasBody": false,
-              "ExposesExceptionDetails": false
+              "ExposesExceptionDetails": false,
+              "LogsException": false
             },
             {
               "StatusCode": 400,
@@ -3099,7 +3527,8 @@
               "IsExceptionPath": false,
               "IsNullPath": false,
               "HasBody": true,
-              "ExposesExceptionDetails": false
+              "ExposesExceptionDetails": false,
+              "LogsException": false
             },
             {
               "StatusCode": 400,
@@ -3108,7 +3537,8 @@
               "IsExceptionPath": true,
               "IsNullPath": false,
               "HasBody": true,
-              "ExposesExceptionDetails": false
+              "ExposesExceptionDetails": false,
+              "LogsException": true
             }
           ],
           "IsHttpRequestHandler": true,
@@ -3123,7 +3553,7 @@
     {
       "Name": "cCoder.Core.Exposures.Controllers.SetupController",
       "StandardElementType": "HttpExposure",
-      "LineNumber": 13,
+      "LineNumber": 14,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -3142,7 +3572,7 @@
         {
           "Id": "cCoder.Core.Exposures.Controllers.SetupController.Get(System.Threading.CancellationToken)",
           "Name": "Get",
-          "LineNumber": 21,
+          "LineNumber": 23,
           "Inputs": [
             {
               "Name": "cancellationToken",
@@ -3152,6 +3582,13 @@
           "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E",
           "Implements": [],
           "Calls": [
+            {
+              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "LogError",
+              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
+            },
             {
               "TypeName": "cCoder.Core.Exposures.IFirstTimeSetupManager",
               "MethodName": "IsInitializedAsync",
@@ -3189,7 +3626,8 @@
               "IsExceptionPath": true,
               "IsNullPath": false,
               "HasBody": true,
-              "ExposesExceptionDetails": false
+              "ExposesExceptionDetails": false,
+              "LogsException": true
             }
           ],
           "IsHttpRequestHandler": true,
@@ -3204,7 +3642,7 @@
     {
       "Name": "cCoder.Core.Exposures.Controllers.TemplatedEmailController",
       "StandardElementType": "HttpExposure",
-      "LineNumber": 16,
+      "LineNumber": 17,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -3223,7 +3661,7 @@
         {
           "Id": "cCoder.Core.Exposures.Controllers.TemplatedEmailController.Post(TemplatedEmailDetails)",
           "Name": "Post",
-          "LineNumber": 21,
+          "LineNumber": 23,
           "Inputs": [
             {
               "Name": "newTemplatedEmailDetails",
@@ -3233,6 +3671,13 @@
           "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E",
           "Implements": [],
           "Calls": [
+            {
+              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "LogError",
+              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
+            },
             {
               "TypeName": "cCoder.Core.Exposures.Managers.ITemplatedEmailManager",
               "MethodName": "QueueTemplatedEmailDetailsAsync",
@@ -3266,7 +3711,8 @@
               "IsExceptionPath": false,
               "IsNullPath": false,
               "HasBody": true,
-              "ExposesExceptionDetails": false
+              "ExposesExceptionDetails": false,
+              "LogsException": false
             },
             {
               "StatusCode": 400,
@@ -3275,7 +3721,8 @@
               "IsExceptionPath": false,
               "IsNullPath": false,
               "HasBody": true,
-              "ExposesExceptionDetails": false
+              "ExposesExceptionDetails": false,
+              "LogsException": false
             },
             {
               "StatusCode": 400,
@@ -3284,7 +3731,8 @@
               "IsExceptionPath": true,
               "IsNullPath": false,
               "HasBody": true,
-              "ExposesExceptionDetails": false
+              "ExposesExceptionDetails": false,
+              "LogsException": true
             }
           ],
           "IsHttpRequestHandler": true,
@@ -3299,7 +3747,7 @@
     {
       "Name": "cCoder.Core.Exposures.Cors.CoreAllowedOriginStore",
       "StandardElementType": "Exposure",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -3320,7 +3768,7 @@
         {
           "Id": "cCoder.Core.Exposures.Cors.CoreAllowedOriginStore.IsAllowedAsync(System.String)",
           "Name": "IsAllowedAsync",
-          "LineNumber": 14,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "origin",
@@ -3332,6 +3780,13 @@
             "cCoder.Core.Exposures.Cors.ICoreAllowedOriginStore.IsAllowedAsync(System.String)"
           ],
           "Calls": [
+            {
+              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "LogWarning",
+              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogWarning(System.String,System.Object[])",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
+            },
             {
               "TypeName": "cCoder.Core.Services.Processings.AllowedOrigins.IAllowedOriginStoreProcessingService",
               "MethodName": "IsCoreAllowedOriginAllowedAsync",
@@ -10881,6 +11336,240 @@
       ]
     },
     {
+      "Name": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
+      "StandardElementType": "Broker",
+      "LineNumber": 7,
+      "IsPublic": true,
+      "Kind": "Interface",
+      "BaseType": null,
+      "Interfaces": [],
+      "Properties": [],
+      "Methods": [
+        {
+          "Id": "cCoder.Core.Brokers.Loggings.ILoggingBroker.IsDebugEnabled()",
+          "Name": "IsDebugEnabled",
+          "LineNumber": 9,
+          "Inputs": [],
+          "ReturnType": "System.Boolean",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Brokers.Loggings.ILoggingBroker.IsInformationEnabled()",
+          "Name": "IsInformationEnabled",
+          "LineNumber": 10,
+          "Inputs": [],
+          "ReturnType": "System.Boolean",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogDebug(System.String,System.Object[])",
+          "Name": "LogDebug",
+          "LineNumber": 11,
+          "Inputs": [
+            {
+              "Name": "message",
+              "Type": "System.String"
+            },
+            {
+              "Name": "args",
+              "Type": "System.Object[]"
+            }
+          ],
+          "ReturnType": "System.Void",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])",
+          "Name": "LogError",
+          "LineNumber": 16,
+          "Inputs": [
+            {
+              "Name": "exception",
+              "Type": "System.Exception"
+            },
+            {
+              "Name": "message",
+              "Type": "System.String"
+            },
+            {
+              "Name": "args",
+              "Type": "System.Object[]"
+            }
+          ],
+          "ReturnType": "System.Void",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.String,System.Object[])",
+          "Name": "LogError",
+          "LineNumber": 15,
+          "Inputs": [
+            {
+              "Name": "message",
+              "Type": "System.String"
+            },
+            {
+              "Name": "args",
+              "Type": "System.Object[]"
+            }
+          ],
+          "ReturnType": "System.Void",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogInformation(System.String,System.Object[])",
+          "Name": "LogInformation",
+          "LineNumber": 12,
+          "Inputs": [
+            {
+              "Name": "message",
+              "Type": "System.String"
+            },
+            {
+              "Name": "args",
+              "Type": "System.Object[]"
+            }
+          ],
+          "ReturnType": "System.Void",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogWarning(System.Exception,System.String,System.Object[])",
+          "Name": "LogWarning",
+          "LineNumber": 14,
+          "Inputs": [
+            {
+              "Name": "exception",
+              "Type": "System.Exception"
+            },
+            {
+              "Name": "message",
+              "Type": "System.String"
+            },
+            {
+              "Name": "args",
+              "Type": "System.Object[]"
+            }
+          ],
+          "ReturnType": "System.Void",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogWarning(System.String,System.Object[])",
+          "Name": "LogWarning",
+          "LineNumber": 13,
+          "Inputs": [
+            {
+              "Name": "message",
+              "Type": "System.String"
+            },
+            {
+              "Name": "args",
+              "Type": "System.Object[]"
+            }
+          ],
+          "ReturnType": "System.Void",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        }
+      ]
+    },
+    {
       "Name": "cCoder.Core.Brokers.Mail.IMailAppBroker",
       "StandardElementType": "Broker",
       "LineNumber": 12,
@@ -14009,8 +14698,20 @@
       "ToType": "cCoder.Core.Services.Processings.Formatters.FormatterODataProcessingService"
     },
     {
+      "FromType": "cCoder.Core.Dependencies.Hubs.NotificationHub",
+      "ToType": "cCoder.Core.Brokers.Loggings.LoggingBroker"
+    },
+    {
+      "FromType": "cCoder.Core.Dependencies.Middleware.CoreExceptionMiddleware",
+      "ToType": "cCoder.Core.Brokers.Loggings.LoggingBroker"
+    },
+    {
       "FromType": "cCoder.Core.Dependencies.Middleware.CoreFormatterMiddleware",
       "ToType": "cCoder.Core.Services.Processings.Middleware.CoreFormatterMiddlewareProcessingService"
+    },
+    {
+      "FromType": "cCoder.Core.Exposures.Controllers.AppController",
+      "ToType": "cCoder.Core.Brokers.Loggings.LoggingBroker"
     },
     {
       "FromType": "cCoder.Core.Exposures.Controllers.AppController",
@@ -14018,7 +14719,15 @@
     },
     {
       "FromType": "cCoder.Core.Exposures.Controllers.PackageManagerController",
+      "ToType": "cCoder.Core.Brokers.Loggings.LoggingBroker"
+    },
+    {
+      "FromType": "cCoder.Core.Exposures.Controllers.PackageManagerController",
       "ToType": "cCoder.Core.Services.Aggregations.Packages.PackageManagerAggregationService"
+    },
+    {
+      "FromType": "cCoder.Core.Exposures.Controllers.SetupController",
+      "ToType": "cCoder.Core.Brokers.Loggings.LoggingBroker"
     },
     {
       "FromType": "cCoder.Core.Exposures.Controllers.SetupController",
@@ -14034,7 +14743,15 @@
     },
     {
       "FromType": "cCoder.Core.Exposures.Controllers.TemplatedEmailController",
+      "ToType": "cCoder.Core.Brokers.Loggings.LoggingBroker"
+    },
+    {
+      "FromType": "cCoder.Core.Exposures.Controllers.TemplatedEmailController",
       "ToType": "cCoder.Core.Exposures.Managers.TemplatedEmailManager"
+    },
+    {
+      "FromType": "cCoder.Core.Exposures.Cors.CoreAllowedOriginStore",
+      "ToType": "cCoder.Core.Brokers.Loggings.LoggingBroker"
     },
     {
       "FromType": "cCoder.Core.Exposures.Cors.CoreAllowedOriginStore",
@@ -14248,21 +14965,14 @@
       "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
       "Severity": "Warning",
       "Type": "cCoder.Core.Exposures.Controllers.AppController",
-      "LineNumber": 19
+      "LineNumber": 21
     },
     {
       "Code": "STXAPI005",
       "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
       "Severity": "Warning",
       "Type": "cCoder.Core.Exposures.Controllers.AppController",
-      "LineNumber": 55
-    },
-    {
-      "Code": "STXAPI005",
-      "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.Exposures.Controllers.AppController",
-      "LineNumber": 96
+      "LineNumber": 65
     },
     {
       "Code": "STXAPI005",
@@ -14276,49 +14986,56 @@
       "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
       "Severity": "Warning",
       "Type": "cCoder.Core.Exposures.Controllers.AppController",
-      "LineNumber": 130
+      "LineNumber": 134
+    },
+    {
+      "Code": "STXAPI005",
+      "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Controllers.AppController",
+      "LineNumber": 152
     },
     {
       "Code": "STXAPI005",
       "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
       "Severity": "Warning",
       "Type": "cCoder.Core.Exposures.Controllers.PackageManagerController",
-      "LineNumber": 27
+      "LineNumber": 29
     },
     {
       "Code": "STXAPI005",
       "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
       "Severity": "Warning",
       "Type": "cCoder.Core.Exposures.Controllers.PackageManagerController",
-      "LineNumber": 62
+      "LineNumber": 70
     },
     {
       "Code": "STXAPI005",
       "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
       "Severity": "Warning",
       "Type": "cCoder.Core.Exposures.Controllers.PackageManagerController",
-      "LineNumber": 98
+      "LineNumber": 112
     },
     {
       "Code": "STXAPI001",
       "Description": "An API controller must have exactly one business dependency.",
       "Severity": "Warning",
       "Type": "cCoder.Core.Exposures.Controllers.SetupController",
-      "LineNumber": 13
+      "LineNumber": 14
     },
     {
       "Code": "STXAPI005",
       "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
       "Severity": "Warning",
       "Type": "cCoder.Core.Exposures.Controllers.SetupController",
-      "LineNumber": 21
+      "LineNumber": 23
     },
     {
       "Code": "STXAPI005",
       "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
       "Severity": "Warning",
       "Type": "cCoder.Core.Exposures.Controllers.TemplatedEmailController",
-      "LineNumber": 21
+      "LineNumber": 23
     },
     {
       "Code": "STXF002",

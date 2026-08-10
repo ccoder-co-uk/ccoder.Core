@@ -13,6 +13,7 @@ using cCoder.Workflow.Activities.Models;
 using cCoder.Workflow.Brokers;
 using cCoder.Workflow.Exposures;
 using cCoder.Core.Models;
+using cCoder.Core.Brokers.Loggings;
 using Microsoft.EntityFrameworkCore;
 
 namespace HostedServices;
@@ -23,7 +24,7 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
     ICoreContextFactory coreContextFactory,
     IServiceProvider serviceProvider,
     CoreConfiguration configuration,
-    ILogger<HostedServicesWorkflowInstanceManagementOrchestrationService> log)
+    ILoggingBroker log)
     : IWorkflowInstanceManager
 {
     public IQueryable<FlowInstanceData> GetAll(bool ignoreFilters = false) =>
@@ -162,7 +163,7 @@ internal sealed class HostedServicesWorkflowInstanceManagementOrchestrationServi
 
         if (dropCount > 0)
         {
-            if (log.IsEnabled(logLevel: LogLevel.Information))
+            if (log.IsInformationEnabled())
             {
                 log.LogInformation(
                     message: "Dropped {Count} Workflow instances older than 7 days.",

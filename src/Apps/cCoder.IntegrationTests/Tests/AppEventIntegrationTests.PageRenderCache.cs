@@ -169,8 +169,9 @@ public sealed partial class AppEventIntegrationTests
 
             using HttpResponseMessage importResponse = await fixture.WebClient.PostAsJsonAsync(
                 requestUri: $"/Api/Core/Package/Import?appId={appId}",
-                value: new Package(name: "Minimal cache invalidation")
+                value: new Package
                 {
+                    Name = "Minimal cache invalidation",
                     Items =
                     [
                         new PackageItem

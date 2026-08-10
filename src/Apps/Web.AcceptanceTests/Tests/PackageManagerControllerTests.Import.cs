@@ -91,8 +91,9 @@ public sealed partial class PackageManagerControllerTests
         // Given
         string uniqueResourceKey = Unique(prefix: "resource-key");
 
-        Package package = new("Resources")
+        Package package = new()
         {
+            Name = "Resources",
             Items =
             [
                 new PackageItem
