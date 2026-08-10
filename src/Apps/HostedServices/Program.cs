@@ -4,6 +4,7 @@
 
 using cCoder.Core;
 using cCoder.Core.Models;
+using cCoder.AppSecurity.Models;
 using cCoder.ContentManagement.Models;
 using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.DMS;
@@ -15,6 +16,7 @@ using cCoder.Eventing.Models;
 using cCoder.Security.Models.Events;
 using cCoder.Workflow.Exposures;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using ContentManagementPackageImportEvent = cCoder.ContentManagement.Models.PackageImportEvent;
 
 namespace HostedServices;
 
@@ -51,8 +53,10 @@ public class Program
             CreateExternalReceiveProvider<ScheduledTask>(
                 ["scheduled_task_execute"]),
             CreateQueuedFlowInstanceReceiveProvider(),
-            CreateExternalReceiveProvider<PackageImportEvent>(
-                ["package_import_complete"]),
+            CreateExternalReceiveProvider<ContentManagementPackageImportEvent>(
+                ["package_import", "package_import_complete"]),
+            CreateExternalReceiveProvider<AppSecurityPackageEvent>(
+                ["content_pages_imported"]),
             CreateExternalReceiveProvider<UncachedPageRenderEvent>(
                 ["uncached_page_render"]),
             CreateExternalReceiveProvider<SecurityAccountEvent>(

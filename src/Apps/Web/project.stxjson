@@ -218,7 +218,7 @@
     {
       "Name": "Web.Controllers.Api.ApiRootController",
       "StandardElementType": "HttpExposure",
-      "LineNumber": 15,
+      "LineNumber": 14,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -237,7 +237,7 @@
         {
           "Id": "Web.Controllers.Api.ApiRootController.Get()",
           "Name": "Get",
-          "LineNumber": 22,
+          "LineNumber": 20,
           "Inputs": [],
           "ReturnType": "IActionResult",
           "Implements": [],
@@ -248,13 +248,6 @@
               "MethodId": "Web.Exposures.IApiContextManager.GetApiInfos()",
               "StandardElementType": "Exposure",
               "IsDependencyBoundary": false
-            },
-            {
-              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
-              "MethodName": "LogError",
-              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
             }
           ],
           "PossibleExceptionTypes": [
@@ -276,8 +269,7 @@
               "IsExceptionPath": false,
               "IsNullPath": false,
               "HasBody": true,
-              "ExposesExceptionDetails": false,
-              "LogsException": false
+              "ExposesExceptionDetails": false
             }
           ],
           "IsHttpRequestHandler": true,
@@ -290,19 +282,11 @@
         {
           "Id": "Web.Controllers.Api.ApiRootController.GetTime()",
           "Name": "GetTime",
-          "LineNumber": 81,
+          "LineNumber": 73,
           "Inputs": [],
           "ReturnType": "IActionResult",
           "Implements": [],
-          "Calls": [
-            {
-              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
-              "MethodName": "LogError",
-              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            }
-          ],
+          "Calls": [],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -317,8 +301,7 @@
               "IsExceptionPath": false,
               "IsNullPath": false,
               "HasBody": true,
-              "ExposesExceptionDetails": false,
-              "LogsException": false
+              "ExposesExceptionDetails": false
             }
           ],
           "IsHttpRequestHandler": true,
@@ -331,7 +314,7 @@
         {
           "Id": "Web.Controllers.Api.ApiRootController.Post()",
           "Name": "Post",
-          "LineNumber": 44,
+          "LineNumber": 40,
           "Inputs": [],
           "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E",
           "Implements": [],
@@ -347,13 +330,6 @@
               "TypeName": "System.IO.StreamReader",
               "MethodName": "ReadToEndAsync",
               "MethodId": "System.IO.StreamReader.ReadToEndAsync()",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
-              "MethodName": "LogError",
-              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
             },
@@ -382,7 +358,7 @@
         {
           "Id": "Web.Controllers.Api.ApiRootController.Put()",
           "Name": "Put",
-          "LineNumber": 64,
+          "LineNumber": 58,
           "Inputs": [],
           "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E",
           "Implements": [],
@@ -393,13 +369,6 @@
               "MethodId": "Web.Controllers.Api.ApiRootController.Post()",
               "StandardElementType": "HttpExposure",
               "IsDependencyBoundary": false
-            },
-            {
-              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
-              "MethodName": "LogError",
-              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
             }
           ],
           "PossibleExceptionTypes": [],
@@ -421,7 +390,7 @@
     {
       "Name": "Web.Controllers.Api.CacheController",
       "StandardElementType": "HttpExposure",
-      "LineNumber": 12,
+      "LineNumber": 11,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -440,7 +409,7 @@
         {
           "Id": "Web.Controllers.Api.CacheController.GetRefreshCache()",
           "Name": "GetRefreshCache",
-          "LineNumber": 19,
+          "LineNumber": 17,
           "Inputs": [],
           "ReturnType": "IActionResult",
           "Implements": [],
@@ -451,13 +420,6 @@
               "MethodId": "Web.Exposures.IApiCacheManager.RefreshCaches()",
               "StandardElementType": "Exposure",
               "IsDependencyBoundary": false
-            },
-            {
-              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
-              "MethodName": "LogError",
-              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
             }
           ],
           "PossibleExceptionTypes": [
@@ -482,8 +444,7 @@
               "IsExceptionPath": false,
               "IsNullPath": false,
               "HasBody": false,
-              "ExposesExceptionDetails": false,
-              "LogsException": false
+              "ExposesExceptionDetails": false
             },
             {
               "StatusCode": 400,
@@ -492,8 +453,7 @@
               "IsExceptionPath": true,
               "IsNullPath": false,
               "HasBody": true,
-              "ExposesExceptionDetails": false,
-              "LogsException": true
+              "ExposesExceptionDetails": false
             }
           ],
           "IsHttpRequestHandler": true,
@@ -508,7 +468,7 @@
     {
       "Name": "Web.Controllers.Api.MetadataController",
       "StandardElementType": "HttpExposure",
-      "LineNumber": 12,
+      "LineNumber": 11,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -527,7 +487,7 @@
         {
           "Id": "Web.Controllers.Api.MetadataController.GetMetadata(System.String)",
           "Name": "GetMetadata",
-          "LineNumber": 19,
+          "LineNumber": 17,
           "Inputs": [
             {
               "Name": "culture",
@@ -541,13 +501,6 @@
               "TypeName": "cCoder.ContentManagement.Exposures.Caching.IMetadataCache",
               "MethodName": "GetAll",
               "MethodId": "cCoder.ContentManagement.Exposures.Caching.IMetadataCache.GetAll(System.String)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
-              "MethodName": "LogError",
-              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
             }
@@ -571,7 +524,7 @@
     {
       "Name": "Web.Controllers.Api.ScriptController",
       "StandardElementType": "HttpExposure",
-      "LineNumber": 13,
+      "LineNumber": 12,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -590,7 +543,7 @@
         {
           "Id": "Web.Controllers.Api.ScriptController.PostExecuteScript()",
           "Name": "PostExecuteScript",
-          "LineNumber": 20,
+          "LineNumber": 18,
           "Inputs": [],
           "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E",
           "Implements": [],
@@ -615,13 +568,6 @@
               "MethodId": "Web.Exposures.IApiScriptManager.ExecuteApiScriptRequestAsync(Web.Models.ApiScriptRequest)",
               "StandardElementType": "Exposure",
               "IsDependencyBoundary": false
-            },
-            {
-              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
-              "MethodName": "LogError",
-              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
             }
           ],
           "PossibleExceptionTypes": [
@@ -649,8 +595,7 @@
               "IsExceptionPath": false,
               "IsNullPath": false,
               "HasBody": true,
-              "ExposesExceptionDetails": false,
-              "LogsException": false
+              "ExposesExceptionDetails": false
             },
             {
               "StatusCode": 400,
@@ -659,8 +604,7 @@
               "IsExceptionPath": true,
               "IsNullPath": false,
               "HasBody": true,
-              "ExposesExceptionDetails": false,
-              "LogsException": true
+              "ExposesExceptionDetails": false
             }
           ],
           "IsHttpRequestHandler": true,
@@ -675,7 +619,7 @@
     {
       "Name": "Web.Controllers.HomeController",
       "StandardElementType": "HttpExposure",
-      "LineNumber": 24,
+      "LineNumber": 23,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -694,7 +638,7 @@
         {
           "Id": "Web.Controllers.HomeController.Index(System.String,System.String,System.String,System.Boolean,System.Threading.CancellationToken)",
           "Name": "Index",
-          "LineNumber": 37,
+          "LineNumber": 36,
           "Inputs": [
             {
               "Name": "path",
@@ -749,27 +693,6 @@
               "IsDependencyBoundary": true
             },
             {
-              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
-              "MethodName": "LogError",
-              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
-              "MethodName": "LogWarning",
-              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogWarning(System.Exception,System.String,System.Object[])",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
-              "MethodName": "LogWarning",
-              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogWarning(System.String,System.Object[])",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
               "TypeName": "cCoder.Core.Exposures.IFirstTimeSetupManager",
               "MethodName": "IsInitializedAsync",
               "MethodId": "cCoder.Core.Exposures.IFirstTimeSetupManager.IsInitializedAsync(System.Threading.CancellationToken)",
@@ -814,8 +737,7 @@
               "IsExceptionPath": false,
               "IsNullPath": false,
               "HasBody": false,
-              "ExposesExceptionDetails": false,
-              "LogsException": false
+              "ExposesExceptionDetails": false
             },
             {
               "StatusCode": 400,
@@ -824,8 +746,7 @@
               "IsExceptionPath": true,
               "IsNullPath": false,
               "HasBody": true,
-              "ExposesExceptionDetails": false,
-              "LogsException": true
+              "ExposesExceptionDetails": false
             },
             {
               "StatusCode": 404,
@@ -834,8 +755,7 @@
               "IsExceptionPath": true,
               "IsNullPath": false,
               "HasBody": true,
-              "ExposesExceptionDetails": false,
-              "LogsException": true
+              "ExposesExceptionDetails": false
             }
           ],
           "IsHttpRequestHandler": true,
@@ -1726,7 +1646,7 @@
     {
       "Name": "Web.Program",
       "StandardElementType": "App",
-      "LineNumber": 22,
+      "LineNumber": 23,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -1736,7 +1656,7 @@
         {
           "Id": "Web.Program.Main(System.String[])",
           "Name": "Main",
-          "LineNumber": 24,
+          "LineNumber": 25,
           "Inputs": [
             {
               "Name": "args",
@@ -3070,70 +2990,70 @@
       "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
       "Severity": "Warning",
       "Type": "Web.Controllers.Api.ApiRootController",
-      "LineNumber": 22
+      "LineNumber": 20
     },
     {
       "Code": "STXAPI005",
       "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
       "Severity": "Warning",
       "Type": "Web.Controllers.Api.ApiRootController",
-      "LineNumber": 44
+      "LineNumber": 40
     },
     {
       "Code": "STXAPI005",
       "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
       "Severity": "Warning",
       "Type": "Web.Controllers.Api.ApiRootController",
-      "LineNumber": 64
+      "LineNumber": 58
     },
     {
       "Code": "STXAPI005",
       "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
       "Severity": "Warning",
       "Type": "Web.Controllers.Api.ApiRootController",
-      "LineNumber": 81
+      "LineNumber": 73
     },
     {
       "Code": "STXAPI005",
       "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
       "Severity": "Warning",
       "Type": "Web.Controllers.Api.CacheController",
-      "LineNumber": 19
+      "LineNumber": 17
     },
     {
       "Code": "STXAPI005",
       "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
       "Severity": "Warning",
       "Type": "Web.Controllers.Api.MetadataController",
-      "LineNumber": 19
+      "LineNumber": 17
     },
     {
       "Code": "STXAPI005",
       "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
       "Severity": "Warning",
       "Type": "Web.Controllers.Api.ScriptController",
-      "LineNumber": 20
+      "LineNumber": 18
     },
     {
       "Code": "STXAPI001",
       "Description": "An API controller must have exactly one business dependency.",
       "Severity": "Warning",
       "Type": "Web.Controllers.HomeController",
-      "LineNumber": 24
+      "LineNumber": 23
     },
     {
       "Code": "STXAPI004",
       "Description": "API controller methods must use HTTP nouns: Get, Post, Put, or Delete.",
       "Severity": "Warning",
       "Type": "Web.Controllers.HomeController",
-      "LineNumber": 36
+      "LineNumber": 35
     },
     {
       "Code": "STXAPI005",
       "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
       "Severity": "Warning",
       "Type": "Web.Controllers.HomeController",
-      "LineNumber": 37
+      "LineNumber": 36
     }
   ]
 }

@@ -65,6 +65,7 @@ public static partial class WebApplicationExtensions
 
         app.EnsureCoreDatabasesMigrated(log: log);
         app.UseCoreSecurityHeaders();
+        app.PopulateSecurityMetadataTypeCache();
 
         IHostedService[] hostedServices = [.. app.Services.GetServices<IHostedService>()];
 

@@ -52,7 +52,7 @@
     {
       "Name": "HostedServices.Controllers.WorkflowController",
       "StandardElementType": "HttpExposure",
-      "LineNumber": 11,
+      "LineNumber": 10,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -71,19 +71,11 @@
         {
           "Id": "HostedServices.Controllers.WorkflowController.Get()",
           "Name": "Get",
-          "LineNumber": 18,
+          "LineNumber": 17,
           "Inputs": [],
           "ReturnType": "IActionResult",
           "Implements": [],
-          "Calls": [
-            {
-              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
-              "MethodName": "LogError",
-              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            }
-          ],
+          "Calls": [],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -101,18 +93,11 @@
         {
           "Id": "HostedServices.Controllers.WorkflowController.GetStats()",
           "Name": "GetStats",
-          "LineNumber": 60,
+          "LineNumber": 57,
           "Inputs": [],
           "ReturnType": "IActionResult",
           "Implements": [],
           "Calls": [
-            {
-              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
-              "MethodName": "LogError",
-              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
             {
               "TypeName": "cCoder.Workflow.Exposures.IWorkflowInstanceManager",
               "MethodName": "GetStats",
@@ -138,7 +123,7 @@
         {
           "Id": "HostedServices.Controllers.WorkflowController.Post(System.Guid)",
           "Name": "Post",
-          "LineNumber": 37,
+          "LineNumber": 34,
           "Inputs": [
             {
               "Name": "flowId",
@@ -148,13 +133,6 @@
           "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E",
           "Implements": [],
           "Calls": [
-            {
-              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
-              "MethodName": "LogError",
-              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
             {
               "TypeName": "cCoder.Workflow.Exposures.IWorkflowInstanceManager",
               "MethodName": "ExecuteWaitingQueuedInstanceByIdAsync",
@@ -177,8 +155,7 @@
               "IsExceptionPath": false,
               "IsNullPath": false,
               "HasBody": false,
-              "ExposesExceptionDetails": false,
-              "LogsException": false
+              "ExposesExceptionDetails": false
             }
           ],
           "IsHttpRequestHandler": true,
@@ -193,7 +170,7 @@
     {
       "Name": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService",
       "StandardElementType": "Dependency",
-      "LineNumber": 21,
+      "LineNumber": 20,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -214,7 +191,7 @@
         {
           "Id": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService.ExecuteWaitingQueuedInstanceByIdAsync(System.Guid)",
           "Name": "ExecuteWaitingQueuedInstanceByIdAsync",
-          "LineNumber": 63,
+          "LineNumber": 62,
           "Inputs": [
             {
               "Name": "id",
@@ -247,7 +224,7 @@
         {
           "Id": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService.GetAll(System.Boolean)",
           "Name": "GetAll",
-          "LineNumber": 30,
+          "LineNumber": 29,
           "Inputs": [
             {
               "Name": "ignoreFilters",
@@ -282,7 +259,7 @@
         {
           "Id": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService.GetStats()",
           "Name": "GetStats",
-          "LineNumber": 60,
+          "LineNumber": 59,
           "Inputs": [],
           "ReturnType": "System.Object[]",
           "Implements": [
@@ -312,7 +289,7 @@
         {
           "Id": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService.RunAsync(System.Threading.CancellationToken)",
           "Name": "RunAsync",
-          "LineNumber": 33,
+          "LineNumber": 32,
           "Inputs": [
             {
               "Name": "cancellationToken",
@@ -337,13 +314,6 @@
               "MethodId": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService.RunQueueInstanceBackgroundServiceDependencyAsync(System.Threading.CancellationToken)",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": false
-            },
-            {
-              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
-              "MethodName": "LogError",
-              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
             }
           ],
           "PossibleExceptionTypes": [
@@ -363,7 +333,7 @@
         {
           "Id": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService.RunInstanceMaintenanceAsync(System.Threading.CancellationToken)",
           "Name": "RunInstanceMaintenanceAsync",
-          "LineNumber": 81,
+          "LineNumber": 80,
           "Inputs": [
             {
               "Name": "cancellationToken",
@@ -374,15 +344,7 @@
           "Implements": [
             "cCoder.Workflow.Exposures.IWorkflowInstanceManager.RunInstanceMaintenanceAsync(System.Threading.CancellationToken)"
           ],
-          "Calls": [
-            {
-              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
-              "MethodName": "LogError",
-              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            }
-          ],
+          "Calls": [],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -398,7 +360,7 @@
         {
           "Id": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService.RunInstanceMaintenanceContinuouslyAsync(System.Threading.CancellationToken)",
           "Name": "RunInstanceMaintenanceContinuouslyAsync",
-          "LineNumber": 68,
+          "LineNumber": 67,
           "Inputs": [
             {
               "Name": "cancellationToken",
@@ -454,7 +416,7 @@
         {
           "Id": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService.RunQueueInstanceBackgroundServiceDependencyAsync(System.Threading.CancellationToken)",
           "Name": "RunQueueInstanceBackgroundServiceDependencyAsync",
-          "LineNumber": 121,
+          "LineNumber": 120,
           "Inputs": [
             {
               "Name": "cancellationToken",
@@ -465,15 +427,7 @@
           "Implements": [
             "cCoder.Workflow.Exposures.IWorkflowInstanceManager.RunQueueInstanceBackgroundServiceDependencyAsync(System.Threading.CancellationToken)"
           ],
-          "Calls": [
-            {
-              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
-              "MethodName": "LogError",
-              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            }
-          ],
+          "Calls": [],
           "PossibleExceptionTypes": [
             "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException"
           ],
@@ -493,7 +447,7 @@
         {
           "Id": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService.RunQueueInstanceBackgroundServiceDependencyContinuouslyAsync(System.Threading.CancellationToken)",
           "Name": "RunQueueInstanceBackgroundServiceDependencyContinuouslyAsync",
-          "LineNumber": 107,
+          "LineNumber": 106,
           "Inputs": [
             {
               "Name": "cancellationToken",
@@ -613,7 +567,7 @@
     {
       "Name": "HostedServices.Program",
       "StandardElementType": "App",
-      "LineNumber": 21,
+      "LineNumber": 22,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -623,7 +577,7 @@
         {
           "Id": "HostedServices.Program.Main(System.String[])",
           "Name": "Main",
-          "LineNumber": 23,
+          "LineNumber": 24,
           "Inputs": [
             {
               "Name": "args",
@@ -676,21 +630,21 @@
       "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
       "Severity": "Warning",
       "Type": "HostedServices.Controllers.WorkflowController",
-      "LineNumber": 18
+      "LineNumber": 17
     },
     {
       "Code": "STXAPI005",
       "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
       "Severity": "Warning",
       "Type": "HostedServices.Controllers.WorkflowController",
-      "LineNumber": 37
+      "LineNumber": 34
     },
     {
       "Code": "STXAPI005",
       "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
       "Severity": "Warning",
       "Type": "HostedServices.Controllers.WorkflowController",
-      "LineNumber": 60
+      "LineNumber": 57
     }
   ]
 }

@@ -460,9 +460,13 @@ function Guid() {
     return crypto.randomUUID();
 };
 
-function initContent() {
+async function initContent() {
     // auto init components dropped on the page
-    $.each($(".component"), function (i, c) {
+    const pageComponents = $(".component").filter(function () {
+        return $(this).parents(".component").length === 0;
+    });
+
+    $.each(pageComponents, function (i, c) {
         try {
             let name = $(c).attr("name");
 

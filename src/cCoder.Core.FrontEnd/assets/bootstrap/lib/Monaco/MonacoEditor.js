@@ -14,6 +14,22 @@ var monacoEditorLoader = {
         window.MonacoEnvironment = { getWorkerUrl: () => proxy };
     },
 
+    configureNonce: function() {
+        let requestNonce = document.querySelector("script[nonce]")?.nonce;
+        if (!requestNonce || Node.prototype.monacoNonceConfigured) return;
+
+        let appendChild = Node.prototype.appendChild;
+        Node.prototype.appendChild = function(node) {
+            if (node.tagName === "STYLE" && !node.nonce) {
+                node.nonce = requestNonce;
+            }
+
+            return appendChild.call(this, node);
+        };
+
+        Node.prototype.monacoNonceConfigured = true;
+    },
+
     loadMonaco: function() {
         if (window.monaco && window.monaco.editor) {
             return Promise.resolve(window.monaco);
@@ -24,6 +40,7 @@ var monacoEditorLoader = {
         }
 
         monacoEditorLoader.configureWorker();
+        monacoEditorLoader.configureNonce();
 
         monacoEditorLoader.loadPromise = new Promise((resolve, reject) => {
             const configure = () => {
@@ -35,7 +52,8 @@ var monacoEditorLoader = {
                 window.require.config({
                     paths: {
                         'vs': monacoEditorLoader.vsPath
-                    }
+                    },
+                    cspNonce: document.querySelector("script[nonce]")?.nonce
                 });
                 window.require(["vs/editor/editor.main"], () => resolve(window.monaco), reject);
             };
@@ -74,6 +92,8 @@ var monacoEditorLoader = {
         return monacoEditorLoader.loadPromise;
     }
 };
+
+monacoEditorLoader.configureNonce();
 
 class MonacoEditor {
     constructor(container, args) {
@@ -116,7 +136,7 @@ class MonacoEditor {
                 }
             });
 
-            if (session.app.Config.Themes[session.theme].IsDark) {
+            if (session.app.Config?.Themes?.[session.theme]?.IsDark === true) {
                 this.monaco.editor.setTheme("vs-dark");
             }
             

@@ -41,7 +41,15 @@
           "Implements": [
             "cCoder.Core.Brokers.AppSecurity.IAppSecurityAppBroker.AddAppAsync(App)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.AppSecurity.Exposures.IAppSecurityAppExposure",
+              "MethodName": "AddAsync",
+              "MethodId": "cCoder.AppSecurity.Exposures.IAppSecurityAppExposure.AddAsync(cCoder.Data.Models.CMS.App)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -68,7 +76,15 @@
           "Implements": [
             "cCoder.Core.Brokers.AppSecurity.IAppSecurityAppBroker.DeleteAppAsync(System.Int32)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.AppSecurity.Exposures.IAppSecurityAppExposure",
+              "MethodName": "DeleteAsync",
+              "MethodId": "cCoder.AppSecurity.Exposures.IAppSecurityAppExposure.DeleteAsync(System.Int32)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -95,7 +111,15 @@
           "Implements": [
             "cCoder.Core.Brokers.AppSecurity.IAppSecurityAppBroker.UpdateAppAsync(App)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.AppSecurity.Exposures.IAppSecurityAppExposure",
+              "MethodName": "UpdateAsync",
+              "MethodId": "cCoder.AppSecurity.Exposures.IAppSecurityAppExposure.UpdateAsync(cCoder.Data.Models.CMS.App)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -145,7 +169,15 @@
           "Implements": [
             "cCoder.Core.Brokers.ContentManagement.IContentManagementAppBroker.AddAppAsync(cCoder.Data.Models.CMS.App)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.ContentManagement.Exposures.IAppManager",
+              "MethodName": "AddAsync",
+              "MethodId": "cCoder.ContentManagement.Exposures.IAppManager.AddAsync(cCoder.Data.Models.CMS.App)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -172,7 +204,15 @@
           "Implements": [
             "cCoder.Core.Brokers.ContentManagement.IContentManagementAppBroker.DeleteAppAsync(System.Int32)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.ContentManagement.Exposures.IAppManager",
+              "MethodName": "DeleteAsync",
+              "MethodId": "cCoder.ContentManagement.Exposures.IAppManager.DeleteAsync(System.Int32)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -199,7 +239,15 @@
           "Implements": [
             "cCoder.Core.Brokers.ContentManagement.IContentManagementAppBroker.GetAllApps(System.Boolean)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.ContentManagement.Exposures.IAppManager",
+              "MethodName": "GetAll",
+              "MethodId": "cCoder.ContentManagement.Exposures.IAppManager.GetAll(System.Boolean)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -230,7 +278,15 @@
           "Implements": [
             "cCoder.Core.Brokers.ContentManagement.IContentManagementAppBroker.GetApp(System.Int32,System.Boolean)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.ContentManagement.Exposures.IAppManager",
+              "MethodName": "Get",
+              "MethodId": "cCoder.ContentManagement.Exposures.IAppManager.Get(System.Int32,System.Boolean)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -261,7 +317,15 @@
           "Implements": [
             "cCoder.Core.Brokers.ContentManagement.IContentManagementAppBroker.GetAppByDomain(System.String,System.Boolean)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.ContentManagement.Exposures.IAppManager",
+              "MethodName": "GetByDomain",
+              "MethodId": "cCoder.ContentManagement.Exposures.IAppManager.GetByDomain(System.String,System.Boolean)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -288,7 +352,15 @@
           "Implements": [
             "cCoder.Core.Brokers.ContentManagement.IContentManagementAppBroker.UpdateAppAsync(cCoder.Data.Models.CMS.App)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.ContentManagement.Exposures.IAppManager",
+              "MethodName": "UpdateAsync",
+              "MethodId": "cCoder.ContentManagement.Exposures.IAppManager.UpdateAsync(cCoder.Data.Models.CMS.App)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -338,7 +410,15 @@
           "Implements": [
             "cCoder.Core.Brokers.DocumentManagement.IDocumentManagementAppBroker.AddAppAsync(App)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.DocumentManagement.Exposures.IDocumentManagementAppExposure",
+              "MethodName": "AddAsync",
+              "MethodId": "cCoder.DocumentManagement.Exposures.IDocumentManagementAppExposure.AddAsync(cCoder.Data.Models.CMS.App)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -365,7 +445,15 @@
           "Implements": [
             "cCoder.Core.Brokers.DocumentManagement.IDocumentManagementAppBroker.DeleteAppAsync(System.Int32)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.DocumentManagement.Exposures.IDocumentManagementAppExposure",
+              "MethodName": "DeleteAsync",
+              "MethodId": "cCoder.DocumentManagement.Exposures.IDocumentManagementAppExposure.DeleteAsync(System.Int32)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -392,7 +480,15 @@
           "Implements": [
             "cCoder.Core.Brokers.DocumentManagement.IDocumentManagementAppBroker.UpdateAppAsync(App)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.DocumentManagement.Exposures.IDocumentManagementAppExposure",
+              "MethodName": "UpdateAsync",
+              "MethodId": "cCoder.DocumentManagement.Exposures.IDocumentManagementAppExposure.UpdateAsync(cCoder.Data.Models.CMS.App)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -1176,7 +1272,15 @@
           "Implements": [
             "cCoder.Core.Brokers.Packaging.IPackageBroker.ExportPackage(System.Int32,System.String)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Packaging.Exposures.IPackageTransferManager",
+              "MethodName": "ExportPackage",
+              "MethodId": "cCoder.Packaging.Exposures.IPackageTransferManager.ExportPackage(System.Int32,System.String)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -1207,7 +1311,15 @@
           "Implements": [
             "cCoder.Core.Brokers.Packaging.IPackageBroker.ImportPackageAsync(System.Int32,Package)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Packaging.Exposures.IPackageTransferManager",
+              "MethodName": "ImportPackageAsync",
+              "MethodId": "cCoder.Packaging.Exposures.IPackageTransferManager.ImportPackageAsync(System.Int32,cCoder.Data.Models.Packaging.Package)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -1257,7 +1369,15 @@
           "Implements": [
             "cCoder.Core.Brokers.Planning.IPlanningAppBroker.AddAppAsync(App)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Workflow.Exposures.IWorkflowAppExposure",
+              "MethodName": "AddAsync",
+              "MethodId": "cCoder.Workflow.Exposures.IWorkflowAppExposure.AddAsync(cCoder.Data.Models.CMS.App)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -1284,7 +1404,15 @@
           "Implements": [
             "cCoder.Core.Brokers.Planning.IPlanningAppBroker.DeleteAppAsync(System.Int32)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Workflow.Exposures.IWorkflowAppExposure",
+              "MethodName": "DeleteAsync",
+              "MethodId": "cCoder.Workflow.Exposures.IWorkflowAppExposure.DeleteAsync(System.Int32)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -1311,7 +1439,15 @@
           "Implements": [
             "cCoder.Core.Brokers.Planning.IPlanningAppBroker.UpdateAppAsync(App)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Workflow.Exposures.IWorkflowAppExposure",
+              "MethodName": "UpdateAsync",
+              "MethodId": "cCoder.Workflow.Exposures.IWorkflowAppExposure.UpdateAsync(cCoder.Data.Models.CMS.App)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -1451,7 +1587,15 @@
           "Implements": [
             "cCoder.Core.Brokers.Workflow.IWorkflowAppBroker.AddAppAsync(App)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Workflow.Exposures.IWorkflowAppExposure",
+              "MethodName": "AddAsync",
+              "MethodId": "cCoder.Workflow.Exposures.IWorkflowAppExposure.AddAsync(cCoder.Data.Models.CMS.App)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -1478,7 +1622,15 @@
           "Implements": [
             "cCoder.Core.Brokers.Workflow.IWorkflowAppBroker.DeleteAppAsync(System.Int32)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Workflow.Exposures.IWorkflowAppExposure",
+              "MethodName": "DeleteAsync",
+              "MethodId": "cCoder.Workflow.Exposures.IWorkflowAppExposure.DeleteAsync(System.Int32)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -1505,7 +1657,15 @@
           "Implements": [
             "cCoder.Core.Brokers.Workflow.IWorkflowAppBroker.UpdateAppAsync(App)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Workflow.Exposures.IWorkflowAppExposure",
+              "MethodName": "UpdateAsync",
+              "MethodId": "cCoder.Workflow.Exposures.IWorkflowAppExposure.UpdateAsync(cCoder.Data.Models.CMS.App)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -3399,10 +3559,7 @@
             "System.InvalidOperationException",
             "cCoder.Core.Models.Exceptions.CoreOrchestrationDependencyException",
             "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationValidationException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingValidationException"
+            "cCoder.Core.Models.Exceptions.CoreOrchestrationValidationException"
           ],
           "IncomingExceptionTypes": [
             "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException"
@@ -3497,10 +3654,7 @@
             "System.InvalidOperationException",
             "cCoder.Core.Models.Exceptions.CoreOrchestrationDependencyException",
             "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationValidationException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingValidationException"
+            "cCoder.Core.Models.Exceptions.CoreOrchestrationValidationException"
           ],
           "IncomingExceptionTypes": [
             "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException"
@@ -4688,17 +4842,19 @@
       "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
-      "BaseType": {
-        "Id": "cCoder.Core:IAppDomainManager",
-        "FullName": "IAppDomainManager",
-        "Name": "IAppDomainManager",
-        "Namespace": "\u003Cglobal namespace\u003E",
-        "AssemblyName": "cCoder.Core",
-        "Kind": "Class",
-        "IsInCurrentProject": true,
-        "StandardElementType": "Dependency"
-      },
-      "Interfaces": [],
+      "BaseType": null,
+      "Interfaces": [
+        {
+          "Id": "cCoder.Packaging:cCoder.Packaging.Exposures.PackageManagers.IAppDomainManager",
+          "FullName": "cCoder.Packaging.Exposures.PackageManagers.IAppDomainManager",
+          "Name": "IAppDomainManager",
+          "Namespace": "cCoder.Packaging.Exposures.PackageManagers",
+          "AssemblyName": "cCoder.Packaging",
+          "Kind": "Interface",
+          "IsInCurrentProject": false,
+          "StandardElementType": "Dependency"
+        }
+      ],
       "Properties": [],
       "Methods": [
         {
@@ -4712,8 +4868,18 @@
             }
           ],
           "ReturnType": "System.String",
-          "Implements": [],
-          "Calls": [],
+          "Implements": [
+            "cCoder.Packaging.Exposures.PackageManagers.IAppDomainManager.GetDomain(System.Int32)"
+          ],
+          "Calls": [
+            {
+              "TypeName": "cCoder.ContentManagement.Exposures.IAppManager",
+              "MethodName": "Get",
+              "MethodId": "cCoder.ContentManagement.Exposures.IAppManager.Get(System.Int32,System.Boolean)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -4734,17 +4900,19 @@
       "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
-      "BaseType": {
-        "Id": ":cCoder.Packaging.Exposures.PackageManagers.IAppSecurityPackageManager",
-        "FullName": "cCoder.Packaging.Exposures.PackageManagers.IAppSecurityPackageManager",
-        "Name": "IAppSecurityPackageManager",
-        "Namespace": "cCoder",
-        "AssemblyName": "",
-        "Kind": "Class",
-        "IsInCurrentProject": false,
-        "StandardElementType": "Dependency"
-      },
-      "Interfaces": [],
+      "BaseType": null,
+      "Interfaces": [
+        {
+          "Id": "cCoder.Packaging:cCoder.Packaging.Exposures.PackageManagers.IAppSecurityPackageManager",
+          "FullName": "cCoder.Packaging.Exposures.PackageManagers.IAppSecurityPackageManager",
+          "Name": "IAppSecurityPackageManager",
+          "Namespace": "cCoder.Packaging.Exposures.PackageManagers",
+          "AssemblyName": "cCoder.Packaging",
+          "Kind": "Interface",
+          "IsInCurrentProject": false,
+          "StandardElementType": "Dependency"
+        }
+      ],
       "Properties": [],
       "Methods": [
         {
@@ -4845,17 +5013,19 @@
       "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
-      "BaseType": {
-        "Id": ":cCoder.Packaging.Exposures.PackageManagers.IContentManagementPackageManager",
-        "FullName": "cCoder.Packaging.Exposures.PackageManagers.IContentManagementPackageManager",
-        "Name": "IContentManagementPackageManager",
-        "Namespace": "cCoder",
-        "AssemblyName": "",
-        "Kind": "Class",
-        "IsInCurrentProject": false,
-        "StandardElementType": "Dependency"
-      },
-      "Interfaces": [],
+      "BaseType": null,
+      "Interfaces": [
+        {
+          "Id": "cCoder.Packaging:cCoder.Packaging.Exposures.PackageManagers.IContentManagementPackageManager",
+          "FullName": "cCoder.Packaging.Exposures.PackageManagers.IContentManagementPackageManager",
+          "Name": "IContentManagementPackageManager",
+          "Namespace": "cCoder.Packaging.Exposures.PackageManagers",
+          "AssemblyName": "cCoder.Packaging",
+          "Kind": "Interface",
+          "IsInCurrentProject": false,
+          "StandardElementType": "Dependency"
+        }
+      ],
       "Properties": [],
       "Methods": [
         {
@@ -4956,17 +5126,19 @@
       "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
-      "BaseType": {
-        "Id": ":cCoder.Packaging.Exposures.PackageManagers.IDocumentManagementPackageManager",
-        "FullName": "cCoder.Packaging.Exposures.PackageManagers.IDocumentManagementPackageManager",
-        "Name": "IDocumentManagementPackageManager",
-        "Namespace": "cCoder",
-        "AssemblyName": "",
-        "Kind": "Class",
-        "IsInCurrentProject": false,
-        "StandardElementType": "Dependency"
-      },
-      "Interfaces": [],
+      "BaseType": null,
+      "Interfaces": [
+        {
+          "Id": "cCoder.Packaging:cCoder.Packaging.Exposures.PackageManagers.IDocumentManagementPackageManager",
+          "FullName": "cCoder.Packaging.Exposures.PackageManagers.IDocumentManagementPackageManager",
+          "Name": "IDocumentManagementPackageManager",
+          "Namespace": "cCoder.Packaging.Exposures.PackageManagers",
+          "AssemblyName": "cCoder.Packaging",
+          "Kind": "Interface",
+          "IsInCurrentProject": false,
+          "StandardElementType": "Dependency"
+        }
+      ],
       "Properties": [],
       "Methods": [
         {
@@ -5067,17 +5239,19 @@
       "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
-      "BaseType": {
-        "Id": ":cCoder.Packaging.Exposures.PackageManagers.ISchedulingPackageManager",
-        "FullName": "cCoder.Packaging.Exposures.PackageManagers.ISchedulingPackageManager",
-        "Name": "ISchedulingPackageManager",
-        "Namespace": "cCoder",
-        "AssemblyName": "",
-        "Kind": "Class",
-        "IsInCurrentProject": false,
-        "StandardElementType": "Dependency"
-      },
-      "Interfaces": [],
+      "BaseType": null,
+      "Interfaces": [
+        {
+          "Id": "cCoder.Packaging:cCoder.Packaging.Exposures.PackageManagers.ISchedulingPackageManager",
+          "FullName": "cCoder.Packaging.Exposures.PackageManagers.ISchedulingPackageManager",
+          "Name": "ISchedulingPackageManager",
+          "Namespace": "cCoder.Packaging.Exposures.PackageManagers",
+          "AssemblyName": "cCoder.Packaging",
+          "Kind": "Interface",
+          "IsInCurrentProject": false,
+          "StandardElementType": "Dependency"
+        }
+      ],
       "Properties": [],
       "Methods": [
         {
@@ -5178,17 +5352,19 @@
       "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
-      "BaseType": {
-        "Id": ":cCoder.Packaging.Exposures.PackageManagers.IWorkflowPackageManager",
-        "FullName": "cCoder.Packaging.Exposures.PackageManagers.IWorkflowPackageManager",
-        "Name": "IWorkflowPackageManager",
-        "Namespace": "cCoder",
-        "AssemblyName": "",
-        "Kind": "Class",
-        "IsInCurrentProject": false,
-        "StandardElementType": "Dependency"
-      },
-      "Interfaces": [],
+      "BaseType": null,
+      "Interfaces": [
+        {
+          "Id": "cCoder.Packaging:cCoder.Packaging.Exposures.PackageManagers.IWorkflowPackageManager",
+          "FullName": "cCoder.Packaging.Exposures.PackageManagers.IWorkflowPackageManager",
+          "Name": "IWorkflowPackageManager",
+          "Namespace": "cCoder.Packaging.Exposures.PackageManagers",
+          "AssemblyName": "cCoder.Packaging",
+          "Kind": "Interface",
+          "IsInCurrentProject": false,
+          "StandardElementType": "Dependency"
+        }
+      ],
       "Properties": [],
       "Methods": [
         {
@@ -5857,7 +6033,7 @@
         },
         {
           "Name": "AppSecurity",
-          "Type": "AppSecurityConfiguration"
+          "Type": "cCoder.AppSecurity.Models.AppSecurityConfiguration"
         },
         {
           "Name": "ApplicationConfiguration",
@@ -5865,11 +6041,11 @@
         },
         {
           "Name": "ContentManagement",
-          "Type": "ContentManagementConfiguration"
+          "Type": "cCoder.ContentManagement.Models.ContentManagementConfiguration"
         },
         {
           "Name": "DocumentManagement",
-          "Type": "DocumentManagementConfiguration"
+          "Type": "cCoder.DocumentManagement.Models.DocumentManagementConfiguration"
         },
         {
           "Name": "Eventing",
@@ -5885,7 +6061,7 @@
         },
         {
           "Name": "Packaging",
-          "Type": "PackagingConfiguration"
+          "Type": "cCoder.Packaging.Models.PackagingConfiguration"
         },
         {
           "Name": "Security",
@@ -5893,7 +6069,7 @@
         },
         {
           "Name": "Workflow",
-          "Type": "WorkflowConfiguration"
+          "Type": "cCoder.Workflow.Models.WorkflowConfiguration"
         }
       ],
       "Methods": []
@@ -7061,16 +7237,12 @@
             "System.InvalidOperationException",
             "cCoder.Core.Models.Exceptions.CoreOrchestrationDependencyException",
             "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationValidationException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingValidationException"
+            "cCoder.Core.Models.Exceptions.CoreOrchestrationValidationException"
           ],
           "IncomingExceptionTypes": [
             "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException",
             "System.InvalidOperationException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
+            "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException"
           ],
           "ThrowsExceptionTypes": [
             "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException"
@@ -7487,7 +7659,15 @@
           "Implements": [
             "cCoder.Core.Services.Foundations.AppSecurity.IAppSecurityAppService.AddAppAsync(App)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.AppSecurity.Exposures.IAppSecurityAppExposure",
+              "MethodName": "AddAsync",
+              "MethodId": "cCoder.AppSecurity.Exposures.IAppSecurityAppExposure.AddAsync(cCoder.Data.Models.CMS.App)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [
             "cCoder.Core.Models.Exceptions.CoreDependencyException",
             "cCoder.Core.Models.Exceptions.CoreValidationException"
@@ -7521,7 +7701,15 @@
           "Implements": [
             "cCoder.Core.Services.Foundations.AppSecurity.IAppSecurityAppService.DeleteAppAsync(System.Int32)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.AppSecurity.Exposures.IAppSecurityAppExposure",
+              "MethodName": "DeleteAsync",
+              "MethodId": "cCoder.AppSecurity.Exposures.IAppSecurityAppExposure.DeleteAsync(System.Int32)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [
             "cCoder.Core.Models.Exceptions.CoreDependencyException",
             "cCoder.Core.Models.Exceptions.CoreValidationException"
@@ -7555,7 +7743,15 @@
           "Implements": [
             "cCoder.Core.Services.Foundations.AppSecurity.IAppSecurityAppService.UpdateAppAsync(App)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.AppSecurity.Exposures.IAppSecurityAppExposure",
+              "MethodName": "UpdateAsync",
+              "MethodId": "cCoder.AppSecurity.Exposures.IAppSecurityAppExposure.UpdateAsync(cCoder.Data.Models.CMS.App)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [
             "cCoder.Core.Models.Exceptions.CoreDependencyException",
             "cCoder.Core.Models.Exceptions.CoreValidationException"
@@ -7614,9 +7810,30 @@
           ],
           "Calls": [
             {
+              "TypeName": "System.Linq.Enumerable",
+              "MethodName": "Any",
+              "MethodId": "System.Linq.Enumerable.Any(System.Collections.Generic.IEnumerable\u003CTSource\u003E,System.Func\u003CTSource, System.Boolean\u003E)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
               "TypeName": "System.String",
               "MethodName": "IsNullOrWhiteSpace",
               "MethodId": "System.String.IsNullOrWhiteSpace(System.String?)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "cCoder.AppSecurity.Brokers.Storages.IUserRoleBroker",
+              "MethodName": "AddUserRoleAsync",
+              "MethodId": "cCoder.AppSecurity.Brokers.Storages.IUserRoleBroker.AddUserRoleAsync(cCoder.Data.Models.Security.UserRole)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "cCoder.AppSecurity.Brokers.Storages.IUserRoleBroker",
+              "MethodName": "GetAllUserRoles",
+              "MethodId": "cCoder.AppSecurity.Brokers.Storages.IUserRoleBroker.GetAllUserRoles(System.Boolean)",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
             }
@@ -8911,7 +9128,15 @@
           "Implements": [
             "cCoder.Core.Services.Foundations.TemplatedEmails.ITemplatedEmailContentService.RenderTemplatedEmailOperationContent(cCoder.Core.Models.TemplatedEmailOperation)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.ContentManagement.Exposures.ITemplateRenderer",
+              "MethodName": "Render",
+              "MethodId": "cCoder.ContentManagement.Exposures.ITemplateRenderer.Render(System.Int32,System.String,System.String,dynamic)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [
             "cCoder.Core.Models.Exceptions.CoreDependencyException",
             "cCoder.Core.Models.Exceptions.CoreServiceException",
@@ -9025,7 +9250,15 @@
           "Implements": [
             "cCoder.Core.Services.Foundations.TemplatedEmails.ITemplatedEmailIdentityService.ResolveTemplatedEmailOperationIdentity(cCoder.Core.Models.TemplatedEmailOperation)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.AppSecurity.Brokers.IAuthorizationBroker",
+              "MethodName": "GetCurrentUser",
+              "MethodId": "cCoder.AppSecurity.Brokers.IAuthorizationBroker.GetCurrentUser()",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [
             "System.InvalidOperationException",
             "cCoder.Core.Models.Exceptions.CoreDependencyException",
@@ -10039,7 +10272,15 @@
           "Implements": [
             "cCoder.Core.Services.Processings.Packages.IAppSecurityPackageProcessingService.ExportPackage(System.Int32,System.String)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.AppSecurity.Exposures.IAppSecurityPackageManager",
+              "MethodName": "ExportPackage",
+              "MethodId": "cCoder.AppSecurity.Exposures.IAppSecurityPackageManager.ExportPackage(System.Int32,System.String)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [
             "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
             "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
@@ -10078,7 +10319,15 @@
           "Implements": [
             "cCoder.Core.Services.Processings.Packages.IAppSecurityPackageProcessingService.ImportPackageAsync(System.Int32,Package)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.AppSecurity.Exposures.IAppSecurityPackageManager",
+              "MethodName": "ImportPackageAsync",
+              "MethodId": "cCoder.AppSecurity.Exposures.IAppSecurityPackageManager.ImportPackageAsync(System.Int32,cCoder.AppSecurity.Models.AppSecurityPackage)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [
             "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
             "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
@@ -10140,7 +10389,15 @@
           "Implements": [
             "cCoder.Core.Services.Processings.Packages.IContentManagementPackageProcessingService.ExportPackage(System.Int32,System.String)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.ContentManagement.Exposures.IContentManagementPackageManager",
+              "MethodName": "ExportPackage",
+              "MethodId": "cCoder.ContentManagement.Exposures.IContentManagementPackageManager.ExportPackage(System.Int32,System.String)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [
             "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
             "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
@@ -10179,7 +10436,15 @@
           "Implements": [
             "cCoder.Core.Services.Processings.Packages.IContentManagementPackageProcessingService.ImportPackageAsync(System.Int32,Package)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.ContentManagement.Exposures.IContentManagementPackageManager",
+              "MethodName": "ImportPackageAsync",
+              "MethodId": "cCoder.ContentManagement.Exposures.IContentManagementPackageManager.ImportPackageAsync(System.Int32,cCoder.Data.Models.Packaging.Package)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [
             "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
             "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
@@ -10241,7 +10506,15 @@
           "Implements": [
             "cCoder.Core.Services.Processings.Packages.IDocumentManagementPackageProcessingService.ExportPackage(System.Int32,System.String)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.DocumentManagement.Exposures.IDocumentManagementPackageManager",
+              "MethodName": "ExportPackage",
+              "MethodId": "cCoder.DocumentManagement.Exposures.IDocumentManagementPackageManager.ExportPackage(System.Int32,System.String)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [
             "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
             "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
@@ -10280,7 +10553,15 @@
           "Implements": [
             "cCoder.Core.Services.Processings.Packages.IDocumentManagementPackageProcessingService.ImportPackageAsync(System.Int32,Package)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.DocumentManagement.Exposures.IDocumentManagementPackageManager",
+              "MethodName": "ImportPackageAsync",
+              "MethodId": "cCoder.DocumentManagement.Exposures.IDocumentManagementPackageManager.ImportPackageAsync(System.Int32,cCoder.DocumentManagement.Models.DocumentManagementPackage)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [
             "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
             "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
@@ -10342,7 +10623,15 @@
           "Implements": [
             "cCoder.Core.Services.Processings.Packages.ISchedulingPackageProcessingService.ExportPackage(System.Int32,System.String)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Workflow.Exposures.IWorkflowPackageManager",
+              "MethodName": "ExportPackage",
+              "MethodId": "cCoder.Workflow.Exposures.IWorkflowPackageManager.ExportPackage(System.Int32,System.String)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [
             "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
             "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
@@ -10381,7 +10670,15 @@
           "Implements": [
             "cCoder.Core.Services.Processings.Packages.ISchedulingPackageProcessingService.ImportPackageAsync(System.Int32,Package)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Workflow.Exposures.IWorkflowPackageManager",
+              "MethodName": "ImportPackageAsync",
+              "MethodId": "cCoder.Workflow.Exposures.IWorkflowPackageManager.ImportPackageAsync(System.Int32,cCoder.Workflow.Models.WorkflowPackage)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [
             "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
             "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
@@ -10443,7 +10740,15 @@
           "Implements": [
             "cCoder.Core.Services.Processings.Packages.IWorkflowPackageProcessingService.ExportPackage(System.Int32,System.String)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Workflow.Exposures.IWorkflowPackageManager",
+              "MethodName": "ExportPackage",
+              "MethodId": "cCoder.Workflow.Exposures.IWorkflowPackageManager.ExportPackage(System.Int32,System.String)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [
             "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
             "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
@@ -10482,7 +10787,15 @@
           "Implements": [
             "cCoder.Core.Services.Processings.Packages.IWorkflowPackageProcessingService.ImportPackageAsync(System.Int32,Package)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Workflow.Exposures.IWorkflowPackageManager",
+              "MethodName": "ImportPackageAsync",
+              "MethodId": "cCoder.Workflow.Exposures.IWorkflowPackageManager.ImportPackageAsync(System.Int32,cCoder.Workflow.Models.WorkflowPackage)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [
             "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
             "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
@@ -10692,7 +11005,7 @@
     {
       "Name": "cCoder.Core.WebApplicationExtensions.StartupMigrationLock",
       "StandardElementType": "Dependency",
-      "LineNumber": 224,
+      "LineNumber": 225,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -10713,7 +11026,7 @@
         {
           "Id": "cCoder.Core.WebApplicationExtensions.StartupMigrationLock.Dispose()",
           "Name": "Dispose",
-          "LineNumber": 226,
+          "LineNumber": 227,
           "Inputs": [],
           "ReturnType": "System.Void",
           "Implements": [
@@ -15036,27 +15349,6 @@
       "Severity": "Warning",
       "Type": "cCoder.Core.Exposures.Controllers.TemplatedEmailController",
       "LineNumber": 23
-    },
-    {
-      "Code": "STXF002",
-      "Description": "A foundation service may only depend on brokers, exposures, or nothing.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.Services.Foundations.AppSecurity.AppSecurityAppService",
-      "LineNumber": 10
-    },
-    {
-      "Code": "STXF002",
-      "Description": "A foundation service may only depend on brokers, exposures, or nothing.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.Services.Foundations.AppSecurity.AppSecurityUserRoleService",
-      "LineNumber": 11
-    },
-    {
-      "Code": "STXF002",
-      "Description": "A foundation service may only depend on brokers, exposures, or nothing.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.Services.Foundations.TemplatedEmails.TemplatedEmailContentService",
-      "LineNumber": 13
     },
     {
       "Code": "STXF002",
