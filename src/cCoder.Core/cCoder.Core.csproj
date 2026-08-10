@@ -121,7 +121,7 @@
     <PackageReference Include="cCoder.Eventing.Http" Version="2026.8.10.1536" Condition="'$(UseLocalEventing)' != 'true'" />
     <PackageReference Include="cCoder.Logging" Version="2026.8.5.127" Condition="'$(UseLocalLogging)' != 'true'" />
     <PackageReference Include="cCoder.Mail" Version="2026.8.8.2050" Condition="'$(UseLocalMail)' != 'true'" />
-    <PackageReference Include="cCoder.Packaging" Version="2026.8.10.1829" Condition="'$(UseLocalPackaging)' != 'true'" />
+    <PackageReference Include="cCoder.Packaging" Version="2026.8.10.2016" Condition="'$(UseLocalPackaging)' != 'true'" />
     <PackageReference Include="cCoder.Security" Version="2026.8.10.1617" Condition="'$(UseLocalSecurity)' != 'true'" />
     <PackageReference Include="cCoder.Security.Data" Version="2026.8.10.1617" Condition="'$(UseLocalSecurity)' != 'true'" />
     <PackageReference Include="cCoder.Workflow" Version="2026.8.10.1950" Condition="'$(UseLocalWorkflow)' != 'true'" />
