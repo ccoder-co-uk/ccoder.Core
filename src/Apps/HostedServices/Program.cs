@@ -17,6 +17,8 @@ using cCoder.Security.Models.Events;
 using cCoder.Workflow.Exposures;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using ContentManagementPackageImportEvent = cCoder.ContentManagement.Models.PackageImportEvent;
+using DocumentManagementPackageImportEvent = cCoder.DocumentManagement.Models.DocumentManagementPackageEvent;
+using WorkflowPackageImportEvent = cCoder.Workflow.Models.WorkflowPackageEvent;
 
 namespace HostedServices;
 
@@ -57,6 +59,10 @@ public class Program
                 ["package_import", "package_import_complete"]),
             CreateExternalReceiveProvider<AppSecurityPackageEvent>(
                 ["content_pages_imported"]),
+            CreateExternalReceiveProvider<DocumentManagementPackageImportEvent>(
+                ["package_import"]),
+            CreateExternalReceiveProvider<WorkflowPackageImportEvent>(
+                ["package_import"]),
             CreateExternalReceiveProvider<UncachedPageRenderEvent>(
                 ["uncached_page_render"]),
             CreateExternalReceiveProvider<SecurityAccountEvent>(
