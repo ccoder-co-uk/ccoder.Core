@@ -4,6 +4,6 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup Condition="'$(MSBuildProjectExtension)' == '.csproj'">
-    <PackageReference Include="cCoder.CodeAnalysis" Version="2026.8.4.2107" PrivateAssets="all" />
+    <PackageReference Include="cCoder.CodeAnalysis" Version="2026.8.10.1538" PrivateAssets="all" />
   </ItemGroup>
 </Project>

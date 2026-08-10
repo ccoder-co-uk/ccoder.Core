@@ -2,14 +2,15 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using cCoder.Core.Brokers.Loggings;
 using Microsoft.AspNetCore.SignalR;
 
 
 namespace cCoder.Core.Dependencies.Hubs;
 
-public class NotificationHub(ILogger<NotificationHub> log) : Hub
+public class NotificationHub(ILoggingBroker log) : Hub
 {
-    private readonly ILogger<NotificationHub> log = log;
+    private readonly ILoggingBroker log = log;
     private static readonly IDictionary<string, ICollection<HistoryItem>> History =
         new Dictionary<string, ICollection<HistoryItem>>();
     private static readonly IDictionary<string, int> UserCounts = new Dictionary<string, int>();
@@ -22,7 +23,7 @@ public class NotificationHub(ILogger<NotificationHub> log) : Hub
 
     public override Task OnConnectedAsync()
     {
-        if (log.IsEnabled(logLevel: LogLevel.Debug))
+        if (log.IsDebugEnabled())
         {
             log.LogDebug(
                 message: "New client connected to {HubName}",
@@ -34,7 +35,7 @@ public class NotificationHub(ILogger<NotificationHub> log) : Hub
 
     public override Task OnDisconnectedAsync(Exception exception)
     {
-        if (log.IsEnabled(logLevel: LogLevel.Debug))
+        if (log.IsDebugEnabled())
         {
             log.LogDebug(
                 message: "Client disconnected from {HubName}",
@@ -46,7 +47,7 @@ public class NotificationHub(ILogger<NotificationHub> log) : Hub
 
     public async Task Join(string thread)
     {
-        if (log.IsEnabled(logLevel: LogLevel.Debug))
+        if (log.IsDebugEnabled())
         {
             log.LogDebug(
                 message: "User joining {Thread}",
@@ -85,7 +86,7 @@ method: "ConsoleReceive", arg1: "info", arg2: "Connected to instance " + thread,
 
     public async Task Leave(string thread)
     {
-        if (log.IsEnabled(logLevel: LogLevel.Debug))
+        if (log.IsDebugEnabled())
         {
             log.LogDebug(
                 message: "User leaving {Thread}",

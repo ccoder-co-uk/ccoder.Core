@@ -2,6 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using cCoder.Core.Brokers.Loggings;
 using Microsoft.AspNetCore.Mvc;
 using Web.Exposures;
 using Web.Models;
@@ -11,7 +12,8 @@ namespace Web.Controllers.Api;
 
 [Route("Api")]
 public sealed class ScriptController(
-    IApiScriptManager apiScriptManager)
+    IApiScriptManager apiScriptManager,
+    ILoggingBroker loggingBroker)
     : Controller
 {
     [HttpPost("ExecuteScript")]
@@ -33,12 +35,16 @@ public sealed class ScriptController(
 
             return Ok(value: response);
         }
-        catch (ApiScriptOrchestrationValidationException)
+        catch (ApiScriptOrchestrationValidationException exception)
         {
+            loggingBroker.LogError(exception: exception, message: "Script validation failed.");
+
             return BadRequest(error: "The script request is invalid.");
         }
-        catch (Exception)
+        catch (Exception exception)
         {
+            loggingBroker.LogError(exception: exception, message: "Script execution failed.");
+
             return StatusCode(
                 statusCode: StatusCodes.Status500InternalServerError,
                 value: "The script could not be executed.");

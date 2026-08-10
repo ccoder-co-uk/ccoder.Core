@@ -2,6 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using cCoder.Core.Brokers.Loggings;
 using cCoder.Workflow.Exposures;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,7 +11,7 @@ namespace HostedServices.Controllers;
 [Route("Workflow")]
 public sealed class WorkflowController(
     IWorkflowInstanceManager workflowInstanceProcessingService,
-    ILogger<WorkflowController> log)
+    ILoggingBroker log)
     : Controller
 {
     [HttpGet("")]
@@ -22,8 +23,10 @@ public sealed class WorkflowController(
 
             return View(viewName: "Index");
         }
-        catch (Exception)
+        catch (Exception exception)
         {
+            log.LogError(exception: exception, message: "Workflow page display failed.");
+
             return StatusCode(
                 statusCode: StatusCodes.Status500InternalServerError,
                 value: "The workflow page could not be displayed.");
@@ -61,8 +64,10 @@ public sealed class WorkflowController(
             return Json(
                 data: workflowInstanceProcessingService.GetStats());
         }
-        catch (Exception)
+        catch (Exception exception)
         {
+            log.LogError(exception: exception, message: "Workflow statistics loading failed.");
+
             return StatusCode(
                 statusCode: StatusCodes.Status500InternalServerError,
                 value: "The workflow statistics could not be loaded.");

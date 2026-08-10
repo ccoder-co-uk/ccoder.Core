@@ -2,6 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using cCoder.Core.Brokers.Loggings;
 using cCoder.Data;
 using cCoder.Data.Models.Workflow;
 using cCoder.Core.Models;
@@ -9,8 +10,6 @@ using cCoder.Workflow.Brokers;
 using cCoder.Workflow.Exposures;
 using FluentAssertions;
 using HostedServices;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Xunit;
 
@@ -60,7 +59,7 @@ public sealed partial class HostedServicesWorkflowInstanceManagementOrchestratio
             Mock.Of<ICoreContextFactory>(),
             Mock.Of<IServiceProvider>(),
             CoreConfigurationFactory.Create(),
-            NullLogger<HostedServicesWorkflowInstanceManagementOrchestrationService>.Instance);
+            Mock.Of<ILoggingBroker>());
 
         // When
         await service.RunAsync();

@@ -427,6 +427,7 @@ predicate: (documentName, apiDescription) =>
     private static void AddBrokers(
         this IServiceCollection services)
     {
+        services.AddTransient<Brokers.Loggings.ILoggingBroker, Brokers.Loggings.LoggingBroker>();
         services.AddTransient<IContentManagementAppBroker, ContentManagementAppBroker>();
         services.AddTransient<IAppGraphEventBroker, AppGraphEventBroker>();
         services.AddTransient<IAuthInfoBroker, AuthInfoBroker>();

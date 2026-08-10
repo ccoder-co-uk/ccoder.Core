@@ -2,6 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using cCoder.Core.Brokers.Loggings;
 using cCoder.Core.Services.Aggregations;
 using cCoder.Core.Models.Exceptions;
 using cCoder.Data.Models.CMS;
@@ -13,7 +14,8 @@ using Microsoft.AspNetCore.OData.Routing.Controllers;
 namespace cCoder.Core.Exposures.Controllers;
 
 public class AppController(
-    ICoreAppManager service) : ODataController
+    ICoreAppManager service,
+    ILoggingBroker loggingBroker) : ODataController
 {
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] App newApp)
@@ -29,22 +31,30 @@ public class AppController(
                 statusCode: StatusCodes.Status201Created,
                 value: await service.AddAppAsync(newApp: newApp));
         }
-        catch (CoreOrchestrationValidationException)
+        catch (CoreOrchestrationValidationException exception)
         {
+            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+
             return BadRequest(error: "The app request is invalid.");
         }
-        catch (DbUpdateConcurrencyException)
+        catch (DbUpdateConcurrencyException exception)
         {
+            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+
             return Conflict(error: "The app changed before the request completed.");
         }
-        catch (System.Security.SecurityException)
+        catch (System.Security.SecurityException exception)
         {
+            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+
             return StatusCode(
                 statusCode: StatusCodes.Status403Forbidden,
                 value: "The app operation is forbidden.");
         }
-        catch (Exception)
+        catch (Exception exception)
         {
+            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+
             return StatusCode(
                 statusCode: StatusCodes.Status500InternalServerError,
                 value: "The app operation failed.");
@@ -69,22 +79,30 @@ public class AppController(
                 value: await service.UpdateAppAsync(
                     updatedApp: updatedApp));
         }
-        catch (CoreOrchestrationValidationException)
+        catch (CoreOrchestrationValidationException exception)
         {
+            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+
             return BadRequest(error: "The app request is invalid.");
         }
-        catch (DbUpdateConcurrencyException)
+        catch (DbUpdateConcurrencyException exception)
         {
+            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+
             return Conflict(error: "The app changed before the request completed.");
         }
-        catch (System.Security.SecurityException)
+        catch (System.Security.SecurityException exception)
         {
+            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+
             return StatusCode(
                 statusCode: StatusCodes.Status403Forbidden,
                 value: "The app operation is forbidden.");
         }
-        catch (Exception)
+        catch (Exception exception)
         {
+            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+
             return StatusCode(
                 statusCode: StatusCodes.Status500InternalServerError,
                 value: "The app operation failed.");
@@ -101,8 +119,10 @@ public class AppController(
         {
             return await Put(key: key, updatedApp: updatedApp);
         }
-        catch (Exception)
+        catch (Exception exception)
         {
+            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+
             return StatusCode(
                 statusCode: StatusCodes.Status500InternalServerError,
                 value: "The app operation failed.");
@@ -118,8 +138,10 @@ public class AppController(
         {
             return await Delete(key: key);
         }
-        catch (Exception)
+        catch (Exception exception)
         {
+            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+
             return StatusCode(
                 statusCode: StatusCodes.Status500InternalServerError,
                 value: "The app operation failed.");
@@ -137,22 +159,30 @@ public class AppController(
                 ? Accepted()
                 : NoContent();
         }
-        catch (CoreOrchestrationValidationException)
+        catch (CoreOrchestrationValidationException exception)
         {
+            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+
             return BadRequest(error: "The app request is invalid.");
         }
-        catch (DbUpdateConcurrencyException)
+        catch (DbUpdateConcurrencyException exception)
         {
+            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+
             return Conflict(error: "The app changed before the request completed.");
         }
-        catch (System.Security.SecurityException)
+        catch (System.Security.SecurityException exception)
         {
+            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+
             return StatusCode(
                 statusCode: StatusCodes.Status403Forbidden,
                 value: "The app operation is forbidden.");
         }
-        catch (Exception)
+        catch (Exception exception)
         {
+            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+
             return StatusCode(
                 statusCode: StatusCodes.Status500InternalServerError,
                 value: "The app operation failed.");

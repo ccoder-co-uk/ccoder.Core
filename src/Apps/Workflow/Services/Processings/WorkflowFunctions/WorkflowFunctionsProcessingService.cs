@@ -2,11 +2,11 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using Workflow.Brokers.Loggings;
 using cCoder.Workflow.Activities.Models;
 using cCoder.Workflow.Engine.Exposures;
 using cCoder.Workflow.Engine.Extensions;
 using Microsoft.Azure.Functions.Worker.Http;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Net;
 using System.Text;
@@ -17,7 +17,7 @@ namespace Workflow.Services.Processings.WorkflowFunctions;
 internal sealed partial class WorkflowFunctionsProcessingService(
     IFlowRunner flowRunner,
     IWorkflowScriptExecutionService scriptExecutionService,
-    ILogger<WorkflowFunctionsProcessingService> logger)
+    ILoggingBroker loggingBroker)
         : IWorkflowFunctionsProcessingService
 {
     public Task<HttpResponseData> ProcessExecuteAsync(HttpRequestData request) =>
@@ -75,7 +75,7 @@ internal sealed partial class WorkflowFunctionsProcessingService(
         {
             ValidateInputs(inputs: [message]);
 
-            logger.LogInformation(
+            loggingBroker.LogInformation(
                 message:
                     "Service Bus workflow trigger is scaffolded but disabled.");
 
