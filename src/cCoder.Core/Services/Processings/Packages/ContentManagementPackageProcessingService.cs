@@ -32,10 +32,10 @@ internal sealed partial class ContentManagementPackageProcessingService(
         });
 
     private static DataPackage ToExternalPackage(Package package) =>
-        package == null ? null : new DataPackage()
+        package == null ? null : new DataPackage
         {
-            Id = package.Id,
             Name = package.Name,
+            Id = package.Id,
             Description = package.Description,
             Category = package.Category,
             SourceApi = package.SourceApi,
@@ -53,10 +53,10 @@ internal sealed partial class ContentManagementPackageProcessingService(
         };
 
     private static Package ToLocalPackage(DataPackage package) =>
-        package == null ? null : new Package()
+        package == null ? null : new Package
         {
-            Id = package.Id,
             Name = package.Name,
+            Id = package.Id,
             Description = package.Description,
             Category = package.Category,
             SourceApi = package.SourceApi,
