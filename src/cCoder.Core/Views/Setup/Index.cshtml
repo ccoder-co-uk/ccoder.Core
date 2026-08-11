@@ -728,7 +728,7 @@
                     appendLog("Importing application baseline.");
 
                     const appResults = await sendJson(
-                        `/Api/Core/Package/Import?appId=${appId}`,
+                        `/Api/Packaging/Package/Import?appId=${appId}`,
                         firstAppPackage);
 
                     ensureImportSucceeded(appResults, "Application baseline");

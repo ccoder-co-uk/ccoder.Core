@@ -95,6 +95,12 @@ public sealed partial class FirstTimeSetupTests
             .Contain(expected: "\"/Api/Packaging/PackageItem\"");
 
         setupContent.Should()
+            .Contain(expected: "`/Api/Packaging/Package/Import?appId=${appId}`");
+
+        setupContent.Should()
+            .NotContain(unexpected: "/Api/Core/Package/Import");
+
+        setupContent.Should()
             .Contain(expected: "Type: item.Type");
 
         setupContent.Should()
