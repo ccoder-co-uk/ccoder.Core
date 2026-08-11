@@ -130,6 +130,48 @@ jobs:
             docker push "${IMAGE_PREFIX}-${application}:latest"
           done
 
+      - name: Create application release archives
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+        shell: pwsh
+        run: |
+          $archiveRoot = "${{ env.APPLICATION_DIRECTORY }}/archives"
+          New-Item -ItemType Directory -Path $archiveRoot -Force | Out-Null
+
+          foreach ($applicationName in @("Web", "HostedServices", "Workflow")) {
+            $applicationRoot = Join-Path `
+              "${{ env.APPLICATION_DIRECTORY }}/publish/latest" `
+              $applicationName
+            $versionedArchive = Join-Path `
+              $archiveRoot `
+              "cCoder.Core-$applicationName-${{ env.VERSION }}.zip"
+            $latestArchive = Join-Path `
+              $archiveRoot `
+              "cCoder.Core-$applicationName-latest.zip"
+
+            [IO.Compression.ZipFile]::CreateFromDirectory(
+              $applicationRoot,
+              $versionedArchive,
+              [IO.Compression.CompressionLevel]::Optimal,
+              $false)
+
+            Copy-Item -LiteralPath $versionedArchive -Destination $latestArchive
+          }
+
+          $checksumLines = Get-ChildItem `
+            -LiteralPath $archiveRoot `
+            -Filter "*.zip" |
+            Sort-Object Name |
+            ForEach-Object {
+              $hash = Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256
+              "$($hash.Hash.ToLowerInvariant())  $($_.Name)"
+            }
+
+          Set-Content `
+            -LiteralPath (Join-Path $archiveRoot "SHA256SUMS.txt") `
+            -Value $checksumLines `
+            -Encoding ascii
+
       - name: Create GitHub application release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
