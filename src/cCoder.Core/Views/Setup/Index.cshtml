@@ -621,25 +621,6 @@
                 appendLog("Reusable packages registered.");
             };
 
-            const toCommonObjects = (setupPackage) => ({
-                value: setupPackage.Items.flatMap((item) => {
-                    const data = JSON.parse(item.Data);
-                    const records = Array.isArray(data) ? data : [data];
-
-                    return records.map((record) => ({
-                        Name: record.Name,
-                        Description: record.Description ?? null,
-                        Version: 1,
-                        Key: record.ResourceKey
-                            ?? record.Key
-                            ?? setupPackage.Category,
-                        Type: item.Type,
-                        Json: JSON.stringify(record),
-                        Culture: record.Culture ?? "",
-                    }));
-                }),
-            });
-
             form.addEventListener("submit", async (event) => {
                 event.preventDefault();
 
@@ -736,8 +717,8 @@
                     appendLog("Importing common cache baseline.");
 
                     const commonCacheResults = await sendJson(
-                        "/Api/ContentManagement/CommonObject/Import",
-                        toCommonObjects(commonCachePackage));
+                        "/Api/Packaging/Package/Import",
+                        commonCachePackage);
 
                     ensureImportSucceeded(
                         commonCacheResults,
