@@ -6,8 +6,7 @@ using cCoder.Data.Models.Packaging;
 
 namespace cCoder.Core.Services.Processings.Packages;
 
-internal interface IContentManagementPackageProcessingService
+internal interface ICorePackageProcessingService
 {
-    ValueTask ImportPackageAsync(int? appId, Package package);
-    Package ExportPackage(int appId, string packageName);
+    ValueTask ImportPackageAsync(int appId, Package package);
 }

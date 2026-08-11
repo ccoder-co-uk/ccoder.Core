@@ -15,7 +15,7 @@ internal sealed partial class ContentManagementPackageProcessingService(
     IContentManagementPackageManager contentManagementPackageManager
 ) : IContentManagementPackageProcessingService
 {
-    public ValueTask ImportPackageAsync(int appId, Package package) =>
+    public ValueTask ImportPackageAsync(int? appId, Package package) =>
         TryCatch(operation: () =>
         {
             ValidatePackageOnImport(appId: appId, package: package);

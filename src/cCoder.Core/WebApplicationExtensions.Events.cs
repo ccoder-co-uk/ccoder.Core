@@ -21,6 +21,8 @@ using cCoder.Core.Services.Orchestrations;
 using cCoder.Data.Models.DMS;
 using cCoder.Data.Models.Workflow;
 using CmsApp = cCoder.Data.Models.CMS.App;
+using PackagingPackageImportEvent = cCoder.Packaging.Models.PackageImportEvent;
+using PackageImportAggregation = cCoder.Core.Services.Aggregations.Packages.IPackageImportAggregationService;
 
 namespace cCoder.Core;
 
@@ -44,8 +46,26 @@ public static partial class WebApplicationExtensions
     private static WebApplication UseCoreEventHandlers(this WebApplication app)
     {
         app.ListenToSecurityEvents();
+        app.UsePackageImportEventHandler();
         app.UseSecurityAccountEmailEventHandlers();
         app.UseServiceBusAppDeleteForwarder();
+        return app;
+    }
+
+    private static WebApplication UsePackageImportEventHandler(
+        this WebApplication app)
+    {
+        using IServiceScope scope = app.Services.CreateScope();
+        IEventHub eventHub = scope.ServiceProvider.GetRequiredService<IEventHub>();
+
+        eventHub.ListenToEvent<
+            PackagingPackageImportEvent,
+            PackageImportAggregation>(
+                name: "package_import",
+                handler: static (service, packageImportEvent) =>
+                    service.ProcessPackageImportEventAsync(
+                        packageImportEvent: packageImportEvent));
+
         return app;
     }
 

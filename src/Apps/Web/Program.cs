@@ -4,11 +4,9 @@
 
 using cCoder.Core;
 using cCoder.Core.Models;
-using cCoder.ContentManagement.Models;
 using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.DMS;
 using cCoder.Data.Models.Planning;
-using cCoder.Data.Models.Packaging;
 using cCoder.Data.Models.Workflow;
 using cCoder.Eventing.AzureServiceBus;
 using cCoder.Eventing.AzureServiceBus.Models;
@@ -16,8 +14,6 @@ using cCoder.Eventing.Http;
 using cCoder.Eventing.Models;
 using cCoder.Security.Models.Events;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using ContentManagementPackageImportEvent = cCoder.ContentManagement.Models.PackageImportEvent;
-using PackagingPackageImportEvent = cCoder.Packaging.Models.PackageImportEvent;
 
 namespace Web;
 
@@ -67,10 +63,6 @@ public class Program
                 ["scheduled_task_execute"]),
             CreateHttpEventProvider<FlowInstanceData>(
                 ["flow_instance_data_add"]),
-            CreateHttpEventProvider<PackagingPackageImportEvent>(
-                ["package_import"]),
-            CreateHttpEventProvider<ContentManagementPackageImportEvent>(
-                ["package_import_complete", "content_pages_imported"]),
             CreateHttpEventProvider<SecurityAccountEvent>(
                 CreateSecurityAccountEventNames())
         ];

@@ -32,6 +32,25 @@ public sealed partial class PackageManagerControllerTests(WebAcceptanceFixture f
     private static string Unique(string prefix) =>
         $"{prefix}-{Guid.NewGuid():N}";
 
+    private static async Task WaitUntilAsync(
+        Func<Task<bool>> predicate,
+        int attempts = 50,
+        int delayMilliseconds = 100)
+    {
+        for (int attempt = 0; attempt < attempts; attempt++)
+        {
+            if (await predicate())
+            {
+                return;
+            }
+
+            await Task.Delay(millisecondsDelay: delayMilliseconds);
+        }
+
+        throw new TimeoutException(
+            message: "The expected package import state was not observed.");
+    }
+
     public static IEnumerable<object[]> CapturedPackageTypeCounts()
     {
         foreach (Package package in AcceptanceSeedData.LoadExportPackages())
@@ -51,7 +70,7 @@ public sealed partial class PackageManagerControllerTests(WebAcceptanceFixture f
 
     private async Task<int> ImportPackageAsync(string body, int appId = 1)
     {
-        using HttpRequestMessage request = new(HttpMethod.Post, $"{BaseUrl}/ImportThis?appId={appId}")
+        using HttpRequestMessage request = new(HttpMethod.Post, $"/Api/Packaging/Package/Import?appId={appId}")
         {
             Content = new StringContent(body, Encoding.UTF8, "application/json"),
         };
@@ -60,7 +79,7 @@ public sealed partial class PackageManagerControllerTests(WebAcceptanceFixture f
         string content = await response.Content.ReadAsStringAsync();
 
         response.StatusCode.Should()
-            .Be(expected: HttpStatusCode.OK,because: content);
+            .Be(expected: HttpStatusCode.Accepted,because: content);
 
         return (int)response.StatusCode;
     }
@@ -68,17 +87,17 @@ public sealed partial class PackageManagerControllerTests(WebAcceptanceFixture f
     private async Task<int> ImportPackageAsync(int appId, Package package)
     {
         using HttpResponseMessage response = await Client.PostAsJsonAsync(
-requestUri:             $"{BaseUrl}/Import?appId={appId}",value:             package);
+requestUri:             $"/Api/Packaging/Package/Import?appId={appId}",value:             package);
 
         string content = await response.Content.ReadAsStringAsync();
 
-        if (response.StatusCode != HttpStatusCode.OK)
+        if (response.StatusCode != HttpStatusCode.Accepted)
         {
         }
 
         response.StatusCode.Should()
             .Be(
-                expected: HttpStatusCode.OK,
+                expected: HttpStatusCode.Accepted,
                 because: $"{package.Name}: {content}");
 
         return (int)response.StatusCode;

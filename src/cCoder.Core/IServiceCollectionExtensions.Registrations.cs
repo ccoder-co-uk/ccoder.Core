@@ -431,6 +431,9 @@ predicate: (documentName, apiDescription) =>
         services.AddTransient<IContentManagementAppBroker, ContentManagementAppBroker>();
         services.AddTransient<IAppGraphEventBroker, AppGraphEventBroker>();
         services.AddTransient<IAuthInfoBroker, AuthInfoBroker>();
+        services.AddTransient<
+            IPackageImportCompletionEventBroker,
+            PackageImportCompletionEventBroker>();
         services.AddTransient<IHttpRequestBroker, HttpRequestBroker>();
         services.AddTransient<IAppSecurityAppBroker, AppSecurityAppBroker>();
         services.AddTransient<IPlanningAppBroker, PlanningAppBroker>();
@@ -460,6 +463,9 @@ predicate: (documentName, apiDescription) =>
     {
         services.AddTransient<IContentManagementAppService, ContentManagementAppService>();
         services.AddTransient<IAppGraphEventService, AppGraphEventService>();
+        services.AddTransient<
+            IPackageImportCompletionEventService,
+            PackageImportCompletionEventService>();
         services.AddTransient<IAllowedOriginStoreService, AllowedOriginStoreService>();
         services.AddTransient<IAppSecurityAppService, AppSecurityAppService>();
 
@@ -543,6 +549,14 @@ predicate: (documentName, apiDescription) =>
         services.AddTransient<
             IWorkflowPackageProcessingService,
             WorkflowPackageProcessingService>();
+
+        services.AddTransient<
+            ICorePackageProcessingService,
+            CorePackageProcessingService>();
+
+        services.AddTransient<
+            IPackageImportCompletionEventProcessingService,
+            PackageImportCompletionEventProcessingService>();
     }
 
     private static void AddAggregations(
@@ -555,6 +569,10 @@ predicate: (documentName, apiDescription) =>
         services.AddTransient<
             IPackageManagerAggregationService,
             PackageManagerAggregationService>();
+
+        services.AddTransient<
+            IPackageImportAggregationService,
+            PackageImportAggregationService>();
 
         services.AddTransient<
             IPackageManager,
@@ -579,6 +597,7 @@ predicate: (documentName, apiDescription) =>
         services.AddTransient<
             IHostedServicesAppSecurityAppAddOrchestrationService,
             HostedServicesAppSecurityAppAddOrchestrationService>();
+
     }
 
     private static IServiceCollection AddCoreFirstTimeSetup(

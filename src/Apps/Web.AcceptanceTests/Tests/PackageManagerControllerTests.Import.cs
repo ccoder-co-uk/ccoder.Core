@@ -3,6 +3,7 @@
 // ---------------------------------------------------------------
 
 using System.Net;
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using cCoder.Data;
@@ -22,12 +23,32 @@ namespace Web.AcceptanceTests.Tests.Api;
 public sealed partial class PackageManagerControllerTests
 {
     [Fact]
-    public async Task ShouldImportPackageFromBodyWhenImportThis()
+    public async Task ShouldNotExposeLegacyCorePackageImportRoute()
+    {
+        // Given
+        Package package = new()
+        {
+            Name = Unique(prefix: "LegacyImport"),
+            Items = [],
+        };
+
+        // When
+        using HttpResponseMessage response = await Client.PostAsJsonAsync(
+            requestUri: $"{BaseUrl}/Import?appId=1",
+            value: package);
+
+        // Then
+        response.StatusCode.Should()
+            .Be(expected: HttpStatusCode.MethodNotAllowed);
+    }
+
+    [Fact]
+    public async Task ShouldImportPackageFromBodyWhenImport()
     {
         // Given
         string name = Unique(prefix: "ImportedPackage");
 
-        using HttpRequestMessage request = new(HttpMethod.Post, $"{BaseUrl}/ImportThis?appId=1")
+        using HttpRequestMessage request = new(HttpMethod.Post, "/Api/Packaging/Package/Import?appId=1")
         {
             Content = new StringContent(
                 $$"""
@@ -49,40 +70,7 @@ public sealed partial class PackageManagerControllerTests
 
         // Then
         response.StatusCode.Should()
-            .Be(expected: HttpStatusCode.OK,because: content);
-    }
-
-    [Fact]
-    public async Task ShouldImportPackageArrayFromBodyWhenImportThis()
-    {
-        // Given
-        string name = Unique(prefix: "ImportedPackages");
-
-        using HttpRequestMessage request = new(HttpMethod.Post, $"{BaseUrl}/ImportThis?appId=1")
-        {
-            Content = new StringContent(
-                $$"""
-                [
-                  {
-                    "name": "{{name}}",
-                    "description": "Acceptance import package",
-                    "category": "Acceptance",
-                    "sourceApi": "https://acceptance.local",
-                    "items": []
-                  }
-                ]
-                """,
-                Encoding.UTF8,
-                "application/json"),
-        };
-
-        // When
-        using HttpResponseMessage response = await Client.SendAsync(request: request);
-        string content = await response.Content.ReadAsStringAsync();
-
-        // Then
-        response.StatusCode.Should()
-            .Be(expected: HttpStatusCode.OK,because: content);
+            .Be(expected: HttpStatusCode.Accepted,because: content);
     }
 
     [Fact]
@@ -118,19 +106,26 @@ value:                         new[]
         // When
         int statusCode = await ImportPackageAsync(appId: 1,package: package);
 
-        await using DbContext core = fixture.Factory.Services
-            .GetRequiredService<ICoreContextFactory>()
-            .CreateCoreContext();
+        bool resourceWasImported = false;
 
-        bool resourceWasImported = await core.Set<Resource>()
-            .IgnoreQueryFilters()
-            .AnyAsync(predicate: resource =>
-                resource.AppId == 1
-                && resource.Key == uniqueResourceKey);
+        await WaitUntilAsync(predicate: async () =>
+        {
+            await using DbContext core = fixture.Factory.Services
+                .GetRequiredService<ICoreContextFactory>()
+                .CreateCoreContext();
+
+            resourceWasImported = await core.Set<Resource>()
+                .IgnoreQueryFilters()
+                .AnyAsync(predicate: resource =>
+                    resource.AppId == 1
+                    && resource.Key == uniqueResourceKey);
+
+            return resourceWasImported;
+        });
 
         // Then
         statusCode.Should()
-            .Be(expected: (int)HttpStatusCode.OK);
+            .Be(expected: (int)HttpStatusCode.Accepted);
 
         resourceWasImported.Should()
             .BeTrue();
@@ -212,11 +207,20 @@ value:                             new
         // When
         int statusCode = await ImportPackageAsync(body: body,appId: created.Id);
 
-        CoreApp updated = await GetStoredAppAsync(appId: created.Id);
+        CoreApp updated = null;
+
+        await WaitUntilAsync(predicate: async () =>
+        {
+            updated = await GetStoredAppAsync(appId: created.Id);
+
+            return updated.Name == "Imported App"
+                && updated.DefaultTheme == "Ocean"
+                && updated.DefaultCultureId == "en-GB";
+        });
 
         // Then
         statusCode.Should()
-            .Be(expected: (int)HttpStatusCode.OK);
+            .Be(expected: (int)HttpStatusCode.Accepted);
 
         updated.Name.Should()
             .Be(expected: "Imported App");

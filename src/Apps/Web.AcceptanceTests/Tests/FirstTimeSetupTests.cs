@@ -354,6 +354,10 @@ public sealed partial class FirstTimeSetupTests
             appId: app!.Id,
             package: packages[1]);
 
+        await WaitForBaselineImportsAsync(
+            harness: harness,
+            appId: app.Id);
+
         string[] packagingRoutes = harness.Factory.Services
             .GetServices<Microsoft.AspNetCore.Routing.EndpointDataSource>()
             .SelectMany(selector: source => source.Endpoints)
@@ -383,6 +387,42 @@ public sealed partial class FirstTimeSetupTests
         await RegisterReusablePackagesAsync(
             assetsClient: assetsClient,
             apiClient: harness.Client);
+    }
+
+    private static async Task WaitForBaselineImportsAsync(
+        SetupHarness harness,
+        int appId)
+    {
+        for (int attempt = 0; attempt < 100; attempt++)
+        {
+            await using DbContext core = harness.Factory.Services
+                .GetRequiredService<ICoreContextFactory>()
+                .CreateCoreContext();
+
+            bool commonCacheReady = await core.Set<CommonObject>()
+                .IgnoreQueryFilters()
+                .AnyAsync(predicate: commonObject =>
+                    commonObject.Key == "Security"
+                    && commonObject.Type == "ContentManagement/Script"
+                    && commonObject.Name == "CoreDailyUsageApiDetailsGrid");
+
+            bool appReady = await core.Set<Component>()
+                .IgnoreQueryFilters()
+                .AnyAsync(predicate: component =>
+                    component.AppId == appId
+                    && component.ResourceKey == "AppSecurity"
+                    && component.Name == "Login");
+
+            if (commonCacheReady && appReady)
+            {
+                return;
+            }
+
+            await Task.Delay(millisecondsDelay: 100);
+        }
+
+        throw new TimeoutException(
+            message: "The first-time setup baseline packages did not finish importing.");
     }
 
     private static async Task RegisterReusablePackagesAsync(
@@ -433,54 +473,13 @@ public sealed partial class FirstTimeSetupTests
         HttpClient client,
         Package package)
     {
-        JsonArray values = [];
-
-        foreach (PackageItem item in package.Items)
-        {
-            using JsonDocument data = JsonDocument.Parse(json: item.Data);
-
-            IEnumerable<JsonElement> records =
-                data.RootElement.ValueKind == JsonValueKind.Array
-                    ? data.RootElement.EnumerateArray()
-                    : [data.RootElement];
-
-            foreach (JsonElement record in records)
-            {
-                values.Add(item: new JsonObject
-                {
-                    ["Name"] = record
-                        .GetProperty(propertyName: "Name")
-                        .GetString(),
-                    ["Description"] = record.TryGetProperty(
-                        propertyName: "Description",
-                        value: out JsonElement description)
-                            ? description.GetString()
-                            : null,
-                    ["Version"] = 1,
-                    ["Key"] = ReadOptionalString(record: record, name: "ResourceKey")
-                        ?? ReadOptionalString(record: record, name: "Key")
-                        ?? package.Category,
-                    ["Type"] = item.Type,
-                    ["Json"] = record.GetRawText(),
-                    ["Culture"] = ReadOptionalString(record: record, name: "Culture")
-                        ?? string.Empty,
-                });
-            }
-        }
-
         using HttpResponseMessage response = await client.PostAsJsonAsync(
-            requestUri: "/Api/ContentManagement/CommonObject/Import",
-            value: new JsonObject { ["value"] = values });
+            requestUri: "/Api/Packaging/Package/Import",
+            value: package);
 
         response.StatusCode.Should()
-            .Be(expected: HttpStatusCode.OK);
+            .Be(expected: HttpStatusCode.Accepted);
     }
-
-    private static string ReadOptionalString(JsonElement record, string name) =>
-        record.TryGetProperty(propertyName: name, value: out JsonElement value)
-            && value.ValueKind == JsonValueKind.String
-                ? value.GetString()
-                : null;
 
     private static async Task<Package> DownloadPackageAsync(
         HttpClient client,
@@ -501,14 +500,14 @@ public sealed partial class FirstTimeSetupTests
         Package package)
     {
         using HttpResponseMessage response = await client.PostAsJsonAsync(
-            requestUri: $"/Api/Core/Package/Import?appId={appId}",
+            requestUri: $"/Api/Packaging/Package/Import?appId={appId}",
             value: package);
 
         string content = await response.Content.ReadAsStringAsync();
 
         response.StatusCode.Should()
             .Be(
-                expected: HttpStatusCode.OK,
+                expected: HttpStatusCode.Accepted,
                 because: $"{package.Name}: {content}");
 
         content.Should()

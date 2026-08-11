@@ -3,7 +3,6 @@
 // ---------------------------------------------------------------
 
 using cCoder.Core.Brokers.Loggings;
-using System.Text.Json;
 using cCoder.Core.Services.Aggregations.Packages;
 using cCoder.Core.Models.Exceptions;
 using cCoder.Data.Models.Packaging;
@@ -20,11 +19,6 @@ public class PackageManagerController(
     ILoggingBroker loggingBroker)
     : ControllerBase
 {
-    private static readonly JsonSerializerOptions JsonOptions = new()
-    {
-        PropertyNameCaseInsensitive = true,
-    };
-
     [HttpGet("Export")]
     public async Task<IActionResult> Get(
         [FromQuery] int appId,
@@ -66,96 +60,4 @@ public class PackageManagerController(
         }
     }
 
-    [HttpPost("Import")]
-    public async Task<IActionResult> Post(
-        [FromQuery] int appId,
-        [FromBody] Package newPackage)
-    {
-        try
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(modelState: ModelState);
-            }
-
-            await packageManagerAggregationService.ImportPackagesAsync(
-                appId: appId,
-                packages: [newPackage]);
-
-            return Ok();
-        }
-        catch (CoreOrchestrationValidationException exception)
-        {
-            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
-
-            return BadRequest(error: "The package request is invalid.");
-        }
-        catch (System.Security.SecurityException exception)
-        {
-            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
-
-            return StatusCode(
-                statusCode: StatusCodes.Status403Forbidden,
-                value: "The package operation is forbidden.");
-        }
-        catch (Exception exception)
-        {
-            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
-
-            return StatusCode(
-                statusCode: StatusCodes.Status500InternalServerError,
-                value: "The package operation failed.");
-        }
-    }
-
-    [HttpPost("ImportThis")]
-    public async Task<IActionResult> PostThis([FromQuery] int appId)
-    {
-        try
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(modelState: ModelState);
-            }
-
-            using JsonDocument document =
-                await JsonDocument.ParseAsync(utf8Json: Request.Body);
-
-            JsonElement body = document.RootElement;
-
-            Package[] packages = body.ValueKind == JsonValueKind.Array
-                ? body.Deserialize<Package[]>(options: JsonOptions) ?? []
-                : body.Deserialize<Package>(options: JsonOptions) is Package package
-                    ? [package]
-                    : [];
-
-            await packageManagerAggregationService.ImportPackagesAsync(
-                appId: appId,
-                packages: packages);
-
-            return Ok();
-        }
-        catch (CoreOrchestrationValidationException exception)
-        {
-            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
-
-            return BadRequest(error: "The package request is invalid.");
-        }
-        catch (System.Security.SecurityException exception)
-        {
-            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
-
-            return StatusCode(
-                statusCode: StatusCodes.Status403Forbidden,
-                value: "The package operation is forbidden.");
-        }
-        catch (Exception exception)
-        {
-            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
-
-            return StatusCode(
-                statusCode: StatusCodes.Status500InternalServerError,
-                value: "The package operation failed.");
-        }
-    }
 }

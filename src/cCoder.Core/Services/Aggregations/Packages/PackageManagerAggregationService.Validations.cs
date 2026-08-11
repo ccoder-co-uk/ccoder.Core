@@ -3,7 +3,6 @@
 // ---------------------------------------------------------------
 
 using cCoder.Core.Dependencies;
-using cCoder.Data.Models.Packaging;
 
 namespace cCoder.Core.Services.Aggregations.Packages;
 
@@ -21,9 +20,4 @@ internal sealed partial class PackageManagerAggregationService
             ValidationRulesEngine.Validate(inputs: [packageNames]);
         }
     }
-
-    private static void ValidatePackagesOnImport(
-        int appId,
-        IEnumerable<Package> packages) =>
-        ValidationRulesEngine.Validate(inputs: [appId, packages]);
 }

@@ -4,21 +4,15 @@
 
 using cCoder.Core;
 using cCoder.Core.Models;
-using cCoder.AppSecurity.Models;
-using cCoder.ContentManagement.Models;
 using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.DMS;
 using cCoder.Data.Models.Planning;
-using cCoder.Data.Models.Packaging;
 using cCoder.Data.Models.Workflow;
 using cCoder.Eventing;
 using cCoder.Eventing.Models;
 using cCoder.Security.Models.Events;
 using cCoder.Workflow.Exposures;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using ContentManagementPackageImportEvent = cCoder.ContentManagement.Models.PackageImportEvent;
-using DocumentManagementPackageImportEvent = cCoder.DocumentManagement.Models.DocumentManagementPackageEvent;
-using WorkflowPackageImportEvent = cCoder.Workflow.Models.WorkflowPackageEvent;
 
 namespace HostedServices;
 
@@ -55,14 +49,6 @@ public class Program
             CreateExternalReceiveProvider<ScheduledTask>(
                 ["scheduled_task_execute"]),
             CreateQueuedFlowInstanceReceiveProvider(),
-            CreateExternalReceiveProvider<ContentManagementPackageImportEvent>(
-                ["package_import", "package_import_complete"]),
-            CreateExternalReceiveProvider<AppSecurityPackageEvent>(
-                ["content_pages_imported"]),
-            CreateExternalReceiveProvider<DocumentManagementPackageImportEvent>(
-                ["package_import"]),
-            CreateExternalReceiveProvider<WorkflowPackageImportEvent>(
-                ["package_import"]),
             CreateExternalReceiveProvider<SecurityAccountEvent>(
                 CreateSecurityAccountEventNames()),
         ];
