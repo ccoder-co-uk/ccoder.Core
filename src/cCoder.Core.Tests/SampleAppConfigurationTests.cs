@@ -124,16 +124,30 @@ public sealed partial class SampleAppConfigurationTests
             .Should()
             .BeEmpty();
 
-        Uri.TryCreate(
-                uriString: configuration["Packaging:AssetsRoot"],
-                uriKind: UriKind.Absolute,
-                result: out Uri assetsRoot)
-            .Should()
-            .BeTrue();
+        string assetsRoot = configuration["Packaging:AssetsRoot"]!;
 
-        assetsRoot.Scheme
-            .Should()
-            .Be(expected: Uri.UriSchemeHttps);
+        if (string.Equals(
+            a: fileName,
+            b: "Web.appsettings.json",
+            comparisonType: StringComparison.Ordinal))
+        {
+            assetsRoot
+                .Should()
+                .Be(expected: "/Assets/");
+        }
+        else
+        {
+            Uri.TryCreate(
+                    uriString: assetsRoot,
+                    uriKind: UriKind.Absolute,
+                    result: out Uri assetsRootUri)
+                .Should()
+                .BeTrue();
+
+            assetsRootUri.Scheme
+                .Should()
+                .Be(expected: Uri.UriSchemeHttps);
+        }
 
         Uri.TryCreate(
                 uriString: configuration["Eventing:Http:HubUrl"],
