@@ -2,6 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System.Net;
 using System.Text.Json;
 using cCoder.Data;
 using cCoder.Data.Models.CMS;
@@ -16,7 +17,7 @@ namespace cCoder.IntegrationTests.Tests;
 public sealed partial class AppEventIntegrationTests
 {
     [Fact]
-    public async Task PackageImport_RoutesPagesImportedThroughHostedServicesAndPersistsRootPageRole()
+    public async Task PackageImport_ProcessesInWebAndPersistsRootPageRole()
     {
         // Given
         int appId = 0;
@@ -33,9 +34,10 @@ public sealed partial class AppEventIntegrationTests
             // When
             await SendAsJsonAsync(
                 method: HttpMethod.Post,
-                relativeUrl: $"/Api/Core/Package/Import?appId={appId}",
+                relativeUrl: $"/Api/Packaging/Package/Import?appId={appId}",
                 payload: package,
-                host: appDomain);
+                host: appDomain,
+                expectedStatusCode: HttpStatusCode.Accepted);
 
             // Then
             await WaitUntilAsync(
@@ -89,8 +91,9 @@ public sealed partial class AppEventIntegrationTests
     }
 
     private static Package CreateRootPageRolePackage() =>
-        new("Root page role")
+        new()
         {
+            Name = "Root page role",
             Items =
             [
                 new PackageItem

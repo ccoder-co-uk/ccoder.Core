@@ -13,7 +13,4 @@ public interface IPackageManager
         string[] packageNames,
         string sourceApi);
 
-    ValueTask ImportPackagesAsync(
-        int appId,
-        IEnumerable<Package> packages);
 }

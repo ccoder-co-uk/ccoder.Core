@@ -2,8 +2,12 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.Core.Exposures;
+using cCoder.Packaging.Models;
 
 namespace cCoder.Core.Services.Aggregations.Packages;
 
-internal interface IPackageManagerAggregationService : IPackageManager { }
+internal interface IPackageImportAggregationService
+{
+    ValueTask ProcessPackageImportEventAsync(
+        PackageImportEvent packageImportEvent);
+}

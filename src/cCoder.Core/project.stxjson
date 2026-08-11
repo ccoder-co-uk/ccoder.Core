@@ -530,6 +530,56 @@
       ]
     },
     {
+      "Name": "cCoder.Core.Brokers.Eventing.PackageImportCompletionEventBroker",
+      "StandardElementType": "Broker",
+      "LineNumber": 11,
+      "IsPublic": false,
+      "Kind": "Class",
+      "BaseType": null,
+      "Interfaces": [
+        {
+          "Id": "cCoder.Core:cCoder.Core.Brokers.Eventing.IPackageImportCompletionEventBroker",
+          "FullName": "cCoder.Core.Brokers.Eventing.IPackageImportCompletionEventBroker",
+          "Name": "IPackageImportCompletionEventBroker",
+          "Namespace": "cCoder.Core.Brokers.Eventing",
+          "AssemblyName": "cCoder.Core",
+          "Kind": "Interface",
+          "IsInCurrentProject": true,
+          "StandardElementType": "Broker"
+        }
+      ],
+      "Properties": [],
+      "Methods": [
+        {
+          "Id": "cCoder.Core.Brokers.Eventing.PackageImportCompletionEventBroker.RaisePackageImportEventCompleteAsync(EventMessage\u003CPackageImportEvent\u003E)",
+          "Name": "RaisePackageImportEventCompleteAsync",
+          "LineNumber": 15,
+          "Inputs": [
+            {
+              "Name": "message",
+              "Type": "EventMessage\u003CPackageImportEvent\u003E"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask",
+          "Implements": [
+            "cCoder.Core.Brokers.Eventing.IPackageImportCompletionEventBroker.RaisePackageImportEventCompleteAsync(EventMessage\u003CPackageImportEvent\u003E)"
+          ],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        }
+      ]
+    },
+    {
       "Name": "cCoder.Core.Brokers.Eventing.ServiceBusAppDeleteForwardingBroker",
       "StandardElementType": "Broker",
       "LineNumber": 12,
@@ -1175,37 +1225,6 @@
           "ReturnType": "Package",
           "Implements": [
             "cCoder.Core.Brokers.Packaging.IPackageBroker.ExportPackage(System.Int32,System.String)"
-          ],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Brokers.Packaging.PackageBroker.ImportPackageAsync(System.Int32,Package)",
-          "Name": "ImportPackageAsync",
-          "LineNumber": 21,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "package",
-              "Type": "Package"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask",
-          "Implements": [
-            "cCoder.Core.Brokers.Packaging.IPackageBroker.ImportPackageAsync(System.Int32,Package)"
           ],
           "Calls": [],
           "PossibleExceptionTypes": [],
@@ -3272,7 +3291,7 @@
     {
       "Name": "cCoder.Core.Exposures.Controllers.PackageManagerController",
       "StandardElementType": "HttpExposure",
-      "LineNumber": 15,
+      "LineNumber": 14,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -3291,7 +3310,7 @@
         {
           "Id": "cCoder.Core.Exposures.Controllers.PackageManagerController.Get(System.Int32,System.String[])",
           "Name": "Get",
-          "LineNumber": 29,
+          "LineNumber": 23,
           "Inputs": [
             {
               "Name": "appId",
@@ -3337,186 +3356,6 @@
             {
               "StatusCode": 200,
               "ResultMethod": "Ok",
-              "ExceptionType": "",
-              "IsExceptionPath": false,
-              "IsNullPath": false,
-              "HasBody": true,
-              "ExposesExceptionDetails": false,
-              "LogsException": false
-            },
-            {
-              "StatusCode": 400,
-              "ResultMethod": "BadRequest",
-              "ExceptionType": "cCoder.Core.Models.Exceptions.CoreOrchestrationValidationException",
-              "IsExceptionPath": true,
-              "IsNullPath": false,
-              "HasBody": true,
-              "ExposesExceptionDetails": false,
-              "LogsException": true
-            }
-          ],
-          "IsHttpRequestHandler": true,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": true
-        },
-        {
-          "Id": "cCoder.Core.Exposures.Controllers.PackageManagerController.Post(System.Int32,Package)",
-          "Name": "Post",
-          "LineNumber": 70,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "newPackage",
-              "Type": "Package"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E",
-          "Implements": [],
-          "Calls": [
-            {
-              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
-              "MethodName": "LogError",
-              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])",
-              "StandardElementType": "Broker",
-              "IsDependencyBoundary": false
-            },
-            {
-              "TypeName": "cCoder.Core.Exposures.IPackageManager",
-              "MethodName": "ImportPackagesAsync",
-              "MethodId": "cCoder.Core.Exposures.IPackageManager.ImportPackagesAsync(System.Int32,System.Collections.Generic.IEnumerable\u003CPackage\u003E)",
-              "StandardElementType": "Exposure",
-              "IsDependencyBoundary": false
-            }
-          ],
-          "PossibleExceptionTypes": [
-            "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException",
-            "System.InvalidOperationException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationValidationException"
-          ],
-          "IncomingExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException"
-          ],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [
-            "POST"
-          ],
-          "HttpResponses": [
-            {
-              "StatusCode": 200,
-              "ResultMethod": "Ok",
-              "ExceptionType": "",
-              "IsExceptionPath": false,
-              "IsNullPath": false,
-              "HasBody": false,
-              "ExposesExceptionDetails": false,
-              "LogsException": false
-            },
-            {
-              "StatusCode": 400,
-              "ResultMethod": "BadRequest",
-              "ExceptionType": "",
-              "IsExceptionPath": false,
-              "IsNullPath": false,
-              "HasBody": true,
-              "ExposesExceptionDetails": false,
-              "LogsException": false
-            },
-            {
-              "StatusCode": 400,
-              "ResultMethod": "BadRequest",
-              "ExceptionType": "cCoder.Core.Models.Exceptions.CoreOrchestrationValidationException",
-              "IsExceptionPath": true,
-              "IsNullPath": false,
-              "HasBody": true,
-              "ExposesExceptionDetails": false,
-              "LogsException": true
-            }
-          ],
-          "IsHttpRequestHandler": true,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": true
-        },
-        {
-          "Id": "cCoder.Core.Exposures.Controllers.PackageManagerController.PostThis(System.Int32)",
-          "Name": "PostThis",
-          "LineNumber": 112,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E",
-          "Implements": [],
-          "Calls": [
-            {
-              "TypeName": "System.Text.Json.JsonDocument",
-              "MethodName": "ParseAsync",
-              "MethodId": "System.Text.Json.JsonDocument.ParseAsync(System.IO.Stream,System.Text.Json.JsonDocumentOptions,System.Threading.CancellationToken)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "System.Text.Json.JsonSerializer",
-              "MethodName": "Deserialize",
-              "MethodId": "System.Text.Json.JsonSerializer.Deserialize(System.Text.Json.JsonElement,System.Text.Json.JsonSerializerOptions?)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
-              "MethodName": "LogError",
-              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])",
-              "StandardElementType": "Broker",
-              "IsDependencyBoundary": false
-            },
-            {
-              "TypeName": "cCoder.Core.Exposures.IPackageManager",
-              "MethodName": "ImportPackagesAsync",
-              "MethodId": "cCoder.Core.Exposures.IPackageManager.ImportPackagesAsync(System.Int32,System.Collections.Generic.IEnumerable\u003CPackage\u003E)",
-              "StandardElementType": "Exposure",
-              "IsDependencyBoundary": false
-            }
-          ],
-          "PossibleExceptionTypes": [
-            "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException",
-            "System.InvalidOperationException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationValidationException"
-          ],
-          "IncomingExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException"
-          ],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [
-            "POST"
-          ],
-          "HttpResponses": [
-            {
-              "StatusCode": 200,
-              "ResultMethod": "Ok",
-              "ExceptionType": "",
-              "IsExceptionPath": false,
-              "IsNullPath": false,
-              "HasBody": false,
-              "ExposesExceptionDetails": false,
-              "LogsException": false
-            },
-            {
-              "StatusCode": 400,
-              "ResultMethod": "BadRequest",
               "ExceptionType": "",
               "IsExceptionPath": false,
               "IsNullPath": false,
@@ -4917,7 +4756,7 @@
             {
               "TypeName": "cCoder.Core.Services.Processings.Packages.IContentManagementPackageProcessingService",
               "MethodName": "ImportPackageAsync",
-              "MethodId": "cCoder.Core.Services.Processings.Packages.IContentManagementPackageProcessingService.ImportPackageAsync(System.Int32,Package)",
+              "MethodId": "cCoder.Core.Services.Processings.Packages.IContentManagementPackageProcessingService.ImportPackageAsync(System.Int32?,Package)",
               "StandardElementType": "ProcessingService",
               "IsDependencyBoundary": false
             }
@@ -6966,9 +6805,120 @@
       ]
     },
     {
+      "Name": "cCoder.Core.Services.Aggregations.Packages.PackageImportAggregationService",
+      "StandardElementType": "AggregationService",
+      "LineNumber": 10,
+      "IsPublic": false,
+      "Kind": "Class",
+      "BaseType": null,
+      "Interfaces": [
+        {
+          "Id": "cCoder.Core:cCoder.Core.Services.Aggregations.Packages.IPackageImportAggregationService",
+          "FullName": "cCoder.Core.Services.Aggregations.Packages.IPackageImportAggregationService",
+          "Name": "IPackageImportAggregationService",
+          "Namespace": "cCoder.Core.Services.Aggregations.Packages",
+          "AssemblyName": "cCoder.Core",
+          "Kind": "Interface",
+          "IsInCurrentProject": true,
+          "StandardElementType": "AggregationService"
+        }
+      ],
+      "Properties": [],
+      "Methods": [
+        {
+          "Id": "cCoder.Core.Services.Aggregations.Packages.PackageImportAggregationService.ProcessPackageImportEventAsync(PackageImportEvent)",
+          "Name": "ProcessPackageImportEventAsync",
+          "LineNumber": 19,
+          "Inputs": [
+            {
+              "Name": "packageImportEvent",
+              "Type": "PackageImportEvent"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask",
+          "Implements": [
+            "cCoder.Core.Services.Aggregations.Packages.IPackageImportAggregationService.ProcessPackageImportEventAsync(PackageImportEvent)"
+          ],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Core.Services.Processings.Packages.IAppSecurityPackageProcessingService",
+              "MethodName": "ImportPackageAsync",
+              "MethodId": "cCoder.Core.Services.Processings.Packages.IAppSecurityPackageProcessingService.ImportPackageAsync(System.Int32,Package)",
+              "StandardElementType": "ProcessingService",
+              "IsDependencyBoundary": false
+            },
+            {
+              "TypeName": "cCoder.Core.Services.Processings.Packages.IContentManagementPackageProcessingService",
+              "MethodName": "ImportPackageAsync",
+              "MethodId": "cCoder.Core.Services.Processings.Packages.IContentManagementPackageProcessingService.ImportPackageAsync(System.Int32?,Package)",
+              "StandardElementType": "ProcessingService",
+              "IsDependencyBoundary": false
+            },
+            {
+              "TypeName": "cCoder.Core.Services.Processings.Packages.ICorePackageProcessingService",
+              "MethodName": "ImportPackageAsync",
+              "MethodId": "cCoder.Core.Services.Processings.Packages.ICorePackageProcessingService.ImportPackageAsync(System.Int32,Package)",
+              "StandardElementType": "ProcessingService",
+              "IsDependencyBoundary": false
+            },
+            {
+              "TypeName": "cCoder.Core.Services.Processings.Packages.IDocumentManagementPackageProcessingService",
+              "MethodName": "ImportPackageAsync",
+              "MethodId": "cCoder.Core.Services.Processings.Packages.IDocumentManagementPackageProcessingService.ImportPackageAsync(System.Int32,Package)",
+              "StandardElementType": "ProcessingService",
+              "IsDependencyBoundary": false
+            },
+            {
+              "TypeName": "cCoder.Core.Services.Processings.Packages.IPackageImportCompletionEventProcessingService",
+              "MethodName": "ProcessPackageImportEventAsync",
+              "MethodId": "cCoder.Core.Services.Processings.Packages.IPackageImportCompletionEventProcessingService.ProcessPackageImportEventAsync(PackageImportEvent)",
+              "StandardElementType": "ProcessingService",
+              "IsDependencyBoundary": false
+            },
+            {
+              "TypeName": "cCoder.Core.Services.Processings.Packages.IWorkflowPackageProcessingService",
+              "MethodName": "ImportPackageAsync",
+              "MethodId": "cCoder.Core.Services.Processings.Packages.IWorkflowPackageProcessingService.ImportPackageAsync(System.Int32,Package)",
+              "StandardElementType": "ProcessingService",
+              "IsDependencyBoundary": false
+            }
+          ],
+          "PossibleExceptionTypes": [
+            "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException",
+            "System.InvalidOperationException",
+            "cCoder.Core.Models.Exceptions.CoreDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreOrchestrationDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException",
+            "cCoder.Core.Models.Exceptions.CoreOrchestrationValidationException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingValidationException",
+            "cCoder.Core.Models.Exceptions.CoreServiceException",
+            "cCoder.Core.Models.Exceptions.CoreValidationException"
+          ],
+          "IncomingExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
+          ],
+          "ThrowsExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException"
+          ],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        }
+      ]
+    },
+    {
       "Name": "cCoder.Core.Services.Aggregations.Packages.PackageManagerAggregationService",
       "StandardElementType": "AggregationService",
-      "LineNumber": 20,
+      "LineNumber": 17,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -6989,7 +6939,7 @@
         {
           "Id": "cCoder.Core.Services.Aggregations.Packages.PackageManagerAggregationService.ExportPackagesAsync(System.Int32,System.String[],System.String)",
           "Name": "ExportPackagesAsync",
-          "LineNumber": 51,
+          "LineNumber": 42,
           "Inputs": [
             {
               "Name": "appId",
@@ -7016,49 +6966,6 @@
             "cCoder.Core.Models.Exceptions.CoreOrchestrationValidationException"
           ],
           "IncomingExceptionTypes": [
-            "System.InvalidOperationException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException"
-          ],
-          "ThrowsExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException"
-          ],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Services.Aggregations.Packages.PackageManagerAggregationService.ImportPackagesAsync(System.Int32,System.Collections.Generic.IEnumerable\u003CPackage\u003E)",
-          "Name": "ImportPackagesAsync",
-          "LineNumber": 126,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "packages",
-              "Type": "System.Collections.Generic.IEnumerable\u003CPackage\u003E"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask",
-          "Implements": [
-            "cCoder.Core.Exposures.IPackageManager.ImportPackagesAsync(System.Int32,System.Collections.Generic.IEnumerable\u003CPackage\u003E)"
-          ],
-          "Calls": [],
-          "PossibleExceptionTypes": [
-            "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException",
-            "System.InvalidOperationException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationValidationException"
-          ],
-          "IncomingExceptionTypes": [
-            "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException",
             "System.InvalidOperationException",
             "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException"
           ],
@@ -8176,6 +8083,74 @@
               "TypeName": "cCoder.Core.Brokers.Eventing.IAppGraphEventBroker",
               "MethodName": "RaiseAppUpdateEventAsync",
               "MethodId": "cCoder.Core.Brokers.Eventing.IAppGraphEventBroker.RaiseAppUpdateEventAsync(EventMessage\u003CApp\u003E)",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
+            }
+          ],
+          "PossibleExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreServiceException",
+            "cCoder.Core.Models.Exceptions.CoreValidationException"
+          ],
+          "IncomingExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreServiceException"
+          ],
+          "ThrowsExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreServiceException"
+          ],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Foundations.Eventing.PackageImportCompletionEventService",
+      "StandardElementType": "FoundationService",
+      "LineNumber": 11,
+      "IsPublic": false,
+      "Kind": "Class",
+      "BaseType": null,
+      "Interfaces": [
+        {
+          "Id": "cCoder.Core:cCoder.Core.Services.Foundations.Eventing.IPackageImportCompletionEventService",
+          "FullName": "cCoder.Core.Services.Foundations.Eventing.IPackageImportCompletionEventService",
+          "Name": "IPackageImportCompletionEventService",
+          "Namespace": "cCoder.Core.Services.Foundations.Eventing",
+          "AssemblyName": "cCoder.Core",
+          "Kind": "Interface",
+          "IsInCurrentProject": true,
+          "StandardElementType": "FoundationService"
+        }
+      ],
+      "Properties": [],
+      "Methods": [
+        {
+          "Id": "cCoder.Core.Services.Foundations.Eventing.PackageImportCompletionEventService.RaisePackageImportEventCompleteAsync(PackageImportEvent)",
+          "Name": "RaisePackageImportEventCompleteAsync",
+          "LineNumber": 16,
+          "Inputs": [
+            {
+              "Name": "packageImportEvent",
+              "Type": "PackageImportEvent"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask",
+          "Implements": [
+            "cCoder.Core.Services.Foundations.Eventing.IPackageImportCompletionEventService.RaisePackageImportEventCompleteAsync(PackageImportEvent)"
+          ],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Core.Brokers.Eventing.IPackageImportCompletionEventBroker",
+              "MethodName": "RaisePackageImportEventCompleteAsync",
+              "MethodId": "cCoder.Core.Brokers.Eventing.IPackageImportCompletionEventBroker.RaisePackageImportEventCompleteAsync(EventMessage\u003CPackageImportEvent\u003E)",
               "StandardElementType": "Broker",
               "IsDependencyBoundary": false
             }
@@ -10152,9 +10127,71 @@
           "HasTryCatch": false
         },
         {
-          "Id": "cCoder.Core.Services.Processings.Packages.ContentManagementPackageProcessingService.ImportPackageAsync(System.Int32,Package)",
+          "Id": "cCoder.Core.Services.Processings.Packages.ContentManagementPackageProcessingService.ImportPackageAsync(System.Int32?,Package)",
           "Name": "ImportPackageAsync",
           "LineNumber": 18,
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32?"
+            },
+            {
+              "Name": "package",
+              "Type": "Package"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask",
+          "Implements": [
+            "cCoder.Core.Services.Processings.Packages.IContentManagementPackageProcessingService.ImportPackageAsync(System.Int32?,Package)"
+          ],
+          "Calls": [],
+          "PossibleExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingValidationException"
+          ],
+          "IncomingExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
+          ],
+          "ThrowsExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
+          ],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Processings.Packages.CorePackageProcessingService",
+      "StandardElementType": "ProcessingService",
+      "LineNumber": 15,
+      "IsPublic": false,
+      "Kind": "Class",
+      "BaseType": null,
+      "Interfaces": [
+        {
+          "Id": "cCoder.Core:cCoder.Core.Services.Processings.Packages.ICorePackageProcessingService",
+          "FullName": "cCoder.Core.Services.Processings.Packages.ICorePackageProcessingService",
+          "Name": "ICorePackageProcessingService",
+          "Namespace": "cCoder.Core.Services.Processings.Packages",
+          "AssemblyName": "cCoder.Core",
+          "Kind": "Interface",
+          "IsInCurrentProject": true,
+          "StandardElementType": "ProcessingService"
+        }
+      ],
+      "Properties": [],
+      "Methods": [
+        {
+          "Id": "cCoder.Core.Services.Processings.Packages.CorePackageProcessingService.ImportPackageAsync(System.Int32,Package)",
+          "Name": "ImportPackageAsync",
+          "LineNumber": 26,
           "Inputs": [
             {
               "Name": "appId",
@@ -10167,15 +10204,19 @@
           ],
           "ReturnType": "System.Threading.Tasks.ValueTask",
           "Implements": [
-            "cCoder.Core.Services.Processings.Packages.IContentManagementPackageProcessingService.ImportPackageAsync(System.Int32,Package)"
+            "cCoder.Core.Services.Processings.Packages.ICorePackageProcessingService.ImportPackageAsync(System.Int32,Package)"
           ],
           "Calls": [],
           "PossibleExceptionTypes": [
+            "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException",
+            "System.InvalidOperationException",
             "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
             "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
             "cCoder.Core.Models.Exceptions.CoreProcessingValidationException"
           ],
           "IncomingExceptionTypes": [
+            "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException",
+            "System.InvalidOperationException",
             "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
           ],
           "ThrowsExceptionTypes": [
@@ -10280,6 +10321,78 @@
             "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
           ],
           "ThrowsExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
+          ],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Processings.Packages.PackageImportCompletionEventProcessingService",
+      "StandardElementType": "ProcessingService",
+      "LineNumber": 11,
+      "IsPublic": false,
+      "Kind": "Class",
+      "BaseType": null,
+      "Interfaces": [
+        {
+          "Id": "cCoder.Core:cCoder.Core.Services.Processings.Packages.IPackageImportCompletionEventProcessingService",
+          "FullName": "cCoder.Core.Services.Processings.Packages.IPackageImportCompletionEventProcessingService",
+          "Name": "IPackageImportCompletionEventProcessingService",
+          "Namespace": "cCoder.Core.Services.Processings.Packages",
+          "AssemblyName": "cCoder.Core",
+          "Kind": "Interface",
+          "IsInCurrentProject": true,
+          "StandardElementType": "ProcessingService"
+        }
+      ],
+      "Properties": [],
+      "Methods": [
+        {
+          "Id": "cCoder.Core.Services.Processings.Packages.PackageImportCompletionEventProcessingService.ProcessPackageImportEventAsync(PackageImportEvent)",
+          "Name": "ProcessPackageImportEventAsync",
+          "LineNumber": 15,
+          "Inputs": [
+            {
+              "Name": "packageImportEvent",
+              "Type": "PackageImportEvent"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask",
+          "Implements": [
+            "cCoder.Core.Services.Processings.Packages.IPackageImportCompletionEventProcessingService.ProcessPackageImportEventAsync(PackageImportEvent)"
+          ],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Core.Services.Foundations.Eventing.IPackageImportCompletionEventService",
+              "MethodName": "RaisePackageImportEventCompleteAsync",
+              "MethodId": "cCoder.Core.Services.Foundations.Eventing.IPackageImportCompletionEventService.RaisePackageImportEventCompleteAsync(PackageImportEvent)",
+              "StandardElementType": "FoundationService",
+              "IsDependencyBoundary": false
+            }
+          ],
+          "PossibleExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingValidationException",
+            "cCoder.Core.Models.Exceptions.CoreServiceException",
+            "cCoder.Core.Models.Exceptions.CoreValidationException"
+          ],
+          "IncomingExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
+            "cCoder.Core.Models.Exceptions.CoreServiceException"
+          ],
+          "ThrowsExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
             "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
           ],
           "HttpMethods": [],
@@ -11180,6 +11293,43 @@
       ]
     },
     {
+      "Name": "cCoder.Core.Brokers.Eventing.IPackageImportCompletionEventBroker",
+      "StandardElementType": "Broker",
+      "LineNumber": 10,
+      "IsPublic": false,
+      "Kind": "Interface",
+      "BaseType": null,
+      "Interfaces": [],
+      "Properties": [],
+      "Methods": [
+        {
+          "Id": "cCoder.Core.Brokers.Eventing.IPackageImportCompletionEventBroker.RaisePackageImportEventCompleteAsync(EventMessage\u003CPackageImportEvent\u003E)",
+          "Name": "RaisePackageImportEventCompleteAsync",
+          "LineNumber": 12,
+          "Inputs": [
+            {
+              "Name": "message",
+              "Type": "EventMessage\u003CPackageImportEvent\u003E"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        }
+      ]
+    },
+    {
       "Name": "cCoder.Core.Brokers.Eventing.IServiceBusAppDeleteForwardingBroker",
       "StandardElementType": "Broker",
       "LineNumber": 10,
@@ -11725,35 +11875,6 @@
           "HasKeyParameter": false,
           "HandlesNullWithNotFound": false,
           "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Brokers.Packaging.IPackageBroker.ImportPackageAsync(System.Int32,Package)",
-          "Name": "ImportPackageAsync",
-          "LineNumber": 15,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "package",
-              "Type": "Package"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
         }
       ]
     },
@@ -12198,35 +12319,6 @@
           "HasKeyParameter": false,
           "HandlesNullWithNotFound": false,
           "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Exposures.IPackageManager.ImportPackagesAsync(System.Int32,System.Collections.Generic.IEnumerable\u003CPackage\u003E)",
-          "Name": "ImportPackagesAsync",
-          "LineNumber": 16,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "packages",
-              "Type": "System.Collections.Generic.IEnumerable\u003CPackage\u003E"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
         }
       ]
     },
@@ -12529,9 +12621,46 @@
       ]
     },
     {
+      "Name": "cCoder.Core.Services.Aggregations.Packages.IPackageImportAggregationService",
+      "StandardElementType": "AggregationService",
+      "LineNumber": 9,
+      "IsPublic": false,
+      "Kind": "Interface",
+      "BaseType": null,
+      "Interfaces": [],
+      "Properties": [],
+      "Methods": [
+        {
+          "Id": "cCoder.Core.Services.Aggregations.Packages.IPackageImportAggregationService.ProcessPackageImportEventAsync(PackageImportEvent)",
+          "Name": "ProcessPackageImportEventAsync",
+          "LineNumber": 11,
+          "Inputs": [
+            {
+              "Name": "packageImportEvent",
+              "Type": "PackageImportEvent"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        }
+      ]
+    },
+    {
       "Name": "cCoder.Core.Services.Aggregations.Packages.IPackageManagerAggregationService",
       "StandardElementType": "AggregationService",
-      "LineNumber": 11,
+      "LineNumber": 9,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -13006,6 +13135,43 @@
             {
               "Name": "app",
               "Type": "App"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Foundations.Eventing.IPackageImportCompletionEventService",
+      "StandardElementType": "FoundationService",
+      "LineNumber": 9,
+      "IsPublic": false,
+      "Kind": "Interface",
+      "BaseType": null,
+      "Interfaces": [],
+      "Properties": [],
+      "Methods": [
+        {
+          "Id": "cCoder.Core.Services.Foundations.Eventing.IPackageImportCompletionEventService.RaisePackageImportEventCompleteAsync(PackageImportEvent)",
+          "Name": "RaisePackageImportEventCompleteAsync",
+          "LineNumber": 11,
+          "Inputs": [
+            {
+              "Name": "packageImportEvent",
+              "Type": "PackageImportEvent"
             }
           ],
           "ReturnType": "System.Threading.Tasks.ValueTask",
@@ -14374,7 +14540,48 @@
           "HasTryCatch": false
         },
         {
-          "Id": "cCoder.Core.Services.Processings.Packages.IContentManagementPackageProcessingService.ImportPackageAsync(System.Int32,Package)",
+          "Id": "cCoder.Core.Services.Processings.Packages.IContentManagementPackageProcessingService.ImportPackageAsync(System.Int32?,Package)",
+          "Name": "ImportPackageAsync",
+          "LineNumber": 11,
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32?"
+            },
+            {
+              "Name": "package",
+              "Type": "Package"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Processings.Packages.ICorePackageProcessingService",
+      "StandardElementType": "ProcessingService",
+      "LineNumber": 9,
+      "IsPublic": false,
+      "Kind": "Interface",
+      "BaseType": null,
+      "Interfaces": [],
+      "Properties": [],
+      "Methods": [
+        {
+          "Id": "cCoder.Core.Services.Processings.Packages.ICorePackageProcessingService.ImportPackageAsync(System.Int32,Package)",
           "Name": "ImportPackageAsync",
           "LineNumber": 11,
           "Inputs": [
@@ -14455,6 +14662,43 @@
             {
               "Name": "package",
               "Type": "Package"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Processings.Packages.IPackageImportCompletionEventProcessingService",
+      "StandardElementType": "ProcessingService",
+      "LineNumber": 9,
+      "IsPublic": false,
+      "Kind": "Interface",
+      "BaseType": null,
+      "Interfaces": [],
+      "Properties": [],
+      "Methods": [
+        {
+          "Id": "cCoder.Core.Services.Processings.Packages.IPackageImportCompletionEventProcessingService.ProcessPackageImportEventAsync(PackageImportEvent)",
+          "Name": "ProcessPackageImportEventAsync",
+          "LineNumber": 11,
+          "Inputs": [
+            {
+              "Name": "packageImportEvent",
+              "Type": "PackageImportEvent"
             }
           ],
           "ReturnType": "System.Threading.Tasks.ValueTask",
@@ -14816,12 +15060,32 @@
       "ToType": "cCoder.Core.Services.Foundations.Workflow.WorkflowAppService"
     },
     {
-      "FromType": "cCoder.Core.Services.Aggregations.Packages.PackageManagerAggregationService",
-      "ToType": "cCoder.Core.Brokers.Packaging.PackageBroker"
+      "FromType": "cCoder.Core.Services.Aggregations.Packages.PackageImportAggregationService",
+      "ToType": "cCoder.Core.Services.Processings.Packages.AppSecurityPackageProcessingService"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Aggregations.Packages.PackageImportAggregationService",
+      "ToType": "cCoder.Core.Services.Processings.Packages.ContentManagementPackageProcessingService"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Aggregations.Packages.PackageImportAggregationService",
+      "ToType": "cCoder.Core.Services.Processings.Packages.CorePackageProcessingService"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Aggregations.Packages.PackageImportAggregationService",
+      "ToType": "cCoder.Core.Services.Processings.Packages.DocumentManagementPackageProcessingService"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Aggregations.Packages.PackageImportAggregationService",
+      "ToType": "cCoder.Core.Services.Processings.Packages.PackageImportCompletionEventProcessingService"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Aggregations.Packages.PackageImportAggregationService",
+      "ToType": "cCoder.Core.Services.Processings.Packages.WorkflowPackageProcessingService"
     },
     {
       "FromType": "cCoder.Core.Services.Aggregations.Packages.PackageManagerAggregationService",
-      "ToType": "cCoder.Core.Services.Processings.Packages.ContentManagementPackageProcessingService"
+      "ToType": "cCoder.Core.Brokers.Packaging.PackageBroker"
     },
     {
       "FromType": "cCoder.Core.Services.Aggregations.SecurityAccountEmailAggregationService",
@@ -14854,6 +15118,14 @@
     {
       "FromType": "cCoder.Core.Services.Foundations.Eventing.AppGraphEventService",
       "ToType": "cCoder.Core.Brokers.Eventing.AuthInfoBroker"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Foundations.Eventing.PackageImportCompletionEventService",
+      "ToType": "cCoder.Core.Brokers.Eventing.AuthInfoBroker"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Foundations.Eventing.PackageImportCompletionEventService",
+      "ToType": "cCoder.Core.Brokers.Eventing.PackageImportCompletionEventBroker"
     },
     {
       "FromType": "cCoder.Core.Services.Foundations.Eventing.ServiceBusAppDeleteForwardingService",
@@ -14926,6 +15198,10 @@
     {
       "FromType": "cCoder.Core.Services.Processings.AllowedOrigins.AllowedOriginStoreProcessingService",
       "ToType": "cCoder.Core.Services.Foundations.AllowedOrigins.AllowedOriginStoreService"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Processings.Packages.PackageImportCompletionEventProcessingService",
+      "ToType": "cCoder.Core.Services.Foundations.Eventing.PackageImportCompletionEventService"
     }
   ],
   "AnalysisItems": [
@@ -14990,21 +15266,7 @@
       "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
       "Severity": "Warning",
       "Type": "cCoder.Core.Exposures.Controllers.PackageManagerController",
-      "LineNumber": 29
-    },
-    {
-      "Code": "STXAPI005",
-      "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.Exposures.Controllers.PackageManagerController",
-      "LineNumber": 70
-    },
-    {
-      "Code": "STXAPI005",
-      "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
-      "Severity": "Warning",
-      "Type": "cCoder.Core.Exposures.Controllers.PackageManagerController",
-      "LineNumber": 112
+      "LineNumber": 23
     },
     {
       "Code": "STXAPI001",

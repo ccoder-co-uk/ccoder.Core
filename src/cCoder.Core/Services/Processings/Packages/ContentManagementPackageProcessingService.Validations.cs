@@ -9,8 +9,15 @@ namespace cCoder.Core.Services.Processings.Packages;
 
 internal sealed partial class ContentManagementPackageProcessingService
 {
-    private static void ValidatePackageOnImport(int appId, Package package) =>
-        ValidationRulesEngine.Validate(inputs: [appId, package]);
+    private static void ValidatePackageOnImport(int? appId, Package package)
+    {
+        ValidationRulesEngine.Validate(inputs: [package]);
+
+        if (appId.HasValue)
+        {
+            ValidationRulesEngine.Validate(inputs: [appId.Value]);
+        }
+    }
 
     private static void ValidatePackageOnExport(int appId, string packageName) =>
         ValidationRulesEngine.Validate(inputs: [appId, packageName]);

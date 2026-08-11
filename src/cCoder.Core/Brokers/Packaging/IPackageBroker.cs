@@ -12,7 +12,4 @@ internal interface IPackageBroker
         int appId,
         string packageName);
 
-    ValueTask ImportPackageAsync(
-        int appId,
-        Package package);
 }

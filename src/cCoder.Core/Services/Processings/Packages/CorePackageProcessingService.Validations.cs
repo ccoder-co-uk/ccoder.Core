@@ -2,12 +2,15 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using cCoder.Core.Dependencies;
 using cCoder.Data.Models.Packaging;
 
 namespace cCoder.Core.Services.Processings.Packages;
 
-internal interface IContentManagementPackageProcessingService
+internal sealed partial class CorePackageProcessingService
 {
-    ValueTask ImportPackageAsync(int? appId, Package package);
-    Package ExportPackage(int appId, string packageName);
+    private static void ValidatePackageOnImport(
+        int appId,
+        Package package) =>
+        ValidationRulesEngine.Validate(inputs: [appId, package]);
 }

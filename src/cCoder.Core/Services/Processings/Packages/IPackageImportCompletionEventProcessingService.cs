@@ -2,12 +2,12 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.Data.Models.Packaging;
+using cCoder.Packaging.Models;
 
 namespace cCoder.Core.Services.Processings.Packages;
 
-internal interface IContentManagementPackageProcessingService
+internal interface IPackageImportCompletionEventProcessingService
 {
-    ValueTask ImportPackageAsync(int? appId, Package package);
-    Package ExportPackage(int appId, string packageName);
+    ValueTask ProcessPackageImportEventAsync(
+        PackageImportEvent packageImportEvent);
 }

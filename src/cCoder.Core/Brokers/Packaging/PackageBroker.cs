@@ -18,10 +18,4 @@ internal sealed class PackageBroker(
             appId: appId,
             packageName: packageName);
 
-    public ValueTask ImportPackageAsync(
-        int appId,
-        Package package) =>
-        packageManager.ImportPackageAsync(
-            appId: appId,
-            package: package);
 }

@@ -407,7 +407,12 @@ roles: [.. core.Set<Role>()
             ?? throw new InvalidOperationException($"Expected payload for {relativeUrl}.");
     }
 
-    private async Task SendAsJsonAsync(HttpMethod method, string relativeUrl, object payload, string host = null)
+    private async Task SendAsJsonAsync(
+        HttpMethod method,
+        string relativeUrl,
+        object payload,
+        string host = null,
+        HttpStatusCode expectedStatusCode = HttpStatusCode.OK)
     {
         using HttpRequestMessage request = new(method, relativeUrl)
         {
@@ -423,7 +428,7 @@ roles: [.. core.Set<Role>()
         string content = await response.Content.ReadAsStringAsync();
 
         response.StatusCode.Should()
-            .Be(expected: HttpStatusCode.OK,because: content);
+            .Be(expected: expectedStatusCode,because: content);
     }
 
     private async Task SendWithOptionalHostAsync(HttpMethod method, string relativeUrl, string host = null)
