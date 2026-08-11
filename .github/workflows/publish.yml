@@ -162,9 +162,7 @@ jobs:
           compression-level: 6
           if-no-files-found: error
           retention-days: 14
-          path: |
-            ${{ env.APPLICATION_DIRECTORY }}/publish/latest
-            ${{ env.APPLICATION_DIRECTORY }}/archives
+          path: ${{ env.APPLICATION_DIRECTORY }}/publish/latest
 
       - name: Upload test and coverage results
         if: always()
