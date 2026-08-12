@@ -12,7 +12,26 @@
     });
 }
 
-$(initialisePageEditing);;
+function addPageEditorStyle(id, css) {
+    if (document.getElementById(id)) {
+        return;
+    }
+
+    const style = document.createElement("style");
+    const nonceSource = document.querySelector("script[nonce], style[nonce]");
+
+    style.id = id;
+    style.textContent = css;
+
+    if (nonceSource?.nonce) {
+        style.nonce = nonceSource.nonce;
+    }
+
+    document.head.appendChild(style);
+}
+
+$(initialisePageEditing);
+;
 ﻿class ContentEditor {
     constructor(element, page) {
         this.element = element;
@@ -39,7 +58,61 @@ $(initialisePageEditing);;
     async init() {
         $(this.element).data("contentEditor", this);
 
+        this.prepareEditableRegion();
         this.setupToolbars();
+    }
+
+    prepareEditableRegion() {
+        addPageEditorStyle("ccoder-page-editor-styles", `
+            [contenteditable].ccoder-editable-content {
+                box-sizing: border-box;
+                min-height: 1.5rem;
+                border: 2px dashed #0d6efd !important;
+                cursor: text;
+            }
+            [contenteditable].ccoder-editable-content.ccoder-editable-content-active {
+                border-color: #fd7e14 !important;
+            }
+            .ccoder-content-editor-toolbar {
+                position: fixed !important;
+                display: none;
+                flex-direction: column;
+                flex-wrap: nowrap !important;
+                align-items: center;
+                width: fit-content;
+                max-width: calc(100vw - 16px);
+                z-index: 10001;
+                background: #fff;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, .2);
+            }
+            .ccoder-content-editor-toolbar > .ccoder-toolbar-row {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                width: max-content;
+                max-width: 100%;
+            }
+            .ccoder-content-editor-toolbar::before {
+                content: none;
+                display: none;
+            }
+            .ccoder-content-editor-toolbar .k-editortoolbar-dragHandle {
+                align-self: stretch;
+                display: inline-flex;
+                align-items: center;
+                padding: 0 .25rem;
+                cursor: move;
+            }
+            .ccoder-content-editor-toolbar button[name='viewSource'] .k-icon {
+                min-width: calc(var(--kendo-font-size, inherit) * var(--kendo-line-height, normal));
+                min-height: calc(var(--kendo-font-size, inherit) * var(--kendo-line-height, normal));
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+        `);
+
+        $(this.element).addClass("ccoder-editable-content");
     }
 
     setupToolbars() {
@@ -100,7 +173,7 @@ $(initialisePageEditing);;
                 {
                     type: 'button',
                     name: 'viewSource',
-                    template: '<button role="button" title="View Source" class="k-button k-tool" name="viewSource"><span class="k-icon k-i-file"></span></button>'
+                    template: '<button role="button" title="View Source" class="k-button k-button-md k-rounded-md k-button-solid k-button-solid-base k-icon-button k-toolbar-tool" name="viewSource"><span class="k-icon k-i-file k-button-icon"></span></button>'
                 }
             ],
             change: () => {
@@ -108,7 +181,90 @@ $(initialisePageEditing);;
             }
         }).data("kendoEditor");
 
+        const toolbarWindow = $(this.kendoEditor.toolbar.element)
+            .closest(".k-window");
+
+        const dragHandle = $(".k-editortoolbar-dragHandle", toolbarWindow)
+            .first()
+            .detach();
+
+        this.toolbarElement = $(this.kendoEditor.toolbar.element)
+            .addClass("ccoder-content-editor-toolbar")
+            .appendTo("body")
+            .hide();
+
+        toolbarWindow.remove();
+
+        const toolbarTools = this.toolbarElement.children().detach();
+        const firstDropdown = toolbarTools
+            .filter(".k-toolbar-item[data-command='formatting']")
+            .first();
+        const firstDropdownIndex = toolbarTools.index(firstDropdown);
+        const viewSourceTool = toolbarTools
+            .filter((_, tool) =>
+                $(tool).is("button[name='viewSource']")
+                    || $("button[name='viewSource']", tool).length > 0)
+            .first();
+
+        const primaryRow = $("<div class='ccoder-toolbar-row'></div>")
+            .append(dragHandle)
+            .append(toolbarTools.slice(0, firstDropdownIndex))
+            .append(viewSourceTool);
+
+        const dropdownRow = $("<div class='ccoder-toolbar-row'></div>")
+            .append(toolbarTools.slice(firstDropdownIndex).not(viewSourceTool));
+
+        this.toolbarElement.append(primaryRow, dropdownRow);
+
+        this.toolbarElement.draggable({ handle: dragHandle });
+
+        $(this.element).on("click focusin", () => this.showToolbar());
+
+        $(document).on("mousedown", (event) => {
+            if (!$(event.target).closest(this.element).length
+                && !$(event.target).closest(this.toolbarElement).length) {
+                this.hideToolbar();
+            }
+        });
+
+        $(window).on("resize scroll", () => {
+            if (this.toolbarElement.is(":visible")) {
+                this.positionToolbar();
+            }
+        });
+
         this.setupViewSourceButton();
+    }
+
+    showToolbar() {
+        if (ContentEditor.activeEditor && ContentEditor.activeEditor !== this) {
+            ContentEditor.activeEditor.hideToolbar();
+        }
+
+        ContentEditor.activeEditor = this;
+        $(this.element).addClass("ccoder-editable-content-active");
+        this.toolbarElement.css("display", "flex");
+        this.positionToolbar();
+    }
+
+    hideToolbar() {
+        $(this.element).removeClass("ccoder-editable-content-active");
+        this.toolbarElement.hide();
+
+        if (ContentEditor.activeEditor === this) {
+            ContentEditor.activeEditor = null;
+        }
+    }
+
+    positionToolbar() {
+        const contentBounds = this.element[0].getBoundingClientRect();
+        const toolbarHeight = this.toolbarElement.outerHeight();
+        const top = Math.max(8, contentBounds.top - toolbarHeight - 8);
+        const left = Math.min(
+            Math.max(8, contentBounds.left),
+            Math.max(8, window.innerWidth - this.toolbarElement.outerWidth() - 8));
+
+        this.toolbarElement.css({ left: `${left}px`, top: `${top}px` });
     }
 
     setupViewSourceButton() {
@@ -143,15 +299,40 @@ $(initialisePageEditing);;
             });
         });
     }
-};
+}
+;
 class PageToolbar {
     async init() {
         await this.getPage();
 
+        addPageEditorStyle("ccoder-page-toolbar-styles", `
+            .pageToolbar {
+                position: relative;
+                top: 0 !important;
+                left: 0 !important;
+                display: block !important;
+                width: 100%;
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            .pageToolbar > .editorToolbarWindow {
+                width: 100%;
+                box-sizing: border-box;
+                padding: 8px !important;
+            }
+            .pageToolbar .k-editor-toolbar {
+                width: 100%;
+                box-sizing: border-box;
+            }
+            .pageToolbar > * { display: inline-block; }
+            .pageToolbar > label { margin: 0 5px; }
+            .pageToolbar button[name=pageSave] { margin-left: 10px; }
+        `);
+
         $("body").prepend(`
             <div class="pageToolbar k-window k-window-titleless">
                 <div class="editorToolbarWindow k-editor-window k-window-content">
-                    <span class="k-editortoolbar-dragHandle"><span class="k-icon k-i-handle-drag"></span></span>
                     <div class="k-editor-toolbar k-toolbar k-toolbar-md">
                         <span data-role="buttongroup" class="k-widget k-button-group k-toolbar-button-group" role="group">
                             <label>Culture</label>
@@ -166,7 +347,6 @@ class PageToolbar {
         `);
 
         this.toolbarElement = $(".pageToolbar");
-        this.toolbarElement.draggable();
 
         $("[name=pageSave]", this.toolbarElement)
             .click((e) => this.save(e));
