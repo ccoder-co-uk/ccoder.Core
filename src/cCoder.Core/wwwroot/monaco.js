@@ -181,7 +181,7 @@ class MonacoEditor {
     }
 }
 
-
+;
 class JavaScriptMonacoEditor extends MonacoEditor {
     constructor(container, args) {
         super(container, args);
@@ -316,7 +316,7 @@ class JavaScriptMonacoEditor extends MonacoEditor {
             }
         });
     }
-}
+};
 class HTMLMonacoEditor extends MonacoEditor {
     constructor(container, args) {
         super(container, args);
@@ -370,7 +370,7 @@ class HTMLMonacoEditor extends MonacoEditor {
             });
         });
     }
-}
+};
 class CSharpMonacoEditor extends MonacoEditor {
     constructor(container, args) {
         super(container, args);

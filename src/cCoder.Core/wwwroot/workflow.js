@@ -25,7 +25,7 @@
         this.flow.Links = this.flow.Links.filter(l => l.model.Source !== this.parent.activity.model.Ref);
         this.flow.Links = this.flow.Links.filter(l => l.model.Destination !== this.parent.activity.model.Ref);
     }
-}
+};
 ﻿class Handle extends Collidable {
     constructor(parent, col, textCol) {
         super(parent.model.Ref, parent.x, parent.y, parent.w - 1, handleHeight, 0);
@@ -74,7 +74,7 @@
             this.start = mouseposition;
         }
     }
-}
+};
 ﻿class Link extends Collidable {
     constructor(model, flow) {
         super('', 0, 0, 0, 0, 5);
@@ -140,7 +140,7 @@
             });
         });
     }
-}
+};
 ﻿class Action extends Collidable {
     constructor(parent, text, offsetX, offsetY, height, width, col, onClick) {
         super(text, parent.x + offsetX, parent.y + offsetY, height, width, 0);
@@ -167,7 +167,7 @@
     draw(ctx) {
         draw.text(ctx, this.x + 10, this.y + 15, this.text, this.col);
     }
-}
+};
 ﻿class Activity extends Collidable {
     constructor(meta, flow, model) {
         super(meta.DisplayName.replace("Activity", ""), 0, 0, activityWidth, 100, 0);
@@ -359,7 +359,7 @@
         $(".flowConsole", dialog).append(messages);
     }
 }
-
+;
 ﻿/// <reference path="workflowdesigner.js" />
 class Connector extends Collidable {
     constructor(parent, type) {
@@ -463,7 +463,7 @@ class Connector extends Collidable {
             window.removeEventListener('keydown', this.listenForEsc);
         }
     }
-}
+};
 ﻿const activityWidth = 200;
 const handleHeight = 25;
 const nodeSize = 16;
@@ -717,7 +717,7 @@ class Flow {
         this.Activities.map(a => a.draw(ctx));
         this.Links.map(l => l.draw(ctx));
     }
-}
+};
 ﻿class WorkflowDesigner {
     constructor(container, flow) {
 

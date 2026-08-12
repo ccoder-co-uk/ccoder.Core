@@ -100,6 +100,16 @@ test("framework preserves the configured bundle order", async () => {
     assert.equal(workflowPosition, -1);
 });
 
+test("framework keeps concatenated scripts as separate statements", async () => {
+    const framework = await readFile(
+        path.join(stageDirectory, "framework.min.js"),
+        "utf8");
+
+    assert.doesNotMatch(
+        framework,
+        /KendoLicensing\.setScriptKey\([^;]+\)\(function/);
+});
+
 test("workflow remains an independently cacheable bundle", async () => {
     const framework = await readFile(
         path.join(stageDirectory, "framework.js"),
