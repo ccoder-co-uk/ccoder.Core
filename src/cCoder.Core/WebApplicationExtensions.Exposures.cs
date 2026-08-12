@@ -24,14 +24,22 @@ public static partial class WebApplicationExtensions
     {
         app.Use(middleware: async (context, next) =>
         {
-            await next();
-
-            if (context.Response.StatusCode == StatusCodes.Status200OK
-                && IsCacheableStaticAsset(path: context.Request.Path))
+            if (IsCacheableStaticAsset(path: context.Request.Path))
             {
-                context.Response.Headers[HeaderNames.CacheControl] =
-                    "public,max-age=" + 86400;
+                context.Response.OnStarting(callback: () =>
+                {
+                    if (context.Response.StatusCode
+                        == StatusCodes.Status200OK)
+                    {
+                        context.Response.Headers[HeaderNames.CacheControl] =
+                            "public,max-age=" + 86400;
+                    }
+
+                    return Task.CompletedTask;
+                });
             }
+
+            await next();
         });
 
         StaticFileOptions defaultStaticFileOptions = new()
