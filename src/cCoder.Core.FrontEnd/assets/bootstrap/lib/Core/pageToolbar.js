@@ -2,10 +2,34 @@ class PageToolbar {
     async init() {
         await this.getPage();
 
+        addPageEditorStyle("ccoder-page-toolbar-styles", `
+            .pageToolbar {
+                position: relative;
+                top: 0 !important;
+                left: 0 !important;
+                display: block !important;
+                width: 100%;
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            .pageToolbar > .editorToolbarWindow {
+                width: 100%;
+                box-sizing: border-box;
+                padding: 8px !important;
+            }
+            .pageToolbar .k-editor-toolbar {
+                width: 100%;
+                box-sizing: border-box;
+            }
+            .pageToolbar > * { display: inline-block; }
+            .pageToolbar > label { margin: 0 5px; }
+            .pageToolbar button[name=pageSave] { margin-left: 10px; }
+        `);
+
         $("body").prepend(`
             <div class="pageToolbar k-window k-window-titleless">
                 <div class="editorToolbarWindow k-editor-window k-window-content">
-                    <span class="k-editortoolbar-dragHandle"><span class="k-icon k-i-handle-drag"></span></span>
                     <div class="k-editor-toolbar k-toolbar k-toolbar-md">
                         <span data-role="buttongroup" class="k-widget k-button-group k-toolbar-button-group" role="group">
                             <label>Culture</label>
@@ -20,7 +44,6 @@ class PageToolbar {
         `);
 
         this.toolbarElement = $(".pageToolbar");
-        this.toolbarElement.draggable();
 
         $("[name=pageSave]", this.toolbarElement)
             .click((e) => this.save(e));

@@ -12,4 +12,22 @@
     });
 }
 
+function addPageEditorStyle(id, css) {
+    if (document.getElementById(id)) {
+        return;
+    }
+
+    const style = document.createElement("style");
+    const nonceSource = document.querySelector("script[nonce], style[nonce]");
+
+    style.id = id;
+    style.textContent = css;
+
+    if (nonceSource?.nonce) {
+        style.nonce = nonceSource.nonce;
+    }
+
+    document.head.appendChild(style);
+}
+
 $(initialisePageEditing);
