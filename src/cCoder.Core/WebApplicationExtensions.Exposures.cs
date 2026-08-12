@@ -22,6 +22,18 @@ public static partial class WebApplicationExtensions
 
     private static WebApplication UseCoreApiShell(this WebApplication app)
     {
+        app.Use(middleware: async (context, next) =>
+        {
+            await next();
+
+            if (context.Response.StatusCode == StatusCodes.Status200OK
+                && IsCacheableStaticAsset(path: context.Request.Path))
+            {
+                context.Response.Headers[HeaderNames.CacheControl] =
+                    "public,max-age=" + 86400;
+            }
+        });
+
         StaticFileOptions defaultStaticFileOptions = new()
         {
             OnPrepareResponse = ctx =>
@@ -54,6 +66,21 @@ public static partial class WebApplicationExtensions
         app.MapHub<NotificationHub>(pattern: "/Api/Hubs/Notification");
         return app;
     }
+
+    private static bool IsCacheableStaticAsset(PathString path) =>
+        path.HasValue
+        && (path.Value.EndsWith(
+                value: ".css",
+                comparisonType: StringComparison.OrdinalIgnoreCase)
+            || path.Value.EndsWith(
+                value: ".js",
+                comparisonType: StringComparison.OrdinalIgnoreCase)
+            || path.Value.EndsWith(
+                value: ".png",
+                comparisonType: StringComparison.OrdinalIgnoreCase)
+            || path.Value.EndsWith(
+                value: ".svg",
+                comparisonType: StringComparison.OrdinalIgnoreCase));
 
     private static WebApplication UseDocumentManagementExposure(
         this WebApplication app,
