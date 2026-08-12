@@ -1,4 +1,4 @@
-﻿const html = {
+const html = {
     encode: function (value) { return $('<div />').text(value).html(); },
     decode: function (value) { return $('<div/>').html(value).text(); }
 };
@@ -129,14 +129,59 @@ function removeQueryParameter(key, sourceURL) {
             .get("ContentManagement/Component/Render()?AppId=" + session.app.Id + "&Name=" + componentName + "&culture=" + session.culture + "&theme=" + session.theme);
 
         try {
-            $(container).append(result.value);
+            let markup = result && result.value !== undefined ? result.value : result;
+            let template = document.createElement("template");
+            template.innerHTML = markup;
+
+            let requestNonceElement = document.querySelector("script[nonce]");
+            let requestNonce = requestNonceElement ? requestNonceElement.nonce : "";
+            let scripts = Array.from(template.content.querySelectorAll("script"));
+
+            scripts.forEach(function (script) {
+                script.remove();
+            });
+
+            template.content.querySelectorAll("style").forEach(function (style) {
+                if (requestNonce) {
+                    style.nonce = requestNonce;
+                }
+            });
+
+            let target = $(container).get(0);
+            target.appendChild(template.content);
+
+            for (let sourceScript of scripts) {
+                let executableScript = document.createElement("script");
+
+                Array.from(sourceScript.attributes).forEach(function (attribute) {
+                    if (attribute.name.toLowerCase() !== "nonce") {
+                        executableScript.setAttribute(attribute.name, attribute.value);
+                    }
+                });
+
+                if (requestNonce) {
+                    executableScript.nonce = requestNonce;
+                }
+
+                if (sourceScript.src) {
+                    await new Promise(function (resolve, reject) {
+                        executableScript.addEventListener("load", resolve, { once: true });
+                        executableScript.addEventListener("error", reject, { once: true });
+                        executableScript.src = sourceScript.src;
+                        target.appendChild(executableScript);
+                    });
+                } else {
+                    executableScript.textContent = sourceScript.textContent;
+                    target.appendChild(executableScript);
+                }
+            }
 
             if (callback) {
-                callback(window[componentName]);
+                await callback(window[componentName]);
             }
 
             return window[componentName];
-        } 
+        }
         catch (ex) {
             $(container).empty();
             $(container).append($("<h3>Component Loading Failed</h3><p>" + componentName + " could not be found or loaded because of the following exception:<br>" + ex.message + "</p>"));
