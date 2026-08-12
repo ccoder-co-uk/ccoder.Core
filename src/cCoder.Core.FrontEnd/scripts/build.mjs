@@ -45,6 +45,8 @@ const javascriptBundles = {
         "bootstrap/lib/widgets/picker.js",
         "bootstrap/lib/widgets/readOnlyDetailView.js",
         "bootstrap/lib/widgets/tree.js",
+        "bootstrap/lib/widgets/treeView.js",
+        "bootstrap/lib/widgets/cms.js",
         "bootstrap/lib/widgets/dataTreeView.js",
         "bootstrap/lib/widgets/odataTree.js",
         "bootstrap/lib/widgets/workspace.js",
