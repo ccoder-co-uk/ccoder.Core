@@ -50,7 +50,7 @@ jQuery.fn.getPath = function () {
     }
 
     return path;
-};
+};;
 ﻿class Dialog extends Widget {
     /* Consumes https://demos.telerik.com/kendo-ui/templates/expressions to build a read only detail view of an object or portion of an object */
     constructor(args) {
@@ -124,7 +124,7 @@ jQuery.fn.getPath = function () {
     }
 }
 
-
+;
 ﻿class BootstrapDialog extends Widget {
     constructor(args) {
         super(null, args);
@@ -207,7 +207,7 @@ jQuery.fn.getPath = function () {
     }
 }
 
-
+;
 class BootstrapTabs extends Widget {
     static upgradeLegacy(elements) {
         $(elements).each(function () {
@@ -386,7 +386,7 @@ class BootstrapTabs extends Widget {
             }
         }
     }
-}
+};
 ﻿class Chart extends Widget
 {
     constructor(element, args) {
@@ -434,7 +434,7 @@ class BootstrapTabs extends Widget {
             }
         }).data('kendoChart');
     }
-}
+};
 class PieChart extends Widget {
     constructor(element, data) {
         super(element);
@@ -473,7 +473,7 @@ class PieChart extends Widget {
         this.kendoObject.refresh();
     }
 }
-
+;
 ﻿class ConfirmDialog extends Dialog {
 
     init(callback) {
@@ -482,7 +482,7 @@ class PieChart extends Widget {
         }
         super.init(callback);
     }
-}
+};
 class ConsoleDialog extends Dialog {
     constructor(args) {
         super(args);
@@ -521,7 +521,7 @@ class ConsoleDialog extends Dialog {
         $("[name=console]", this.element).append($("<div class='message " + level + "'><span class='time'>" + time + "</span><pre class='message'>" + html.encode(message) + "</pre></div>"));
         $("[name=console]", this.element).scrollTop($("[name=flowConsole]", this.element).height());
     }
-}
+};
 ﻿class ExportDialog extends Dialog {
     constructor(args) {
         super(args);
@@ -619,7 +619,7 @@ class ConsoleDialog extends Dialog {
         `;
 
     }
-}
+};
 ﻿class DetailWidget extends Widget {
     // Consumes https://demos.telerik.com/kendo-ui/templates/expressions to build a read only detail view of an object
     // or portion of an object
@@ -716,7 +716,7 @@ class ConsoleDialog extends Dialog {
     }
 
     fieldValueExpression(fieldName) { /* Intentional */ }
-}
+};
 ﻿class EditorDialog extends Dialog {
     constructor(args) {
         super(args);
@@ -743,7 +743,7 @@ class ConsoleDialog extends Dialog {
         await this.writableEditor.init();
         this.data = this.writableEditor.data;
     }
-}
+};
 ﻿class GridWidget extends Widget {
     constructor(element, dataSource) {
         super(element);
@@ -1230,7 +1230,7 @@ class ConsoleDialog extends Dialog {
         }
     }
 }
-
+;
 ﻿class ContextMenuWidget extends Widget {
     constructor(element) {
         super(element);
@@ -1294,7 +1294,7 @@ class ConsoleDialog extends Dialog {
             top: pageY
         });
     }
-}
+};
 ﻿class FileDropContainerWidget extends Widget {
     constructor(element) {
         super(element, null);
@@ -1352,7 +1352,7 @@ class ConsoleDialog extends Dialog {
 
         $(this.container)[0].style.setProperty("display", "flex", "important");
     }
-}
+};
 ﻿class Picker extends Dialog {
 	constructor(args) {
 		super(args);
@@ -1453,7 +1453,7 @@ class ConsoleDialog extends Dialog {
 			
 		});
     }
-}
+};
 ﻿class ReadOnlyDetailView extends DetailWidget {
     fieldValueExpression(fieldName) {
         let meta = this.fields.filter(i => i.field === fieldName)[0];
@@ -1479,7 +1479,7 @@ class ConsoleDialog extends Dialog {
             }
         }
     }
-}
+};
 class Tree extends Widget {
     constructor(element, dataSource) {
         super(element, null);
@@ -1590,7 +1590,7 @@ class Tree extends Widget {
         this.kendoObject.expand(".k-treeview-item:first");
     }
 
-}
+};
 class TreeView extends Widget {
     constructor(element, args) {
         super(element, args);
@@ -1660,7 +1660,7 @@ class TreeView extends Widget {
     drop(e) {
         // placeholder
     }
-}
+};
 class CMS extends Tree {
 
 	dragStart(e) {
@@ -1775,7 +1775,7 @@ class CMS extends Tree {
 			nodeData.items.push(node);
 		}
 	}
-}
+};
 ﻿class DataTreeViewWidget extends Widget {
     constructor(element, treeViewConfig) {
         super(element, null);
@@ -1843,7 +1843,7 @@ class CMS extends Tree {
     async onExpand(e) { }
 
     async wireUp() { }
-}
+};
 ﻿class ODataTreeOptions {
     setElement(element) {
         this.element = element;
@@ -1959,7 +1959,7 @@ class ODataTree extends Tree {
     prepareData(data) {
     
     }
-}
+};
 ﻿class Workspace extends Widget {
     constructor(element, args) {
         super(element, args);
@@ -2024,7 +2024,7 @@ class ODataTree extends Tree {
     disconnectFrom(tree) {
         this.leftPanel.remove(tree.element);
     }
-}
+};
 ﻿class WritableDetailView extends DetailWidget {
     constructor(element, args) {
         super(element, args);

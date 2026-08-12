@@ -17,20 +17,6 @@ class PageToolbar {
                     </div>
                 </div>
             </div>
-            <style>
-                .pageToolbar { 
-                    position: static; 
-                    width: 300px; 
-                    padding: 10px; 
-                    top: 20px; 
-                    left: 30px; 
-                    z-index: 10000;
-                    padding: 0;
-                }
-                .pageToolbar > * { display: inline-block; }
-                .pageToolbar > label { margin: 0 5px; }
-                .pageToolbar > button[name=pageSave] { margin-left: 10px; width: 100px; }
-            </style>
         `);
 
         this.toolbarElement = $(".pageToolbar");
@@ -73,13 +59,18 @@ class PageToolbar {
             cultures[i].InPage = this.page.Contents.filter(r => r.CultureId === cultures[i].Id).length > 0;
         }
 
+        const renderCulture = culture => {
+            const icon = culture.InPage ? "k-i-check" : "k-i-x";
+            return `<span class="k-icon ${icon}"></span> ${kendo.htmlEncode(culture.Name)}`;
+        };
+
         $("[name=cultureDropdown]").kendoDropDownList({
             dataSource: cultures,
             dataTextField: "Name",
             dataValueField: "Id",
             width: 150,
-            valueTemplate: "#=(InPage) ? '<span class=\"k-icon k-i-check\"></span>' : '<span class=\"k-icon k-i-x\"></span>'# #=Name#",
-            template: "#=(InPage) ? '<span class=\"k-icon k-i-check\"></span>' : '<span class=\"k-icon k-i-x\"></span>'# #=Name#",
+            valueTemplate: renderCulture,
+            template: renderCulture,
             change: function (_) {
                 setQueryParameter("culture", this.value());
             }

@@ -258,7 +258,7 @@ class Api
 window.api = new Api({
     baseUrl: session.apiRoot,
     token: session.token
-});
+});;
 const html = {
     encode: function (value) { return $('<div />').text(value).html(); },
     decode: function (value) { return $('<div/>').html(value).text(); }
@@ -596,7 +596,7 @@ function getMonthlyDateRange(start, end, format) {
 
     return months;
 }
-
+;
 ﻿const model = {
     clone: (obj) => JSON.parse(JSON.stringify(obj)),
 

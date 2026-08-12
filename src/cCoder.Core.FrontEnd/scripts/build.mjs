@@ -82,6 +82,16 @@ async function readFiles(relativePaths, rootDirectory = assetsDirectory) {
     return contents.join("\n");
 }
 
+async function readJavaScriptFiles(
+    relativePaths,
+    rootDirectory = assetsDirectory) {
+    const contents = await Promise.all(
+        relativePaths.map(relativePath =>
+            readFile(path.join(rootDirectory, relativePath), "utf8")));
+
+    return contents.join(";\n");
+}
+
 async function write(relativePath, contents) {
     const outputPath = path.join(stageDirectory, relativePath);
 
@@ -109,7 +119,7 @@ await rm(stageDirectory, {
 });
 
 for (const [outputPath, inputPaths] of Object.entries(javascriptBundles)) {
-    const contents = await readFiles(inputPaths);
+    const contents = await readJavaScriptFiles(inputPaths);
 
     await write(outputPath, contents);
     await write(
@@ -117,30 +127,30 @@ for (const [outputPath, inputPaths] of Object.entries(javascriptBundles)) {
         await minify(contents, "js"));
 }
 
-const drawing = await readFiles([
+const drawing = await readJavaScriptFiles([
     "bootstrap/lib/Core/drawing.js"
 ]);
 
 const dependencies = [
-    await readFiles(dependencyFiles),
+    await readJavaScriptFiles(dependencyFiles),
     await readFile(
         path.join(assetsDirectory, "dependencies/other/signalr.min.js"),
         "utf8")
-].join("\n");
+].join(";\n");
 
 const framework = [
     dependencies,
     drawing,
     await readFile(path.join(stageDirectory, "widget.js"), "utf8"),
     await readFile(path.join(stageDirectory, "core.js"), "utf8")
-].join("\n");
+].join(";\n");
 
 await write("framework.js", framework);
 await write(
     "framework.min.js",
     await minify(framework, "js"));
 
-const background = await readFiles([
+const background = await readJavaScriptFiles([
     "bootstrap/lib/background.js"
 ]);
 
@@ -159,7 +169,7 @@ const everything = [
     await readFile(
         path.join(stageDirectory, "workflow.min.js"),
         "utf8")
-].join("\n");
+].join(";\n");
 
 await write("everything.js", everything);
 await write("everything.min.js", everything);
@@ -180,7 +190,7 @@ const codeEditor = [
     await readFile(
         path.join(assetsDirectory, "dependencies/monaco/web-languages.js"),
         "utf8")
-].join("\n");
+].join(";\n");
 
 await write("code-editor.js", codeEditor);
 await write(
