@@ -1,7 +1,7 @@
 var monacoEditorLoader = {
-    loaderUrl: "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/loader.min.js",
-    vsPath: "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs",
-    baseUrl: "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/",
+    loaderUrl: "/lib/monaco/min/vs/loader.js",
+    vsPath: "/lib/monaco/min/vs",
+    baseUrl: "/lib/monaco/min/",
     loadPromise: null,
 
     configureWorker: function() {

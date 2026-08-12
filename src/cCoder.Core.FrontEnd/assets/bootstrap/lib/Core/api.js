@@ -1,4 +1,4 @@
-﻿/* Api Management */
+/* Api Management */
 class Api
 {
     constructor(args) {
@@ -109,6 +109,22 @@ class Api
             this.cache.resources.push(resourceSet[r]);
     }
 
+    async ensureType(endpointRef) {
+        try {
+            return this.getType(endpointRef);
+        } catch (missingTypeError) {
+            if (!this.metadataLoadPromise) {
+                this.metadataLoadPromise = this.get("GetMetadata")
+                    .then((metadata) => {
+                        this.addToMetaCache(metadata);
+                        return metadata;
+                    });
+            }
+
+            await this.metadataLoadPromise;
+            return this.getType(endpointRef);
+        }
+    }
     getType(endpointRef) {
         let context = endpointRef.split('/')[0];
         let typeName = endpointRef.split('/')[1];

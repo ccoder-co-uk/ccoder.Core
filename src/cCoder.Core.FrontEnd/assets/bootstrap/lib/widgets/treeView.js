@@ -1,4 +1,4 @@
-﻿class TreeView extends Widget {
+class TreeView extends Widget {
     constructor(element, args) {
         super(element, args);
 

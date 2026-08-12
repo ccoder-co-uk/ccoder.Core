@@ -1,4 +1,4 @@
-﻿class CMS extends Tree {
+class CMS extends Tree {
 
 	dragStart(e) {
 		let nodeData = this.dataItem(e.sourceNode);

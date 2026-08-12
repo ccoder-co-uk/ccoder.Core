@@ -22,7 +22,7 @@
         @RenderBody()
         @if (ViewData["Edit"] is true) 
         {
-            <script nonce="@contentSecurityPolicyNonce" src="/editor.js"></script>
+            <script nonce="@contentSecurityPolicyNonce" src="/editor.min.js"></script>
             <script nonce="@contentSecurityPolicyNonce" type="text/javascript">$(function () { parent.$("body").trigger("enablePageEditing", $("body")); })</script>
         }
     </body>

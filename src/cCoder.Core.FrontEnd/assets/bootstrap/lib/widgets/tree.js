@@ -1,4 +1,4 @@
-﻿class Tree extends Widget {
+class Tree extends Widget {
     constructor(element, dataSource) {
         super(element, null);
         this.dataSource = dataSource;
@@ -66,6 +66,8 @@
 
         let node = this.dataItem(e.node);
         let nodeElement = $(e.node);
+
+        if (!node) { return; }
 
         $(nodeElement).children('.k-treeview-group').remove();
         $(".k-i-collapse", nodeElement).removeClass("k-i-collapse").addClass("k-i-expand");

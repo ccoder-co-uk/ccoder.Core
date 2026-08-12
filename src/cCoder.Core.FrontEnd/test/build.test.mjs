@@ -18,6 +18,10 @@ test("build stages the public frontend assets", async () => {
         "everything.css",
         "everything.min.css",
         "core.js",
+        "code-editor.js",
+        "code-editor.min.js",
+        "code-editor.css",
+        "code-editor.min.css",
         "editor.js",
         "monaco.js",
         "widget.js",
@@ -83,9 +87,42 @@ test("framework preserves the configured bundle order", async () => {
     const widgetPosition = framework.indexOf("class Widget");
     const apiPosition = framework.indexOf("class Api");
     const workflowPosition = framework.indexOf("class WorkflowDesigner");
+    const jqueryPosition = framework.indexOf("jQuery v3.7.0");
+    const bootstrapPosition = framework.indexOf("Bootstrap v5");
+    const kendoPosition = framework.indexOf("Kendo UI v2024");
 
-    assert.ok(drawingPosition >= 0);
+    assert.ok(jqueryPosition >= 0);
+    assert.ok(bootstrapPosition > jqueryPosition);
+    assert.ok(kendoPosition > bootstrapPosition);
+    assert.ok(drawingPosition > kendoPosition);
     assert.ok(widgetPosition > drawingPosition);
     assert.ok(apiPosition > widgetPosition);
-    assert.ok(workflowPosition > apiPosition);
+    assert.equal(workflowPosition, -1);
+});
+
+test("workflow remains an independently cacheable bundle", async () => {
+    const framework = await readFile(
+        path.join(stageDirectory, "framework.js"),
+        "utf8");
+
+    const workflow = await readFile(
+        path.join(stageDirectory, "workflow.js"),
+        "utf8");
+
+    assert.doesNotMatch(framework, /class WorkflowDesigner/);
+    assert.match(workflow, /class WorkflowDesigner/);
+});
+
+test("code editor remains an independently cacheable bundle", async () => {
+    const framework = await readFile(
+        path.join(stageDirectory, "framework.js"),
+        "utf8");
+
+    const codeEditor = await readFile(
+        path.join(stageDirectory, "code-editor.js"),
+        "utf8");
+
+    assert.doesNotMatch(framework, /class MonacoEditor/);
+    assert.match(codeEditor, /class MonacoEditor/);
+    assert.match(codeEditor, /monaco\.editor/);
 });

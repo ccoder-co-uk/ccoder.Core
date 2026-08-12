@@ -1,4 +1,4 @@
-﻿class PageToolbar {
+class PageToolbar {
     async init() {
         await this.getPage();
 
@@ -46,7 +46,7 @@
         let path = window.location.pathname
             .substring(1);
 
-        this.page = (await api.get("Core/Page?$filter=AppId eq " + session.app.Id + " and Path eq '" + path + "'&$expand=Contents"))
+        this.page = (await api.get("ContentManagement/Page?$filter=AppId eq " + session.app.Id + " and Path eq '" + path + "'&$expand=Contents"))
             .value[0];
     }
 
@@ -55,7 +55,7 @@
         this.page.Contents = this.page.Contents
             .filter(r => r.Html.length > 0 || r.CultureId === "");
 
-        await api.update("Core/Page(" + this.page.Id + ")", this.page)
+        await api.update("ContentManagement/Page(" + this.page.Id + ")", this.page)
             .then((newPage) => {
                 $("[name=lastUpdatedTime]", this.toolbarElement).html(kendo.toString(new Date(newPage.LastUpdated), "yyyy-MM-dd hh:mm"));
                 notification.success("Saved");
@@ -67,7 +67,7 @@
     }
 
     async setupCultureDropdown() {
-        let cultures = (await api.get("Core/Culture?$filter=Apps/any(a: a/AppId eq " + session.app.Id + ") or Id eq ''")).value;
+        let cultures = (await api.get("ContentManagement/Culture?$filter=Apps/any(a: a/AppId eq " + session.app.Id + ") or Id eq ''")).value;
 
         for (let i = 0; i < cultures.length; i++) {
             cultures[i].InPage = this.page.Contents.filter(r => r.CultureId === cultures[i].Id).length > 0;

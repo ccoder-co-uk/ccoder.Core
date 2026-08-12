@@ -1,4 +1,47 @@
-﻿class BootstrapTabs extends Widget {
+class BootstrapTabs extends Widget {
+    static upgradeLegacy(elements) {
+        $(elements).each(function () {
+            var root = $(this);
+            if (root.data("bootstrapTabsUpgraded"))
+                return;
+
+            var headings = root.children("ul").first();
+            var panels = root.children("div");
+            if (headings.length === 0 || panels.length === 0)
+                return;
+
+            var prefix = "bootstrap-tabs-" + Guid();
+            headings.addClass("nav nav-tabs").attr("role", "tablist");
+
+            headings.children("li").each(function (index) {
+                var item = $(this);
+                var panel = panels.eq(index);
+                if (panel.length === 0)
+                    return;
+
+                var panelId = prefix + "-" + index;
+                var active = index === 0;
+                var button = $('<button type="button" class="nav-link bg" data-bs-toggle="tab" role="tab"></button>');
+                button.attr("data-bs-target", "#" + panelId);
+                button.attr("aria-controls", panelId);
+                button.attr("aria-selected", active ? "true" : "false");
+                button.toggleClass("active", active);
+                if (!active)
+                    button.attr("tabindex", "-1");
+
+                button.append(item.contents());
+                item.empty().removeClass("k-active k-state-active").append(button);
+
+                panel.attr("id", panelId);
+                panel.attr("role", "tabpanel");
+                panel.addClass("tab-pane fade");
+                panel.toggleClass("active show", active);
+            });
+
+            panels.wrapAll('<div class="tab-content"></div>');
+            root.addClass("tab-control").data("bootstrapTabsUpgraded", true);
+        });
+    }
     constructor(args) {
         super(null, args);
 

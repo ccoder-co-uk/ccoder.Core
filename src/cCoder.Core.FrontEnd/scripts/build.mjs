@@ -45,6 +45,8 @@ const javascriptBundles = {
         "bootstrap/lib/widgets/picker.js",
         "bootstrap/lib/widgets/readOnlyDetailView.js",
         "bootstrap/lib/widgets/tree.js",
+        "bootstrap/lib/widgets/treeView.js",
+        "bootstrap/lib/widgets/CMS.js",
         "bootstrap/lib/widgets/dataTreeView.js",
         "bootstrap/lib/widgets/odataTree.js",
         "bootstrap/lib/widgets/workspace.js",
@@ -68,6 +70,7 @@ const dependencyFiles = [
     "dependencies/jquery/jquery.validate.js",
     "dependencies/bootstrap/bootstrap.bundle.min.js",
     "dependencies/kendo/kendo.all.v2024.2.514.min.js",
+    "dependencies/kendo/kendo.csp-templates.js",
     "dependencies/kendo/kendo-ui-license.js"
 ];
 
@@ -118,11 +121,18 @@ const drawing = await readFiles([
     "bootstrap/lib/Core/drawing.js"
 ]);
 
+const dependencies = [
+    await readFiles(dependencyFiles),
+    await readFile(
+        path.join(assetsDirectory, "dependencies/other/signalr.min.js"),
+        "utf8")
+].join("\n");
+
 const framework = [
+    dependencies,
     drawing,
     await readFile(path.join(stageDirectory, "widget.js"), "utf8"),
-    await readFile(path.join(stageDirectory, "core.js"), "utf8"),
-    await readFile(path.join(stageDirectory, "workflow.js"), "utf8")
+    await readFile(path.join(stageDirectory, "core.js"), "utf8")
 ].join("\n");
 
 await write("framework.js", framework);
@@ -139,25 +149,50 @@ await write(
     "background.min.js",
     await minify(background, "js"));
 
-const dependencies = [
-    await readFiles(dependencyFiles),
+const everything = [
+    await readFile(
+        path.join(stageDirectory, "framework.min.js"),
+        "utf8"),
     await readFile(
         path.join(stageDirectory, "monaco.min.js"),
         "utf8"),
     await readFile(
-        path.join(assetsDirectory, "dependencies/other/signalr.min.js"),
-        "utf8")
-].join("\n");
-
-const everything = [
-    dependencies,
-    await readFile(
-        path.join(stageDirectory, "framework.min.js"),
+        path.join(stageDirectory, "workflow.min.js"),
         "utf8")
 ].join("\n");
 
 await write("everything.js", everything);
 await write("everything.min.js", everything);
+
+const codeEditor = [
+    await readFile(
+        path.join(assetsDirectory, "dependencies/monaco/worker.js"),
+        "utf8"),
+    await readFile(
+        path.join(stageDirectory, "monaco.js"),
+        "utf8"),
+    await readFile(
+        path.join(assetsDirectory, "dependencies/monaco/runtime.js"),
+        "utf8"),
+    await readFile(
+        path.join(assetsDirectory, "dependencies/monaco/javascript-validation.js"),
+        "utf8"),
+    await readFile(
+        path.join(assetsDirectory, "dependencies/monaco/web-languages.js"),
+        "utf8")
+].join("\n");
+
+await write("code-editor.js", codeEditor);
+await write(
+    "code-editor.min.js",
+    await minify(codeEditor, "js"));
+
+const codeEditorCss = await readFile(
+    path.join(assetsDirectory, "dependencies/monaco/runtime.css"),
+    "utf8");
+
+await write("code-editor.css", codeEditorCss);
+await write("code-editor.min.css", codeEditorCss);
 
 const bootstrapSiteCss = await readFile(
     path.join(assetsDirectory, "bootstrap/css/site.css"),
