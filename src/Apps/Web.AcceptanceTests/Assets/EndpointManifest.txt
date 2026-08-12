@@ -304,6 +304,7 @@ POST Api/Mail/MailReceiver
 POST Api/Mail/MailSender
 POST Api/Mail/MailServer
 POST Api/Mail/QueuedEmail
+POST Api/Mail/QueuedEmail({key})/Retry
 POST Api/Mail/ReceivedEmail
 POST Api/Mail/ReceivedEmail/Receive
 POST Api/Mail/SentEmail
