@@ -258,6 +258,7 @@ POST Api/AI/Chat/Stream
 POST Api/AI/Completions
 POST Api/AI/Model/Providers/{provider}/Import
 POST Api/Account/AcceptInvite
+POST Api/Account/ChangePassword
 POST Api/Account/ConfirmForgotPassword
 POST Api/Account/ConfirmRegistration
 POST Api/Account/ForgotPassword
@@ -326,6 +327,7 @@ POST Api/Workflow/ScheduledTask
 POST Api/Workflow/ScheduledTask({key})/Execute
 POST Api/Workflow/WorkflowEvent
 PUT Api
+PUT Api/Account/Me
 PUT Api/AppSecurity/App({key})
 PUT Api/AppSecurity/Privilege({key})
 PUT Api/AppSecurity/Role({key})
