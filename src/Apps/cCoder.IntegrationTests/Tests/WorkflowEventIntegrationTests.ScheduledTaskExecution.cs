@@ -152,12 +152,19 @@ flowId:                 flowId,name:                 Unique(prefix: "Delayed Hos
 predicate:                 () => Task.FromResult(result: HostedServicesOutputContains(value: "No scheduled tasks are due to run.")),                attempts: 40,                delayMilliseconds: 250,                diagnosticsFactory: () => BuildFlowDiagnosticsAsync(flowId: flowId));
 
             // When
+            System.Diagnostics.Stopwatch executionTimer = System.Diagnostics.Stopwatch.StartNew();
+
             await UpdateScheduledTaskNextExecutionAsync(taskId: taskId,nextExecution: DateTimeOffset.UtcNow.AddMinutes(minutes: -5));
 
             await WaitUntilAsync(
 predicate:                 async () => await HasFlowInstanceStateAsync(flowId: flowId,state: "Complete"),                attempts: 180,                delayMilliseconds: 500,                diagnosticsFactory: () => BuildFlowDiagnosticsAsync(flowId: flowId));
 
+            executionTimer.Stop();
+
             // Then
+            executionTimer.Elapsed.Should()
+                .BeLessThan(expected: TimeSpan.FromSeconds(seconds: 15));
+
             fixture.HostedServicesOutput.Should()
                 .NotContain(unexpected: "Exception thrown whilst raising scheduled_task_execute event");
 

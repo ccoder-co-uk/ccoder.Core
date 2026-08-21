@@ -32,6 +32,12 @@ internal sealed class AcceptanceSettings
 
     public bool UseLocalWorkflow { get; init; }
 
+    public string LocalWorkflowProject { get; init; } = string.Empty;
+
+    public string LocalWorkflowActivitiesProject { get; init; } = string.Empty;
+
+    public string LocalWorkflowEngineProject { get; init; } = string.Empty;
+
     public bool UseLocalSecurity { get; init; }
 
     public bool UseLocalAppSecurity { get; init; }
