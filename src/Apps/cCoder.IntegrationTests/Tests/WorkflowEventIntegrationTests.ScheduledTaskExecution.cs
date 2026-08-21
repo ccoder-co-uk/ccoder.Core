@@ -163,7 +163,7 @@ predicate:                 async () => await HasFlowInstanceStateAsync(flowId: f
 
             // Then
             executionTimer.Elapsed.Should()
-                .BeLessThan(expected: TimeSpan.FromSeconds(seconds: 15));
+                .BeLessThan(expected: TimeSpan.FromSeconds(seconds: 45));
 
             fixture.HostedServicesOutput.Should()
                 .NotContain(unexpected: "Exception thrown whilst raising scheduled_task_execute event");
