@@ -123,6 +123,17 @@ test("workflow remains an independently cacheable bundle", async () => {
     assert.match(workflow, /class WorkflowDesigner/);
 });
 
+test("workflow editor uses Workflow domain API routes", async () => {
+    const workflow = await readFile(
+        path.join(stageDirectory, "workflow.js"),
+        "utf8");
+
+    assert.match(workflow, /Workflow\/FlowDefinition\(/);
+    assert.match(workflow, /Workflow\/FlowInstanceData\(/);
+    assert.doesNotMatch(workflow, /Core\/FlowDefinition\(/);
+    assert.doesNotMatch(workflow, /Core\/FlowInstanceData\(/);
+});
+
 test("code editor remains an independently cacheable bundle", async () => {
     const framework = await readFile(
         path.join(stageDirectory, "framework.js"),
@@ -135,4 +146,5 @@ test("code editor remains an independently cacheable bundle", async () => {
     assert.doesNotMatch(framework, /class MonacoEditor/);
     assert.match(codeEditor, /class MonacoEditor/);
     assert.match(codeEditor, /monaco\.editor/);
+    assert.match(codeEditor, /registerLanguage\("csharp"/);
 });

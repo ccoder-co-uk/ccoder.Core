@@ -694,7 +694,7 @@
         {
           "Id": "Web.Controllers.HomeController.Index(System.String,System.String,System.String,System.Boolean,System.Threading.CancellationToken)",
           "Name": "Index",
-          "LineNumber": 37,
+          "LineNumber": 39,
           "Inputs": [
             {
               "Name": "path",
@@ -724,6 +724,13 @@
               "TypeName": "System.String",
               "MethodName": "EndsWith",
               "MethodId": "System.String.EndsWith(System.String)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "System.String",
+              "MethodName": "IsNullOrWhiteSpace",
+              "MethodId": "System.String.IsNullOrWhiteSpace(System.String?)",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
             },
@@ -3126,14 +3133,14 @@
       "Description": "API controller methods must use HTTP nouns: Get, Post, Put, or Delete.",
       "Severity": "Warning",
       "Type": "Web.Controllers.HomeController",
-      "LineNumber": 36
+      "LineNumber": 38
     },
     {
       "Code": "STXAPI005",
       "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
       "Severity": "Warning",
       "Type": "Web.Controllers.HomeController",
-      "LineNumber": 37
+      "LineNumber": 39
     }
   ]
 }
