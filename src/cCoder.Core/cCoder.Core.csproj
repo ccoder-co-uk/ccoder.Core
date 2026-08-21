@@ -113,9 +113,9 @@
   <ItemGroup>
     <PackageReference Include="cCoder.AI" Version="2026.8.5.30" Condition="'$(UseLocalAI)' != 'true'" />
     <PackageReference Include="cCoder.AppSecurity" Version="2026.8.20.1637" Condition="'$(UseLocalAppSecurity)' != 'true'" />
-    <PackageReference Include="cCoder.ContentManagement" Version="2026.8.17.2127" Condition="'$(UseLocalContentManagement)' != 'true'" />
+    <PackageReference Include="cCoder.ContentManagement" Version="2026.8.21.903" Condition="'$(UseLocalContentManagement)' != 'true'" />
     <PackageReference Include="cCoder.Data" Version="2026.8.12.1324" Condition="'$(UseLocalData)' != 'true'" />
-    <PackageReference Include="cCoder.DocumentManagement" Version="2026.8.10.1854" Condition="'$(UseLocalDocumentManagement)' != 'true'" />
+    <PackageReference Include="cCoder.DocumentManagement" Version="2026.8.21.858" Condition="'$(UseLocalDocumentManagement)' != 'true'" />
     <PackageReference Include="cCoder.Eventing" Version="2026.8.15.955" Condition="'$(UseLocalEventing)' != 'true'" />
     <PackageReference Include="cCoder.Eventing.AzureServiceBus" Version="2026.8.15.955" Condition="'$(UseLocalEventing)' != 'true'" />
     <PackageReference Include="cCoder.Eventing.Http" Version="2026.8.15.955" Condition="'$(UseLocalEventing)' != 'true'" />

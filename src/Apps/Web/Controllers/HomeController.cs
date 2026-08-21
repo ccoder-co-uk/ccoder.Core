@@ -33,6 +33,8 @@ namespace Web.Controllers
         private readonly ISetupRequestHostManager setupRequestHostManager = setupRequestHostManager;
         private readonly IHomeSessionManager homeSessionManager = homeSessionManager;
 
+        private const string CultureExplicitSessionKey = "cultureexplicit";
+
         [HttpGet]
         public async Task<IActionResult> Index(
             string path = null,
@@ -53,6 +55,14 @@ namespace Web.Controllers
                 if (path?.ToLower() == "robots.txt")
                 {
                     return Content(content: "User-agent: * Allow: *", contentType: "text/plain");
+                }
+
+                if (!string.IsNullOrWhiteSpace(value: culture))
+                {
+                    homeSessionManager.SetSessionValue(
+                        context: HttpContext,
+                        key: CultureExplicitSessionKey,
+                        value: bool.TrueString);
                 }
 
                 PageRenderResponse response = await pageRenderer.RenderAsync();

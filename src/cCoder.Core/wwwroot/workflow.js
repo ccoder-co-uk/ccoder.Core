@@ -653,7 +653,7 @@ class Flow {
         flow.DefinitionJson.Name = "";
         flow.DefinitionJson = JSON.stringify(flow.DefinitionJson);
 
-        api.update('Core/FlowDefinition(' + flow.Id + ')', flow)
+        api.update('Workflow/FlowDefinition(' + flow.Id + ')', flow)
             .then(() => notification.success('Flow Saved Succesfully'))
             .catch(error);
     }
@@ -703,7 +703,7 @@ class Flow {
 
     async loadInstance(id) {
         var that = this;
-        var instance = await api.get("Core/FlowInstanceData(" + id + ")");
+        var instance = await api.get("Workflow/FlowInstanceData(" + id + ")");
         var ctx = JSON.parse(instance.ContextString);
         that.Activities.map(function (a) {
             a.addInstanceData(
@@ -717,7 +717,8 @@ class Flow {
         this.Activities.map(a => a.draw(ctx));
         this.Links.map(l => l.draw(ctx));
     }
-};
+}
+;
 ﻿class WorkflowDesigner {
     constructor(container, flow) {
 
