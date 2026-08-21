@@ -701,7 +701,7 @@ fileName: "dotnet", arguments: $"\"{Path.Combine(path1: hostedServicesOutputDire
             ["ContentManagement__WorkflowServiceUrl"] = WorkflowBaseAddress.ToString(),
             ["Workflow__ServiceUrl"] = WorkflowBaseAddress.ToString(),
             ["Workflow__SslPort"] = WebBaseAddress.Port.ToString(),
-            ["Workflow__ScheduledTaskPollingIntervalMilliseconds"] = "250",
+            ["Workflow__ScheduledTaskPollingIntervalMilliseconds"] = "5000",
             ["Workflow__QueueInstanceManagement__PollingIntervalMilliseconds"] = "250",
             ["Eventing__ProviderType"] = Settings.EventProviderType,
             ["Eventing__Http__MaxConcurrency"] = "1"
