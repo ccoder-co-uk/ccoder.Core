@@ -121,7 +121,15 @@ public static partial class WebApplicationExtensions
 
         using CoreDataContext coreContext = coreContextFactory.CreateCoreContext();
 
-        string coreConnectionString = coreContext.Database.GetConnectionString();
+        string coreConnectionString =
+            ResolveMigrationConnectionString(
+                configuration: configuration.ApplicationConfiguration,
+                databaseName: "Core",
+                regularConnectionString: coreContext.Database.GetConnectionString());
+
+        coreContext.Database.SetConnectionString(
+            connectionString: coreConnectionString);
+
         string securityConnectionString = null;
         SecurityDbContext securityContext = null;
 
@@ -136,8 +144,13 @@ public static partial class WebApplicationExtensions
                     ignoreAuthInfo: true);
 
             securityConnectionString =
-                securityContext.Database.GetConnectionString();
+                ResolveMigrationConnectionString(
+                    configuration: configuration.ApplicationConfiguration,
+                    databaseName: "Security",
+                    regularConnectionString: securityContext.Database.GetConnectionString());
 
+            securityContext.Database.SetConnectionString(
+                connectionString: securityConnectionString);
         }
 
         using (securityContext)
@@ -161,6 +174,20 @@ public static partial class WebApplicationExtensions
                     ResolveDatabaseName(connectionString: securityConnectionString)
                 ]);
         }
+    }
+
+    internal static string ResolveMigrationConnectionString(
+        IConfiguration configuration,
+        string databaseName,
+        string regularConnectionString)
+    {
+        string adminConnectionString =
+            configuration?.GetConnectionString(
+                name: $"{databaseName}Admin");
+
+        return string.IsNullOrWhiteSpace(value: adminConnectionString)
+            ? regularConnectionString
+            : adminConnectionString;
     }
 
     private static IDisposable AcquireStartupMigrationLock(

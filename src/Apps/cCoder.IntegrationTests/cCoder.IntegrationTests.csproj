@@ -15,10 +15,10 @@
     <Compile Include="..\Shared\Testing\AcceptanceTestConfiguration.cs"
              Link="Shared\Testing\AcceptanceTestConfiguration.cs" />
     <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.20.2" />
-    <PackageReference Include="cCoder.Security.Data" Version="2026.8.20.1304" Condition="'$(UseLocalSecurity)' != 'true'" />
-    <PackageReference Include="cCoder.Mail.Providers" Version="2026.8.13.922" />
+    <PackageReference Include="cCoder.Security.Data" Version="2026.8.26.2208" Condition="'$(UseLocalSecurity)' != 'true'" />
+    <PackageReference Include="cCoder.Mail.Providers" Version="2026.8.26.2258" />
     <PackageReference Include="FluentAssertions" Version="8.10.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.11" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.8.1" />
     <PackageReference Include="xunit" Version="2.9.3" />
