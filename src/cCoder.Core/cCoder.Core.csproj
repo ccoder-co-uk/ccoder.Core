@@ -111,7 +111,7 @@
     <ProjectReference Include="$(LocalWorkflowEngineProject)" AdditionalProperties="UseLocalData=$(UseLocalData);UseLocalSecurity=$(UseLocalSecurity)" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="cCoder.AI" Version="2026.8.5.30" Condition="'$(UseLocalAI)' != 'true'" />
+    <PackageReference Include="cCoder.AI" Version="2026.8.26.1035" Condition="'$(UseLocalAI)' != 'true'" />
     <PackageReference Include="cCoder.AppSecurity" Version="2026.8.20.1637" Condition="'$(UseLocalAppSecurity)' != 'true'" />
     <PackageReference Include="cCoder.ContentManagement" Version="2026.8.21.903" Condition="'$(UseLocalContentManagement)' != 'true'" />
     <PackageReference Include="cCoder.Data" Version="2026.8.12.1324" Condition="'$(UseLocalData)' != 'true'" />
