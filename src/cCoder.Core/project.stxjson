@@ -10795,7 +10795,7 @@
     {
       "Name": "cCoder.Core.WebApplicationExtensions.StartupMigrationLock",
       "StandardElementType": "Dependency",
-      "LineNumber": 225,
+      "LineNumber": 252,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -10816,7 +10816,7 @@
         {
           "Id": "cCoder.Core.WebApplicationExtensions.StartupMigrationLock.Dispose()",
           "Name": "Dispose",
-          "LineNumber": 227,
+          "LineNumber": 254,
           "Inputs": [],
           "ReturnType": "System.Void",
           "Implements": [
