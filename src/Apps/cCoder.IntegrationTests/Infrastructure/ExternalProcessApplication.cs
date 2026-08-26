@@ -13,6 +13,7 @@ internal sealed class ExternalProcessApplication(string name) : IAsyncDisposable
 {
     private readonly StringBuilder output = new();
     private Process process;
+    private WindowsProcessLifetimeJob processLifetimeJob;
 
     public string Name { get; } = name;
 
@@ -54,6 +55,9 @@ internal sealed class ExternalProcessApplication(string name) : IAsyncDisposable
         {
             throw new InvalidOperationException($"Failed to start process '{Name}'.");
         }
+
+        processLifetimeJob = new WindowsProcessLifetimeJob();
+        processLifetimeJob.Add(process: process);
 
         process.BeginOutputReadLine();
         process.BeginErrorReadLine();
@@ -115,6 +119,7 @@ internal sealed class ExternalProcessApplication(string name) : IAsyncDisposable
         finally
         {
             process.Dispose();
+            processLifetimeJob?.Dispose();
         }
     }
 

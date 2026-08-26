@@ -98,6 +98,9 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
 
     public async Task InitializeAsync()
     {
+        System.Diagnostics.Stopwatch fixtureTimer = System.Diagnostics.Stopwatch.StartNew();
+        System.Diagnostics.Stopwatch phaseTimer = System.Diagnostics.Stopwatch.StartNew();
+
         IntegrationTestConfiguration configuration =
             IntegrationTestConfiguration.Load();
 
@@ -121,6 +124,11 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
             MailReceiveUser = configuration.MailReceiveUser,
             KeepArtifacts = configuration.KeepArtifacts,
             UseLocalWorkflow = configuration.UseLocalWorkflow,
+            LocalWorkflowProject = configuration.LocalWorkflowProject,
+            LocalWorkflowActivitiesProject =
+                configuration.LocalWorkflowActivitiesProject,
+            LocalWorkflowEngineProject =
+                configuration.LocalWorkflowEngineProject,
             UseLocalSecurity = configuration.UseLocalSecurity,
             UseLocalAppSecurity =
                 configuration.UseLocalAppSecurity,
@@ -166,11 +174,17 @@ path1: repositoryRoot, path2: "artifacts", path3: "integration-tests", path4: Gu
             Settings.CoreConnectionString,
             Settings.SsoConnectionString);
 
+        phaseTimer.Restart();
         await databaseManager.ResetDatabasesAsync();
-        Console.WriteLine(value: "Integration fixture: acceptance databases reset.");
 
+        Console.WriteLine(
+            value: $"Integration fixture: acceptance databases reset in {phaseTimer.Elapsed}.");
+
+        phaseTimer.Restart();
         await new IntegrationAcceptanceSeeder(databaseServices).SeedAsync();
-        Console.WriteLine(value: "Integration fixture: baseline data seeded.");
+
+        Console.WriteLine(
+            value: $"Integration fixture: baseline data seeded in {phaseTimer.Elapsed}.");
 
         await BuildApplicationAsync(
 projectPath: "src\\Apps\\Workflow\\Workflow.csproj", msbuildProperties: string.Empty, outputDirectory: workflowOutputDirectory, intermediateDirectory: Path.Combine(path1: acceptanceArtifactsRoot, path2: "obj", path3: "Workflow"));
@@ -189,15 +203,22 @@ projectPath: "src\\Apps\\Web\\Web.csproj", msbuildProperties: string.Empty, outp
 
         workflowApplication = new ExternalProcessApplication("Workflow");
 
+        phaseTimer.Restart();
+
         await workflowApplication.StartAsync(
 fileName: ResolveFuncExecutablePath(), arguments: $"start --port {workflowHttpPort} --csharp --no-build", workingDirectory: workflowOutputDirectory, environmentVariables: new Dictionary<string, string>
 {
     ["FUNCTIONS_WORKER_RUNTIME"] = "dotnet-isolated"
 }, readinessProbe: () => ProbeHealthAsync(baseAddress: WorkflowBaseAddress), timeout: TimeSpan.FromMinutes(minutes: 2), readinessDiagnostics: GetHealthProbeDiagnostics);
 
-        Console.WriteLine(value: "Integration fixture: Workflow started.");
+        Console.WriteLine(
+            value: $"Integration fixture: Workflow started in {phaseTimer.Elapsed}.");
 
+        phaseTimer.Restart();
         await StartHostedServicesAsync();
+
+        Console.WriteLine(
+            value: $"Integration fixture: HostedServices started in {phaseTimer.Elapsed}.");
 
         Dictionary<string, string> webEnvironment = CreateCommonApplicationEnvironment();
         AddHttpsCertificateEnvironment(environment: webEnvironment);
@@ -211,13 +232,19 @@ fileName: ResolveFuncExecutablePath(), arguments: $"start --port {workflowHttpPo
 
         webApplication = new ExternalProcessApplication("Web");
 
+        phaseTimer.Restart();
+
         await webApplication.StartAsync(
 fileName: "dotnet", arguments: $"\"{Path.Combine(path1: webOutputDirectory, path2: "Web.dll")}\"", workingDirectory: webOutputDirectory, environmentVariables: webEnvironment, readinessProbe: () => ProbeHealthAsync(baseAddress: WebBaseAddress, useInsecureHandler: true), timeout: TimeSpan.FromMinutes(minutes: 2), readinessDiagnostics: GetHealthProbeDiagnostics);
 
-        Console.WriteLine(value: "Integration fixture: Web started.");
+        Console.WriteLine(
+            value: $"Integration fixture: Web started in {phaseTimer.Elapsed}.");
 
         WebClient = CreateClient(baseAddress: WebBaseAddress, useInsecureHandler: true);
         HostedServicesClient = CreateClient(baseAddress: HostedServicesBaseAddress, useInsecureHandler: false);
+
+        Console.WriteLine(
+            value: $"Integration fixture: initialization completed in {fixtureTimer.Elapsed}.");
     }
 
     public async Task RestartHostedServicesAsync()
@@ -319,6 +346,7 @@ fileName: "dotnet", arguments: $"\"{Path.Combine(path1: webOutputDirectory, path
         string outputDirectory,
         string intermediateDirectory)
     {
+        System.Diagnostics.Stopwatch phaseTimer = System.Diagnostics.Stopwatch.StartNew();
         string localBuildProperties = ResolveLocalBuildProperties();
 
         string outputProperties =
@@ -333,8 +361,16 @@ fileName: "dotnet", arguments: $"\"{Path.Combine(path1: webOutputDirectory, path
         await RunCommandAsync(
 fileName: "dotnet", arguments: $"restore {projectPath} {combinedProperties}");
 
+        Console.WriteLine(
+            value: $"Integration fixture: restored {projectPath} in {phaseTimer.Elapsed}.");
+
+        phaseTimer.Restart();
+
         await RunCommandAsync(
 fileName: "dotnet", arguments: $"build {projectPath} --no-restore -m:1 -p:BuildInParallel=false -p:UseSharedCompilation=false {combinedProperties}");
+
+        Console.WriteLine(
+            value: $"Integration fixture: built {projectPath} in {phaseTimer.Elapsed}.");
     }
 
     private string ResolveLocalBuildProperties()
@@ -391,8 +427,9 @@ path: Path.Combine(
                     "cCoder.Data.csproj"
                 ]));
 
-        string localWorkflowProject = Path.GetFullPath(
-path: Path.Combine(
+        string localWorkflowProject = ResolveLocalProjectPath(
+            configuredPath: Settings.LocalWorkflowProject,
+            defaultPath: Path.Combine(
                 paths:
                 [
                     repositoryRoot,
@@ -401,6 +438,32 @@ path: Path.Combine(
                     "src",
                     "cCoder.Workflow",
                     "cCoder.Workflow.csproj"
+                ]));
+
+        string localWorkflowActivitiesProject = ResolveLocalProjectPath(
+            configuredPath: Settings.LocalWorkflowActivitiesProject,
+            defaultPath: Path.Combine(
+                paths:
+                [
+                    repositoryRoot,
+                    "..",
+                    "cCoder.Workflow",
+                    "src",
+                    "cCoder.Workflow.Activities",
+                    "cCoder.Workflow.Activities.csproj"
+                ]));
+
+        string localWorkflowEngineProject = ResolveLocalProjectPath(
+            configuredPath: Settings.LocalWorkflowEngineProject,
+            defaultPath: Path.Combine(
+                paths:
+                [
+                    repositoryRoot,
+                    "..",
+                    "cCoder.Workflow",
+                    "src",
+                    "cCoder.Workflow.Engine",
+                    "cCoder.Workflow.Engine.csproj"
                 ]));
 
         string localSecurityProject = Path.GetFullPath(
@@ -450,9 +513,19 @@ path: Path.Combine(
             properties.Add(item: "-p:UseLocalSecurity=true");
         }
 
-        if (useLocalWorkflow && File.Exists(path: localWorkflowProject))
+        if (useLocalWorkflow
+            && File.Exists(path: localWorkflowProject)
+            && File.Exists(path: localWorkflowActivitiesProject)
+            && File.Exists(path: localWorkflowEngineProject))
         {
             properties.Add(item: "-p:UseLocalWorkflow=true");
+            properties.Add(item: $"-p:LocalWorkflowProject=\"{localWorkflowProject}\"");
+
+            properties.Add(
+                item: $"-p:LocalWorkflowActivitiesProject=\"{localWorkflowActivitiesProject}\"");
+
+            properties.Add(
+                item: $"-p:LocalWorkflowEngineProject=\"{localWorkflowEngineProject}\"");
         }
 
         if (useLocalSecurity && !string.IsNullOrWhiteSpace(value: localSecurityAssemblyVersion))
@@ -467,6 +540,14 @@ path: Path.Combine(
 
     private static string CombineMsBuildProperties(params string[] values) =>
         string.Join(separator: " ", values: values.Where(predicate: value => !string.IsNullOrWhiteSpace(value: value)));
+
+    private static string ResolveLocalProjectPath(
+        string configuredPath,
+        string defaultPath) =>
+        Path.GetFullPath(
+            path: string.IsNullOrWhiteSpace(value: configuredPath)
+                ? defaultPath
+                : configuredPath);
 
     private static string FormatMsBuildPath(string path, bool trailingSlash)
     {
@@ -626,6 +707,7 @@ fileName: "dotnet", arguments: $"\"{Path.Combine(path1: hostedServicesOutputDire
             ["Workflow__ConnectionString"] = Settings.CoreConnectionString,
             ["Workflow__ServiceUrl"] = WorkflowBaseAddress.ToString(),
             ["Workflow__SslPort"] = WebBaseAddress.Port.ToString(),
+            ["Workflow__ScheduledTaskPollingIntervalMilliseconds"] = "5000",
             ["Workflow__QueueInstanceManagement__PollingIntervalMilliseconds"] = "250",
             ["Eventing__ProviderType"] = Settings.EventProviderType,
             ["Eventing__Http__MaxConcurrency"] = "1"
