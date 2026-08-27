@@ -1,4 +1,4 @@
-// ---------------------------------------------------------------
+﻿// ---------------------------------------------------------------
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
@@ -123,8 +123,8 @@ public static partial class WebApplicationExtensions
 
         string coreConnectionString =
             ResolveMigrationConnectionString(
-                configuration: configuration.ApplicationConfiguration,
-                databaseName: "Core",
+                adminConnectionString:
+                    configuration.CoreData?.AdminConnectionString,
                 regularConnectionString: coreContext.Database.GetConnectionString());
 
         coreContext.Database.SetConnectionString(
@@ -145,8 +145,8 @@ public static partial class WebApplicationExtensions
 
             securityConnectionString =
                 ResolveMigrationConnectionString(
-                    configuration: configuration.ApplicationConfiguration,
-                    databaseName: "Security",
+                    adminConnectionString:
+                        configuration.SecurityData?.AdminConnectionString,
                     regularConnectionString: securityContext.Database.GetConnectionString());
 
             securityContext.Database.SetConnectionString(
@@ -177,14 +177,9 @@ public static partial class WebApplicationExtensions
     }
 
     internal static string ResolveMigrationConnectionString(
-        IConfiguration configuration,
-        string databaseName,
+        string adminConnectionString,
         string regularConnectionString)
     {
-        string adminConnectionString =
-            configuration?.GetConnectionString(
-                name: $"{databaseName}Admin");
-
         return string.IsNullOrWhiteSpace(value: adminConnectionString)
             ? regularConnectionString
             : adminConnectionString;
