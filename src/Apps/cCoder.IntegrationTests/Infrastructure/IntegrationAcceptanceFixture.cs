@@ -613,6 +613,8 @@ fileName: "dotnet", arguments: $"\"{Path.Combine(path1: hostedServicesOutputDire
         Dictionary<string, string> environment = new()
         {
             ["ASPNETCORE_ENVIRONMENT"] = "Acceptance",
+            ["CoreData__ConnectionString"] = Settings.CoreConnectionString,
+            ["SecurityData__ConnectionString"] = Settings.SsoConnectionString,
             ["AppSecurity__ConnectionString"] = Settings.CoreConnectionString,
             ["Security__ConnectionString"] = Settings.SsoConnectionString,
             ["Security__DecryptionKey"] = Settings.DecryptionKey,

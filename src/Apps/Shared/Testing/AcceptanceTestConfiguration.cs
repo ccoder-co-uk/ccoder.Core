@@ -39,6 +39,8 @@ internal sealed class AcceptanceTestConfiguration
         new ProcessConfigurationScope(
             values: new Dictionary<string, string>
             {
+                ["CoreData__ConnectionString"] = coreConnectionString,
+                ["SecurityData__ConnectionString"] = securityConnectionString,
                 ["AppSecurity__ConnectionString"] = coreConnectionString,
                 ["AppSecurity__AggregateDomains"] =
                     aggregateDomains.ToString(),

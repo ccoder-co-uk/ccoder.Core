@@ -1542,7 +1542,7 @@
     {
       "Name": "cCoder.Core.CoreConfigurationFactory",
       "StandardElementType": "Unknown",
-      "LineNumber": 20,
+      "LineNumber": 13,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -1552,7 +1552,7 @@
         {
           "Id": "cCoder.Core.CoreConfigurationFactory.Create()",
           "Name": "Create",
-          "LineNumber": 22,
+          "LineNumber": 15,
           "Inputs": [],
           "ReturnType": "cCoder.Core.Models.CoreConfiguration",
           "Implements": [],
@@ -1572,7 +1572,7 @@
         {
           "Id": "cCoder.Core.CoreConfigurationFactory.Create(Microsoft.Extensions.Configuration.IConfiguration)",
           "Name": "Create",
-          "LineNumber": 29,
+          "LineNumber": 22,
           "Inputs": [
             {
               "Name": "configuration",
@@ -1583,23 +1583,42 @@
           "Implements": [],
           "Calls": [
             {
-              "TypeName": "Microsoft.Extensions.Configuration.ConfigurationBinder",
-              "MethodName": "Bind",
-              "MethodId": "Microsoft.Extensions.Configuration.ConfigurationBinder.Bind(Microsoft.Extensions.Configuration.IConfiguration,System.Object?)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
+              "TypeName": "cCoder.Core.CoreConfigurationFactory",
+              "MethodName": "Create",
+              "MethodId": "cCoder.Core.CoreConfigurationFactory.Create(Microsoft.Extensions.Configuration.IConfiguration)",
+              "StandardElementType": "Unknown",
+              "IsDependencyBoundary": false
+            }
+          ],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.CoreConfigurationFactory.Create(Microsoft.Extensions.Configuration.IConfiguration)",
+          "Name": "Create",
+          "LineNumber": 25,
+          "Inputs": [
+            {
+              "Name": "configuration",
+              "Type": "Microsoft.Extensions.Configuration.IConfiguration"
+            }
+          ],
+          "ReturnType": "TConfiguration",
+          "Implements": [],
+          "Calls": [
             {
               "TypeName": "Microsoft.Extensions.Configuration.ConfigurationBinder",
-              "MethodName": "Bind",
-              "MethodId": "Microsoft.Extensions.Configuration.ConfigurationBinder.Bind(Microsoft.Extensions.Configuration.IConfiguration,System.String,System.Object?)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "Microsoft.Extensions.Configuration.IConfiguration",
-              "MethodName": "GetSection",
-              "MethodId": "Microsoft.Extensions.Configuration.IConfiguration.GetSection(System.String)",
+              "MethodName": "Get",
+              "MethodId": "Microsoft.Extensions.Configuration.ConfigurationBinder.Get(Microsoft.Extensions.Configuration.IConfiguration)",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
             },
@@ -1609,13 +1628,6 @@
               "MethodId": "System.ArgumentNullException.ThrowIfNull(System.Object?,System.String?)",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "cCoder.Core.CoreConfigurationFactory",
-              "MethodName": "Create",
-              "MethodId": "cCoder.Core.CoreConfigurationFactory.Create()",
-              "StandardElementType": "Unknown",
-              "IsDependencyBoundary": false
             }
           ],
           "PossibleExceptionTypes": [],
@@ -5329,7 +5341,7 @@
         {
           "Id": "cCoder.Core.IServiceCollectionExtensions.AddCoreHostedServices(IServiceCollection,cCoder.Core.Models.CoreConfiguration)",
           "Name": "AddCoreHostedServices",
-          "LineNumber": 213,
+          "LineNumber": 218,
           "Inputs": [
             {
               "Name": "services",
@@ -5674,7 +5686,7 @@
     {
       "Name": "cCoder.Core.Models.CoreConfiguration",
       "StandardElementType": "Model",
-      "LineNumber": 19,
+      "LineNumber": 20,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -5701,6 +5713,10 @@
           "Type": "ContentManagementConfiguration"
         },
         {
+          "Name": "CoreData",
+          "Type": "CoreDataConfiguration"
+        },
+        {
           "Name": "DocumentManagement",
           "Type": "DocumentManagementConfiguration"
         },
@@ -5723,6 +5739,10 @@
         {
           "Name": "Security",
           "Type": "SecurityConfiguration"
+        },
+        {
+          "Name": "SecurityData",
+          "Type": "SecurityDataConfiguration"
         },
         {
           "Name": "Workflow",
@@ -10795,7 +10815,7 @@
     {
       "Name": "cCoder.Core.WebApplicationExtensions.StartupMigrationLock",
       "StandardElementType": "Dependency",
-      "LineNumber": 252,
+      "LineNumber": 247,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -10816,7 +10836,7 @@
         {
           "Id": "cCoder.Core.WebApplicationExtensions.StartupMigrationLock.Dispose()",
           "Name": "Dispose",
-          "LineNumber": 254,
+          "LineNumber": 249,
           "Inputs": [],
           "ReturnType": "System.Void",
           "Implements": [
@@ -15224,7 +15244,7 @@
       "Description": "The type is not a valid Standard element type.",
       "Severity": "Warning",
       "Type": "cCoder.Core.CoreConfigurationFactory",
-      "LineNumber": 20
+      "LineNumber": 13
     },
     {
       "Code": "STXAPI005",
