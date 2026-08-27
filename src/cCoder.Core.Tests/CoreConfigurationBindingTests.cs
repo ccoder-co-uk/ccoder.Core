@@ -1,4 +1,4 @@
-﻿// ---------------------------------------------------------------
+// ---------------------------------------------------------------
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
@@ -25,6 +25,33 @@ public sealed partial class CoreConfigurationBindingTests
         isSealed
             .Should()
             .BeFalse();
+    }
+
+    [Fact]
+    public void Bind_ShouldPopulateDerivedApplicationConfiguration()
+    {
+        // Given
+        IConfiguration configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(initialData: new Dictionary<string, string>
+            {
+                ["CoreData:ConnectionString"] = "core",
+                ["ApplicationDomain:Value"] = "extension"
+            })
+            .Build();
+
+        // When
+        ExtendedCoreConfiguration result =
+            CoreConfigurationFactory.Create<ExtendedCoreConfiguration>(
+                configuration: configuration);
+
+        // Then
+        result.CoreData.ConnectionString
+            .Should()
+            .Be(expected: "core");
+
+        result.ApplicationDomain.Value
+            .Should()
+            .Be(expected: "extension");
     }
 
     [Fact]
@@ -164,6 +191,32 @@ public sealed partial class CoreConfigurationBindingTests
     }
 
     [Fact]
+    public void Bind_ShouldProjectLegacyConnectionsIntoDataDomains()
+    {
+        // Given
+        IConfiguration configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(initialData: new Dictionary<string, string>
+            {
+                ["ContentManagement:ConnectionString"] = "legacy-core",
+                ["Security:ConnectionString"] = "legacy-sso"
+            })
+            .Build();
+
+        // When
+        CoreConfiguration result = CoreConfigurationFactory.Create(
+            configuration: configuration);
+
+        // Then
+        result.CoreData.ConnectionString
+            .Should()
+            .Be(expected: "legacy-core");
+
+        result.SecurityData.ConnectionString
+            .Should()
+            .Be(expected: "legacy-sso");
+    }
+
+    [Fact]
     public void FromConfiguration_ShouldOmitUnconfiguredDomains()
     {
         // Given
@@ -228,5 +281,15 @@ public sealed partial class CoreConfigurationBindingTests
         exception.Message
             .Should()
             .Contain(expected: "Workflow:SslPort");
+    }
+
+    private sealed class ExtendedCoreConfiguration : CoreConfiguration
+    {
+        public ApplicationDomainConfiguration ApplicationDomain { get; set; }
+    }
+
+    private sealed class ApplicationDomainConfiguration
+    {
+        public string Value { get; set; }
     }
 }
