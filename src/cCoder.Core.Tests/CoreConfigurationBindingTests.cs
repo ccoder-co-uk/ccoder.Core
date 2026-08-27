@@ -28,6 +28,33 @@ public sealed partial class CoreConfigurationBindingTests
     }
 
     [Fact]
+    public void Bind_ShouldPopulateDerivedApplicationConfiguration()
+    {
+        // Given
+        IConfiguration configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(initialData: new Dictionary<string, string>
+            {
+                ["CoreData:ConnectionString"] = "core",
+                ["ApplicationDomain:Value"] = "extension"
+            })
+            .Build();
+
+        // When
+        ExtendedCoreConfiguration result =
+            CoreConfigurationFactory.Create<ExtendedCoreConfiguration>(
+                configuration: configuration);
+
+        // Then
+        result.CoreData.ConnectionString
+            .Should()
+            .Be(expected: "core");
+
+        result.ApplicationDomain.Value
+            .Should()
+            .Be(expected: "extension");
+    }
+
+    [Fact]
     public void CoreConfiguration_ShouldFailForMalformedAiSection()
     {
         // Given
@@ -254,5 +281,15 @@ public sealed partial class CoreConfigurationBindingTests
         exception.Message
             .Should()
             .Contain(expected: "Workflow:SslPort");
+    }
+
+    private sealed class ExtendedCoreConfiguration : CoreConfiguration
+    {
+        public ApplicationDomainConfiguration ApplicationDomain { get; set; }
+    }
+
+    private sealed class ApplicationDomainConfiguration
+    {
+        public string Value { get; set; }
     }
 }
