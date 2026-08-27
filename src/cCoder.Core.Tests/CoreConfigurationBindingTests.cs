@@ -1,4 +1,4 @@
-// ---------------------------------------------------------------
+﻿// ---------------------------------------------------------------
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
@@ -77,10 +77,12 @@ public sealed partial class CoreConfigurationBindingTests
         // Given
         Dictionary<string, string> values = new()
         {
-            ["AppSecurity:ConnectionString"] = "app-security",
-            ["Security:ConnectionString"] = "sso",
+            ["CoreData:ConnectionString"] = "core",
+            ["CoreData:AdminConnectionString"] = "core-admin",
+            ["AppSecurity:AggregateDomains"] = "true",
+            ["SecurityData:ConnectionString"] = "sso",
+            ["SecurityData:AdminConnectionString"] = "sso-admin",
             ["Security:DecryptionKey"] = "key",
-            ["ContentManagement:ConnectionString"] = "content",
             ["ContentManagement:RootPath"] = "Api/Content",
             ["Mail:Providers:MicrosoftGraph:TenantId"] = "tenant",
             ["Eventing:ProviderType"] = "ServiceBus",
@@ -100,13 +102,21 @@ public sealed partial class CoreConfigurationBindingTests
                 configuration: configuration);
 
         // Then
-        result.AppSecurity.ConnectionString
+        result.CoreData.ConnectionString
             .Should()
-            .Be(expected: "app-security");
+            .Be(expected: "core");
 
-        result.Security.ConnectionString
+        result.CoreData.AdminConnectionString
+            .Should()
+            .Be(expected: "core-admin");
+
+        result.SecurityData.ConnectionString
             .Should()
             .Be(expected: "sso");
+
+        result.SecurityData.AdminConnectionString
+            .Should()
+            .Be(expected: "sso-admin");
 
         result.Security.DecryptionKey
             .Should()
@@ -114,7 +124,11 @@ public sealed partial class CoreConfigurationBindingTests
 
         result.ContentManagement.ConnectionString
             .Should()
-            .Be(expected: "content");
+            .Be(expected: "core");
+
+        result.AppSecurity.ConnectionString
+            .Should()
+            .Be(expected: "core");
 
         result.ContentManagement.RootPath
             .Should()
@@ -169,6 +183,7 @@ public sealed partial class CoreConfigurationBindingTests
         object[] domains =
         [
             result.AI,
+            result.CoreData,
             result.AppSecurity,
             result.ContentManagement,
             result.DocumentManagement,
@@ -176,6 +191,7 @@ public sealed partial class CoreConfigurationBindingTests
             result.Mail,
             result.Packaging,
             result.Security,
+            result.SecurityData,
             result.Workflow
         ];
 

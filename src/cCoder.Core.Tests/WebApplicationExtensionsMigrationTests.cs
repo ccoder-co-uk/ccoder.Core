@@ -3,36 +3,23 @@
 // ---------------------------------------------------------------
 
 using FluentAssertions;
-using Microsoft.Extensions.Configuration;
 using Xunit;
 
 namespace cCoder.Core.Tests;
 
 public sealed partial class WebApplicationExtensionsMigrationTests
 {
-    [Theory]
-    [InlineData("Core", "CoreAdmin")]
-    [InlineData("Security", "SecurityAdmin")]
-    public void ResolveMigrationConnectionString_ShouldUseConfiguredAdminConnection(
-        string databaseName,
-        string adminConnectionName)
+    [Fact]
+    public void ResolveMigrationConnectionString_ShouldUseConfiguredAdminConnection()
     {
         // Given
         const string regularConnection = "Server=regular;Database=Runtime;";
         const string adminConnection = "Server=admin;Database=Migrations;";
 
-        IConfiguration configuration =
-            CreateConfiguration(
-                connectionStrings:
-                [
-                    (adminConnectionName, adminConnection)
-                ]);
-
         // When
         string result =
             WebApplicationExtensions.ResolveMigrationConnectionString(
-                configuration: configuration,
-                databaseName: databaseName,
+                adminConnectionString: adminConnection,
                 regularConnectionString: regularConnection);
 
         // Then
@@ -50,18 +37,10 @@ public sealed partial class WebApplicationExtensionsMigrationTests
         // Given
         const string regularConnection = "Server=regular;Database=Core;";
 
-        IConfiguration configuration =
-            CreateConfiguration(
-                connectionStrings:
-                [
-                    ("CoreAdmin", adminConnection)
-                ]);
-
         // When
         string result =
             WebApplicationExtensions.ResolveMigrationConnectionString(
-                configuration: configuration,
-                databaseName: "Core",
+                adminConnectionString: adminConnection,
                 regularConnectionString: regularConnection);
 
         // Then
@@ -69,17 +48,4 @@ public sealed partial class WebApplicationExtensionsMigrationTests
             .Be(expected: regularConnection);
     }
 
-    private static IConfiguration CreateConfiguration(
-        params (string Name, string Value)[] connectionStrings)
-    {
-        Dictionary<string, string> values = connectionStrings
-            .Where(predicate: item => item.Value is not null)
-            .ToDictionary(
-                keySelector: item => $"ConnectionStrings:{item.Name}",
-                elementSelector: item => item.Value);
-
-        return new ConfigurationBuilder()
-            .AddInMemoryCollection(initialData: values)
-            .Build();
-    }
 }

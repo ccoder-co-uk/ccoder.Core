@@ -1,4 +1,4 @@
-// ---------------------------------------------------------------
+﻿// ---------------------------------------------------------------
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
@@ -83,6 +83,11 @@ public static partial class IServiceCollectionExtensions
     {
         ArgumentNullException.ThrowIfNull(argument: configuration);
         services.AddSingleton(implementationInstance: configuration);
+
+        if (configuration.CoreData is not null)
+        {
+            services.AddData(configuration: configuration.CoreData);
+        }
 
         ODataConventionModelBuilder domainModelBuilder = new();
 
@@ -216,6 +221,11 @@ public static partial class IServiceCollectionExtensions
     {
         ArgumentNullException.ThrowIfNull(argument: configuration);
         services.AddSingleton(implementationInstance: configuration);
+
+        if (configuration.CoreData is not null)
+        {
+            services.AddData(configuration: configuration.CoreData);
+        }
 
         if (configuration.Security is not null)
         {
