@@ -1,4 +1,4 @@
-﻿// ---------------------------------------------------------------
+// ---------------------------------------------------------------
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
@@ -60,10 +60,21 @@ public static class CoreConfigurationFactory
 
     private static void ApplyDataConnections(CoreConfiguration configuration)
     {
-        string coreConnectionString = configuration.CoreData?.ConnectionString;
+        string coreConnectionString = FirstConfigured(
+            configuration.CoreData?.ConnectionString,
+            configuration.AppSecurity?.ConnectionString,
+            configuration.ContentManagement?.ConnectionString,
+            configuration.DocumentManagement?.ConnectionString,
+            configuration.Logging?.ConnectionString,
+            configuration.Mail?.ConnectionString,
+            configuration.Packaging?.ConnectionString,
+            configuration.Workflow?.ConnectionString);
 
         if (!string.IsNullOrWhiteSpace(value: coreConnectionString))
         {
+            configuration.CoreData ??= new CoreDataConfiguration();
+            configuration.CoreData.ConnectionString = coreConnectionString;
+
             if (configuration.AppSecurity is not null)
             {
                 configuration.AppSecurity.ConnectionString = coreConnectionString;
@@ -100,14 +111,27 @@ public static class CoreConfigurationFactory
             }
         }
 
-        if (configuration.Security is not null
-            && !string.IsNullOrWhiteSpace(
-                value: configuration.SecurityData?.ConnectionString))
+        string securityConnectionString = FirstConfigured(
+            configuration.SecurityData?.ConnectionString,
+            configuration.Security?.ConnectionString);
+
+        if (!string.IsNullOrWhiteSpace(value: securityConnectionString))
         {
-            configuration.Security.ConnectionString =
-                configuration.SecurityData.ConnectionString;
+            configuration.SecurityData ??= new SecurityDataConfiguration();
+            configuration.SecurityData.ConnectionString =
+                securityConnectionString;
+
+            if (configuration.Security is not null)
+            {
+                configuration.Security.ConnectionString =
+                    securityConnectionString;
+            }
         }
     }
+
+    private static string FirstConfigured(params string[] values) =>
+        values.FirstOrDefault(
+            predicate: value => !string.IsNullOrWhiteSpace(value));
 
     private static TConfiguration GetOptional<TConfiguration>(
         IConfiguration configuration,

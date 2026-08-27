@@ -1,4 +1,4 @@
-﻿// ---------------------------------------------------------------
+// ---------------------------------------------------------------
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
@@ -161,6 +161,32 @@ public sealed partial class CoreConfigurationBindingTests
         result.Api.ExposeMetadata
             .Should()
             .BeFalse();
+    }
+
+    [Fact]
+    public void Bind_ShouldProjectLegacyConnectionsIntoDataDomains()
+    {
+        // Given
+        IConfiguration configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(initialData: new Dictionary<string, string>
+            {
+                ["ContentManagement:ConnectionString"] = "legacy-core",
+                ["Security:ConnectionString"] = "legacy-sso"
+            })
+            .Build();
+
+        // When
+        CoreConfiguration result = CoreConfigurationFactory.Create(
+            configuration: configuration);
+
+        // Then
+        result.CoreData.ConnectionString
+            .Should()
+            .Be(expected: "legacy-core");
+
+        result.SecurityData.ConnectionString
+            .Should()
+            .Be(expected: "legacy-sso");
     }
 
     [Fact]
