@@ -4,6 +4,7 @@
 
 using cCoder.Core;
 using cCoder.Core.Models;
+using HostedServices.Models;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using cCoder.Security.Data.EF;
 using cCoder.Security.Data.EF.Dependencies;
@@ -18,10 +19,11 @@ public static class IServiceCollectionExtensions
     public static IServiceCollection AddHostedServices(
         this IServiceCollection services,
         IConfiguration applicationConfiguration,
-        Action<CoreConfiguration> configure = null)
+        Action<AppConfiguration> configure = null)
     {
-        CoreConfiguration configuration =
-            CoreConfigurationFactory.Create(applicationConfiguration);
+        AppConfiguration configuration =
+            CoreConfigurationFactory.Create<AppConfiguration>(
+                configuration: applicationConfiguration);
         configure?.Invoke(configuration);
         services.AddApplicationLogging(applicationConfiguration);
         services.AddDependencies(configuration);
@@ -57,13 +59,13 @@ public static class IServiceCollectionExtensions
 
     private static void AddDependencies(
         this IServiceCollection services,
-        CoreConfiguration configuration)
+        AppConfiguration configuration)
     {
         services.RemoveAll<ISecurityDbContextFactory>();
 
         services.AddSingleton<ISecurityDbContextFactory>(
             implementationInstance: new MSSQLSecurityDbContextFactory(
-                configuration.Security.ConnectionString)
+                configuration.SecurityData.ConnectionString)
             {
                 GetAuthInfo = _ => new SSOAuthInfo { SSOUserId = "Guest" },
             });

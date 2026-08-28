@@ -1542,7 +1542,7 @@
     {
       "Name": "cCoder.Core.CoreConfigurationFactory",
       "StandardElementType": "Unknown",
-      "LineNumber": 13,
+      "LineNumber": 11,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -1552,7 +1552,7 @@
         {
           "Id": "cCoder.Core.CoreConfigurationFactory.Create()",
           "Name": "Create",
-          "LineNumber": 15,
+          "LineNumber": 13,
           "Inputs": [],
           "ReturnType": "cCoder.Core.Models.CoreConfiguration",
           "Implements": [],
@@ -1572,7 +1572,7 @@
         {
           "Id": "cCoder.Core.CoreConfigurationFactory.Create(Microsoft.Extensions.Configuration.IConfiguration)",
           "Name": "Create",
-          "LineNumber": 22,
+          "LineNumber": 20,
           "Inputs": [
             {
               "Name": "configuration",
@@ -1605,7 +1605,7 @@
         {
           "Id": "cCoder.Core.CoreConfigurationFactory.Create(Microsoft.Extensions.Configuration.IConfiguration)",
           "Name": "Create",
-          "LineNumber": 25,
+          "LineNumber": 23,
           "Inputs": [
             {
               "Name": "configuration",
@@ -5341,7 +5341,7 @@
         {
           "Id": "cCoder.Core.IServiceCollectionExtensions.AddCoreHostedServices(IServiceCollection,cCoder.Core.Models.CoreConfiguration)",
           "Name": "AddCoreHostedServices",
-          "LineNumber": 218,
+          "LineNumber": 223,
           "Inputs": [
             {
               "Name": "services",
@@ -15244,7 +15244,7 @@
       "Description": "The type is not a valid Standard element type.",
       "Severity": "Warning",
       "Type": "cCoder.Core.CoreConfigurationFactory",
-      "LineNumber": 13
+      "LineNumber": 11
     },
     {
       "Code": "STXAPI005",
