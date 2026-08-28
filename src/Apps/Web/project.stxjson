@@ -1390,7 +1390,7 @@
     {
       "Name": "Web.IServiceCollectionExtensions",
       "StandardElementType": "App",
-      "LineNumber": 17,
+      "LineNumber": 18,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -1398,9 +1398,9 @@
       "Properties": [],
       "Methods": [
         {
-          "Id": "Web.IServiceCollectionExtensions.AddWeb(IServiceCollection,IConfiguration,System.Action\u003CcCoder.Core.Models.CoreConfiguration\u003E)",
+          "Id": "Web.IServiceCollectionExtensions.AddWeb(IServiceCollection,IConfiguration,System.Action\u003CWeb.Models.AppConfiguration\u003E)",
           "Name": "AddWeb",
-          "LineNumber": 19,
+          "LineNumber": 20,
           "Inputs": [
             {
               "Name": "services",
@@ -1412,7 +1412,7 @@
             },
             {
               "Name": "configure",
-              "Type": "System.Action\u003CcCoder.Core.Models.CoreConfiguration\u003E"
+              "Type": "System.Action\u003CWeb.Models.AppConfiguration\u003E"
             }
           ],
           "ReturnType": "IServiceCollection",
@@ -1428,7 +1428,7 @@
             {
               "TypeName": "cCoder.Core.CoreConfigurationFactory",
               "MethodName": "Create",
-              "MethodId": "cCoder.Core.CoreConfigurationFactory.Create()",
+              "MethodId": "cCoder.Core.CoreConfigurationFactory.Create(Microsoft.Extensions.Configuration.IConfiguration)",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
             },
@@ -1468,6 +1468,26 @@
           "Type": "System.String"
         }
       ],
+      "Methods": []
+    },
+    {
+      "Name": "Web.Models.AppConfiguration",
+      "StandardElementType": "Dependency",
+      "LineNumber": 9,
+      "IsPublic": true,
+      "Kind": "Class",
+      "BaseType": {
+        "Id": "cCoder.Core:cCoder.Core.Models.CoreConfiguration",
+        "FullName": "cCoder.Core.Models.CoreConfiguration",
+        "Name": "CoreConfiguration",
+        "Namespace": "cCoder.Core.Models",
+        "AssemblyName": "cCoder.Core",
+        "Kind": "Class",
+        "IsInCurrentProject": false,
+        "StandardElementType": "Dependency"
+      },
+      "Interfaces": [],
+      "Properties": [],
       "Methods": []
     },
     {

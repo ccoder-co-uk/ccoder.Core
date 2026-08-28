@@ -4,6 +4,7 @@
 
 using cCoder.Core;
 using cCoder.Core.Models;
+using Web.Models;
 using Web.Services.Processings;
 using Web.Exposures;
 using Web.Services.Aggregations;
@@ -19,10 +20,11 @@ public static class IServiceCollectionExtensions
     public static IServiceCollection AddWeb(
         this IServiceCollection services,
         IConfiguration applicationConfiguration,
-        Action<CoreConfiguration> configure = null)
+        Action<AppConfiguration> configure = null)
     {
-        CoreConfiguration configuration =
-            CoreConfigurationFactory.Create(applicationConfiguration);
+        AppConfiguration configuration =
+            CoreConfigurationFactory.Create<AppConfiguration>(
+                configuration: applicationConfiguration);
         configure?.Invoke(configuration);
         services.AddApplicationLogging(applicationConfiguration);
         services.AddBrokers();

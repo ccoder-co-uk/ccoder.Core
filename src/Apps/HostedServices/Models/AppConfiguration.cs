@@ -2,11 +2,10 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.Data.Models;
+using cCoder.Core.Models;
 
-namespace Workflow.Models;
+namespace HostedServices.Models;
 
-public sealed class WorkflowConfiguration
+public sealed class AppConfiguration : CoreConfiguration
 {
-    public DataConfiguration Data { get; set; }
 }

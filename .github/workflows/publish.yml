@@ -67,6 +67,14 @@ jobs:
 
       - name: Test with coverage
         run: |
+          if ([string]::IsNullOrWhiteSpace($env:CoreData__ConnectionString)) {
+            $env:CoreData__ConnectionString = $env:AppSecurity__ConnectionString
+          }
+
+          if ([string]::IsNullOrWhiteSpace($env:SecurityData__ConnectionString)) {
+            $env:SecurityData__ConnectionString = $env:Security__ConnectionString
+          }
+
           & ccoder.Core/.github/workflows/Invoke-Tests.ps1 `
             -RepositoryRoot "${{ github.workspace }}/ccoder.Core" `
             -SettingsPath "${{ github.workspace }}/ccoder.Core/src/cCoder.Core.coverage.runsettings" `

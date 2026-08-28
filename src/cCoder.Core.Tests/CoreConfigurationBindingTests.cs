@@ -3,6 +3,14 @@
 // ---------------------------------------------------------------
 
 using cCoder.Core.Models;
+using cCoder.AppSecurity.Models;
+using cCoder.ContentManagement.Models;
+using cCoder.DocumentManagement.Models;
+using cCoder.Logging.Models;
+using cCoder.Mail.Models;
+using cCoder.Packaging.Models;
+using cCoder.Security.Models;
+using cCoder.Workflow.Models;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using System.Text.Json.Serialization;
@@ -12,6 +20,37 @@ namespace cCoder.Core.Tests;
 
 public sealed partial class CoreConfigurationBindingTests
 {
+    [Fact]
+    public void BusinessDomainConfigurations_ShouldNotOwnPersistenceSettings()
+    {
+        // Given
+        Type[] businessDomainConfigurationTypes =
+        [
+            typeof(AppSecurityConfiguration),
+            typeof(ContentManagementConfiguration),
+            typeof(DocumentManagementConfiguration),
+            typeof(LoggingConfiguration),
+            typeof(MailConfiguration),
+            typeof(PackagingConfiguration),
+            typeof(SecurityConfiguration),
+            typeof(WorkflowConfiguration)
+        ];
+
+        // When
+        string[] persistenceProperties = businessDomainConfigurationTypes
+            .SelectMany(selector: type => type.GetProperties())
+            .Where(predicate: property =>
+                property.Name is "ConnectionString" or "DebugInfo" or "LogSQL")
+            .Select(selector: property =>
+                $"{property.DeclaringType!.Name}.{property.Name}")
+            .ToArray();
+
+        // Then
+        persistenceProperties
+            .Should()
+            .BeEmpty();
+    }
+
     [Fact]
     public void CoreConfiguration_ShouldSupportExtension()
     {
@@ -149,14 +188,6 @@ public sealed partial class CoreConfigurationBindingTests
             .Should()
             .Be(expected: "key");
 
-        result.ContentManagement.ConnectionString
-            .Should()
-            .Be(expected: "core");
-
-        result.AppSecurity.ConnectionString
-            .Should()
-            .Be(expected: "core");
-
         result.ContentManagement.RootPath
             .Should()
             .Be(expected: "Api/Content");
@@ -191,7 +222,7 @@ public sealed partial class CoreConfigurationBindingTests
     }
 
     [Fact]
-    public void Bind_ShouldProjectLegacyConnectionsIntoDataDomains()
+    public void Bind_ShouldNotProjectLegacyConnectionsIntoDataDomains()
     {
         // Given
         IConfiguration configuration = new ConfigurationBuilder()
@@ -207,13 +238,13 @@ public sealed partial class CoreConfigurationBindingTests
             configuration: configuration);
 
         // Then
-        result.CoreData.ConnectionString
+        result.CoreData
             .Should()
-            .Be(expected: "legacy-core");
+            .BeNull();
 
-        result.SecurityData.ConnectionString
+        result.SecurityData
             .Should()
-            .Be(expected: "legacy-sso");
+            .BeNull();
     }
 
     [Fact]

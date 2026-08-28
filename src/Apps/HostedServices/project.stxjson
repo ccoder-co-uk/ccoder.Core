@@ -546,7 +546,7 @@
     {
       "Name": "HostedServices.IServiceCollectionExtensions",
       "StandardElementType": "App",
-      "LineNumber": 16,
+      "LineNumber": 17,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -554,9 +554,9 @@
       "Properties": [],
       "Methods": [
         {
-          "Id": "HostedServices.IServiceCollectionExtensions.AddHostedServices(IServiceCollection,IConfiguration,System.Action\u003CcCoder.Core.Models.CoreConfiguration\u003E)",
+          "Id": "HostedServices.IServiceCollectionExtensions.AddHostedServices(IServiceCollection,IConfiguration,System.Action\u003CHostedServices.Models.AppConfiguration\u003E)",
           "Name": "AddHostedServices",
-          "LineNumber": 18,
+          "LineNumber": 19,
           "Inputs": [
             {
               "Name": "services",
@@ -568,7 +568,7 @@
             },
             {
               "Name": "configure",
-              "Type": "System.Action\u003CcCoder.Core.Models.CoreConfiguration\u003E"
+              "Type": "System.Action\u003CHostedServices.Models.AppConfiguration\u003E"
             }
           ],
           "ReturnType": "IServiceCollection",
@@ -584,7 +584,7 @@
             {
               "TypeName": "cCoder.Core.CoreConfigurationFactory",
               "MethodName": "Create",
-              "MethodId": "cCoder.Core.CoreConfigurationFactory.Create()",
+              "MethodId": "cCoder.Core.CoreConfigurationFactory.Create(Microsoft.Extensions.Configuration.IConfiguration)",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
             },
@@ -609,6 +609,26 @@
           "HasTryCatch": false
         }
       ]
+    },
+    {
+      "Name": "HostedServices.Models.AppConfiguration",
+      "StandardElementType": "Dependency",
+      "LineNumber": 9,
+      "IsPublic": true,
+      "Kind": "Class",
+      "BaseType": {
+        "Id": "cCoder.Core:cCoder.Core.Models.CoreConfiguration",
+        "FullName": "cCoder.Core.Models.CoreConfiguration",
+        "Name": "CoreConfiguration",
+        "Namespace": "cCoder.Core.Models",
+        "AssemblyName": "cCoder.Core",
+        "Kind": "Class",
+        "IsInCurrentProject": false,
+        "StandardElementType": "Dependency"
+      },
+      "Interfaces": [],
+      "Properties": [],
+      "Methods": []
     },
     {
       "Name": "HostedServices.Program",

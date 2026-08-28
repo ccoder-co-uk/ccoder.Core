@@ -18,15 +18,15 @@ internal static class IServiceCollectionExtensions
     public static IServiceCollection AddWorkflow(
         this IServiceCollection services,
         IConfiguration configuration,
-        Action<WorkflowConfiguration> configure = null)
+        Action<AppConfiguration> configure = null)
     {
-        WorkflowConfiguration workflowConfiguration = new();
-        configuration.Bind(instance: workflowConfiguration);
-        configure?.Invoke(obj: workflowConfiguration);
+        AppConfiguration appConfiguration = new();
+        configuration.Bind(instance: appConfiguration);
+        configure?.Invoke(obj: appConfiguration);
 
         services.AddProcessings();
         services.AddTransient<ILoggingBroker, LoggingBroker>();
-        services.AddData(configuration: workflowConfiguration.Data);
+        services.AddData(configuration: appConfiguration.CoreData);
         services.AddWorkflowEngineHostedServices();
 
         return services;

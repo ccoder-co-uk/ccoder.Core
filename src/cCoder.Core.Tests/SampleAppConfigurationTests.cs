@@ -32,8 +32,6 @@ public sealed partial class SampleAppConfigurationTests
         "CoreData:AdminConnectionString",
         "SecurityData:ConnectionString",
         "SecurityData:AdminConnectionString",
-        "Logging:DebugInfo",
-        "Logging:LogSQL",
         "Logging:StoreLogEntries",
         "Logging:StreamLogEntries",
         "Logging:RetentionDays",
@@ -42,8 +40,6 @@ public sealed partial class SampleAppConfigurationTests
         "Logging:DefaultAppDomain",
         "Logging:RootPath",
         "AppSecurity:AggregateDomains",
-        "AppSecurity:DebugInfo",
-        "AppSecurity:LogSQL",
         "AppSecurity:RootPath",
         "AppSecurity:IncludeLegacyCoreContext",
         "AppSecurity:IsMigrating",
@@ -61,15 +57,9 @@ public sealed partial class SampleAppConfigurationTests
         "ContentManagement:CacheSourceAppId",
         "ContentManagement:CacheExpiry",
         "ContentManagement:WorkflowServiceUrl",
-        "ContentManagement:DebugInfo",
-        "ContentManagement:LogSQL",
         "ContentManagement:RootPath",
         "ContentManagement:IncludeLegacyCoreContext",
-        "DocumentManagement:DebugInfo",
-        "DocumentManagement:LogSQL",
         "DocumentManagement:RootPath",
-        "Mail:DebugInfo",
-        "Mail:LogSQL",
         "Mail:RootPath",
         "Mail:IsMigrating",
         "Packaging:AssetsRoot",
@@ -80,8 +70,6 @@ public sealed partial class SampleAppConfigurationTests
         "Workflow:InstanceMaintenance:MaxAgeDays",
         "Workflow:QueueInstanceManagement:ExecutingTimeoutMinutes",
         "Workflow:QueueInstanceManagement:PollingIntervalMilliseconds",
-        "Workflow:DebugInfo",
-        "Workflow:LogSQL",
         "Workflow:RootPath",
         "Workflow:IncludeLegacyCoreContext",
         "Workflow:IsMigrating",
@@ -173,9 +161,8 @@ public sealed partial class SampleAppConfigurationTests
         // When
         string[] missingKeys =
         [
-            "Values:Data__ConnectionString",
-            "Values:Data__DebugInfo",
-            "Values:Data__LogSQL"
+            "Values:CoreData__ConnectionString",
+            "Values:CoreData__AdminConnectionString"
         ];
 
         missingKeys = missingKeys

@@ -23,25 +23,34 @@
 
 ## Run Locally
 
-The application configuration binds directly from `appsettings.json`, the
-environment-specific appsettings file, and environment variables into
-`CoreConfiguration`. Values left empty in appsettings are secrets that must be
-defined as user-level or machine-level environment variables.
+Each executable binds the complete configuration root from `appsettings.json`,
+the environment-specific appsettings file, and environment variables into its
+own `AppConfiguration`. The Web and HostedServices roots extend
+`CoreConfiguration`; the Workflow app has the smaller root required by that
+process.
+
+Core is the deliberate aggregate-composition exception: its composite API
+registers every configured child domain recursively. Persistence is still
+owned by the side-by-side Data domains. `CoreData` owns the shared platform
+database and `SecurityData` owns the SSO database; business-domain sections do
+not contain connection strings or register Data themselves. Values left empty
+in appsettings are secrets that must be defined as user-level or machine-level
+environment variables.
 
 For a normal local SQL Server setup, define:
 
 ```text
-AppSecurity__ConnectionString
-Security__ConnectionString
+CoreData__ConnectionString
+CoreData__AdminConnectionString
+SecurityData__ConnectionString
+SecurityData__AdminConnectionString
 Security__DecryptionKey
-ContentManagement__ConnectionString
-DocumentManagement__ConnectionString
-Logging__ConnectionString
-Mail__ConnectionString
-Packaging__ConnectionString
-Workflow__ConnectionString
-Data__ConnectionString
 ```
+
+The two `AdminConnectionString` values are optional migration-only overrides.
+When configured, startup migrations use the admin connection while normal
+runtime operations continue using the regular connection. When omitted,
+migrations use the regular connection.
 
 Optional provider credentials, such as Mail or Azure Service Bus credentials,
 and AI provider API keys use the same `Section__Property` naming shown by the
@@ -104,7 +113,7 @@ dotnet test src\cCoder.Core.slnx -c Release --no-build --settings src\cCoder.Cor
 ```
 
 The acceptance and integration tests use the same
-`AppSecurity__ConnectionString`, `Security__ConnectionString`, and
+`CoreData__ConnectionString`, `SecurityData__ConnectionString`, and
 `Security__DecryptionKey` variables as the applications. A single shared test
 configuration source appends `-acceptance-{guid}` to both database names,
 resets those isolated databases before running, and drops them during cleanup.

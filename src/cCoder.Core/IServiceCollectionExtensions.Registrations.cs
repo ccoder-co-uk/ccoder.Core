@@ -89,6 +89,11 @@ public static partial class IServiceCollectionExtensions
             services.AddData(configuration: configuration.CoreData);
         }
 
+        if (configuration.SecurityData is not null)
+        {
+            services.AddSecurityData(configuration: configuration.SecurityData);
+        }
+
         ODataConventionModelBuilder domainModelBuilder = new();
 
         if (configuration.AI is not null)
@@ -225,6 +230,11 @@ public static partial class IServiceCollectionExtensions
         if (configuration.CoreData is not null)
         {
             services.AddData(configuration: configuration.CoreData);
+        }
+
+        if (configuration.SecurityData is not null)
+        {
+            services.AddSecurityData(configuration: configuration.SecurityData);
         }
 
         if (configuration.Security is not null)
