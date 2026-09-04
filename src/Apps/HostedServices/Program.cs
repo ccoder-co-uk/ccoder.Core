@@ -11,6 +11,7 @@ using cCoder.Data.Models.Workflow;
 using cCoder.Eventing;
 using cCoder.Eventing.Models;
 using cCoder.Security.Models.Events;
+using cCoder.Workflow.Activities.Models;
 using cCoder.Workflow.Exposures;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
@@ -27,7 +28,7 @@ public class Program
             applicationConfiguration: builder.Configuration,
             configure: configuration =>
                 configuration.Eventing.EventProviders =
-                    CreateEventProviders());
+                    CreateEventProviders(configuration));
 
         WebApplication app = builder.Build();
         app.StartCoreHostedServices();
@@ -41,7 +42,8 @@ public class Program
         app.Run();
     }
 
-    private static EventProvider[] CreateEventProviders() =>
+    private static EventProvider[] CreateEventProviders(
+        CoreConfiguration configuration) =>
         [
             CreateExternalReceiveProvider<App>(
                 ["app_add", "app_update", "app_delete"]),
@@ -49,9 +51,31 @@ public class Program
             CreateExternalReceiveProvider<ScheduledTask>(
                 ["scheduled_task_execute"]),
             CreateQueuedFlowInstanceReceiveProvider(),
+            CreateWorkflowExecuteProvider(configuration),
             CreateExternalReceiveProvider<SecurityAccountEvent>(
                 CreateSecurityAccountEventNames()),
         ];
+
+    private static EventProvider<WorkflowRequest> CreateWorkflowExecuteProvider(
+        CoreConfiguration configuration) =>
+        new()
+        {
+            Events = ["workflow_execute"],
+            SendHandler = async (_, _, message) =>
+            {
+                using HttpClient client = new()
+                {
+                    BaseAddress = new Uri(configuration.Workflow.ServiceUrl)
+                };
+
+                using HttpResponseMessage response =
+                    await client.PostAsJsonAsync(
+                        requestUri: "Execute",
+                        value: message.Data);
+
+                response.EnsureSuccessStatusCode();
+            }
+        };
 
     private static string[] CreateSecurityAccountEventNames() =>
         [
