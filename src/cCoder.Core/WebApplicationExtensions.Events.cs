@@ -19,6 +19,7 @@ using cCoder.Workflow;
 using cCoder.Core.Services.Foundations.Eventing;
 using cCoder.Core.Services.Orchestrations;
 using cCoder.Data.Models.DMS;
+using cCoder.Data.Models.Planning;
 using cCoder.Data.Models.Workflow;
 using CmsApp = cCoder.Data.Models.CMS.App;
 using PackagingPackageImportEvent = cCoder.Packaging.Models.PackageImportEvent;
@@ -136,6 +137,8 @@ name: "folder_delete", handler: static (service, entity) => service.ForwardFolde
         eventHub.ListenToLocalEventHub<CmsApp>(eventName: "app_update");
         eventHub.ListenToLocalEventHub<CmsApp>(eventName: "app_delete");
         eventHub.ListenToLocalEventHub<Folder>(eventName: "folder_delete");
+        eventHub.ListenToLocalEventHub<ScheduledTask>(
+            eventName: "scheduled_task_execute");
         eventHub.ListenToLocalEventHub<FlowInstanceData>(eventName: "flow_instance_data_add");
 
         return app;

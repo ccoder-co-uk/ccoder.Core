@@ -1276,7 +1276,15 @@
           "Implements": [
             "cCoder.Core.Brokers.Planning.IPlanningAppBroker.AddAppAsync(App)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Workflow.Exposures.IWorkflowAppExposure",
+              "MethodName": "AddAsync",
+              "MethodId": "cCoder.Workflow.Exposures.IWorkflowAppExposure.AddAsync(cCoder.Data.Models.CMS.App)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -1303,7 +1311,15 @@
           "Implements": [
             "cCoder.Core.Brokers.Planning.IPlanningAppBroker.DeleteAppAsync(System.Int32)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Workflow.Exposures.IWorkflowAppExposure",
+              "MethodName": "DeleteAsync",
+              "MethodId": "cCoder.Workflow.Exposures.IWorkflowAppExposure.DeleteAsync(System.Int32)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -1330,7 +1346,15 @@
           "Implements": [
             "cCoder.Core.Brokers.Planning.IPlanningAppBroker.UpdateAppAsync(App)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Workflow.Exposures.IWorkflowAppExposure",
+              "MethodName": "UpdateAsync",
+              "MethodId": "cCoder.Workflow.Exposures.IWorkflowAppExposure.UpdateAsync(cCoder.Data.Models.CMS.App)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -1470,7 +1494,15 @@
           "Implements": [
             "cCoder.Core.Brokers.Workflow.IWorkflowAppBroker.AddAppAsync(App)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Workflow.Exposures.IWorkflowAppExposure",
+              "MethodName": "AddAsync",
+              "MethodId": "cCoder.Workflow.Exposures.IWorkflowAppExposure.AddAsync(cCoder.Data.Models.CMS.App)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -1497,7 +1529,15 @@
           "Implements": [
             "cCoder.Core.Brokers.Workflow.IWorkflowAppBroker.DeleteAppAsync(System.Int32)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Workflow.Exposures.IWorkflowAppExposure",
+              "MethodName": "DeleteAsync",
+              "MethodId": "cCoder.Workflow.Exposures.IWorkflowAppExposure.DeleteAsync(System.Int32)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -1524,7 +1564,15 @@
           "Implements": [
             "cCoder.Core.Brokers.Workflow.IWorkflowAppBroker.UpdateAppAsync(App)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Workflow.Exposures.IWorkflowAppExposure",
+              "MethodName": "UpdateAsync",
+              "MethodId": "cCoder.Workflow.Exposures.IWorkflowAppExposure.UpdateAsync(cCoder.Data.Models.CMS.App)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -5746,7 +5794,7 @@
         },
         {
           "Name": "Workflow",
-          "Type": "WorkflowConfiguration"
+          "Type": "cCoder.Workflow.Models.WorkflowConfiguration"
         }
       ],
       "Methods": []
@@ -10465,7 +10513,15 @@
           "Implements": [
             "cCoder.Core.Services.Processings.Packages.ISchedulingPackageProcessingService.ExportPackage(System.Int32,System.String)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Workflow.Exposures.IWorkflowPackageManager",
+              "MethodName": "ExportPackage",
+              "MethodId": "cCoder.Workflow.Exposures.IWorkflowPackageManager.ExportPackage(System.Int32,System.String)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [
             "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
             "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
@@ -10504,7 +10560,15 @@
           "Implements": [
             "cCoder.Core.Services.Processings.Packages.ISchedulingPackageProcessingService.ImportPackageAsync(System.Int32,Package)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Workflow.Exposures.IWorkflowPackageManager",
+              "MethodName": "ImportPackageAsync",
+              "MethodId": "cCoder.Workflow.Exposures.IWorkflowPackageManager.ImportPackageAsync(System.Int32,cCoder.Workflow.Models.WorkflowPackage)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [
             "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
             "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
@@ -10566,7 +10630,15 @@
           "Implements": [
             "cCoder.Core.Services.Processings.Packages.IWorkflowPackageProcessingService.ExportPackage(System.Int32,System.String)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Workflow.Exposures.IWorkflowPackageManager",
+              "MethodName": "ExportPackage",
+              "MethodId": "cCoder.Workflow.Exposures.IWorkflowPackageManager.ExportPackage(System.Int32,System.String)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [
             "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
             "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
@@ -10605,7 +10677,15 @@
           "Implements": [
             "cCoder.Core.Services.Processings.Packages.IWorkflowPackageProcessingService.ImportPackageAsync(System.Int32,Package)"
           ],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Workflow.Exposures.IWorkflowPackageManager",
+              "MethodName": "ImportPackageAsync",
+              "MethodId": "cCoder.Workflow.Exposures.IWorkflowPackageManager.ImportPackageAsync(System.Int32,cCoder.Workflow.Models.WorkflowPackage)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [
             "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
             "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
