@@ -764,7 +764,7 @@ requestUri: "/Api/Eventing", value: new HttpEventMessage
             AppId = appId,
             Name = Unique(prefix: "FolderDeleteRole"),
             Description = "Acceptance role",
-            Privs = "app_admin,folder_delete,file_delete,flowdefinition_execute"
+            Privs = "app_admin,folder_delete,file_delete,flowdefinition_execute,flowinstancedata_read,flowinstancedata_update"
         });
 
         await core.AddUserRoleAsync(userRole: new UserRole { RoleId = roleId, UserId = "Guest" });

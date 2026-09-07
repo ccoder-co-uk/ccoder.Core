@@ -119,9 +119,5 @@ END";
     }
 
     private static SqlConnectionStringBuilder CreateAcceptanceConnectionStringBuilder(string connectionString) =>
-        new(connectionString)
-        {
-            Encrypt = true,
-            TrustServerCertificate = true
-        };
+        new(connectionString);
 }
