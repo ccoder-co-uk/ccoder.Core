@@ -151,7 +151,7 @@ workflowEvents: [.. core.Set<WorkflowEvent>()
             AppId = appId,
             Name = $"Execute Only {userId}",
             Description = "Integration execute-only role",
-            Privs = "flowdefinition_execute"
+            Privs = "app_read,flowdefinition_read,flowdefinition_execute,flowinstancedata_read,flowinstancedata_update"
         });
 
         await core.AddUserRoleAsync(userRole: new cCoder.Data.Models.Security.UserRole

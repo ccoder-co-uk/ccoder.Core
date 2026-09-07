@@ -64,9 +64,7 @@
     <UseLocalWorkflow Condition="'$(UseLocalWorkflow)' == 'true' and !(Exists('$(LocalWorkflowProject)') and Exists('$(LocalWorkflowActivitiesProject)') and Exists('$(LocalWorkflowEngineProject)'))">false</UseLocalWorkflow>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference
-      Include="..\cCoder.Core.FrontEnd\cCoder.Core.FrontEnd.esproj"
-      ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\cCoder.Core.FrontEnd\cCoder.Core.FrontEnd.esproj" ReferenceOutputAssembly="false" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\LICENSE.txt" Pack="true" PackagePath="\" />
@@ -124,13 +122,13 @@
     <PackageReference Include="cCoder.Packaging" Version="2026.8.28.2200" Condition="'$(UseLocalPackaging)' != 'true'" />
     <PackageReference Include="cCoder.Security" Version="2026.8.28.1335" Condition="'$(UseLocalSecurity)' != 'true'" />
     <PackageReference Include="cCoder.Security.Data" Version="2026.8.28.1335" Condition="'$(UseLocalSecurity)' != 'true'" />
-    <PackageReference Include="cCoder.Workflow" Version="2026.9.4.1453" Condition="'$(UseLocalWorkflow)' != 'true'" />
-    <PackageReference Include="cCoder.Workflow.Activities" Version="2026.9.4.1453" Condition="'$(UseLocalWorkflow)' != 'true'" />
-    <PackageReference Include="cCoder.Workflow.Engine" Version="2026.9.4.1453" Condition="'$(UseLocalWorkflow)' != 'true'" />
+    <PackageReference Include="cCoder.Workflow" Version="2026.9.7.1429" Condition="'$(UseLocalWorkflow)' != 'true'" />
+    <PackageReference Include="cCoder.Workflow.Activities" Version="2026.9.7.1429" Condition="'$(UseLocalWorkflow)' != 'true'" />
+    <PackageReference Include="cCoder.Workflow.Engine" Version="2026.9.7.1429" Condition="'$(UseLocalWorkflow)' != 'true'" />
     <PackageReference Include="Microsoft.AspNetCore.OData" Version="9.5.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.11" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.7.3" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.7.4" />
     <PackageReference Include="itext" Version="9.7.0" />
     <PackageReference Include="itext.pdfhtml" Version="6.3.3" />
     <PackageReference Include="itext.bouncy-castle-adapter" Version="9.7.0" />
@@ -138,16 +136,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.2.3" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.2.3" />
   </ItemGroup>
-  <Target
-    Name="CopyFrontEndAssets"
-    AfterTargets="ResolveProjectReferences"
-    BeforeTargets="DefineStaticWebAssets">
+  <Target Name="CopyFrontEndAssets" AfterTargets="ResolveProjectReferences" BeforeTargets="DefineStaticWebAssets">
     <ItemGroup>
       <FrontEndAsset Include="..\cCoder.Core.FrontEnd\stage\**\*" />
     </ItemGroup>
-    <Copy
-      SourceFiles="@(FrontEndAsset)"
-      DestinationFiles="@(FrontEndAsset->'wwwroot\%(RecursiveDir)%(Filename)%(Extension)')"
-      SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(FrontEndAsset)" DestinationFiles="@(FrontEndAsset->'wwwroot\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
   </Target>
 </Project>
