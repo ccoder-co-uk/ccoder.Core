@@ -563,7 +563,7 @@ condition: () =>
     }
 
     [Fact]
-    public async Task Post_GivenFolderDeleteEvent_ShouldCreateWorkflowInstanceAndTriggerExecutionAttempt()
+    public async Task Post_GivenFolderDeleteEvent_ShouldCreateQueuedWorkflowInstance()
     {
         // Given
         int appId = await CreateAppAsync();
@@ -575,60 +575,59 @@ condition: () =>
 
         try
         {
-            await SeedFolderDeleteScenarioAsync(appId: appId, roleId: roleId, rootFolderId: rootFolderId, childFolderId: childFolderId, fileId: fileId);
+            await SeedFolderDeleteScenarioAsync(
+                appId: appId,
+                roleId: roleId,
+                rootFolderId: rootFolderId,
+                childFolderId: childFolderId,
+                fileId: fileId);
 
-            using IServiceScope seedScope = fixture.Factory.Services.CreateScope();
-
-            using var seedCore = seedScope.ServiceProvider
-                .GetRequiredService<ICoreContextFactory>()
-                .CreateCoreContext();
-
-            flowId = (await seedCore.AddAppFlowDefinitionAsync(flowDefinition: new FlowDefinition
-            {
-                AppId = appId,
-                Name = Unique(prefix: "Subscribed Flow"),
-                Description = "Acceptance flow",
-                DefinitionJson =
-                    "{\"Name\":\"Acceptance\",\"Activities\":[{\"$type\":\"cCoder.Workflow.Activities.Start, cCoder.Workflow.Activities\",\"Ref\":\"start\"}],\"Links\":[]}",
-                ConfigJson = "{}",
-                CreatedBy = "Guest",
-                CreatedOn = DateTimeOffset.UtcNow,
-                LastUpdatedBy = "Guest",
-                LastUpdated = DateTimeOffset.UtcNow,
-            })).Id;
-
-            _ = await seedCore.AddWorkflowEventAsync(workflowEvent: new WorkflowEvent
-            {
-                FlowId = flowId,
-                Type = "Acceptance",
-                EventContext = "folder_deletecontent",
-                ExecuteAs = "Guest",
-                CreatedBy = "Guest",
-                CreatedOn = DateTimeOffset.UtcNow,
-            });
-
-            // When
-            HttpStatusCode statusCode = await PostEventAsync(
-eventName: "folder_delete", data: new Folder
-{
-    Id = rootFolderId,
-    AppId = appId,
-    Name = "content",
-    Path = "content",
-});
-
-            // Then
             using IServiceScope scope = fixture.Factory.Services.CreateScope();
 
             using var core = scope.ServiceProvider
                 .GetRequiredService<ICoreContextFactory>()
                 .CreateCoreContext();
 
-            statusCode.Should()
-                .Be(expected: HttpStatusCode.Accepted);
+            flowId = (await core.AddAppFlowDefinitionAsync(
+                flowDefinition: new FlowDefinition
+                {
+                    AppId = appId,
+                    Name = Unique(prefix: "Subscribed Flow"),
+                    Description = "Acceptance flow",
+                    DefinitionJson =
+                        "{\"Name\":\"Acceptance\",\"Activities\":[{\"$type\":\"cCoder.Workflow.Activities.Start, cCoder.Workflow.Activities\",\"Ref\":\"start\"}],\"Links\":[]}",
+                    ConfigJson = "{}",
+                    CreatedBy = "Guest",
+                    CreatedOn = DateTimeOffset.UtcNow,
+                    LastUpdatedBy = "Guest",
+                    LastUpdated = DateTimeOffset.UtcNow,
+                })).Id;
 
+            _ = await core.AddWorkflowEventAsync(
+                workflowEvent: new WorkflowEvent
+                {
+                    FlowId = flowId,
+                    Type = "Acceptance",
+                    EventContext = "folder_deletecontent",
+                    ExecuteAs = "Guest",
+                    CreatedBy = "Guest",
+                    CreatedOn = DateTimeOffset.UtcNow,
+                });
+
+            // When
+            await PostEventAsync(
+                eventName: "folder_delete",
+                data: new Folder
+                {
+                    Id = rootFolderId,
+                    AppId = appId,
+                    Name = "content",
+                    Path = "content",
+                });
+
+            // Then
             await WaitForAsync(
-condition: () =>
+                condition: () =>
                 {
                     using IServiceScope waitScope = fixture.Factory.Services.CreateScope();
 
@@ -640,15 +639,9 @@ condition: () =>
                         .IgnoreQueryFilters()
                         .Any(predicate: instance =>
                             instance.FlowDefinitionId == flowId
-                            && instance.State != "Queued");
-                }, because: "folder_delete should create and execute the subscribed workflow instance");
-
-            FlowInstanceData instance = core.Set<FlowInstanceData>()
-                .IgnoreQueryFilters()
-                .Single(predicate: instance => instance.FlowDefinitionId == flowId);
-
-            instance.State.Should()
-                .NotBe(unexpected: "Queued");
+                            && instance.State == "Queued");
+                },
+                because: "folder_delete should create a queued workflow instance");
         }
         finally
         {
@@ -764,7 +757,7 @@ requestUri: "/Api/Eventing", value: new HttpEventMessage
             AppId = appId,
             Name = Unique(prefix: "FolderDeleteRole"),
             Description = "Acceptance role",
-            Privs = "app_admin,folder_delete,file_delete,flowdefinition_execute,flowinstancedata_read,flowinstancedata_update"
+            Privs = "app_admin,folder_delete,file_delete"
         });
 
         await core.AddUserRoleAsync(userRole: new UserRole { RoleId = roleId, UserId = "Guest" });
