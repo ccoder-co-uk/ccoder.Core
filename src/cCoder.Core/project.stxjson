@@ -5341,7 +5341,7 @@
         {
           "Id": "cCoder.Core.IServiceCollectionExtensions.AddCoreHostedServices(IServiceCollection,cCoder.Core.Models.CoreConfiguration)",
           "Name": "AddCoreHostedServices",
-          "LineNumber": 223,
+          "LineNumber": 226,
           "Inputs": [
             {
               "Name": "services",
@@ -5429,7 +5429,7 @@
         {
           "Id": "cCoder.Core.IServiceCollectionExtensions.AddCoreWeb(IServiceCollection,cCoder.Core.Models.CoreConfiguration)",
           "Name": "AddCoreWeb",
-          "LineNumber": 80,
+          "LineNumber": 81,
           "Inputs": [
             {
               "Name": "services",

@@ -57,6 +57,7 @@ using cCoder.Eventing.AzureServiceBus;
 using cCoder.Eventing.Http;
 using cCoder.Eventing.Models;
 using cCoder.Packaging;
+using cCoder.Security.Models.Configurations;
 using cCoder.Security.Models.Events;
 using cCoder.Security;
 using cCoder.Security.Data.EF;
@@ -199,6 +200,8 @@ public static partial class IServiceCollectionExtensions
             services.AddCoreFirstTimeSetup();
         }
 
+        services.AddCoreEventAuthInfo();
+
         return services;
     }
 
@@ -299,6 +302,8 @@ public static partial class IServiceCollectionExtensions
         services.AddServiceBusEventForwarding(
             configuration: configuration.Eventing);
 
+        services.AddCoreEventAuthInfo();
+
         return services;
     }
 
@@ -367,6 +372,21 @@ predicate: (documentName, apiDescription) =>
         });
 
         services.AddEventingForType<SecurityAccountEvent>();
+    }
+
+    private static void AddCoreEventAuthInfo(
+        this IServiceCollection services)
+    {
+        services.RemoveAll<IEventAuthInfo>();
+
+        services.AddTransient<IEventAuthInfo>(
+            implementationFactory: provider =>
+                new EventAuthInfo
+                {
+                    SSOUserId = provider
+                        .GetRequiredService<ISSOAuthInfo>()
+                        .SSOUserId,
+                });
     }
 
     private static IServiceCollection AddConfiguredWebEventing(
