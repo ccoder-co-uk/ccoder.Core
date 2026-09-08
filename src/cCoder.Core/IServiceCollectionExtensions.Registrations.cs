@@ -377,7 +377,40 @@ predicate: (documentName, apiDescription) =>
     private static void AddCoreEventAuthInfo(
         this IServiceCollection services)
     {
+        ServiceDescriptor currentEventAuthInfoRegistration =
+            services.LastOrDefault(predicate: descriptor =>
+                descriptor.ServiceType == typeof(IEventAuthInfo)
+                && !descriptor.IsKeyedService);
+
+        ServiceDescriptor securityAuthInfoRegistration =
+            services.LastOrDefault(predicate: descriptor =>
+                descriptor.ServiceType == typeof(ISSOAuthInfo)
+                && !descriptor.IsKeyedService);
+
         services.RemoveAll<IEventAuthInfo>();
+        services.RemoveAll<ISSOAuthInfo>();
+
+        services.AddTransient<ISSOAuthInfo>(
+            implementationFactory: provider =>
+            {
+                IEventAuthInfo currentEventAuthInfo =
+                    currentEventAuthInfoRegistration
+                        ?.ImplementationFactory
+                        ?.Invoke(provider) as IEventAuthInfo;
+
+                if (currentEventAuthInfo is not null)
+                {
+                    return new SSOAuthInfo
+                    {
+                        SSOUserId = currentEventAuthInfo.SSOUserId,
+                    };
+                }
+
+                return securityAuthInfoRegistration
+                    ?.ImplementationFactory
+                    ?.Invoke(provider) as ISSOAuthInfo
+                    ?? new SSOAuthInfo { SSOUserId = "Guest" };
+            });
 
         services.AddTransient<IEventAuthInfo>(
             implementationFactory: provider =>

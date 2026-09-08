@@ -28,6 +28,8 @@ public sealed partial class EventAuthInfoRegistrationTests
         services.AddCoreWeb(
             configuration: CoreConfigurationFactory.Create());
 
+        AddSecurityAuthInfo(services: services);
+
         // Then
         AssertEventAuthInfoUsesSecurityAuthInfo(services: services);
     }
@@ -42,6 +44,8 @@ public sealed partial class EventAuthInfoRegistrationTests
         services.AddCoreHostedServices(
             configuration: CoreConfigurationFactory.Create());
 
+        AddSecurityAuthInfo(services: services);
+
         // Then
         AssertEventAuthInfoUsesSecurityAuthInfo(services: services);
     }
@@ -49,6 +53,13 @@ public sealed partial class EventAuthInfoRegistrationTests
     private static IServiceCollection CreateServices()
     {
         IServiceCollection services = new ServiceCollection();
+
+        return services;
+    }
+
+    private static void AddSecurityAuthInfo(
+        IServiceCollection services)
+    {
         Mock<ISSOAuthInfo> authInfoMock = new();
 
         authInfoMock.SetupGet(
@@ -57,8 +68,6 @@ public sealed partial class EventAuthInfoRegistrationTests
 
         services.AddSingleton(
             implementationInstance: authInfoMock.Object);
-
-        return services;
     }
 
     private static void AssertEventAuthInfoUsesSecurityAuthInfo(
