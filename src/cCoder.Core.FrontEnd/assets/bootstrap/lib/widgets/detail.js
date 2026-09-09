@@ -1,4 +1,4 @@
-﻿class DetailWidget extends Widget {
+class DetailWidget extends Widget {
     // Consumes https://demos.telerik.com/kendo-ui/templates/expressions to build a read only detail view of an object
     // or portion of an object
     constructor(element, args) {
@@ -69,22 +69,18 @@
     buildTemplate() {
 
         let build = (that) => {
-            let fieldSet = "";
-
-            that.fields.map((meta) => {
-                if (that.splits && that.splits.indexOf(meta.field) > - 1) { fieldSet += "</ul><ul class='fieldList'>"; }
-                fieldSet += "<li name='" + that.config.endpoint + "/" + meta.field + "'><label title='" + meta.description + "' for='" + meta.field + "'>" + meta.title + "</label><div class='value'>" + that.fieldValueExpression(meta.field) + "</div></li>";
-            });
-
-            that.template = "";
-
-            if (that.header) {
-                that.template = "<h3>" + that.title + "</h3>";
-            }
-
-            that.template += (that.toolbar
-                    ? "<div class='k-header k-grid-toolbar'>" + that.toolbar + "</div><div name='details'><ul class='fieldList'>" + fieldSet + "</ul></div>"
-                    : "<div name='details'><ul class='fieldList'>" + fieldSet + "</ul></div>");
+            const title = kendo.template(that.title);
+            const fields = that.fields.map((meta) => ({ meta, render: kendo.template(that.fieldValueExpression(meta.field)) }));
+            that.template = function (data) {
+                let html = that.header ? '<h3>' + title(data) + '</h3>' : '';
+                if (that.toolbar) html += "<div class='k-header k-grid-toolbar'>" + that.toolbar + '</div>';
+                html += "<div name='details'><ul class='fieldList'>";
+                fields.forEach(({ meta, render }) => {
+                    if (that.splits && that.splits.indexOf(meta.field) > -1) html += "</ul><ul class='fieldList'>";
+                    html += "<li name='" + that.config.endpoint + '/' + meta.field + "'><label title='" + meta.description + "' for='" + meta.field + "'>" + meta.title + "</label><div class='value'>" + render(data) + '</div></li>';
+                });
+                return html + '</ul></div>';
+            };
         };
 
         if (!this.fields) {

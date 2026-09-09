@@ -13,7 +13,7 @@ class PieChart extends Widget {
                 labels: {
                     visible: true,
                     background: "transparent",
-                    template: "#= category #: #= kendo.toString(value, type.aggregateMoneyFormat)#",
+                    template: function (data) { return "" + (data.category) + ": " + (kendo.toString(data.value, type.aggregateMoneyFormat)) + ""; },
                 }
             },
             legend: {

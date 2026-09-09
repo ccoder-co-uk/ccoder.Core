@@ -1,4 +1,4 @@
-﻿class Picker extends Dialog {
+class Picker extends Dialog {
 	constructor(args) {
 		super(args);
 		args = args || {};
@@ -56,12 +56,9 @@
 
 	init(callback) {
 		super.init(() => {
-			let itemTemplate = "<li>" +
-				(this.multiSelect
-				? "<input type='checkbox' name='selected' value='" + this.valueTemplate + "'></input>"
-				: "<input type='radio' name='selected' value='" + this.valueTemplate + "'></input>"
-				)
-				+ this.displayTemplate + "</li>";
+            const valueTemplate = kendo.template(this.valueTemplate);
+            const displayTemplate = kendo.template(this.displayTemplate);
+            const itemTemplate = (data) => "<li><input type='" + (this.multiSelect ? "checkbox" : "radio") + "' name='selected' value='" + valueTemplate(data) + "'></input>" + displayTemplate(data) + "</li>";
 
 			let that = this;
 			
