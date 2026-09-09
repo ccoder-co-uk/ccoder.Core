@@ -1512,8 +1512,8 @@
     },
     {
       "Name": "Web.Models.Exceptions.ApiCacheDependencyException",
-      "StandardElementType": "Dependency",
-      "LineNumber": 13,
+      "StandardElementType": "Model",
+      "LineNumber": 7,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -1532,8 +1532,8 @@
     },
     {
       "Name": "Web.Models.Exceptions.ApiCacheServiceException",
-      "StandardElementType": "Dependency",
-      "LineNumber": 19,
+      "StandardElementType": "Model",
+      "LineNumber": 7,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -1552,7 +1552,7 @@
     },
     {
       "Name": "Web.Models.Exceptions.ApiCacheValidationException",
-      "StandardElementType": "Dependency",
+      "StandardElementType": "Model",
       "LineNumber": 7,
       "IsPublic": false,
       "Kind": "Class",
@@ -1572,8 +1572,8 @@
     },
     {
       "Name": "Web.Models.Exceptions.ApiScriptDependencyException",
-      "StandardElementType": "Dependency",
-      "LineNumber": 11,
+      "StandardElementType": "Model",
+      "LineNumber": 7,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -1592,8 +1592,8 @@
     },
     {
       "Name": "Web.Models.Exceptions.ApiScriptOrchestrationDependencyException",
-      "StandardElementType": "Dependency",
-      "LineNumber": 23,
+      "StandardElementType": "Model",
+      "LineNumber": 7,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -1612,8 +1612,8 @@
     },
     {
       "Name": "Web.Models.Exceptions.ApiScriptOrchestrationServiceException",
-      "StandardElementType": "Dependency",
-      "LineNumber": 27,
+      "StandardElementType": "Model",
+      "LineNumber": 7,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -1632,8 +1632,8 @@
     },
     {
       "Name": "Web.Models.Exceptions.ApiScriptOrchestrationValidationException",
-      "StandardElementType": "Dependency",
-      "LineNumber": 19,
+      "StandardElementType": "Model",
+      "LineNumber": 7,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -1652,8 +1652,8 @@
     },
     {
       "Name": "Web.Models.Exceptions.ApiScriptServiceException",
-      "StandardElementType": "Dependency",
-      "LineNumber": 15,
+      "StandardElementType": "Model",
+      "LineNumber": 7,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -1672,7 +1672,7 @@
     },
     {
       "Name": "Web.Models.Exceptions.ApiScriptValidationException",
-      "StandardElementType": "Dependency",
+      "StandardElementType": "Model",
       "LineNumber": 7,
       "IsPublic": false,
       "Kind": "Class",
@@ -1692,8 +1692,8 @@
     },
     {
       "Name": "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
-      "StandardElementType": "Dependency",
-      "LineNumber": 19,
+      "StandardElementType": "Model",
+      "LineNumber": 7,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -1712,8 +1712,8 @@
     },
     {
       "Name": "Web.Models.Exceptions.HomeSessionProcessingServiceException",
-      "StandardElementType": "Dependency",
-      "LineNumber": 13,
+      "StandardElementType": "Model",
+      "LineNumber": 7,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -1732,7 +1732,7 @@
     },
     {
       "Name": "Web.Models.Exceptions.HomeSessionProcessingValidationException",
-      "StandardElementType": "Dependency",
+      "StandardElementType": "Model",
       "LineNumber": 7,
       "IsPublic": false,
       "Kind": "Class",
@@ -3031,24 +3031,76 @@
   ],
   "Links": [
     {
+      "FromType": "Web.Brokers.Api.ApiContextBroker",
+      "ToType": "System.Collections.Generic.IEnumerable\u003CcCoder.Data.Models.ApiInfo\u003E"
+    },
+    {
       "FromType": "Web.Brokers.Api.ApiScriptExecutionBroker",
       "ToType": "Web.Dependencies.Api.ApiScriptExecutionDependency"
+    },
+    {
+      "FromType": "Web.Brokers.Api.CommonObjectCacheBroker",
+      "ToType": "cCoder.ContentManagement.Exposures.Caching.ICommonObjectCache"
+    },
+    {
+      "FromType": "Web.Brokers.Api.MetadataCacheBroker",
+      "ToType": "cCoder.ContentManagement.Exposures.Caching.IMetadataCache"
     },
     {
       "FromType": "Web.Controllers.Api.ApiRootController",
       "ToType": "Web.Exposures.ApiContextManager"
     },
     {
+      "FromType": "Web.Controllers.Api.ApiRootController",
+      "ToType": "cCoder.Core.Brokers.Loggings.ILoggingBroker"
+    },
+    {
       "FromType": "Web.Controllers.Api.CacheController",
       "ToType": "Web.Exposures.ApiCacheManager"
+    },
+    {
+      "FromType": "Web.Controllers.Api.CacheController",
+      "ToType": "cCoder.Core.Brokers.Loggings.ILoggingBroker"
+    },
+    {
+      "FromType": "Web.Controllers.Api.MetadataController",
+      "ToType": "cCoder.ContentManagement.Exposures.Caching.IMetadataCache"
+    },
+    {
+      "FromType": "Web.Controllers.Api.MetadataController",
+      "ToType": "cCoder.Core.Brokers.Loggings.ILoggingBroker"
     },
     {
       "FromType": "Web.Controllers.Api.ScriptController",
       "ToType": "Web.Exposures.ApiScriptManager"
     },
     {
+      "FromType": "Web.Controllers.Api.ScriptController",
+      "ToType": "cCoder.Core.Brokers.Loggings.ILoggingBroker"
+    },
+    {
       "FromType": "Web.Controllers.HomeController",
       "ToType": "Web.Exposures.HomeSessionManager"
+    },
+    {
+      "FromType": "Web.Controllers.HomeController",
+      "ToType": "cCoder.ContentManagement.Exposures.IPageRenderer"
+    },
+    {
+      "FromType": "Web.Controllers.HomeController",
+      "ToType": "cCoder.Core.Brokers.Loggings.ILoggingBroker"
+    },
+    {
+      "FromType": "Web.Controllers.HomeController",
+      "ToType": "cCoder.Core.Exposures.IFirstTimeSetupManager"
+    },
+    {
+      "FromType": "Web.Controllers.HomeController",
+      "ToType": "cCoder.Core.Exposures.Setup.ISetupRequestHostManager"
+    },
+    {
+      "FromType": "Web.Dependencies.Api.ApiScriptExecutionDependency",
+      "ToType": "cCoder.Core.Models.CoreConfiguration"
     },
     {
       "FromType": "Web.Exposures.ApiCacheManager",
@@ -3067,6 +3119,54 @@
       "ToType": "Web.Services.Processings.HomeSessionProcessingService"
     },
     {
+      "FromType": "Web.Models.Exceptions.ApiCacheDependencyException",
+      "ToType": "System.Exception"
+    },
+    {
+      "FromType": "Web.Models.Exceptions.ApiCacheServiceException",
+      "ToType": "System.Exception"
+    },
+    {
+      "FromType": "Web.Models.Exceptions.ApiCacheValidationException",
+      "ToType": "System.Exception"
+    },
+    {
+      "FromType": "Web.Models.Exceptions.ApiScriptDependencyException",
+      "ToType": "System.Exception"
+    },
+    {
+      "FromType": "Web.Models.Exceptions.ApiScriptOrchestrationDependencyException",
+      "ToType": "System.Exception"
+    },
+    {
+      "FromType": "Web.Models.Exceptions.ApiScriptOrchestrationServiceException",
+      "ToType": "System.Exception"
+    },
+    {
+      "FromType": "Web.Models.Exceptions.ApiScriptOrchestrationValidationException",
+      "ToType": "System.Exception"
+    },
+    {
+      "FromType": "Web.Models.Exceptions.ApiScriptServiceException",
+      "ToType": "System.Exception"
+    },
+    {
+      "FromType": "Web.Models.Exceptions.ApiScriptValidationException",
+      "ToType": "System.Exception"
+    },
+    {
+      "FromType": "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
+      "ToType": "System.Exception"
+    },
+    {
+      "FromType": "Web.Models.Exceptions.HomeSessionProcessingServiceException",
+      "ToType": "System.Exception"
+    },
+    {
+      "FromType": "Web.Models.Exceptions.HomeSessionProcessingValidationException",
+      "ToType": "System.Exception"
+    },
+    {
       "FromType": "Web.Services.Aggregations.ApiCacheAggregationService",
       "ToType": "Web.Brokers.Api.CommonObjectCacheBroker"
     },
@@ -3077,6 +3177,10 @@
     {
       "FromType": "Web.Services.Foundations.Api.ApiContextService",
       "ToType": "Web.Brokers.Api.ApiContextBroker"
+    },
+    {
+      "FromType": "Web.Services.Foundations.Api.ApiScriptAuthorizationService",
+      "ToType": "cCoder.AppSecurity.Brokers.IAuthorizationBroker"
     },
     {
       "FromType": "Web.Services.Foundations.Api.ApiScriptExecutionService",

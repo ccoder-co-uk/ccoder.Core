@@ -1,4 +1,4 @@
-﻿// ---------------------------------------------------------------
+// ---------------------------------------------------------------
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
@@ -44,6 +44,7 @@ using cCoder.Core.Services.Orchestrations;
 using cCoder.Core.Services.Processings.AllowedOrigins;
 using cCoder.Core.Services.Processings.Packages;
 using cCoder.Core.Services.Processings.Middleware;
+using cCoder.Core.Services.Processings.Notifications;
 using cCoder.Core.Services.Processings.Setup;
 using cCoder.Core.Services.Foundations.Setup;
 using cCoder.Core.Services.Foundations.TemplatedEmails;
@@ -602,6 +603,10 @@ predicate: (documentName, apiDescription) =>
         services.AddTransient<
             IAllowedOriginStoreProcessingService,
             AllowedOriginStoreProcessingService>();
+
+        services.AddTransient<
+            INotificationHubProcessingService,
+            NotificationHubProcessingService>();
 
         services.AddTransient<
             IAppSecurityPackageProcessingService,

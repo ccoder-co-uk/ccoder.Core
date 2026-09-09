@@ -4,8 +4,8 @@
 
 using System.Text.RegularExpressions;
 using cCoder.Core.Exposures;
-using cCoder.Core.Dependencies.Hubs;
 using cCoder.DocumentManagement.Exposures.Middleware;
+using cCoder.Core.Exposures.Hubs;
 using cCoder.Workflow;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Net.Http.Headers;

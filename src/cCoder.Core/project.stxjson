@@ -1889,320 +1889,6 @@
       ]
     },
     {
-      "Name": "cCoder.Core.Dependencies.Hubs.NotificationHub",
-      "StandardElementType": "Dependency",
-      "LineNumber": 11,
-      "IsPublic": true,
-      "Kind": "Class",
-      "BaseType": {
-        "Id": "cCoder.Core:Hub",
-        "FullName": "Hub",
-        "Name": "Hub",
-        "Namespace": "\u003Cglobal namespace\u003E",
-        "AssemblyName": "cCoder.Core",
-        "Kind": "Class",
-        "IsInCurrentProject": true,
-        "StandardElementType": "Dependency"
-      },
-      "Interfaces": [],
-      "Properties": [],
-      "Methods": [
-        {
-          "Id": "cCoder.Core.Dependencies.Hubs.NotificationHub.ConsoleSend(System.String,System.String,System.String)",
-          "Name": "ConsoleSend",
-          "LineNumber": 117,
-          "Inputs": [
-            {
-              "Name": "level",
-              "Type": "System.String"
-            },
-            {
-              "Name": "message",
-              "Type": "System.String"
-            },
-            {
-              "Name": "thread",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.Task",
-          "Implements": [],
-          "Calls": [
-            {
-              "TypeName": "System.Collections.Generic.ICollection\u003CT\u003E",
-              "MethodName": "Add",
-              "MethodId": "System.Collections.Generic.ICollection\u003CT\u003E.Add(T)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "System.Collections.Generic.IDictionary\u003CTKey, TValue\u003E",
-              "MethodName": "Add",
-              "MethodId": "System.Collections.Generic.IDictionary\u003CTKey, TValue\u003E.Add(TKey,TValue)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "System.Collections.Generic.IDictionary\u003CTKey, TValue\u003E",
-              "MethodName": "TryGetValue",
-              "MethodId": "System.Collections.Generic.IDictionary\u003CTKey, TValue\u003E.TryGetValue(TKey,TValue)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            }
-          ],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Dependencies.Hubs.NotificationHub.Join(System.String)",
-          "Name": "Join",
-          "LineNumber": 48,
-          "Inputs": [
-            {
-              "Name": "thread",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.Task",
-          "Implements": [],
-          "Calls": [
-            {
-              "TypeName": "System.Collections.Generic.IDictionary\u003CTKey, TValue\u003E",
-              "MethodName": "Add",
-              "MethodId": "System.Collections.Generic.IDictionary\u003CTKey, TValue\u003E.Add(TKey,TValue)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "System.Collections.Generic.IDictionary\u003CTKey, TValue\u003E",
-              "MethodName": "TryGetValue",
-              "MethodId": "System.Collections.Generic.IDictionary\u003CTKey, TValue\u003E.TryGetValue(TKey,TValue)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
-              "MethodName": "IsDebugEnabled",
-              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.IsDebugEnabled()",
-              "StandardElementType": "Broker",
-              "IsDependencyBoundary": false
-            },
-            {
-              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
-              "MethodName": "LogDebug",
-              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogDebug(System.String,System.Object[])",
-              "StandardElementType": "Broker",
-              "IsDependencyBoundary": false
-            }
-          ],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Dependencies.Hubs.NotificationHub.Leave(System.String)",
-          "Name": "Leave",
-          "LineNumber": 87,
-          "Inputs": [
-            {
-              "Name": "thread",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.Task",
-          "Implements": [],
-          "Calls": [
-            {
-              "TypeName": "System.Collections.Generic.IDictionary\u003CTKey, TValue\u003E",
-              "MethodName": "Remove",
-              "MethodId": "System.Collections.Generic.IDictionary\u003CTKey, TValue\u003E.Remove(TKey)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
-              "MethodName": "IsDebugEnabled",
-              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.IsDebugEnabled()",
-              "StandardElementType": "Broker",
-              "IsDependencyBoundary": false
-            },
-            {
-              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
-              "MethodName": "LogDebug",
-              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogDebug(System.String,System.Object[])",
-              "StandardElementType": "Broker",
-              "IsDependencyBoundary": false
-            }
-          ],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Dependencies.Hubs.NotificationHub.OnConnectedAsync()",
-          "Name": "OnConnectedAsync",
-          "LineNumber": 24,
-          "Inputs": [],
-          "ReturnType": "System.Threading.Tasks.Task",
-          "Implements": [],
-          "Calls": [
-            {
-              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
-              "MethodName": "IsDebugEnabled",
-              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.IsDebugEnabled()",
-              "StandardElementType": "Broker",
-              "IsDependencyBoundary": false
-            },
-            {
-              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
-              "MethodName": "LogDebug",
-              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogDebug(System.String,System.Object[])",
-              "StandardElementType": "Broker",
-              "IsDependencyBoundary": false
-            }
-          ],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Dependencies.Hubs.NotificationHub.OnDisconnectedAsync(System.Exception)",
-          "Name": "OnDisconnectedAsync",
-          "LineNumber": 36,
-          "Inputs": [
-            {
-              "Name": "exception",
-              "Type": "System.Exception"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.Task",
-          "Implements": [],
-          "Calls": [
-            {
-              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
-              "MethodName": "IsDebugEnabled",
-              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.IsDebugEnabled()",
-              "StandardElementType": "Broker",
-              "IsDependencyBoundary": false
-            },
-            {
-              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
-              "MethodName": "LogDebug",
-              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogDebug(System.String,System.Object[])",
-              "StandardElementType": "Broker",
-              "IsDependencyBoundary": false
-            }
-          ],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Dependencies.Hubs.NotificationHub.Send(System.String,System.String,System.String)",
-          "Name": "Send",
-          "LineNumber": 113,
-          "Inputs": [
-            {
-              "Name": "level",
-              "Type": "System.String"
-            },
-            {
-              "Name": "message",
-              "Type": "System.String"
-            },
-            {
-              "Name": "thread",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.Void",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Dependencies.Hubs.NotificationHub.SendTest(System.String,System.String)",
-          "Name": "SendTest",
-          "LineNumber": 131,
-          "Inputs": [
-            {
-              "Name": "message",
-              "Type": "System.String"
-            },
-            {
-              "Name": "thread",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.Task",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        }
-      ]
-    },
-    {
       "Name": "cCoder.Core.Dependencies.Metadata.MetadataContainerDependency",
       "StandardElementType": "Dependency",
       "LineNumber": 11,
@@ -2215,7 +1901,7 @@
     },
     {
       "Name": "cCoder.Core.Dependencies.Middleware.CoreExceptionMiddleware",
-      "StandardElementType": "Dependency",
+      "StandardElementType": "HttpExposure",
       "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
@@ -2280,7 +1966,7 @@
     },
     {
       "Name": "cCoder.Core.Dependencies.Middleware.CoreFormatterMiddleware",
-      "StandardElementType": "Dependency",
+      "StandardElementType": "HttpExposure",
       "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Class",
@@ -3756,6 +3442,329 @@
               "TypeName": "cCoder.Core.Services.Processings.Formatters.ExcelFileProcessingService",
               "MethodName": "BuildExcelFile",
               "MethodId": "cCoder.Core.Services.Processings.Formatters.ExcelFileProcessingService.BuildExcelFile(System.Object)",
+              "StandardElementType": "ProcessingService",
+              "IsDependencyBoundary": false
+            }
+          ],
+          "PossibleExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingValidationException"
+          ],
+          "IncomingExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
+          ],
+          "ThrowsExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
+          ],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Exposures.Hubs.NotificationHub",
+      "StandardElementType": "Exposure",
+      "LineNumber": 10,
+      "IsPublic": true,
+      "Kind": "Class",
+      "BaseType": {
+        "Id": "cCoder.Core:Hub",
+        "FullName": "Hub",
+        "Name": "Hub",
+        "Namespace": "\u003Cglobal namespace\u003E",
+        "AssemblyName": "cCoder.Core",
+        "Kind": "Class",
+        "IsInCurrentProject": true,
+        "StandardElementType": "Dependency"
+      },
+      "Interfaces": [],
+      "Properties": [],
+      "Methods": [
+        {
+          "Id": "cCoder.Core.Exposures.Hubs.NotificationHub.ConsoleSend(System.String,System.String,System.String)",
+          "Name": "ConsoleSend",
+          "LineNumber": 44,
+          "Inputs": [
+            {
+              "Name": "level",
+              "Type": "System.String"
+            },
+            {
+              "Name": "message",
+              "Type": "System.String"
+            },
+            {
+              "Name": "thread",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task",
+          "Implements": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Core.Services.Processings.Notifications.INotificationHubProcessingService",
+              "MethodName": "ConsoleSendAsync",
+              "MethodId": "cCoder.Core.Services.Processings.Notifications.INotificationHubProcessingService.ConsoleSendAsync(System.String,System.String,System.String,IHubCallerClients)",
+              "StandardElementType": "ProcessingService",
+              "IsDependencyBoundary": false
+            }
+          ],
+          "PossibleExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingValidationException"
+          ],
+          "IncomingExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
+          ],
+          "ThrowsExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
+          ],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Exposures.Hubs.NotificationHub.Join(System.String)",
+          "Name": "Join",
+          "LineNumber": 23,
+          "Inputs": [
+            {
+              "Name": "thread",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task",
+          "Implements": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Core.Services.Processings.Notifications.INotificationHubProcessingService",
+              "MethodName": "JoinAsync",
+              "MethodId": "cCoder.Core.Services.Processings.Notifications.INotificationHubProcessingService.JoinAsync(System.String,System.String,IGroupManager,IHubCallerClients)",
+              "StandardElementType": "ProcessingService",
+              "IsDependencyBoundary": false
+            }
+          ],
+          "PossibleExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingValidationException"
+          ],
+          "IncomingExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
+          ],
+          "ThrowsExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
+          ],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Exposures.Hubs.NotificationHub.Leave(System.String)",
+          "Name": "Leave",
+          "LineNumber": 30,
+          "Inputs": [
+            {
+              "Name": "thread",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task",
+          "Implements": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Core.Services.Processings.Notifications.INotificationHubProcessingService",
+              "MethodName": "LeaveAsync",
+              "MethodId": "cCoder.Core.Services.Processings.Notifications.INotificationHubProcessingService.LeaveAsync(System.String,System.String,IGroupManager,IHubCallerClients)",
+              "StandardElementType": "ProcessingService",
+              "IsDependencyBoundary": false
+            }
+          ],
+          "PossibleExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingValidationException"
+          ],
+          "IncomingExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
+          ],
+          "ThrowsExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
+          ],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Exposures.Hubs.NotificationHub.OnConnectedAsync()",
+          "Name": "OnConnectedAsync",
+          "LineNumber": 14,
+          "Inputs": [],
+          "ReturnType": "System.Threading.Tasks.Task",
+          "Implements": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Core.Services.Processings.Notifications.INotificationHubProcessingService",
+              "MethodName": "OnConnectedAsync",
+              "MethodId": "cCoder.Core.Services.Processings.Notifications.INotificationHubProcessingService.OnConnectedAsync(System.Func\u003CSystem.Threading.Tasks.Task\u003E)",
+              "StandardElementType": "ProcessingService",
+              "IsDependencyBoundary": false
+            }
+          ],
+          "PossibleExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingValidationException"
+          ],
+          "IncomingExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
+          ],
+          "ThrowsExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
+          ],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Exposures.Hubs.NotificationHub.OnDisconnectedAsync(System.Exception)",
+          "Name": "OnDisconnectedAsync",
+          "LineNumber": 18,
+          "Inputs": [
+            {
+              "Name": "exception",
+              "Type": "System.Exception"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task",
+          "Implements": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Core.Services.Processings.Notifications.INotificationHubProcessingService",
+              "MethodName": "OnDisconnectedAsync",
+              "MethodId": "cCoder.Core.Services.Processings.Notifications.INotificationHubProcessingService.OnDisconnectedAsync(System.Exception,System.Func\u003CSystem.Exception, System.Threading.Tasks.Task\u003E)",
+              "StandardElementType": "ProcessingService",
+              "IsDependencyBoundary": false
+            }
+          ],
+          "PossibleExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingValidationException"
+          ],
+          "IncomingExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
+          ],
+          "ThrowsExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
+          ],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Exposures.Hubs.NotificationHub.Send(System.String,System.String,System.String)",
+          "Name": "Send",
+          "LineNumber": 37,
+          "Inputs": [
+            {
+              "Name": "level",
+              "Type": "System.String"
+            },
+            {
+              "Name": "message",
+              "Type": "System.String"
+            },
+            {
+              "Name": "thread",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.Void",
+          "Implements": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Core.Services.Processings.Notifications.INotificationHubProcessingService",
+              "MethodName": "Send",
+              "MethodId": "cCoder.Core.Services.Processings.Notifications.INotificationHubProcessingService.Send(System.String,System.String,System.String,IHubCallerClients)",
+              "StandardElementType": "ProcessingService",
+              "IsDependencyBoundary": false
+            }
+          ],
+          "PossibleExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingValidationException"
+          ],
+          "IncomingExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
+          ],
+          "ThrowsExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
+          ],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Exposures.Hubs.NotificationHub.SendTest(System.String,System.String)",
+          "Name": "SendTest",
+          "LineNumber": 51,
+          "Inputs": [
+            {
+              "Name": "message",
+              "Type": "System.String"
+            },
+            {
+              "Name": "thread",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task",
+          "Implements": [],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Core.Services.Processings.Notifications.INotificationHubProcessingService",
+              "MethodName": "SendTestAsync",
+              "MethodId": "cCoder.Core.Services.Processings.Notifications.INotificationHubProcessingService.SendTestAsync(System.String,System.String,IHubCallerClients)",
               "StandardElementType": "ProcessingService",
               "IsDependencyBoundary": false
             }
@@ -5341,7 +5350,7 @@
         {
           "Id": "cCoder.Core.IServiceCollectionExtensions.AddCoreHostedServices(IServiceCollection,cCoder.Core.Models.CoreConfiguration)",
           "Name": "AddCoreHostedServices",
-          "LineNumber": 226,
+          "LineNumber": 227,
           "Inputs": [
             {
               "Name": "services",
@@ -5429,7 +5438,7 @@
         {
           "Id": "cCoder.Core.IServiceCollectionExtensions.AddCoreWeb(IServiceCollection,cCoder.Core.Models.CoreConfiguration)",
           "Name": "AddCoreWeb",
-          "LineNumber": 81,
+          "LineNumber": 82,
           "Inputs": [
             {
               "Name": "services",
@@ -5781,8 +5790,8 @@
     },
     {
       "Name": "cCoder.Core.Models.Exceptions.CoreDependencyException",
-      "StandardElementType": "Dependency",
-      "LineNumber": 10,
+      "StandardElementType": "Model",
+      "LineNumber": 7,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -5801,8 +5810,8 @@
     },
     {
       "Name": "cCoder.Core.Models.Exceptions.CoreOrchestrationDependencyException",
-      "StandardElementType": "Dependency",
-      "LineNumber": 28,
+      "StandardElementType": "Model",
+      "LineNumber": 7,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -5821,8 +5830,8 @@
     },
     {
       "Name": "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException",
-      "StandardElementType": "Dependency",
-      "LineNumber": 31,
+      "StandardElementType": "Model",
+      "LineNumber": 7,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -5841,8 +5850,8 @@
     },
     {
       "Name": "cCoder.Core.Models.Exceptions.CoreOrchestrationValidationException",
-      "StandardElementType": "Dependency",
-      "LineNumber": 25,
+      "StandardElementType": "Model",
+      "LineNumber": 7,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -5861,8 +5870,8 @@
     },
     {
       "Name": "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
-      "StandardElementType": "Dependency",
-      "LineNumber": 19,
+      "StandardElementType": "Model",
+      "LineNumber": 7,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -5881,8 +5890,8 @@
     },
     {
       "Name": "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
-      "StandardElementType": "Dependency",
-      "LineNumber": 22,
+      "StandardElementType": "Model",
+      "LineNumber": 7,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -5901,8 +5910,8 @@
     },
     {
       "Name": "cCoder.Core.Models.Exceptions.CoreProcessingValidationException",
-      "StandardElementType": "Dependency",
-      "LineNumber": 16,
+      "StandardElementType": "Model",
+      "LineNumber": 7,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -5921,8 +5930,8 @@
     },
     {
       "Name": "cCoder.Core.Models.Exceptions.CoreServiceException",
-      "StandardElementType": "Dependency",
-      "LineNumber": 13,
+      "StandardElementType": "Model",
+      "LineNumber": 7,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -5941,7 +5950,7 @@
     },
     {
       "Name": "cCoder.Core.Models.Exceptions.CoreValidationException",
-      "StandardElementType": "Dependency",
+      "StandardElementType": "Model",
       "LineNumber": 7,
       "IsPublic": false,
       "Kind": "Class",
@@ -6258,6 +6267,17 @@
           "Type": "System.Object"
         }
       ],
+      "Methods": []
+    },
+    {
+      "Name": "cCoder.Core.Models.Notifications.NotificationHistoryItem",
+      "StandardElementType": "Model",
+      "LineNumber": 7,
+      "IsPublic": false,
+      "Kind": "Class",
+      "BaseType": null,
+      "Interfaces": [],
+      "Properties": [],
       "Methods": []
     },
     {
@@ -9963,6 +9983,451 @@
               "IsDependencyBoundary": true
             }
           ],
+          "PossibleExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingValidationException"
+          ],
+          "IncomingExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
+          ],
+          "ThrowsExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
+          ],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Services.Processings.Notifications.NotificationHubProcessingService",
+      "StandardElementType": "ProcessingService",
+      "LineNumber": 11,
+      "IsPublic": false,
+      "Kind": "Class",
+      "BaseType": null,
+      "Interfaces": [
+        {
+          "Id": "cCoder.Core:cCoder.Core.Services.Processings.Notifications.INotificationHubProcessingService",
+          "FullName": "cCoder.Core.Services.Processings.Notifications.INotificationHubProcessingService",
+          "Name": "INotificationHubProcessingService",
+          "Namespace": "cCoder.Core.Services.Processings.Notifications",
+          "AssemblyName": "cCoder.Core",
+          "Kind": "Interface",
+          "IsInCurrentProject": true,
+          "StandardElementType": "ProcessingService"
+        }
+      ],
+      "Properties": [],
+      "Methods": [
+        {
+          "Id": "cCoder.Core.Services.Processings.Notifications.NotificationHubProcessingService.ConsoleSendAsync(System.String,System.String,System.String,IHubCallerClients)",
+          "Name": "ConsoleSendAsync",
+          "LineNumber": 180,
+          "Inputs": [
+            {
+              "Name": "level",
+              "Type": "System.String"
+            },
+            {
+              "Name": "message",
+              "Type": "System.String"
+            },
+            {
+              "Name": "thread",
+              "Type": "System.String"
+            },
+            {
+              "Name": "clients",
+              "Type": "IHubCallerClients"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task",
+          "Implements": [
+            "cCoder.Core.Services.Processings.Notifications.INotificationHubProcessingService.ConsoleSendAsync(System.String,System.String,System.String,IHubCallerClients)"
+          ],
+          "Calls": [
+            {
+              "TypeName": "System.Collections.Generic.ICollection\u003CT\u003E",
+              "MethodName": "Add",
+              "MethodId": "System.Collections.Generic.ICollection\u003CT\u003E.Add(T)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "System.Collections.Generic.IDictionary\u003CTKey, TValue\u003E",
+              "MethodName": "Add",
+              "MethodId": "System.Collections.Generic.IDictionary\u003CTKey, TValue\u003E.Add(TKey,TValue)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "System.Collections.Generic.IDictionary\u003CTKey, TValue\u003E",
+              "MethodName": "TryGetValue",
+              "MethodId": "System.Collections.Generic.IDictionary\u003CTKey, TValue\u003E.TryGetValue(TKey,TValue)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
+          "PossibleExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingValidationException"
+          ],
+          "IncomingExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
+          ],
+          "ThrowsExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
+          ],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Services.Processings.Notifications.NotificationHubProcessingService.JoinAsync(System.String,System.String,IGroupManager,IHubCallerClients)",
+          "Name": "JoinAsync",
+          "LineNumber": 55,
+          "Inputs": [
+            {
+              "Name": "thread",
+              "Type": "System.String"
+            },
+            {
+              "Name": "connectionId",
+              "Type": "System.String"
+            },
+            {
+              "Name": "groups",
+              "Type": "IGroupManager"
+            },
+            {
+              "Name": "clients",
+              "Type": "IHubCallerClients"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task",
+          "Implements": [
+            "cCoder.Core.Services.Processings.Notifications.INotificationHubProcessingService.JoinAsync(System.String,System.String,IGroupManager,IHubCallerClients)"
+          ],
+          "Calls": [
+            {
+              "TypeName": "System.Collections.Generic.IDictionary\u003CTKey, TValue\u003E",
+              "MethodName": "Add",
+              "MethodId": "System.Collections.Generic.IDictionary\u003CTKey, TValue\u003E.Add(TKey,TValue)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "System.Collections.Generic.IDictionary\u003CTKey, TValue\u003E",
+              "MethodName": "TryGetValue",
+              "MethodId": "System.Collections.Generic.IDictionary\u003CTKey, TValue\u003E.TryGetValue(TKey,TValue)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "IsDebugEnabled",
+              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.IsDebugEnabled()",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
+            },
+            {
+              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "LogDebug",
+              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogDebug(System.String,System.Object[])",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
+            }
+          ],
+          "PossibleExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingValidationException"
+          ],
+          "IncomingExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
+          ],
+          "ThrowsExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
+          ],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Services.Processings.Notifications.NotificationHubProcessingService.LeaveAsync(System.String,System.String,IGroupManager,IHubCallerClients)",
+          "Name": "LeaveAsync",
+          "LineNumber": 119,
+          "Inputs": [
+            {
+              "Name": "thread",
+              "Type": "System.String"
+            },
+            {
+              "Name": "connectionId",
+              "Type": "System.String"
+            },
+            {
+              "Name": "groups",
+              "Type": "IGroupManager"
+            },
+            {
+              "Name": "clients",
+              "Type": "IHubCallerClients"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task",
+          "Implements": [
+            "cCoder.Core.Services.Processings.Notifications.INotificationHubProcessingService.LeaveAsync(System.String,System.String,IGroupManager,IHubCallerClients)"
+          ],
+          "Calls": [
+            {
+              "TypeName": "System.Collections.Generic.IDictionary\u003CTKey, TValue\u003E",
+              "MethodName": "Remove",
+              "MethodId": "System.Collections.Generic.IDictionary\u003CTKey, TValue\u003E.Remove(TKey)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "IsDebugEnabled",
+              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.IsDebugEnabled()",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
+            },
+            {
+              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "LogDebug",
+              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogDebug(System.String,System.Object[])",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
+            }
+          ],
+          "PossibleExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingValidationException"
+          ],
+          "IncomingExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
+          ],
+          "ThrowsExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
+          ],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Services.Processings.Notifications.NotificationHubProcessingService.OnConnectedAsync(System.Func\u003CSystem.Threading.Tasks.Task\u003E)",
+          "Name": "OnConnectedAsync",
+          "LineNumber": 21,
+          "Inputs": [
+            {
+              "Name": "onConnectedAsync",
+              "Type": "System.Func\u003CSystem.Threading.Tasks.Task\u003E"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task",
+          "Implements": [
+            "cCoder.Core.Services.Processings.Notifications.INotificationHubProcessingService.OnConnectedAsync(System.Func\u003CSystem.Threading.Tasks.Task\u003E)"
+          ],
+          "Calls": [
+            {
+              "TypeName": "System.Func\u003CTResult\u003E",
+              "MethodName": "Invoke",
+              "MethodId": "System.Func\u003CTResult\u003E.Invoke()",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "IsDebugEnabled",
+              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.IsDebugEnabled()",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
+            },
+            {
+              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "LogDebug",
+              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogDebug(System.String,System.Object[])",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
+            }
+          ],
+          "PossibleExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingValidationException"
+          ],
+          "IncomingExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
+          ],
+          "ThrowsExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
+          ],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Services.Processings.Notifications.NotificationHubProcessingService.OnDisconnectedAsync(System.Exception,System.Func\u003CSystem.Exception, System.Threading.Tasks.Task\u003E)",
+          "Name": "OnDisconnectedAsync",
+          "LineNumber": 36,
+          "Inputs": [
+            {
+              "Name": "exception",
+              "Type": "System.Exception"
+            },
+            {
+              "Name": "onDisconnectedAsync",
+              "Type": "System.Func\u003CSystem.Exception, System.Threading.Tasks.Task\u003E"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task",
+          "Implements": [
+            "cCoder.Core.Services.Processings.Notifications.INotificationHubProcessingService.OnDisconnectedAsync(System.Exception,System.Func\u003CSystem.Exception, System.Threading.Tasks.Task\u003E)"
+          ],
+          "Calls": [
+            {
+              "TypeName": "System.Func\u003CT, TResult\u003E",
+              "MethodName": "Invoke",
+              "MethodId": "System.Func\u003CT, TResult\u003E.Invoke(T)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "IsDebugEnabled",
+              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.IsDebugEnabled()",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
+            },
+            {
+              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "LogDebug",
+              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogDebug(System.String,System.Object[])",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
+            }
+          ],
+          "PossibleExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingValidationException"
+          ],
+          "IncomingExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
+          ],
+          "ThrowsExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
+          ],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Services.Processings.Notifications.NotificationHubProcessingService.Send(System.String,System.String,System.String,IHubCallerClients)",
+          "Name": "Send",
+          "LineNumber": 163,
+          "Inputs": [
+            {
+              "Name": "level",
+              "Type": "System.String"
+            },
+            {
+              "Name": "message",
+              "Type": "System.String"
+            },
+            {
+              "Name": "thread",
+              "Type": "System.String"
+            },
+            {
+              "Name": "clients",
+              "Type": "IHubCallerClients"
+            }
+          ],
+          "ReturnType": "System.Void",
+          "Implements": [
+            "cCoder.Core.Services.Processings.Notifications.INotificationHubProcessingService.Send(System.String,System.String,System.String,IHubCallerClients)"
+          ],
+          "Calls": [],
+          "PossibleExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingValidationException"
+          ],
+          "IncomingExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
+          ],
+          "ThrowsExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
+          ],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Services.Processings.Notifications.NotificationHubProcessingService.SendTestAsync(System.String,System.String,IHubCallerClients)",
+          "Name": "SendTestAsync",
+          "LineNumber": 216,
+          "Inputs": [
+            {
+              "Name": "message",
+              "Type": "System.String"
+            },
+            {
+              "Name": "thread",
+              "Type": "System.String"
+            },
+            {
+              "Name": "clients",
+              "Type": "IHubCallerClients"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task",
+          "Implements": [
+            "cCoder.Core.Services.Processings.Notifications.INotificationHubProcessingService.SendTestAsync(System.String,System.String,IHubCallerClients)"
+          ],
+          "Calls": [],
           "PossibleExceptionTypes": [
             "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
             "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
@@ -14451,6 +14916,253 @@
       ]
     },
     {
+      "Name": "cCoder.Core.Services.Processings.Notifications.INotificationHubProcessingService",
+      "StandardElementType": "ProcessingService",
+      "LineNumber": 9,
+      "IsPublic": true,
+      "Kind": "Interface",
+      "BaseType": null,
+      "Interfaces": [],
+      "Properties": [],
+      "Methods": [
+        {
+          "Id": "cCoder.Core.Services.Processings.Notifications.INotificationHubProcessingService.ConsoleSendAsync(System.String,System.String,System.String,IHubCallerClients)",
+          "Name": "ConsoleSendAsync",
+          "LineNumber": 30,
+          "Inputs": [
+            {
+              "Name": "level",
+              "Type": "System.String"
+            },
+            {
+              "Name": "message",
+              "Type": "System.String"
+            },
+            {
+              "Name": "thread",
+              "Type": "System.String"
+            },
+            {
+              "Name": "clients",
+              "Type": "IHubCallerClients"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Services.Processings.Notifications.INotificationHubProcessingService.JoinAsync(System.String,System.String,IGroupManager,IHubCallerClients)",
+          "Name": "JoinAsync",
+          "LineNumber": 15,
+          "Inputs": [
+            {
+              "Name": "thread",
+              "Type": "System.String"
+            },
+            {
+              "Name": "connectionId",
+              "Type": "System.String"
+            },
+            {
+              "Name": "groups",
+              "Type": "IGroupManager"
+            },
+            {
+              "Name": "clients",
+              "Type": "IHubCallerClients"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Services.Processings.Notifications.INotificationHubProcessingService.LeaveAsync(System.String,System.String,IGroupManager,IHubCallerClients)",
+          "Name": "LeaveAsync",
+          "LineNumber": 20,
+          "Inputs": [
+            {
+              "Name": "thread",
+              "Type": "System.String"
+            },
+            {
+              "Name": "connectionId",
+              "Type": "System.String"
+            },
+            {
+              "Name": "groups",
+              "Type": "IGroupManager"
+            },
+            {
+              "Name": "clients",
+              "Type": "IHubCallerClients"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Services.Processings.Notifications.INotificationHubProcessingService.OnConnectedAsync(System.Func\u003CSystem.Threading.Tasks.Task\u003E)",
+          "Name": "OnConnectedAsync",
+          "LineNumber": 11,
+          "Inputs": [
+            {
+              "Name": "onConnectedAsync",
+              "Type": "System.Func\u003CSystem.Threading.Tasks.Task\u003E"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Services.Processings.Notifications.INotificationHubProcessingService.OnDisconnectedAsync(System.Exception,System.Func\u003CSystem.Exception, System.Threading.Tasks.Task\u003E)",
+          "Name": "OnDisconnectedAsync",
+          "LineNumber": 12,
+          "Inputs": [
+            {
+              "Name": "exception",
+              "Type": "System.Exception"
+            },
+            {
+              "Name": "onDisconnectedAsync",
+              "Type": "System.Func\u003CSystem.Exception, System.Threading.Tasks.Task\u003E"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Services.Processings.Notifications.INotificationHubProcessingService.Send(System.String,System.String,System.String,IHubCallerClients)",
+          "Name": "Send",
+          "LineNumber": 25,
+          "Inputs": [
+            {
+              "Name": "level",
+              "Type": "System.String"
+            },
+            {
+              "Name": "message",
+              "Type": "System.String"
+            },
+            {
+              "Name": "thread",
+              "Type": "System.String"
+            },
+            {
+              "Name": "clients",
+              "Type": "IHubCallerClients"
+            }
+          ],
+          "ReturnType": "System.Void",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Services.Processings.Notifications.INotificationHubProcessingService.SendTestAsync(System.String,System.String,IHubCallerClients)",
+          "Name": "SendTestAsync",
+          "LineNumber": 35,
+          "Inputs": [
+            {
+              "Name": "message",
+              "Type": "System.String"
+            },
+            {
+              "Name": "thread",
+              "Type": "System.String"
+            },
+            {
+              "Name": "clients",
+              "Type": "IHubCallerClients"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.Task",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        }
+      ]
+    },
+    {
       "Name": "cCoder.Core.Services.Processings.Packages.IAppSecurityPackageProcessingService",
       "StandardElementType": "ProcessingService",
       "LineNumber": 9,
@@ -14940,6 +15652,82 @@
   ],
   "Links": [
     {
+      "FromType": "cCoder.Core.Brokers.AppSecurity.AppSecurityAppBroker",
+      "ToType": "IAppSecurityAppExposure"
+    },
+    {
+      "FromType": "cCoder.Core.Brokers.ContentManagement.ContentManagementAppBroker",
+      "ToType": "IAppManager"
+    },
+    {
+      "FromType": "cCoder.Core.Brokers.DocumentManagement.DocumentManagementAppBroker",
+      "ToType": "IDocumentManagementAppExposure"
+    },
+    {
+      "FromType": "cCoder.Core.Brokers.Eventing.AppGraphEventBroker",
+      "ToType": "IEventHub"
+    },
+    {
+      "FromType": "cCoder.Core.Brokers.Eventing.AuthInfoBroker",
+      "ToType": "ICoreAuthInfo"
+    },
+    {
+      "FromType": "cCoder.Core.Brokers.Eventing.PackageImportCompletionEventBroker",
+      "ToType": "IEventHub"
+    },
+    {
+      "FromType": "cCoder.Core.Brokers.Eventing.ServiceBusAppDeleteForwardingBroker",
+      "ToType": "IAzureServiceBusEventHub"
+    },
+    {
+      "FromType": "cCoder.Core.Brokers.Eventing.ServiceBusAppDeleteForwardingBroker",
+      "ToType": "ISSOAuthInfo"
+    },
+    {
+      "FromType": "cCoder.Core.Brokers.Eventing.ServiceBusFolderDeleteForwardingBroker",
+      "ToType": "IAzureServiceBusEventHub"
+    },
+    {
+      "FromType": "cCoder.Core.Brokers.Eventing.ServiceBusFolderDeleteForwardingBroker",
+      "ToType": "ISSOAuthInfo"
+    },
+    {
+      "FromType": "cCoder.Core.Brokers.Http.HttpRequestBroker",
+      "ToType": "IHttpContextAccessor"
+    },
+    {
+      "FromType": "cCoder.Core.Brokers.Loggings.LoggingBroker",
+      "ToType": "ILogger\u003CcCoder.Core.Brokers.Loggings.LoggingBroker\u003E"
+    },
+    {
+      "FromType": "cCoder.Core.Brokers.Mail.MailAppBroker",
+      "ToType": "IMailAppExposure"
+    },
+    {
+      "FromType": "cCoder.Core.Brokers.Mail.MailManagerBroker",
+      "ToType": "IMailManagerExposure"
+    },
+    {
+      "FromType": "cCoder.Core.Brokers.Packaging.PackageBroker",
+      "ToType": "IPackageTransferManager"
+    },
+    {
+      "FromType": "cCoder.Core.Brokers.Planning.PlanningAppBroker",
+      "ToType": "IWorkflowAppExposure"
+    },
+    {
+      "FromType": "cCoder.Core.Brokers.Setup.CoreSetupContextBroker",
+      "ToType": "ICoreContextFactory"
+    },
+    {
+      "FromType": "cCoder.Core.Brokers.Setup.SecuritySetupContextBroker",
+      "ToType": "ISecurityDbContextFactory"
+    },
+    {
+      "FromType": "cCoder.Core.Brokers.Workflow.WorkflowAppBroker",
+      "ToType": "IWorkflowAppExposure"
+    },
+    {
       "FromType": "cCoder.Core.Dependencies.Formatters.CsvFormatter",
       "ToType": "cCoder.Core.Services.Processings.Formatters.FormatterODataProcessingService"
     },
@@ -14952,16 +15740,16 @@
       "ToType": "cCoder.Core.Services.Processings.Formatters.FormatterODataProcessingService"
     },
     {
-      "FromType": "cCoder.Core.Dependencies.Hubs.NotificationHub",
-      "ToType": "cCoder.Core.Brokers.Loggings.LoggingBroker"
-    },
-    {
       "FromType": "cCoder.Core.Dependencies.Middleware.CoreExceptionMiddleware",
       "ToType": "cCoder.Core.Brokers.Loggings.LoggingBroker"
     },
     {
       "FromType": "cCoder.Core.Dependencies.Middleware.CoreFormatterMiddleware",
       "ToType": "cCoder.Core.Services.Processings.Middleware.CoreFormatterMiddlewareProcessingService"
+    },
+    {
+      "FromType": "cCoder.Core.Exposures.BadRequestResult",
+      "ToType": "ModelStateDictionary"
     },
     {
       "FromType": "cCoder.Core.Exposures.Controllers.AppController",
@@ -15012,12 +15800,24 @@
       "ToType": "cCoder.Core.Services.Processings.AllowedOrigins.AllowedOriginStoreProcessingService"
     },
     {
+      "FromType": "cCoder.Core.Exposures.Hubs.NotificationHub",
+      "ToType": "cCoder.Core.Services.Processings.Notifications.NotificationHubProcessingService"
+    },
+    {
       "FromType": "cCoder.Core.Exposures.Managers.TemplatedEmailManager",
       "ToType": "cCoder.Core.Services.Orchestrations.TemplatedEmailOperationOrchestrationService"
     },
     {
       "FromType": "cCoder.Core.Exposures.Managers.UserRegistrationManager",
       "ToType": "cCoder.Core.Services.Aggregations.UserRegistrationAggregationService"
+    },
+    {
+      "FromType": "cCoder.Core.Exposures.OData.Responses.RawResult",
+      "ToType": "System.String"
+    },
+    {
+      "FromType": "cCoder.Core.Exposures.PackageManagers.AppDomainManager",
+      "ToType": "IAppManager"
     },
     {
       "FromType": "cCoder.Core.Exposures.PackageManagers.AppSecurityPackageManager",
@@ -15046,6 +15846,42 @@
     {
       "FromType": "cCoder.Core.Exposures.Setup.SetupRequestHostManager",
       "ToType": "cCoder.Core.Services.Processings.Setup.SetupRequestHostProcessingService"
+    },
+    {
+      "FromType": "cCoder.Core.Models.Exceptions.CoreDependencyException",
+      "ToType": "System.Exception"
+    },
+    {
+      "FromType": "cCoder.Core.Models.Exceptions.CoreOrchestrationDependencyException",
+      "ToType": "System.Exception"
+    },
+    {
+      "FromType": "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException",
+      "ToType": "System.Exception"
+    },
+    {
+      "FromType": "cCoder.Core.Models.Exceptions.CoreOrchestrationValidationException",
+      "ToType": "System.Exception"
+    },
+    {
+      "FromType": "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
+      "ToType": "System.Exception"
+    },
+    {
+      "FromType": "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
+      "ToType": "System.Exception"
+    },
+    {
+      "FromType": "cCoder.Core.Models.Exceptions.CoreProcessingValidationException",
+      "ToType": "System.Exception"
+    },
+    {
+      "FromType": "cCoder.Core.Models.Exceptions.CoreServiceException",
+      "ToType": "System.Exception"
+    },
+    {
+      "FromType": "cCoder.Core.Models.Exceptions.CoreValidationException",
+      "ToType": "System.Exception"
     },
     {
       "FromType": "cCoder.Core.Services.Aggregations.AppAggregationService",
@@ -15105,6 +15941,10 @@
     },
     {
       "FromType": "cCoder.Core.Services.Aggregations.Packages.PackageManagerAggregationService",
+      "ToType": "ICoreContextFactory"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Aggregations.Packages.PackageManagerAggregationService",
       "ToType": "cCoder.Core.Brokers.Packaging.PackageBroker"
     },
     {
@@ -15116,12 +15956,32 @@
       "ToType": "cCoder.Core.Services.Foundations.ContentManagement.ContentManagementAppService"
     },
     {
+      "FromType": "cCoder.Core.Services.Aggregations.UserRegistrationAggregationService",
+      "ToType": "IAuthenticationManager"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Aggregations.UserRegistrationAggregationService",
+      "ToType": "IRegistrationManager"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Aggregations.UserRegistrationAggregationService",
+      "ToType": "ISecurityCurrentUserManager"
+    },
+    {
       "FromType": "cCoder.Core.Services.Foundations.AllowedOrigins.AllowedOriginStoreService",
       "ToType": "cCoder.Core.Brokers.ContentManagement.ContentManagementAppBroker"
     },
     {
       "FromType": "cCoder.Core.Services.Foundations.AllowedOrigins.AllowedOriginStoreService",
       "ToType": "cCoder.Core.Brokers.Http.HttpRequestBroker"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Foundations.AppSecurity.AppSecurityAppService",
+      "ToType": "IAppSecurityAppExposure"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Foundations.AppSecurity.AppSecurityUserRoleService",
+      "ToType": "IUserRoleBroker"
     },
     {
       "FromType": "cCoder.Core.Services.Foundations.ContentManagement.ContentManagementAppService",
@@ -15177,7 +16037,19 @@
     },
     {
       "FromType": "cCoder.Core.Services.Foundations.TemplatedEmails.TemplatedEmailContentService",
+      "ToType": "ITemplateRenderer"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Foundations.TemplatedEmails.TemplatedEmailContentService",
       "ToType": "cCoder.Core.Brokers.ContentManagement.ContentManagementAppBroker"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Foundations.TemplatedEmails.TemplatedEmailIdentityService",
+      "ToType": "IAuthorizationBroker"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Foundations.TemplatedEmails.TemplatedEmailIdentityService",
+      "ToType": "IMailSenderManager"
     },
     {
       "FromType": "cCoder.Core.Services.Foundations.TemplatedEmails.TemplatedEmailQueueService",
@@ -15220,8 +16092,56 @@
       "ToType": "cCoder.Core.Services.Foundations.AllowedOrigins.AllowedOriginStoreService"
     },
     {
+      "FromType": "cCoder.Core.Services.Processings.Formatters.CsvFileProcessingService",
+      "ToType": "System.Collections.Generic.IEnumerable\u003CResource\u003E"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Processings.Formatters.CsvFileProcessingService",
+      "ToType": "System.String"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Processings.Formatters.ExcelFileProcessingService",
+      "ToType": "System.Collections.Generic.IEnumerable\u003CResource\u003E"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Processings.Formatters.ExcelFileProcessingService",
+      "ToType": "System.String"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Processings.Notifications.NotificationHubProcessingService",
+      "ToType": "cCoder.Core.Brokers.Loggings.LoggingBroker"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Processings.Packages.AppSecurityPackageProcessingService",
+      "ToType": "IAppSecurityPackageManager"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Processings.Packages.ContentManagementPackageProcessingService",
+      "ToType": "IContentManagementPackageManager"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Processings.Packages.CorePackageProcessingService",
+      "ToType": "ICoreContextFactory"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Processings.Packages.DocumentManagementPackageProcessingService",
+      "ToType": "IDocumentManagementPackageManager"
+    },
+    {
       "FromType": "cCoder.Core.Services.Processings.Packages.PackageImportCompletionEventProcessingService",
       "ToType": "cCoder.Core.Services.Foundations.Eventing.PackageImportCompletionEventService"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Processings.Packages.SchedulingPackageProcessingService",
+      "ToType": "IWorkflowPackageManager"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Processings.Packages.WorkflowPackageProcessingService",
+      "ToType": "IWorkflowPackageManager"
+    },
+    {
+      "FromType": "cCoder.Core.WebApplicationExtensions.StartupMigrationLock",
+      "ToType": "System.Threading.Mutex"
     }
   ],
   "AnalysisItems": [
@@ -15245,6 +16165,20 @@
       "Severity": "Warning",
       "Type": "cCoder.Core.CoreConfigurationFactory",
       "LineNumber": 11
+    },
+    {
+      "Code": "STXAPI005",
+      "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Dependencies.Middleware.CoreExceptionMiddleware",
+      "LineNumber": 14
+    },
+    {
+      "Code": "STXAPI005",
+      "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Dependencies.Middleware.CoreFormatterMiddleware",
+      "LineNumber": 14
     },
     {
       "Code": "STXAPI005",
