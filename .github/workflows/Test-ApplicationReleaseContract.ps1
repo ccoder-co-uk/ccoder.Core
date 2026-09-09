@@ -10,6 +10,10 @@ $publishWorkflowPath = Join-Path $RepositoryRoot ".github/workflows/publish.yml"
 $releaseWorkflowPath = Join-Path $RepositoryRoot ".github/workflows/application-release.yml"
 $publishWorkflow = Get-Content -LiteralPath $publishWorkflowPath -Raw
 $releaseWorkflow = Get-Content -LiteralPath $releaseWorkflowPath -Raw
+$composeFiles = @(
+    "Docker/compose.yml",
+    "Docker/ci/compose.yml"
+)
 
 if ($publishWorkflow -notmatch [regex]::Escape('path: ${{ env.APPLICATION_DIRECTORY }}/publish/latest')) {
     throw "The applications artifact must continue to upload the contents of publish/latest."
@@ -43,5 +47,43 @@ $invalidReleasePaths = @(
 foreach ($invalidPath in $invalidReleasePaths) {
     if ($releaseWorkflow.Contains($invalidPath)) {
         throw "application-release.yml still contains the invalid path: $invalidPath"
+    }
+}
+
+$retiredPersistenceOwners = @(
+    "Data",
+    "AppSecurity",
+    "ContentManagement",
+    "DocumentManagement",
+    "Logging",
+    "Mail",
+    "Packaging",
+    "Workflow",
+    "Security"
+)
+
+foreach ($composeFile in $composeFiles) {
+    $composePath = Join-Path $RepositoryRoot $composeFile
+    $compose = Get-Content -LiteralPath $composePath -Raw
+
+    foreach ($requiredPersistenceOwner in @("CoreData", "SecurityData")) {
+        if ($compose -notmatch "(?m)^\s+$($requiredPersistenceOwner)__ConnectionString:") {
+            throw "$composeFile does not provide the required $requiredPersistenceOwner connection setting."
+        }
+    }
+
+    $coreDataSettingCount =
+        [regex]::Matches(
+            $compose,
+            '(?m)^\s+CoreData__ConnectionString:').Count
+
+    if ($coreDataSettingCount -lt 2) {
+        throw "$composeFile must provide CoreData to the application and workflow images."
+    }
+
+    foreach ($retiredPersistenceOwner in $retiredPersistenceOwners) {
+        if ($compose -match "(?m)^\s+$($retiredPersistenceOwner)__ConnectionString:") {
+            throw "$composeFile still provides the retired $retiredPersistenceOwner connection setting."
+        }
     }
 }

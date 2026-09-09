@@ -2,14 +2,8 @@ name: ccoder-core
 
 x-ccoder-environment: &ccoder-environment
   ASPNETCORE_ENVIRONMENT: Development
-  AppSecurity__ConnectionString: &core-connection-string Server=sqlserver,1433;Database=cCoder-Core;User Id=sa;Password=${CCODER_SQL_PASSWORD:?Run Docker/ci/Initialize.ps1};Encrypt=True;TrustServerCertificate=True
-  ContentManagement__ConnectionString: *core-connection-string
-  DocumentManagement__ConnectionString: *core-connection-string
-  Logging__ConnectionString: *core-connection-string
-  Mail__ConnectionString: *core-connection-string
-  Packaging__ConnectionString: *core-connection-string
-  Workflow__ConnectionString: *core-connection-string
-  Security__ConnectionString: Server=sqlserver,1433;Database=cCoder-SSO;User Id=sa;Password=${CCODER_SQL_PASSWORD:?Run Docker/ci/Initialize.ps1};Encrypt=True;TrustServerCertificate=True
+  CoreData__ConnectionString: &core-connection-string Server=sqlserver,1433;Database=cCoder-Core;User Id=sa;Password=${CCODER_SQL_PASSWORD:?Run Docker/ci/Initialize.ps1};Encrypt=True;TrustServerCertificate=True
+  SecurityData__ConnectionString: &security-connection-string Server=sqlserver,1433;Database=cCoder-SSO;User Id=sa;Password=${CCODER_SQL_PASSWORD:?Run Docker/ci/Initialize.ps1};Encrypt=True;TrustServerCertificate=True
   Security__DecryptionKey: ${CCODER_DECRYPTION_KEY:?Run Docker/ci/Initialize.ps1}
   Eventing__ProviderType: Http
   Eventing__Http__HubUrl: http://localhost:5100
@@ -47,9 +41,7 @@ services:
     environment:
       AzureWebJobsStorage: DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://azurite:10000/devstoreaccount1;QueueEndpoint=http://azurite:10001/devstoreaccount1;TableEndpoint=http://azurite:10002/devstoreaccount1
       FUNCTIONS_WORKER_RUNTIME: dotnet-isolated
-      Data__ConnectionString: *core-connection-string
-      Workflow__ConnectionString: *core-connection-string
-      Security__ConnectionString: Server=sqlserver,1433;Database=cCoder-SSO;User Id=sa;Password=${CCODER_SQL_PASSWORD:?Run Docker/ci/Initialize.ps1};Encrypt=True;TrustServerCertificate=True
+      CoreData__ConnectionString: *core-connection-string
       Security__DecryptionKey: ${CCODER_DECRYPTION_KEY:?Run Docker/ci/Initialize.ps1}
       ASPNETCORE_URLS: http://+:800;https://+:4433
       ASPNETCORE_Kestrel__Certificates__Default__Path: /https/ccoder-localhost.pfx
