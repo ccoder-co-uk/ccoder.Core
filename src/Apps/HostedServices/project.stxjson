@@ -675,7 +675,40 @@
     }
   ],
   "Interfaces": [],
-  "Links": [],
+  "Links": [
+    {
+      "FromType": "HostedServices.Controllers.WorkflowController",
+      "ToType": "cCoder.Core.Brokers.Loggings.ILoggingBroker"
+    },
+    {
+      "FromType": "HostedServices.Controllers.WorkflowController",
+      "ToType": "cCoder.Workflow.Exposures.IWorkflowInstanceManager"
+    },
+    {
+      "FromType": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService",
+      "ToType": "System.IServiceProvider"
+    },
+    {
+      "FromType": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService",
+      "ToType": "cCoder.Core.Brokers.Loggings.ILoggingBroker"
+    },
+    {
+      "FromType": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService",
+      "ToType": "cCoder.Core.Models.CoreConfiguration"
+    },
+    {
+      "FromType": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService",
+      "ToType": "cCoder.Data.ICoreContextFactory"
+    },
+    {
+      "FromType": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService",
+      "ToType": "cCoder.Workflow.Brokers.IWorkflowInstanceManagementBroker"
+    },
+    {
+      "FromType": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService",
+      "ToType": "cCoder.Workflow.Exposures.IFlowInstanceDataManager"
+    }
+  ],
   "AnalysisItems": [
     {
       "Code": "STXAPI001",
