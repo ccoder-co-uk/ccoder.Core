@@ -38,7 +38,6 @@ jobs:
         uses: actions/checkout@v7
         with:
           ref: ${{ github.event.workflow_run.head_sha }}
-          path: ccoder.Core
 
       - name: Download application artifacts
         uses: actions/download-artifact@v8
@@ -55,7 +54,7 @@ jobs:
         run: |
           $manifest = Get-Content `
             -Raw `
-            -LiteralPath "${{ env.APPLICATION_DIRECTORY }}/publish/latest/Web/release-manifest.json" |
+            -LiteralPath "${{ env.APPLICATION_DIRECTORY }}/Web/release-manifest.json" |
             ConvertFrom-Json
           "version=$($manifest.version)" >> $env:GITHUB_OUTPUT
 
@@ -65,19 +64,19 @@ jobs:
           SOURCE_COMMIT: ${{ github.event.workflow_run.head_sha }}
         run: |
           set -euo pipefail
-          context="${APPLICATION_DIRECTORY}/publish/latest"
-          cp ccoder.Core/Docker/build/start-application.sh \
+          context="${APPLICATION_DIRECTORY}"
+          cp Docker/build/start-application.sh \
             "${context}/start-application.sh"
 
           docker build \
-            --file ccoder.Core/Docker/build/Dockerfile.application \
+            --file Docker/build/Dockerfile.application \
             --build-arg VERSION="${VERSION}" \
             --build-arg COMMIT="${SOURCE_COMMIT}" \
             --tag "${IMAGE_PREFIX}-application:${VERSION}" \
             "${context}"
 
           docker build \
-            --file ccoder.Core/Docker/build/Dockerfile.workflow \
+            --file Docker/build/Dockerfile.workflow \
             --build-arg VERSION="${VERSION}" \
             --build-arg COMMIT="${SOURCE_COMMIT}" \
             --tag "${IMAGE_PREFIX}-workflow:${VERSION}" \
@@ -89,10 +88,10 @@ jobs:
       - name: Smoke-test two-container topology
         run: |
           set -euo pipefail
-          pwsh -File ccoder.Core/Docker/ci/Initialize.ps1
+          pwsh -File Docker/ci/Initialize.ps1
           docker compose \
-            --env-file ccoder.Core/Docker/ci/.env \
-            --file ccoder.Core/Docker/ci/compose.yml \
+            --env-file Docker/ci/.env \
+            --file Docker/ci/compose.yml \
             up --detach --wait --wait-timeout 240
           curl --fail --insecure \
             --resolve localhost:443:127.0.0.1 \
@@ -105,16 +104,16 @@ jobs:
         if: failure()
         run: |
           docker compose \
-            --env-file ccoder.Core/Docker/ci/.env \
-            --file ccoder.Core/Docker/ci/compose.yml \
+            --env-file Docker/ci/.env \
+            --file Docker/ci/compose.yml \
             logs --no-color
 
       - name: Stop smoke-test environment
         if: always()
         run: |
           docker compose \
-            --env-file ccoder.Core/Docker/ci/.env \
-            --file ccoder.Core/Docker/ci/compose.yml \
+            --env-file Docker/ci/.env \
+            --file Docker/ci/compose.yml \
             down --volumes
 
       - name: Publish versioned and latest images
@@ -140,7 +139,7 @@ jobs:
 
           foreach ($applicationName in @("Web", "HostedServices", "Workflow")) {
             $applicationRoot = Join-Path `
-              "${{ env.APPLICATION_DIRECTORY }}/publish/latest" `
+              "${{ env.APPLICATION_DIRECTORY }}" `
               $applicationName
             $versionedArchive = Join-Path `
               $archiveRoot `
