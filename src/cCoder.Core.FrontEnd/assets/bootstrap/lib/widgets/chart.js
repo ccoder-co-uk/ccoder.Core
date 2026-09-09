@@ -1,4 +1,4 @@
-﻿class Chart extends Widget
+class Chart extends Widget
 {
     constructor(element, args) {
         super(element, args);
@@ -10,9 +10,9 @@
         this.max = args.max;
         this.type = args.type || "bar";
         this.showMinorLines = args.showMinorLines;
-        this.valueTemplate = args.valueTemplate ||"#= value #";
-        this.categoryTemplate = args.categoryTemplate || "#= value #";
-        this.tooltipTemplate = args.tooltipTemplate || "#= series.name #: #= value #";;
+        this.valueTemplate = args.valueTemplate ||function (data) { return "" + (data.value) + ""; };
+        this.categoryTemplate = args.categoryTemplate || function (data) { return "" + (data.value) + ""; };
+        this.tooltipTemplate = args.tooltipTemplate || function (data) { return "" + (data.series.name) + ": " + (data.value) + ""; };;
         this.axisCrossingValue = args.axisCrossingValue || 0;
         this.colors = args.colors || session.app.Config.Themes.Default.colours.charts;
 

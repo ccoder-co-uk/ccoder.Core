@@ -1,4 +1,4 @@
-﻿class GridWidget extends Widget {
+class GridWidget extends Widget {
     constructor(element, dataSource) {
         super(element);
 
@@ -292,9 +292,11 @@
                 multi: true,
                 dataSource: col.values,
                 itemTemplate: function (e) {
-                    return (e.field == "all")
-                        ? "<li><input type='checkbox' name='" + e.field + "' value='all'/><span>All</span></li>"
-                        : "<li><input type='checkbox' name='" + e.field + "' value='#=data.id#'/><span>#= data.name #</span></li>";
+                    return function (data) {
+                        return (e.field == "all")
+                            ? "<li><input type='checkbox' name='" + e.field + "' value='all'/><span>All</span></li>"
+                            : "<li><input type='checkbox' name='" + e.field + "' value='" + data.id + "'/><span>" + data.name + "</span></li>";
+                    };
                 }
             };
         }
@@ -419,24 +421,25 @@
     }
 
     commandColumn() {
-        let result = "<div class='btn-group btn-group-sm'>";
-
-        this.commands.forEach((command) => {
-            if (command.template) {
-                result += command.template;
-            }
-            else if (command.href) {
-                result += "<a name='" + command.name + "' href='" + command.href + "'><span class='k-icon " + command.icon + "'></span>" + command.text + "</a>";
-            } else {
-                result += `<button class="btn btn-primary" name="` + command.name + `">
-                        <span class='k-icon ` + command.icon + `'></span> ` + command.text + `
-                    </button>`
-            }
-        });
-
-        result += '</div>';
-
-        return result;
+        const commands = this.commands.map((command) => ({
+            ...command,
+            template: command.template ? kendo.template(command.template) : null,
+            href: command.href ? kendo.template(command.href) : null
+        }));
+        return (data) => {
+            let result = "<div class='btn-group btn-group-sm'>";
+            commands.forEach((command) => {
+                if (command.template) {
+                    result += command.template(data);
+                } else if (command.href) {
+                    const href = command.href(data);
+                    result += "<a name='" + command.name + "' href='" + href + "'><span class='k-icon " + command.icon + "'></span>" + command.text + "</a>";
+                } else {
+                    result += '<button class="btn btn-primary" name="' + command.name + '"><span class="k-icon ' + command.icon + '"></span> ' + command.text + '</button>';
+                }
+            });
+            return result + '</div>';
+        };
     }
 
     dataBound(e) {
