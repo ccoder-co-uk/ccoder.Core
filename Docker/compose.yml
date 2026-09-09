@@ -2,14 +2,8 @@ name: ccoder-core
 
 x-core-environment: &core-environment
   ASPNETCORE_ENVIRONMENT: Development
-  AppSecurity__ConnectionString: ${CCODER_CORE_CONNECTION_STRING:?Set CCODER_CORE_CONNECTION_STRING in Docker/.env}
-  ContentManagement__ConnectionString: ${CCODER_CORE_CONNECTION_STRING:?Set CCODER_CORE_CONNECTION_STRING in Docker/.env}
-  DocumentManagement__ConnectionString: ${CCODER_CORE_CONNECTION_STRING:?Set CCODER_CORE_CONNECTION_STRING in Docker/.env}
-  Logging__ConnectionString: ${CCODER_CORE_CONNECTION_STRING:?Set CCODER_CORE_CONNECTION_STRING in Docker/.env}
-  Mail__ConnectionString: ${CCODER_CORE_CONNECTION_STRING:?Set CCODER_CORE_CONNECTION_STRING in Docker/.env}
-  Packaging__ConnectionString: ${CCODER_CORE_CONNECTION_STRING:?Set CCODER_CORE_CONNECTION_STRING in Docker/.env}
-  Workflow__ConnectionString: ${CCODER_CORE_CONNECTION_STRING:?Set CCODER_CORE_CONNECTION_STRING in Docker/.env}
-  Security__ConnectionString: ${CCODER_SECURITY_CONNECTION_STRING:?Set CCODER_SECURITY_CONNECTION_STRING in Docker/.env}
+  CoreData__ConnectionString: ${CCODER_CORE_CONNECTION_STRING:?Set CCODER_CORE_CONNECTION_STRING in Docker/.env}
+  SecurityData__ConnectionString: ${CCODER_SECURITY_CONNECTION_STRING:?Set CCODER_SECURITY_CONNECTION_STRING in Docker/.env}
   Security__DecryptionKey: ${CCODER_DECRYPTION_KEY:?Run Docker/Initialize.ps1}
   Eventing__ProviderType: Http
   Eventing__Http__HubUrl: http://localhost:5100
@@ -22,9 +16,7 @@ services:
     pull_policy: always
     environment:
       FUNCTIONS_WORKER_RUNTIME: dotnet-isolated
-      Data__ConnectionString: ${CCODER_CORE_CONNECTION_STRING}
-      Workflow__ConnectionString: ${CCODER_CORE_CONNECTION_STRING}
-      Security__ConnectionString: ${CCODER_SECURITY_CONNECTION_STRING}
+      CoreData__ConnectionString: ${CCODER_CORE_CONNECTION_STRING}
       Security__DecryptionKey: ${CCODER_DECRYPTION_KEY}
       ASPNETCORE_URLS: http://+:800;https://+:4433
       ASPNETCORE_Kestrel__Certificates__Default__Path: /https/ccoder-localhost.crt
