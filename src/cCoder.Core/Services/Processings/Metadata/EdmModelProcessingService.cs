@@ -6,12 +6,13 @@ using cCoder.Core.Models.Metadata;
 using cCoder.Core.Dependencies.Metadata;
 using cCoder.Data.Extensions;
 using Microsoft.OData.Edm;
-using Microsoft.OData.ModelBuilder;
+using cCoder.Core.Services.Foundations.Metadata;
 
 
 namespace cCoder.Core.Services.Processings.Metadata;
 
-internal sealed partial class EdmModelProcessingService
+internal sealed partial class EdmModelProcessingService(
+    IEdmModelService edmModelService)
     : IEdmModelProcessingService
 {
     public IEnumerable<ExtendedMetadataContainer> GetEdmModelMetadata(
@@ -48,52 +49,30 @@ internal sealed partial class EdmModelProcessingService
                 hasEndpoint: hasEndpoint);
         });
 
-    private static IEnumerable<ExtendedMetadataContainer> BuildMetadata(
+    private IEnumerable<ExtendedMetadataContainer> BuildMetadata(
         IEdmModel model,
         string contextName
     )
     {
         List<ExtendedMetadataContainer> types = [];
 
-        foreach (var entitySet in model.EntityContainer.EntitySets())
+        EdmModelDetails edmModelDetails = edmModelService.RetrieveEdmModelDetails(
+            edmModelDetails: new EdmModelDetails { Model = model });
+
+        foreach (EdmModelType edmType in edmModelDetails.Types)
         {
-            var clr = GetClrType(model: model, edmType: entitySet.EntityType);
-
-            if (clr != null)
-            {
-                types.Add(
-                    item: BuildExtendedMetadataForType(
-                        model: model,
-                        context: contextName,
-                        type: clr,
-                        hasEndpoint: true));
-            }
-        }
-
-        foreach (var schemaType in model.SchemaElements.OfType<IEdmSchemaType>())
-        {
-            if (schemaType is IEdmComplexType || schemaType is IEdmEntityType)
-            {
-                var clr = GetClrType(model: model, edmType: schemaType);
-
-                if (clr != null)
-                {
-                    bool hasEndpoint = model.EntityContainer.FindEntitySet(setName: clr.Name) != null;
-
-                    types.Add(
-                        item: BuildExtendedMetadataForType(
-                            model: model,
-                            context: contextName,
-                            type: clr,
-                            hasEndpoint: hasEndpoint));
-                }
-            }
+            types.Add(
+                item: BuildExtendedMetadataForType(
+                    model: model,
+                    context: contextName,
+                    type: edmType.ClrType,
+                    hasEndpoint: edmType.HasEndpoint));
         }
 
         return types.DistinctBy(keySelector: t => t.ServerTypeName);
     }
 
-    private static ExtendedMetadataContainer BuildExtendedMetadataForType(
+    private ExtendedMetadataContainer BuildExtendedMetadataForType(
         IEdmModel model,
         string context,
         Type type,
@@ -108,23 +87,26 @@ internal sealed partial class EdmModelProcessingService
 
         result.Category = context;
 
-        IEdmEntitySet set = model.EntityContainer.FindEntitySet(setName: type.Name);
+        EdmModelOperations edmOperations = edmModelService.RetrieveEdmModelDetails(
+            edmModelDetails: new EdmModelDetails
+            {
+                Model = model,
+                Type = type
+            }).Operations;
 
-        if (set != null)
+        if (edmOperations.HasEntitySet)
         {
-            IEnumerable<OperationContainer> customOperations = model
-                .FindDeclaredBoundOperations(bindingType: set.Type)
-                .Select(selector: o => new OperationContainer
+            IEnumerable<OperationContainer> customOperations = edmOperations.Operations
+                .Select(selector: operation => new OperationContainer
                 {
-                    Name = o.Name,
-                    Url = $"{result.Category}/{type.Name}/{o.Name}()",
-                    Queryable = o.IsFunction(),
-                    HttpVerb = o.IsFunction() ? "GET" : "POST",
-                    ReturnType = BuildMetaFor(definition: o.GetReturn()?.Type?.Definition),
-                    Parameters = o
-                        .Parameters?.Where(predicate: p => p.Name != "bindingParameter")
-                        .Select(selector: p => new { k = p.Name, v = p.Type.FullName() })
-                        .ToDictionary(keySelector: i => i.k, elementSelector: i => i.v),
+                    Name = operation.Name,
+                    Url = $"{result.Category}/{type.Name}/{operation.Name}()",
+                    Queryable = operation.IsFunction,
+                    HttpVerb = operation.IsFunction ? "GET" : "POST",
+                    ReturnType = BuildMetaFor(
+                        typeName: operation.ReturnTypeName,
+                        isCollection: operation.ReturnIsCollection),
+                    Parameters = operation.Parameters,
                 });
 
             result.Operations =
@@ -141,14 +123,13 @@ internal sealed partial class EdmModelProcessingService
         return result;
     }
 
-    static Type GetClrType(IEdmModel model, IEdmSchemaType edmType) =>
-        model.GetAnnotationValue<ClrTypeAnnotation>(element: edmType)?.ClrType;
-
-    private static MetadataContainer BuildMetaFor(IEdmType definition)
+    private static MetadataContainer BuildMetaFor(
+        string typeName,
+        bool isCollection)
     {
-        if (definition != null && definition.TypeKind == EdmTypeKind.Collection)
+        if (isCollection && !string.IsNullOrWhiteSpace(value: typeName))
         {
-            Type cSharpType = Type.GetType(typeName: definition.FullTypeName(), throwOnError: false);
+            Type cSharpType = Type.GetType(typeName: typeName, throwOnError: false);
 
             if (cSharpType != null)
             {

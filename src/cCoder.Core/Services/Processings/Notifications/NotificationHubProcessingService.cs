@@ -4,12 +4,14 @@
 
 using cCoder.Core.Brokers.Loggings;
 using cCoder.Core.Models.Notifications;
+using cCoder.Core.Services.Foundations.Notifications;
 using Microsoft.AspNetCore.SignalR;
 
 namespace cCoder.Core.Services.Processings.Notifications;
 
 internal sealed partial class NotificationHubProcessingService(
-    ILoggingBroker log)
+    ILoggingBroker log,
+    INotificationHubService notificationHubService)
     : INotificationHubProcessingService
 {
     private static readonly IDictionary<string, ICollection<NotificationHistoryItem>> History =
@@ -72,22 +74,33 @@ internal sealed partial class NotificationHubProcessingService(
                     args: thread);
             }
 
-            await groups.AddToGroupAsync(
-                connectionId: connectionId,
-                groupName: thread);
+            await notificationHubService.ExecuteNotificationHubOperationAsync(
+                notificationHubOperation: new NotificationHubOperation
+                {
+                    Kind = NotificationHubOperationKind.AddToGroup,
+                    Groups = groups,
+                    ConnectionId = connectionId,
+                    Thread = thread
+                });
 
-            await clients.Caller.SendAsync(
-                method: "ConsoleReceive",
-                arg1: "info",
-                arg2: "Connected to instance " + thread,
-                arg3: thread);
+            await notificationHubService.ExecuteNotificationHubOperationAsync(
+                notificationHubOperation: new NotificationHubOperation
+                {
+                    Kind = NotificationHubOperationKind.SendToCaller,
+                    Clients = clients,
+                    Method = "ConsoleReceive",
+                    Arguments = ["info", "Connected to instance " + thread, thread]
+                });
 
-            await clients.Group(groupName: thread)
-                .SendAsync(
-                    method: "ConsoleReceive",
-                    arg1: "info",
-                    arg2: "User Joined",
-                    arg3: thread);
+            await notificationHubService.ExecuteNotificationHubOperationAsync(
+                notificationHubOperation: new NotificationHubOperation
+                {
+                    Kind = NotificationHubOperationKind.SendToGroup,
+                    Clients = clients,
+                    Thread = thread,
+                    Method = "ConsoleReceive",
+                    Arguments = ["info", "User Joined", thread]
+                });
 
             if (!History.TryGetValue(
                 key: thread,
@@ -108,11 +121,14 @@ internal sealed partial class NotificationHubProcessingService(
 
             foreach (NotificationHistoryItem item in history)
             {
-                await clients.Caller.SendAsync(
-                    method: "ConsoleReceive",
-                    arg1: item.Level,
-                    arg2: item.Message,
-                    arg3: thread);
+                await notificationHubService.ExecuteNotificationHubOperationAsync(
+                    notificationHubOperation: new NotificationHubOperation
+                    {
+                        Kind = NotificationHubOperationKind.SendToCaller,
+                        Clients = clients,
+                        Method = "ConsoleReceive",
+                        Arguments = [item.Level, item.Message, thread]
+                    });
             }
         });
 
@@ -136,21 +152,33 @@ internal sealed partial class NotificationHubProcessingService(
                     args: thread);
             }
 
-            await groups.RemoveFromGroupAsync(
-                connectionId: connectionId,
-                groupName: thread);
+            await notificationHubService.ExecuteNotificationHubOperationAsync(
+                notificationHubOperation: new NotificationHubOperation
+                {
+                    Kind = NotificationHubOperationKind.RemoveFromGroup,
+                    Groups = groups,
+                    ConnectionId = connectionId,
+                    Thread = thread
+                });
 
-            await clients.Caller.SendAsync(
-                method: "info",
-                arg1: "Stopped listening to messages for " + thread,
-                arg2: thread);
+            await notificationHubService.ExecuteNotificationHubOperationAsync(
+                notificationHubOperation: new NotificationHubOperation
+                {
+                    Kind = NotificationHubOperationKind.SendToCaller,
+                    Clients = clients,
+                    Method = "info",
+                    Arguments = ["Stopped listening to messages for " + thread, thread]
+                });
 
-            await clients.Group(groupName: thread)
-                .SendAsync(
-                    method: "ConsoleReceive",
-                    arg1: "info",
-                    arg2: "User Left",
-                    arg3: thread);
+            await notificationHubService.ExecuteNotificationHubOperationAsync(
+                notificationHubOperation: new NotificationHubOperation
+                {
+                    Kind = NotificationHubOperationKind.SendToGroup,
+                    Clients = clients,
+                    Thread = thread,
+                    Method = "ConsoleReceive",
+                    Arguments = ["info", "User Left", thread]
+                });
 
             UserCounts[thread]--;
 
@@ -173,8 +201,15 @@ internal sealed partial class NotificationHubProcessingService(
                 thread: thread,
                 clients: clients);
 
-            clients.Group(groupName: thread)
-                .SendAsync(method: level, arg1: message);
+            _ = notificationHubService.ExecuteNotificationHubOperationAsync(
+                notificationHubOperation: new NotificationHubOperation
+                {
+                    Kind = NotificationHubOperationKind.SendToGroup,
+                    Clients = clients,
+                    Thread = thread,
+                    Method = level,
+                    Arguments = [message]
+                });
         });
 
     public Task ConsoleSendAsync(
@@ -205,12 +240,15 @@ internal sealed partial class NotificationHubProcessingService(
                     Level = level
                 });
 
-            await clients.Group(groupName: thread)
-                .SendAsync(
-                    method: "ConsoleReceive",
-                    arg1: level,
-                    arg2: message,
-                    arg3: thread);
+            await notificationHubService.ExecuteNotificationHubOperationAsync(
+                notificationHubOperation: new NotificationHubOperation
+                {
+                    Kind = NotificationHubOperationKind.SendToGroup,
+                    Clients = clients,
+                    Thread = thread,
+                    Method = "ConsoleReceive",
+                    Arguments = [level, message, thread]
+                });
         });
 
     public Task SendTestAsync(
@@ -224,11 +262,14 @@ internal sealed partial class NotificationHubProcessingService(
                 thread: thread,
                 clients: clients);
 
-            await clients.Group(groupName: thread)
-                .SendAsync(
-                    method: "ConsoleReceive",
-                    arg1: "test",
-                    arg2: message,
-                    arg3: thread);
+            await notificationHubService.ExecuteNotificationHubOperationAsync(
+                notificationHubOperation: new NotificationHubOperation
+                {
+                    Kind = NotificationHubOperationKind.SendToGroup,
+                    Clients = clients,
+                    Thread = thread,
+                    Method = "ConsoleReceive",
+                    Arguments = ["test", message, thread]
+                });
         });
 }

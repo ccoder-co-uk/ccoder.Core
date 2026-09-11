@@ -19,7 +19,9 @@ public class ExcelFormatter : TextOutputFormatter
     private readonly IFormatterODataProcessingService formatterODataProcessingService;
 
     public ExcelFormatter()
-        : this(new FormatterODataProcessingService())
+        : this(new FormatterODataProcessingService(
+            new Services.Foundations.Formatters.FormatterODataService(
+                new Brokers.Formatters.FormatterODataBroker())))
     {
     }
 

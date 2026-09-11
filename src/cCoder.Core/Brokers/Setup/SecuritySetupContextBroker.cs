@@ -2,8 +2,8 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using cCoder.Core.Dependencies.Setup;
 using cCoder.Security.Data.EF.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace cCoder.Core.Brokers.Setup;
 
@@ -11,7 +11,9 @@ internal sealed class SecuritySetupContextBroker(
     ISecurityDbContextFactory securityDbContextFactory)
     : ISecuritySetupContextBroker
 {
-    public DbContext CreateSecurityContext() =>
-        securityDbContextFactory.CreateDbContext(
-            ignoreAuthInfo: true);
+    public ValueTask<bool> IsInitializedAsync(
+        CancellationToken cancellationToken) =>
+        SetupStateDependency.IsSecurityInitializedAsync(
+            securityDbContextFactory: securityDbContextFactory,
+            cancellationToken: cancellationToken);
 }

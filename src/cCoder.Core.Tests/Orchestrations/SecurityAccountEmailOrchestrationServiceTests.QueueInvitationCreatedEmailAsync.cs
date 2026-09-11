@@ -22,7 +22,8 @@ public partial class SecurityAccountEmailOrchestrationServiceTests
             subject: "Core Portal: Confirm Invitation");
 
         // When
-        await orchestrationService.QueueInvitationCreatedSecurityAccountEventEmailAsync(accountEvent: accountEvent);
+        await orchestrationService.QueueInvitationCreatedSecurityAccountEventEmailAsync(
+            securityAccountEvent: accountEvent);
 
         // Then
         VerifyQueuedEmail(

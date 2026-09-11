@@ -16,6 +16,10 @@ using cCoder.Core.Brokers.DocumentManagement;
 using cCoder.Core.Brokers.Eventing;
 using cCoder.Core.Brokers.Http;
 using cCoder.Core.Brokers.Mail;
+using cCoder.Core.Brokers.Json;
+using cCoder.Core.Brokers.Metadata;
+using cCoder.Core.Brokers.Middleware;
+using cCoder.Core.Brokers.Notifications;
 using cCoder.Core.Brokers.Planning;
 using cCoder.Core.Brokers.Packaging;
 using cCoder.Core.Brokers.Workflow;
@@ -39,6 +43,9 @@ using cCoder.Core.Services.Foundations.ContentManagement;
 using cCoder.Core.Services.Foundations.DocumentManagement;
 using cCoder.Core.Services.Foundations.Eventing;
 using cCoder.Core.Services.Foundations.Mail;
+using cCoder.Core.Services.Foundations.Metadata;
+using cCoder.Core.Services.Foundations.Middleware;
+using cCoder.Core.Services.Foundations.Notifications;
 using cCoder.Core.Services.Foundations.Planning;
 using cCoder.Core.Services.Foundations.Packages;
 using cCoder.Core.Services.Foundations.Workflow;
@@ -512,6 +519,10 @@ predicate: (documentName, apiDescription) =>
             IPackageImportCompletionEventBroker,
             PackageImportCompletionEventBroker>();
         services.AddTransient<IHttpRequestBroker, HttpRequestBroker>();
+        services.AddTransient<IAllowedOriginJsonBroker, AllowedOriginJsonBroker>();
+        services.AddTransient<IEdmModelBroker, EdmModelBroker>();
+        services.AddTransient<ICoreFormatterMiddlewareBroker, CoreFormatterMiddlewareBroker>();
+        services.AddTransient<INotificationHubBroker, NotificationHubBroker>();
         services.AddTransient<IAppSecurityAppBroker, AppSecurityAppBroker>();
         services.AddTransient<IPlanningAppBroker, PlanningAppBroker>();
         services.AddTransient<IDocumentManagementAppBroker, DocumentManagementAppBroker>();
@@ -550,6 +561,9 @@ predicate: (documentName, apiDescription) =>
             IPackageImportCompletionEventService,
             PackageImportCompletionEventService>();
         services.AddTransient<IAllowedOriginStoreService, AllowedOriginStoreService>();
+        services.AddTransient<IEdmModelService, EdmModelService>();
+        services.AddTransient<ICoreFormatterMiddlewareService, CoreFormatterMiddlewareService>();
+        services.AddTransient<INotificationHubService, NotificationHubService>();
         services.AddTransient<IAppSecurityAppService, AppSecurityAppService>();
 
         services.AddTransient<

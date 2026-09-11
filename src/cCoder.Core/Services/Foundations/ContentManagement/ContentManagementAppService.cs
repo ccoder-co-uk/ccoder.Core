@@ -42,6 +42,15 @@ internal sealed partial class ContentManagementAppService(
                 ignoreFilters: ignoreFilters);
         });
 
+    public IQueryable<App> GetAllAppsWithTemplates(bool ignoreFilters = false) =>
+        TryCatch(operation: () =>
+        {
+            ValidateAllAppsWithTemplatesOnGet(ignoreFilters: ignoreFilters);
+
+            return contentManagementAppBroker.GetAllAppsWithTemplates(
+                ignoreFilters: ignoreFilters);
+        });
+
     public ValueTask<App> AddAppAsync(App newApp) =>
         TryCatch(operation: async ValueTask<App> () =>
         {

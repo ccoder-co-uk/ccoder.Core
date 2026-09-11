@@ -46,11 +46,11 @@ internal sealed class TemplatedEmailManager(
     }
 
     public async ValueTask<QueuedEmail> QueueTemplatedEmailDetailsAsync(
-        TemplatedEmailDetails details)
+        TemplatedEmailDetails templatedEmailDetails)
     {
         TemplatedEmailOperation templatedEmailOperation = new()
         {
-            Details = details,
+            Details = templatedEmailDetails,
         };
 
         TemplatedEmailOperation completedOperation =
