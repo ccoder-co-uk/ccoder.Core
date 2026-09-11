@@ -97,7 +97,9 @@ internal sealed partial class CsvFileProcessingService(
     {
         IEnumerable<string> headings =
             source is IDictionary<string, object> dictionary
-                ? dictionary.Keys.Select(
+                ? dictionary.Keys.Where(
+                    predicate: key => dictionary[key] is not IEnumerable or string)
+                    .Select(
                     selector: key => $"{quotes}{key}{quotes}")
                 : properties.Select(
                     selector: property => resources
@@ -140,10 +142,11 @@ internal sealed partial class CsvFileProcessingService(
     {
         if (source is IDictionary<string, object> dictionary)
         {
-            string[] values = [.. dictionary.Values
+            string[] values = [.. dictionary
+                .Where(predicate: pair => pair.Value is not IEnumerable or string)
                 .Select(
-                    selector: value => FormatCsvValue(
-                        value: value,
+                    selector: pair => FormatCsvValue(
+                        value: pair.Value,
                         dateFormat: dateFormat,
                         moneyFormat: moneyFormat))];
 

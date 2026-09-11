@@ -157,10 +157,9 @@ path: "xl/theme/theme1.xml", text: @"<?xml version='1.0' encoding='UTF-8' standa
                     .GetType()
                     .GetProperties()
                     .Where(predicate: property =>
-                        (property.PropertyType.IsValueType
-                            || property.PropertyType == typeof(string))
-                        && (property.PropertyType is not IEnumerable
-                            || property.PropertyType == typeof(string))
+                        property.PropertyType.IsValueType
+                        || property.PropertyType == typeof(string)
+                        || !typeof(IEnumerable).IsAssignableFrom(c: property.PropertyType)
                     )
                     .Select(selector: property => property.Name)];
             }
