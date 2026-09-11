@@ -4,11 +4,11 @@
 
 using cCoder.Data.Models.Packaging;
 
-namespace cCoder.Core.Services.Processings.Packages;
+namespace cCoder.Core.Services.Foundations.Packages;
 
-internal interface ICorePackageProcessingService
+internal interface ICorePackageService
 {
-    ValueTask ImportPackageAsync(int appId, Package package);
+    ValueTask ImportAppConfigurationAsync(int appId, string data);
     ValueTask<Package> ExportAppConfigurationAsync(int appId, string sourceApi);
     ValueTask<Package> ExportPageRolesAsync(int appId, string sourceApi);
     ValueTask<Package> ExportFolderRolesAsync(int appId, string sourceApi);

@@ -13,4 +13,7 @@ internal sealed partial class CorePackageProcessingService
         int appId,
         Package package) =>
         ValidationRulesEngine.Validate(inputs: [appId, package]);
+
+    private static void ValidatePackageOnExport(int appId, string value) =>
+        ValidationRulesEngine.Validate(inputs: [appId, value]);
 }

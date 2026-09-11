@@ -29,6 +29,7 @@ using cCoder.Core.Dependencies.Middleware;
 using cCoder.Core.Dependencies.OData;
 using cCoder.Core.Dependencies.OpenApi;
 using cCoder.Core.Dependencies.Sessions;
+using cCoder.Core.Dependencies.Packages;
 using cCoder.Core.Exposures;
 using cCoder.Core.Services.Aggregations;
 using cCoder.Core.Services.Aggregations.Packages;
@@ -39,6 +40,7 @@ using cCoder.Core.Services.Foundations.DocumentManagement;
 using cCoder.Core.Services.Foundations.Eventing;
 using cCoder.Core.Services.Foundations.Mail;
 using cCoder.Core.Services.Foundations.Planning;
+using cCoder.Core.Services.Foundations.Packages;
 using cCoder.Core.Services.Foundations.Workflow;
 using cCoder.Core.Services.Orchestrations;
 using cCoder.Core.Services.Processings.AllowedOrigins;
@@ -501,6 +503,7 @@ predicate: (documentName, apiDescription) =>
     private static void AddBrokers(
         this IServiceCollection services)
     {
+        services.AddTransient<CorePackageDependency>();
         services.AddTransient<Brokers.Loggings.ILoggingBroker, Brokers.Loggings.LoggingBroker>();
         services.AddTransient<IContentManagementAppBroker, ContentManagementAppBroker>();
         services.AddTransient<IAppGraphEventBroker, AppGraphEventBroker>();
@@ -516,6 +519,12 @@ predicate: (documentName, apiDescription) =>
         services.AddTransient<IWorkflowAppBroker, WorkflowAppBroker>();
         services.AddTransient<IMailAppBroker, MailAppBroker>();
         services.AddTransient<IMailManagerBroker, MailManagerBroker>();
+        services.AddTransient<ICorePackageBroker, CorePackageBroker>();
+        services.AddTransient<IAppSecurityPackageBroker, AppSecurityPackageBroker>();
+        services.AddTransient<IContentManagementPackageBroker, ContentManagementPackageBroker>();
+        services.AddTransient<IDocumentManagementPackageBroker, DocumentManagementPackageBroker>();
+        services.AddTransient<ISchedulingPackageBroker, SchedulingPackageBroker>();
+        services.AddTransient<IWorkflowPackageBroker, WorkflowPackageBroker>();
 
         services.TryAddTransient<cCoder.Packaging.Exposures.PackageManagers.IAppDomainManager, AppDomainManager>();
         services.TryAddTransient<cCoder.Packaging.Exposures.PackageManagers.IAppSecurityPackageManager, AppSecurityPackageManager>();
@@ -552,7 +561,12 @@ predicate: (documentName, apiDescription) =>
         services.AddTransient<IWorkflowAppService, WorkflowAppService>();
         services.AddTransient<IMailAppService, MailAppService>();
         services.AddTransient<IMailManagerService, MailManagerService>();
-        services.AddTransient<IPackageBroker, PackageBroker>();
+        services.AddTransient<ICorePackageService, CorePackageService>();
+        services.AddTransient<IAppSecurityPackageService, AppSecurityPackageService>();
+        services.AddTransient<IContentManagementPackageService, ContentManagementPackageService>();
+        services.AddTransient<IDocumentManagementPackageService, DocumentManagementPackageService>();
+        services.AddTransient<ISchedulingPackageService, SchedulingPackageService>();
+        services.AddTransient<IWorkflowPackageService, WorkflowPackageService>();
 
         services.AddTransient<
             ITemplatedEmailContentService,
