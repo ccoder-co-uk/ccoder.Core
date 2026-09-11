@@ -2,22 +2,14 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using Workflow.Brokers.Loggings;
 using cCoder.Workflow.Activities.Models;
-using cCoder.Workflow.Engine.Exposures;
-using cCoder.Workflow.Engine.Extensions;
 using Microsoft.Azure.Functions.Worker.Http;
-using Newtonsoft.Json;
-using System.Net;
-using System.Text;
-using Workflow.Dependencies;
+using Workflow.Services.Foundations.WorkflowFunctions;
 
 namespace Workflow.Services.Processings.WorkflowFunctions;
 
 internal sealed partial class WorkflowFunctionsProcessingService(
-    IFlowRunner flowRunner,
-    IWorkflowScriptExecutionService scriptExecutionService,
-    ILoggingBroker loggingBroker)
+    IWorkflowFunctionsService workflowFunctionsService)
         : IWorkflowFunctionsProcessingService
 {
     public Task<HttpResponseData> ProcessExecuteAsync(HttpRequestData request) =>
@@ -25,19 +17,20 @@ internal sealed partial class WorkflowFunctionsProcessingService(
         {
             ValidateInputs(inputs: [request]);
 
-            string json = await ReadBodyAsync(request: request);
+            string json = await workflowFunctionsService.ReadBodyAsync(
+                request: request);
 
             WorkflowRequest workflowRequest =
-                JsonConvert.DeserializeObject<WorkflowRequest>(
-                    value: json,
-                    settings: ObjectExtensions.GetJsonSettings())
+                workflowFunctionsService.DeserializeWorkflowRequest(
+                    json: json)
                 ?? throw new InvalidOperationException(
                     message:
                         "Workflow request payload could not be deserialized.");
 
-            await flowRunner.RunAsync(request: workflowRequest);
+            await workflowFunctionsService.RunWorkflowRequestAsync(
+                workflowRequest: workflowRequest);
 
-            return await CreateHttpResponseDataAsync(
+            return await workflowFunctionsService.CreateHttpResponseDataAsync(
                 request: request,
                 content: "OK");
         });
@@ -49,13 +42,14 @@ internal sealed partial class WorkflowFunctionsProcessingService(
         {
             ValidateInputs(inputs: [request, useDetails]);
 
-            string payload = await ReadBodyAsync(request: request);
+            string payload = await workflowFunctionsService.ReadBodyAsync(
+                request: request);
 
-            string result = await scriptExecutionService.ExecuteAsync(
+            string result = await workflowFunctionsService.ExecuteScriptAsync(
                 payload: payload,
                 useDetails: useDetails);
 
-            return await CreateHttpResponseDataAsync(
+            return await workflowFunctionsService.CreateHttpResponseDataAsync(
                 request: request,
                 content: result);
         });
@@ -65,7 +59,7 @@ internal sealed partial class WorkflowFunctionsProcessingService(
         {
             ValidateInputs(inputs: [request]);
 
-            return CreateHttpResponseDataAsync(
+            return workflowFunctionsService.CreateHttpResponseDataAsync(
                 request: request,
                 content: "OK");
         });
@@ -75,30 +69,11 @@ internal sealed partial class WorkflowFunctionsProcessingService(
         {
             ValidateInputs(inputs: [message]);
 
-            loggingBroker.LogInformation(
+            workflowFunctionsService.LogInformation(
                 message:
                     "Service Bus workflow trigger is scaffolded but disabled.");
 
             return Task.CompletedTask;
         });
 
-    private static async Task<HttpResponseData> CreateHttpResponseDataAsync(
-        HttpRequestData request,
-        string content)
-    {
-        HttpResponseData response = request.CreateResponse(
-            statusCode: HttpStatusCode.OK);
-
-        await response.WriteStringAsync(value: content);
-
-        return response;
-    }
-
-    private static async ValueTask<string> ReadBodyAsync(
-        HttpRequestData request)
-    {
-        using WorkflowFunctionStreamDependency content = new();
-        await request.Body.CopyToAsync(destination: content);
-        return Encoding.UTF8.GetString(bytes: content.ToArray());
-    }
 }
