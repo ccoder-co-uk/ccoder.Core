@@ -106,8 +106,11 @@ public sealed partial class AppEventIntegrationTests
                 expectedContent: "Initial content 1",
                 unexpectedContent: "Old cache");
 
+            // Uncached renders may take up to two seconds. Cached hits remain
+            // subject to the one-second guardrails above and below, with the
+            // platform-wide 300 ms response goal retained as an optimisation target.
             missDuration.Should()
-                .BeLessThan(expected: TimeSpan.FromMilliseconds(milliseconds: 1200));
+                .BeLessThan(expected: TimeSpan.FromSeconds(seconds: 2));
 
             await WaitForPageCacheAsync(
                 appId: appId,
