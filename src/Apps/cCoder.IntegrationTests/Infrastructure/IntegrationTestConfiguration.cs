@@ -58,6 +58,21 @@ internal sealed class IntegrationTestConfiguration
             AcceptanceTestConfiguration.ReadOptionalBool(
                 variableName:
                     "CoreIntegrationTests__UseLocalWorkflow");
+        LocalWorkflowProject =
+            AcceptanceTestConfiguration.ReadOptionalValue(
+                variableName:
+                    "CoreIntegrationTests__LocalWorkflowProject")
+            ?? string.Empty;
+        LocalWorkflowActivitiesProject =
+            AcceptanceTestConfiguration.ReadOptionalValue(
+                variableName:
+                    "CoreIntegrationTests__LocalWorkflowActivitiesProject")
+            ?? string.Empty;
+        LocalWorkflowEngineProject =
+            AcceptanceTestConfiguration.ReadOptionalValue(
+                variableName:
+                    "CoreIntegrationTests__LocalWorkflowEngineProject")
+            ?? string.Empty;
         UseLocalSecurity =
             AcceptanceTestConfiguration.ReadOptionalBool(
                 variableName:
@@ -107,6 +122,12 @@ internal sealed class IntegrationTestConfiguration
     internal bool KeepArtifacts { get; }
 
     internal bool UseLocalWorkflow { get; }
+
+    internal string LocalWorkflowProject { get; }
+
+    internal string LocalWorkflowActivitiesProject { get; }
+
+    internal string LocalWorkflowEngineProject { get; }
 
     internal bool UseLocalSecurity { get; }
 
