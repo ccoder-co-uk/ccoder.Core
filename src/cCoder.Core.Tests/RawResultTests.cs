@@ -9,7 +9,7 @@ using Xunit;
 
 namespace cCoder.Core.Tests.Exposures.OData.Responses;
 
-public sealed class RawResultTests
+public sealed partial class RawResultTests
 {
     [Fact]
     public void RawResult_WhenCreated_PreservesRawResponseAndSuccessStatus()
@@ -21,7 +21,12 @@ public sealed class RawResultTests
         RawResult result = new(response: response);
 
         // Then
-        result.Content.Should().Be(response);
-        result.StatusCode.Should().Be(StatusCodes.Status200OK);
+        result.Content
+            .Should()
+            .Be(expected: response);
+
+        result.StatusCode
+            .Should()
+            .Be(expected: StatusCodes.Status200OK);
     }
 }

@@ -22,13 +22,15 @@ public partial class SecurityAccountEmailOrchestrationServiceTests
 
     public SecurityAccountEmailOrchestrationServiceTests()
     {
-        contentManagementAppServiceMock = new Mock<IContentManagementAppService>(MockBehavior.Strict);
+        contentManagementAppServiceMock =
+            new Mock<IContentManagementAppService>(behavior: MockBehavior.Strict);
+
         templatedEmailManagerMock =
-            new Mock<ITemplatedEmailManager>(MockBehavior.Strict);
+            new Mock<ITemplatedEmailManager>(behavior: MockBehavior.Strict);
 
         orchestrationService = new SecurityAccountEmailAggregationService(
-            contentManagementAppServiceMock.Object,
-            templatedEmailManagerMock.Object);
+            contentManagementAppService: contentManagementAppServiceMock.Object,
+            templatedEmailManager: templatedEmailManagerMock.Object);
     }
 
     private static App CreateApp(string templateName) =>

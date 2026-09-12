@@ -8,7 +8,7 @@ using Xunit;
 
 namespace cCoder.Core.Tests.Brokers.Json;
 
-public sealed class AllowedOriginJsonBrokerTests
+public sealed partial class AllowedOriginJsonBrokerTests
 {
     [Fact]
     public void ExtractOrigins_WhenConfigurationContainsNestedOrigins_ReturnsOrigins()
@@ -32,12 +32,14 @@ public sealed class AllowedOriginJsonBrokerTests
             configJson: configJson);
 
         // Then
-        actualOrigins.Should().BeEquivalentTo(
-            expectation:
-            [
-                "https://admin.example.com",
-                "https://api.example.com"
-            ]);
+        actualOrigins
+            .Should()
+            .BeEquivalentTo(
+                expectation:
+                [
+                    "https://admin.example.com",
+                    "https://api.example.com"
+                ]);
     }
 
     [Fact]
@@ -51,6 +53,8 @@ public sealed class AllowedOriginJsonBrokerTests
             configJson: "{ invalid json }");
 
         // Then
-        actualOrigins.Should().BeEmpty();
+        actualOrigins
+            .Should()
+            .BeEmpty();
     }
 }
