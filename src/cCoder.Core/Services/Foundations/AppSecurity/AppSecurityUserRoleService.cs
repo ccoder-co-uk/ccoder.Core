@@ -48,7 +48,7 @@ internal sealed partial class AppSecurityUserRoleService(
                 if (!exists)
                 {
                     await userRoleBroker.AddUserRoleAsync(
-                        entity: userRole);
+                        userRole: userRole);
                 }
             }
         });

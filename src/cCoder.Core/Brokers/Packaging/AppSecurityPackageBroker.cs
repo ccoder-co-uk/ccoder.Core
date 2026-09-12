@@ -12,7 +12,9 @@ internal sealed class AppSecurityPackageBroker(
     : IAppSecurityPackageBroker
 {
     public ValueTask ImportPackageAsync(int appId, AppSecurityPackage appSecurityPackage) =>
-        appSecurityPackageManager.ImportPackageAsync(appId: appId, package: appSecurityPackage);
+        appSecurityPackageManager.ImportPackageAsync(
+            appId: appId,
+            appSecurityPackage: appSecurityPackage);
 
     public AppSecurityPackage ExportPackage(int appId, string packageName) =>
         appSecurityPackageManager.ExportPackage(appId: appId, packageName: packageName);

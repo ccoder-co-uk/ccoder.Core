@@ -12,7 +12,9 @@ internal sealed class DocumentManagementPackageBroker(
     : IDocumentManagementPackageBroker
 {
     public ValueTask ImportPackageAsync(int appId, DocumentManagementPackage documentManagementPackage) =>
-        documentManagementPackageManager.ImportPackageAsync(appId: appId, package: documentManagementPackage);
+        documentManagementPackageManager.ImportPackageAsync(
+            appId: appId,
+            documentManagementPackage: documentManagementPackage);
 
     public DocumentManagementPackage ExportPackage(int appId, string packageName) =>
         documentManagementPackageManager.ExportPackage(appId: appId, packageName: packageName);

@@ -22,9 +22,9 @@
   <ItemGroup>
     <ProjectReference Include="..\cCoder.Core\cCoder.Core.csproj" />
     <ProjectReference Include="..\Apps\HostedServices\HostedServices.csproj" />
-    <PackageReference Include="cCoder.AppSecurity" Version="2026.9.9.859" />
-    <PackageReference Include="cCoder.ContentManagement" Version="2026.9.11.2355" />
-    <PackageReference Include="cCoder.Data" Version="2026.9.9.951" />
+    <PackageReference Include="cCoder.AppSecurity" Version="2026.9.12.1256" />
+    <PackageReference Include="cCoder.ContentManagement" Version="2026.9.12.1337" />
+    <PackageReference Include="cCoder.Data" Version="2026.9.12.1246" />
   </ItemGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
