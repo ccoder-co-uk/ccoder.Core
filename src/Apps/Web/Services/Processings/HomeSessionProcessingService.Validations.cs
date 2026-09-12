@@ -38,4 +38,12 @@ internal sealed partial class HomeSessionProcessingService
         ValidateSessionOnGet(
             context: context,
             key: key);
+
+    private static void ValidateUrlOnCheck(
+        Microsoft.AspNetCore.Mvc.IUrlHelper urlHelper,
+        string url)
+    {
+        ArgumentNullException.ThrowIfNull(argument: urlHelper);
+        ArgumentNullException.ThrowIfNull(argument: url);
+    }
 }

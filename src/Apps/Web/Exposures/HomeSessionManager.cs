@@ -3,6 +3,7 @@
 // ---------------------------------------------------------------
 
 using System.Dynamic;
+using Microsoft.AspNetCore.Mvc;
 using Web.Services.Processings;
 
 namespace Web.Exposures;
@@ -36,4 +37,12 @@ internal sealed class HomeSessionManager(
             context: context,
             key: key,
             value: value);
+
+    public void AbortRequest(HttpContext context) =>
+        homeSessionProcessingService.AbortRequest(context: context);
+
+    public bool IsLocalUrl(IUrlHelper urlHelper, string url) =>
+        homeSessionProcessingService.IsLocalUrl(
+            urlHelper: urlHelper,
+            url: url);
 }

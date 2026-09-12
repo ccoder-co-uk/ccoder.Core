@@ -9,7 +9,7 @@ namespace Web.Services.Orchestrations.Api;
 internal sealed partial class ApiScriptOrchestrationService
 {
     private static void ValidateApiScriptRequestOnExecute(
-        ApiScriptRequest request) =>
+        ApiScriptRequest apiScriptRequest) =>
         ArgumentNullException.ThrowIfNull(
-            argument: request);
+            argument: apiScriptRequest);
 }

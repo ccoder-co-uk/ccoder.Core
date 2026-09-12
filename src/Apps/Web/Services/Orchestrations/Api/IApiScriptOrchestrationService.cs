@@ -9,5 +9,5 @@ namespace Web.Services.Orchestrations.Api;
 internal interface IApiScriptOrchestrationService
 {
     ValueTask<string> ExecuteApiScriptRequestAsync(
-        ApiScriptRequest request);
+        ApiScriptRequest apiScriptRequest);
 }

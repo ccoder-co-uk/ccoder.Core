@@ -31,7 +31,7 @@ public sealed class ScriptController(
 
             string response =
                 await apiScriptManager.ExecuteApiScriptRequestAsync(
-                    request: request);
+                    apiScriptRequest: request);
 
             return Ok(value: response);
         }

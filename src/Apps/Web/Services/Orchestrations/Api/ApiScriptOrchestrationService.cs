@@ -13,17 +13,17 @@ internal sealed partial class ApiScriptOrchestrationService(
     : IApiScriptOrchestrationService
 {
     public ValueTask<string> ExecuteApiScriptRequestAsync(
-        ApiScriptRequest request) =>
+        ApiScriptRequest apiScriptRequest) =>
         TryCatch(operation: async () =>
         {
             ValidateApiScriptRequestOnExecute(
-                request: request);
+                apiScriptRequest: apiScriptRequest);
 
             apiScriptAuthorizationService
                 .AuthorizeScriptExecution();
 
             return await apiScriptExecutionService
                 .ExecuteScriptAsync(
-                    script: request.Script);
+                    script: apiScriptRequest.Script);
         });
 }

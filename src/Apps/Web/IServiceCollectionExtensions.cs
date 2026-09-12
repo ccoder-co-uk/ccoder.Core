@@ -12,6 +12,9 @@ using Web.Brokers.Api;
 using Web.Services.Foundations.Api;
 using Web.Services.Orchestrations.Api;
 using Web.Dependencies.Api;
+using Web.Dependencies;
+using Web.Brokers.HomeSessions;
+using Web.Services.Foundations.HomeSessions;
 
 namespace Web;
 
@@ -27,6 +30,7 @@ public static class IServiceCollectionExtensions
                 configuration: applicationConfiguration);
         configure?.Invoke(configuration);
         services.AddApplicationLogging(applicationConfiguration);
+        services.AddDependencies();
         services.AddBrokers();
         services.AddFoundations();
         services.AddProcessings();
@@ -63,11 +67,18 @@ public static class IServiceCollectionExtensions
 
     private static void AddBrokers(this IServiceCollection services)
     {
-        services.AddScoped<ApiScriptExecutionDependency>();
         services.AddScoped<ICommonObjectCacheBroker, CommonObjectCacheBroker>();
         services.AddScoped<IMetadataCacheBroker, MetadataCacheBroker>();
         services.AddScoped<IApiScriptExecutionBroker, ApiScriptExecutionBroker>();
         services.AddScoped<IApiContextBroker, ApiContextBroker>();
+        services.AddScoped<IHomeSessionBroker, HomeSessionBroker>();
+    }
+
+    private static void AddDependencies(this IServiceCollection services)
+    {
+        services.AddScoped<ApiContextDependency>();
+        services.AddScoped<ApiScriptExecutionDependency>();
+        services.AddScoped<HomeSessionDependency>();
     }
 
     private static void AddFoundations(this IServiceCollection services)
@@ -81,6 +92,7 @@ public static class IServiceCollectionExtensions
             ApiScriptExecutionService>();
 
         services.AddScoped<IApiContextService, ApiContextService>();
+        services.AddScoped<IHomeSessionService, HomeSessionService>();
     }
 
     private static void AddProcessings(this IServiceCollection services) =>

@@ -3,85 +3,78 @@
 // ---------------------------------------------------------------
 
 using System.Dynamic;
-using cCoder.Core.Models;
-using cCoder.Data;
+using Microsoft.AspNetCore.Mvc;
+using Web.Models;
+using Web.Services.Foundations.HomeSessions;
 
 namespace Web.Services.Processings;
 
-internal sealed partial class HomeSessionProcessingService
-    : IHomeSessionProcessingService
+internal sealed partial class HomeSessionProcessingService(
+    IHomeSessionService homeSessionService)
+        : IHomeSessionProcessingService
 {
-    public bool CanUseSession(
-        HttpContext context) =>
+    public bool CanUseSession(HttpContext context) =>
         TryCatch(operation: () =>
         {
-            ValidateContextOnCheck(
-                context: context);
+            ValidateContextOnCheck(context: context);
 
-            return IsSessionAvailable(
-                context: context);
+            return homeSessionService.CanUseSession(context: context);
         });
 
-    public ExpandoObject CreateExpandoObject(
-        HttpContext context) =>
+    public ExpandoObject CreateExpandoObject(HttpContext context) =>
         TryCatch(operation: () =>
         {
-            ValidateContextOnCreate(
-                context: context);
+            ValidateContextOnCreate(context: context);
 
             dynamic result = new ExpandoObject();
 
             IDictionary<string, object> values =
                 (IDictionary<string, object>)result;
 
-            string host = context.Request.Host.Host
+            HomeSessionContext homeSessionContext =
+                homeSessionService.CreateHomeSessionContext(
+                    context: context);
+
+            string host = homeSessionContext.Host
                 .Replace(
                     oldValue: "www.",
                     newValue: string.Empty)
                 .ToLowerInvariant();
 
-            int? port = context.Request.Host.Port;
+            int? port = homeSessionContext.Port;
 
             result.apiRoot =
                 port.HasValue && port.Value is not 443 and not 80
-                    ? $"{context.Request.Scheme}://{host}:{port.Value}/Api/"
-                    : $"{context.Request.Scheme}://{host}/Api/";
-
-            ICoreAuthInfo authInfo = context.RequestServices
-                .GetService<ICoreAuthInfo>()
-                ?? new CoreAuthInfo
-                {
-                    SSOUserId = "Guest"
-                };
+                    ? $"{homeSessionContext.Scheme}://{host}:{port.Value}/Api/"
+                    : $"{homeSessionContext.Scheme}://{host}/Api/";
 
             if (!string.IsNullOrWhiteSpace(
-                value: authInfo.SSOUserId)
+                value: homeSessionContext.SSOUserId)
                 && !string.Equals(
-                    a: authInfo.SSOUserId,
+                    a: homeSessionContext.SSOUserId,
                     b: "Guest",
                     comparisonType:
                         StringComparison.OrdinalIgnoreCase))
             {
-                values["user"] = authInfo.SSOUserId;
+                values["user"] = homeSessionContext.SSOUserId;
             }
 
-            string token =
-                context.Request.Query["t"].ToString();
+            string token = homeSessionContext.Token;
 
             if (!string.IsNullOrWhiteSpace(value: token))
             {
                 values["token"] = token;
             }
 
-            if (!IsSessionAvailable(context: context))
+            if (!homeSessionService.CanUseSession(context: context))
             {
                 return result;
             }
 
-            foreach (string key in context.Session.Keys)
+            foreach (string key in homeSessionContext.SessionKeys)
             {
                 values[key] = key == "ssoUser"
-                    ? authInfo.SSOUserId
+                    ? homeSessionContext.SSOUserId
                     : GetSessionValueCore(
                         context: context,
                         key: key);
@@ -90,16 +83,12 @@ internal sealed partial class HomeSessionProcessingService
             return (ExpandoObject)result;
         });
 
-    public string GetSessionValue(
-        HttpContext context,
-        string key) =>
+    public string GetSessionValue(HttpContext context, string key) =>
         TryCatch(operation: () =>
         {
             ValidateSessionOnGet(context: context, key: key);
 
-            return GetSessionValueCore(
-                context: context,
-                key: key);
+            return GetSessionValueCore(context: context, key: key);
         });
 
     public void SetSessionValue(
@@ -110,51 +99,60 @@ internal sealed partial class HomeSessionProcessingService
         {
             ValidateSessionOnSet(context: context, key: key, value: value);
 
-            if (!IsSessionAvailable(context: context))
+            if (!homeSessionService.CanUseSession(context: context))
             {
                 return;
             }
 
             if (value is not null)
             {
-                context.Session.SetString(
-                    key: key.ToLowerInvariant(),
+                homeSessionService.SetSessionValue(
+                    context: context,
+                    key: key,
                     value: value);
 
                 return;
             }
 
-            if (context.Session.Keys.Contains(
-                value: key.ToLowerInvariant()))
+            if (homeSessionService.ContainsSessionKey(
+                context: context,
+                key: key))
             {
-                context.Session.Remove(
-                    key: key.ToLowerInvariant());
+                homeSessionService.RemoveSessionValue(
+                    context: context,
+                    key: key);
             }
         });
 
-    private static bool IsSessionAvailable(
-        HttpContext context)
-    {
-        try
+    public void AbortRequest(HttpContext context) =>
+        TryCatch(operation: () =>
         {
-            return context.Session?.IsAvailable == true;
-        }
-        catch
-        {
-            return false;
-        }
-    }
+            ValidateContextOnCheck(context: context);
 
-    private static string GetSessionValueCore(
-        HttpContext context,
-        string key)
+            homeSessionService.AbortRequest(context: context);
+        });
+
+    public bool IsLocalUrl(IUrlHelper urlHelper, string url) =>
+        TryCatch(operation: () =>
+        {
+            ValidateUrlOnCheck(urlHelper: urlHelper, url: url);
+
+            return homeSessionService.IsLocalUrl(
+                urlHelper: urlHelper,
+                url: url);
+        });
+
+    private string GetSessionValueCore(HttpContext context, string key)
     {
-        bool hasValue = IsSessionAvailable(context: context)
-            && context.Session.Keys.Contains(
-                value: key.ToLowerInvariant());
+        bool hasValue = homeSessionService.CanUseSession(context: context)
+            && homeSessionService.ContainsSessionKey(
+                context: context,
+                key: key);
 
         return hasValue
-            ? context.Session.GetString(key: key)
+            ? homeSessionService.ReadSessionValue(
+                context: context,
+                key: key)
             : null;
     }
 }

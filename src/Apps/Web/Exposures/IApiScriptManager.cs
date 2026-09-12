@@ -9,5 +9,5 @@ namespace Web.Exposures;
 public interface IApiScriptManager
 {
     ValueTask<string> ExecuteApiScriptRequestAsync(
-        ApiScriptRequest request);
+        ApiScriptRequest apiScriptRequest);
 }
