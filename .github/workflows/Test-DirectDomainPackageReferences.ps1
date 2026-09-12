@@ -9,7 +9,7 @@ Set-StrictMode -Version Latest
 $expectedReferences = [ordered]@{
     "cCoder.AI" = "2026.9.9.920"
     "cCoder.AppSecurity" = "2026.9.9.859"
-    "cCoder.ContentManagement" = "2026.9.10.1713"
+    "cCoder.ContentManagement" = "2026.9.11.2355"
     "cCoder.Data" = "2026.9.9.951"
     "cCoder.DocumentManagement" = "2026.9.10.1724"
     "cCoder.Eventing" = "2026.9.9.847"
@@ -60,7 +60,7 @@ if ($incorrectReferences.Count -gt 0) {
 
 $expectedConsumerReferences = @(
     @{ Project = "src/cCoder.Core.Tests/cCoder.Core.Tests.csproj"; Package = "cCoder.AppSecurity"; Version = "2026.9.9.859" },
-    @{ Project = "src/cCoder.Core.Tests/cCoder.Core.Tests.csproj"; Package = "cCoder.ContentManagement"; Version = "2026.9.10.1713" },
+    @{ Project = "src/cCoder.Core.Tests/cCoder.Core.Tests.csproj"; Package = "cCoder.ContentManagement"; Version = "2026.9.11.2355" },
     @{ Project = "src/cCoder.Core.Tests/cCoder.Core.Tests.csproj"; Package = "cCoder.Data"; Version = "2026.9.9.951" },
     @{ Project = "src/Apps/HostedServices.AcceptanceTests/HostedServices.AcceptanceTests.csproj"; Package = "cCoder.Security.Data"; Version = "2026.9.9.902" },
     @{ Project = "src/Apps/Web.AcceptanceTests/Web.AcceptanceTests.csproj"; Package = "cCoder.Security.Data"; Version = "2026.9.9.902" },

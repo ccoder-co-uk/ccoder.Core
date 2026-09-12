@@ -13,13 +13,13 @@
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
-        "Id": "HostedServices:Controller",
-        "FullName": "Controller",
+        "Id": "Microsoft.AspNetCore.Mvc.ViewFeatures:Microsoft.AspNetCore.Mvc.Controller",
+        "FullName": "Microsoft.AspNetCore.Mvc.Controller",
         "Name": "Controller",
-        "Namespace": "\u003Cglobal namespace\u003E",
-        "AssemblyName": "HostedServices",
+        "Namespace": "Microsoft.AspNetCore.Mvc",
+        "AssemblyName": "Microsoft.AspNetCore.Mvc.ViewFeatures",
         "Kind": "Class",
-        "IsInCurrentProject": true,
+        "IsInCurrentProject": false,
         "StandardElementType": "Dependency"
       },
       "Interfaces": [],
@@ -30,16 +30,42 @@
           "Name": "Get",
           "LineNumber": 13,
           "Inputs": [],
-          "ReturnType": "IActionResult",
+          "ReturnType": "Microsoft.AspNetCore.Mvc.IActionResult",
           "Implements": [],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "Microsoft.AspNetCore.Mvc.Controller",
+              "MethodName": "View",
+              "MethodId": "Microsoft.AspNetCore.Mvc.Controller.View(System.String?)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "Microsoft.AspNetCore.Mvc.ControllerBase",
+              "MethodName": "StatusCode",
+              "MethodId": "Microsoft.AspNetCore.Mvc.ControllerBase.StatusCode(System.Int32,System.Object?)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
           "HttpMethods": [
             "GET"
           ],
-          "HttpResponses": [],
+          "HttpResponses": [
+            {
+              "StatusCode": 500,
+              "ResultMethod": "StatusCode",
+              "ExceptionType": "System.Exception",
+              "IsExceptionPath": true,
+              "IsNullPath": false,
+              "HasBody": true,
+              "ExposesExceptionDetails": false,
+              "LogsException": false
+            }
+          ],
           "IsHttpRequestHandler": true,
           "IsODataControllerAction": false,
           "HasFromBodyParameter": false,
@@ -56,13 +82,13 @@
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
-        "Id": "HostedServices:Controller",
-        "FullName": "Controller",
+        "Id": "Microsoft.AspNetCore.Mvc.ViewFeatures:Microsoft.AspNetCore.Mvc.Controller",
+        "FullName": "Microsoft.AspNetCore.Mvc.Controller",
         "Name": "Controller",
-        "Namespace": "\u003Cglobal namespace\u003E",
-        "AssemblyName": "HostedServices",
+        "Namespace": "Microsoft.AspNetCore.Mvc",
+        "AssemblyName": "Microsoft.AspNetCore.Mvc.ViewFeatures",
         "Kind": "Class",
-        "IsInCurrentProject": true,
+        "IsInCurrentProject": false,
         "StandardElementType": "Dependency"
       },
       "Interfaces": [],
@@ -73,9 +99,23 @@
           "Name": "Get",
           "LineNumber": 18,
           "Inputs": [],
-          "ReturnType": "IActionResult",
+          "ReturnType": "Microsoft.AspNetCore.Mvc.IActionResult",
           "Implements": [],
           "Calls": [
+            {
+              "TypeName": "Microsoft.AspNetCore.Mvc.Controller",
+              "MethodName": "View",
+              "MethodId": "Microsoft.AspNetCore.Mvc.Controller.View(System.String?)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "Microsoft.AspNetCore.Mvc.ControllerBase",
+              "MethodName": "StatusCode",
+              "MethodId": "Microsoft.AspNetCore.Mvc.ControllerBase.StatusCode(System.Int32,System.Object?)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
             {
               "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
               "MethodName": "LogError",
@@ -90,7 +130,18 @@
           "HttpMethods": [
             "GET"
           ],
-          "HttpResponses": [],
+          "HttpResponses": [
+            {
+              "StatusCode": 500,
+              "ResultMethod": "StatusCode",
+              "ExceptionType": "System.Exception",
+              "IsExceptionPath": true,
+              "IsNullPath": false,
+              "HasBody": true,
+              "ExposesExceptionDetails": false,
+              "LogsException": true
+            }
+          ],
           "IsHttpRequestHandler": true,
           "IsODataControllerAction": false,
           "HasFromBodyParameter": false,
@@ -103,9 +154,23 @@
           "Name": "GetStats",
           "LineNumber": 60,
           "Inputs": [],
-          "ReturnType": "IActionResult",
+          "ReturnType": "Microsoft.AspNetCore.Mvc.IActionResult",
           "Implements": [],
           "Calls": [
+            {
+              "TypeName": "Microsoft.AspNetCore.Mvc.Controller",
+              "MethodName": "Json",
+              "MethodId": "Microsoft.AspNetCore.Mvc.Controller.Json(System.Object?)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "Microsoft.AspNetCore.Mvc.ControllerBase",
+              "MethodName": "StatusCode",
+              "MethodId": "Microsoft.AspNetCore.Mvc.ControllerBase.StatusCode(System.Int32,System.Object?)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
             {
               "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
               "MethodName": "LogError",
@@ -127,7 +192,18 @@
           "HttpMethods": [
             "GET"
           ],
-          "HttpResponses": [],
+          "HttpResponses": [
+            {
+              "StatusCode": 500,
+              "ResultMethod": "StatusCode",
+              "ExceptionType": "System.Exception",
+              "IsExceptionPath": true,
+              "IsNullPath": false,
+              "HasBody": true,
+              "ExposesExceptionDetails": false,
+              "LogsException": true
+            }
+          ],
           "IsHttpRequestHandler": true,
           "IsODataControllerAction": false,
           "HasFromBodyParameter": false,
@@ -145,9 +221,23 @@
               "Type": "System.Guid"
             }
           ],
-          "ReturnType": "System.Threading.Tasks.Task\u003CIActionResult\u003E",
+          "ReturnType": "System.Threading.Tasks.Task\u003CMicrosoft.AspNetCore.Mvc.IActionResult\u003E",
           "Implements": [],
           "Calls": [
+            {
+              "TypeName": "Microsoft.AspNetCore.Mvc.ControllerBase",
+              "MethodName": "Ok",
+              "MethodId": "Microsoft.AspNetCore.Mvc.ControllerBase.Ok()",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "Microsoft.AspNetCore.Mvc.ControllerBase",
+              "MethodName": "StatusCode",
+              "MethodId": "Microsoft.AspNetCore.Mvc.ControllerBase.StatusCode(System.Int32,System.Object?)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
             {
               "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
               "MethodName": "LogError",
@@ -179,6 +269,16 @@
               "HasBody": false,
               "ExposesExceptionDetails": false,
               "LogsException": false
+            },
+            {
+              "StatusCode": 500,
+              "ResultMethod": "StatusCode",
+              "ExceptionType": "System.Exception",
+              "IsExceptionPath": true,
+              "IsNullPath": false,
+              "HasBody": true,
+              "ExposesExceptionDetails": false,
+              "LogsException": true
             }
           ],
           "IsHttpRequestHandler": true,
@@ -554,24 +654,24 @@
       "Properties": [],
       "Methods": [
         {
-          "Id": "HostedServices.IServiceCollectionExtensions.AddHostedServices(IServiceCollection,IConfiguration,System.Action\u003CHostedServices.Models.AppConfiguration\u003E)",
+          "Id": "HostedServices.IServiceCollectionExtensions.AddHostedServices(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration,System.Action\u003CHostedServices.Models.AppConfiguration\u003E)",
           "Name": "AddHostedServices",
           "LineNumber": 19,
           "Inputs": [
             {
               "Name": "services",
-              "Type": "IServiceCollection"
+              "Type": "Microsoft.Extensions.DependencyInjection.IServiceCollection"
             },
             {
               "Name": "applicationConfiguration",
-              "Type": "IConfiguration"
+              "Type": "Microsoft.Extensions.Configuration.IConfiguration"
             },
             {
               "Name": "configure",
               "Type": "System.Action\u003CHostedServices.Models.AppConfiguration\u003E"
             }
           ],
-          "ReturnType": "IServiceCollection",
+          "ReturnType": "Microsoft.Extensions.DependencyInjection.IServiceCollection",
           "Implements": [],
           "Calls": [
             {
@@ -591,7 +691,7 @@
             {
               "TypeName": "cCoder.Core.IServiceCollectionExtensions",
               "MethodName": "AddCoreHostedServices",
-              "MethodId": "cCoder.Core.IServiceCollectionExtensions.AddCoreHostedServices(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action\u003CcCoder.Core.Models.CoreConfiguration\u003E)",
+              "MethodId": "cCoder.Core.IServiceCollectionExtensions.AddCoreHostedServices(Microsoft.Extensions.DependencyInjection.IServiceCollection,cCoder.Core.Models.CoreConfiguration)",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
             }
@@ -652,7 +752,64 @@
           ],
           "ReturnType": "System.Void",
           "Implements": [],
-          "Calls": [],
+          "Calls": [
+            {
+              "TypeName": "HostedServices.IServiceCollectionExtensions",
+              "MethodName": "AddHostedServices",
+              "MethodId": "HostedServices.IServiceCollectionExtensions.AddHostedServices(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration,System.Action\u003CHostedServices.Models.AppConfiguration\u003E)",
+              "StandardElementType": "App",
+              "IsDependencyBoundary": false
+            },
+            {
+              "TypeName": "Microsoft.AspNetCore.Builder.HealthCheckEndpointRouteBuilderExtensions",
+              "MethodName": "MapHealthChecks",
+              "MethodId": "Microsoft.AspNetCore.Builder.HealthCheckEndpointRouteBuilderExtensions.MapHealthChecks(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder,System.String,Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "Microsoft.AspNetCore.Builder.WebApplication",
+              "MethodName": "CreateBuilder",
+              "MethodId": "Microsoft.AspNetCore.Builder.WebApplication.CreateBuilder(System.String[])",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "Microsoft.AspNetCore.Builder.WebApplication",
+              "MethodName": "Run",
+              "MethodId": "Microsoft.AspNetCore.Builder.WebApplication.Run(System.String?)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "Microsoft.AspNetCore.Builder.WebApplicationBuilder",
+              "MethodName": "Build",
+              "MethodId": "Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build()",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions",
+              "MethodName": ".ctor",
+              "MethodId": "Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions..ctor()",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "Microsoft.AspNetCore.Http.HttpResponseWritingExtensions",
+              "MethodName": "WriteAsync",
+              "MethodId": "Microsoft.AspNetCore.Http.HttpResponseWritingExtensions.WriteAsync(Microsoft.AspNetCore.Http.HttpResponse,System.String,System.Threading.CancellationToken)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "cCoder.Core.WebApplicationExtensions",
+              "MethodName": "StartCoreHostedServices",
+              "MethodId": "cCoder.Core.WebApplicationExtensions.StartCoreHostedServices(Microsoft.AspNetCore.Builder.WebApplication)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [
             "System.InvalidOperationException"
           ],
@@ -709,41 +866,5 @@
       "ToType": "cCoder.Workflow.Exposures.IFlowInstanceDataManager"
     }
   ],
-  "AnalysisItems": [
-    {
-      "Code": "STXAPI001",
-      "Description": "An API controller must have exactly one business dependency.",
-      "Severity": "Warning",
-      "Type": "HostedServices.Controllers.HomeController",
-      "LineNumber": 9
-    },
-    {
-      "Code": "STXAPI005",
-      "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
-      "Severity": "Warning",
-      "Type": "HostedServices.Controllers.HomeController",
-      "LineNumber": 13
-    },
-    {
-      "Code": "STXAPI005",
-      "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
-      "Severity": "Warning",
-      "Type": "HostedServices.Controllers.WorkflowController",
-      "LineNumber": 18
-    },
-    {
-      "Code": "STXAPI005",
-      "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
-      "Severity": "Warning",
-      "Type": "HostedServices.Controllers.WorkflowController",
-      "LineNumber": 37
-    },
-    {
-      "Code": "STXAPI005",
-      "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
-      "Severity": "Warning",
-      "Type": "HostedServices.Controllers.WorkflowController",
-      "LineNumber": 60
-    }
-  ]
+  "AnalysisItems": []
 }

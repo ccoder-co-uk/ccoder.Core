@@ -3,13 +3,14 @@
 // ---------------------------------------------------------------
 
 using cCoder.Data.Models;
+using Web.Dependencies.Api;
 
 namespace Web.Brokers.Api;
 
 internal sealed class ApiContextBroker(
-    IEnumerable<ApiInfo> apiInfos)
+    ApiContextDependency apiContextDependency)
     : IApiContextBroker
 {
     public ApiInfo[] SelectAllApiInfos() =>
-        [.. apiInfos];
+        apiContextDependency.SelectAllApiInfos();
 }

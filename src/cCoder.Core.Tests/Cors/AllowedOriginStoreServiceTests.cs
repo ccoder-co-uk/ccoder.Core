@@ -4,6 +4,7 @@
 
 using cCoder.Core.Brokers.ContentManagement;
 using cCoder.Core.Brokers.Http;
+using cCoder.Core.Brokers.Json;
 using cCoder.Core.Services.Foundations.AllowedOrigins;
 using cCoder.Data.Models.CMS;
 using FluentAssertions;
@@ -45,7 +46,8 @@ public sealed partial class AllowedOriginStoreServiceTests
 
         AllowedOriginStoreService service = new(
             appBroker: appBrokerMock.Object,
-            httpRequestBroker: httpRequestBroker);
+            httpRequestBroker: httpRequestBroker,
+            allowedOriginJsonBroker: new AllowedOriginJsonBroker());
 
         // When
         string[] actualOrigins = await service.GetAllowedOriginsAsync();
@@ -69,7 +71,8 @@ public sealed partial class AllowedOriginStoreServiceTests
 
         AllowedOriginStoreService service = new(
             appBroker: appBrokerMock.Object,
-            httpRequestBroker: httpRequestBroker);
+            httpRequestBroker: httpRequestBroker,
+            allowedOriginJsonBroker: new AllowedOriginJsonBroker());
 
         // When
         string[] actualOrigins = await service.GetAllowedOriginsAsync();
@@ -105,7 +108,8 @@ public sealed partial class AllowedOriginStoreServiceTests
 
         AllowedOriginStoreService service = new(
             appBroker: appBrokerMock.Object,
-            httpRequestBroker: httpRequestBroker);
+            httpRequestBroker: httpRequestBroker,
+            allowedOriginJsonBroker: new AllowedOriginJsonBroker());
 
         // When
         string[] actualOrigins = await service.GetAllowedOriginsAsync();

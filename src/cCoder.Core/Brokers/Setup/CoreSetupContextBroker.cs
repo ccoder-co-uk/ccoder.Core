@@ -2,8 +2,8 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using cCoder.Core.Dependencies.Setup;
 using cCoder.Data;
-using Microsoft.EntityFrameworkCore;
 
 namespace cCoder.Core.Brokers.Setup;
 
@@ -11,6 +11,9 @@ internal sealed class CoreSetupContextBroker(
     ICoreContextFactory coreContextFactory)
     : ICoreSetupContextBroker
 {
-    public DbContext CreateCoreContext() =>
-        coreContextFactory.CreateCoreContext();
+    public ValueTask<bool> IsInitializedAsync(
+        CancellationToken cancellationToken) =>
+        SetupStateDependency.IsCoreInitializedAsync(
+            coreContextFactory: coreContextFactory,
+            cancellationToken: cancellationToken);
 }

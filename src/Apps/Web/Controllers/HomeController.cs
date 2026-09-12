@@ -48,7 +48,9 @@ namespace Web.Controllers
                 if (path?.ToLower()
                     .EndsWith(value: ".php") ?? false)
                 {
-                    Response.HttpContext.Abort();
+                    homeSessionManager.AbortRequest(
+                        context: Response.HttpContext);
+
                     return Ok();
                 }
 
@@ -101,7 +103,9 @@ namespace Web.Controllers
                 string returnUrl = Request.PathBase + Request.Path
                     + Request.QueryString;
 
-                if (!Url.IsLocalUrl(url: returnUrl))
+                if (!homeSessionManager.IsLocalUrl(
+                    urlHelper: Url,
+                    url: returnUrl))
                 {
                     returnUrl = "/";
                 }

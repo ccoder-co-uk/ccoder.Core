@@ -16,7 +16,9 @@ public class XmlFormatter : TextOutputFormatter
     private readonly IFormatterODataProcessingService formatterODataProcessingService;
 
     public XmlFormatter()
-        : this(new FormatterODataProcessingService())
+        : this(new FormatterODataProcessingService(
+            new Services.Foundations.Formatters.FormatterODataService(
+                new Brokers.Formatters.FormatterODataBroker())))
     {
     }
 

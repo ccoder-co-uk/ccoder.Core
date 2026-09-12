@@ -2,11 +2,13 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using Microsoft.Extensions.Primitives;
+using cCoder.Core.Services.Foundations.Middleware;
+using cCoder.Core.Models.Middleware;
 
 namespace cCoder.Core.Services.Processings.Middleware;
 
-internal sealed partial class CoreFormatterMiddlewareProcessingService
+internal sealed partial class CoreFormatterMiddlewareProcessingService(
+    ICoreFormatterMiddlewareService coreFormatterMiddlewareService)
     : ICoreFormatterMiddlewareProcessingService
 {
     public Task ProcessAsync(
@@ -16,23 +18,23 @@ internal sealed partial class CoreFormatterMiddlewareProcessingService
         {
             ValidateOnProcess(context: context, next: next);
 
-            Dictionary<string, StringValues> query =
-                Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(
+            IReadOnlyDictionary<string, string> query =
+                coreFormatterMiddlewareService.ParseQuery(
                     queryString: context.Request.QueryString.Value);
 
             if (query.TryGetValue(
                 key: "t",
-                value: out StringValues token))
+                value: out string token))
             {
                 context.Request.Headers.Authorization =
-                    $"bearer {token[0]}";
+                    $"bearer {token}";
             }
 
             if (query.TryGetValue(
                 key: "$format",
-                value: out StringValues value))
+                value: out string value))
             {
-                context.Request.Headers.Accept = value[0] switch
+                context.Request.Headers.Accept = value switch
                 {
                     "xml" => "application/xml",
                     "csv" => "text/csv",
@@ -42,7 +44,7 @@ internal sealed partial class CoreFormatterMiddlewareProcessingService
                 };
 
                 context.Response.Headers.ContentDisposition =
-                    value[0] switch
+                    value switch
                     {
                         "xml" => "attachment; filename=export.xml",
                         "csv" => "attachment; filename=export.csv",
@@ -51,6 +53,12 @@ internal sealed partial class CoreFormatterMiddlewareProcessingService
                     };
             }
 
-            await next(context: context);
+            await coreFormatterMiddlewareService
+                .InvokeCoreFormatterMiddlewareInvocationNextAsync(
+                coreFormatterMiddlewareInvocation: new CoreFormatterMiddlewareInvocation
+                {
+                    Next = next,
+                    Context = context
+                });
         });
 }

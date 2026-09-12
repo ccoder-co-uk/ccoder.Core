@@ -4,12 +4,10 @@
 
 using cCoder.Data.Models.Packaging;
 
-namespace cCoder.Core.Brokers.Packaging;
+namespace cCoder.Core.Services.Foundations.Packages;
 
-internal interface IPackageBroker
+internal interface IWorkflowPackageService
 {
-    Package ExportPackage(
-        int appId,
-        string packageName);
-
+    ValueTask ImportPackageAsync(int appId, Package package);
+    Package ExportPackage(int appId, string packageName);
 }

@@ -22,7 +22,8 @@ public partial class SecurityAccountEmailOrchestrationServiceTests
             subject: "Core Portal: Password Reset");
 
         // When
-        await orchestrationService.QueuePasswordResetRequestedSecurityAccountEventEmailAsync(accountEvent: accountEvent);
+        await orchestrationService.QueuePasswordResetRequestedSecurityAccountEventEmailAsync(
+            securityAccountEvent: accountEvent);
 
         // Then
         VerifyQueuedEmail(

@@ -7,16 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace cCoder.Core.Exposures.OData.Responses;
 
-public class RawResult(string response) : IActionResult
+public class RawResult : ContentResult
 {
-    private readonly string response = response;
-
-    public Task ExecuteResultAsync(ActionContext context)
+    public RawResult(string response)
     {
-        context.HttpContext.Response.StatusCode =
-            StatusCodes.Status200OK;
-
-        return context.HttpContext.Response.WriteAsync(
-            text: response);
+        Content = response;
+        StatusCode = StatusCodes.Status200OK;
     }
 }

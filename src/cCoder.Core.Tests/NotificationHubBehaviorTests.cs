@@ -3,8 +3,10 @@
 // ---------------------------------------------------------------
 
 using cCoder.Core.Brokers.Loggings;
+using cCoder.Core.Brokers.Notifications;
 using cCoder.Core.Exposures.Hubs;
 using cCoder.Core.Services.Processings.Notifications;
+using cCoder.Core.Services.Foundations.Notifications;
 using Microsoft.AspNetCore.SignalR;
 using Moq;
 using Xunit;
@@ -185,7 +187,10 @@ public sealed partial class NotificationHubBehaviorTests
                 .Returns(value: GroupMock.Object);
 
             INotificationHubProcessingService processingService =
-                new NotificationHubProcessingService(log: loggingBrokerMock.Object);
+                new NotificationHubProcessingService(
+                    log: loggingBrokerMock.Object,
+                    notificationHubService: new NotificationHubService(
+                        notificationHubBroker: new NotificationHubBroker()));
 
             Hub = new NotificationHub(
                 notificationHubProcessingService: processingService)

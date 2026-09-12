@@ -4,6 +4,7 @@
 
 using App = cCoder.Data.Models.CMS.App;
 using cCoder.ContentManagement.Exposures;
+using Microsoft.EntityFrameworkCore;
 
 namespace cCoder.Core.Brokers.ContentManagement;
 
@@ -18,6 +19,10 @@ internal class ContentManagementAppBroker(IAppManager appManager)
 
     public IQueryable<App> GetAllApps(bool ignoreFilters = false) =>
         appManager.GetAll(ignoreFilters: ignoreFilters);
+
+    public IQueryable<App> GetAllAppsWithTemplates(bool ignoreFilters = false) =>
+        appManager.GetAll(ignoreFilters: ignoreFilters)
+            .Include(navigationPropertyPath: app => app.Templates);
 
     public ValueTask<App> AddAppAsync(App newApp) =>
         appManager.AddAsync(newApp: newApp);

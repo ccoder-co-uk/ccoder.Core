@@ -3,6 +3,7 @@
 // ---------------------------------------------------------------
 
 using System.Dynamic;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Exposures;
 
@@ -22,4 +23,8 @@ public interface IHomeSessionManager
         HttpContext context,
         string key,
         string value);
+
+    void AbortRequest(HttpContext context);
+
+    bool IsLocalUrl(IUrlHelper urlHelper, string url);
 }

@@ -20,6 +20,9 @@ internal sealed partial class ContentManagementAppService
     private static void ValidateAllAppsOnGet(bool ignoreFilters) =>
         ValidationRulesEngine.Validate(inputs: [ignoreFilters]);
 
+    private static void ValidateAllAppsWithTemplatesOnGet(bool ignoreFilters) =>
+        ValidationRulesEngine.Validate(inputs: [ignoreFilters]);
+
     private static void ValidateAppOnAdd(App newApp) =>
         ValidationRulesEngine.Validate(inputs: [newApp]);
 

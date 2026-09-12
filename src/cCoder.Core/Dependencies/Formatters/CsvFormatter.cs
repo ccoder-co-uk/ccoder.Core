@@ -19,7 +19,9 @@ public class CsvFormatter : TextOutputFormatter
     private readonly IFormatterODataProcessingService formatterODataProcessingService;
 
     public CsvFormatter()
-        : this(new FormatterODataProcessingService())
+        : this(new FormatterODataProcessingService(
+            new Services.Foundations.Formatters.FormatterODataService(
+                new Brokers.Formatters.FormatterODataBroker())))
     {
     }
 

@@ -12,7 +12,7 @@ internal sealed class ApiScriptManager(
     : IApiScriptManager
 {
     public ValueTask<string> ExecuteApiScriptRequestAsync(
-        ApiScriptRequest request) =>
+        ApiScriptRequest apiScriptRequest) =>
         apiScriptOrchestrationService.ExecuteApiScriptRequestAsync(
-            request: request);
+            apiScriptRequest: apiScriptRequest);
 }

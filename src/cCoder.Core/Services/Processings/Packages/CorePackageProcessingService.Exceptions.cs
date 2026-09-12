@@ -15,4 +15,21 @@ internal sealed partial class CorePackageProcessingService
         catch (CoreDependencyException innerException) { throw new CoreProcessingDependencyException(innerException); }
         catch (Exception innerException) { throw new CoreProcessingServiceException(innerException); }
     }
+
+    private static async ValueTask<TResult> TryCatch<TResult>(
+        Func<ValueTask<TResult>> operation)
+    {
+        try { return await operation(); }
+        catch (CoreValidationException innerException) { throw new CoreProcessingValidationException(innerException); }
+        catch (CoreDependencyException innerException) { throw new CoreProcessingDependencyException(innerException); }
+        catch (Exception innerException) { throw new CoreProcessingServiceException(innerException); }
+    }
+
+    private static TResult TryCatch<TResult>(Func<TResult> operation)
+    {
+        try { return operation(); }
+        catch (CoreValidationException innerException) { throw new CoreProcessingValidationException(innerException); }
+        catch (CoreDependencyException innerException) { throw new CoreProcessingDependencyException(innerException); }
+        catch (Exception innerException) { throw new CoreProcessingServiceException(innerException); }
+    }
 }

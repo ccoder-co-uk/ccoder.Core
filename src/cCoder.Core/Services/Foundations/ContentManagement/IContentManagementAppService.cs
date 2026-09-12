@@ -11,6 +11,7 @@ internal interface IContentManagementAppService
     App GetApp(int appId, bool ignoreFilters = false);
     App GetAppByDomain(string domain, bool ignoreFilters = false);
     IQueryable<App> GetAllApps(bool ignoreFilters = false);
+    IQueryable<App> GetAllAppsWithTemplates(bool ignoreFilters = false);
     ValueTask<App> AddAppAsync(App newApp);
     ValueTask<App> UpdateAppAsync(App updatedApp);
     ValueTask DeleteAppAsync(int appId);

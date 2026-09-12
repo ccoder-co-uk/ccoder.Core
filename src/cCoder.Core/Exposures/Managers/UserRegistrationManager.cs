@@ -80,12 +80,12 @@ internal sealed class UserRegistrationManager(
     }
 
     public async ValueTask<SSOUser> RegisterAsync(
-        RegisterUser registerForm)
+        RegisterUser registerUser)
     {
         UserRegistrationOperation userRegistrationOperation = new()
         {
             Type = UserRegistrationOperationType.RegisterUser,
-            Registration = registerForm,
+            Registration = registerUser,
         };
 
         UserRegistrationOperation completedOperation =

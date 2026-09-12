@@ -9,7 +9,6 @@ using cCoder.Core.Exposures.Managers;
 using cCoder.Data.Models.CMS;
 using cCoder.Security.Models.Entities;
 using cCoder.Security.Models.Events;
-using Microsoft.EntityFrameworkCore;
 
 namespace cCoder.Core.Services.Aggregations;
 
@@ -19,52 +18,52 @@ internal sealed partial class SecurityAccountEmailAggregationService(
     : ISecurityAccountEmailAggregationService
 {
     public ValueTask QueueRegistrationCreatedSecurityAccountEventEmailAsync(
-        SecurityAccountEvent accountEvent) =>
+        SecurityAccountEvent securityAccountEvent) =>
         TryCatch(operation: async () =>
         {
-            ValidateSecurityAccountEventOnQueue(accountEvent: accountEvent);
+            ValidateSecurityAccountEventOnQueue(accountEvent: securityAccountEvent);
 
             await QueueAccountEmailAsync(
-                accountEvent: accountEvent,
+                securityAccountEvent: securityAccountEvent,
                 templateName: "ConfirmRegistration",
                 subject: "Confirm Registration");
         });
 
     public ValueTask QueueInvitationCreatedSecurityAccountEventEmailAsync(
-        SecurityAccountEvent accountEvent) =>
+        SecurityAccountEvent securityAccountEvent) =>
         TryCatch(operation: async () =>
         {
-            ValidateSecurityAccountEventOnQueue(accountEvent: accountEvent);
+            ValidateSecurityAccountEventOnQueue(accountEvent: securityAccountEvent);
 
             await QueueAccountEmailAsync(
-                accountEvent: accountEvent,
+                securityAccountEvent: securityAccountEvent,
                 templateName: "UserInvite",
                 subject: "Confirm Invitation");
         });
 
     public ValueTask QueuePasswordResetRequestedSecurityAccountEventEmailAsync(
-        SecurityAccountEvent accountEvent) =>
+        SecurityAccountEvent securityAccountEvent) =>
         TryCatch(operation: async () =>
         {
-            ValidateSecurityAccountEventOnQueue(accountEvent: accountEvent);
+            ValidateSecurityAccountEventOnQueue(accountEvent: securityAccountEvent);
 
             await QueueAccountEmailAsync(
-                accountEvent: accountEvent,
+                securityAccountEvent: securityAccountEvent,
                 templateName: "ForgotPassword",
                 subject: "Password Reset");
         });
 
     private async ValueTask QueueAccountEmailAsync(
-        SecurityAccountEvent accountEvent,
+        SecurityAccountEvent securityAccountEvent,
         string templateName,
         string subject)
     {
-        if (string.IsNullOrWhiteSpace(value: accountEvent?.RequestDomain))
+        if (string.IsNullOrWhiteSpace(value: securityAccountEvent?.RequestDomain))
         {
             return;
         }
 
-        App app = ResolveApp(requestDomain: accountEvent.RequestDomain);
+        App app = ResolveApp(requestDomain: securityAccountEvent.RequestDomain);
 
         if (app is null)
         {
@@ -79,11 +78,11 @@ internal sealed partial class SecurityAccountEmailAggregationService(
             return;
         }
 
-        string culture = string.IsNullOrWhiteSpace(value: accountEvent.Culture)
+        string culture = string.IsNullOrWhiteSpace(value: securityAccountEvent.Culture)
             ? app.DefaultCultureId
-            : accountEvent.Culture;
+            : securityAccountEvent.Culture;
 
-        SSOUser user = accountEvent.User;
+        SSOUser user = securityAccountEvent.User;
 
         var coreUser = new
         {
@@ -96,13 +95,13 @@ internal sealed partial class SecurityAccountEmailAggregationService(
 
         var renderModel = new
         {
-            accountEvent.Token,
-            EncodedToken = HttpUtility.UrlEncode(str: accountEvent.Token),
+            securityAccountEvent.Token,
+            EncodedToken = HttpUtility.UrlEncode(str: securityAccountEvent.Token),
             SSOUser = user,
             CoreUser = coreUser,
-            accountEvent.Tenant,
-            accountEvent.RequestDomain,
-            accountEvent.Kind,
+            securityAccountEvent.Tenant,
+            securityAccountEvent.RequestDomain,
+            securityAccountEvent.Kind,
         };
 
         await templatedEmailManager.QueueAppTemplatedEmailAsync(
@@ -119,11 +118,9 @@ internal sealed partial class SecurityAccountEmailAggregationService(
     {
         string normalizedDomain = NormalizeDomain(domain: requestDomain);
 
-        App app = contentManagementAppService.GetAllApps(ignoreFilters: true)
-            .Include(navigationPropertyPath: candidate => candidate.Templates)
+        App app = contentManagementAppService.GetAllAppsWithTemplates(ignoreFilters: true)
             .FirstOrDefault(predicate: candidate => candidate.Domain == normalizedDomain)
-            ?? contentManagementAppService.GetAllApps(ignoreFilters: true)
-                .Include(navigationPropertyPath: candidate => candidate.Templates)
+            ?? contentManagementAppService.GetAllAppsWithTemplates(ignoreFilters: true)
                 .AsEnumerable()
                 .FirstOrDefault(predicate: candidate =>
                     string.Equals(

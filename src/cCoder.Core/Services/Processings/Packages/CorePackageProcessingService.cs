@@ -2,139 +2,62 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using System.Text.Json;
-using System.Text.Json.Nodes;
-using cCoder.Core.Models.Packaging;
-using cCoder.Data;
-using cCoder.Data.Models.CMS;
+using cCoder.Core.Services.Foundations.Packages;
 using cCoder.Data.Models.Packaging;
-using Microsoft.EntityFrameworkCore;
 
 namespace cCoder.Core.Services.Processings.Packages;
 
 internal sealed partial class CorePackageProcessingService(
-    ICoreContextFactory coreContextFactory)
-    : ICorePackageProcessingService
+    ICorePackageService corePackageService) : ICorePackageProcessingService
 {
     private const string AppConfigurationItemType = "Core/App";
 
-    private static readonly JsonSerializerOptions JsonOptions = new()
-    {
-        PropertyNameCaseInsensitive = true,
-    };
-
-    public ValueTask ImportPackageAsync(
-        int appId,
-        Package package) =>
+    public ValueTask ImportPackageAsync(int appId, Package package) =>
         TryCatch(operation: async () =>
         {
             ValidatePackageOnImport(appId: appId, package: package);
 
-            await ImportPackageCoreAsync(
-                appId: appId,
-                package: package);
-        });
-
-    private async ValueTask ImportPackageCoreAsync(
-        int appId,
-        Package package)
-    {
-        PackageItem[] appItems =
-        [
-            .. (package?.Items ?? []).Where(
-                predicate: item => string.Equals(
+            PackageItem[] appItems =
+            [
+                .. (package.Items ?? []).Where(predicate: item => string.Equals(
                     a: item.Type,
                     b: AppConfigurationItemType,
                     comparisonType: StringComparison.OrdinalIgnoreCase))
-        ];
+            ];
 
-        foreach (PackageItem appItem in appItems)
+            foreach (PackageItem appItem in appItems)
+            {
+                await corePackageService.ImportAppConfigurationAsync(
+                    appId: appId,
+                    data: appItem.Data);
+            }
+        });
+
+    public ValueTask<Package> ExportAppConfigurationAsync(int appId, string sourceApi) =>
+        TryCatch(operation: () =>
         {
-            await ImportAppConfigurationPackageItemAsync(
-                appId: appId,
-                packageItem: appItem);
-        }
-    }
+            ValidatePackageOnExport(appId: appId, value: sourceApi);
+            return corePackageService.ExportAppConfigurationAsync(appId: appId, sourceApi: sourceApi);
+        });
 
-    private async ValueTask ImportAppConfigurationPackageItemAsync(
-        int appId,
-        PackageItem packageItem)
-    {
-        AppConfigurationPackageItem imported =
-            DeserializeAppConfiguration(data: packageItem.Data);
-
-        if (imported is null)
+    public ValueTask<Package> ExportPageRolesAsync(int appId, string sourceApi) =>
+        TryCatch(operation: () =>
         {
-            return;
-        }
+            ValidatePackageOnExport(appId: appId, value: sourceApi);
+            return corePackageService.ExportPageRolesAsync(appId: appId, sourceApi: sourceApi);
+        });
 
-        await using DbContext core = coreContextFactory.CreateCoreContext();
-
-        App app = await core.Set<App>()
-            .IgnoreQueryFilters()
-            .SingleOrDefaultAsync(predicate: found => found.Id == appId)
-            ?? throw new InvalidOperationException(
-                message: $"App '{appId}' was not found.");
-
-        app.DefaultCultureId = imported.DefaultCultureId ?? string.Empty;
-        app.Name = imported.Name ?? app.Name;
-        app.DefaultTheme = imported.DefaultTheme ?? app.DefaultTheme;
-        app.ConfigJson = imported.ConfigJson ?? app.ConfigJson;
-
-        await core.SaveChangesAsync();
-    }
-
-    private static AppConfigurationPackageItem DeserializeAppConfiguration(
-        string data)
-    {
-        if (string.IsNullOrWhiteSpace(value: data))
+    public ValueTask<Package> ExportFolderRolesAsync(int appId, string sourceApi) =>
+        TryCatch(operation: () =>
         {
-            return null;
-        }
+            ValidatePackageOnExport(appId: appId, value: sourceApi);
+            return corePackageService.ExportFolderRolesAsync(appId: appId, sourceApi: sourceApi);
+        });
 
-        JsonNode node = JsonNode.Parse(json: data);
-
-        if (node is null)
+    public Package ExportPackage(int appId, string packageName) =>
+        TryCatch(operation: () =>
         {
-            return null;
-        }
-
-        RemoveTypeMetadata(node: node);
-
-        return node switch
-        {
-            JsonArray array => array.Deserialize<AppConfigurationPackageItem[]>(
-                options: JsonOptions)?.FirstOrDefault(),
-            JsonObject jsonObject => jsonObject.Deserialize<AppConfigurationPackageItem>(
-                options: JsonOptions),
-            _ => null,
-        };
-    }
-
-    private static void RemoveTypeMetadata(JsonNode node)
-    {
-        switch (node)
-        {
-            case JsonObject jsonObject:
-                jsonObject.Remove(propertyName: "$type");
-
-                foreach (JsonNode child in jsonObject
-                    .Select(selector: property => property.Value)
-                    .Where(predicate: value => value is not null))
-                {
-                    RemoveTypeMetadata(node: child);
-                }
-
-                break;
-
-            case JsonArray jsonArray:
-                foreach (JsonNode child in jsonArray.Where(
-                    predicate: value => value is not null))
-                {
-                    RemoveTypeMetadata(node: child);
-                }
-
-                break;
-        }
-    }
+            ValidatePackageOnExport(appId: appId, value: packageName);
+            return corePackageService.ExportPackage(appId: appId, packageName: packageName);
+        });
 }

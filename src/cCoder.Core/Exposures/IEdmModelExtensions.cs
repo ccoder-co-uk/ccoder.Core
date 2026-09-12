@@ -4,6 +4,8 @@
 
 using cCoder.Core.Models.Metadata;
 using cCoder.Core.Services.Processings.Metadata;
+using cCoder.Core.Brokers.Metadata;
+using cCoder.Core.Services.Foundations.Metadata;
 using Microsoft.OData.Edm;
 
 namespace cCoder.Core.Exposures;
@@ -13,7 +15,7 @@ public static class IEdmModelExtensions
     public static IEnumerable<ExtendedMetadataContainer> GetMetadata(
         this IEdmModel model,
         string contextName) =>
-        new EdmModelProcessingService()
+        CreateEdmModelProcessingService()
             .GetEdmModelMetadata(
                 model: model,
                 contextName: contextName);
@@ -23,10 +25,15 @@ public static class IEdmModelExtensions
         string context,
         Type type,
         bool hasEndpoint = true) =>
-        new EdmModelProcessingService()
+        CreateEdmModelProcessingService()
             .GetExtendedMetadataContainer(
                 model: model,
                 context: context,
                 type: type,
                 hasEndpoint: hasEndpoint);
+
+    private static IEdmModelProcessingService CreateEdmModelProcessingService() =>
+        new EdmModelProcessingService(
+            edmModelService: new EdmModelService(
+                edmModelBroker: new EdmModelBroker()));
 }

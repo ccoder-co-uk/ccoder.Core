@@ -4,12 +4,13 @@
 
 using System.Collections;
 using System.Dynamic;
-using Microsoft.AspNetCore.OData.Query.Wrapper;
+using cCoder.Core.Services.Foundations.Formatters;
 
 
 namespace cCoder.Core.Services.Processings.Formatters;
 
-internal sealed partial class FormatterODataProcessingService
+internal sealed partial class FormatterODataProcessingService(
+    IFormatterODataService formatterODataService)
     : IFormatterODataProcessingService
 {
     public object HandleOData(object contextObject) =>
@@ -20,7 +21,7 @@ internal sealed partial class FormatterODataProcessingService
             return HandleODataObject(contextObject: contextObject);
         });
 
-    private static object HandleODataObject(object contextObject)
+    private object HandleODataObject(object contextObject)
     {
         if (contextObject is IEnumerable enumerable and not string)
         {
@@ -39,7 +40,7 @@ internal sealed partial class FormatterODataProcessingService
         }
     }
 
-    private static dynamic[] ProcessIEumerable(IEnumerable enumerable)
+    private dynamic[] ProcessIEumerable(IEnumerable enumerable)
     {
         dynamic[] rawDataItems = [.. enumerable
             .Cast<object>()
@@ -56,10 +57,15 @@ internal sealed partial class FormatterODataProcessingService
         return rawDataItems;
     }
 
-    private static object UnpackSelectExpandWrapper(object contextObject) =>
-        (contextObject is ISelectExpandWrapper wrapper)
-            ? ToExpandoObject(source: wrapper.ToDictionary())
-            : contextObject;
+    private object UnpackSelectExpandWrapper(object contextObject)
+    {
+        object unpacked = formatterODataService.UnpackSelectExpandWrapper(
+            contextObject: contextObject);
+
+        return unpacked is IDictionary<string, object> dictionary
+            ? ToExpandoObject(source: dictionary)
+            : unpacked;
+    }
 
     private static ExpandoObject ToExpandoObject(IDictionary<string, object> source)
     {
@@ -74,7 +80,7 @@ internal sealed partial class FormatterODataProcessingService
         return result;
     }
 
-    private static void ProcessDictionary(IDictionary<string, object> dict)
+    private void ProcessDictionary(IDictionary<string, object> dict)
     {
         string[] keys = [.. dict.Keys];
 
