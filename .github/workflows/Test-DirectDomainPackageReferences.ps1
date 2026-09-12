@@ -8,21 +8,21 @@ Set-StrictMode -Version Latest
 
 $expectedReferences = [ordered]@{
     "cCoder.AI" = "2026.9.9.920"
-    "cCoder.AppSecurity" = "2026.9.9.859"
-    "cCoder.ContentManagement" = "2026.9.11.2355"
-    "cCoder.Data" = "2026.9.9.951"
-    "cCoder.DocumentManagement" = "2026.9.10.1724"
-    "cCoder.Eventing" = "2026.9.9.847"
-    "cCoder.Eventing.AzureServiceBus" = "2026.9.9.847"
-    "cCoder.Eventing.Http" = "2026.9.9.847"
-    "cCoder.Logging" = "2026.9.9.1004"
-    "cCoder.Mail" = "2026.9.9.833"
-    "cCoder.Packaging" = "2026.9.9.848"
-    "cCoder.Security" = "2026.9.9.902"
-    "cCoder.Security.Data" = "2026.9.9.902"
-    "cCoder.Workflow" = "2026.9.9.835"
-    "cCoder.Workflow.Activities" = "2026.9.9.835"
-    "cCoder.Workflow.Engine" = "2026.9.9.835"
+    "cCoder.AppSecurity" = "2026.9.12.1256"
+    "cCoder.ContentManagement" = "2026.9.12.1337"
+    "cCoder.Data" = "2026.9.12.1246"
+    "cCoder.DocumentManagement" = "2026.9.12.1258"
+    "cCoder.Eventing" = "2026.9.12.1245"
+    "cCoder.Eventing.AzureServiceBus" = "2026.9.12.1245"
+    "cCoder.Eventing.Http" = "2026.9.12.1245"
+    "cCoder.Logging" = "2026.9.12.1250"
+    "cCoder.Mail" = "2026.9.12.1300"
+    "cCoder.Packaging" = "2026.9.12.1247"
+    "cCoder.Security" = "2026.9.12.1248"
+    "cCoder.Security.Data" = "2026.9.12.1248"
+    "cCoder.Workflow" = "2026.9.12.1252"
+    "cCoder.Workflow.Activities" = "2026.9.12.1252"
+    "cCoder.Workflow.Engine" = "2026.9.12.1252"
 }
 
 $projectPath = Join-Path $RepositoryRoot "src/cCoder.Core/cCoder.Core.csproj"
@@ -59,13 +59,13 @@ if ($incorrectReferences.Count -gt 0) {
 }
 
 $expectedConsumerReferences = @(
-    @{ Project = "src/cCoder.Core.Tests/cCoder.Core.Tests.csproj"; Package = "cCoder.AppSecurity"; Version = "2026.9.9.859" },
-    @{ Project = "src/cCoder.Core.Tests/cCoder.Core.Tests.csproj"; Package = "cCoder.ContentManagement"; Version = "2026.9.11.2355" },
-    @{ Project = "src/cCoder.Core.Tests/cCoder.Core.Tests.csproj"; Package = "cCoder.Data"; Version = "2026.9.9.951" },
-    @{ Project = "src/Apps/HostedServices.AcceptanceTests/HostedServices.AcceptanceTests.csproj"; Package = "cCoder.Security.Data"; Version = "2026.9.9.902" },
-    @{ Project = "src/Apps/Web.AcceptanceTests/Web.AcceptanceTests.csproj"; Package = "cCoder.Security.Data"; Version = "2026.9.9.902" },
-    @{ Project = "src/Apps/cCoder.IntegrationTests/cCoder.IntegrationTests.csproj"; Package = "cCoder.Security.Data"; Version = "2026.9.9.902" },
-    @{ Project = "src/Apps/cCoder.IntegrationTests/cCoder.IntegrationTests.csproj"; Package = "cCoder.Mail.Providers"; Version = "2026.9.9.833" }
+    @{ Project = "src/cCoder.Core.Tests/cCoder.Core.Tests.csproj"; Package = "cCoder.AppSecurity"; Version = "2026.9.12.1256" },
+    @{ Project = "src/cCoder.Core.Tests/cCoder.Core.Tests.csproj"; Package = "cCoder.ContentManagement"; Version = "2026.9.12.1337" },
+    @{ Project = "src/cCoder.Core.Tests/cCoder.Core.Tests.csproj"; Package = "cCoder.Data"; Version = "2026.9.12.1246" },
+    @{ Project = "src/Apps/HostedServices.AcceptanceTests/HostedServices.AcceptanceTests.csproj"; Package = "cCoder.Security.Data"; Version = "2026.9.12.1248" },
+    @{ Project = "src/Apps/Web.AcceptanceTests/Web.AcceptanceTests.csproj"; Package = "cCoder.Security.Data"; Version = "2026.9.12.1248" },
+    @{ Project = "src/Apps/cCoder.IntegrationTests/cCoder.IntegrationTests.csproj"; Package = "cCoder.Security.Data"; Version = "2026.9.12.1248" },
+    @{ Project = "src/Apps/cCoder.IntegrationTests/cCoder.IntegrationTests.csproj"; Package = "cCoder.Mail.Providers"; Version = "2026.9.12.1300" }
 )
 
 $consumerDowngrades = @(

@@ -11,5 +11,5 @@ internal sealed class WorkflowRunnerBroker(IFlowRunner flowRunner)
     : IWorkflowRunnerBroker
 {
     public Task RunWorkflowRequestAsync(WorkflowRequest workflowRequest) =>
-        flowRunner.RunAsync(request: workflowRequest);
+        flowRunner.RunAsync(workflowRequest: workflowRequest);
 }
