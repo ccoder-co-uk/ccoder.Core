@@ -11,39 +11,61 @@ using Xunit;
 
 namespace cCoder.Core.Tests;
 
-public sealed class ContentManagementPackageProcessingServiceTests
+public sealed partial class ContentManagementPackageProcessingServiceTests
 {
     [Fact]
     public async Task ImportPackageAsync_WhenAppIdIsNull_ForwardsCommonCacheImportUnchanged()
     {
+        // Given
         Package package = new() { Name = "Common Cache" };
         Mock<IContentManagementPackageService> packageServiceMock = new();
-        packageServiceMock.Setup(service => service.ImportPackageAsync(null, package))
-            .Returns(ValueTask.CompletedTask);
+
+        packageServiceMock
+            .Setup(expression: service => service.ImportPackageAsync(
+                appId: null,
+                package: package))
+            .Returns(value: ValueTask.CompletedTask);
 
         ContentManagementPackageProcessingService service = new(
             contentManagementPackageService: packageServiceMock.Object);
 
-        await service.ImportPackageAsync(appId: null, package: package);
+        // When
+        await service.ImportPackageAsync(
+            appId: null,
+            package: package);
 
+        // Then
         packageServiceMock.Verify(
-            expression: service => service.ImportPackageAsync(null, package),
+            expression: service => service.ImportPackageAsync(
+                appId: null,
+                package: package),
             times: Times.Once);
     }
 
     [Fact]
     public void ExportPackage_WhenFoundationReturnsPackage_ReturnsSamePackage()
     {
+        // Given
         Package expected = new() { Name = "Pages" };
         Mock<IContentManagementPackageService> packageServiceMock = new();
-        packageServiceMock.Setup(service => service.ExportPackage(42, "Pages"))
-            .Returns(expected);
+
+        packageServiceMock
+            .Setup(expression: service => service.ExportPackage(
+                appId: 42,
+                packageName: "Pages"))
+            .Returns(value: expected);
 
         ContentManagementPackageProcessingService service = new(
             contentManagementPackageService: packageServiceMock.Object);
 
-        Package actual = service.ExportPackage(appId: 42, packageName: "Pages");
+        // When
+        Package actual = service.ExportPackage(
+            appId: 42,
+            packageName: "Pages");
 
-        actual.Should().BeSameAs(expected);
+        // Then
+        actual
+            .Should()
+            .BeSameAs(expected: expected);
     }
 }

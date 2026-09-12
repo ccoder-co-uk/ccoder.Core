@@ -8,23 +8,29 @@ using Xunit;
 
 namespace cCoder.Core.Tests;
 
-public sealed class PackageArchitectureTests
+public sealed partial class PackageArchitectureTests
 {
     [Fact]
     public void PackageProcessingServices_WhenConstructed_UseOneMatchingFoundation()
     {
-        Type[] processingTypes = typeof(cCoder.Core.IServiceCollectionExtensions)
-            .Assembly
+        // Given
+        Assembly coreAssembly = typeof(cCoder.Core.IServiceCollectionExtensions).Assembly;
+
+        // When
+        Type[] processingTypes = coreAssembly
             .GetTypes()
-            .Where(type => type.Namespace ==
+            .Where(predicate: type => type.Namespace ==
                 "cCoder.Core.Services.Processings.Packages")
-            .Where(type => type.Name.EndsWith(
+            .Where(predicate: type => type.Name.EndsWith(
                 value: "PackageProcessingService",
                 comparisonType: StringComparison.Ordinal))
-            .Where(type => !type.IsInterface)
+            .Where(predicate: type => !type.IsInterface)
             .ToArray();
 
-        processingTypes.Should().NotBeEmpty();
+        // Then
+        processingTypes
+            .Should()
+            .NotBeEmpty();
 
         foreach (Type processingType in processingTypes)
         {
@@ -33,36 +39,65 @@ public sealed class PackageArchitectureTests
                 .Single()
                 .GetParameters();
 
-            parameters.Should().ContainSingle(
-                because: $"{processingType.Name} must cross one Foundation boundary");
+            parameters
+                .Should()
+                .ContainSingle(
+                    because: $"{processingType.Name} must cross one Foundation boundary");
 
-            parameters[0].ParameterType.Namespace.Should().Be(
-                expected: "cCoder.Core.Services.Foundations.Packages");
+            parameters[0]
+                .ParameterType
+                .Namespace
+                .Should()
+                .Be(expected: "cCoder.Core.Services.Foundations.Packages");
         }
     }
 
     [Fact]
     public void PackageAggregationServices_WhenImplemented_DoNotCallExternalPersistenceOrJsonApis()
     {
+        // Given
         string repositoryRoot = FindRepositoryRoot();
-        string packageServicesPath = Path.Combine(
-            repositoryRoot,
-            "src",
-            "cCoder.Core",
-            "Services",
-            "Aggregations",
-            "Packages");
 
+        string packageServicesPath = Path.Combine(
+            paths:
+            [
+                repositoryRoot,
+                "src",
+                "cCoder.Core",
+                "Services",
+                "Aggregations",
+                "Packages",
+            ]);
+
+        // When
         string source = string.Join(
             separator: Environment.NewLine,
-            values: Directory.GetFiles(packageServicesPath, "*.cs")
-                .Select(File.ReadAllText));
+            values: Directory
+                .GetFiles(
+                    path: packageServicesPath,
+                    searchPattern: "*.cs")
+                .Select(selector: file => File.ReadAllText(path: file)));
 
-        source.Should().NotContain("Microsoft.EntityFrameworkCore");
-        source.Should().NotContain("System.Text.Json");
-        source.Should().NotContain("ICoreContextFactory");
-        source.Should().NotContain("DbContext");
-        source.Should().NotContain("JsonSerializer");
+        // Then
+        source
+            .Should()
+            .NotContain(unexpected: "Microsoft.EntityFrameworkCore");
+
+        source
+            .Should()
+            .NotContain(unexpected: "System.Text.Json");
+
+        source
+            .Should()
+            .NotContain(unexpected: "ICoreContextFactory");
+
+        source
+            .Should()
+            .NotContain(unexpected: "DbContext");
+
+        source
+            .Should()
+            .NotContain(unexpected: "JsonSerializer");
     }
 
     private static string FindRepositoryRoot()
@@ -70,8 +105,12 @@ public sealed class PackageArchitectureTests
         DirectoryInfo directory = new(AppContext.BaseDirectory);
 
         while (directory is not null &&
-            !Directory.Exists(Path.Combine(directory.FullName, ".git")) &&
-            !File.Exists(Path.Combine(directory.FullName, ".git")))
+            !Directory.Exists(path: Path.Combine(
+                path1: directory.FullName,
+                path2: ".git")) &&
+            !File.Exists(path: Path.Combine(
+                path1: directory.FullName,
+                path2: ".git")))
         {
             directory = directory.Parent;
         }

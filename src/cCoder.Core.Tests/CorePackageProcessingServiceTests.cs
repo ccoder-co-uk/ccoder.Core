@@ -11,20 +11,21 @@ using Xunit;
 
 namespace cCoder.Core.Tests;
 
-public sealed class CorePackageProcessingServiceTests
+public sealed partial class CorePackageProcessingServiceTests
 {
     [Fact]
     public async Task ImportPackageAsync_WhenCoreAppItemsExist_ImportsEachInSourceOrder()
     {
+        // Given
         List<string> importedData = [];
         Mock<ICorePackageService> corePackageServiceMock = new();
 
         corePackageServiceMock
-            .Setup(service => service.ImportAppConfigurationAsync(
-                It.IsAny<int>(),
-                It.IsAny<string>()))
-            .Callback<int, string>((_, data) => importedData.Add(item: data))
-            .Returns(ValueTask.CompletedTask);
+            .Setup(expression: service => service.ImportAppConfigurationAsync(
+                appId: It.IsAny<int>(),
+                data: It.IsAny<string>()))
+            .Callback<int, string>(action: (_, data) => importedData.Add(item: data))
+            .Returns(value: ValueTask.CompletedTask);
 
         CorePackageProcessingService service = new(
             corePackageService: corePackageServiceMock.Object);
@@ -39,56 +40,113 @@ public sealed class CorePackageProcessingServiceTests
             ],
         };
 
-        await service.ImportPackageAsync(appId: 42, package: package);
+        // When
+        await service.ImportPackageAsync(
+            appId: 42,
+            package: package);
 
-        importedData.Should().Equal("first", "second");
+        // Then
+        importedData.Count
+            .Should()
+            .Be(expected: 2);
+
+        importedData[0]
+            .Should()
+            .Be(expected: "first");
+
+        importedData[1]
+            .Should()
+            .Be(expected: "second");
     }
 
     [Fact]
     public async Task ImportPackageAsync_WhenNoCoreAppItemsExist_DoesNotCallFoundation()
     {
+        // Given
         Mock<ICorePackageService> corePackageServiceMock = new();
+
         CorePackageProcessingService service = new(
             corePackageService: corePackageServiceMock.Object);
 
+        Package package = new()
+        {
+            Items =
+            [
+                new PackageItem
+                {
+                    Type = "Other/Item",
+                    Data = "ignored",
+                },
+            ],
+        };
+
+        // When
         await service.ImportPackageAsync(
             appId: 42,
-            package: new Package
-            {
-                Items = [new PackageItem { Type = "Other/Item", Data = "ignored" }],
-            });
+            package: package);
 
+        // Then
         corePackageServiceMock.Verify(
             expression: service => service.ImportAppConfigurationAsync(
-                It.IsAny<int>(),
-                It.IsAny<string>()),
+                appId: It.IsAny<int>(),
+                data: It.IsAny<string>()),
             times: Times.Never);
     }
 
     [Fact]
     public async Task ExportMethods_WhenCalled_DelegateToMatchingFoundationOperation()
     {
+        // Given
         Package appPackage = new() { Name = "AppConfiguration" };
         Package pageRolesPackage = new() { Name = "PageRoles" };
         Package folderRolesPackage = new() { Name = "FolderRoles" };
         Mock<ICorePackageService> corePackageServiceMock = new();
 
-        corePackageServiceMock.Setup(service => service.ExportAppConfigurationAsync(42, "source"))
-            .ReturnsAsync(appPackage);
-        corePackageServiceMock.Setup(service => service.ExportPageRolesAsync(42, "source"))
-            .ReturnsAsync(pageRolesPackage);
-        corePackageServiceMock.Setup(service => service.ExportFolderRolesAsync(42, "source"))
-            .ReturnsAsync(folderRolesPackage);
+        corePackageServiceMock
+            .Setup(expression: service => service.ExportAppConfigurationAsync(
+                appId: 42,
+                sourceApi: "source"))
+            .ReturnsAsync(value: appPackage);
+
+        corePackageServiceMock
+            .Setup(expression: service => service.ExportPageRolesAsync(
+                appId: 42,
+                sourceApi: "source"))
+            .ReturnsAsync(value: pageRolesPackage);
+
+        corePackageServiceMock
+            .Setup(expression: service => service.ExportFolderRolesAsync(
+                appId: 42,
+                sourceApi: "source"))
+            .ReturnsAsync(value: folderRolesPackage);
 
         CorePackageProcessingService service = new(
             corePackageService: corePackageServiceMock.Object);
 
-        Package actualApp = await service.ExportAppConfigurationAsync(42, "source");
-        Package actualPageRoles = await service.ExportPageRolesAsync(42, "source");
-        Package actualFolderRoles = await service.ExportFolderRolesAsync(42, "source");
+        // When
+        Package actualApp = await service.ExportAppConfigurationAsync(
+            appId: 42,
+            sourceApi: "source");
 
-        actualApp.Should().BeSameAs(appPackage);
-        actualPageRoles.Should().BeSameAs(pageRolesPackage);
-        actualFolderRoles.Should().BeSameAs(folderRolesPackage);
+        Package actualPageRoles = await service.ExportPageRolesAsync(
+            appId: 42,
+            sourceApi: "source");
+
+        Package actualFolderRoles = await service.ExportFolderRolesAsync(
+            appId: 42,
+            sourceApi: "source");
+
+        // Then
+        actualApp
+            .Should()
+            .BeSameAs(expected: appPackage);
+
+        actualPageRoles
+            .Should()
+            .BeSameAs(expected: pageRolesPackage);
+
+        actualFolderRoles
+            .Should()
+            .BeSameAs(expected: folderRolesPackage);
     }
 }

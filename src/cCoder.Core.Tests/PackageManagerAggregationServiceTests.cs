@@ -11,35 +11,70 @@ using Xunit;
 
 namespace cCoder.Core.Tests;
 
-public sealed class PackageManagerAggregationServiceTests
+public sealed partial class PackageManagerAggregationServiceTests
 {
     [Fact]
     public async Task ExportPackagesAsync_WhenSpecialAndDomainNamesRequested_PreservesRequestOrder()
     {
+        // Given
         Mock<ICorePackageProcessingService> corePackageProcessingServiceMock = new();
 
         corePackageProcessingServiceMock
-            .Setup(service => service.ExportAppConfigurationAsync(42, "source"))
-            .ReturnsAsync(new Package { Name = "AppConfiguration" });
+            .Setup(expression: service => service.ExportAppConfigurationAsync(
+                appId: 42,
+                sourceApi: "source"))
+            .ReturnsAsync(value: new Package { Name = "AppConfiguration" });
+
         corePackageProcessingServiceMock
-            .Setup(service => service.ExportPageRolesAsync(42, "source"))
-            .ReturnsAsync(new Package { Name = "PageRoles" });
+            .Setup(expression: service => service.ExportPageRolesAsync(
+                appId: 42,
+                sourceApi: "source"))
+            .ReturnsAsync(value: new Package { Name = "PageRoles" });
+
         corePackageProcessingServiceMock
-            .Setup(service => service.ExportFolderRolesAsync(42, "source"))
-            .ReturnsAsync(new Package { Name = "FolderRoles" });
+            .Setup(expression: service => service.ExportFolderRolesAsync(
+                appId: 42,
+                sourceApi: "source"))
+            .ReturnsAsync(value: new Package { Name = "FolderRoles" });
+
         corePackageProcessingServiceMock
-            .Setup(service => service.ExportPackage(42, "Pages"))
-            .Returns(new Package { Name = "Pages" });
+            .Setup(expression: service => service.ExportPackage(
+                appId: 42,
+                packageName: "Pages"))
+            .Returns(value: new Package { Name = "Pages" });
 
         PackageManagerAggregationService service = new(
             corePackageProcessingService: corePackageProcessingServiceMock.Object);
 
+        // When
         Package[] packages = await service.ExportPackagesAsync(
             appId: 42,
             packageNames: ["FolderRoles", "Pages", "appconfiguration", "PAGEROLES"],
             sourceApi: "source");
 
-        packages.Select(selector: package => package.Name)
-            .Should().Equal("FolderRoles", "Pages", "AppConfiguration", "PageRoles");
+        // Then
+        string[] packageNames = packages
+            .Select(selector: package => package.Name)
+            .ToArray();
+
+        packageNames.Length
+            .Should()
+            .Be(expected: 4);
+
+        packageNames[0]
+            .Should()
+            .Be(expected: "FolderRoles");
+
+        packageNames[1]
+            .Should()
+            .Be(expected: "Pages");
+
+        packageNames[2]
+            .Should()
+            .Be(expected: "AppConfiguration");
+
+        packageNames[3]
+            .Should()
+            .Be(expected: "PageRoles");
     }
 }
