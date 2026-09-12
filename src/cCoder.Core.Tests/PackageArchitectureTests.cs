@@ -105,12 +105,14 @@ public sealed partial class PackageArchitectureTests
         DirectoryInfo directory = new(AppContext.BaseDirectory);
 
         while (directory is not null &&
-            !Directory.Exists(path: Path.Combine(
-                path1: directory.FullName,
-                path2: ".git")) &&
             !File.Exists(path: Path.Combine(
-                path1: directory.FullName,
-                path2: ".git")))
+                paths:
+                [
+                    directory.FullName,
+                    "src",
+                    "cCoder.Core",
+                    "cCoder.Core.csproj",
+                ])))
         {
             directory = directory.Parent;
         }
