@@ -1796,7 +1796,7 @@
         {
           "Id": "cCoder.Core.Brokers.Packaging.AppSecurityPackageBroker.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 17,
+          "LineNumber": 19,
           "Inputs": [
             {
               "Name": "appId",
@@ -2231,7 +2231,7 @@
         {
           "Id": "cCoder.Core.Brokers.Packaging.DocumentManagementPackageBroker.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 17,
+          "LineNumber": 19,
           "Inputs": [
             {
               "Name": "appId",
@@ -2332,7 +2332,7 @@
         {
           "Id": "cCoder.Core.Brokers.Packaging.SchedulingPackageBroker.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 17,
+          "LineNumber": 19,
           "Inputs": [
             {
               "Name": "appId",
@@ -2433,7 +2433,7 @@
         {
           "Id": "cCoder.Core.Brokers.Packaging.WorkflowPackageBroker.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 17,
+          "LineNumber": 19,
           "Inputs": [
             {
               "Name": "appId",
@@ -4694,7 +4694,7 @@
     },
     {
       "Name": "cCoder.Core.Exposures.BadRequestResult",
-      "StandardElementType": "Exposure",
+      "StandardElementType": "HttpExposure",
       "LineNumber": 12,
       "IsPublic": true,
       "Kind": "Class",
@@ -6997,7 +6997,7 @@
     },
     {
       "Name": "cCoder.Core.Exposures.OData.Responses.RawResult",
-      "StandardElementType": "Exposure",
+      "StandardElementType": "HttpExposure",
       "LineNumber": 10,
       "IsPublic": true,
       "Kind": "Class",
@@ -22829,5 +22829,321 @@
       "ToType": "System.Threading.Mutex"
     }
   ],
-  "AnalysisItems": []
+  "AnalysisItems": [
+    {
+      "Code": "STXE004",
+      "Description": "An exposure must not communicate directly with a broker.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Dependencies.Middleware.CoreExceptionMiddleware",
+      "LineNumber": 11
+    },
+    {
+      "Code": "STX0004",
+      "Description": "An architectural element must not depend on another element at the same layer.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.BadRequestResult",
+      "LineNumber": 12
+    },
+    {
+      "Code": "STXE004",
+      "Description": "An exposure must not communicate directly with a broker.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Controllers.AppController",
+      "LineNumber": 16
+    },
+    {
+      "Code": "STXE004",
+      "Description": "An exposure must not communicate directly with a broker.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Controllers.PackageManagerController",
+      "LineNumber": 14
+    },
+    {
+      "Code": "STXE004",
+      "Description": "An exposure must not communicate directly with a broker.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Controllers.SetupController",
+      "LineNumber": 14
+    },
+    {
+      "Code": "STXE004",
+      "Description": "An exposure must not communicate directly with a broker.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Controllers.TemplatedEmailController",
+      "LineNumber": 17
+    },
+    {
+      "Code": "STXE004",
+      "Description": "An exposure must not communicate directly with a broker.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.Cors.CoreAllowedOriginStore",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STXD001",
+      "Description": "Dependency elements and event hubs may only be consumed by brokers or other dependencies.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.OData.CoreModelBuilder",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STXD001",
+      "Description": "Dependency elements and event hubs may only be consumed by brokers or other dependencies.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.ODataConventionModelBuilderExtensions",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0004",
+      "Description": "An architectural element must not depend on another element at the same layer.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Exposures.PackageManagers.AppDomainManager",
+      "LineNumber": 11
+    },
+    {
+      "Code": "STX0012",
+      "Description": "Business-operation validation methods must evaluate their rules through a validation collector.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Aggregations.AppAggregationService",
+      "LineNumber": 19
+    },
+    {
+      "Code": "STX0012",
+      "Description": "Business-operation validation methods must evaluate their rules through a validation collector.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Aggregations.UserRegistrationAggregationService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STXF005",
+      "Description": "A foundation service may depend on only one ordinary broker; utility brokers are excluded.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.AllowedOrigins.AllowedOriginStoreService",
+      "LineNumber": 12
+    },
+    {
+      "Code": "STX0012",
+      "Description": "Business-operation validation methods must evaluate their rules through a validation collector.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.AppSecurity.AppSecurityAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STXF002",
+      "Description": "A foundation service may only depend on brokers or nothing.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.AppSecurity.AppSecurityAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0012",
+      "Description": "Business-operation validation methods must evaluate their rules through a validation collector.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.ContentManagement.ContentManagementAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0012",
+      "Description": "Business-operation validation methods must evaluate their rules through a validation collector.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.DocumentManagement.DocumentManagementAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STXF005",
+      "Description": "A foundation service may depend on only one ordinary broker; utility brokers are excluded.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Eventing.AppGraphEventService",
+      "LineNumber": 11
+    },
+    {
+      "Code": "STXF005",
+      "Description": "A foundation service may depend on only one ordinary broker; utility brokers are excluded.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Eventing.PackageImportCompletionEventService",
+      "LineNumber": 11
+    },
+    {
+      "Code": "STX0012",
+      "Description": "Business-operation validation methods must evaluate their rules through a validation collector.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Mail.MailAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0012",
+      "Description": "Business-operation validation methods must evaluate their rules through a validation collector.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Mail.MailManagerService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0012",
+      "Description": "Business-operation validation methods must evaluate their rules through a validation collector.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Metadata.EdmModelService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STX0012",
+      "Description": "Business-operation validation methods must evaluate their rules through a validation collector.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Planning.PlanningAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STXF002",
+      "Description": "A foundation service may only depend on brokers or nothing.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.TemplatedEmails.TemplatedEmailContentService",
+      "LineNumber": 13
+    },
+    {
+      "Code": "STXF002",
+      "Description": "A foundation service may only depend on brokers or nothing.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.TemplatedEmails.TemplatedEmailIdentityService",
+      "LineNumber": 12
+    },
+    {
+      "Code": "STX0012",
+      "Description": "Business-operation validation methods must evaluate their rules through a validation collector.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Foundations.Workflow.WorkflowAppService",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STXD005",
+      "Description": "External API call \u0027System.Net.IPAddress.IsLoopback(System.Net.IPAddress)\u0027 must be isolated behind a broker or dependency.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Processings.AllowedOrigins.AllowedOriginStoreProcessingService",
+      "LineNumber": 133
+    },
+    {
+      "Code": "STXD005",
+      "Description": "External API call \u0027System.Net.IPAddress.TryParse(System.String?,System.Net.IPAddress?)\u0027 must be isolated behind a broker or dependency.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Processings.AllowedOrigins.AllowedOriginStoreProcessingService",
+      "LineNumber": 133
+    },
+    {
+      "Code": "STXD005",
+      "Description": "External API call \u0027System.Reflection.PropertyInfo.GetValue(System.Object?)\u0027 must be isolated behind a broker or dependency.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Processings.Formatters.CsvFileProcessingService",
+      "LineNumber": 79
+    },
+    {
+      "Code": "STXD005",
+      "Description": "External API call \u0027System.Reflection.PropertyInfo.GetValue(System.Object?)\u0027 must be isolated behind a broker or dependency.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Processings.Formatters.CsvFileProcessingService",
+      "LineNumber": 159
+    },
+    {
+      "Code": "STXD005",
+      "Description": "External API call \u0027System.IO.MemoryStream..ctor()\u0027 must be isolated behind a broker or dependency.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Processings.Formatters.ExcelFileProcessingService",
+      "LineNumber": 33
+    },
+    {
+      "Code": "STXD005",
+      "Description": "External API call \u0027System.IO.Compression.ZipArchive..ctor(System.IO.Stream,System.IO.Compression.ZipArchiveMode,System.Boolean)\u0027 must be isolated behind a broker or dependency.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Processings.Formatters.ExcelFileProcessingService",
+      "LineNumber": 35
+    },
+    {
+      "Code": "STXD005",
+      "Description": "External API call \u0027System.IO.MemoryStream.Seek(System.Int64,System.IO.SeekOrigin)\u0027 must be isolated behind a broker or dependency.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Processings.Formatters.ExcelFileProcessingService",
+      "LineNumber": 59
+    },
+    {
+      "Code": "STXD005",
+      "Description": "External API call \u0027System.IO.Compression.ZipArchive.CreateEntry(System.String,System.IO.Compression.CompressionLevel)\u0027 must be isolated behind a broker or dependency.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Processings.Formatters.ExcelFileProcessingService",
+      "LineNumber": 65
+    },
+    {
+      "Code": "STXD005",
+      "Description": "External API call \u0027System.IO.Compression.ZipArchive.CreateEntry(System.String,System.IO.Compression.CompressionLevel)\u0027 must be isolated behind a broker or dependency.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Processings.Formatters.ExcelFileProcessingService",
+      "LineNumber": 78
+    },
+    {
+      "Code": "STXD005",
+      "Description": "External API call \u0027System.IO.Compression.ZipArchive.CreateEntry(System.String,System.IO.Compression.CompressionLevel)\u0027 must be isolated behind a broker or dependency.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Processings.Formatters.ExcelFileProcessingService",
+      "LineNumber": 99
+    },
+    {
+      "Code": "STXD005",
+      "Description": "External API call \u0027System.Reflection.PropertyInfo.GetValue(System.Object?)\u0027 must be isolated behind a broker or dependency.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Processings.Formatters.ExcelFileProcessingService",
+      "LineNumber": 307
+    },
+    {
+      "Code": "STXD005",
+      "Description": "External API call \u0027System.IO.Compression.ZipArchive.CreateEntry(System.String,System.IO.Compression.CompressionLevel)\u0027 must be isolated behind a broker or dependency.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Processings.Formatters.ExcelFileProcessingService",
+      "LineNumber": 451
+    },
+    {
+      "Code": "STXD005",
+      "Description": "External API call \u0027System.IO.Compression.ZipArchiveEntry.Open()\u0027 must be isolated behind a broker or dependency.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Processings.Formatters.ExcelFileProcessingService",
+      "LineNumber": 455
+    },
+    {
+      "Code": "STXD005",
+      "Description": "External API call \u0027System.IO.StreamWriter..ctor(System.IO.Stream)\u0027 must be isolated behind a broker or dependency.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Processings.Formatters.ExcelFileProcessingService",
+      "LineNumber": 456
+    },
+    {
+      "Code": "STXD005",
+      "Description": "External API call \u0027System.IO.StreamWriter.Write(System.String?)\u0027 must be isolated behind a broker or dependency.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Processings.Formatters.ExcelFileProcessingService",
+      "LineNumber": 457
+    },
+    {
+      "Code": "STX0012",
+      "Description": "Business-operation validation methods must evaluate their rules through a validation collector.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Processings.Metadata.EdmModelProcessingService",
+      "LineNumber": 14
+    },
+    {
+      "Code": "STXD001",
+      "Description": "Dependency elements and event hubs may only be consumed by brokers or other dependencies.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Processings.Metadata.EdmModelProcessingService",
+      "LineNumber": 14
+    },
+    {
+      "Code": "STXSTRUCT003",
+      "Description": "Service contracts must be internal; expose cross-library operations through a public exposure contract.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Processings.Notifications.INotificationHubProcessingService",
+      "LineNumber": 9
+    },
+    {
+      "Code": "STXP001",
+      "Description": "A processing service may use only one foundation service and must not bypass its layer boundary.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Services.Processings.Notifications.NotificationHubProcessingService",
+      "LineNumber": 12
+    }
+  ]
 }

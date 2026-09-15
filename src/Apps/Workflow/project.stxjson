@@ -497,9 +497,16 @@
               "IsDependencyBoundary": true
             },
             {
-              "TypeName": "cCoder.Workflow.Engine.Extensions.ObjectExtensions",
-              "MethodName": "GetJsonSettings",
-              "MethodId": "cCoder.Workflow.Engine.Extensions.ObjectExtensions.GetJsonSettings()",
+              "TypeName": "Newtonsoft.Json.JsonSerializerSettings",
+              "MethodName": ".ctor",
+              "MethodId": "Newtonsoft.Json.JsonSerializerSettings..ctor()",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "Newtonsoft.Json.Serialization.DefaultContractResolver",
+              "MethodName": ".ctor",
+              "MethodId": "Newtonsoft.Json.Serialization.DefaultContractResolver..ctor()",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
             }
@@ -2037,5 +2044,20 @@
       "ToType": "Workflow.Services.Foundations.WorkflowFunctions.WorkflowFunctionsService"
     }
   ],
-  "AnalysisItems": []
+  "AnalysisItems": [
+    {
+      "Code": "STX0004",
+      "Description": "An architectural element must not depend on another element at the same layer.",
+      "Severity": "Warning",
+      "Type": "Workflow.Exposures.ExecuteFromServiceBus",
+      "LineNumber": 9
+    },
+    {
+      "Code": "STXF005",
+      "Description": "A foundation service may depend on only one ordinary broker; utility brokers are excluded.",
+      "Severity": "Warning",
+      "Type": "Workflow.Services.Foundations.WorkflowFunctions.WorkflowFunctionsService",
+      "LineNumber": 12
+    }
+  ]
 }

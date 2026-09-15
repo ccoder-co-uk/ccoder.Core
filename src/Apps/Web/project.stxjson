@@ -5496,5 +5496,83 @@
       "ToType": "Web.Services.Foundations.HomeSessions.HomeSessionService"
     }
   ],
-  "AnalysisItems": []
+  "AnalysisItems": [
+    {
+      "Code": "STXE004",
+      "Description": "An exposure must not communicate directly with a broker.",
+      "Severity": "Warning",
+      "Type": "Web.Controllers.Api.ApiRootController",
+      "LineNumber": 15
+    },
+    {
+      "Code": "STXD005",
+      "Description": "External API call \u0027System.IO.StreamReader..ctor(System.IO.Stream)\u0027 must be isolated behind a broker or dependency.",
+      "Severity": "Warning",
+      "Type": "Web.Controllers.Api.ApiRootController",
+      "LineNumber": 48
+    },
+    {
+      "Code": "STXD005",
+      "Description": "External API call \u0027System.IO.StreamReader.ReadToEndAsync()\u0027 must be isolated behind a broker or dependency.",
+      "Severity": "Warning",
+      "Type": "Web.Controllers.Api.ApiRootController",
+      "LineNumber": 49
+    },
+    {
+      "Code": "STXE004",
+      "Description": "An exposure must not communicate directly with a broker.",
+      "Severity": "Warning",
+      "Type": "Web.Controllers.Api.CacheController",
+      "LineNumber": 12
+    },
+    {
+      "Code": "STXE004",
+      "Description": "An exposure must not communicate directly with a broker.",
+      "Severity": "Warning",
+      "Type": "Web.Controllers.Api.MetadataController",
+      "LineNumber": 12
+    },
+    {
+      "Code": "STXE004",
+      "Description": "An exposure must not communicate directly with a broker.",
+      "Severity": "Warning",
+      "Type": "Web.Controllers.Api.ScriptController",
+      "LineNumber": 13
+    },
+    {
+      "Code": "STXD005",
+      "Description": "External API call \u0027System.IO.StreamReader..ctor(System.IO.Stream)\u0027 must be isolated behind a broker or dependency.",
+      "Severity": "Warning",
+      "Type": "Web.Controllers.Api.ScriptController",
+      "LineNumber": 24
+    },
+    {
+      "Code": "STXD005",
+      "Description": "External API call \u0027System.IO.StreamReader.ReadToEndAsync()\u0027 must be isolated behind a broker or dependency.",
+      "Severity": "Warning",
+      "Type": "Web.Controllers.Api.ScriptController",
+      "LineNumber": 29
+    },
+    {
+      "Code": "STXE004",
+      "Description": "An exposure must not communicate directly with a broker.",
+      "Severity": "Warning",
+      "Type": "Web.Controllers.HomeController",
+      "LineNumber": 24
+    },
+    {
+      "Code": "STX0012",
+      "Description": "Business-operation validation methods must evaluate their rules through a validation collector.",
+      "Severity": "Warning",
+      "Type": "Web.Services.Processings.HomeSessionProcessingService",
+      "LineNumber": 12
+    },
+    {
+      "Code": "STX0023",
+      "Description": "Each business operation must call its operation-specific validation method.",
+      "Severity": "Warning",
+      "Type": "Web.Services.Processings.HomeSessionProcessingService",
+      "LineNumber": 12
+    }
+  ]
 }

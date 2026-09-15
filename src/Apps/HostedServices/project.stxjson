@@ -866,5 +866,20 @@
       "ToType": "cCoder.Workflow.Exposures.IFlowInstanceDataManager"
     }
   ],
-  "AnalysisItems": []
+  "AnalysisItems": [
+    {
+      "Code": "STXD001",
+      "Description": "Dependency elements and event hubs may only be consumed by brokers or other dependencies.",
+      "Severity": "Warning",
+      "Type": "HostedServices.Controllers.WorkflowController",
+      "LineNumber": 11
+    },
+    {
+      "Code": "STXE004",
+      "Description": "An exposure must not communicate directly with a broker.",
+      "Severity": "Warning",
+      "Type": "HostedServices.Controllers.WorkflowController",
+      "LineNumber": 11
+    }
+  ]
 }
