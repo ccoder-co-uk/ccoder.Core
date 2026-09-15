@@ -7,14 +7,14 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="cCoder.Data" Version="2026.9.12.1246" />
-    <PackageReference Include="cCoder.Workflow.Activities" Version="2026.9.12.1252" />
-    <PackageReference Include="cCoder.Workflow.Engine" Version="2026.9.12.1252" />
+    <PackageReference Include="cCoder.Data" Version="2026.9.13.1526" />
+    <PackageReference Include="cCoder.Workflow.Activities" Version="2026.9.15.1059" />
+    <PackageReference Include="cCoder.Workflow.Engine" Version="2026.9.15.1059" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="2.52.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.3.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http.AspNetCore" Version="2.1.1" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="2.1.0" OutputItemType="Analyzer" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.12" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
   </ItemGroup>
   <ItemGroup>
@@ -25,5 +25,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>Never</CopyToPublishDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="cCoder.CodeAnalysis" Version="2026.9.15.1012" />
   </ItemGroup>
 </Project>
