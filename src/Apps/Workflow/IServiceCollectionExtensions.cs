@@ -8,7 +8,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Workflow.Models;
 using Workflow.Exposures;
-using Workflow.Brokers.Loggings;
 using Workflow.Brokers.WorkflowFunctions;
 using Workflow.Dependencies;
 using Workflow.Services.Foundations.WorkflowFunctions;
@@ -37,22 +36,12 @@ internal static class IServiceCollectionExtensions
         return services;
     }
 
-    private static void AddDependencies(this IServiceCollection services)
-    {
-        services.AddTransient<WorkflowFunctionHttpDependency>();
-        services.AddTransient<WorkflowJsonDependency>();
-    }
+    private static void AddDependencies(this IServiceCollection services) =>
+        services.AddTransient<WorkflowFunctionsDependency>();
 
     private static void AddBrokers(this IServiceCollection services)
     {
-        services.AddTransient<ILoggingBroker, LoggingBroker>();
-        services.AddTransient<IWorkflowFunctionHttpBroker, WorkflowFunctionHttpBroker>();
-        services.AddTransient<IWorkflowJsonBroker, WorkflowJsonBroker>();
-        services.AddTransient<IWorkflowRunnerBroker, WorkflowRunnerBroker>();
-
-        services.AddTransient<
-            IWorkflowScriptExecutionBroker,
-            WorkflowScriptExecutionBroker>();
+        services.AddTransient<IWorkflowFunctionsBroker, WorkflowFunctionsBroker>();
     }
 
     private static void AddFoundations(this IServiceCollection services) =>

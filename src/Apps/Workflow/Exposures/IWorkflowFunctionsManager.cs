@@ -16,5 +16,4 @@ public interface IWorkflowFunctionsManager
 
     Task<HttpResponseData> ProcessHealthAsync(HttpRequestData request);
 
-    Task ProcessServiceBusMessageAsync(string message);
 }

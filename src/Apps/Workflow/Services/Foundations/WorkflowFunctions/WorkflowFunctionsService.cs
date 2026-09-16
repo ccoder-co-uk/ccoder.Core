@@ -4,17 +4,12 @@
 
 using cCoder.Workflow.Activities.Models;
 using Microsoft.Azure.Functions.Worker.Http;
-using Workflow.Brokers.Loggings;
 using Workflow.Brokers.WorkflowFunctions;
 
 namespace Workflow.Services.Foundations.WorkflowFunctions;
 
 internal sealed partial class WorkflowFunctionsService(
-    IWorkflowFunctionHttpBroker workflowFunctionHttpBroker,
-    IWorkflowJsonBroker workflowJsonBroker,
-    IWorkflowRunnerBroker workflowRunnerBroker,
-    IWorkflowScriptExecutionBroker workflowScriptExecutionBroker,
-    ILoggingBroker loggingBroker)
+    IWorkflowFunctionsBroker workflowFunctionsBroker)
         : IWorkflowFunctionsService
 {
     public ValueTask<string> ReadBodyAsync(HttpRequestData request) =>
@@ -22,7 +17,7 @@ internal sealed partial class WorkflowFunctionsService(
         {
             ValidateInputs(inputs: [request]);
 
-            return await workflowFunctionHttpBroker.ReadBodyAsync(
+            return await workflowFunctionsBroker.ReadBodyAsync(
                 request: request);
         });
 
@@ -31,7 +26,7 @@ internal sealed partial class WorkflowFunctionsService(
         {
             ValidateInputs(inputs: [json]);
 
-            return workflowJsonBroker.DeserializeWorkflowRequest(json: json);
+            return workflowFunctionsBroker.DeserializeWorkflowRequest(json: json);
         });
 
     public Task RunWorkflowRequestAsync(WorkflowRequest workflowRequest) =>
@@ -39,7 +34,7 @@ internal sealed partial class WorkflowFunctionsService(
         {
             ValidateInputs(inputs: [workflowRequest]);
 
-            await workflowRunnerBroker.RunWorkflowRequestAsync(
+            await workflowFunctionsBroker.RunWorkflowRequestAsync(
                 workflowRequest: workflowRequest);
         });
 
@@ -48,7 +43,7 @@ internal sealed partial class WorkflowFunctionsService(
         {
             ValidateInputs(inputs: [payload, useDetails]);
 
-            return await workflowScriptExecutionBroker.ExecuteAsync(
+            return await workflowFunctionsBroker.ExecuteScriptAsync(
                 payload: payload,
                 useDetails: useDetails);
         });
@@ -60,7 +55,7 @@ internal sealed partial class WorkflowFunctionsService(
         {
             ValidateInputs(inputs: [request, content]);
 
-            return await workflowFunctionHttpBroker.CreateResponseAsync(
+            return await workflowFunctionsBroker.CreateResponseAsync(
                 request: request,
                 content: content);
         });
@@ -70,6 +65,6 @@ internal sealed partial class WorkflowFunctionsService(
         {
             ValidateInputs(inputs: [message]);
 
-            loggingBroker.LogInformation(message: message);
+            workflowFunctionsBroker.LogInformation(message: message);
         });
 }
