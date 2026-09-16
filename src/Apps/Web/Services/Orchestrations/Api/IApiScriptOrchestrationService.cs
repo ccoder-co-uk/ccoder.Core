@@ -13,4 +13,5 @@ internal interface IApiScriptOrchestrationService
         ApiScriptRequest apiScriptRequest);
 
     ValueTask<string> ReadRequestBodyAsync(Stream requestBody);
+    void LogError(Exception exception);
 }

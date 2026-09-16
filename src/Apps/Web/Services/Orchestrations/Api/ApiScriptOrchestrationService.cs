@@ -10,7 +10,8 @@ namespace Web.Services.Orchestrations.Api;
 
 internal sealed partial class ApiScriptOrchestrationService(
     IApiScriptAuthorizationService apiScriptAuthorizationService,
-    IApiScriptExecutionService apiScriptExecutionService)
+    IApiScriptExecutionService apiScriptExecutionService,
+    IApiContextService apiContextService)
     : IApiScriptOrchestrationService
 {
     public ValueTask<string> ExecuteApiScriptRequestAsync(
@@ -36,4 +37,7 @@ internal sealed partial class ApiScriptOrchestrationService(
             return await apiScriptExecutionService.ReadRequestBodyAsync(
                 requestBody: requestBody);
         });
+
+    void IApiScriptOrchestrationService.LogError(Exception exception) =>
+        apiContextService.LogError(exception: exception);
 }

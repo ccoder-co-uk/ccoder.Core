@@ -12,7 +12,6 @@ using Web.Brokers.Api;
 using Web.Services.Foundations.Api;
 using Web.Services.Orchestrations.Api;
 using Web.Dependencies;
-using Web.Dependencies.Middleware;
 using Web.Brokers.HomeSessions;
 using Web.Services.Foundations.HomeSessions;
 
@@ -76,7 +75,6 @@ public static class IServiceCollectionExtensions
 
     private static void AddDependencies(this IServiceCollection services)
     {
-        services.AddTransient<WebExceptionMiddleware>();
         services.AddScoped<HomeSessionDependency>();
     }
 
@@ -116,6 +114,7 @@ public static class IServiceCollectionExtensions
         services.AddScoped<IApiCacheManager, ApiCacheManager>();
         services.AddScoped<IApiScriptManager, ApiScriptManager>();
         services.AddScoped<IApiContextManager, ApiContextManager>();
+        services.AddScoped<IMetadataManager, MetadataManager>();
     }
 
 }

@@ -11,4 +11,5 @@ public interface IApiContextManager
 {
     ApiInfo[] GetApiInfos();
     ValueTask<string> ReadRequestBodyAsync(Stream requestBody);
+    void LogError(Exception exception);
 }

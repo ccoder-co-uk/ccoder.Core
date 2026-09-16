@@ -15,29 +15,81 @@ namespace Web.Controllers.Api
         IApiContextManager apiContextManager)
         : Controller
     {
-    [HttpGet()]
-        public IActionResult Get() =>
-            Ok(value: new
+        [HttpGet()]
+        public IActionResult Get()
+        {
+            try
             {
-                value = apiContextManager.GetApiInfos()
-            });
+                return Ok(
+                    value: new
+                    {
+                        value = apiContextManager.GetApiInfos()
+                    });
+            }
+            catch (Exception exception)
+            {
+                apiContextManager.LogError(exception: exception);
+
+                return StatusCode(
+                    statusCode: StatusCodes.Status500InternalServerError,
+                    value: "The API contexts could not be loaded.");
+            }
+        }
 
         [HttpPost]
         public async Task<IActionResult> Post()
         {
-            string response = await apiContextManager.ReadRequestBodyAsync(
-                requestBody: Request.Body);
+            try
+            {
+                string response =
+                    await apiContextManager.ReadRequestBodyAsync(
+                        requestBody: Request.Body);
 
-            return new RawResult(response);
+                return new RawResult(response);
+            }
+            catch (Exception exception)
+            {
+                apiContextManager.LogError(exception: exception);
+
+                return StatusCode(
+                    statusCode: StatusCodes.Status500InternalServerError,
+                    value: "The API request could not be processed.");
+            }
         }
 
         [HttpPut]
-        public async Task<IActionResult> Put() =>
-            await Post();
+        public async Task<IActionResult> Put()
+        {
+            try
+            {
+                return await Post();
+            }
+            catch (Exception exception)
+            {
+                apiContextManager.LogError(exception: exception);
+
+                return StatusCode(
+                    statusCode: StatusCodes.Status500InternalServerError,
+                    value: "The API request could not be processed.");
+            }
+        }
 
         [HttpGet("Time")]
-        public IActionResult GetTime() =>
-            Ok(value: new { DateTimeOffset.UtcNow });
+        public IActionResult GetTime()
+        {
+            try
+            {
+                return Ok(value: new { DateTimeOffset.UtcNow });
+            }
+            catch (Exception exception)
+            {
+                apiContextManager.LogError(exception: exception);
+
+                return StatusCode(
+                    statusCode: StatusCodes.Status500InternalServerError,
+                    value: "The server time could not be loaded.");
+            }
+        }
 
     }
 }

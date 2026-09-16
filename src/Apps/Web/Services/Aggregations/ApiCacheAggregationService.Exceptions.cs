@@ -31,4 +31,28 @@ internal sealed partial class ApiCacheAggregationService
                 innerException: innerException);
         }
     }
+
+    private static T TryCatch<T>(
+        Func<T> operation)
+    {
+        try
+        {
+            return operation();
+        }
+        catch (ApiCacheValidationException innerException)
+        {
+            throw new ApiCacheValidationException(
+                innerException: innerException);
+        }
+        catch (ApiCacheDependencyException innerException)
+        {
+            throw new ApiCacheDependencyException(
+                innerException: innerException);
+        }
+        catch (Exception innerException)
+        {
+            throw new ApiCacheServiceException(
+                innerException: innerException);
+        }
+    }
 }

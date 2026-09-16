@@ -17,16 +17,33 @@ public sealed class ScriptController(
     [HttpPost("ExecuteScript")]
     public async Task<IActionResult> PostExecuteScript()
     {
-        ApiScriptRequest request = new()
+        try
         {
-            Script = await apiScriptManager.ReadRequestBodyAsync(
-                requestBody: Request.Body)
-        };
+            ApiScriptRequest request = new()
+            {
+                Script = await apiScriptManager.ReadRequestBodyAsync(
+                    requestBody: Request.Body)
+            };
 
-        string response =
-            await apiScriptManager.ExecuteApiScriptRequestAsync(
-                apiScriptRequest: request);
+            string response =
+                await apiScriptManager.ExecuteApiScriptRequestAsync(
+                    apiScriptRequest: request);
 
-        return Ok(value: response);
+            return Ok(value: response);
+        }
+        catch (ApiScriptOrchestrationValidationException exception)
+        {
+            apiScriptManager.LogError(exception: exception);
+
+            return BadRequest(error: "The script request is invalid.");
+        }
+        catch (Exception exception)
+        {
+            apiScriptManager.LogError(exception: exception);
+
+            return StatusCode(
+                statusCode: StatusCodes.Status500InternalServerError,
+                value: "The script could not be executed.");
+        }
     }
 }

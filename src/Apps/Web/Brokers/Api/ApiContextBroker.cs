@@ -3,6 +3,8 @@
 // ---------------------------------------------------------------
 
 using cCoder.Data.Models;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System.IO;
 
 namespace Web.Brokers.Api;
@@ -19,5 +21,15 @@ internal sealed class ApiContextBroker(
         using StreamReader reader = new(stream: requestBody);
 
         return await reader.ReadToEndAsync();
+    }
+
+    public void LogError(Exception exception)
+    {
+        ILogger<ApiContextBroker> logger =
+            serviceProvider.GetRequiredService<ILogger<ApiContextBroker>>();
+
+        logger.LogError(
+            exception: exception,
+            message: "HTTP request failed.");
     }
 }

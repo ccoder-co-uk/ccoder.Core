@@ -13,4 +13,5 @@ public interface IApiScriptManager
         ApiScriptRequest apiScriptRequest);
 
     ValueTask<string> ReadRequestBodyAsync(Stream requestBody);
+    void LogError(Exception exception);
 }

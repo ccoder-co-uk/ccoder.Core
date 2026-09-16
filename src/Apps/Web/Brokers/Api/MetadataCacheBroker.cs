@@ -13,4 +13,7 @@ internal sealed class MetadataCacheBroker(
 {
     public void Rebuild() =>
         metadataCache.Rebuild();
+
+    public string GetAll(string culture) =>
+        metadataCache.GetAll(culture: culture);
 }

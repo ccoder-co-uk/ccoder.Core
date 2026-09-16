@@ -3,21 +3,40 @@
 // ---------------------------------------------------------------
 
 using Microsoft.AspNetCore.Mvc;
-using ContentManagementMetadataCache =
-    cCoder.ContentManagement.Exposures.Caching.IMetadataCache;
+using Web.Exposures;
+using Web.Models.Exceptions;
 
 namespace Web.Controllers.Api;
 
 [Route("Api")]
 public sealed class MetadataController(
-    ContentManagementMetadataCache metadataCache)
+    IMetadataManager metadataManager)
     : Controller
 {
     [HttpGet("GetMetadata")]
     public IActionResult GetMetadata(
-        string culture = "") =>
-        Content(
-            content: metadataCache.GetAll(
-                culture: culture),
-            contentType: "application/json");
+        string culture = "")
+    {
+        try
+        {
+            return Content(
+                content: metadataManager.GetAll(
+                    culture: culture),
+                contentType: "application/json");
+        }
+        catch (ApiCacheValidationException exception)
+        {
+            metadataManager.LogError(exception: exception);
+
+            return BadRequest(error: "The metadata request is invalid.");
+        }
+        catch (Exception exception)
+        {
+            metadataManager.LogError(exception: exception);
+
+            return StatusCode(
+                statusCode: StatusCodes.Status500InternalServerError,
+                value: "The metadata could not be loaded.");
+        }
+    }
 }

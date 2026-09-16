@@ -39,4 +39,7 @@ internal sealed partial class ApiContextService(
             return await apiContextBroker.ReadRequestBodyAsync(
                 requestBody: requestBody);
         });
+
+    void IApiContextService.LogError(Exception exception) =>
+        apiContextBroker.LogError(exception: exception);
 }

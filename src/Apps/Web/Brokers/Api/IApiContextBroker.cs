@@ -11,4 +11,5 @@ internal interface IApiContextBroker
 {
     ApiInfo[] SelectAllApiInfos();
     ValueTask<string> ReadRequestBodyAsync(Stream requestBody);
+    void LogError(Exception exception);
 }

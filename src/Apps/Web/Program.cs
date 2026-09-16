@@ -14,7 +14,6 @@ using cCoder.Eventing.Http;
 using cCoder.Eventing.Models;
 using cCoder.Security.Models.Events;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Web.Dependencies.Middleware;
 
 namespace Web;
 
@@ -32,7 +31,6 @@ public class Program
                     CreateEventProviders(configuration));
 
         WebApplication app = builder.Build();
-        app.UseMiddleware<WebExceptionMiddleware>();
         app.StartCoreWeb();
         app.MapHealthChecks(
             pattern: "/Health",

@@ -17,4 +17,7 @@ internal sealed class ApiContextManager(
 
     public ValueTask<string> ReadRequestBodyAsync(Stream requestBody) =>
         apiContextService.ReadRequestBodyAsync(requestBody: requestBody);
+
+    public void LogError(Exception exception) =>
+        apiContextService.LogError(exception: exception);
 }

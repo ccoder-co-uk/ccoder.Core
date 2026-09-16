@@ -2,14 +2,10 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.Data.Models;
-using System.IO;
+namespace Web.Exposures;
 
-namespace Web.Services.Foundations.Api;
-
-internal interface IApiContextService
+public interface IMetadataManager
 {
-    ApiInfo[] GetApiInfos();
-    ValueTask<string> ReadRequestBodyAsync(Stream requestBody);
+    string GetAll(string culture);
     void LogError(Exception exception);
 }

@@ -6,12 +6,12 @@ using Web.Services.Aggregations;
 
 namespace Web.Exposures;
 
-internal sealed class ApiCacheManager(
+internal sealed class MetadataManager(
     IApiCacheAggregationService apiCacheAggregationService)
-    : IApiCacheManager
+    : IMetadataManager
 {
-    public void RefreshCaches() =>
-        apiCacheAggregationService.RefreshCaches();
+    public string GetAll(string culture) =>
+        apiCacheAggregationService.GetMetadata(culture: culture);
 
     public void LogError(Exception exception) =>
         apiCacheAggregationService.LogError(exception: exception);

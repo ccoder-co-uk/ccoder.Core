@@ -13,7 +13,21 @@ internal sealed class HomeSessionBroker(
         : IHomeSessionBroker
 {
     public HomeSessionContext CreateHomeSessionContext(HttpContext context) =>
-        homeSessionDependency.CreateHomeSessionContext(context: context);
+        new()
+        {
+            Host = homeSessionDependency.SelectRequestHost(
+                context: context),
+            Port = homeSessionDependency.SelectRequestPort(
+                context: context),
+            Scheme = homeSessionDependency.SelectRequestScheme(
+                context: context),
+            SSOUserId = homeSessionDependency.SelectSsoUserId(
+                context: context),
+            Token = homeSessionDependency.SelectRequestToken(
+                context: context),
+            SessionKeys = homeSessionDependency.SelectSessionKeys(
+                context: context)
+        };
 
     public bool IsSessionAvailable(HttpContext context) =>
         homeSessionDependency.IsSessionAvailable(context: context);

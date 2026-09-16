@@ -19,4 +19,7 @@ internal sealed class ApiScriptManager(
 
     public ValueTask<string> ReadRequestBodyAsync(Stream requestBody) =>
         apiScriptOrchestrationService.ReadRequestBodyAsync(requestBody: requestBody);
+
+    public void LogError(Exception exception) =>
+        apiScriptOrchestrationService.LogError(exception: exception);
 }
