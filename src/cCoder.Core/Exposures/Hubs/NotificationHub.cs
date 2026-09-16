@@ -2,7 +2,6 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.Core.Services.Processings.Notifications;
 using Microsoft.AspNetCore.SignalR;
 
 namespace cCoder.Core.Exposures.Hubs;

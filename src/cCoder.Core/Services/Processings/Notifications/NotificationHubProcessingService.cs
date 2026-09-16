@@ -2,7 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.Core.Brokers.Loggings;
+using cCoder.Core.Exposures.Hubs;
 using cCoder.Core.Models.Notifications;
 using cCoder.Core.Services.Foundations.Notifications;
 using Microsoft.AspNetCore.SignalR;
@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.SignalR;
 namespace cCoder.Core.Services.Processings.Notifications;
 
 internal sealed partial class NotificationHubProcessingService(
-    ILoggingBroker log,
     INotificationHubService notificationHubService)
     : INotificationHubProcessingService
 {
@@ -25,13 +24,6 @@ internal sealed partial class NotificationHubProcessingService(
         {
             ValidateOnConnected(onConnectedAsync: onConnectedAsync);
 
-            if (log.IsDebugEnabled())
-            {
-                log.LogDebug(
-                    message: "New client connected to {HubName}",
-                    args: "NotificationHub");
-            }
-
             await onConnectedAsync();
         });
 
@@ -43,13 +35,6 @@ internal sealed partial class NotificationHubProcessingService(
             ValidateOnDisconnected(
                 exception: exception,
                 onDisconnectedAsync: onDisconnectedAsync);
-
-            if (log.IsDebugEnabled())
-            {
-                log.LogDebug(
-                    message: "Client disconnected from {HubName}",
-                    args: "NotificationHub");
-            }
 
             await onDisconnectedAsync(arg: exception);
         });
@@ -66,13 +51,6 @@ internal sealed partial class NotificationHubProcessingService(
                 connectionId: connectionId,
                 groups: groups,
                 clients: clients);
-
-            if (log.IsDebugEnabled())
-            {
-                log.LogDebug(
-                    message: "User joining {Thread}",
-                    args: thread);
-            }
 
             await notificationHubService.ExecuteNotificationHubOperationAsync(
                 notificationHubOperation: new NotificationHubOperation
@@ -144,13 +122,6 @@ internal sealed partial class NotificationHubProcessingService(
                 connectionId: connectionId,
                 groups: groups,
                 clients: clients);
-
-            if (log.IsDebugEnabled())
-            {
-                log.LogDebug(
-                    message: "User leaving {Thread}",
-                    args: thread);
-            }
 
             await notificationHubService.ExecuteNotificationHubOperationAsync(
                 notificationHubOperation: new NotificationHubOperation

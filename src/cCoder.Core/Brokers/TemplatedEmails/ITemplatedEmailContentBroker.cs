@@ -4,11 +4,11 @@
 
 using cCoder.Data.Models.CMS;
 
-namespace cCoder.Core.Brokers.Eventing;
+namespace cCoder.Core.Brokers.TemplatedEmails;
 
-internal interface IAppGraphEventBroker
+internal interface ITemplatedEmailContentBroker
 {
-    ValueTask RaiseAppAddEventAsync(App app);
+    App GetAppByDomain(string domain);
 
-    ValueTask RaiseAppUpdateEventAsync(App app);
+    string Render(int appId, string name, string culture, dynamic model);
 }

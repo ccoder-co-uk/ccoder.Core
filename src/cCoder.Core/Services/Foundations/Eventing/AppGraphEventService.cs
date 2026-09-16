@@ -4,13 +4,11 @@
 
 using cCoder.Core.Brokers.Eventing;
 using cCoder.Data.Models.CMS;
-using cCoder.Eventing.Models;
 
 namespace cCoder.Core.Services.Foundations.Eventing;
 
 internal sealed partial class AppGraphEventService(
-    IAppGraphEventBroker appGraphEventBroker,
-    IAuthInfoBroker authInfoBroker)
+    IAppGraphEventBroker appGraphEventBroker)
     : IAppGraphEventService
 {
     public ValueTask RaiseAppAddEventAsync(App app) =>
@@ -18,11 +16,8 @@ internal sealed partial class AppGraphEventService(
         {
             ValidateAppOnRaise(app: app);
 
-            EventMessage<App> message =
-                CreateAppEventMessage(app: app);
-
             await appGraphEventBroker.RaiseAppAddEventAsync(
-                message: message);
+                app: app);
         });
 
     public ValueTask RaiseAppUpdateEventAsync(App app) =>
@@ -30,21 +25,7 @@ internal sealed partial class AppGraphEventService(
         {
             ValidateAppOnRaise(app: app);
 
-            EventMessage<App> message =
-                CreateAppEventMessage(app: app);
-
             await appGraphEventBroker.RaiseAppUpdateEventAsync(
-                message: message);
+                app: app);
         });
-
-    private EventMessage<App> CreateAppEventMessage(App app) =>
-        new()
-        {
-            AuthInfo = new EventAuthInfo
-            {
-                SSOUserId =
-                    authInfoBroker.GetCurrentSsoUserId(),
-            },
-            Data = app,
-        };
 }

@@ -3,22 +3,21 @@
 // ---------------------------------------------------------------
 
 using cCoder.Data.Models.CMS;
-using cCoder.Eventing;
-using cCoder.Eventing.Models;
+using cCoder.Core.Dependencies.Eventing;
 
 namespace cCoder.Core.Brokers.Eventing;
 
 internal sealed class AppGraphEventBroker(
-    IEventHub eventHub)
+    EventingDependency eventingDependency)
     : IAppGraphEventBroker
 {
-    public ValueTask RaiseAppAddEventAsync(EventMessage<App> message) =>
-        eventHub.RaiseEventAsync(
+    public ValueTask RaiseAppAddEventAsync(App app) =>
+        eventingDependency.RaiseEventAsync(
             name: "app_add",
-            message: message);
+            data: app);
 
-    public ValueTask RaiseAppUpdateEventAsync(EventMessage<App> message) =>
-        eventHub.RaiseEventAsync(
+    public ValueTask RaiseAppUpdateEventAsync(App app) =>
+        eventingDependency.RaiseEventAsync(
             name: "app_update",
-            message: message);
+            data: app);
 }

@@ -3,18 +3,17 @@
 // ---------------------------------------------------------------
 
 using cCoder.ContentManagement.Models;
-using cCoder.Eventing;
-using cCoder.Eventing.Models;
+using cCoder.Core.Dependencies.Eventing;
 
 namespace cCoder.Core.Brokers.Eventing;
 
 internal sealed class PackageImportCompletionEventBroker(
-    IEventHub eventHub)
+    EventingDependency eventingDependency)
     : IPackageImportCompletionEventBroker
 {
     public ValueTask RaisePackageImportEventCompleteAsync(
-        EventMessage<PackageImportEvent> message) =>
-        eventHub.RaiseEventAsync(
+        PackageImportEvent packageImportEvent) =>
+        eventingDependency.RaiseEventAsync(
             name: "package_import_complete",
-            message: message);
+            data: packageImportEvent);
 }

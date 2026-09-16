@@ -3,6 +3,8 @@
 // ---------------------------------------------------------------
 
 using cCoder.Core.Brokers.Eventing;
+using cCoder.Core.Dependencies.Eventing;
+using cCoder.Data;
 using cCoder.Eventing;
 using Moq;
 
@@ -13,6 +15,11 @@ public sealed partial class PackageImportCompletionEventBrokerTests
     private readonly Mock<IEventHub> eventHubMock =
         new(MockBehavior.Strict);
 
+    private readonly Mock<ICoreAuthInfo> authInfoMock =
+        new(MockBehavior.Strict);
+
     private PackageImportCompletionEventBroker CreateBroker() =>
-        new(eventHub: eventHubMock.Object);
+        new(eventingDependency: new EventingDependency(
+            eventHub: eventHubMock.Object,
+            authInfo: authInfoMock.Object));
 }

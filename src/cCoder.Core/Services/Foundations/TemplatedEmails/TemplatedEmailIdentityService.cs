@@ -2,16 +2,14 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.AppSecurity.Brokers;
+using cCoder.Core.Brokers.TemplatedEmails;
 using cCoder.Core.Models;
 using cCoder.Data.Models.Mail;
-using cCoder.Mail.Exposures;
 
 namespace cCoder.Core.Services.Foundations.TemplatedEmails;
 
 internal sealed partial class TemplatedEmailIdentityService(
-    IAuthorizationBroker authorizationBroker,
-    IMailSenderManager mailSenderProcessingService
+    ITemplatedEmailIdentityBroker templatedEmailIdentityBroker
 ) : ITemplatedEmailIdentityService
 {
     public TemplatedEmailOperation ResolveTemplatedEmailOperationIdentity(
@@ -24,7 +22,7 @@ internal sealed partial class TemplatedEmailIdentityService(
             if (templatedEmailOperation.Details is not null)
             {
                 templatedEmailOperation.CurrentUser =
-                    authorizationBroker.GetCurrentUser();
+                    templatedEmailIdentityBroker.GetCurrentUser();
 
                 templatedEmailOperation.Culture = ResolveCulture(
                     detailsCulture: templatedEmailOperation.Details.Culture,
@@ -53,12 +51,12 @@ internal sealed partial class TemplatedEmailIdentityService(
     private MailSender ResolveMailSender(
         int appId,
         string mailSenderName) =>
-        mailSenderProcessingService
+        templatedEmailIdentityBroker
             .GetAllMailSender(ignoreFilters: true)
             .Where(predicate: sender => sender.AppId == appId)
             .FirstOrDefault(predicate: sender =>
                 sender.Name == mailSenderName)
-        ?? mailSenderProcessingService
+        ?? templatedEmailIdentityBroker
             .GetAllMailSender(ignoreFilters: true)
             .FirstOrDefault(predicate: sender =>
                 sender.AppId == appId)

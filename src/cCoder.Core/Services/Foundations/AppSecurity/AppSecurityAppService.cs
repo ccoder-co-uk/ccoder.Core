@@ -2,13 +2,13 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.AppSecurity.Exposures;
+using cCoder.Core.Brokers.AppSecurity;
 using cCoder.Data.Models.CMS;
 
 namespace cCoder.Core.Services.Foundations.AppSecurity;
 
 internal sealed partial class AppSecurityAppService(
-    IAppSecurityAppExposure appSecurityAppExposure)
+    IAppSecurityAppBroker appSecurityAppBroker)
     : IAppSecurityAppService
 {
     public ValueTask AddAppAsync(App newApp) =>
@@ -19,8 +19,8 @@ internal sealed partial class AppSecurityAppService(
             App flatApp = CreateFlatApp(
                 app: newApp);
 
-            await appSecurityAppExposure.AddAsync(
-                app: flatApp);
+            await appSecurityAppBroker.AddAppAsync(
+                newApp: flatApp);
         });
 
     public ValueTask UpdateAppAsync(App updatedApp) =>
@@ -31,8 +31,8 @@ internal sealed partial class AppSecurityAppService(
             App flatApp = CreateFlatApp(
                 app: updatedApp);
 
-            await appSecurityAppExposure.UpdateAsync(
-                app: flatApp);
+            await appSecurityAppBroker.UpdateAppAsync(
+                updatedApp: flatApp);
         });
 
     public ValueTask DeleteAppAsync(int appId) =>
@@ -40,7 +40,7 @@ internal sealed partial class AppSecurityAppService(
         {
             ValidateAppOnDelete(appId: appId);
 
-            await appSecurityAppExposure.DeleteAsync(
+            await appSecurityAppBroker.DeleteAppAsync(
                 appId: appId);
         });
 
