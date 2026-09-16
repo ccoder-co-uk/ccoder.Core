@@ -3,6 +3,7 @@
 // ---------------------------------------------------------------
 
 using cCoder.Data.Models;
+using System.IO;
 using Web.Services.Foundations.Api;
 
 namespace Web.Exposures;
@@ -13,4 +14,7 @@ internal sealed class ApiContextManager(
 {
     public ApiInfo[] GetApiInfos() =>
         apiContextService.GetApiInfos();
+
+    public ValueTask<string> ReadRequestBodyAsync(Stream requestBody) =>
+        apiContextService.ReadRequestBodyAsync(requestBody: requestBody);
 }

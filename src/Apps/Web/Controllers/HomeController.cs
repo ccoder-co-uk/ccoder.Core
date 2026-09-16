@@ -8,7 +8,6 @@ using cCoder.ContentManagement.Models;
 using cCoder.ContentManagement.Models.Exceptions;
 using cCoder.Data;
 using cCoder.Core.Models;
-using cCoder.Core.Brokers.Loggings;
 using cCoder.Core.Exposures.Setup;
 using cCoder.Core.Exposures;
 using Microsoft.AspNetCore.Http.Extensions;
@@ -25,8 +24,7 @@ namespace Web.Controllers
         IPageRenderer pageRenderer,
         IFirstTimeSetupManager setupStateService,
         ISetupRequestHostManager setupRequestHostManager,
-        IHomeSessionManager homeSessionManager,
-        ILoggingBroker logger) : Controller
+        IHomeSessionManager homeSessionManager) : Controller
     {
         private readonly IPageRenderer pageRenderer = pageRenderer;
         private readonly IFirstTimeSetupManager setupStateService = setupStateService;
@@ -90,16 +88,12 @@ namespace Web.Controllers
                 viewResult.StatusCode = page.StatusCode;
                 return viewResult;
             }
-            catch (ValidationException exception)
+            catch (ValidationException)
             {
-                logger.LogError(exception: exception, message: "Page request validation failed.");
-
                 return BadRequest(error: "The page request is invalid.");
             }
-            catch (PageAccessSecurityException exception)
+            catch (PageAccessSecurityException)
             {
-                logger.LogWarning(exception: exception, message: "Page access was denied.");
-
                 string returnUrl = Request.PathBase + Request.Path
                     + Request.QueryString;
 
@@ -118,13 +112,8 @@ namespace Web.Controllers
                         returnUrl
                     });
             }
-            catch (PageNotFoundException exception)
+            catch (PageNotFoundException)
             {
-                logger.LogWarning(
-                    exception: exception,
-                    message: "Page render request was not found for {Path}.",
-                    args: [Request.Path]);
-
                 if (!await setupStateService.IsInitializedAsync(
                     cancellationToken: cancellationToken))
                 {
@@ -139,46 +128,8 @@ namespace Web.Controllers
 
                 return NotFound(value: "The requested page was not found.");
             }
-            catch (SecurityException exception)
+            catch (Exception)
             {
-                logger.LogWarning(exception: exception, message: "Page security processing failed.");
-
-                if (!await setupStateService.IsInitializedAsync(
-                    cancellationToken: cancellationToken))
-                {
-                    return View(
-                        viewName: "~/Views/Setup/Index.cshtml",
-                        model: new FirstTimeSetupViewModel
-                        {
-                            Domain = setupRequestHostManager.NormalizeHost(
-                                host: Request.Host.Host),
-                        });
-                }
-
-                throw;
-            }
-            catch (ContentManagementDependencyException exception)
-            {
-                logger.LogError(exception: exception, message: "Page content dependency failed.");
-
-                if (!await setupStateService.IsInitializedAsync(
-                    cancellationToken: cancellationToken))
-                {
-                    return View(
-                        viewName: "~/Views/Setup/Index.cshtml",
-                        model: new FirstTimeSetupViewModel
-                        {
-                            Domain = setupRequestHostManager.NormalizeHost(
-                                host: Request.Host.Host),
-                        });
-                }
-
-                throw;
-            }
-            catch (Exception exception)
-            {
-                logger.LogError(exception: exception, message: "Page rendering failed.");
-
                 return StatusCode(
                     statusCode: StatusCodes.Status500InternalServerError,
                     value: "The page could not be rendered.");

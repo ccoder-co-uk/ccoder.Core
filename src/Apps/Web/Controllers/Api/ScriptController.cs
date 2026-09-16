@@ -2,7 +2,6 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.Core.Brokers.Loggings;
 using Microsoft.AspNetCore.Mvc;
 using Web.Exposures;
 using Web.Models;
@@ -12,42 +11,22 @@ namespace Web.Controllers.Api;
 
 [Route("Api")]
 public sealed class ScriptController(
-    IApiScriptManager apiScriptManager,
-    ILoggingBroker loggingBroker)
+    IApiScriptManager apiScriptManager)
     : Controller
 {
     [HttpPost("ExecuteScript")]
     public async Task<IActionResult> PostExecuteScript()
     {
-        try
+        ApiScriptRequest request = new()
         {
-            using StreamReader reader = new(
-                stream: Request.Body);
+            Script = await apiScriptManager.ReadRequestBodyAsync(
+                requestBody: Request.Body)
+        };
 
-            ApiScriptRequest request = new()
-            {
-                Script = await reader.ReadToEndAsync()
-            };
+        string response =
+            await apiScriptManager.ExecuteApiScriptRequestAsync(
+                apiScriptRequest: request);
 
-            string response =
-                await apiScriptManager.ExecuteApiScriptRequestAsync(
-                    apiScriptRequest: request);
-
-            return Ok(value: response);
-        }
-        catch (ApiScriptOrchestrationValidationException exception)
-        {
-            loggingBroker.LogError(exception: exception, message: "Script validation failed.");
-
-            return BadRequest(error: "The script request is invalid.");
-        }
-        catch (Exception exception)
-        {
-            loggingBroker.LogError(exception: exception, message: "Script execution failed.");
-
-            return StatusCode(
-                statusCode: StatusCodes.Status500InternalServerError,
-                value: "The script could not be executed.");
-        }
+        return Ok(value: response);
     }
 }

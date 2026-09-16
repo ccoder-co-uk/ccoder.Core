@@ -3,6 +3,7 @@
 // ---------------------------------------------------------------
 
 using Web.Models;
+using System.IO;
 using Web.Services.Foundations.Api;
 
 namespace Web.Services.Orchestrations.Api;
@@ -25,5 +26,14 @@ internal sealed partial class ApiScriptOrchestrationService(
             return await apiScriptExecutionService
                 .ExecuteScriptAsync(
                     script: apiScriptRequest.Script);
+        });
+
+    public ValueTask<string> ReadRequestBodyAsync(Stream requestBody) =>
+        TryCatch(operation: async () =>
+        {
+            ValidateRequestBodyOnRead(requestBody: requestBody);
+
+            return await apiScriptExecutionService.ReadRequestBodyAsync(
+                requestBody: requestBody);
         });
 }

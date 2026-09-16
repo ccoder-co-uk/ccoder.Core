@@ -3,6 +3,7 @@
 // ---------------------------------------------------------------
 
 using cCoder.Data.Models;
+using System.IO;
 using Web.Brokers.Api;
 
 namespace Web.Services.Foundations.Api;
@@ -28,5 +29,14 @@ internal sealed partial class ApiContextService(
                     comparer:
                         StringComparer.OrdinalIgnoreCase)
                 .ToArray();
+        });
+
+    public ValueTask<string> ReadRequestBodyAsync(Stream requestBody) =>
+        TryCatch(operation: async () =>
+        {
+            ValidateRequestBodyOnRead(requestBody: requestBody);
+
+            return await apiContextBroker.ReadRequestBodyAsync(
+                requestBody: requestBody);
         });
 }

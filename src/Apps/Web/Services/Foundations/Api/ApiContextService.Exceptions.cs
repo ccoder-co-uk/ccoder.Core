@@ -31,4 +31,28 @@ internal sealed partial class ApiContextService
                 innerException: innerException);
         }
     }
+
+    private static async ValueTask<string> TryCatch(
+        Func<ValueTask<string>> operation)
+    {
+        try
+        {
+            return await operation();
+        }
+        catch (ArgumentException innerException)
+        {
+            throw new ApiScriptValidationException(
+                innerException: innerException);
+        }
+        catch (ApiScriptDependencyException innerException)
+        {
+            throw new ApiScriptDependencyException(
+                innerException: innerException);
+        }
+        catch (Exception innerException)
+        {
+            throw new ApiScriptDependencyException(
+                innerException: innerException);
+        }
+    }
 }

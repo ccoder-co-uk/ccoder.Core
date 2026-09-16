@@ -9,23 +9,20 @@ using Web.Models;
 
 namespace Web.Dependencies;
 
-internal sealed class HomeSessionDependency
+internal sealed class HomeSessionDependency(
+    IServiceProvider serviceProvider)
 {
     public HomeSessionContext CreateHomeSessionContext(HttpContext context)
     {
-        ICoreAuthInfo authInfo = context.RequestServices
-            .GetService<ICoreAuthInfo>()
-            ?? new CoreAuthInfo
-            {
-                SSOUserId = "Guest"
-            };
+        ICoreAuthInfo authInfo = serviceProvider
+            .GetService<ICoreAuthInfo>();
 
         return new HomeSessionContext
         {
             Host = context.Request.Host.Host,
             Port = context.Request.Host.Port,
             Scheme = context.Request.Scheme,
-            SSOUserId = authInfo.SSOUserId,
+            SSOUserId = authInfo?.SSOUserId ?? "Guest",
             Token = context.Request.Query["t"].ToString(),
             SessionKeys = IsSessionAvailable(context: context)
                 ? [.. context.Session.Keys]
