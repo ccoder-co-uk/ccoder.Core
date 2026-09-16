@@ -14,18 +14,11 @@ using cCoder.Packaging.Exposures;
 
 namespace cCoder.Core.Dependencies.Packages;
 
-internal sealed class CorePackageDependency : IPackageTransferManager
+internal sealed class CorePackageDependency(
+    ICoreContextFactory coreContextFactory,
+    IPackageTransferManager packageTransferManager)
+    : IPackageTransferManager
 {
-    private readonly ICoreContextFactory coreContextFactory;
-    private readonly IPackageTransferManager packageTransferManager;
-
-    internal CorePackageDependency(
-        ICoreContextFactory coreContextFactory,
-        IPackageTransferManager packageTransferManager)
-    {
-        this.coreContextFactory = coreContextFactory;
-        this.packageTransferManager = packageTransferManager;
-    }
 
     private const string AppConfigurationPackageName = "AppConfiguration";
     private const string AppConfigurationItemType = "Core/App";
