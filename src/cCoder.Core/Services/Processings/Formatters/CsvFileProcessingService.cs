@@ -8,24 +8,13 @@ using System.Reflection;
 using System.Text;
 using cCoder.Data.Models.CMS;
 
-namespace cCoder.Core.Services.Processings.Formatters;
+namespace cCoder.Core.Dependencies.Formatters;
 
-internal sealed partial class CsvFileProcessingService(
-    IEnumerable<Resource> resources,
-    string delimiter,
-    string quotes,
-    string culture)
-    : ICsvFileProcessingService
+public sealed partial class CsvFormatter
 {
-    private readonly IEnumerable<Resource> resources = resources ?? [];
-    private readonly string delimiter = delimiter;
-    private readonly string quotes = quotes;
-    private readonly string culture = culture;
-
-    public string BuildCsvFile(object source) =>
-        TryCatch(operation: () =>
-        {
-            ValidateCsvFileOnBuild(source: source);
+    internal string BuildCsvFile(object source)
+    {
+        ValidateCsvFileOnBuild(source: source);
 
             string dateFormat = resources
                 .FirstOrDefault(
@@ -81,7 +70,7 @@ internal sealed partial class CsvFileProcessingService(
                         moneyFormat: moneyFormat)));
 
             return $"{sourceHeader}\n{sourceValues}";
-        });
+    }
 
     private static PropertyInfo[] SelectProperties(object source) =>
         [.. source.GetType()

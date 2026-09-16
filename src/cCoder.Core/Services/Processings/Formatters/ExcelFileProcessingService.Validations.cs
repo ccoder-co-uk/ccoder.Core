@@ -4,9 +4,9 @@
 
 using cCoder.Core.Dependencies;
 
-namespace cCoder.Core.Services.Processings.Formatters;
+namespace cCoder.Core.Dependencies.Formatters;
 
-internal sealed partial class ExcelFileProcessingService
+public sealed partial class ExcelFormatter
 {
     private static void ValidateExcelFileOnBuild(object data) =>
         ValidationRulesEngine.Validate(inputs: [data]);

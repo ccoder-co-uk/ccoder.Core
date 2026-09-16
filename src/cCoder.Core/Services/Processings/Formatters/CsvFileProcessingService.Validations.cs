@@ -4,9 +4,9 @@
 
 using cCoder.Core.Dependencies;
 
-namespace cCoder.Core.Services.Processings.Formatters;
+namespace cCoder.Core.Dependencies.Formatters;
 
-internal sealed partial class CsvFileProcessingService
+public sealed partial class CsvFormatter
 {
     private static void ValidateCsvFileOnBuild(object source) =>
         ValidationRulesEngine.Validate(inputs: [source]);

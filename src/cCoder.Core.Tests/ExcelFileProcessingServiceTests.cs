@@ -4,7 +4,7 @@
 
 using System.IO.Compression;
 using System.Text;
-using cCoder.Core.Services.Processings.Formatters;
+using cCoder.Core.Dependencies.Formatters;
 using FluentAssertions;
 using Xunit;
 
@@ -18,12 +18,12 @@ public sealed partial class ExcelFileProcessingServiceTests
         // Given
         TypedRow[] input = CreateTypedRows();
 
-        ExcelFileProcessingService service = new(
+        ExcelFormatter service = new(
             culture: "en-GB",
             resources: []);
 
         // When
-        using Stream workbook = service.BuildExcelFile(data: input);
+        byte[] workbook = service.BuildExcelFile(data: input);
 
         string sheet = ReadSheet(workbook: workbook);
 
@@ -104,7 +104,7 @@ public sealed partial class ExcelFileProcessingServiceTests
         // Given
         TypedRow[] input = CreateTypedRows();
 
-        CsvFileProcessingService service = new(
+        CsvFormatter service = new(
             resources: [],
             delimiter: ",",
             quotes: "",
@@ -200,12 +200,12 @@ public sealed partial class ExcelFileProcessingServiceTests
             },
         ];
 
-        ExcelFileProcessingService service = new(
+        ExcelFormatter service = new(
             culture: "en-GB",
             resources: []);
 
         // When
-        using Stream workbook = service.BuildExcelFile(data: input);
+        byte[] workbook = service.BuildExcelFile(data: input);
 
         string sheet = ReadSheet(workbook: workbook);
 
@@ -237,7 +237,7 @@ public sealed partial class ExcelFileProcessingServiceTests
             },
         ];
 
-        CsvFileProcessingService service = new(
+        CsvFormatter service = new(
             resources: [],
             delimiter: ",",
             quotes: "",
@@ -327,11 +327,15 @@ public sealed partial class ExcelFileProcessingServiceTests
     private static string ReadCsvHeader(string csv) =>
         csv[..csv.IndexOf(value: '\n')];
 
-    private static string ReadSheet(Stream workbook)
+    private static string ReadSheet(byte[] workbook)
     {
+        using MemoryStream stream = new(
+            buffer: workbook,
+            writable: false);
+
         using ZipArchive archive =
             new(
-                stream: workbook,
+                stream: stream,
                 mode: ZipArchiveMode.Read);
 
         ZipArchiveEntry entry =

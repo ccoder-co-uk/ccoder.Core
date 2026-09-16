@@ -2,33 +2,27 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System.Collections;
+using System.Dynamic;
 using System.Linq.Dynamic.Core;
 using System.Text;
 using cCoder.ContentManagement.Exposures.Caching;
-using cCoder.Core.Exposures.Formatters;
-using cCoder.Core.Services.Processings.Formatters;
 using cCoder.Data.Models.CMS;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.OData.Query.Wrapper;
 using Microsoft.Net.Http.Headers;
 
 
 namespace cCoder.Core.Dependencies.Formatters;
 
-public class ExcelFormatter : TextOutputFormatter
+public sealed partial class ExcelFormatter : TextOutputFormatter
 {
-    private readonly IFormatterODataProcessingService formatterODataProcessingService;
+    private readonly string culture;
+    private readonly IEnumerable<Resource> resources;
 
     public ExcelFormatter()
-        : this(new FormatterODataProcessingService(
-            new Services.Foundations.Formatters.FormatterODataService(
-                new Brokers.Formatters.FormatterODataBroker())))
+        : this(culture: "", resources: [])
     {
-    }
-
-    internal ExcelFormatter(
-        IFormatterODataProcessingService formatterODataProcessingService)
-    {
-        this.formatterODataProcessingService = formatterODataProcessingService;
         SupportedMediaTypes.Add(
 item: MediaTypeHeaderValue.Parse(
 input: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
@@ -36,6 +30,14 @@ input: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         );
         SupportedMediaTypes.Add(item: MediaTypeHeaderValue.Parse(input: "text/vnd.ms-excel"));
         SupportedEncodings.Add(item: Encoding.UTF8);
+    }
+
+    internal ExcelFormatter(
+        string culture,
+        IEnumerable<Resource> resources)
+    {
+        this.culture = culture;
+        this.resources = resources ?? [];
     }
 
     protected override bool CanWriteType(Type type) =>
@@ -48,13 +50,88 @@ input: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     {
         string culture = GetCulture(context: context, selectedEncoding: selectedEncoding);
 
-        await formatterODataProcessingService
-            .HandleOData(contextObject: context.Object)
-            .ToExcel(resources: GetResources(context: context), culture: culture)
-            .CopyToAsync(destination: context.HttpContext.Response.Body);
+        byte[] workbook = new ExcelFormatter(
+                culture: culture,
+                resources: GetResources(context: context))
+            .BuildExcelFile(data: HandleOData(contextObject: context.Object))
+            ;
+
+        await context.HttpContext.Response.Body.WriteAsync(
+            buffer: workbook);
 
         await context.HttpContext.Response.Body.FlushAsync();
         context.HttpContext.Response.Body.Close();
+    }
+
+    private static object HandleOData(object contextObject)
+    {
+        if (contextObject is IEnumerable enumerable and not string)
+        {
+            return ProcessEnumerable(enumerable: enumerable);
+        }
+
+        object result = UnpackSelectExpandWrapper(contextObject: contextObject);
+
+        if (result is IDictionary<string, object> dictionary)
+        {
+            ProcessDictionary(dictionary: dictionary);
+        }
+
+        return result;
+    }
+
+    private static dynamic[] ProcessEnumerable(IEnumerable enumerable)
+    {
+        dynamic[] rawDataItems = [.. enumerable
+            .Cast<object>()
+            .Select(selector: item => UnpackSelectExpandWrapper(
+                contextObject: item))];
+
+        foreach (dynamic item in rawDataItems)
+        {
+            if (item is IDictionary<string, object> dictionary)
+            {
+                ProcessDictionary(dictionary: dictionary);
+            }
+        }
+
+        return rawDataItems;
+    }
+
+    private static object UnpackSelectExpandWrapper(object contextObject)
+    {
+        object unpacked = contextObject is ISelectExpandWrapper wrapper
+            ? wrapper.ToDictionary()
+            : contextObject;
+
+        return unpacked is IDictionary<string, object> dictionary
+            ? ToExpandoObject(source: dictionary)
+            : unpacked;
+    }
+
+    private static ExpandoObject ToExpandoObject(
+        IDictionary<string, object> source)
+    {
+        ExpandoObject result = new();
+        IDictionary<string, object> resultDictionary = result;
+
+        foreach ((string key, object value) in source)
+        {
+            resultDictionary[key] = value;
+        }
+
+        return result;
+    }
+
+    private static void ProcessDictionary(
+        IDictionary<string, object> dictionary)
+    {
+        string[] keys = [.. dictionary.Keys];
+
+        foreach (string key in keys)
+        {
+            dictionary[key] = HandleOData(contextObject: dictionary[key]);
+        }
     }
 
     private static string GetCulture(OutputFormatterWriteContext context, Encoding selectedEncoding)
