@@ -17,35 +17,43 @@ public sealed partial class PackageImportCompletionEventBrokerTests
     public async Task ShouldRaiseCompletionUsingUnifiedPackageImportCompleteEvent()
     {
         // Given
-        EventMessage<PackageImportEvent> message = new()
+        PackageImportEvent packageImportEvent = new()
         {
-            Data = new PackageImportEvent
+            AppId = 42,
+            Package = new Package
             {
-                AppId = 42,
-                Package = new Package
-                {
-                    Name = "App package",
-                    Items = [],
-                },
+                Name = "App package",
+                Items = [],
             },
         };
+
+        authInfoMock
+            .SetupGet(expression: authInfo => authInfo.SSOUserId)
+            .Returns(value: "user-id");
 
         eventHubMock
             .Setup(expression: eventHub => eventHub.RaiseEventAsync(
                 name: "package_import_complete",
-                message: message))
+                message: It.Is<EventMessage<PackageImportEvent>>(
+                    match: message =>
+                        message.Data == packageImportEvent
+                        && message.AuthInfo.SSOUserId == "user-id")))
             .Returns(value: ValueTask.CompletedTask);
 
         PackageImportCompletionEventBroker broker = CreateBroker();
 
         // When
-        await broker.RaisePackageImportEventCompleteAsync(message: message);
+        await broker.RaisePackageImportEventCompleteAsync(
+            packageImportEvent: packageImportEvent);
 
         // Then
         eventHubMock.Verify(
             expression: eventHub => eventHub.RaiseEventAsync(
                 name: "package_import_complete",
-                message: message),
+                message: It.Is<EventMessage<PackageImportEvent>>(
+                    match: message =>
+                        message.Data == packageImportEvent
+                        && message.AuthInfo.SSOUserId == "user-id")),
             times: Times.Once);
     }
 }

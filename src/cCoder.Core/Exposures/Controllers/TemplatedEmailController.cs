@@ -2,7 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.Core.Brokers.Loggings;
+using cCoder.Core;
 using cCoder.Core.Services.Orchestrations;
 using cCoder.Core.Models.Exceptions;
 using cCoder.Core.Exposures.Managers;
@@ -16,8 +16,7 @@ namespace cCoder.Core.Exposures.Controllers;
 
 [ApiController]
 public class TemplatedEmailController(
-    ITemplatedEmailManager templatedEmailOrchestrationService,
-    ILoggingBroker loggingBroker) : ControllerBase
+    ITemplatedEmailManager templatedEmailOrchestrationService) : ControllerBase
 {
     [HttpPost("Api/Core/QueuedEmail/AddTemplatedEmail()")]
     public async Task<IActionResult> Post(
@@ -37,13 +36,17 @@ public class TemplatedEmailController(
         }
         catch (CoreOrchestrationValidationException exception)
         {
-            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+            WebApplicationExtensions.LogCoreControllerException(
+                context: HttpContext,
+                exception: exception);
 
             return BadRequest(error: "The email request is invalid.");
         }
         catch (System.Security.SecurityException exception)
         {
-            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+            WebApplicationExtensions.LogCoreControllerException(
+                context: HttpContext,
+                exception: exception);
 
             return StatusCode(
                 statusCode: StatusCodes.Status403Forbidden,
@@ -51,7 +54,9 @@ public class TemplatedEmailController(
         }
         catch (Exception exception)
         {
-            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+            WebApplicationExtensions.LogCoreControllerException(
+                context: HttpContext,
+                exception: exception);
 
             return StatusCode(
                 statusCode: StatusCodes.Status500InternalServerError,

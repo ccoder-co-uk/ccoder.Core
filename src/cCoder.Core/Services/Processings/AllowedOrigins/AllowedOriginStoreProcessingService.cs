@@ -2,7 +2,6 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using System.Net;
 using cCoder.Core.Models;
 using cCoder.Core.Services.Foundations.AllowedOrigins;
 
@@ -129,6 +128,5 @@ internal sealed partial class AllowedOriginStoreProcessingService(
         $"{uri.Scheme.ToLowerInvariant()}://{uri.Authority.ToLowerInvariant()}";
 
     private static bool IsLoopback(Uri uri) =>
-        string.Equals(a: uri.Host, b: "localhost", comparisonType: StringComparison.OrdinalIgnoreCase)
-        || (IPAddress.TryParse(ipString: uri.Host, address: out IPAddress address) && IPAddress.IsLoopback(address: address));
+        uri.IsLoopback;
 }

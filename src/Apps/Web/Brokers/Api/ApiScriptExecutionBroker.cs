@@ -3,6 +3,7 @@
 // ---------------------------------------------------------------
 
 using Web.Dependencies.Api;
+using System.IO;
 
 namespace Web.Brokers.Api;
 
@@ -12,4 +13,11 @@ internal sealed class ApiScriptExecutionBroker(
 {
     public ValueTask<string> ExecuteScriptAsync(string script) =>
         apiScriptExecutionDependency.ExecuteScriptAsync(script: script);
+
+    public async ValueTask<string> ReadRequestBodyAsync(Stream requestBody)
+    {
+        using StreamReader reader = new(stream: requestBody);
+
+        return await reader.ReadToEndAsync();
+    }
 }

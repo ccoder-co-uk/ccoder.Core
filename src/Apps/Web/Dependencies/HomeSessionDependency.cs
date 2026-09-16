@@ -5,33 +5,46 @@
 using cCoder.Core.Models;
 using cCoder.Data;
 using Microsoft.AspNetCore.Mvc;
-using Web.Models;
 
 namespace Web.Dependencies;
 
-internal sealed class HomeSessionDependency
+internal sealed class HomeSessionDependency(
+    IHttpContextAccessor httpContextAccessor)
+    : IHttpContextAccessor
 {
-    public HomeSessionContext CreateHomeSessionContext(HttpContext context)
+    HttpContext IHttpContextAccessor.HttpContext
     {
-        ICoreAuthInfo authInfo = context.RequestServices
-            .GetService<ICoreAuthInfo>()
-            ?? new CoreAuthInfo
-            {
-                SSOUserId = "Guest"
-            };
-
-        return new HomeSessionContext
-        {
-            Host = context.Request.Host.Host,
-            Port = context.Request.Host.Port,
-            Scheme = context.Request.Scheme,
-            SSOUserId = authInfo.SSOUserId,
-            Token = context.Request.Query["t"].ToString(),
-            SessionKeys = IsSessionAvailable(context: context)
-                ? [.. context.Session.Keys]
-                : []
-        };
+        get => httpContextAccessor.HttpContext;
+        set => httpContextAccessor.HttpContext = value;
     }
+
+    public string SelectRequestHost(HttpContext context) =>
+        context.Request.Host.Host;
+
+    public int? SelectRequestPort(HttpContext context) =>
+        context.Request.Host.Port;
+
+    public string SelectRequestScheme(HttpContext context) =>
+        context.Request.Scheme;
+
+    public string SelectSsoUserId(HttpContext context)
+    {
+        HttpContext requestContext =
+            httpContextAccessor.HttpContext ?? context;
+
+        ICoreAuthInfo authInfo = requestContext.RequestServices
+            .GetService<ICoreAuthInfo>();
+
+        return authInfo?.SSOUserId ?? "Guest";
+    }
+
+    public string SelectRequestToken(HttpContext context) =>
+        context.Request.Query["t"].ToString();
+
+    public string[] SelectSessionKeys(HttpContext context) =>
+        IsSessionAvailable(context: context)
+            ? [.. context.Session.Keys]
+            : [];
 
     public bool IsSessionAvailable(HttpContext context)
     {

@@ -19,7 +19,7 @@ internal static class AcceptanceSeedData
         JsonElement value = json.RootElement.GetProperty(propertyName: "value");
 
         return JsonConvert.DeserializeObject<Package[]>(
-value: value.GetRawText(), settings: cCoder.Data.Extensions.ObjectExtensions.GetJSONSettings());
+            value: value.GetRawText());
     }
 
     public static Role[] LoadRoles() =>
@@ -85,7 +85,7 @@ value: value.GetRawText(), settings: cCoder.Data.Extensions.ObjectExtensions.Get
                 : json.RootElement;
 
         return JsonConvert.DeserializeObject<CommonObject[]>(
-value: value.GetRawText(), settings: cCoder.Data.Extensions.ObjectExtensions.GetJSONSettings());
+            value: value.GetRawText());
     }
 
     private static object[] LoadPackageItems(
@@ -124,8 +124,7 @@ value: value.GetRawText(), settings: cCoder.Data.Extensions.ObjectExtensions.Get
 
         object deserialized = JsonConvert.DeserializeObject(
             value: trimmed,
-            type: deserializationType,
-            settings: cCoder.Data.Extensions.ObjectExtensions.GetJSONSettings());
+            type: deserializationType);
 
         return deserialized is Array items
             ? items.Cast<object>()

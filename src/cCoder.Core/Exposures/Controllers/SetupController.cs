@@ -2,7 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.Core.Brokers.Loggings;
+using cCoder.Core;
 using Microsoft.AspNetCore.Mvc;
 using cCoder.Core.Models;
 using cCoder.Core.Services.Setup;
@@ -15,8 +15,7 @@ namespace cCoder.Core.Exposures.Controllers;
 public sealed class SetupController(
     IFirstTimeSetupManager setupStateService,
     ISetupRequestHostManager setupRequestHostManager,
-    CoreConfiguration configuration,
-    ILoggingBroker loggingBroker)
+    CoreConfiguration configuration)
     : Controller
 {
     [HttpGet("")]
@@ -36,13 +35,17 @@ public sealed class SetupController(
         }
         catch (CoreOrchestrationValidationException exception)
         {
-            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+            WebApplicationExtensions.LogCoreControllerException(
+                context: HttpContext,
+                exception: exception);
 
             return BadRequest(error: "The setup request is invalid.");
         }
         catch (System.Security.SecurityException exception)
         {
-            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+            WebApplicationExtensions.LogCoreControllerException(
+                context: HttpContext,
+                exception: exception);
 
             return StatusCode(
                 statusCode: StatusCodes.Status403Forbidden,
@@ -50,7 +53,9 @@ public sealed class SetupController(
         }
         catch (Exception exception)
         {
-            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+            WebApplicationExtensions.LogCoreControllerException(
+                context: HttpContext,
+                exception: exception);
 
             return StatusCode(
                 statusCode: StatusCodes.Status500InternalServerError,

@@ -4,13 +4,11 @@
 
 using cCoder.ContentManagement.Models;
 using cCoder.Core.Brokers.Eventing;
-using cCoder.Eventing.Models;
 
 namespace cCoder.Core.Services.Foundations.Eventing;
 
 internal sealed partial class PackageImportCompletionEventService(
-    IPackageImportCompletionEventBroker eventBroker,
-    IAuthInfoBroker authInfoBroker)
+    IPackageImportCompletionEventBroker eventBroker)
     : IPackageImportCompletionEventService
 {
     public ValueTask RaisePackageImportEventCompleteAsync(
@@ -21,16 +19,6 @@ internal sealed partial class PackageImportCompletionEventService(
                 packageImportEvent: packageImportEvent);
 
             await eventBroker.RaisePackageImportEventCompleteAsync(
-                message: new EventMessage<PackageImportEvent>
-                {
-                    AuthInfo = CreateEventAuthInfo(),
-                    Data = packageImportEvent,
-                });
+                packageImportEvent: packageImportEvent);
         });
-
-    private EventAuthInfo CreateEventAuthInfo() =>
-        new()
-        {
-            SSOUserId = authInfoBroker.GetCurrentSsoUserId(),
-        };
 }

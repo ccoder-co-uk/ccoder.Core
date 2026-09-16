@@ -2,36 +2,48 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System.Collections;
+using System.Dynamic;
 using System.Linq.Dynamic.Core;
 using System.Text;
 using cCoder.ContentManagement.Exposures.Caching;
-using cCoder.Core.Exposures.Formatters;
-using cCoder.Core.Services.Processings.Formatters;
 using cCoder.Data.Models.CMS;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.OData.Query.Wrapper;
 using Microsoft.Net.Http.Headers;
 
 
 namespace cCoder.Core.Dependencies.Formatters;
 
-public class CsvFormatter : TextOutputFormatter
+public sealed partial class CsvFormatter : TextOutputFormatter
 {
-    private readonly IFormatterODataProcessingService formatterODataProcessingService;
+    private readonly IEnumerable<Resource> resources;
+    private readonly string delimiter;
+    private readonly string quotes;
+    private readonly string culture;
 
     public CsvFormatter()
-        : this(new FormatterODataProcessingService(
-            new Services.Foundations.Formatters.FormatterODataService(
-                new Brokers.Formatters.FormatterODataBroker())))
+        : this(
+            resources: [],
+            delimiter: ", ",
+            quotes: "",
+            culture: "en-GB")
     {
-    }
-
-    internal CsvFormatter(
-        IFormatterODataProcessingService formatterODataProcessingService)
-    {
-        this.formatterODataProcessingService = formatterODataProcessingService;
         SupportedMediaTypes.Add(item: MediaTypeHeaderValue.Parse(input: "application/csv"));
         SupportedMediaTypes.Add(item: MediaTypeHeaderValue.Parse(input: "text/csv"));
         SupportedEncodings.Add(item: Encoding.UTF8);
+    }
+
+    internal CsvFormatter(
+        IEnumerable<Resource> resources,
+        string delimiter,
+        string quotes,
+        string culture)
+    {
+        this.resources = resources ?? [];
+        this.delimiter = delimiter;
+        this.quotes = quotes;
+        this.culture = culture;
     }
 
     protected override bool CanWriteType(Type type) =>
@@ -45,10 +57,84 @@ public class CsvFormatter : TextOutputFormatter
         (string delimiter, string quotes, string culture) = ExtractValues(context: context);
 
         await context.HttpContext.Response.WriteAsync(
-text: formatterODataProcessingService
-                .HandleOData(contextObject: context.Object)
-                .ToCsv(resources: GetResources(context: context, culture: culture), delimiter: delimiter, quotes: quotes, culture: culture)
+text: new CsvFormatter(
+                    resources: GetResources(context: context, culture: culture),
+                    delimiter: delimiter,
+                    quotes: quotes,
+                    culture: culture)
+                .BuildCsvFile(source: HandleOData(contextObject: context.Object))
         );
+    }
+
+    private static object HandleOData(object contextObject)
+    {
+        if (contextObject is IEnumerable enumerable and not string)
+        {
+            return ProcessEnumerable(enumerable: enumerable);
+        }
+
+        object result = UnpackSelectExpandWrapper(contextObject: contextObject);
+
+        if (result is IDictionary<string, object> dictionary)
+        {
+            ProcessDictionary(dictionary: dictionary);
+        }
+
+        return result;
+    }
+
+    private static dynamic[] ProcessEnumerable(IEnumerable enumerable)
+    {
+        dynamic[] rawDataItems = [.. enumerable
+            .Cast<object>()
+            .Select(selector: item => UnpackSelectExpandWrapper(
+                contextObject: item))];
+
+        foreach (dynamic item in rawDataItems)
+        {
+            if (item is IDictionary<string, object> dictionary)
+            {
+                ProcessDictionary(dictionary: dictionary);
+            }
+        }
+
+        return rawDataItems;
+    }
+
+    private static object UnpackSelectExpandWrapper(object contextObject)
+    {
+        object unpacked = contextObject is ISelectExpandWrapper wrapper
+            ? wrapper.ToDictionary()
+            : contextObject;
+
+        return unpacked is IDictionary<string, object> dictionary
+            ? ToExpandoObject(source: dictionary)
+            : unpacked;
+    }
+
+    private static ExpandoObject ToExpandoObject(
+        IDictionary<string, object> source)
+    {
+        ExpandoObject result = new();
+        IDictionary<string, object> resultDictionary = result;
+
+        foreach ((string key, object value) in source)
+        {
+            resultDictionary[key] = value;
+        }
+
+        return result;
+    }
+
+    private static void ProcessDictionary(
+        IDictionary<string, object> dictionary)
+    {
+        string[] keys = [.. dictionary.Keys];
+
+        foreach (string key in keys)
+        {
+            dictionary[key] = HandleOData(contextObject: dictionary[key]);
+        }
     }
 
     private static (string delimiter, string quotes, string culture) ExtractValues(

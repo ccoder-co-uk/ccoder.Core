@@ -2,7 +2,6 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.Core.Brokers.Loggings;
 using Microsoft.AspNetCore.Mvc;
 using Web.Exposures;
 using Web.Models;
@@ -12,8 +11,7 @@ namespace Web.Controllers.Api;
 
 [Route("Api")]
 public sealed class ScriptController(
-    IApiScriptManager apiScriptManager,
-    ILoggingBroker loggingBroker)
+    IApiScriptManager apiScriptManager)
     : Controller
 {
     [HttpPost("ExecuteScript")]
@@ -21,12 +19,10 @@ public sealed class ScriptController(
     {
         try
         {
-            using StreamReader reader = new(
-                stream: Request.Body);
-
             ApiScriptRequest request = new()
             {
-                Script = await reader.ReadToEndAsync()
+                Script = await apiScriptManager.ReadRequestBodyAsync(
+                    requestBody: Request.Body)
             };
 
             string response =
@@ -37,13 +33,13 @@ public sealed class ScriptController(
         }
         catch (ApiScriptOrchestrationValidationException exception)
         {
-            loggingBroker.LogError(exception: exception, message: "Script validation failed.");
+            apiScriptManager.LogError(exception: exception);
 
             return BadRequest(error: "The script request is invalid.");
         }
         catch (Exception exception)
         {
-            loggingBroker.LogError(exception: exception, message: "Script execution failed.");
+            apiScriptManager.LogError(exception: exception);
 
             return StatusCode(
                 statusCode: StatusCodes.Status500InternalServerError,

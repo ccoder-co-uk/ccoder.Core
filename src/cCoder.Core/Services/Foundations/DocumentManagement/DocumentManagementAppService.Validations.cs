@@ -9,12 +9,15 @@ namespace cCoder.Core.Services.Foundations.DocumentManagement;
 
 internal sealed partial class DocumentManagementAppService
 {
+    private static void Validate(params object[] inputs) =>
+        ValidationRulesEngine.Validate(inputs: inputs);
+
     private static void ValidateAppOnAdd(App newApp) =>
-        ValidationRulesEngine.Validate(inputs: [newApp]);
+        Validate(inputs: [newApp]);
 
     private static void ValidateAppOnUpdate(App updatedApp) =>
-        ValidationRulesEngine.Validate(inputs: [updatedApp]);
+        Validate(inputs: [updatedApp]);
 
     private static void ValidateAppOnDelete(int appId) =>
-        ValidationRulesEngine.Validate(inputs: [appId]);
+        Validate(inputs: [appId]);
 }

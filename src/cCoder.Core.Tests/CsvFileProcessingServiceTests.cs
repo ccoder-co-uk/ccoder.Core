@@ -2,7 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.Core.Services.Processings.Formatters;
+using cCoder.Core.Dependencies.Formatters;
 using FluentAssertions;
 using Xunit;
 
@@ -22,7 +22,7 @@ public sealed partial class CsvFileProcessingServiceTests
             Identifier = identifier,
         };
 
-        CsvFileProcessingService service = new(
+        CsvFormatter service = new(
             resources: [],
             delimiter: ",",
             quotes: "\"",
@@ -47,7 +47,7 @@ public sealed partial class CsvFileProcessingServiceTests
             new { Name = "Beta", Count = 2 },
         ];
 
-        CsvFileProcessingService service = new(
+        CsvFormatter service = new(
             resources: [],
             delimiter: ";",
             quotes: "'",
@@ -66,7 +66,7 @@ public sealed partial class CsvFileProcessingServiceTests
     public void ShouldReturnEmptyCsvForEmptyCollection()
     {
         // Given
-        CsvFileProcessingService service = new(
+        CsvFormatter service = new(
             resources: [],
             delimiter: ",",
             quotes: "\"",

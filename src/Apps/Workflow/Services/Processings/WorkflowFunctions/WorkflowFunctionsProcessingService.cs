@@ -64,16 +64,4 @@ internal sealed partial class WorkflowFunctionsProcessingService(
                 content: "OK");
         });
 
-    public Task ProcessServiceBusMessageAsync(string message) =>
-        TryCatch(operation: () =>
-        {
-            ValidateInputs(inputs: [message]);
-
-            workflowFunctionsService.LogInformation(
-                message:
-                    "Service Bus workflow trigger is scaffolded but disabled.");
-
-            return Task.CompletedTask;
-        });
-
 }

@@ -17,7 +17,18 @@ internal sealed partial class EdmModelService(IEdmModelBroker edmModelBroker)
             ValidateEdmModelDetailsOnRetrieve(
                 edmModelDetails: edmModelDetails);
 
-            return edmModelBroker.RetrieveEdmModelDetails(
-                edmModelDetails: edmModelDetails);
+            if (edmModelDetails.Type is null)
+            {
+                edmModelDetails.Types = edmModelBroker.RetrieveTypes(
+                    model: (Microsoft.OData.Edm.IEdmModel)edmModelDetails.Model);
+            }
+            else
+            {
+                edmModelDetails.Operations = edmModelBroker.RetrieveOperations(
+                    model: (Microsoft.OData.Edm.IEdmModel)edmModelDetails.Model,
+                    type: edmModelDetails.Type);
+            }
+
+            return edmModelDetails;
         });
 }

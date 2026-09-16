@@ -9,6 +9,20 @@ namespace cCoder.Core;
 
 public static partial class WebApplicationExtensions
 {
+    internal static void LogCoreControllerException(
+        HttpContext context,
+        Exception exception)
+    {
+        ILogger logger = context.RequestServices
+            .GetService<ILoggerFactory>()?
+            .CreateLogger(categoryName: "cCoder.Core.Web")
+            ?? Microsoft.Extensions.Logging.Abstractions.NullLogger.Instance;
+
+        logger.LogError(
+            exception: exception,
+            message: "Controller request failed.");
+    }
+
     private static async Task HandleUnhandledException(HttpContext context)
     {
         ILogger logger = context.RequestServices

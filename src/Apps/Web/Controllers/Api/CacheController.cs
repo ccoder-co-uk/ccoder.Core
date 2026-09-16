@@ -2,7 +2,6 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.Core.Brokers.Loggings;
 using Microsoft.AspNetCore.Mvc;
 using Web.Exposures;
 using Web.Models.Exceptions;
@@ -11,8 +10,7 @@ namespace Web.Controllers.Api;
 
 [Route("Api")]
 public sealed class CacheController(
-    IApiCacheManager apiCacheManager,
-    ILoggingBroker loggingBroker)
+    IApiCacheManager apiCacheManager)
     : Controller
 {
     [HttpGet("RefreshCache")]
@@ -26,13 +24,13 @@ public sealed class CacheController(
         }
         catch (ApiCacheValidationException exception)
         {
-            loggingBroker.LogError(exception: exception, message: "Cache refresh validation failed.");
+            apiCacheManager.LogError(exception: exception);
 
             return BadRequest(error: "The cache refresh request is invalid.");
         }
         catch (Exception exception)
         {
-            loggingBroker.LogError(exception: exception, message: "Cache refresh failed.");
+            apiCacheManager.LogError(exception: exception);
 
             return StatusCode(
                 statusCode: StatusCodes.Status500InternalServerError,

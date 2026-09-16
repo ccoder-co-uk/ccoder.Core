@@ -11,6 +11,9 @@ using cCoder.Security.Data.EF.Dependencies;
 using cCoder.Security.Data.EF.Interfaces;
 using cCoder.Security.Models.Configurations;
 using cCoder.Workflow.Exposures;
+using HostedServices.Brokers.Workflow;
+using HostedServices.Exposures;
+using HostedServices.Services.Foundations.Workflow;
 
 namespace HostedServices;
 
@@ -79,6 +82,12 @@ public static class IServiceCollectionExtensions
         services.AddTransient<
             IWorkflowInstanceManager,
             HostedServicesWorkflowInstanceManagementOrchestrationService>();
+        services.AddTransient<
+            IHostedWorkflowInstanceManager,
+            HostedWorkflowInstanceManager>();
+        services.AddTransient<
+            IHostedWorkflowInstanceBroker,
+            HostedWorkflowInstanceBroker>();
     }
 
     private static void AddExposures(

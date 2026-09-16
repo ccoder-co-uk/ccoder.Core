@@ -2,17 +2,15 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.Core.Brokers.Loggings;
 using Microsoft.AspNetCore.Mvc;
-using ContentManagementMetadataCache =
-    cCoder.ContentManagement.Exposures.Caching.IMetadataCache;
+using Web.Exposures;
+using Web.Models.Exceptions;
 
 namespace Web.Controllers.Api;
 
 [Route("Api")]
 public sealed class MetadataController(
-    ContentManagementMetadataCache metadataCache,
-    ILoggingBroker loggingBroker)
+    IMetadataManager metadataManager)
     : Controller
 {
     [HttpGet("GetMetadata")]
@@ -22,13 +20,19 @@ public sealed class MetadataController(
         try
         {
             return Content(
-                content: metadataCache.GetAll(
+                content: metadataManager.GetAll(
                     culture: culture),
                 contentType: "application/json");
         }
+        catch (ApiCacheValidationException exception)
+        {
+            metadataManager.LogError(exception: exception);
+
+            return BadRequest(error: "The metadata request is invalid.");
+        }
         catch (Exception exception)
         {
-            loggingBroker.LogError(exception: exception, message: "Metadata loading failed.");
+            metadataManager.LogError(exception: exception);
 
             return StatusCode(
                 statusCode: StatusCodes.Status500InternalServerError,

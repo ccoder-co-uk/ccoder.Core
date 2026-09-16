@@ -3,6 +3,7 @@
 // ---------------------------------------------------------------
 
 using Web.Models;
+using System.IO;
 using Web.Services.Orchestrations.Api;
 
 namespace Web.Exposures;
@@ -15,4 +16,10 @@ internal sealed class ApiScriptManager(
         ApiScriptRequest apiScriptRequest) =>
         apiScriptOrchestrationService.ExecuteApiScriptRequestAsync(
             apiScriptRequest: apiScriptRequest);
+
+    public ValueTask<string> ReadRequestBodyAsync(Stream requestBody) =>
+        apiScriptOrchestrationService.ReadRequestBodyAsync(requestBody: requestBody);
+
+    public void LogError(Exception exception) =>
+        apiScriptOrchestrationService.LogError(exception: exception);
 }

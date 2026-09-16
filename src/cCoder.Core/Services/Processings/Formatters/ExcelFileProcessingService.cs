@@ -8,27 +8,19 @@ using System.IO.Compression;
 using System.Reflection;
 using System.Text;
 using cCoder.Data.Models.CMS;
-using cCoder.Core.Exposures.Formatters;
 
-namespace cCoder.Core.Services.Processings.Formatters;
+namespace cCoder.Core.Dependencies.Formatters;
 
-internal sealed partial class ExcelFileProcessingService(
-    string culture,
-    IEnumerable<Resource> resources)
-    : IExcelFileProcessingService
+public sealed partial class ExcelFormatter
 {
-    private readonly string culture = culture;
-    private readonly IEnumerable<Resource> resources = resources ?? [];
+    internal byte[] BuildExcelFile(object data)
+    {
+        ValidateExcelFileOnBuild(data: data);
 
-    public Stream BuildExcelFile(object data) =>
-        TryCatch(operation: () =>
-        {
-            ValidateExcelFileOnBuild(data: data);
+        return BuildExcelFileInternal(data: data);
+    }
 
-            return BuildExcelFileInternal(data: data);
-        });
-
-    private Stream BuildExcelFileInternal(object data)
+    private byte[] BuildExcelFileInternal(object data)
     {
         MemoryStream result = new();
 
@@ -57,7 +49,7 @@ oldValue: "'", newValue: "\""
         }
 
         _ = result.Seek(offset: 0, loc: SeekOrigin.Begin);
-        return result;
+        return result.ToArray();
     }
 
     private static void AddRels(ZipArchive excelFile)

@@ -7,4 +7,5 @@ namespace Web.Exposures;
 public interface IApiCacheManager
 {
     void RefreshCaches();
+    void LogError(Exception exception);
 }

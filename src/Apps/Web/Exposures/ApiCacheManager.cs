@@ -12,4 +12,7 @@ internal sealed class ApiCacheManager(
 {
     public void RefreshCaches() =>
         apiCacheAggregationService.RefreshCaches();
+
+    public void LogError(Exception exception) =>
+        apiCacheAggregationService.LogError(exception: exception);
 }

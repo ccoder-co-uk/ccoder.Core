@@ -2,7 +2,6 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.Core.Brokers.Loggings;
 using cCoder.Core.Brokers.Notifications;
 using cCoder.Core.Exposures.Hubs;
 using cCoder.Core.Services.Processings.Notifications;
@@ -170,7 +169,6 @@ public sealed partial class NotificationHubBehaviorTests
 
         internal HubTestContext()
         {
-            Mock<ILoggingBroker> loggingBrokerMock = new();
             Mock<HubCallerContext> callerContextMock = new();
             Mock<IHubCallerClients> clientsMock = new();
 
@@ -188,7 +186,6 @@ public sealed partial class NotificationHubBehaviorTests
 
             INotificationHubProcessingService processingService =
                 new NotificationHubProcessingService(
-                    log: loggingBrokerMock.Object,
                     notificationHubService: new NotificationHubService(
                         notificationHubBroker: new NotificationHubBroker()));
 

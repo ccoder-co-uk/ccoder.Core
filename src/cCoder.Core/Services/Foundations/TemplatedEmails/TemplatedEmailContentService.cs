@@ -2,8 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.ContentManagement.Exposures;
-using cCoder.Core.Brokers.ContentManagement;
+using cCoder.Core.Brokers.TemplatedEmails;
 using cCoder.Core.Models;
 using CoreUser = cCoder.Data.Models.Security.User;
 using CoreApp = cCoder.Data.Models.CMS.App;
@@ -11,8 +10,7 @@ using CoreApp = cCoder.Data.Models.CMS.App;
 namespace cCoder.Core.Services.Foundations.TemplatedEmails;
 
 internal sealed partial class TemplatedEmailContentService(
-    IContentManagementAppBroker contentManagementAppBroker,
-    ITemplateRenderer templateRenderer
+    ITemplatedEmailContentBroker templatedEmailContentBroker
 ) : ITemplatedEmailContentService
 {
     public TemplatedEmailOperation ResolveTemplatedEmailOperationContent(
@@ -25,9 +23,8 @@ internal sealed partial class TemplatedEmailContentService(
             if (templatedEmailOperation.Details is not null)
             {
                 templatedEmailOperation.App =
-                    contentManagementAppBroker.GetAppByDomain(
-                        domain: templatedEmailOperation.Details.SourceDomain,
-                        ignoreFilters: true)
+                    templatedEmailContentBroker.GetAppByDomain(
+                        domain: templatedEmailOperation.Details.SourceDomain)
                     ?? throw new InvalidOperationException(
                         $"No app found for domain '{templatedEmailOperation.Details.SourceDomain}'");
 
@@ -79,7 +76,7 @@ internal sealed partial class TemplatedEmailContentService(
                 };
             }
 
-            templatedEmailOperation.Content = templateRenderer.Render(
+            templatedEmailOperation.Content = templatedEmailContentBroker.Render(
                 appId: templatedEmailOperation.App.Id,
                 name: templatedEmailOperation.Template.Name,
                 culture: templatedEmailOperation.Culture,

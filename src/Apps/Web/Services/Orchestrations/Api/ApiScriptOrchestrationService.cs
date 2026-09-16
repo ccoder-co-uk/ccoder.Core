@@ -3,13 +3,15 @@
 // ---------------------------------------------------------------
 
 using Web.Models;
+using System.IO;
 using Web.Services.Foundations.Api;
 
 namespace Web.Services.Orchestrations.Api;
 
 internal sealed partial class ApiScriptOrchestrationService(
     IApiScriptAuthorizationService apiScriptAuthorizationService,
-    IApiScriptExecutionService apiScriptExecutionService)
+    IApiScriptExecutionService apiScriptExecutionService,
+    IApiContextService apiContextService)
     : IApiScriptOrchestrationService
 {
     public ValueTask<string> ExecuteApiScriptRequestAsync(
@@ -26,4 +28,16 @@ internal sealed partial class ApiScriptOrchestrationService(
                 .ExecuteScriptAsync(
                     script: apiScriptRequest.Script);
         });
+
+    public ValueTask<string> ReadRequestBodyAsync(Stream requestBody) =>
+        TryCatch(operation: async () =>
+        {
+            ValidateRequestBodyOnRead(requestBody: requestBody);
+
+            return await apiScriptExecutionService.ReadRequestBodyAsync(
+                requestBody: requestBody);
+        });
+
+    void IApiScriptOrchestrationService.LogError(Exception exception) =>
+        apiContextService.LogError(exception: exception);
 }

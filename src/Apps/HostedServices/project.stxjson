@@ -7,6 +7,94 @@
   },
   "Classes": [
     {
+      "Name": "HostedServices.Brokers.Workflow.HostedWorkflowInstanceBroker",
+      "StandardElementType": "Broker",
+      "LineNumber": 9,
+      "IsPublic": false,
+      "Kind": "Class",
+      "BaseType": null,
+      "Interfaces": [
+        {
+          "Id": "HostedServices:HostedServices.Brokers.Workflow.IHostedWorkflowInstanceBroker",
+          "FullName": "HostedServices.Brokers.Workflow.IHostedWorkflowInstanceBroker",
+          "Name": "IHostedWorkflowInstanceBroker",
+          "Namespace": "HostedServices.Brokers.Workflow",
+          "AssemblyName": "HostedServices",
+          "Kind": "Interface",
+          "IsInCurrentProject": true,
+          "StandardElementType": "Broker"
+        }
+      ],
+      "Properties": [],
+      "Methods": [
+        {
+          "Id": "HostedServices.Brokers.Workflow.HostedWorkflowInstanceBroker.ExecuteWaitingQueuedInstanceByIdAsync(System.Guid)",
+          "Name": "ExecuteWaitingQueuedInstanceByIdAsync",
+          "LineNumber": 13,
+          "Inputs": [
+            {
+              "Name": "flowInstanceDataId",
+              "Type": "System.Guid"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask",
+          "Implements": [
+            "HostedServices.Brokers.Workflow.IHostedWorkflowInstanceBroker.ExecuteWaitingQueuedInstanceByIdAsync(System.Guid)"
+          ],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Workflow.Exposures.IWorkflowInstanceManager",
+              "MethodName": "ExecuteWaitingQueuedInstanceByIdAsync",
+              "MethodId": "cCoder.Workflow.Exposures.IWorkflowInstanceManager.ExecuteWaitingQueuedInstanceByIdAsync(System.Guid)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "HostedServices.Brokers.Workflow.HostedWorkflowInstanceBroker.GetStats()",
+          "Name": "GetStats",
+          "LineNumber": 17,
+          "Inputs": [],
+          "ReturnType": "System.Object[]",
+          "Implements": [
+            "HostedServices.Brokers.Workflow.IHostedWorkflowInstanceBroker.GetStats()"
+          ],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Workflow.Exposures.IWorkflowInstanceManager",
+              "MethodName": "GetStats",
+              "MethodId": "cCoder.Workflow.Exposures.IWorkflowInstanceManager.GetStats()",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        }
+      ]
+    },
+    {
       "Name": "HostedServices.Controllers.HomeController",
       "StandardElementType": "HttpExposure",
       "LineNumber": 9,
@@ -78,7 +166,7 @@
     {
       "Name": "HostedServices.Controllers.WorkflowController",
       "StandardElementType": "HttpExposure",
-      "LineNumber": 11,
+      "LineNumber": 10,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -97,7 +185,7 @@
         {
           "Id": "HostedServices.Controllers.WorkflowController.Get()",
           "Name": "Get",
-          "LineNumber": 18,
+          "LineNumber": 16,
           "Inputs": [],
           "ReturnType": "Microsoft.AspNetCore.Mvc.IActionResult",
           "Implements": [],
@@ -108,20 +196,6 @@
               "MethodId": "Microsoft.AspNetCore.Mvc.Controller.View(System.String?)",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "Microsoft.AspNetCore.Mvc.ControllerBase",
-              "MethodName": "StatusCode",
-              "MethodId": "Microsoft.AspNetCore.Mvc.ControllerBase.StatusCode(System.Int32,System.Object?)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
-              "MethodName": "LogError",
-              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
             }
           ],
           "PossibleExceptionTypes": [],
@@ -130,91 +204,65 @@
           "HttpMethods": [
             "GET"
           ],
-          "HttpResponses": [
-            {
-              "StatusCode": 500,
-              "ResultMethod": "StatusCode",
-              "ExceptionType": "System.Exception",
-              "IsExceptionPath": true,
-              "IsNullPath": false,
-              "HasBody": true,
-              "ExposesExceptionDetails": false,
-              "LogsException": true
-            }
-          ],
+          "HttpResponses": [],
           "IsHttpRequestHandler": true,
           "IsODataControllerAction": false,
           "HasFromBodyParameter": false,
           "HasKeyParameter": false,
           "HandlesNullWithNotFound": false,
-          "HasTryCatch": true
+          "HasTryCatch": false
         },
         {
           "Id": "HostedServices.Controllers.WorkflowController.GetStats()",
           "Name": "GetStats",
-          "LineNumber": 60,
+          "LineNumber": 33,
           "Inputs": [],
           "ReturnType": "Microsoft.AspNetCore.Mvc.IActionResult",
           "Implements": [],
           "Calls": [
+            {
+              "TypeName": "HostedServices.Exposures.IHostedWorkflowInstanceManager",
+              "MethodName": "GetStats",
+              "MethodId": "HostedServices.Exposures.IHostedWorkflowInstanceManager.GetStats()",
+              "StandardElementType": "Exposure",
+              "IsDependencyBoundary": false
+            },
             {
               "TypeName": "Microsoft.AspNetCore.Mvc.Controller",
               "MethodName": "Json",
               "MethodId": "Microsoft.AspNetCore.Mvc.Controller.Json(System.Object?)",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "Microsoft.AspNetCore.Mvc.ControllerBase",
-              "MethodName": "StatusCode",
-              "MethodId": "Microsoft.AspNetCore.Mvc.ControllerBase.StatusCode(System.Int32,System.Object?)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
-              "MethodName": "LogError",
-              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "cCoder.Workflow.Exposures.IWorkflowInstanceManager",
-              "MethodName": "GetStats",
-              "MethodId": "cCoder.Workflow.Exposures.IWorkflowInstanceManager.GetStats()",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
             }
           ],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
+          "PossibleExceptionTypes": [
+            "cCoder.Workflow.Models.Exceptions.WorkflowDependencyException",
+            "cCoder.Workflow.Models.Exceptions.WorkflowServiceException",
+            "cCoder.Workflow.Models.Exceptions.WorkflowValidationException"
+          ],
+          "IncomingExceptionTypes": [
+            "cCoder.Workflow.Models.Exceptions.WorkflowDependencyException",
+            "cCoder.Workflow.Models.Exceptions.WorkflowServiceException"
+          ],
+          "ThrowsExceptionTypes": [
+            "cCoder.Workflow.Models.Exceptions.WorkflowDependencyException",
+            "cCoder.Workflow.Models.Exceptions.WorkflowServiceException"
+          ],
           "HttpMethods": [
             "GET"
           ],
-          "HttpResponses": [
-            {
-              "StatusCode": 500,
-              "ResultMethod": "StatusCode",
-              "ExceptionType": "System.Exception",
-              "IsExceptionPath": true,
-              "IsNullPath": false,
-              "HasBody": true,
-              "ExposesExceptionDetails": false,
-              "LogsException": true
-            }
-          ],
+          "HttpResponses": [],
           "IsHttpRequestHandler": true,
           "IsODataControllerAction": false,
           "HasFromBodyParameter": false,
           "HasKeyParameter": false,
           "HandlesNullWithNotFound": false,
-          "HasTryCatch": true
+          "HasTryCatch": false
         },
         {
           "Id": "HostedServices.Controllers.WorkflowController.Post(System.Guid)",
           "Name": "Post",
-          "LineNumber": 37,
+          "LineNumber": 24,
           "Inputs": [
             {
               "Name": "flowId",
@@ -225,37 +273,33 @@
           "Implements": [],
           "Calls": [
             {
+              "TypeName": "HostedServices.Exposures.IHostedWorkflowInstanceManager",
+              "MethodName": "ExecuteWaitingQueuedInstanceByIdAsync",
+              "MethodId": "HostedServices.Exposures.IHostedWorkflowInstanceManager.ExecuteWaitingQueuedInstanceByIdAsync(System.Guid)",
+              "StandardElementType": "Exposure",
+              "IsDependencyBoundary": false
+            },
+            {
               "TypeName": "Microsoft.AspNetCore.Mvc.ControllerBase",
               "MethodName": "Ok",
               "MethodId": "Microsoft.AspNetCore.Mvc.ControllerBase.Ok()",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "Microsoft.AspNetCore.Mvc.ControllerBase",
-              "MethodName": "StatusCode",
-              "MethodId": "Microsoft.AspNetCore.Mvc.ControllerBase.StatusCode(System.Int32,System.Object?)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
-              "MethodName": "LogError",
-              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "cCoder.Workflow.Exposures.IWorkflowInstanceManager",
-              "MethodName": "ExecuteWaitingQueuedInstanceByIdAsync",
-              "MethodId": "cCoder.Workflow.Exposures.IWorkflowInstanceManager.ExecuteWaitingQueuedInstanceByIdAsync(System.Guid)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
             }
           ],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
+          "PossibleExceptionTypes": [
+            "cCoder.Workflow.Models.Exceptions.WorkflowDependencyException",
+            "cCoder.Workflow.Models.Exceptions.WorkflowServiceException",
+            "cCoder.Workflow.Models.Exceptions.WorkflowValidationException"
+          ],
+          "IncomingExceptionTypes": [
+            "cCoder.Workflow.Models.Exceptions.WorkflowDependencyException",
+            "cCoder.Workflow.Models.Exceptions.WorkflowServiceException"
+          ],
+          "ThrowsExceptionTypes": [
+            "cCoder.Workflow.Models.Exceptions.WorkflowDependencyException",
+            "cCoder.Workflow.Models.Exceptions.WorkflowServiceException"
+          ],
           "HttpMethods": [
             "POST"
           ],
@@ -269,16 +313,6 @@
               "HasBody": false,
               "ExposesExceptionDetails": false,
               "LogsException": false
-            },
-            {
-              "StatusCode": 500,
-              "ResultMethod": "StatusCode",
-              "ExceptionType": "System.Exception",
-              "IsExceptionPath": true,
-              "IsNullPath": false,
-              "HasBody": true,
-              "ExposesExceptionDetails": false,
-              "LogsException": true
             }
           ],
           "IsHttpRequestHandler": true,
@@ -286,14 +320,14 @@
           "HasFromBodyParameter": false,
           "HasKeyParameter": false,
           "HandlesNullWithNotFound": false,
-          "HasTryCatch": true
+          "HasTryCatch": false
         }
       ]
     },
     {
       "Name": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService",
       "StandardElementType": "Dependency",
-      "LineNumber": 21,
+      "LineNumber": 22,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -314,7 +348,7 @@
         {
           "Id": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService.ExecuteWaitingQueuedInstanceByIdAsync(System.Guid)",
           "Name": "ExecuteWaitingQueuedInstanceByIdAsync",
-          "LineNumber": 63,
+          "LineNumber": 64,
           "Inputs": [
             {
               "Name": "id",
@@ -347,7 +381,7 @@
         {
           "Id": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService.GetAll(System.Boolean)",
           "Name": "GetAll",
-          "LineNumber": 30,
+          "LineNumber": 31,
           "Inputs": [
             {
               "Name": "ignoreFilters",
@@ -382,7 +416,7 @@
         {
           "Id": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService.GetStats()",
           "Name": "GetStats",
-          "LineNumber": 60,
+          "LineNumber": 61,
           "Inputs": [],
           "ReturnType": "System.Object[]",
           "Implements": [
@@ -412,7 +446,7 @@
         {
           "Id": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService.RunAsync(System.Threading.CancellationToken)",
           "Name": "RunAsync",
-          "LineNumber": 33,
+          "LineNumber": 34,
           "Inputs": [
             {
               "Name": "cancellationToken",
@@ -463,7 +497,7 @@
         {
           "Id": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService.RunInstanceMaintenanceAsync(System.Threading.CancellationToken)",
           "Name": "RunInstanceMaintenanceAsync",
-          "LineNumber": 81,
+          "LineNumber": 82,
           "Inputs": [
             {
               "Name": "cancellationToken",
@@ -498,7 +532,7 @@
         {
           "Id": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService.RunInstanceMaintenanceContinuouslyAsync(System.Threading.CancellationToken)",
           "Name": "RunInstanceMaintenanceContinuouslyAsync",
-          "LineNumber": 68,
+          "LineNumber": 69,
           "Inputs": [
             {
               "Name": "cancellationToken",
@@ -554,7 +588,7 @@
         {
           "Id": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService.RunQueueInstanceBackgroundServiceDependencyAsync(System.Threading.CancellationToken)",
           "Name": "RunQueueInstanceBackgroundServiceDependencyAsync",
-          "LineNumber": 121,
+          "LineNumber": 122,
           "Inputs": [
             {
               "Name": "cancellationToken",
@@ -593,7 +627,7 @@
         {
           "Id": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService.RunQueueInstanceBackgroundServiceDependencyContinuouslyAsync(System.Threading.CancellationToken)",
           "Name": "RunQueueInstanceBackgroundServiceDependencyContinuouslyAsync",
-          "LineNumber": 107,
+          "LineNumber": 108,
           "Inputs": [
             {
               "Name": "cancellationToken",
@@ -646,7 +680,7 @@
     {
       "Name": "HostedServices.IServiceCollectionExtensions",
       "StandardElementType": "App",
-      "LineNumber": 17,
+      "LineNumber": 20,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -656,7 +690,7 @@
         {
           "Id": "HostedServices.IServiceCollectionExtensions.AddHostedServices(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration,System.Action\u003CHostedServices.Models.AppConfiguration\u003E)",
           "Name": "AddHostedServices",
-          "LineNumber": 19,
+          "LineNumber": 22,
           "Inputs": [
             {
               "Name": "services",
@@ -829,17 +863,240 @@
           "HasTryCatch": false
         }
       ]
+    },
+    {
+      "Name": "HostedServices.Services.Foundations.Workflow.HostedWorkflowInstanceManager",
+      "StandardElementType": "FoundationService",
+      "LineNumber": 10,
+      "IsPublic": false,
+      "Kind": "Class",
+      "BaseType": null,
+      "Interfaces": [
+        {
+          "Id": "HostedServices:HostedServices.Exposures.IHostedWorkflowInstanceManager",
+          "FullName": "HostedServices.Exposures.IHostedWorkflowInstanceManager",
+          "Name": "IHostedWorkflowInstanceManager",
+          "Namespace": "HostedServices.Exposures",
+          "AssemblyName": "HostedServices",
+          "Kind": "Interface",
+          "IsInCurrentProject": true,
+          "StandardElementType": "Exposure"
+        }
+      ],
+      "Properties": [],
+      "Methods": [
+        {
+          "Id": "HostedServices.Services.Foundations.Workflow.HostedWorkflowInstanceManager.ExecuteWaitingQueuedInstanceByIdAsync(System.Guid)",
+          "Name": "ExecuteWaitingQueuedInstanceByIdAsync",
+          "LineNumber": 14,
+          "Inputs": [
+            {
+              "Name": "flowInstanceDataId",
+              "Type": "System.Guid"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask",
+          "Implements": [
+            "HostedServices.Exposures.IHostedWorkflowInstanceManager.ExecuteWaitingQueuedInstanceByIdAsync(System.Guid)"
+          ],
+          "Calls": [
+            {
+              "TypeName": "HostedServices.Brokers.Workflow.IHostedWorkflowInstanceBroker",
+              "MethodName": "ExecuteWaitingQueuedInstanceByIdAsync",
+              "MethodId": "HostedServices.Brokers.Workflow.IHostedWorkflowInstanceBroker.ExecuteWaitingQueuedInstanceByIdAsync(System.Guid)",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
+            }
+          ],
+          "PossibleExceptionTypes": [
+            "cCoder.Workflow.Models.Exceptions.WorkflowDependencyException",
+            "cCoder.Workflow.Models.Exceptions.WorkflowServiceException",
+            "cCoder.Workflow.Models.Exceptions.WorkflowValidationException"
+          ],
+          "IncomingExceptionTypes": [
+            "cCoder.Workflow.Models.Exceptions.WorkflowDependencyException",
+            "cCoder.Workflow.Models.Exceptions.WorkflowServiceException"
+          ],
+          "ThrowsExceptionTypes": [
+            "cCoder.Workflow.Models.Exceptions.WorkflowDependencyException",
+            "cCoder.Workflow.Models.Exceptions.WorkflowServiceException"
+          ],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "HostedServices.Services.Foundations.Workflow.HostedWorkflowInstanceManager.GetStats()",
+          "Name": "GetStats",
+          "LineNumber": 25,
+          "Inputs": [],
+          "ReturnType": "System.Object[]",
+          "Implements": [
+            "HostedServices.Exposures.IHostedWorkflowInstanceManager.GetStats()"
+          ],
+          "Calls": [
+            {
+              "TypeName": "HostedServices.Brokers.Workflow.IHostedWorkflowInstanceBroker",
+              "MethodName": "GetStats",
+              "MethodId": "HostedServices.Brokers.Workflow.IHostedWorkflowInstanceBroker.GetStats()",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
+            }
+          ],
+          "PossibleExceptionTypes": [
+            "cCoder.Workflow.Models.Exceptions.WorkflowDependencyException",
+            "cCoder.Workflow.Models.Exceptions.WorkflowServiceException",
+            "cCoder.Workflow.Models.Exceptions.WorkflowValidationException"
+          ],
+          "IncomingExceptionTypes": [
+            "cCoder.Workflow.Models.Exceptions.WorkflowDependencyException",
+            "cCoder.Workflow.Models.Exceptions.WorkflowServiceException"
+          ],
+          "ThrowsExceptionTypes": [
+            "cCoder.Workflow.Models.Exceptions.WorkflowDependencyException",
+            "cCoder.Workflow.Models.Exceptions.WorkflowServiceException"
+          ],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        }
+      ]
     }
   ],
-  "Interfaces": [],
+  "Interfaces": [
+    {
+      "Name": "HostedServices.Brokers.Workflow.IHostedWorkflowInstanceBroker",
+      "StandardElementType": "Broker",
+      "LineNumber": 7,
+      "IsPublic": true,
+      "Kind": "Interface",
+      "BaseType": null,
+      "Interfaces": [],
+      "Properties": [],
+      "Methods": [
+        {
+          "Id": "HostedServices.Brokers.Workflow.IHostedWorkflowInstanceBroker.ExecuteWaitingQueuedInstanceByIdAsync(System.Guid)",
+          "Name": "ExecuteWaitingQueuedInstanceByIdAsync",
+          "LineNumber": 9,
+          "Inputs": [
+            {
+              "Name": "flowInstanceDataId",
+              "Type": "System.Guid"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "HostedServices.Brokers.Workflow.IHostedWorkflowInstanceBroker.GetStats()",
+          "Name": "GetStats",
+          "LineNumber": 10,
+          "Inputs": [],
+          "ReturnType": "System.Object[]",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        }
+      ]
+    },
+    {
+      "Name": "HostedServices.Exposures.IHostedWorkflowInstanceManager",
+      "StandardElementType": "Exposure",
+      "LineNumber": 7,
+      "IsPublic": true,
+      "Kind": "Interface",
+      "BaseType": null,
+      "Interfaces": [],
+      "Properties": [],
+      "Methods": [
+        {
+          "Id": "HostedServices.Exposures.IHostedWorkflowInstanceManager.ExecuteWaitingQueuedInstanceByIdAsync(System.Guid)",
+          "Name": "ExecuteWaitingQueuedInstanceByIdAsync",
+          "LineNumber": 9,
+          "Inputs": [
+            {
+              "Name": "flowInstanceDataId",
+              "Type": "System.Guid"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "HostedServices.Exposures.IHostedWorkflowInstanceManager.GetStats()",
+          "Name": "GetStats",
+          "LineNumber": 10,
+          "Inputs": [],
+          "ReturnType": "System.Object[]",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        }
+      ]
+    }
+  ],
   "Links": [
     {
-      "FromType": "HostedServices.Controllers.WorkflowController",
-      "ToType": "cCoder.Core.Brokers.Loggings.ILoggingBroker"
+      "FromType": "HostedServices.Brokers.Workflow.HostedWorkflowInstanceBroker",
+      "ToType": "cCoder.Workflow.Exposures.IWorkflowInstanceManager"
     },
     {
       "FromType": "HostedServices.Controllers.WorkflowController",
-      "ToType": "cCoder.Workflow.Exposures.IWorkflowInstanceManager"
+      "ToType": "HostedServices.Services.Foundations.Workflow.HostedWorkflowInstanceManager"
     },
     {
       "FromType": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService",
@@ -864,6 +1121,10 @@
     {
       "FromType": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService",
       "ToType": "cCoder.Workflow.Exposures.IFlowInstanceDataManager"
+    },
+    {
+      "FromType": "HostedServices.Services.Foundations.Workflow.HostedWorkflowInstanceManager",
+      "ToType": "HostedServices.Brokers.Workflow.HostedWorkflowInstanceBroker"
     }
   ],
   "AnalysisItems": []

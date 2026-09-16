@@ -2216,7 +2216,7 @@ class BootstrapTabs extends Widget {
         }
     }
 };
-﻿class Chart extends Widget
+class Chart extends Widget
 {
     constructor(element, args) {
         super(element, args);
@@ -2228,9 +2228,9 @@ class BootstrapTabs extends Widget {
         this.max = args.max;
         this.type = args.type || "bar";
         this.showMinorLines = args.showMinorLines;
-        this.valueTemplate = args.valueTemplate ||"#= value #";
-        this.categoryTemplate = args.categoryTemplate || "#= value #";
-        this.tooltipTemplate = args.tooltipTemplate || "#= series.name #: #= value #";;
+        this.valueTemplate = args.valueTemplate ||function (data) { return "" + (data.value) + ""; };
+        this.categoryTemplate = args.categoryTemplate || function (data) { return "" + (data.value) + ""; };
+        this.tooltipTemplate = args.tooltipTemplate || function (data) { return "" + (data.series.name) + ": " + (data.value) + ""; };;
         this.axisCrossingValue = args.axisCrossingValue || 0;
         this.colors = args.colors || session.app.Config.Themes.Default.colours.charts;
 
@@ -2279,7 +2279,7 @@ class PieChart extends Widget {
                 labels: {
                     visible: true,
                     background: "transparent",
-                    template: "#= category #: #= kendo.toString(value, type.aggregateMoneyFormat)#",
+                    template: function (data) { return "" + (data.category) + ": " + (kendo.toString(data.value, type.aggregateMoneyFormat)) + ""; },
                 }
             },
             legend: {
@@ -2449,7 +2449,7 @@ class ConsoleDialog extends Dialog {
 
     }
 };
-﻿class DetailWidget extends Widget {
+class DetailWidget extends Widget {
     // Consumes https://demos.telerik.com/kendo-ui/templates/expressions to build a read only detail view of an object
     // or portion of an object
     constructor(element, args) {
@@ -2520,22 +2520,18 @@ class ConsoleDialog extends Dialog {
     buildTemplate() {
 
         let build = (that) => {
-            let fieldSet = "";
-
-            that.fields.map((meta) => {
-                if (that.splits && that.splits.indexOf(meta.field) > - 1) { fieldSet += "</ul><ul class='fieldList'>"; }
-                fieldSet += "<li name='" + that.config.endpoint + "/" + meta.field + "'><label title='" + meta.description + "' for='" + meta.field + "'>" + meta.title + "</label><div class='value'>" + that.fieldValueExpression(meta.field) + "</div></li>";
-            });
-
-            that.template = "";
-
-            if (that.header) {
-                that.template = "<h3>" + that.title + "</h3>";
-            }
-
-            that.template += (that.toolbar
-                    ? "<div class='k-header k-grid-toolbar'>" + that.toolbar + "</div><div name='details'><ul class='fieldList'>" + fieldSet + "</ul></div>"
-                    : "<div name='details'><ul class='fieldList'>" + fieldSet + "</ul></div>");
+            const title = kendo.template(that.title);
+            const fields = that.fields.map((meta) => ({ meta, render: kendo.template(that.fieldValueExpression(meta.field)) }));
+            that.template = function (data) {
+                let html = that.header ? '<h3>' + title(data) + '</h3>' : '';
+                if (that.toolbar) html += "<div class='k-header k-grid-toolbar'>" + that.toolbar + '</div>';
+                html += "<div name='details'><ul class='fieldList'>";
+                fields.forEach(({ meta, render }) => {
+                    if (that.splits && that.splits.indexOf(meta.field) > -1) html += "</ul><ul class='fieldList'>";
+                    html += "<li name='" + that.config.endpoint + '/' + meta.field + "'><label title='" + meta.description + "' for='" + meta.field + "'>" + meta.title + "</label><div class='value'>" + render(data) + '</div></li>';
+                });
+                return html + '</ul></div>';
+            };
         };
 
         if (!this.fields) {
@@ -2573,7 +2569,7 @@ class ConsoleDialog extends Dialog {
         this.data = this.writableEditor.data;
     }
 };
-﻿class GridWidget extends Widget {
+class GridWidget extends Widget {
     constructor(element, dataSource) {
         super(element);
 
@@ -2867,9 +2863,11 @@ class ConsoleDialog extends Dialog {
                 multi: true,
                 dataSource: col.values,
                 itemTemplate: function (e) {
-                    return (e.field == "all")
-                        ? "<li><input type='checkbox' name='" + e.field + "' value='all'/><span>All</span></li>"
-                        : "<li><input type='checkbox' name='" + e.field + "' value='#=data.id#'/><span>#= data.name #</span></li>";
+                    return function (data) {
+                        return (e.field == "all")
+                            ? "<li><input type='checkbox' name='" + e.field + "' value='all'/><span>All</span></li>"
+                            : "<li><input type='checkbox' name='" + e.field + "' value='" + data.id + "'/><span>" + data.name + "</span></li>";
+                    };
                 }
             };
         }
@@ -2994,24 +2992,25 @@ class ConsoleDialog extends Dialog {
     }
 
     commandColumn() {
-        let result = "<div class='btn-group btn-group-sm'>";
-
-        this.commands.forEach((command) => {
-            if (command.template) {
-                result += command.template;
-            }
-            else if (command.href) {
-                result += "<a name='" + command.name + "' href='" + command.href + "'><span class='k-icon " + command.icon + "'></span>" + command.text + "</a>";
-            } else {
-                result += `<button class="btn btn-primary" name="` + command.name + `">
-                        <span class='k-icon ` + command.icon + `'></span> ` + command.text + `
-                    </button>`
-            }
-        });
-
-        result += '</div>';
-
-        return result;
+        const commands = this.commands.map((command) => ({
+            ...command,
+            template: command.template ? kendo.template(command.template) : null,
+            href: command.href ? kendo.template(command.href) : null
+        }));
+        return (data) => {
+            let result = "<div class='btn-group btn-group-sm'>";
+            commands.forEach((command) => {
+                if (command.template) {
+                    result += command.template(data);
+                } else if (command.href) {
+                    const href = command.href(data);
+                    result += "<a name='" + command.name + "' href='" + href + "'><span class='k-icon " + command.icon + "'></span>" + command.text + "</a>";
+                } else {
+                    result += '<button class="btn btn-primary" name="' + command.name + '"><span class="k-icon ' + command.icon + '"></span> ' + command.text + '</button>';
+                }
+            });
+            return result + '</div>';
+        };
     }
 
     dataBound(e) {
@@ -3182,7 +3181,7 @@ class ConsoleDialog extends Dialog {
         $(this.container)[0].style.setProperty("display", "flex", "important");
     }
 };
-﻿class Picker extends Dialog {
+class Picker extends Dialog {
 	constructor(args) {
 		super(args);
 		args = args || {};
@@ -3240,12 +3239,9 @@ class ConsoleDialog extends Dialog {
 
 	init(callback) {
 		super.init(() => {
-			let itemTemplate = "<li>" +
-				(this.multiSelect
-				? "<input type='checkbox' name='selected' value='" + this.valueTemplate + "'></input>"
-				: "<input type='radio' name='selected' value='" + this.valueTemplate + "'></input>"
-				)
-				+ this.displayTemplate + "</li>";
+            const valueTemplate = kendo.template(this.valueTemplate);
+            const displayTemplate = kendo.template(this.displayTemplate);
+            const itemTemplate = (data) => "<li><input type='" + (this.multiSelect ? "checkbox" : "radio") + "' name='selected' value='" + valueTemplate(data) + "'></input>" + displayTemplate(data) + "</li>";
 
 			let that = this;
 			

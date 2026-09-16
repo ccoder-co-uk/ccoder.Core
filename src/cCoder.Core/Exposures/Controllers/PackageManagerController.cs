@@ -2,7 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.Core.Brokers.Loggings;
+using cCoder.Core;
 using cCoder.Core.Services.Aggregations.Packages;
 using cCoder.Core.Models.Exceptions;
 using cCoder.Data.Models.Packaging;
@@ -15,8 +15,7 @@ namespace cCoder.Core.Exposures.Controllers;
 [ApiController]
 [Route("Api/Core/Package")]
 public class PackageManagerController(
-    IPackageManager packageManagerAggregationService,
-    ILoggingBroker loggingBroker)
+    IPackageManager packageManagerAggregationService)
     : ControllerBase
 {
     [HttpGet("Export")]
@@ -38,13 +37,17 @@ public class PackageManagerController(
         }
         catch (CoreOrchestrationValidationException exception)
         {
-            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+            WebApplicationExtensions.LogCoreControllerException(
+                context: HttpContext,
+                exception: exception);
 
             return BadRequest(error: "The package request is invalid.");
         }
         catch (System.Security.SecurityException exception)
         {
-            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+            WebApplicationExtensions.LogCoreControllerException(
+                context: HttpContext,
+                exception: exception);
 
             return StatusCode(
                 statusCode: StatusCodes.Status403Forbidden,
@@ -52,7 +55,9 @@ public class PackageManagerController(
         }
         catch (Exception exception)
         {
-            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+            WebApplicationExtensions.LogCoreControllerException(
+                context: HttpContext,
+                exception: exception);
 
             return StatusCode(
                 statusCode: StatusCodes.Status500InternalServerError,

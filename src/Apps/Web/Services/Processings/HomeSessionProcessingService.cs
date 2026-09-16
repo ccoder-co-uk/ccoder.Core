@@ -86,7 +86,9 @@ internal sealed partial class HomeSessionProcessingService(
     public string GetSessionValue(HttpContext context, string key) =>
         TryCatch(operation: () =>
         {
-            ValidateSessionOnGet(context: context, key: key);
+            ValidateSessionValueOnGet(
+                context: context,
+                key: key);
 
             return GetSessionValueCore(context: context, key: key);
         });

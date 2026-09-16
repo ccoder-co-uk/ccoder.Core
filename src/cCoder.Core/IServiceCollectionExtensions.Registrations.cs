@@ -29,12 +29,12 @@ using cCoder.Core.Exposures.Controllers;
 using cCoder.Core.Exposures.Cors;
 using cCoder.Core.Exposures.Setup;
 using cCoder.Core.Dependencies.Formatters;
-using cCoder.Core.Dependencies.Middleware;
 using cCoder.Core.Dependencies.OData;
 using cCoder.Core.Dependencies.OpenApi;
 using cCoder.Core.Dependencies.Sessions;
 using cCoder.Core.Dependencies.Packages;
 using cCoder.Core.Exposures;
+using cCoder.Core.Exposures.Hubs;
 using cCoder.Core.Services.Aggregations;
 using cCoder.Core.Services.Aggregations.Packages;
 using cCoder.Core.Services.Foundations.AllowedOrigins;
@@ -513,13 +513,25 @@ predicate: (documentName, apiDescription) =>
         services.AddTransient<CorePackageDependency>();
         services.AddTransient<Brokers.Loggings.ILoggingBroker, Brokers.Loggings.LoggingBroker>();
         services.AddTransient<IContentManagementAppBroker, ContentManagementAppBroker>();
+        services.AddTransient<Dependencies.Eventing.EventingDependency>();
+        services.AddTransient<Dependencies.AllowedOrigins.AllowedOriginStoreDependency>();
+        services.AddTransient<
+            Brokers.AllowedOrigins.IAllowedOriginStoreBroker,
+            Brokers.AllowedOrigins.AllowedOriginStoreBroker>();
         services.AddTransient<IAppGraphEventBroker, AppGraphEventBroker>();
-        services.AddTransient<IAuthInfoBroker, AuthInfoBroker>();
         services.AddTransient<
             IPackageImportCompletionEventBroker,
             PackageImportCompletionEventBroker>();
         services.AddTransient<IHttpRequestBroker, HttpRequestBroker>();
         services.AddTransient<IAllowedOriginJsonBroker, AllowedOriginJsonBroker>();
+        services.AddTransient<Dependencies.TemplatedEmails.TemplatedEmailContentDependency>();
+        services.AddTransient<Dependencies.TemplatedEmails.TemplatedEmailIdentityDependency>();
+        services.AddTransient<
+            Brokers.TemplatedEmails.ITemplatedEmailContentBroker,
+            Brokers.TemplatedEmails.TemplatedEmailContentBroker>();
+        services.AddTransient<
+            Brokers.TemplatedEmails.ITemplatedEmailIdentityBroker,
+            Brokers.TemplatedEmails.TemplatedEmailIdentityBroker>();
         services.AddTransient<IEdmModelBroker, EdmModelBroker>();
         services.AddTransient<ICoreFormatterMiddlewareBroker, CoreFormatterMiddlewareBroker>();
         services.AddTransient<INotificationHubBroker, NotificationHubBroker>();
@@ -806,8 +818,6 @@ predicate: (documentName, apiDescription) =>
         services.AddResponseCompression();
         services.AddHttpClient();
         services.AddHttpContextAccessor();
-        services.AddTransient<CoreFormatterMiddleware>();
-        services.AddTransient<CoreExceptionMiddleware>();
 
         services.AddScoped(
             serviceType: typeof(HttpContext),
@@ -832,7 +842,7 @@ predicate: (documentName, apiDescription) =>
                 return httpContext.Features
                     .Get<ISessionFeature>()
                     ?.Session
-                    ?? NoOpSession.Instance;
+                    ?? NoOpSessionFeature.Instance;
             });
 
         services.AddSession(configure: options =>

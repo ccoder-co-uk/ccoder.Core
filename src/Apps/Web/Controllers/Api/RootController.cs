@@ -2,9 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.Core.Brokers.Loggings;
 using cCoder.Core.Exposures.OData.Responses;
-using cCoder.Data;
 using cCoder.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using Web.Exposures;
@@ -14,8 +12,7 @@ namespace Web.Controllers.Api
 {
     [Route("Api")]
     public class ApiRootController(
-        IApiContextManager apiContextManager,
-        ILoggingBroker loggingBroker)
+        IApiContextManager apiContextManager)
         : Controller
     {
         [HttpGet()]
@@ -23,16 +20,15 @@ namespace Web.Controllers.Api
         {
             try
             {
-                var result = new
-                {
-                    value = apiContextManager.GetApiInfos()
-                };
-
-                return Ok(value: result);
+                return Ok(
+                    value: new
+                    {
+                        value = apiContextManager.GetApiInfos()
+                    });
             }
             catch (Exception exception)
             {
-                loggingBroker.LogError(exception: exception, message: "API context loading failed.");
+                apiContextManager.LogError(exception: exception);
 
                 return StatusCode(
                     statusCode: StatusCodes.Status500InternalServerError,
@@ -45,14 +41,15 @@ namespace Web.Controllers.Api
         {
             try
             {
-                using StreamReader reader = new(Request.Body);
-                string response = await reader.ReadToEndAsync();
+                string response =
+                    await apiContextManager.ReadRequestBodyAsync(
+                        requestBody: Request.Body);
 
                 return new RawResult(response);
             }
             catch (Exception exception)
             {
-                loggingBroker.LogError(exception: exception, message: "API request processing failed.");
+                apiContextManager.LogError(exception: exception);
 
                 return StatusCode(
                     statusCode: StatusCodes.Status500InternalServerError,
@@ -69,7 +66,7 @@ namespace Web.Controllers.Api
             }
             catch (Exception exception)
             {
-                loggingBroker.LogError(exception: exception, message: "API request processing failed.");
+                apiContextManager.LogError(exception: exception);
 
                 return StatusCode(
                     statusCode: StatusCodes.Status500InternalServerError,
@@ -86,7 +83,7 @@ namespace Web.Controllers.Api
             }
             catch (Exception exception)
             {
-                loggingBroker.LogError(exception: exception, message: "Server time loading failed.");
+                apiContextManager.LogError(exception: exception);
 
                 return StatusCode(
                     statusCode: StatusCodes.Status500InternalServerError,

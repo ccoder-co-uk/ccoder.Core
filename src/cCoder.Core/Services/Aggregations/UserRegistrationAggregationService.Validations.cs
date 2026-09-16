@@ -9,10 +9,13 @@ namespace cCoder.Core.Services.Aggregations;
 
 internal sealed partial class UserRegistrationAggregationService
 {
+    private static void Validate(params object[] inputs) =>
+        ValidationRulesEngine.Validate(inputs: inputs);
+
     private static void ValidateUserRegistrationOperationOnExecute(
         UserRegistrationOperation userRegistrationOperation)
     {
-        ValidationRulesEngine.Validate(
+        Validate(
             inputs: [userRegistrationOperation]);
 
         object[] operationInputs =
@@ -30,11 +33,11 @@ internal sealed partial class UserRegistrationAggregationService
                 _ => [],
             };
 
-        ValidationRulesEngine.Validate(inputs: operationInputs);
+        Validate(inputs: operationInputs);
     }
 
     private static void ValidateUserRegistrationOperationOnGet(
         UserRegistrationOperation userRegistrationOperation) =>
-        ValidationRulesEngine.Validate(
+        Validate(
             inputs: [userRegistrationOperation]);
 }

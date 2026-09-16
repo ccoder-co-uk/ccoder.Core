@@ -11,7 +11,7 @@ namespace Web.AcceptanceTests.Tests;
 public sealed partial class WebArchitectureTests
 {
     [Fact]
-    public void ApiContextBroker_WhenComposed_UsesApiContextDependency()
+    public void ApiContextBroker_WhenComposed_UsesServiceProvider()
     {
         // Given
 
@@ -21,7 +21,7 @@ public sealed partial class WebArchitectureTests
 
         // Then
         source.Should()
-            .Contain(expected: "ApiContextDependency apiContextDependency");
+            .Contain(expected: "IServiceProvider serviceProvider");
 
         source.Should()
             .NotContain(unexpected: "IEnumerable<ApiInfo> apiInfos");

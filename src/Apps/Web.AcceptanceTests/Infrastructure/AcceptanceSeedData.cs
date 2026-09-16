@@ -21,7 +21,7 @@ internal static class AcceptanceSeedData
         JsonElement value = json.RootElement.GetProperty(propertyName: "value");
 
         Package[] packages = JsonConvert.DeserializeObject<Package[]>(
-value:             value.GetRawText(),settings:             cCoder.Data.Extensions.ObjectExtensions.GetJSONSettings());
+            value: value.GetRawText());
 
         foreach (PackageItem item in packages.SelectMany(selector: package => package.Items ?? []))
         {
@@ -118,7 +118,7 @@ value:             value.GetRawText(),settings:             cCoder.Data.Extensio
                 : json.RootElement;
 
         return JsonConvert.DeserializeObject<CommonObject[]>(
-value:             value.GetRawText(),settings:             cCoder.Data.Extensions.ObjectExtensions.GetJSONSettings());
+            value: value.GetRawText());
     }
 
     private static IEnumerable<object> UnpackItems(string data, Type modelType)
@@ -129,16 +129,14 @@ value:             value.GetRawText(),settings:             cCoder.Data.Extensio
         {
             Array values = (Array)JsonConvert.DeserializeObject(
                 value: trimmed,
-                type: modelType.MakeArrayType(),
-                settings: cCoder.Data.Extensions.ObjectExtensions.GetJSONSettings());
+                type: modelType.MakeArrayType());
 
             return values.Cast<object>();
         }
 
         object value = JsonConvert.DeserializeObject(
             value: trimmed,
-            type: modelType,
-            settings: cCoder.Data.Extensions.ObjectExtensions.GetJSONSettings());
+            type: modelType);
 
         return [value];
     }

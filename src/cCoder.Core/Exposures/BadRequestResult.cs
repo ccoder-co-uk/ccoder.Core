@@ -3,6 +3,7 @@
 // ---------------------------------------------------------------
 
 using cCoder.Data.Extensions;
+using cCoder.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -15,7 +16,7 @@ public class BadRequestResult : BadRequestObjectResult
         : base(modelState)
     {
         Value = modelState
-            .Select(selector: i => new ModelStateError
+            .Select(selector: i => new ModelStateErrorModel
             {
                 Key = i.Key,
                 Value = i.Value?.RawValue,

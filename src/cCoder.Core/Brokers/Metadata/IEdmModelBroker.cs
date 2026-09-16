@@ -3,10 +3,12 @@
 // ---------------------------------------------------------------
 
 using cCoder.Core.Models.Metadata;
+using Microsoft.OData.Edm;
 
 namespace cCoder.Core.Brokers.Metadata;
 
 internal interface IEdmModelBroker
 {
-    EdmModelDetails RetrieveEdmModelDetails(EdmModelDetails edmModelDetails);
+    IReadOnlyCollection<EdmModelType> RetrieveTypes(IEdmModel model);
+    EdmModelOperations RetrieveOperations(IEdmModel model, Type type);
 }
