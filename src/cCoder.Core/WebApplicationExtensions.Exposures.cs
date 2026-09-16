@@ -114,4 +114,10 @@ predicate: context => GetWebDavRouteRegex().IsMatch(input: context.Request.Path.
         return app.StartWorkflowWeb(log: log);
     }
 
+    internal static Services.Processings.Metadata.IEdmModelProcessingService
+        CreateEdmModelProcessingService() =>
+        new Services.Processings.Metadata.EdmModelProcessingService(
+            edmModelService: new Services.Foundations.Metadata.EdmModelService(
+                edmModelBroker: new Brokers.Metadata.EdmModelBroker()));
+
 }

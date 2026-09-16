@@ -3,10 +3,10 @@
 // ---------------------------------------------------------------
 
 using cCoder.Core.Models.Metadata;
-using cCoder.Core.Dependencies.Metadata;
 using cCoder.Data.Extensions;
 using Microsoft.OData.Edm;
 using cCoder.Core.Services.Foundations.Metadata;
+using System.Collections;
 
 
 namespace cCoder.Core.Services.Processings.Metadata;
@@ -15,6 +15,41 @@ internal sealed partial class EdmModelProcessingService(
     IEdmModelService edmModelService)
     : IEdmModelProcessingService
 {
+    private static readonly IReadOnlyDictionary<Type, string> TypeLookup =
+        new Dictionary<Type, string>
+        {
+            { typeof(short), "number" },
+            { typeof(int), "number" },
+            { typeof(long), "number" },
+            { typeof(short?), "number" },
+            { typeof(int?), "number" },
+            { typeof(long?), "number" },
+            { typeof(ushort), "number" },
+            { typeof(uint), "number" },
+            { typeof(ulong), "number" },
+            { typeof(ushort?), "number" },
+            { typeof(uint?), "number" },
+            { typeof(ulong?), "number" },
+            { typeof(byte), "number" },
+            { typeof(byte?), "number" },
+            { typeof(decimal), "number" },
+            { typeof(decimal?), "number" },
+            { typeof(string), "string" },
+            { typeof(DateTime), "date" },
+            { typeof(DateTime?), "date" },
+            { typeof(TimeSpan), "time" },
+            { typeof(TimeSpan?), "time" },
+            { typeof(DateTimeOffset), "date" },
+            { typeof(DateTimeOffset?), "date" },
+            { typeof(Guid), "guid" },
+            { typeof(Guid?), "guid" },
+            { typeof(bool), "bool" },
+            { typeof(bool?), "bool" },
+            { typeof(double), "number" },
+            { typeof(double?), "number" },
+            { typeof(float), "number" },
+            { typeof(float?), "number" },
+        };
     public IEnumerable<ExtendedMetadataContainer> GetEdmModelMetadata(
         IEdmModel model,
         string contextName) =>
@@ -54,14 +89,16 @@ internal sealed partial class EdmModelProcessingService(
         string contextName
     )
     {
-        List<ExtendedMetadataContainer> types = [];
+        List<ExtendedMetadataContainer> metadata = [];
 
         EdmModelDetails edmModelDetails = edmModelService.RetrieveEdmModelDetails(
             edmModelDetails: new EdmModelDetails { Model = model });
 
-        foreach (EdmModelType edmType in edmModelDetails.Types)
+        IReadOnlyCollection<EdmModelType> types = edmModelDetails.Types;
+
+        foreach (EdmModelType edmType in types)
         {
-            types.Add(
+            metadata.Add(
                 item: BuildExtendedMetadataForType(
                     model: model,
                     context: contextName,
@@ -69,7 +106,7 @@ internal sealed partial class EdmModelProcessingService(
                     hasEndpoint: edmType.HasEndpoint));
         }
 
-        return types.DistinctBy(keySelector: t => t.ServerTypeName);
+        return metadata.DistinctBy(keySelector: t => t.ServerTypeName);
     }
 
     private ExtendedMetadataContainer BuildExtendedMetadataForType(
@@ -79,11 +116,10 @@ internal sealed partial class EdmModelProcessingService(
         bool hasEndpoint = true
     )
     {
-        ExtendedMetadataContainer result =
-            MetadataContainerDependency.CreateExtendedMetadataContainer(
-                type: type,
-                isEntity: true,
-                hasEndpoint: hasEndpoint);
+        ExtendedMetadataContainer result = CreateExtendedMetadataContainer(
+            type: type,
+            isEntity: true,
+            hasEndpoint: hasEndpoint);
 
         result.Category = context;
 
@@ -123,7 +159,7 @@ internal sealed partial class EdmModelProcessingService(
         return result;
     }
 
-    private static MetadataContainer BuildMetaFor(
+    private MetadataContainer BuildMetaFor(
         string typeName,
         bool isCollection)
     {
@@ -133,7 +169,7 @@ internal sealed partial class EdmModelProcessingService(
 
             if (cSharpType != null)
             {
-                return MetadataContainerDependency.CreateMetadataContainer(
+                return CreateMetadataContainer(
                     type: cSharpType,
                     isEntity: true,
                     hasEndpoint: true);
@@ -142,6 +178,57 @@ internal sealed partial class EdmModelProcessingService(
 
         return null;
     }
+
+    private static MetadataContainer CreateMetadataContainer(
+        Type type,
+        bool isEntity,
+        bool hasEndpoint) =>
+        InitializeMetadataContainer(
+            container: new MetadataContainer(),
+            type: type,
+            isEntity: isEntity,
+            hasEndpoint: hasEndpoint);
+
+    private static ExtendedMetadataContainer CreateExtendedMetadataContainer(
+        Type type,
+        bool isEntity,
+        bool hasEndpoint) =>
+        InitializeMetadataContainer(
+            container: new ExtendedMetadataContainer(),
+            type: type,
+            isEntity: isEntity,
+            hasEndpoint: hasEndpoint);
+
+    private static TContainer InitializeMetadataContainer<TContainer>(
+        TContainer container,
+        Type type,
+        bool isEntity,
+        bool hasEndpoint)
+        where TContainer : MetadataContainer
+    {
+        container.IsValueType = type.IsValueType || type == typeof(string);
+        container.Type = GetClientType(type: type);
+        container.Name = type.Name;
+        container.DisplayName = type.Name;
+        container.Description = type.Name;
+        container.ServerType = type.AssemblyQualifiedName ?? type.FullName ?? type.Name;
+        container.ServerTypeName = type.FullName ?? type.Name;
+        container.Properties = [];
+        container.IsEntity = isEntity;
+        container.IsJoinEntity = isEntity && type.IsJoinType();
+        container.HasEndpoint = hasEndpoint;
+
+        return container;
+    }
+
+    private static string GetClientType(Type type) =>
+        type == typeof(string)
+            ? "string"
+            : typeof(IEnumerable).IsAssignableFrom(c: type)
+                ? "array"
+                : TypeLookup.TryGetValue(key: type, value: out string typeName)
+                    ? typeName
+                    : "object";
 
     private static IEnumerable<OperationContainer> GetBaseCRUDOperations(MetadataContainer type) =>
         type.IsJoinEntity
