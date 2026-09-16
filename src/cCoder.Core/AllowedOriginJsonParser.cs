@@ -2,12 +2,15 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System.Text;
 using System.Text.Json;
 
-namespace cCoder.Core.Dependencies.Json;
+namespace cCoder.Core;
 
-internal static class AllowedOriginJsonDependency
+internal static class AllowedOriginJsonParser
 {
+    private static readonly Encoding JsonEncoding = Encoding.UTF8;
+
     private static readonly string[] OriginPropertyNames =
     [
         "allowedorigin", "allowedorigins", "origin", "origins", "domain",
@@ -23,8 +26,11 @@ internal static class AllowedOriginJsonDependency
 
         try
         {
-            using JsonDocument document = JsonDocument.Parse(json: configJson);
-            return [.. ExtractOrigins(element: document.RootElement, propertyName: null)];
+            using JsonDocument document = JsonDocument.Parse(
+                utf8Json: JsonEncoding.GetBytes(s: configJson));
+            return [.. ExtractOrigins(
+                element: document.RootElement,
+                propertyName: null)];
         }
         catch (JsonException)
         {
@@ -32,7 +38,9 @@ internal static class AllowedOriginJsonDependency
         }
     }
 
-    private static IEnumerable<string> ExtractOrigins(JsonElement element, string propertyName)
+    private static IEnumerable<string> ExtractOrigins(
+        JsonElement element,
+        string propertyName)
     {
         switch (element.ValueKind)
         {
@@ -46,7 +54,9 @@ internal static class AllowedOriginJsonDependency
                         yield return origin;
                     }
                 }
+
                 break;
+
             case JsonValueKind.Array:
                 foreach (JsonElement item in element.EnumerateArray())
                 {
@@ -57,19 +67,28 @@ internal static class AllowedOriginJsonDependency
                         yield return origin;
                     }
                 }
+
                 break;
+
             case JsonValueKind.String:
                 string value = element.GetString();
-                if (ShouldIncludeString(propertyName: propertyName, value: value))
+
+                if (ShouldIncludeString(
+                    propertyName: propertyName,
+                    value: value))
                 {
                     yield return value;
                 }
+
                 break;
         }
     }
 
-    private static bool ShouldIncludeString(string propertyName, string value) =>
-        IsOriginProperty(propertyName: propertyName) || LooksLikeOrigin(value: value);
+    private static bool ShouldIncludeString(
+        string propertyName,
+        string value) =>
+        IsOriginProperty(propertyName: propertyName)
+        || LooksLikeOrigin(value: value);
 
     private static bool IsOriginProperty(string propertyName)
     {
@@ -82,7 +101,8 @@ internal static class AllowedOriginJsonDependency
             [.. propertyName.Where(predicate: char.IsLetterOrDigit)
                 .Select(selector: char.ToLowerInvariant)]);
 
-        return OriginPropertyNames.Any(predicate: name => normalized.Contains(value: name));
+        return OriginPropertyNames.Any(predicate: name => normalized.Contains(
+            value: name));
     }
 
     private static bool LooksLikeOrigin(string value)
@@ -95,7 +115,10 @@ internal static class AllowedOriginJsonDependency
         string candidate = value.Trim().TrimEnd(trimChar: '/');
 
         if (candidate.Contains(value: "://", comparisonType: StringComparison.Ordinal)
-            && Uri.TryCreate(uriString: candidate, uriKind: UriKind.Absolute, result: out Uri uri))
+            && Uri.TryCreate(
+                uriString: candidate,
+                uriKind: UriKind.Absolute,
+                result: out Uri uri))
         {
             return uri.Scheme is "http" or "https";
         }

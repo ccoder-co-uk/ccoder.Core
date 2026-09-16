@@ -2,9 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.Core.Brokers.ContentManagement;
-using cCoder.Core.Brokers.Http;
-using cCoder.Core.Brokers.Json;
+using cCoder.Core.Brokers.AllowedOrigins;
 using cCoder.Core.Services.Foundations.AllowedOrigins;
 using cCoder.Data.Models.CMS;
 using FluentAssertions;
@@ -20,34 +18,19 @@ public sealed partial class AllowedOriginStoreServiceTests
     public async Task GetAllowedOriginsAsyncReturnsCurrentAppOrigins()
     {
         // Given
-        Mock<IContentManagementAppBroker> appBrokerMock = new();
-        DefaultHttpContext httpContext = new();
-        httpContext.Request.Host = new HostString("app.example.com");
+        Mock<IAllowedOriginStoreBroker> allowedOriginStoreBrokerMock = new();
 
-        App app = new()
-        {
-            Domain = "app.example.com",
-            ConfigJson = """
-                {
-                    "allowedOrigins": ["https://admin.example.com"]
-                }
-                """,
-        };
-
-        appBrokerMock
-            .Setup(
-                expression: broker => broker.GetAppByDomain(
-                    domain: "app.example.com",
-                    ignoreFilters: true))
-            .Returns(value: app);
-
-        TestHttpRequestBroker httpRequestBroker = new(
-            request: httpContext.Request);
+        allowedOriginStoreBrokerMock
+            .Setup(expression: broker => broker.GetAllowedOrigins())
+            .Returns(
+                value:
+                [
+                    "app.example.com",
+                    "https://admin.example.com"
+                ]);
 
         AllowedOriginStoreService service = new(
-            appBroker: appBrokerMock.Object,
-            httpRequestBroker: httpRequestBroker,
-            allowedOriginJsonBroker: new AllowedOriginJsonBroker());
+            allowedOriginStoreBroker: allowedOriginStoreBrokerMock.Object);
 
         // When
         string[] actualOrigins = await service.GetAllowedOriginsAsync();
@@ -66,13 +49,14 @@ public sealed partial class AllowedOriginStoreServiceTests
     public async Task GetAllowedOriginsAsyncReturnsEmptyWithoutRequest()
     {
         // Given
-        Mock<IContentManagementAppBroker> appBrokerMock = new();
-        TestHttpRequestBroker httpRequestBroker = new(request: null);
+        Mock<IAllowedOriginStoreBroker> allowedOriginStoreBrokerMock = new();
+
+        allowedOriginStoreBrokerMock
+            .Setup(expression: broker => broker.GetAllowedOrigins())
+            .Returns(value: []);
 
         AllowedOriginStoreService service = new(
-            appBroker: appBrokerMock.Object,
-            httpRequestBroker: httpRequestBroker,
-            allowedOriginJsonBroker: new AllowedOriginJsonBroker());
+            allowedOriginStoreBroker: allowedOriginStoreBrokerMock.Object);
 
         // When
         string[] actualOrigins = await service.GetAllowedOriginsAsync();
@@ -81,35 +65,23 @@ public sealed partial class AllowedOriginStoreServiceTests
         actualOrigins.Should()
             .BeEmpty();
 
-        appBrokerMock.Verify(
-            expression: broker => broker.GetAppByDomain(
-                domain: It.IsAny<string>(),
-                ignoreFilters: It.IsAny<bool>()),
-            times: Times.Never);
+        allowedOriginStoreBrokerMock.Verify(
+            expression: broker => broker.GetAllowedOrigins(),
+            times: Times.Once);
     }
 
     [Fact]
     public async Task GetAllowedOriginsAsyncReturnsEmptyWithoutCurrentApp()
     {
         // Given
-        Mock<IContentManagementAppBroker> appBrokerMock = new();
-        DefaultHttpContext httpContext = new();
-        httpContext.Request.Host = new HostString("missing.example.com");
+        Mock<IAllowedOriginStoreBroker> allowedOriginStoreBrokerMock = new();
 
-        appBrokerMock
-            .Setup(
-                expression: broker => broker.GetAppByDomain(
-                    domain: "missing.example.com",
-                    ignoreFilters: true))
-            .Returns(value: null);
-
-        TestHttpRequestBroker httpRequestBroker = new(
-            request: httpContext.Request);
+        allowedOriginStoreBrokerMock
+            .Setup(expression: broker => broker.GetAllowedOrigins())
+            .Returns(value: []);
 
         AllowedOriginStoreService service = new(
-            appBroker: appBrokerMock.Object,
-            httpRequestBroker: httpRequestBroker,
-            allowedOriginJsonBroker: new AllowedOriginJsonBroker());
+            allowedOriginStoreBroker: allowedOriginStoreBrokerMock.Object);
 
         // When
         string[] actualOrigins = await service.GetAllowedOriginsAsync();
@@ -119,10 +91,4 @@ public sealed partial class AllowedOriginStoreServiceTests
             .BeEmpty();
     }
 
-    private sealed class TestHttpRequestBroker(HttpRequest request)
-        : IHttpRequestBroker
-    {
-        public HttpRequest GetCurrentRequest() =>
-            request;
-    }
 }

@@ -2,7 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.Core.Dependencies.Middleware;
+using cCoder.Core.Services.Processings.Middleware;
 
 namespace cCoder.Core;
 
@@ -10,9 +10,15 @@ internal static class IApplicationBuilderExtensions
 {
     internal static IApplicationBuilder UseCoreFormatters(
         this IApplicationBuilder app) =>
-        app.UseMiddleware<CoreFormatterMiddleware>();
+        app.Use(
+            middleware: async (context, next) =>
+            {
+                ICoreFormatterMiddlewareProcessingService service =
+                    context.RequestServices.GetRequiredService<
+                        ICoreFormatterMiddlewareProcessingService>();
 
-    internal static IApplicationBuilder HandleExceptions(
-        this IApplicationBuilder app) =>
-        app.UseMiddleware<CoreExceptionMiddleware>();
+                await service.ProcessAsync(
+                    context: context,
+                    next: next);
+            });
 }

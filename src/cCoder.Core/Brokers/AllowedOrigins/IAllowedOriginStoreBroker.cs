@@ -2,9 +2,9 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-namespace cCoder.Core.Services.Foundations.Formatters;
+namespace cCoder.Core.Brokers.AllowedOrigins;
 
-internal interface IFormatterODataService
+internal interface IAllowedOriginStoreBroker
 {
-    object UnpackSelectExpandWrapper(object contextObject);
+    IEnumerable<string> GetAllowedOrigins();
 }
