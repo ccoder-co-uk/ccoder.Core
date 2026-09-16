@@ -2,41 +2,17 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.Data;
-using cCoder.Data.Models.CMS;
-using cCoder.Security.Data.EF.Interfaces;
-using cCoder.Security.Models.Entities;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
-namespace cCoder.Core.Dependencies.Setup;
+namespace cCoder.Core;
 
-internal static class SetupStateDependency
+internal static class SetupDatabase
 {
-    internal static async ValueTask<bool> IsCoreInitializedAsync(
-        ICoreContextFactory coreContextFactory,
-        CancellationToken cancellationToken)
-    {
-        await using DbContext context = coreContextFactory.CreateCoreContext();
+    private static readonly TimeSpan DatabaseTimeout =
+        TimeSpan.FromSeconds(seconds: 2);
 
-        return await IsDatabaseInitializedAsync<App>(
-            context: context,
-            cancellationToken: cancellationToken);
-    }
-
-    internal static async ValueTask<bool> IsSecurityInitializedAsync(
-        ISecurityDbContextFactory securityDbContextFactory,
-        CancellationToken cancellationToken)
-    {
-        await using DbContext context = securityDbContextFactory.CreateDbContext(
-            ignoreAuthInfo: true);
-
-        return await IsDatabaseInitializedAsync<Tenant>(
-            context: context,
-            cancellationToken: cancellationToken);
-    }
-
-    private static async ValueTask<bool> IsDatabaseInitializedAsync<TEntity>(
+    internal static async ValueTask<bool> IsInitializedAsync<TEntity>(
         DbContext context,
         CancellationToken cancellationToken)
         where TEntity : class
@@ -80,7 +56,7 @@ internal static class SetupStateDependency
         using CancellationTokenSource timeout =
             CancellationTokenSource.CreateLinkedTokenSource(token: cancellationToken);
 
-        timeout.CancelAfter(delay: TimeSpan.FromSeconds(seconds: 2));
+        timeout.CancelAfter(delay: DatabaseTimeout);
 
         try
         {
