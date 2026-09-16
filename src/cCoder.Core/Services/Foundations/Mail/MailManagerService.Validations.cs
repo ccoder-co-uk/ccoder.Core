@@ -9,9 +9,12 @@ namespace cCoder.Core.Services.Foundations.Mail;
 
 internal sealed partial class MailManagerService
 {
+    private static void Validate(params object[] inputs) =>
+        ValidationRulesEngine.Validate(inputs: inputs);
+
     private static void ValidateQueuedEmailOnAdd(
         QueuedEmail newQueuedEmail,
         bool checkPrivileges) =>
-        ValidationRulesEngine.Validate(
+        Validate(
             inputs: [newQueuedEmail, checkPrivileges]);
 }

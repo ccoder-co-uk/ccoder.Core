@@ -2,7 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.Core.Brokers.Loggings;
+using cCoder.Core;
 using cCoder.Core.Services.Aggregations;
 using cCoder.Core.Models.Exceptions;
 using cCoder.Data.Models.CMS;
@@ -14,8 +14,7 @@ using Microsoft.AspNetCore.OData.Routing.Controllers;
 namespace cCoder.Core.Exposures.Controllers;
 
 public class AppController(
-    ICoreAppManager service,
-    ILoggingBroker loggingBroker) : ODataController
+    ICoreAppManager service) : ODataController
 {
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] App newApp)
@@ -33,19 +32,25 @@ public class AppController(
         }
         catch (CoreOrchestrationValidationException exception)
         {
-            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+            WebApplicationExtensions.LogCoreControllerException(
+                context: HttpContext,
+                exception: exception);
 
             return BadRequest(error: "The app request is invalid.");
         }
         catch (DbUpdateConcurrencyException exception)
         {
-            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+            WebApplicationExtensions.LogCoreControllerException(
+                context: HttpContext,
+                exception: exception);
 
             return Conflict(error: "The app changed before the request completed.");
         }
         catch (System.Security.SecurityException exception)
         {
-            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+            WebApplicationExtensions.LogCoreControllerException(
+                context: HttpContext,
+                exception: exception);
 
             return StatusCode(
                 statusCode: StatusCodes.Status403Forbidden,
@@ -53,7 +58,9 @@ public class AppController(
         }
         catch (Exception exception)
         {
-            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+            WebApplicationExtensions.LogCoreControllerException(
+                context: HttpContext,
+                exception: exception);
 
             return StatusCode(
                 statusCode: StatusCodes.Status500InternalServerError,
@@ -81,19 +88,25 @@ public class AppController(
         }
         catch (CoreOrchestrationValidationException exception)
         {
-            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+            WebApplicationExtensions.LogCoreControllerException(
+                context: HttpContext,
+                exception: exception);
 
             return BadRequest(error: "The app request is invalid.");
         }
         catch (DbUpdateConcurrencyException exception)
         {
-            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+            WebApplicationExtensions.LogCoreControllerException(
+                context: HttpContext,
+                exception: exception);
 
             return Conflict(error: "The app changed before the request completed.");
         }
         catch (System.Security.SecurityException exception)
         {
-            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+            WebApplicationExtensions.LogCoreControllerException(
+                context: HttpContext,
+                exception: exception);
 
             return StatusCode(
                 statusCode: StatusCodes.Status403Forbidden,
@@ -101,7 +114,9 @@ public class AppController(
         }
         catch (Exception exception)
         {
-            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+            WebApplicationExtensions.LogCoreControllerException(
+                context: HttpContext,
+                exception: exception);
 
             return StatusCode(
                 statusCode: StatusCodes.Status500InternalServerError,
@@ -121,7 +136,9 @@ public class AppController(
         }
         catch (Exception exception)
         {
-            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+            WebApplicationExtensions.LogCoreControllerException(
+                context: HttpContext,
+                exception: exception);
 
             return StatusCode(
                 statusCode: StatusCodes.Status500InternalServerError,
@@ -140,7 +157,9 @@ public class AppController(
         }
         catch (Exception exception)
         {
-            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+            WebApplicationExtensions.LogCoreControllerException(
+                context: HttpContext,
+                exception: exception);
 
             return StatusCode(
                 statusCode: StatusCodes.Status500InternalServerError,
@@ -161,19 +180,25 @@ public class AppController(
         }
         catch (CoreOrchestrationValidationException exception)
         {
-            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+            WebApplicationExtensions.LogCoreControllerException(
+                context: HttpContext,
+                exception: exception);
 
             return BadRequest(error: "The app request is invalid.");
         }
         catch (DbUpdateConcurrencyException exception)
         {
-            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+            WebApplicationExtensions.LogCoreControllerException(
+                context: HttpContext,
+                exception: exception);
 
             return Conflict(error: "The app changed before the request completed.");
         }
         catch (System.Security.SecurityException exception)
         {
-            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+            WebApplicationExtensions.LogCoreControllerException(
+                context: HttpContext,
+                exception: exception);
 
             return StatusCode(
                 statusCode: StatusCodes.Status403Forbidden,
@@ -181,7 +206,9 @@ public class AppController(
         }
         catch (Exception exception)
         {
-            loggingBroker.LogError(exception: exception, message: "Controller request failed.");
+            WebApplicationExtensions.LogCoreControllerException(
+                context: HttpContext,
+                exception: exception);
 
             return StatusCode(
                 statusCode: StatusCodes.Status500InternalServerError,

@@ -9,16 +9,19 @@ namespace cCoder.Core.Services.Processings.Metadata;
 
 internal sealed partial class EdmModelProcessingService
 {
+    private static void Validate(params object[] inputs) =>
+        ValidationRulesEngine.Validate(inputs: inputs);
+
     private static void ValidateEdmModelMetadataOnGet(
         IEdmModel model,
         string contextName) =>
-        ValidationRulesEngine.Validate(inputs: [model, contextName]);
+        Validate(inputs: [model, contextName]);
 
     private static void ValidateExtendedMetadataContainerOnGet(
         IEdmModel model,
         string context,
         Type type,
         bool hasEndpoint) =>
-        ValidationRulesEngine.Validate(
+        Validate(
             inputs: [model, context, type, hasEndpoint]);
 }
