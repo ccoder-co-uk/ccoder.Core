@@ -17,7 +17,7 @@ internal sealed class CoreAllowedOriginStore(
             return await allowedOriginStoreProcessingService
                 .IsCoreAllowedOriginAllowedAsync(origin: origin);
         }
-        catch (Exception exception)
+        catch (Exception)
         {
             return false;
         }
