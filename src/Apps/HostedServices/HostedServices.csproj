@@ -28,6 +28,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="cCoder.CodeAnalysis" Version="2026.9.15.1012" />
+    <PackageReference Update="cCoder.CodeAnalysis" Version="2026.9.16.1056" />
   </ItemGroup>
 </Project>

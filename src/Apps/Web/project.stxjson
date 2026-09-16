@@ -5561,6 +5561,34 @@
       "LineNumber": 24
     },
     {
+      "Code": "STXD002",
+      "Description": "A dependency must inherit an external type or implement an external interface that the application cannot control.",
+      "Severity": "Warning",
+      "Type": "Web.Dependencies.Api.ApiContextDependency",
+      "LineNumber": 9
+    },
+    {
+      "Code": "STXD002",
+      "Description": "A dependency must inherit an external type or implement an external interface that the application cannot control.",
+      "Severity": "Warning",
+      "Type": "Web.Dependencies.Api.ApiScriptExecutionDependency",
+      "LineNumber": 11
+    },
+    {
+      "Code": "STXD002",
+      "Description": "A dependency must inherit an external type or implement an external interface that the application cannot control.",
+      "Severity": "Warning",
+      "Type": "Web.Dependencies.HomeSessionDependency",
+      "LineNumber": 12
+    },
+    {
+      "Code": "STXD007",
+      "Description": "A dependency must not depend on locally defined type \u0027Web.CoreAuthInfo\u0027.",
+      "Severity": "Warning",
+      "Type": "Web.Dependencies.HomeSessionDependency",
+      "LineNumber": 12
+    },
+    {
       "Code": "STX0012",
       "Description": "Business-operation validation methods must evaluate their rules through a validation collector.",
       "Severity": "Warning",

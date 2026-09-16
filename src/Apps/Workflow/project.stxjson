@@ -2046,6 +2046,34 @@
   ],
   "AnalysisItems": [
     {
+      "Code": "STXD002",
+      "Description": "A dependency must inherit an external type or implement an external interface that the application cannot control.",
+      "Severity": "Warning",
+      "Type": "Workflow.Dependencies.WorkflowFunctionHttpDependency",
+      "LineNumber": 11
+    },
+    {
+      "Code": "STXD007",
+      "Description": "A dependency must not depend on locally defined type \u0027Workflow.Dependencies.WorkflowFunctionStreamDependency\u0027.",
+      "Severity": "Warning",
+      "Type": "Workflow.Dependencies.WorkflowFunctionHttpDependency",
+      "LineNumber": 11
+    },
+    {
+      "Code": "STXD008",
+      "Description": "A dependency that inherits an external base type must override a framework member.",
+      "Severity": "Warning",
+      "Type": "Workflow.Dependencies.WorkflowFunctionStreamDependency",
+      "LineNumber": 7
+    },
+    {
+      "Code": "STXD002",
+      "Description": "A dependency must inherit an external type or implement an external interface that the application cannot control.",
+      "Severity": "Warning",
+      "Type": "Workflow.Dependencies.WorkflowJsonDependency",
+      "LineNumber": 11
+    },
+    {
       "Code": "STX0004",
       "Description": "An architectural element must not depend on another element at the same layer.",
       "Severity": "Warning",

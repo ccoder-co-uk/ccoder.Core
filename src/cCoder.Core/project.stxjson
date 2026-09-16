@@ -22831,11 +22831,137 @@
   ],
   "AnalysisItems": [
     {
+      "Code": "STXD007",
+      "Description": "A dependency must not depend on locally defined type \u0027cCoder.Core.Services.Processings.Formatters.IFormatterODataProcessingService\u0027.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Dependencies.Formatters.CsvFormatter",
+      "LineNumber": 17
+    },
+    {
+      "Code": "STXD007",
+      "Description": "A dependency must not depend on locally defined type \u0027cCoder.Core.Services.Processings.Formatters.IFormatterODataProcessingService\u0027.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Dependencies.Formatters.ExcelFormatter",
+      "LineNumber": 17
+    },
+    {
+      "Code": "STXD002",
+      "Description": "A dependency must inherit an external type or implement an external interface that the application cannot control.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Dependencies.Formatters.ODataFormatterDependency",
+      "LineNumber": 9
+    },
+    {
+      "Code": "STXD007",
+      "Description": "A dependency must not depend on locally defined type \u0027cCoder.Core.Services.Processings.Formatters.IFormatterODataProcessingService\u0027.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Dependencies.Formatters.XmlFormatter",
+      "LineNumber": 14
+    },
+    {
+      "Code": "STXD002",
+      "Description": "A dependency must inherit an external type or implement an external interface that the application cannot control.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Dependencies.Json.AllowedOriginJsonDependency",
+      "LineNumber": 9
+    },
+    {
+      "Code": "STXD002",
+      "Description": "A dependency must inherit an external type or implement an external interface that the application cannot control.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Dependencies.Metadata.EdmModelDependency",
+      "LineNumber": 12
+    },
+    {
+      "Code": "STXD007",
+      "Description": "A dependency must not depend on locally defined type \u0027cCoder.Core.Models.Metadata.EdmModelDetails\u0027.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Dependencies.Metadata.EdmModelDependency",
+      "LineNumber": 12
+    },
+    {
+      "Code": "STXD002",
+      "Description": "A dependency must inherit an external type or implement an external interface that the application cannot control.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Dependencies.Metadata.MetadataContainerDependency",
+      "LineNumber": 11
+    },
+    {
+      "Code": "STXD007",
+      "Description": "A dependency must not depend on locally defined type \u0027cCoder.Core.Models.Metadata.MetadataContainer\u0027.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Dependencies.Metadata.MetadataContainerDependency",
+      "LineNumber": 11
+    },
+    {
+      "Code": "STXD007",
+      "Description": "A dependency must not depend on locally defined type \u0027cCoder.Core.Brokers.Loggings.ILoggingBroker\u0027.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Dependencies.Middleware.CoreExceptionMiddleware",
+      "LineNumber": 11
+    },
+    {
       "Code": "STXE004",
       "Description": "An exposure must not communicate directly with a broker.",
       "Severity": "Warning",
       "Type": "cCoder.Core.Dependencies.Middleware.CoreExceptionMiddleware",
       "LineNumber": 11
+    },
+    {
+      "Code": "STXD007",
+      "Description": "A dependency must not depend on locally defined type \u0027cCoder.Core.Services.Processings.Middleware.ICoreFormatterMiddlewareProcessingService\u0027.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Dependencies.Middleware.CoreFormatterMiddleware",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STXD002",
+      "Description": "A dependency must inherit an external type or implement an external interface that the application cannot control.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Dependencies.Notifications.NotificationHubDependency",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STXD007",
+      "Description": "A dependency must not depend on locally defined type \u0027cCoder.Core.Models.Notifications.NotificationHubOperation\u0027.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Dependencies.Notifications.NotificationHubDependency",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STXD007",
+      "Description": "A dependency must not depend on locally defined type \u0027cCoder.Core.Exposures.OData.ODataModel\u0027.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Dependencies.OData.CoreModelBuilderDependency",
+      "LineNumber": 25
+    },
+    {
+      "Code": "STXD002",
+      "Description": "A dependency must inherit an external type or implement an external interface that the application cannot control.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Dependencies.Packages.CorePackageDependency",
+      "LineNumber": 18
+    },
+    {
+      "Code": "STXD007",
+      "Description": "A dependency must not depend on locally defined type \u0027cCoder.Core.Models.Packaging.AppConfigurationPackageItem\u0027.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Dependencies.Packages.CorePackageDependency",
+      "LineNumber": 18
+    },
+    {
+      "Code": "STXD007",
+      "Description": "A dependency must not depend on locally defined type \u0027cCoder.Core.Dependencies.Sessions.NoOpSession\u0027.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Dependencies.Sessions.NoOpSessionFeature",
+      "LineNumber": 10
+    },
+    {
+      "Code": "STXD002",
+      "Description": "A dependency must inherit an external type or implement an external interface that the application cannot control.",
+      "Severity": "Warning",
+      "Type": "cCoder.Core.Dependencies.Setup.SetupStateDependency",
+      "LineNumber": 14
     },
     {
       "Code": "STX0004",
