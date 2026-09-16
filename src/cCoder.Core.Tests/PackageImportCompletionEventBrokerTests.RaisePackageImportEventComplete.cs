@@ -35,7 +35,7 @@ public sealed partial class PackageImportCompletionEventBrokerTests
             .Setup(expression: eventHub => eventHub.RaiseEventAsync(
                 name: "package_import_complete",
                 message: It.Is<EventMessage<PackageImportEvent>>(
-                    predicate: message =>
+                    match: message =>
                         message.Data == packageImportEvent
                         && message.AuthInfo.SSOUserId == "user-id")))
             .Returns(value: ValueTask.CompletedTask);
@@ -51,7 +51,7 @@ public sealed partial class PackageImportCompletionEventBrokerTests
             expression: eventHub => eventHub.RaiseEventAsync(
                 name: "package_import_complete",
                 message: It.Is<EventMessage<PackageImportEvent>>(
-                    predicate: message =>
+                    match: message =>
                         message.Data == packageImportEvent
                         && message.AuthInfo.SSOUserId == "user-id")),
             times: Times.Once);
