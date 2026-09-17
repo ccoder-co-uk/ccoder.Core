@@ -8,4 +8,4 @@ using cCoder.Core.Exposures;
 
 namespace cCoder.Core.Services.Aggregations;
 
-internal interface IAppAggregationService : ICoreAppManager { }
+public interface IAppAggregationService : ICoreAppManager { }

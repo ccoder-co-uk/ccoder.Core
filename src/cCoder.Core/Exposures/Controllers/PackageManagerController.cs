@@ -15,7 +15,7 @@ namespace cCoder.Core.Exposures.Controllers;
 [ApiController]
 [Route("Api/Core/Package")]
 public class PackageManagerController(
-    IPackageManager packageManagerAggregationService)
+    IPackageManagerAggregationService packageManagerAggregationService)
     : ControllerBase
 {
     [HttpGet("Export")]

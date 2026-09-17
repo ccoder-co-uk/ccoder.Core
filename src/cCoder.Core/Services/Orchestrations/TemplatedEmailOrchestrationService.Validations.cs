@@ -7,7 +7,7 @@ using cCoder.Core.Models;
 
 namespace cCoder.Core.Services.Orchestrations;
 
-internal sealed partial class TemplatedEmailOperationOrchestrationService
+internal sealed partial class TemplatedEmailOrchestrationService
 {
     private static void ValidateTemplatedEmailOperationOnQueue(
         TemplatedEmailOperation templatedEmailOperation) =>

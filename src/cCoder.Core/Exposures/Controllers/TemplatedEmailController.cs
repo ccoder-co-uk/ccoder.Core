@@ -16,7 +16,7 @@ namespace cCoder.Core.Exposures.Controllers;
 
 [ApiController]
 public class TemplatedEmailController(
-    ITemplatedEmailManager templatedEmailOrchestrationService) : ControllerBase
+    ITemplatedEmailOrchestrationService templatedEmailOrchestrationService) : ControllerBase
 {
     [HttpPost("Api/Core/QueuedEmail/AddTemplatedEmail()")]
     public async Task<IActionResult> Post(

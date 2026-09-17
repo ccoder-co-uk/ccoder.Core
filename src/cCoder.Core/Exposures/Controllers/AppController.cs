@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.OData.Routing.Controllers;
 namespace cCoder.Core.Exposures.Controllers;
 
 public class AppController(
-    ICoreAppManager service) : ODataController
+    IAppAggregationService service) : ODataController
 {
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] App newApp)

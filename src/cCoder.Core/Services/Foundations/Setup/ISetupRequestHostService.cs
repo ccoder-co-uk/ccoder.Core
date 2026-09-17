@@ -2,8 +2,9 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.Core.Exposures;
+namespace cCoder.Core.Services.Foundations.Setup;
 
-namespace cCoder.Core.Services.Aggregations.Packages;
-
-public interface IPackageManagerAggregationService : IPackageManager { }
+internal interface ISetupRequestHostService
+{
+    string NormalizeHost(string host);
+}
