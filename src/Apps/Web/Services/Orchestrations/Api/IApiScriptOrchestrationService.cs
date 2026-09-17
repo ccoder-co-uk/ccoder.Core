@@ -4,10 +4,14 @@
 
 using Web.Models;
 using System.IO;
-using Web.Exposures;
 
 namespace Web.Services.Orchestrations.Api;
 
-public interface IApiScriptOrchestrationService : IApiScriptManager
+public interface IApiScriptOrchestrationService
 {
+    ValueTask<string> ExecuteApiScriptRequestAsync(
+        ApiScriptRequest apiScriptRequest);
+
+    ValueTask<string> ReadRequestBodyAsync(Stream requestBody);
+    void LogError(Exception exception);
 }

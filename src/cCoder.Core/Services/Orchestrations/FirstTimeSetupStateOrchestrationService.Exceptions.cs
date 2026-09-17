@@ -31,4 +31,27 @@ internal sealed partial class FirstTimeSetupStateOrchestrationService
                 innerException: innerException);
         }
     }
+
+    private static T TryCatch<T>(Func<T> operation)
+    {
+        try
+        {
+            return operation();
+        }
+        catch (ArgumentException innerException)
+        {
+            throw new CoreOrchestrationValidationException(
+                innerException: innerException);
+        }
+        catch (CoreDependencyException innerException)
+        {
+            throw new CoreOrchestrationDependencyException(
+                innerException: innerException);
+        }
+        catch (Exception innerException)
+        {
+            throw new CoreOrchestrationServiceException(
+                innerException: innerException);
+        }
+    }
 }

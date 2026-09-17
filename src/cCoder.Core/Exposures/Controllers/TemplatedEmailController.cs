@@ -5,7 +5,6 @@
 using cCoder.Core;
 using cCoder.Core.Services.Orchestrations;
 using cCoder.Core.Models.Exceptions;
-using cCoder.Core.Exposures.Managers;
 using cCoder.Mail.Models;
 using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.Mail;
@@ -32,7 +31,7 @@ public class TemplatedEmailController(
             return Ok(
                 value: await templatedEmailOrchestrationService
                     .QueueTemplatedEmailDetailsAsync(
-                        details: newTemplatedEmailDetails));
+                        templatedEmailDetails: newTemplatedEmailDetails));
         }
         catch (CoreOrchestrationValidationException exception)
         {

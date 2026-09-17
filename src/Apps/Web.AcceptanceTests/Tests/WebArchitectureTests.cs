@@ -28,7 +28,7 @@ public sealed partial class WebArchitectureTests
     }
 
     [Fact]
-    public void HomeController_WhenUsingRequestApis_UsesHomeSessionManager()
+    public void HomeController_WhenUsingRequestApis_UsesHomeSessionProcessingService()
     {
         // Given
 
@@ -44,10 +44,10 @@ public sealed partial class WebArchitectureTests
             .NotContain(unexpected: "Url.IsLocalUrl(");
 
         source.Should()
-            .Contain(expected: "homeSessionManager.AbortRequest");
+            .Contain(expected: "homeSessionProcessingService.AbortRequest");
 
         source.Should()
-            .Contain(expected: "homeSessionManager.IsLocalUrl");
+            .Contain(expected: "homeSessionProcessingService.IsLocalUrl");
     }
 
     [Fact]
@@ -82,9 +82,6 @@ public sealed partial class WebArchitectureTests
     public void ApiScriptServices_WhenAcceptingRequest_UseFullModelParameterName()
     {
         // Given
-        string managerSource = ReadWebSource(
-            paths: ["Exposures", "ApiScriptManager.cs"]);
-
         string orchestrationSource = ReadWebSource(
             paths:
             [
@@ -95,7 +92,7 @@ public sealed partial class WebArchitectureTests
             ]);
 
         // When
-        string source = managerSource + orchestrationSource;
+        string source = orchestrationSource;
 
         // Then
         source.Should()

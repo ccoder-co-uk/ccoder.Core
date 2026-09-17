@@ -4,12 +4,13 @@
 
 using cCoder.Core.Services.Processings.Packages;
 using cCoder.Data.Models.Packaging;
+using cCoder.Core.Exposures;
 
 namespace cCoder.Core.Services.Aggregations.Packages;
 
 internal sealed partial class PackageManagerAggregationService(
     ICorePackageProcessingService corePackageProcessingService)
-    : IPackageManagerAggregationService
+    : IPackageManagerAggregationService, IPackageManager
 {
     private const string AppConfigurationPackageName = "AppConfiguration";
 

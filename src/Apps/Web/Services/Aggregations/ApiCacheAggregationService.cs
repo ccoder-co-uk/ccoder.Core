@@ -4,7 +4,6 @@
 
 using cCoder.Core.Brokers.Loggings;
 using Web.Brokers.Api;
-using Web.Exposures;
 
 namespace Web.Services.Aggregations;
 
@@ -31,7 +30,7 @@ internal sealed partial class ApiCacheAggregationService(
             return metadataCacheBroker.GetAll(culture: culture);
         });
 
-    void IApiCacheManager.LogError(Exception exception) =>
+    void IApiCacheAggregationService.LogError(Exception exception) =>
         loggingBroker.LogError(
             exception: exception,
             message: "HTTP request failed.");

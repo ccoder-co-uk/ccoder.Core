@@ -12,7 +12,7 @@ namespace cCoder.Core.Exposures.Controllers;
 
 [Route("Setup")]
 public sealed class SetupController(
-    IFirstTimeSetupOrchestrationService setupService,
+    IFirstTimeSetupStateOrchestrationService setupStateService,
     CoreConfiguration configuration)
     : Controller
 {
@@ -21,7 +21,7 @@ public sealed class SetupController(
     {
         try
         {
-            if (await setupService.IsInitializedAsync(
+            if (await setupStateService.IsInitializedAsync(
                 cancellationToken: cancellationToken))
             {
                 return Redirect(url: "/");
@@ -65,7 +65,7 @@ public sealed class SetupController(
         new()
         {
             AssetsRoot = configuration.Packaging.AssetsRoot,
-            Domain = setupService.NormalizeHost(
+            Domain = setupStateService.NormalizeHost(
                 host: Request.Host.Host),
             Setup = new FirstTimeSetupRequest(),
         };

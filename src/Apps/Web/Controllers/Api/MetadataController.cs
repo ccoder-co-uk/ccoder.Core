@@ -10,7 +10,7 @@ namespace Web.Controllers.Api;
 
 [Route("Api")]
 public sealed class MetadataController(
-    IApiCacheAggregationService metadataManager)
+    IApiCacheAggregationService apiCacheAggregationService)
     : Controller
 {
     [HttpGet("GetMetadata")]
@@ -20,19 +20,19 @@ public sealed class MetadataController(
         try
         {
             return Content(
-                content: metadataManager.GetMetadata(
+                content: apiCacheAggregationService.GetMetadata(
                     culture: culture),
                 contentType: "application/json");
         }
         catch (ApiCacheValidationException exception)
         {
-            metadataManager.LogError(exception: exception);
+            apiCacheAggregationService.LogError(exception: exception);
 
             return BadRequest(error: "The metadata request is invalid.");
         }
         catch (Exception exception)
         {
-            metadataManager.LogError(exception: exception);
+            apiCacheAggregationService.LogError(exception: exception);
 
             return StatusCode(
                 statusCode: StatusCodes.Status500InternalServerError,
