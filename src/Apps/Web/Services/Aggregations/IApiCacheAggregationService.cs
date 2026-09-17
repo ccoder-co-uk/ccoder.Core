@@ -4,7 +4,7 @@
 
 namespace Web.Services.Aggregations;
 
-internal interface IApiCacheAggregationService
+public interface IApiCacheAggregationService
 {
     void RefreshCaches();
     string GetMetadata(string culture);

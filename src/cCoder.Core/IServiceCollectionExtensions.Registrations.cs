@@ -713,6 +713,10 @@ predicate: (documentName, apiDescription) =>
             TemplatedEmailOperationOrchestrationService>();
 
         services.AddTransient<
+            ITemplatedEmailOrchestrationService,
+            TemplatedEmailOperationOrchestrationService>();
+
+        services.AddTransient<
             IHostedServicesAppSecurityAppAddOrchestrationService,
             HostedServicesAppSecurityAppAddOrchestrationService>();
 
@@ -787,10 +791,6 @@ predicate: (documentName, apiDescription) =>
 
         services.AddTransient<
             ITemplatedEmailManager,
-            TemplatedEmailManager>();
-
-        services.AddTransient<
-            ITemplatedEmailOrchestrationService,
             TemplatedEmailManager>();
 
         services.AddTransient<

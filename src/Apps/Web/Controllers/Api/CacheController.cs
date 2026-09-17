@@ -3,14 +3,14 @@
 // ---------------------------------------------------------------
 
 using Microsoft.AspNetCore.Mvc;
-using Web.Exposures;
+using Web.Services.Aggregations;
 using Web.Models.Exceptions;
 
 namespace Web.Controllers.Api;
 
 [Route("Api")]
 public sealed class CacheController(
-    IApiCacheManager apiCacheManager)
+    IApiCacheAggregationService apiCacheAggregationService)
     : Controller
 {
     [HttpGet("RefreshCache")]
@@ -18,19 +18,19 @@ public sealed class CacheController(
     {
         try
         {
-            apiCacheManager.RefreshCaches();
+            apiCacheAggregationService.RefreshCaches();
 
             return Ok();
         }
         catch (ApiCacheValidationException exception)
         {
-            apiCacheManager.LogError(exception: exception);
+            apiCacheAggregationService.LogError(exception: exception);
 
             return BadRequest(error: "The cache refresh request is invalid.");
         }
         catch (Exception exception)
         {
-            apiCacheManager.LogError(exception: exception);
+            apiCacheAggregationService.LogError(exception: exception);
 
             return StatusCode(
                 statusCode: StatusCodes.Status500InternalServerError,

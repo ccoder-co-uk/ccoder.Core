@@ -4,12 +4,12 @@
 
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
-using Workflow.Exposures;
+using Workflow.Services.Processings.WorkflowFunctions;
 
 namespace Workflow.Exposures;
 
-public sealed class Health(
-    IWorkflowFunctionsManager workflowFunctionsProcessingService)
+internal sealed class Health(
+    IWorkflowFunctionsProcessingService workflowFunctionsProcessingService)
 {
     [Function(nameof(Health))]
     public Task<HttpResponseData> Run(

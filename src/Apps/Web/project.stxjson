@@ -9,7 +9,7 @@
     {
       "Name": "Web.Brokers.Api.ApiContextBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 10,
+      "LineNumber": 12,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -28,9 +28,51 @@
       "Properties": [],
       "Methods": [
         {
+          "Id": "Web.Brokers.Api.ApiContextBroker.LogError(System.Exception)",
+          "Name": "LogError",
+          "LineNumber": 26,
+          "Inputs": [
+            {
+              "Name": "exception",
+              "Type": "System.Exception"
+            }
+          ],
+          "ReturnType": "System.Void",
+          "Implements": [
+            "Web.Brokers.Api.IApiContextBroker.LogError(System.Exception)"
+          ],
+          "Calls": [
+            {
+              "TypeName": "Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions",
+              "MethodName": "GetRequiredService",
+              "MethodId": "Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService(System.IServiceProvider)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "Microsoft.Extensions.Logging.LoggerExtensions",
+              "MethodName": "LogError",
+              "MethodId": "Microsoft.Extensions.Logging.LoggerExtensions.LogError(Microsoft.Extensions.Logging.ILogger,System.Exception?,System.String?,System.Object?[])",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
           "Id": "Web.Brokers.Api.ApiContextBroker.ReadRequestBodyAsync(System.IO.Stream)",
           "Name": "ReadRequestBodyAsync",
-          "LineNumber": 17,
+          "LineNumber": 19,
           "Inputs": [
             {
               "Name": "requestBody",
@@ -72,7 +114,7 @@
         {
           "Id": "Web.Brokers.Api.ApiContextBroker.SelectAllApiInfos()",
           "Name": "SelectAllApiInfos",
-          "LineNumber": 14,
+          "LineNumber": 16,
           "Inputs": [],
           "ReturnType": "cCoder.Data.Models.ApiInfo[]",
           "Implements": [
@@ -276,6 +318,41 @@
       "Properties": [],
       "Methods": [
         {
+          "Id": "Web.Brokers.Api.MetadataCacheBroker.GetAll(System.String)",
+          "Name": "GetAll",
+          "LineNumber": 17,
+          "Inputs": [
+            {
+              "Name": "culture",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.String",
+          "Implements": [
+            "Web.Brokers.Api.IMetadataCacheBroker.GetAll(System.String)"
+          ],
+          "Calls": [
+            {
+              "TypeName": "cCoder.ContentManagement.Exposures.Caching.IMetadataCache",
+              "MethodName": "GetAll",
+              "MethodId": "cCoder.ContentManagement.Exposures.Caching.IMetadataCache.GetAll(System.String)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
           "Id": "Web.Brokers.Api.MetadataCacheBroker.Rebuild()",
           "Name": "Rebuild",
           "LineNumber": 14,
@@ -331,7 +408,7 @@
         {
           "Id": "Web.Brokers.HomeSessions.HomeSessionBroker.AbortRequest(Microsoft.AspNetCore.Http.HttpContext)",
           "Name": "AbortRequest",
-          "LineNumber": 39,
+          "LineNumber": 53,
           "Inputs": [
             {
               "Name": "context",
@@ -366,7 +443,7 @@
         {
           "Id": "Web.Brokers.HomeSessions.HomeSessionBroker.ContainsSessionKey(Microsoft.AspNetCore.Http.HttpContext,System.String)",
           "Name": "ContainsSessionKey",
-          "LineNumber": 21,
+          "LineNumber": 35,
           "Inputs": [
             {
               "Name": "context",
@@ -419,8 +496,43 @@
           "Calls": [
             {
               "TypeName": "Web.Dependencies.HomeSessionDependency",
-              "MethodName": "CreateHomeSessionContext",
-              "MethodId": "Web.Dependencies.HomeSessionDependency.CreateHomeSessionContext(Microsoft.AspNetCore.Http.HttpContext)",
+              "MethodName": "SelectRequestHost",
+              "MethodId": "Web.Dependencies.HomeSessionDependency.SelectRequestHost(Microsoft.AspNetCore.Http.HttpContext)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": false
+            },
+            {
+              "TypeName": "Web.Dependencies.HomeSessionDependency",
+              "MethodName": "SelectRequestPort",
+              "MethodId": "Web.Dependencies.HomeSessionDependency.SelectRequestPort(Microsoft.AspNetCore.Http.HttpContext)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": false
+            },
+            {
+              "TypeName": "Web.Dependencies.HomeSessionDependency",
+              "MethodName": "SelectRequestScheme",
+              "MethodId": "Web.Dependencies.HomeSessionDependency.SelectRequestScheme(Microsoft.AspNetCore.Http.HttpContext)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": false
+            },
+            {
+              "TypeName": "Web.Dependencies.HomeSessionDependency",
+              "MethodName": "SelectRequestToken",
+              "MethodId": "Web.Dependencies.HomeSessionDependency.SelectRequestToken(Microsoft.AspNetCore.Http.HttpContext)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": false
+            },
+            {
+              "TypeName": "Web.Dependencies.HomeSessionDependency",
+              "MethodName": "SelectSessionKeys",
+              "MethodId": "Web.Dependencies.HomeSessionDependency.SelectSessionKeys(Microsoft.AspNetCore.Http.HttpContext)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": false
+            },
+            {
+              "TypeName": "Web.Dependencies.HomeSessionDependency",
+              "MethodName": "SelectSsoUserId",
+              "MethodId": "Web.Dependencies.HomeSessionDependency.SelectSsoUserId(Microsoft.AspNetCore.Http.HttpContext)",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": false
             }
@@ -440,7 +552,7 @@
         {
           "Id": "Web.Brokers.HomeSessions.HomeSessionBroker.IsLocalUrl(Microsoft.AspNetCore.Mvc.IUrlHelper,System.String)",
           "Name": "IsLocalUrl",
-          "LineNumber": 42,
+          "LineNumber": 56,
           "Inputs": [
             {
               "Name": "urlHelper",
@@ -479,7 +591,7 @@
         {
           "Id": "Web.Brokers.HomeSessions.HomeSessionBroker.IsSessionAvailable(Microsoft.AspNetCore.Http.HttpContext)",
           "Name": "IsSessionAvailable",
-          "LineNumber": 18,
+          "LineNumber": 32,
           "Inputs": [
             {
               "Name": "context",
@@ -514,7 +626,7 @@
         {
           "Id": "Web.Brokers.HomeSessions.HomeSessionBroker.RemoveSessionValue(Microsoft.AspNetCore.Http.HttpContext,System.String)",
           "Name": "RemoveSessionValue",
-          "LineNumber": 36,
+          "LineNumber": 50,
           "Inputs": [
             {
               "Name": "context",
@@ -553,7 +665,7 @@
         {
           "Id": "Web.Brokers.HomeSessions.HomeSessionBroker.SelectSessionValue(Microsoft.AspNetCore.Http.HttpContext,System.String)",
           "Name": "SelectSessionValue",
-          "LineNumber": 24,
+          "LineNumber": 38,
           "Inputs": [
             {
               "Name": "context",
@@ -592,7 +704,7 @@
         {
           "Id": "Web.Brokers.HomeSessions.HomeSessionBroker.SetSessionValue(Microsoft.AspNetCore.Http.HttpContext,System.String,System.String)",
           "Name": "SetSessionValue",
-          "LineNumber": 27,
+          "LineNumber": 41,
           "Inputs": [
             {
               "Name": "context",
@@ -669,10 +781,24 @@
               "IsDependencyBoundary": true
             },
             {
-              "TypeName": "Web.Exposures.IApiContextManager",
+              "TypeName": "Microsoft.AspNetCore.Mvc.ControllerBase",
+              "MethodName": "StatusCode",
+              "MethodId": "Microsoft.AspNetCore.Mvc.ControllerBase.StatusCode(System.Int32,System.Object?)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "Web.Services.Foundations.Api.IApiContextService",
               "MethodName": "GetApiInfos",
-              "MethodId": "Web.Exposures.IApiContextManager.GetApiInfos()",
-              "StandardElementType": "Exposure",
+              "MethodId": "Web.Services.Foundations.Api.IApiContextService.GetApiInfos()",
+              "StandardElementType": "FoundationService",
+              "IsDependencyBoundary": false
+            },
+            {
+              "TypeName": "Web.Services.Foundations.Api.IApiContextService",
+              "MethodName": "LogError",
+              "MethodId": "Web.Services.Foundations.Api.IApiContextService.LogError(System.Exception)",
+              "StandardElementType": "FoundationService",
               "IsDependencyBoundary": false
             }
           ],
@@ -683,9 +809,7 @@
           "IncomingExceptionTypes": [
             "Web.Models.Exceptions.ApiScriptDependencyException"
           ],
-          "ThrowsExceptionTypes": [
-            "Web.Models.Exceptions.ApiScriptDependencyException"
-          ],
+          "ThrowsExceptionTypes": [],
           "HttpMethods": [
             "GET"
           ],
@@ -699,6 +823,16 @@
               "HasBody": true,
               "ExposesExceptionDetails": false,
               "LogsException": false
+            },
+            {
+              "StatusCode": 500,
+              "ResultMethod": "StatusCode",
+              "ExceptionType": "System.Exception",
+              "IsExceptionPath": true,
+              "IsNullPath": false,
+              "HasBody": true,
+              "ExposesExceptionDetails": false,
+              "LogsException": true
             }
           ],
           "IsHttpRequestHandler": true,
@@ -706,12 +840,12 @@
           "HasFromBodyParameter": false,
           "HasKeyParameter": false,
           "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
+          "HasTryCatch": true
         },
         {
           "Id": "Web.Controllers.Api.ApiRootController.GetTime()",
           "Name": "GetTime",
-          "LineNumber": 39,
+          "LineNumber": 78,
           "Inputs": [],
           "ReturnType": "Microsoft.AspNetCore.Mvc.IActionResult",
           "Implements": [],
@@ -722,6 +856,20 @@
               "MethodId": "Microsoft.AspNetCore.Mvc.ControllerBase.Ok(System.Object?)",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "Microsoft.AspNetCore.Mvc.ControllerBase",
+              "MethodName": "StatusCode",
+              "MethodId": "Microsoft.AspNetCore.Mvc.ControllerBase.StatusCode(System.Int32,System.Object?)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "Web.Services.Foundations.Api.IApiContextService",
+              "MethodName": "LogError",
+              "MethodId": "Web.Services.Foundations.Api.IApiContextService.LogError(System.Exception)",
+              "StandardElementType": "FoundationService",
+              "IsDependencyBoundary": false
             }
           ],
           "PossibleExceptionTypes": [],
@@ -740,6 +888,16 @@
               "HasBody": true,
               "ExposesExceptionDetails": false,
               "LogsException": false
+            },
+            {
+              "StatusCode": 500,
+              "ResultMethod": "StatusCode",
+              "ExceptionType": "System.Exception",
+              "IsExceptionPath": true,
+              "IsNullPath": false,
+              "HasBody": true,
+              "ExposesExceptionDetails": false,
+              "LogsException": true
             }
           ],
           "IsHttpRequestHandler": true,
@@ -747,21 +905,35 @@
           "HasFromBodyParameter": false,
           "HasKeyParameter": false,
           "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
+          "HasTryCatch": true
         },
         {
           "Id": "Web.Controllers.Api.ApiRootController.Post()",
           "Name": "Post",
-          "LineNumber": 26,
+          "LineNumber": 40,
           "Inputs": [],
           "ReturnType": "System.Threading.Tasks.Task\u003CMicrosoft.AspNetCore.Mvc.IActionResult\u003E",
           "Implements": [],
           "Calls": [
             {
-              "TypeName": "Web.Exposures.IApiContextManager",
+              "TypeName": "Microsoft.AspNetCore.Mvc.ControllerBase",
+              "MethodName": "StatusCode",
+              "MethodId": "Microsoft.AspNetCore.Mvc.ControllerBase.StatusCode(System.Int32,System.Object?)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "Web.Services.Foundations.Api.IApiContextService",
+              "MethodName": "LogError",
+              "MethodId": "Web.Services.Foundations.Api.IApiContextService.LogError(System.Exception)",
+              "StandardElementType": "FoundationService",
+              "IsDependencyBoundary": false
+            },
+            {
+              "TypeName": "Web.Services.Foundations.Api.IApiContextService",
               "MethodName": "ReadRequestBodyAsync",
-              "MethodId": "Web.Exposures.IApiContextManager.ReadRequestBodyAsync(System.IO.Stream)",
-              "StandardElementType": "Exposure",
+              "MethodId": "Web.Services.Foundations.Api.IApiContextService.ReadRequestBodyAsync(System.IO.Stream)",
+              "StandardElementType": "FoundationService",
               "IsDependencyBoundary": false
             },
             {
@@ -779,33 +951,56 @@
           "IncomingExceptionTypes": [
             "Web.Models.Exceptions.ApiScriptDependencyException"
           ],
-          "ThrowsExceptionTypes": [
-            "Web.Models.Exceptions.ApiScriptDependencyException"
-          ],
+          "ThrowsExceptionTypes": [],
           "HttpMethods": [
             "POST"
           ],
-          "HttpResponses": [],
+          "HttpResponses": [
+            {
+              "StatusCode": 500,
+              "ResultMethod": "StatusCode",
+              "ExceptionType": "System.Exception",
+              "IsExceptionPath": true,
+              "IsNullPath": false,
+              "HasBody": true,
+              "ExposesExceptionDetails": false,
+              "LogsException": true
+            }
+          ],
           "IsHttpRequestHandler": true,
           "IsODataControllerAction": false,
           "HasFromBodyParameter": false,
           "HasKeyParameter": false,
           "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
+          "HasTryCatch": true
         },
         {
           "Id": "Web.Controllers.Api.ApiRootController.Put()",
           "Name": "Put",
-          "LineNumber": 35,
+          "LineNumber": 61,
           "Inputs": [],
           "ReturnType": "System.Threading.Tasks.Task\u003CMicrosoft.AspNetCore.Mvc.IActionResult\u003E",
           "Implements": [],
           "Calls": [
             {
+              "TypeName": "Microsoft.AspNetCore.Mvc.ControllerBase",
+              "MethodName": "StatusCode",
+              "MethodId": "Microsoft.AspNetCore.Mvc.ControllerBase.StatusCode(System.Int32,System.Object?)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
               "TypeName": "Web.Controllers.Api.ApiRootController",
               "MethodName": "Post",
               "MethodId": "Web.Controllers.Api.ApiRootController.Post()",
               "StandardElementType": "HttpExposure",
+              "IsDependencyBoundary": false
+            },
+            {
+              "TypeName": "Web.Services.Foundations.Api.IApiContextService",
+              "MethodName": "LogError",
+              "MethodId": "Web.Services.Foundations.Api.IApiContextService.LogError(System.Exception)",
+              "StandardElementType": "FoundationService",
               "IsDependencyBoundary": false
             }
           ],
@@ -813,22 +1008,29 @@
             "Web.Models.Exceptions.ApiScriptDependencyException",
             "Web.Models.Exceptions.ApiScriptValidationException"
           ],
-          "IncomingExceptionTypes": [
-            "Web.Models.Exceptions.ApiScriptDependencyException"
-          ],
-          "ThrowsExceptionTypes": [
-            "Web.Models.Exceptions.ApiScriptDependencyException"
-          ],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
           "HttpMethods": [
             "PUT"
           ],
-          "HttpResponses": [],
+          "HttpResponses": [
+            {
+              "StatusCode": 500,
+              "ResultMethod": "StatusCode",
+              "ExceptionType": "System.Exception",
+              "IsExceptionPath": true,
+              "IsNullPath": false,
+              "HasBody": true,
+              "ExposesExceptionDetails": false,
+              "LogsException": true
+            }
+          ],
           "IsHttpRequestHandler": true,
           "IsODataControllerAction": false,
           "HasFromBodyParameter": false,
           "HasKeyParameter": false,
           "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
+          "HasTryCatch": true
         }
       ]
     },
@@ -861,16 +1063,37 @@
           "Calls": [
             {
               "TypeName": "Microsoft.AspNetCore.Mvc.ControllerBase",
+              "MethodName": "BadRequest",
+              "MethodId": "Microsoft.AspNetCore.Mvc.ControllerBase.BadRequest(System.Object?)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "Microsoft.AspNetCore.Mvc.ControllerBase",
               "MethodName": "Ok",
               "MethodId": "Microsoft.AspNetCore.Mvc.ControllerBase.Ok()",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
             },
             {
-              "TypeName": "Web.Exposures.IApiCacheManager",
+              "TypeName": "Microsoft.AspNetCore.Mvc.ControllerBase",
+              "MethodName": "StatusCode",
+              "MethodId": "Microsoft.AspNetCore.Mvc.ControllerBase.StatusCode(System.Int32,System.Object?)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "Web.Services.Aggregations.IApiCacheAggregationService",
+              "MethodName": "LogError",
+              "MethodId": "Web.Services.Aggregations.IApiCacheAggregationService.LogError(System.Exception)",
+              "StandardElementType": "AggregationService",
+              "IsDependencyBoundary": false
+            },
+            {
+              "TypeName": "Web.Services.Aggregations.IApiCacheAggregationService",
               "MethodName": "RefreshCaches",
-              "MethodId": "Web.Exposures.IApiCacheManager.RefreshCaches()",
-              "StandardElementType": "Exposure",
+              "MethodId": "Web.Services.Aggregations.IApiCacheAggregationService.RefreshCaches()",
+              "StandardElementType": "AggregationService",
               "IsDependencyBoundary": false
             }
           ],
@@ -884,11 +1107,7 @@
             "Web.Models.Exceptions.ApiCacheServiceException",
             "Web.Models.Exceptions.ApiCacheValidationException"
           ],
-          "ThrowsExceptionTypes": [
-            "Web.Models.Exceptions.ApiCacheDependencyException",
-            "Web.Models.Exceptions.ApiCacheServiceException",
-            "Web.Models.Exceptions.ApiCacheValidationException"
-          ],
+          "ThrowsExceptionTypes": [],
           "HttpMethods": [
             "GET"
           ],
@@ -902,6 +1121,26 @@
               "HasBody": false,
               "ExposesExceptionDetails": false,
               "LogsException": false
+            },
+            {
+              "StatusCode": 400,
+              "ResultMethod": "BadRequest",
+              "ExceptionType": "Web.Models.Exceptions.ApiCacheValidationException",
+              "IsExceptionPath": true,
+              "IsNullPath": false,
+              "HasBody": true,
+              "ExposesExceptionDetails": false,
+              "LogsException": true
+            },
+            {
+              "StatusCode": 500,
+              "ResultMethod": "StatusCode",
+              "ExceptionType": "System.Exception",
+              "IsExceptionPath": true,
+              "IsNullPath": false,
+              "HasBody": true,
+              "ExposesExceptionDetails": false,
+              "LogsException": true
             }
           ],
           "IsHttpRequestHandler": true,
@@ -909,7 +1148,7 @@
           "HasFromBodyParameter": false,
           "HasKeyParameter": false,
           "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
+          "HasTryCatch": true
         }
       ]
     },
@@ -947,32 +1186,83 @@
           "Calls": [
             {
               "TypeName": "Microsoft.AspNetCore.Mvc.ControllerBase",
+              "MethodName": "BadRequest",
+              "MethodId": "Microsoft.AspNetCore.Mvc.ControllerBase.BadRequest(System.Object?)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "Microsoft.AspNetCore.Mvc.ControllerBase",
               "MethodName": "Content",
               "MethodId": "Microsoft.AspNetCore.Mvc.ControllerBase.Content(System.String,System.String)",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
             },
             {
-              "TypeName": "cCoder.ContentManagement.Exposures.Caching.IMetadataCache",
-              "MethodName": "GetAll",
-              "MethodId": "cCoder.ContentManagement.Exposures.Caching.IMetadataCache.GetAll(System.String)",
+              "TypeName": "Microsoft.AspNetCore.Mvc.ControllerBase",
+              "MethodName": "StatusCode",
+              "MethodId": "Microsoft.AspNetCore.Mvc.ControllerBase.StatusCode(System.Int32,System.Object?)",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "Web.Services.Aggregations.IApiCacheAggregationService",
+              "MethodName": "GetMetadata",
+              "MethodId": "Web.Services.Aggregations.IApiCacheAggregationService.GetMetadata(System.String)",
+              "StandardElementType": "AggregationService",
+              "IsDependencyBoundary": false
+            },
+            {
+              "TypeName": "Web.Services.Aggregations.IApiCacheAggregationService",
+              "MethodName": "LogError",
+              "MethodId": "Web.Services.Aggregations.IApiCacheAggregationService.LogError(System.Exception)",
+              "StandardElementType": "AggregationService",
+              "IsDependencyBoundary": false
             }
           ],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
+          "PossibleExceptionTypes": [
+            "System.ArgumentNullException",
+            "Web.Models.Exceptions.ApiCacheDependencyException",
+            "Web.Models.Exceptions.ApiCacheServiceException",
+            "Web.Models.Exceptions.ApiCacheValidationException"
+          ],
+          "IncomingExceptionTypes": [
+            "Web.Models.Exceptions.ApiCacheDependencyException",
+            "Web.Models.Exceptions.ApiCacheServiceException",
+            "Web.Models.Exceptions.ApiCacheValidationException"
+          ],
           "ThrowsExceptionTypes": [],
           "HttpMethods": [
             "GET"
           ],
-          "HttpResponses": [],
+          "HttpResponses": [
+            {
+              "StatusCode": 400,
+              "ResultMethod": "BadRequest",
+              "ExceptionType": "Web.Models.Exceptions.ApiCacheValidationException",
+              "IsExceptionPath": true,
+              "IsNullPath": false,
+              "HasBody": true,
+              "ExposesExceptionDetails": false,
+              "LogsException": true
+            },
+            {
+              "StatusCode": 500,
+              "ResultMethod": "StatusCode",
+              "ExceptionType": "System.Exception",
+              "IsExceptionPath": true,
+              "IsNullPath": false,
+              "HasBody": true,
+              "ExposesExceptionDetails": false,
+              "LogsException": true
+            }
+          ],
           "IsHttpRequestHandler": true,
           "IsODataControllerAction": false,
           "HasFromBodyParameter": false,
           "HasKeyParameter": false,
           "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
+          "HasTryCatch": true
         }
       ]
     },
@@ -1005,23 +1295,44 @@
           "Calls": [
             {
               "TypeName": "Microsoft.AspNetCore.Mvc.ControllerBase",
+              "MethodName": "BadRequest",
+              "MethodId": "Microsoft.AspNetCore.Mvc.ControllerBase.BadRequest(System.Object?)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "Microsoft.AspNetCore.Mvc.ControllerBase",
               "MethodName": "Ok",
               "MethodId": "Microsoft.AspNetCore.Mvc.ControllerBase.Ok(System.Object?)",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
             },
             {
-              "TypeName": "Web.Exposures.IApiScriptManager",
+              "TypeName": "Microsoft.AspNetCore.Mvc.ControllerBase",
+              "MethodName": "StatusCode",
+              "MethodId": "Microsoft.AspNetCore.Mvc.ControllerBase.StatusCode(System.Int32,System.Object?)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "Web.Services.Orchestrations.Api.IApiScriptOrchestrationService",
               "MethodName": "ExecuteApiScriptRequestAsync",
-              "MethodId": "Web.Exposures.IApiScriptManager.ExecuteApiScriptRequestAsync(Web.Models.ApiScriptRequest)",
-              "StandardElementType": "Exposure",
+              "MethodId": "Web.Services.Orchestrations.Api.IApiScriptOrchestrationService.ExecuteApiScriptRequestAsync(Web.Models.ApiScriptRequest)",
+              "StandardElementType": "OrchestrationService",
               "IsDependencyBoundary": false
             },
             {
-              "TypeName": "Web.Exposures.IApiScriptManager",
+              "TypeName": "Web.Services.Orchestrations.Api.IApiScriptOrchestrationService",
+              "MethodName": "LogError",
+              "MethodId": "Web.Services.Orchestrations.Api.IApiScriptOrchestrationService.LogError(System.Exception)",
+              "StandardElementType": "OrchestrationService",
+              "IsDependencyBoundary": false
+            },
+            {
+              "TypeName": "Web.Services.Orchestrations.Api.IApiScriptOrchestrationService",
               "MethodName": "ReadRequestBodyAsync",
-              "MethodId": "Web.Exposures.IApiScriptManager.ReadRequestBodyAsync(System.IO.Stream)",
-              "StandardElementType": "Exposure",
+              "MethodId": "Web.Services.Orchestrations.Api.IApiScriptOrchestrationService.ReadRequestBodyAsync(System.IO.Stream)",
+              "StandardElementType": "OrchestrationService",
               "IsDependencyBoundary": false
             }
           ],
@@ -1038,11 +1349,7 @@
             "Web.Models.Exceptions.ApiScriptOrchestrationServiceException",
             "Web.Models.Exceptions.ApiScriptOrchestrationValidationException"
           ],
-          "ThrowsExceptionTypes": [
-            "Web.Models.Exceptions.ApiScriptOrchestrationDependencyException",
-            "Web.Models.Exceptions.ApiScriptOrchestrationServiceException",
-            "Web.Models.Exceptions.ApiScriptOrchestrationValidationException"
-          ],
+          "ThrowsExceptionTypes": [],
           "HttpMethods": [
             "POST"
           ],
@@ -1056,6 +1363,26 @@
               "HasBody": true,
               "ExposesExceptionDetails": false,
               "LogsException": false
+            },
+            {
+              "StatusCode": 400,
+              "ResultMethod": "BadRequest",
+              "ExceptionType": "Web.Models.Exceptions.ApiScriptOrchestrationValidationException",
+              "IsExceptionPath": true,
+              "IsNullPath": false,
+              "HasBody": true,
+              "ExposesExceptionDetails": false,
+              "LogsException": true
+            },
+            {
+              "StatusCode": 500,
+              "ResultMethod": "StatusCode",
+              "ExceptionType": "System.Exception",
+              "IsExceptionPath": true,
+              "IsNullPath": false,
+              "HasBody": true,
+              "ExposesExceptionDetails": false,
+              "LogsException": true
             }
           ],
           "IsHttpRequestHandler": true,
@@ -1063,7 +1390,7 @@
           "HasFromBodyParameter": false,
           "HasKeyParameter": false,
           "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
+          "HasTryCatch": true
         }
       ]
     },
@@ -1089,7 +1416,7 @@
         {
           "Id": "Web.Controllers.HomeController.Index(System.String,System.String,System.String,System.Boolean,System.Threading.CancellationToken)",
           "Name": "Index",
-          "LineNumber": 37,
+          "LineNumber": 38,
           "Inputs": [
             {
               "Name": "path",
@@ -1193,24 +1520,24 @@
               "IsDependencyBoundary": true
             },
             {
-              "TypeName": "Web.Exposures.IHomeSessionManager",
+              "TypeName": "Web.Services.Processings.IHomeSessionProcessingService",
               "MethodName": "AbortRequest",
-              "MethodId": "Web.Exposures.IHomeSessionManager.AbortRequest(Microsoft.AspNetCore.Http.HttpContext)",
-              "StandardElementType": "Exposure",
+              "MethodId": "Web.Services.Processings.IHomeSessionProcessingService.AbortRequest(Microsoft.AspNetCore.Http.HttpContext)",
+              "StandardElementType": "ProcessingService",
               "IsDependencyBoundary": false
             },
             {
-              "TypeName": "Web.Exposures.IHomeSessionManager",
+              "TypeName": "Web.Services.Processings.IHomeSessionProcessingService",
               "MethodName": "IsLocalUrl",
-              "MethodId": "Web.Exposures.IHomeSessionManager.IsLocalUrl(Microsoft.AspNetCore.Mvc.IUrlHelper,System.String)",
-              "StandardElementType": "Exposure",
+              "MethodId": "Web.Services.Processings.IHomeSessionProcessingService.IsLocalUrl(Microsoft.AspNetCore.Mvc.IUrlHelper,System.String)",
+              "StandardElementType": "ProcessingService",
               "IsDependencyBoundary": false
             },
             {
-              "TypeName": "Web.Exposures.IHomeSessionManager",
+              "TypeName": "Web.Services.Processings.IHomeSessionProcessingService",
               "MethodName": "SetSessionValue",
-              "MethodId": "Web.Exposures.IHomeSessionManager.SetSessionValue(Microsoft.AspNetCore.Http.HttpContext,System.String,System.String)",
-              "StandardElementType": "Exposure",
+              "MethodId": "Web.Services.Processings.IHomeSessionProcessingService.SetSessionValue(Microsoft.AspNetCore.Http.HttpContext,System.String,System.String)",
+              "StandardElementType": "ProcessingService",
               "IsDependencyBoundary": false
             },
             {
@@ -1251,8 +1578,7 @@
           ],
           "IncomingExceptionTypes": [
             "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
-            "Web.Models.Exceptions.HomeSessionProcessingServiceException",
-            "Web.Models.Exceptions.HomeSessionProcessingValidationException"
+            "Web.Models.Exceptions.HomeSessionProcessingServiceException"
           ],
           "ThrowsExceptionTypes": [],
           "HttpMethods": [
@@ -1407,17 +1733,28 @@
     {
       "Name": "Web.Dependencies.HomeSessionDependency",
       "StandardElementType": "Dependency",
-      "LineNumber": 12,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
-      "Interfaces": [],
+      "Interfaces": [
+        {
+          "Id": "Microsoft.AspNetCore.Http.Abstractions:Microsoft.AspNetCore.Http.IHttpContextAccessor",
+          "FullName": "Microsoft.AspNetCore.Http.IHttpContextAccessor",
+          "Name": "IHttpContextAccessor",
+          "Namespace": "Microsoft.AspNetCore.Http",
+          "AssemblyName": "Microsoft.AspNetCore.Http.Abstractions",
+          "Kind": "Interface",
+          "IsInCurrentProject": false,
+          "StandardElementType": "Dependency"
+        }
+      ],
       "Properties": [],
       "Methods": [
         {
           "Id": "Web.Dependencies.HomeSessionDependency.AbortRequest(Microsoft.AspNetCore.Http.HttpContext)",
           "Name": "AbortRequest",
-          "LineNumber": 62,
+          "LineNumber": 78,
           "Inputs": [
             {
               "Name": "context",
@@ -1450,7 +1787,7 @@
         {
           "Id": "Web.Dependencies.HomeSessionDependency.ContainsSessionKey(Microsoft.AspNetCore.Http.HttpContext,System.String)",
           "Name": "ContainsSessionKey",
-          "LineNumber": 45,
+          "LineNumber": 61,
           "Inputs": [
             {
               "Name": "context",
@@ -1492,56 +1829,9 @@
           "HasTryCatch": false
         },
         {
-          "Id": "Web.Dependencies.HomeSessionDependency.CreateHomeSessionContext(Microsoft.AspNetCore.Http.HttpContext)",
-          "Name": "CreateHomeSessionContext",
-          "LineNumber": 15,
-          "Inputs": [
-            {
-              "Name": "context",
-              "Type": "Microsoft.AspNetCore.Http.HttpContext"
-            }
-          ],
-          "ReturnType": "Web.Models.HomeSessionContext",
-          "Implements": [],
-          "Calls": [
-            {
-              "TypeName": "Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions",
-              "MethodName": "GetService",
-              "MethodId": "Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetService(System.IServiceProvider)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "Microsoft.Extensions.Primitives.StringValues",
-              "MethodName": "ToString",
-              "MethodId": "Microsoft.Extensions.Primitives.StringValues.ToString()",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "Web.Dependencies.HomeSessionDependency",
-              "MethodName": "IsSessionAvailable",
-              "MethodId": "Web.Dependencies.HomeSessionDependency.IsSessionAvailable(Microsoft.AspNetCore.Http.HttpContext)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": false
-            }
-          ],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
           "Id": "Web.Dependencies.HomeSessionDependency.IsLocalUrl(Microsoft.AspNetCore.Mvc.IUrlHelper,System.String)",
           "Name": "IsLocalUrl",
-          "LineNumber": 65,
+          "LineNumber": 81,
           "Inputs": [
             {
               "Name": "urlHelper",
@@ -1578,7 +1868,7 @@
         {
           "Id": "Web.Dependencies.HomeSessionDependency.IsSessionAvailable(Microsoft.AspNetCore.Http.HttpContext)",
           "Name": "IsSessionAvailable",
-          "LineNumber": 33,
+          "LineNumber": 49,
           "Inputs": [
             {
               "Name": "context",
@@ -1603,7 +1893,7 @@
         {
           "Id": "Web.Dependencies.HomeSessionDependency.RemoveSessionValue(Microsoft.AspNetCore.Http.HttpContext,System.String)",
           "Name": "RemoveSessionValue",
-          "LineNumber": 59,
+          "LineNumber": 75,
           "Inputs": [
             {
               "Name": "context",
@@ -1645,9 +1935,150 @@
           "HasTryCatch": false
         },
         {
+          "Id": "Web.Dependencies.HomeSessionDependency.SelectRequestHost(Microsoft.AspNetCore.Http.HttpContext)",
+          "Name": "SelectRequestHost",
+          "LineNumber": 21,
+          "Inputs": [
+            {
+              "Name": "context",
+              "Type": "Microsoft.AspNetCore.Http.HttpContext"
+            }
+          ],
+          "ReturnType": "System.String",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "Web.Dependencies.HomeSessionDependency.SelectRequestPort(Microsoft.AspNetCore.Http.HttpContext)",
+          "Name": "SelectRequestPort",
+          "LineNumber": 24,
+          "Inputs": [
+            {
+              "Name": "context",
+              "Type": "Microsoft.AspNetCore.Http.HttpContext"
+            }
+          ],
+          "ReturnType": "System.Int32?",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "Web.Dependencies.HomeSessionDependency.SelectRequestScheme(Microsoft.AspNetCore.Http.HttpContext)",
+          "Name": "SelectRequestScheme",
+          "LineNumber": 27,
+          "Inputs": [
+            {
+              "Name": "context",
+              "Type": "Microsoft.AspNetCore.Http.HttpContext"
+            }
+          ],
+          "ReturnType": "System.String",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "Web.Dependencies.HomeSessionDependency.SelectRequestToken(Microsoft.AspNetCore.Http.HttpContext)",
+          "Name": "SelectRequestToken",
+          "LineNumber": 41,
+          "Inputs": [
+            {
+              "Name": "context",
+              "Type": "Microsoft.AspNetCore.Http.HttpContext"
+            }
+          ],
+          "ReturnType": "System.String",
+          "Implements": [],
+          "Calls": [
+            {
+              "TypeName": "Microsoft.Extensions.Primitives.StringValues",
+              "MethodName": "ToString",
+              "MethodId": "Microsoft.Extensions.Primitives.StringValues.ToString()",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "Web.Dependencies.HomeSessionDependency.SelectSessionKeys(Microsoft.AspNetCore.Http.HttpContext)",
+          "Name": "SelectSessionKeys",
+          "LineNumber": 44,
+          "Inputs": [
+            {
+              "Name": "context",
+              "Type": "Microsoft.AspNetCore.Http.HttpContext"
+            }
+          ],
+          "ReturnType": "System.String[]",
+          "Implements": [],
+          "Calls": [
+            {
+              "TypeName": "Web.Dependencies.HomeSessionDependency",
+              "MethodName": "IsSessionAvailable",
+              "MethodId": "Web.Dependencies.HomeSessionDependency.IsSessionAvailable(Microsoft.AspNetCore.Http.HttpContext)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": false
+            }
+          ],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
           "Id": "Web.Dependencies.HomeSessionDependency.SelectSessionValue(Microsoft.AspNetCore.Http.HttpContext,System.String)",
           "Name": "SelectSessionValue",
-          "LineNumber": 48,
+          "LineNumber": 64,
           "Inputs": [
             {
               "Name": "context",
@@ -1682,9 +2113,42 @@
           "HasTryCatch": false
         },
         {
+          "Id": "Web.Dependencies.HomeSessionDependency.SelectSsoUserId(Microsoft.AspNetCore.Http.HttpContext)",
+          "Name": "SelectSsoUserId",
+          "LineNumber": 30,
+          "Inputs": [
+            {
+              "Name": "context",
+              "Type": "Microsoft.AspNetCore.Http.HttpContext"
+            }
+          ],
+          "ReturnType": "System.String",
+          "Implements": [],
+          "Calls": [
+            {
+              "TypeName": "Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions",
+              "MethodName": "GetService",
+              "MethodId": "Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetService(System.IServiceProvider)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
           "Id": "Web.Dependencies.HomeSessionDependency.SetSessionValue(Microsoft.AspNetCore.Http.HttpContext,System.String,System.String)",
           "Name": "SetSessionValue",
-          "LineNumber": 51,
+          "LineNumber": 67,
           "Inputs": [
             {
               "Name": "context",
@@ -1732,682 +2196,9 @@
       ]
     },
     {
-      "Name": "Web.Dependencies.Middleware.WebExceptionMiddleware",
-      "StandardElementType": "HttpExposure",
-      "LineNumber": 11,
-      "IsPublic": false,
-      "Kind": "Class",
-      "BaseType": null,
-      "Interfaces": [
-        {
-          "Id": "Microsoft.AspNetCore.Http.Abstractions:Microsoft.AspNetCore.Http.IMiddleware",
-          "FullName": "Microsoft.AspNetCore.Http.IMiddleware",
-          "Name": "IMiddleware",
-          "Namespace": "Microsoft.AspNetCore.Http",
-          "AssemblyName": "Microsoft.AspNetCore.Http.Abstractions",
-          "Kind": "Interface",
-          "IsInCurrentProject": false,
-          "StandardElementType": "Dependency"
-        }
-      ],
-      "Properties": [],
-      "Methods": [
-        {
-          "Id": "Web.Dependencies.Middleware.WebExceptionMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext,Microsoft.AspNetCore.Http.RequestDelegate)",
-          "Name": "InvokeAsync",
-          "LineNumber": 14,
-          "Inputs": [
-            {
-              "Name": "context",
-              "Type": "Microsoft.AspNetCore.Http.HttpContext"
-            },
-            {
-              "Name": "next",
-              "Type": "Microsoft.AspNetCore.Http.RequestDelegate"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.Task",
-          "Implements": [
-            "Microsoft.AspNetCore.Http.IMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext,Microsoft.AspNetCore.Http.RequestDelegate)"
-          ],
-          "Calls": [
-            {
-              "TypeName": "Microsoft.AspNetCore.Http.RequestDelegate",
-              "MethodName": "Invoke",
-              "MethodId": "Microsoft.AspNetCore.Http.RequestDelegate.Invoke(Microsoft.AspNetCore.Http.HttpContext)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
-              "MethodName": "LogError",
-              "MethodId": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            }
-          ],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": true,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": true
-        }
-      ]
-    },
-    {
-      "Name": "Web.Exposures.ApiCacheManager",
-      "StandardElementType": "Exposure",
-      "LineNumber": 9,
-      "IsPublic": false,
-      "Kind": "Class",
-      "BaseType": null,
-      "Interfaces": [
-        {
-          "Id": "Web:Web.Exposures.IApiCacheManager",
-          "FullName": "Web.Exposures.IApiCacheManager",
-          "Name": "IApiCacheManager",
-          "Namespace": "Web.Exposures",
-          "AssemblyName": "Web",
-          "Kind": "Interface",
-          "IsInCurrentProject": true,
-          "StandardElementType": "Exposure"
-        }
-      ],
-      "Properties": [],
-      "Methods": [
-        {
-          "Id": "Web.Exposures.ApiCacheManager.RefreshCaches()",
-          "Name": "RefreshCaches",
-          "LineNumber": 13,
-          "Inputs": [],
-          "ReturnType": "System.Void",
-          "Implements": [
-            "Web.Exposures.IApiCacheManager.RefreshCaches()"
-          ],
-          "Calls": [
-            {
-              "TypeName": "Web.Services.Aggregations.IApiCacheAggregationService",
-              "MethodName": "RefreshCaches",
-              "MethodId": "Web.Services.Aggregations.IApiCacheAggregationService.RefreshCaches()",
-              "StandardElementType": "AggregationService",
-              "IsDependencyBoundary": false
-            }
-          ],
-          "PossibleExceptionTypes": [
-            "Web.Models.Exceptions.ApiCacheDependencyException",
-            "Web.Models.Exceptions.ApiCacheServiceException",
-            "Web.Models.Exceptions.ApiCacheValidationException"
-          ],
-          "IncomingExceptionTypes": [
-            "Web.Models.Exceptions.ApiCacheDependencyException",
-            "Web.Models.Exceptions.ApiCacheServiceException",
-            "Web.Models.Exceptions.ApiCacheValidationException"
-          ],
-          "ThrowsExceptionTypes": [
-            "Web.Models.Exceptions.ApiCacheDependencyException",
-            "Web.Models.Exceptions.ApiCacheServiceException",
-            "Web.Models.Exceptions.ApiCacheValidationException"
-          ],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        }
-      ]
-    },
-    {
-      "Name": "Web.Exposures.ApiContextManager",
-      "StandardElementType": "Exposure",
-      "LineNumber": 11,
-      "IsPublic": false,
-      "Kind": "Class",
-      "BaseType": null,
-      "Interfaces": [
-        {
-          "Id": "Web:Web.Exposures.IApiContextManager",
-          "FullName": "Web.Exposures.IApiContextManager",
-          "Name": "IApiContextManager",
-          "Namespace": "Web.Exposures",
-          "AssemblyName": "Web",
-          "Kind": "Interface",
-          "IsInCurrentProject": true,
-          "StandardElementType": "Exposure"
-        }
-      ],
-      "Properties": [],
-      "Methods": [
-        {
-          "Id": "Web.Exposures.ApiContextManager.GetApiInfos()",
-          "Name": "GetApiInfos",
-          "LineNumber": 15,
-          "Inputs": [],
-          "ReturnType": "cCoder.Data.Models.ApiInfo[]",
-          "Implements": [
-            "Web.Exposures.IApiContextManager.GetApiInfos()"
-          ],
-          "Calls": [
-            {
-              "TypeName": "Web.Services.Foundations.Api.IApiContextService",
-              "MethodName": "GetApiInfos",
-              "MethodId": "Web.Services.Foundations.Api.IApiContextService.GetApiInfos()",
-              "StandardElementType": "FoundationService",
-              "IsDependencyBoundary": false
-            }
-          ],
-          "PossibleExceptionTypes": [
-            "Web.Models.Exceptions.ApiScriptDependencyException",
-            "Web.Models.Exceptions.ApiScriptValidationException"
-          ],
-          "IncomingExceptionTypes": [
-            "Web.Models.Exceptions.ApiScriptDependencyException"
-          ],
-          "ThrowsExceptionTypes": [
-            "Web.Models.Exceptions.ApiScriptDependencyException"
-          ],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "Web.Exposures.ApiContextManager.ReadRequestBodyAsync(System.IO.Stream)",
-          "Name": "ReadRequestBodyAsync",
-          "LineNumber": 18,
-          "Inputs": [
-            {
-              "Name": "requestBody",
-              "Type": "System.IO.Stream"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask\u003CSystem.String\u003E",
-          "Implements": [
-            "Web.Exposures.IApiContextManager.ReadRequestBodyAsync(System.IO.Stream)"
-          ],
-          "Calls": [
-            {
-              "TypeName": "Web.Services.Foundations.Api.IApiContextService",
-              "MethodName": "ReadRequestBodyAsync",
-              "MethodId": "Web.Services.Foundations.Api.IApiContextService.ReadRequestBodyAsync(System.IO.Stream)",
-              "StandardElementType": "FoundationService",
-              "IsDependencyBoundary": false
-            }
-          ],
-          "PossibleExceptionTypes": [
-            "Web.Models.Exceptions.ApiScriptDependencyException",
-            "Web.Models.Exceptions.ApiScriptValidationException"
-          ],
-          "IncomingExceptionTypes": [
-            "Web.Models.Exceptions.ApiScriptDependencyException"
-          ],
-          "ThrowsExceptionTypes": [
-            "Web.Models.Exceptions.ApiScriptDependencyException"
-          ],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        }
-      ]
-    },
-    {
-      "Name": "Web.Exposures.ApiScriptManager",
-      "StandardElementType": "Exposure",
-      "LineNumber": 11,
-      "IsPublic": false,
-      "Kind": "Class",
-      "BaseType": null,
-      "Interfaces": [
-        {
-          "Id": "Web:Web.Exposures.IApiScriptManager",
-          "FullName": "Web.Exposures.IApiScriptManager",
-          "Name": "IApiScriptManager",
-          "Namespace": "Web.Exposures",
-          "AssemblyName": "Web",
-          "Kind": "Interface",
-          "IsInCurrentProject": true,
-          "StandardElementType": "Exposure"
-        }
-      ],
-      "Properties": [],
-      "Methods": [
-        {
-          "Id": "Web.Exposures.ApiScriptManager.ExecuteApiScriptRequestAsync(Web.Models.ApiScriptRequest)",
-          "Name": "ExecuteApiScriptRequestAsync",
-          "LineNumber": 15,
-          "Inputs": [
-            {
-              "Name": "apiScriptRequest",
-              "Type": "Web.Models.ApiScriptRequest"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask\u003CSystem.String\u003E",
-          "Implements": [
-            "Web.Exposures.IApiScriptManager.ExecuteApiScriptRequestAsync(Web.Models.ApiScriptRequest)"
-          ],
-          "Calls": [
-            {
-              "TypeName": "Web.Services.Orchestrations.Api.IApiScriptOrchestrationService",
-              "MethodName": "ExecuteApiScriptRequestAsync",
-              "MethodId": "Web.Services.Orchestrations.Api.IApiScriptOrchestrationService.ExecuteApiScriptRequestAsync(Web.Models.ApiScriptRequest)",
-              "StandardElementType": "OrchestrationService",
-              "IsDependencyBoundary": false
-            }
-          ],
-          "PossibleExceptionTypes": [
-            "System.ArgumentException",
-            "Web.Models.Exceptions.ApiScriptDependencyException",
-            "Web.Models.Exceptions.ApiScriptOrchestrationDependencyException",
-            "Web.Models.Exceptions.ApiScriptOrchestrationServiceException",
-            "Web.Models.Exceptions.ApiScriptOrchestrationValidationException",
-            "Web.Models.Exceptions.ApiScriptValidationException"
-          ],
-          "IncomingExceptionTypes": [
-            "Web.Models.Exceptions.ApiScriptOrchestrationDependencyException",
-            "Web.Models.Exceptions.ApiScriptOrchestrationServiceException",
-            "Web.Models.Exceptions.ApiScriptOrchestrationValidationException"
-          ],
-          "ThrowsExceptionTypes": [
-            "Web.Models.Exceptions.ApiScriptOrchestrationDependencyException",
-            "Web.Models.Exceptions.ApiScriptOrchestrationServiceException",
-            "Web.Models.Exceptions.ApiScriptOrchestrationValidationException"
-          ],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "Web.Exposures.ApiScriptManager.ReadRequestBodyAsync(System.IO.Stream)",
-          "Name": "ReadRequestBodyAsync",
-          "LineNumber": 20,
-          "Inputs": [
-            {
-              "Name": "requestBody",
-              "Type": "System.IO.Stream"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask\u003CSystem.String\u003E",
-          "Implements": [
-            "Web.Exposures.IApiScriptManager.ReadRequestBodyAsync(System.IO.Stream)"
-          ],
-          "Calls": [
-            {
-              "TypeName": "Web.Services.Orchestrations.Api.IApiScriptOrchestrationService",
-              "MethodName": "ReadRequestBodyAsync",
-              "MethodId": "Web.Services.Orchestrations.Api.IApiScriptOrchestrationService.ReadRequestBodyAsync(System.IO.Stream)",
-              "StandardElementType": "OrchestrationService",
-              "IsDependencyBoundary": false
-            }
-          ],
-          "PossibleExceptionTypes": [
-            "Web.Models.Exceptions.ApiScriptDependencyException",
-            "Web.Models.Exceptions.ApiScriptOrchestrationDependencyException",
-            "Web.Models.Exceptions.ApiScriptOrchestrationServiceException",
-            "Web.Models.Exceptions.ApiScriptOrchestrationValidationException",
-            "Web.Models.Exceptions.ApiScriptValidationException"
-          ],
-          "IncomingExceptionTypes": [
-            "Web.Models.Exceptions.ApiScriptOrchestrationDependencyException",
-            "Web.Models.Exceptions.ApiScriptOrchestrationServiceException"
-          ],
-          "ThrowsExceptionTypes": [
-            "Web.Models.Exceptions.ApiScriptOrchestrationDependencyException",
-            "Web.Models.Exceptions.ApiScriptOrchestrationServiceException"
-          ],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        }
-      ]
-    },
-    {
-      "Name": "Web.Exposures.HomeSessionManager",
-      "StandardElementType": "Exposure",
-      "LineNumber": 11,
-      "IsPublic": false,
-      "Kind": "Class",
-      "BaseType": null,
-      "Interfaces": [
-        {
-          "Id": "Web:Web.Exposures.IHomeSessionManager",
-          "FullName": "Web.Exposures.IHomeSessionManager",
-          "Name": "IHomeSessionManager",
-          "Namespace": "Web.Exposures",
-          "AssemblyName": "Web",
-          "Kind": "Interface",
-          "IsInCurrentProject": true,
-          "StandardElementType": "Exposure"
-        }
-      ],
-      "Properties": [],
-      "Methods": [
-        {
-          "Id": "Web.Exposures.HomeSessionManager.AbortRequest(Microsoft.AspNetCore.Http.HttpContext)",
-          "Name": "AbortRequest",
-          "LineNumber": 41,
-          "Inputs": [
-            {
-              "Name": "context",
-              "Type": "Microsoft.AspNetCore.Http.HttpContext"
-            }
-          ],
-          "ReturnType": "System.Void",
-          "Implements": [
-            "Web.Exposures.IHomeSessionManager.AbortRequest(Microsoft.AspNetCore.Http.HttpContext)"
-          ],
-          "Calls": [
-            {
-              "TypeName": "Web.Services.Processings.IHomeSessionProcessingService",
-              "MethodName": "AbortRequest",
-              "MethodId": "Web.Services.Processings.IHomeSessionProcessingService.AbortRequest(Microsoft.AspNetCore.Http.HttpContext)",
-              "StandardElementType": "ProcessingService",
-              "IsDependencyBoundary": false
-            }
-          ],
-          "PossibleExceptionTypes": [
-            "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
-            "Web.Models.Exceptions.HomeSessionProcessingServiceException",
-            "Web.Models.Exceptions.HomeSessionProcessingValidationException"
-          ],
-          "IncomingExceptionTypes": [
-            "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
-            "Web.Models.Exceptions.HomeSessionProcessingServiceException"
-          ],
-          "ThrowsExceptionTypes": [
-            "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
-            "Web.Models.Exceptions.HomeSessionProcessingServiceException"
-          ],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "Web.Exposures.HomeSessionManager.CanUseSession(Microsoft.AspNetCore.Http.HttpContext)",
-          "Name": "CanUseSession",
-          "LineNumber": 15,
-          "Inputs": [
-            {
-              "Name": "context",
-              "Type": "Microsoft.AspNetCore.Http.HttpContext"
-            }
-          ],
-          "ReturnType": "System.Boolean",
-          "Implements": [
-            "Web.Exposures.IHomeSessionManager.CanUseSession(Microsoft.AspNetCore.Http.HttpContext)"
-          ],
-          "Calls": [
-            {
-              "TypeName": "Web.Services.Processings.IHomeSessionProcessingService",
-              "MethodName": "CanUseSession",
-              "MethodId": "Web.Services.Processings.IHomeSessionProcessingService.CanUseSession(Microsoft.AspNetCore.Http.HttpContext)",
-              "StandardElementType": "ProcessingService",
-              "IsDependencyBoundary": false
-            }
-          ],
-          "PossibleExceptionTypes": [
-            "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
-            "Web.Models.Exceptions.HomeSessionProcessingServiceException",
-            "Web.Models.Exceptions.HomeSessionProcessingValidationException"
-          ],
-          "IncomingExceptionTypes": [
-            "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
-            "Web.Models.Exceptions.HomeSessionProcessingServiceException"
-          ],
-          "ThrowsExceptionTypes": [
-            "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
-            "Web.Models.Exceptions.HomeSessionProcessingServiceException"
-          ],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "Web.Exposures.HomeSessionManager.CreateExpandoObject(Microsoft.AspNetCore.Http.HttpContext)",
-          "Name": "CreateExpandoObject",
-          "LineNumber": 20,
-          "Inputs": [
-            {
-              "Name": "context",
-              "Type": "Microsoft.AspNetCore.Http.HttpContext"
-            }
-          ],
-          "ReturnType": "System.Dynamic.ExpandoObject",
-          "Implements": [
-            "Web.Exposures.IHomeSessionManager.CreateExpandoObject(Microsoft.AspNetCore.Http.HttpContext)"
-          ],
-          "Calls": [
-            {
-              "TypeName": "Web.Services.Processings.IHomeSessionProcessingService",
-              "MethodName": "CreateExpandoObject",
-              "MethodId": "Web.Services.Processings.IHomeSessionProcessingService.CreateExpandoObject(Microsoft.AspNetCore.Http.HttpContext)",
-              "StandardElementType": "ProcessingService",
-              "IsDependencyBoundary": false
-            }
-          ],
-          "PossibleExceptionTypes": [
-            "System.ArgumentException",
-            "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
-            "Web.Models.Exceptions.HomeSessionProcessingServiceException",
-            "Web.Models.Exceptions.HomeSessionProcessingValidationException"
-          ],
-          "IncomingExceptionTypes": [
-            "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
-            "Web.Models.Exceptions.HomeSessionProcessingServiceException"
-          ],
-          "ThrowsExceptionTypes": [
-            "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
-            "Web.Models.Exceptions.HomeSessionProcessingServiceException"
-          ],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "Web.Exposures.HomeSessionManager.GetSessionValue(Microsoft.AspNetCore.Http.HttpContext,System.String)",
-          "Name": "GetSessionValue",
-          "LineNumber": 25,
-          "Inputs": [
-            {
-              "Name": "context",
-              "Type": "Microsoft.AspNetCore.Http.HttpContext"
-            },
-            {
-              "Name": "key",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.String",
-          "Implements": [
-            "Web.Exposures.IHomeSessionManager.GetSessionValue(Microsoft.AspNetCore.Http.HttpContext,System.String)"
-          ],
-          "Calls": [
-            {
-              "TypeName": "Web.Services.Processings.IHomeSessionProcessingService",
-              "MethodName": "GetSessionValue",
-              "MethodId": "Web.Services.Processings.IHomeSessionProcessingService.GetSessionValue(Microsoft.AspNetCore.Http.HttpContext,System.String)",
-              "StandardElementType": "ProcessingService",
-              "IsDependencyBoundary": false
-            }
-          ],
-          "PossibleExceptionTypes": [
-            "System.ArgumentException",
-            "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
-            "Web.Models.Exceptions.HomeSessionProcessingServiceException",
-            "Web.Models.Exceptions.HomeSessionProcessingValidationException"
-          ],
-          "IncomingExceptionTypes": [
-            "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
-            "Web.Models.Exceptions.HomeSessionProcessingServiceException",
-            "Web.Models.Exceptions.HomeSessionProcessingValidationException"
-          ],
-          "ThrowsExceptionTypes": [
-            "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
-            "Web.Models.Exceptions.HomeSessionProcessingServiceException",
-            "Web.Models.Exceptions.HomeSessionProcessingValidationException"
-          ],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "Web.Exposures.HomeSessionManager.IsLocalUrl(Microsoft.AspNetCore.Mvc.IUrlHelper,System.String)",
-          "Name": "IsLocalUrl",
-          "LineNumber": 44,
-          "Inputs": [
-            {
-              "Name": "urlHelper",
-              "Type": "Microsoft.AspNetCore.Mvc.IUrlHelper"
-            },
-            {
-              "Name": "url",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.Boolean",
-          "Implements": [
-            "Web.Exposures.IHomeSessionManager.IsLocalUrl(Microsoft.AspNetCore.Mvc.IUrlHelper,System.String)"
-          ],
-          "Calls": [
-            {
-              "TypeName": "Web.Services.Processings.IHomeSessionProcessingService",
-              "MethodName": "IsLocalUrl",
-              "MethodId": "Web.Services.Processings.IHomeSessionProcessingService.IsLocalUrl(Microsoft.AspNetCore.Mvc.IUrlHelper,System.String)",
-              "StandardElementType": "ProcessingService",
-              "IsDependencyBoundary": false
-            }
-          ],
-          "PossibleExceptionTypes": [
-            "System.ArgumentNullException",
-            "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
-            "Web.Models.Exceptions.HomeSessionProcessingServiceException",
-            "Web.Models.Exceptions.HomeSessionProcessingValidationException"
-          ],
-          "IncomingExceptionTypes": [
-            "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
-            "Web.Models.Exceptions.HomeSessionProcessingServiceException"
-          ],
-          "ThrowsExceptionTypes": [
-            "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
-            "Web.Models.Exceptions.HomeSessionProcessingServiceException"
-          ],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "Web.Exposures.HomeSessionManager.SetSessionValue(Microsoft.AspNetCore.Http.HttpContext,System.String,System.String)",
-          "Name": "SetSessionValue",
-          "LineNumber": 32,
-          "Inputs": [
-            {
-              "Name": "context",
-              "Type": "Microsoft.AspNetCore.Http.HttpContext"
-            },
-            {
-              "Name": "key",
-              "Type": "System.String"
-            },
-            {
-              "Name": "value",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.Void",
-          "Implements": [
-            "Web.Exposures.IHomeSessionManager.SetSessionValue(Microsoft.AspNetCore.Http.HttpContext,System.String,System.String)"
-          ],
-          "Calls": [
-            {
-              "TypeName": "Web.Services.Processings.IHomeSessionProcessingService",
-              "MethodName": "SetSessionValue",
-              "MethodId": "Web.Services.Processings.IHomeSessionProcessingService.SetSessionValue(Microsoft.AspNetCore.Http.HttpContext,System.String,System.String)",
-              "StandardElementType": "ProcessingService",
-              "IsDependencyBoundary": false
-            }
-          ],
-          "PossibleExceptionTypes": [
-            "System.ArgumentException",
-            "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
-            "Web.Models.Exceptions.HomeSessionProcessingServiceException",
-            "Web.Models.Exceptions.HomeSessionProcessingValidationException"
-          ],
-          "IncomingExceptionTypes": [
-            "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
-            "Web.Models.Exceptions.HomeSessionProcessingServiceException",
-            "Web.Models.Exceptions.HomeSessionProcessingValidationException"
-          ],
-          "ThrowsExceptionTypes": [
-            "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
-            "Web.Models.Exceptions.HomeSessionProcessingServiceException",
-            "Web.Models.Exceptions.HomeSessionProcessingValidationException"
-          ],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        }
-      ]
-    },
-    {
       "Name": "Web.IServiceCollectionExtensions",
       "StandardElementType": "App",
-      "LineNumber": 21,
+      "LineNumber": 19,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -2417,7 +2208,7 @@
         {
           "Id": "Web.IServiceCollectionExtensions.AddWeb(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration,System.Action\u003CWeb.Models.AppConfiguration\u003E)",
           "Name": "AddWeb",
-          "LineNumber": 23,
+          "LineNumber": 21,
           "Inputs": [
             {
               "Name": "services",
@@ -2806,7 +2597,7 @@
     {
       "Name": "Web.Program",
       "StandardElementType": "App",
-      "LineNumber": 21,
+      "LineNumber": 20,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -2816,7 +2607,7 @@
         {
           "Id": "Web.Program.Main(System.String[])",
           "Name": "Main",
-          "LineNumber": 23,
+          "LineNumber": 22,
           "Inputs": [
             {
               "Name": "args",
@@ -2830,13 +2621,6 @@
               "TypeName": "Microsoft.AspNetCore.Builder.HealthCheckEndpointRouteBuilderExtensions",
               "MethodName": "MapHealthChecks",
               "MethodId": "Microsoft.AspNetCore.Builder.HealthCheckEndpointRouteBuilderExtensions.MapHealthChecks(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder,System.String,Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "Microsoft.AspNetCore.Builder.UseMiddlewareExtensions",
-              "MethodName": "UseMiddleware",
-              "MethodId": "Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.UseMiddleware(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.Object?[])",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
             },
@@ -2907,7 +2691,7 @@
     {
       "Name": "Web.Services.Aggregations.ApiCacheAggregationService",
       "StandardElementType": "AggregationService",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -2926,9 +2710,58 @@
       "Properties": [],
       "Methods": [
         {
+          "Id": "Web.Services.Aggregations.ApiCacheAggregationService.GetMetadata(System.String)",
+          "Name": "GetMetadata",
+          "LineNumber": 25,
+          "Inputs": [
+            {
+              "Name": "culture",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.String",
+          "Implements": [
+            "Web.Services.Aggregations.IApiCacheAggregationService.GetMetadata(System.String)"
+          ],
+          "Calls": [
+            {
+              "TypeName": "Web.Brokers.Api.IMetadataCacheBroker",
+              "MethodName": "GetAll",
+              "MethodId": "Web.Brokers.Api.IMetadataCacheBroker.GetAll(System.String)",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
+            }
+          ],
+          "PossibleExceptionTypes": [
+            "System.ArgumentNullException",
+            "Web.Models.Exceptions.ApiCacheDependencyException",
+            "Web.Models.Exceptions.ApiCacheServiceException",
+            "Web.Models.Exceptions.ApiCacheValidationException"
+          ],
+          "IncomingExceptionTypes": [
+            "System.ArgumentNullException",
+            "Web.Models.Exceptions.ApiCacheDependencyException",
+            "Web.Models.Exceptions.ApiCacheServiceException",
+            "Web.Models.Exceptions.ApiCacheValidationException"
+          ],
+          "ThrowsExceptionTypes": [
+            "Web.Models.Exceptions.ApiCacheDependencyException",
+            "Web.Models.Exceptions.ApiCacheServiceException",
+            "Web.Models.Exceptions.ApiCacheValidationException"
+          ],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
           "Id": "Web.Services.Aggregations.ApiCacheAggregationService.RefreshCaches()",
           "Name": "RefreshCaches",
-          "LineNumber": 14,
+          "LineNumber": 16,
           "Inputs": [],
           "ReturnType": "System.Void",
           "Implements": [
@@ -3721,7 +3554,7 @@
         {
           "Id": "Web.Services.Orchestrations.Api.ApiScriptOrchestrationService.ExecuteApiScriptRequestAsync(Web.Models.ApiScriptRequest)",
           "Name": "ExecuteApiScriptRequestAsync",
-          "LineNumber": 16,
+          "LineNumber": 17,
           "Inputs": [
             {
               "Name": "apiScriptRequest",
@@ -3778,7 +3611,7 @@
         {
           "Id": "Web.Services.Orchestrations.Api.ApiScriptOrchestrationService.ReadRequestBodyAsync(System.IO.Stream)",
           "Name": "ReadRequestBodyAsync",
-          "LineNumber": 31,
+          "LineNumber": 32,
           "Inputs": [
             {
               "Name": "requestBody",
@@ -3848,7 +3681,7 @@
         {
           "Id": "Web.Services.Processings.HomeSessionProcessingService.AbortRequest(Microsoft.AspNetCore.Http.HttpContext)",
           "Name": "AbortRequest",
-          "LineNumber": 127,
+          "LineNumber": 129,
           "Inputs": [
             {
               "Name": "context",
@@ -3869,11 +3702,13 @@
             }
           ],
           "PossibleExceptionTypes": [
+            "System.ArgumentNullException",
             "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
             "Web.Models.Exceptions.HomeSessionProcessingServiceException",
             "Web.Models.Exceptions.HomeSessionProcessingValidationException"
           ],
           "IncomingExceptionTypes": [
+            "System.ArgumentNullException",
             "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
             "Web.Models.Exceptions.HomeSessionProcessingServiceException"
           ],
@@ -3914,11 +3749,13 @@
             }
           ],
           "PossibleExceptionTypes": [
+            "System.ArgumentNullException",
             "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
             "Web.Models.Exceptions.HomeSessionProcessingServiceException",
             "Web.Models.Exceptions.HomeSessionProcessingValidationException"
           ],
           "IncomingExceptionTypes": [
+            "System.ArgumentNullException",
             "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
             "Web.Models.Exceptions.HomeSessionProcessingServiceException"
           ],
@@ -4002,11 +3839,13 @@
           ],
           "PossibleExceptionTypes": [
             "System.ArgumentException",
+            "System.ArgumentNullException",
             "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
             "Web.Models.Exceptions.HomeSessionProcessingServiceException",
             "Web.Models.Exceptions.HomeSessionProcessingValidationException"
           ],
           "IncomingExceptionTypes": [
+            "System.ArgumentNullException",
             "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
             "Web.Models.Exceptions.HomeSessionProcessingServiceException",
             "Web.Models.Exceptions.HomeSessionProcessingValidationException"
@@ -4045,12 +3884,14 @@
           "Calls": [],
           "PossibleExceptionTypes": [
             "System.ArgumentException",
+            "System.ArgumentNullException",
             "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
             "Web.Models.Exceptions.HomeSessionProcessingServiceException",
             "Web.Models.Exceptions.HomeSessionProcessingValidationException"
           ],
           "IncomingExceptionTypes": [
             "System.ArgumentException",
+            "System.ArgumentNullException",
             "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
             "Web.Models.Exceptions.HomeSessionProcessingServiceException",
             "Web.Models.Exceptions.HomeSessionProcessingValidationException"
@@ -4072,7 +3913,7 @@
         {
           "Id": "Web.Services.Processings.HomeSessionProcessingService.IsLocalUrl(Microsoft.AspNetCore.Mvc.IUrlHelper,System.String)",
           "Name": "IsLocalUrl",
-          "LineNumber": 135,
+          "LineNumber": 137,
           "Inputs": [
             {
               "Name": "urlHelper",
@@ -4103,6 +3944,7 @@
             "Web.Models.Exceptions.HomeSessionProcessingValidationException"
           ],
           "IncomingExceptionTypes": [
+            "System.ArgumentNullException",
             "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
             "Web.Models.Exceptions.HomeSessionProcessingServiceException"
           ],
@@ -4122,7 +3964,7 @@
         {
           "Id": "Web.Services.Processings.HomeSessionProcessingService.SetSessionValue(Microsoft.AspNetCore.Http.HttpContext,System.String,System.String)",
           "Name": "SetSessionValue",
-          "LineNumber": 94,
+          "LineNumber": 96,
           "Inputs": [
             {
               "Name": "context",
@@ -4173,20 +4015,20 @@
           ],
           "PossibleExceptionTypes": [
             "System.ArgumentException",
+            "System.ArgumentNullException",
             "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
             "Web.Models.Exceptions.HomeSessionProcessingServiceException",
             "Web.Models.Exceptions.HomeSessionProcessingValidationException"
           ],
           "IncomingExceptionTypes": [
-            "System.ArgumentException",
+            "System.ArgumentNullException",
             "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
             "Web.Models.Exceptions.HomeSessionProcessingServiceException",
             "Web.Models.Exceptions.HomeSessionProcessingValidationException"
           ],
           "ThrowsExceptionTypes": [
             "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
-            "Web.Models.Exceptions.HomeSessionProcessingServiceException",
-            "Web.Models.Exceptions.HomeSessionProcessingValidationException"
+            "Web.Models.Exceptions.HomeSessionProcessingServiceException"
           ],
           "HttpMethods": [],
           "HttpResponses": [],
@@ -4211,6 +4053,31 @@
       "Interfaces": [],
       "Properties": [],
       "Methods": [
+        {
+          "Id": "Web.Brokers.Api.IApiContextBroker.LogError(System.Exception)",
+          "Name": "LogError",
+          "LineNumber": 14,
+          "Inputs": [
+            {
+              "Name": "exception",
+              "Type": "System.Exception"
+            }
+          ],
+          "ReturnType": "System.Void",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
         {
           "Id": "Web.Brokers.Api.IApiContextBroker.ReadRequestBodyAsync(System.IO.Stream)",
           "Name": "ReadRequestBodyAsync",
@@ -4362,6 +4229,31 @@
       "Interfaces": [],
       "Properties": [],
       "Methods": [
+        {
+          "Id": "Web.Brokers.Api.IMetadataCacheBroker.GetAll(System.String)",
+          "Name": "GetAll",
+          "LineNumber": 10,
+          "Inputs": [
+            {
+              "Name": "culture",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.String",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
         {
           "Id": "Web.Brokers.Api.IMetadataCacheBroker.Rebuild()",
           "Name": "Rebuild",
@@ -4621,8 +4513,8 @@
       ]
     },
     {
-      "Name": "Web.Exposures.IApiCacheManager",
-      "StandardElementType": "Exposure",
+      "Name": "Web.Services.Aggregations.IApiCacheAggregationService",
+      "StandardElementType": "AggregationService",
       "LineNumber": 7,
       "IsPublic": true,
       "Kind": "Interface",
@@ -4631,242 +4523,12 @@
       "Properties": [],
       "Methods": [
         {
-          "Id": "Web.Exposures.IApiCacheManager.RefreshCaches()",
-          "Name": "RefreshCaches",
-          "LineNumber": 9,
-          "Inputs": [],
-          "ReturnType": "System.Void",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        }
-      ]
-    },
-    {
-      "Name": "Web.Exposures.IApiContextManager",
-      "StandardElementType": "Exposure",
-      "LineNumber": 10,
-      "IsPublic": true,
-      "Kind": "Interface",
-      "BaseType": null,
-      "Interfaces": [],
-      "Properties": [],
-      "Methods": [
-        {
-          "Id": "Web.Exposures.IApiContextManager.GetApiInfos()",
-          "Name": "GetApiInfos",
-          "LineNumber": 12,
-          "Inputs": [],
-          "ReturnType": "cCoder.Data.Models.ApiInfo[]",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "Web.Exposures.IApiContextManager.ReadRequestBodyAsync(System.IO.Stream)",
-          "Name": "ReadRequestBodyAsync",
-          "LineNumber": 13,
+          "Id": "Web.Services.Aggregations.IApiCacheAggregationService.GetMetadata(System.String)",
+          "Name": "GetMetadata",
+          "LineNumber": 10,
           "Inputs": [
             {
-              "Name": "requestBody",
-              "Type": "System.IO.Stream"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask\u003CSystem.String\u003E",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        }
-      ]
-    },
-    {
-      "Name": "Web.Exposures.IApiScriptManager",
-      "StandardElementType": "Exposure",
-      "LineNumber": 10,
-      "IsPublic": true,
-      "Kind": "Interface",
-      "BaseType": null,
-      "Interfaces": [],
-      "Properties": [],
-      "Methods": [
-        {
-          "Id": "Web.Exposures.IApiScriptManager.ExecuteApiScriptRequestAsync(Web.Models.ApiScriptRequest)",
-          "Name": "ExecuteApiScriptRequestAsync",
-          "LineNumber": 12,
-          "Inputs": [
-            {
-              "Name": "apiScriptRequest",
-              "Type": "Web.Models.ApiScriptRequest"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask\u003CSystem.String\u003E",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "Web.Exposures.IApiScriptManager.ReadRequestBodyAsync(System.IO.Stream)",
-          "Name": "ReadRequestBodyAsync",
-          "LineNumber": 15,
-          "Inputs": [
-            {
-              "Name": "requestBody",
-              "Type": "System.IO.Stream"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask\u003CSystem.String\u003E",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        }
-      ]
-    },
-    {
-      "Name": "Web.Exposures.IHomeSessionManager",
-      "StandardElementType": "Exposure",
-      "LineNumber": 10,
-      "IsPublic": true,
-      "Kind": "Interface",
-      "BaseType": null,
-      "Interfaces": [],
-      "Properties": [],
-      "Methods": [
-        {
-          "Id": "Web.Exposures.IHomeSessionManager.AbortRequest(Microsoft.AspNetCore.Http.HttpContext)",
-          "Name": "AbortRequest",
-          "LineNumber": 27,
-          "Inputs": [
-            {
-              "Name": "context",
-              "Type": "Microsoft.AspNetCore.Http.HttpContext"
-            }
-          ],
-          "ReturnType": "System.Void",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "Web.Exposures.IHomeSessionManager.CanUseSession(Microsoft.AspNetCore.Http.HttpContext)",
-          "Name": "CanUseSession",
-          "LineNumber": 12,
-          "Inputs": [
-            {
-              "Name": "context",
-              "Type": "Microsoft.AspNetCore.Http.HttpContext"
-            }
-          ],
-          "ReturnType": "System.Boolean",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "Web.Exposures.IHomeSessionManager.CreateExpandoObject(Microsoft.AspNetCore.Http.HttpContext)",
-          "Name": "CreateExpandoObject",
-          "LineNumber": 15,
-          "Inputs": [
-            {
-              "Name": "context",
-              "Type": "Microsoft.AspNetCore.Http.HttpContext"
-            }
-          ],
-          "ReturnType": "System.Dynamic.ExpandoObject",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "Web.Exposures.IHomeSessionManager.GetSessionValue(Microsoft.AspNetCore.Http.HttpContext,System.String)",
-          "Name": "GetSessionValue",
-          "LineNumber": 18,
-          "Inputs": [
-            {
-              "Name": "context",
-              "Type": "Microsoft.AspNetCore.Http.HttpContext"
-            },
-            {
-              "Name": "key",
+              "Name": "culture",
               "Type": "System.String"
             }
           ],
@@ -4886,50 +4548,13 @@
           "HasTryCatch": false
         },
         {
-          "Id": "Web.Exposures.IHomeSessionManager.IsLocalUrl(Microsoft.AspNetCore.Mvc.IUrlHelper,System.String)",
-          "Name": "IsLocalUrl",
-          "LineNumber": 29,
+          "Id": "Web.Services.Aggregations.IApiCacheAggregationService.LogError(System.Exception)",
+          "Name": "LogError",
+          "LineNumber": 11,
           "Inputs": [
             {
-              "Name": "urlHelper",
-              "Type": "Microsoft.AspNetCore.Mvc.IUrlHelper"
-            },
-            {
-              "Name": "url",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.Boolean",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "Web.Exposures.IHomeSessionManager.SetSessionValue(Microsoft.AspNetCore.Http.HttpContext,System.String,System.String)",
-          "Name": "SetSessionValue",
-          "LineNumber": 22,
-          "Inputs": [
-            {
-              "Name": "context",
-              "Type": "Microsoft.AspNetCore.Http.HttpContext"
-            },
-            {
-              "Name": "key",
-              "Type": "System.String"
-            },
-            {
-              "Name": "value",
-              "Type": "System.String"
+              "Name": "exception",
+              "Type": "System.Exception"
             }
           ],
           "ReturnType": "System.Void",
@@ -4946,19 +4571,7 @@
           "HasKeyParameter": false,
           "HandlesNullWithNotFound": false,
           "HasTryCatch": false
-        }
-      ]
-    },
-    {
-      "Name": "Web.Services.Aggregations.IApiCacheAggregationService",
-      "StandardElementType": "AggregationService",
-      "LineNumber": 7,
-      "IsPublic": false,
-      "Kind": "Interface",
-      "BaseType": null,
-      "Interfaces": [],
-      "Properties": [],
-      "Methods": [
+        },
         {
           "Id": "Web.Services.Aggregations.IApiCacheAggregationService.RefreshCaches()",
           "Name": "RefreshCaches",
@@ -4985,7 +4598,7 @@
       "Name": "Web.Services.Foundations.Api.IApiContextService",
       "StandardElementType": "FoundationService",
       "LineNumber": 10,
-      "IsPublic": false,
+      "IsPublic": true,
       "Kind": "Interface",
       "BaseType": null,
       "Interfaces": [],
@@ -4997,6 +4610,31 @@
           "LineNumber": 12,
           "Inputs": [],
           "ReturnType": "cCoder.Data.Models.ApiInfo[]",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "Web.Services.Foundations.Api.IApiContextService.LogError(System.Exception)",
+          "Name": "LogError",
+          "LineNumber": 14,
+          "Inputs": [
+            {
+              "Name": "exception",
+              "Type": "System.Exception"
+            }
+          ],
+          "ReturnType": "System.Void",
           "Implements": [],
           "Calls": [],
           "PossibleExceptionTypes": [],
@@ -5372,7 +5010,7 @@
       "Name": "Web.Services.Orchestrations.Api.IApiScriptOrchestrationService",
       "StandardElementType": "OrchestrationService",
       "LineNumber": 10,
-      "IsPublic": false,
+      "IsPublic": true,
       "Kind": "Interface",
       "BaseType": null,
       "Interfaces": [],
@@ -5389,6 +5027,31 @@
             }
           ],
           "ReturnType": "System.Threading.Tasks.ValueTask\u003CSystem.String\u003E",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "Web.Services.Orchestrations.Api.IApiScriptOrchestrationService.LogError(System.Exception)",
+          "Name": "LogError",
+          "LineNumber": 16,
+          "Inputs": [
+            {
+              "Name": "exception",
+              "Type": "System.Exception"
+            }
+          ],
+          "ReturnType": "System.Void",
           "Implements": [],
           "Calls": [],
           "PossibleExceptionTypes": [],
@@ -5434,7 +5097,7 @@
       "Name": "Web.Services.Processings.IHomeSessionProcessingService",
       "StandardElementType": "ProcessingService",
       "LineNumber": 10,
-      "IsPublic": false,
+      "IsPublic": true,
       "Kind": "Interface",
       "BaseType": null,
       "Interfaces": [],
@@ -5632,23 +5295,23 @@
     },
     {
       "FromType": "Web.Controllers.Api.ApiRootController",
-      "ToType": "Web.Exposures.ApiContextManager"
+      "ToType": "Web.Services.Foundations.Api.ApiContextService"
     },
     {
       "FromType": "Web.Controllers.Api.CacheController",
-      "ToType": "Web.Exposures.ApiCacheManager"
+      "ToType": "Web.Services.Aggregations.ApiCacheAggregationService"
     },
     {
       "FromType": "Web.Controllers.Api.MetadataController",
-      "ToType": "cCoder.ContentManagement.Exposures.Caching.IMetadataCache"
+      "ToType": "Web.Services.Aggregations.ApiCacheAggregationService"
     },
     {
       "FromType": "Web.Controllers.Api.ScriptController",
-      "ToType": "Web.Exposures.ApiScriptManager"
+      "ToType": "Web.Services.Orchestrations.Api.ApiScriptOrchestrationService"
     },
     {
       "FromType": "Web.Controllers.HomeController",
-      "ToType": "Web.Exposures.HomeSessionManager"
+      "ToType": "Web.Services.Processings.HomeSessionProcessingService"
     },
     {
       "FromType": "Web.Controllers.HomeController",
@@ -5668,27 +5331,7 @@
     },
     {
       "FromType": "Web.Dependencies.HomeSessionDependency",
-      "ToType": "System.IServiceProvider"
-    },
-    {
-      "FromType": "Web.Dependencies.Middleware.WebExceptionMiddleware",
-      "ToType": "cCoder.Core.Brokers.Loggings.ILoggingBroker"
-    },
-    {
-      "FromType": "Web.Exposures.ApiCacheManager",
-      "ToType": "Web.Services.Aggregations.ApiCacheAggregationService"
-    },
-    {
-      "FromType": "Web.Exposures.ApiContextManager",
-      "ToType": "Web.Services.Foundations.Api.ApiContextService"
-    },
-    {
-      "FromType": "Web.Exposures.ApiScriptManager",
-      "ToType": "Web.Services.Orchestrations.Api.ApiScriptOrchestrationService"
-    },
-    {
-      "FromType": "Web.Exposures.HomeSessionManager",
-      "ToType": "Web.Services.Processings.HomeSessionProcessingService"
+      "ToType": "Microsoft.AspNetCore.Http.IHttpContextAccessor"
     },
     {
       "FromType": "Web.Models.Exceptions.ApiCacheDependencyException",
@@ -5747,6 +5390,10 @@
       "ToType": "Web.Brokers.Api.MetadataCacheBroker"
     },
     {
+      "FromType": "Web.Services.Aggregations.ApiCacheAggregationService",
+      "ToType": "cCoder.Core.Brokers.Loggings.ILoggingBroker"
+    },
+    {
       "FromType": "Web.Services.Foundations.Api.ApiContextService",
       "ToType": "Web.Brokers.Api.ApiContextBroker"
     },
@@ -5764,6 +5411,10 @@
     },
     {
       "FromType": "Web.Services.Orchestrations.Api.ApiScriptOrchestrationService",
+      "ToType": "Web.Services.Foundations.Api.ApiContextService"
+    },
+    {
+      "FromType": "Web.Services.Orchestrations.Api.ApiScriptOrchestrationService",
       "ToType": "Web.Services.Foundations.Api.ApiScriptAuthorizationService"
     },
     {
@@ -5775,153 +5426,5 @@
       "ToType": "Web.Services.Foundations.HomeSessions.HomeSessionService"
     }
   ],
-  "AnalysisItems": [
-    {
-      "Code": "STXAPI005",
-      "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
-      "Severity": "Warning",
-      "Type": "Web.Controllers.Api.ApiRootController",
-      "LineNumber": 19
-    },
-    {
-      "Code": "STXFORMAT002",
-      "Description": "Expression-bodied method implementations must start on the line after the =\u003E token.",
-      "Severity": "Warning",
-      "Type": "Web.Controllers.Api.ApiRootController",
-      "LineNumber": 19
-    },
-    {
-      "Code": "STXAPI005",
-      "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
-      "Severity": "Warning",
-      "Type": "Web.Controllers.Api.ApiRootController",
-      "LineNumber": 26
-    },
-    {
-      "Code": "STXFORMAT012",
-      "Description": "Expression-bodied methods must return awaitable calls directly instead of adding redundant async and await keywords.",
-      "Severity": "Warning",
-      "Type": "Web.Controllers.Api.ApiRootController",
-      "LineNumber": 34
-    },
-    {
-      "Code": "STXAPI005",
-      "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
-      "Severity": "Warning",
-      "Type": "Web.Controllers.Api.ApiRootController",
-      "LineNumber": 35
-    },
-    {
-      "Code": "STXAPI005",
-      "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
-      "Severity": "Warning",
-      "Type": "Web.Controllers.Api.ApiRootController",
-      "LineNumber": 39
-    },
-    {
-      "Code": "RFC0005",
-      "Description": "An HTTP validation failure must return 400 Bad Request or the adopted 422 semantic-validation response.",
-      "Severity": "Warning",
-      "Type": "Web.Controllers.Api.CacheController",
-      "LineNumber": 17
-    },
-    {
-      "Code": "STXAPI005",
-      "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
-      "Severity": "Warning",
-      "Type": "Web.Controllers.Api.CacheController",
-      "LineNumber": 17
-    },
-    {
-      "Code": "STXAPI005",
-      "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
-      "Severity": "Warning",
-      "Type": "Web.Controllers.Api.MetadataController",
-      "LineNumber": 17
-    },
-    {
-      "Code": "RFC0005",
-      "Description": "An HTTP validation failure must return 400 Bad Request or the adopted 422 semantic-validation response.",
-      "Severity": "Warning",
-      "Type": "Web.Controllers.Api.ScriptController",
-      "LineNumber": 18
-    },
-    {
-      "Code": "STXAPI005",
-      "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
-      "Severity": "Warning",
-      "Type": "Web.Controllers.Api.ScriptController",
-      "LineNumber": 18
-    },
-    {
-      "Code": "STXD002",
-      "Description": "A dependency must inherit an external type or implement an external interface that the application cannot control.",
-      "Severity": "Warning",
-      "Type": "Web.Dependencies.HomeSessionDependency",
-      "LineNumber": 12
-    },
-    {
-      "Code": "STXD007",
-      "Description": "A dependency must not depend on locally defined type \u0027Web.Models.HomeSessionContext\u0027.",
-      "Severity": "Warning",
-      "Type": "Web.Dependencies.HomeSessionDependency",
-      "LineNumber": 12
-    },
-    {
-      "Code": "STXD007",
-      "Description": "A dependency must not depend on locally defined type \u0027Web.Models.Exceptions.ApiCacheValidationException\u0027.",
-      "Severity": "Warning",
-      "Type": "Web.Dependencies.Middleware.WebExceptionMiddleware",
-      "LineNumber": 11
-    },
-    {
-      "Code": "STXE004",
-      "Description": "An exposure must not communicate directly with a broker.",
-      "Severity": "Warning",
-      "Type": "Web.Dependencies.Middleware.WebExceptionMiddleware",
-      "LineNumber": 11
-    },
-    {
-      "Code": "STXAPI005",
-      "Description": "Every public HTTP handler must map success and caught failure paths to 2xx, 4xx, or 5xx responses.",
-      "Severity": "Warning",
-      "Type": "Web.Dependencies.Middleware.WebExceptionMiddleware",
-      "LineNumber": 14
-    },
-    {
-      "Code": "STXFORMAT005",
-      "Description": "Method call arguments must declare their parameter names.",
-      "Severity": "Warning",
-      "Type": "Web.Dependencies.Middleware.WebExceptionMiddleware",
-      "LineNumber": 20
-    },
-    {
-      "Code": "STXD005",
-      "Description": "External API call \u0027Microsoft.AspNetCore.Http.HttpResponseWritingExtensions.WriteAsync(Microsoft.AspNetCore.Http.HttpResponse,System.String,System.Threading.CancellationToken)\u0027 must be isolated behind a broker or dependency.",
-      "Severity": "Warning",
-      "Type": "Web.Dependencies.Middleware.WebExceptionMiddleware",
-      "LineNumber": 54
-    },
-    {
-      "Code": "STXD005",
-      "Description": "External API call \u0027System.Text.Json.JsonSerializer.Serialize(TValue,System.Text.Json.JsonSerializerOptions?)\u0027 must be isolated behind a broker or dependency.",
-      "Severity": "Warning",
-      "Type": "Web.Dependencies.Middleware.WebExceptionMiddleware",
-      "LineNumber": 55
-    },
-    {
-      "Code": "STX0012",
-      "Description": "Business-operation validation methods must evaluate their rules through a validation collector.",
-      "Severity": "Warning",
-      "Type": "Web.Services.Processings.HomeSessionProcessingService",
-      "LineNumber": 12
-    },
-    {
-      "Code": "STX0023",
-      "Description": "Each business operation must call its operation-specific validation method.",
-      "Severity": "Warning",
-      "Type": "Web.Services.Processings.HomeSessionProcessingService",
-      "LineNumber": 12
-    }
-  ]
+  "AnalysisItems": []
 }
