@@ -5,6 +5,7 @@
 using cCoder.Data.Models;
 using System.IO;
 using Web.Brokers.Api;
+using Web.Exposures;
 
 namespace Web.Services.Foundations.Api;
 
@@ -40,6 +41,6 @@ internal sealed partial class ApiContextService(
                 requestBody: requestBody);
         });
 
-    void IApiContextService.LogError(Exception exception) =>
+    void IApiContextManager.LogError(Exception exception) =>
         apiContextBroker.LogError(exception: exception);
 }

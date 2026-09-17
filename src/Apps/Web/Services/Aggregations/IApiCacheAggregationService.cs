@@ -2,11 +2,11 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using Web.Exposures;
+
 namespace Web.Services.Aggregations;
 
-public interface IApiCacheAggregationService
+public interface IApiCacheAggregationService : IApiCacheManager
 {
-    void RefreshCaches();
     string GetMetadata(string culture);
-    void LogError(Exception exception);
 }

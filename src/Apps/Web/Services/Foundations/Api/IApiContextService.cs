@@ -4,12 +4,10 @@
 
 using cCoder.Data.Models;
 using System.IO;
+using Web.Exposures;
 
 namespace Web.Services.Foundations.Api;
 
-public interface IApiContextService
+public interface IApiContextService : IApiContextManager
 {
-    ApiInfo[] GetApiInfos();
-    ValueTask<string> ReadRequestBodyAsync(Stream requestBody);
-    void LogError(Exception exception);
 }

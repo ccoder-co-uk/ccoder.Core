@@ -4,27 +4,10 @@
 
 using System.Dynamic;
 using Microsoft.AspNetCore.Mvc;
+using Web.Exposures;
 
 namespace Web.Services.Processings;
 
-public interface IHomeSessionProcessingService
+public interface IHomeSessionProcessingService : IHomeSessionManager
 {
-    bool CanUseSession(
-        HttpContext context);
-
-    ExpandoObject CreateExpandoObject(
-        HttpContext context);
-
-    string GetSessionValue(
-        HttpContext context,
-        string key);
-
-    void SetSessionValue(
-        HttpContext context,
-        string key,
-        string value);
-
-    void AbortRequest(HttpContext context);
-
-    bool IsLocalUrl(IUrlHelper urlHelper, string url);
 }

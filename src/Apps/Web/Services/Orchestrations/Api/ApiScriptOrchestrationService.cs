@@ -4,6 +4,7 @@
 
 using Web.Models;
 using System.IO;
+using Web.Exposures;
 using Web.Services.Foundations.Api;
 
 namespace Web.Services.Orchestrations.Api;
@@ -38,6 +39,6 @@ internal sealed partial class ApiScriptOrchestrationService(
                 requestBody: requestBody);
         });
 
-    void IApiScriptOrchestrationService.LogError(Exception exception) =>
+    void IApiScriptManager.LogError(Exception exception) =>
         apiContextService.LogError(exception: exception);
 }
