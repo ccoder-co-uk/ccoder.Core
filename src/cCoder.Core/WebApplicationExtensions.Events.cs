@@ -40,7 +40,29 @@ public static partial class WebApplicationExtensions
         app.UseCoreEventHandlers();
         app.UseMailHostedServiceEventHandlers();
         app.UseHostedServicesServiceBusEventBridge();
-        app.StartContentManagementFinalAppDeleteEventHandler();
+        app.UseContentManagementHostedEventHandlers();
+        return app;
+    }
+
+    private static WebApplication UseContentManagementHostedEventHandlers(
+        this WebApplication app)
+    {
+        using IServiceScope scope = app.Services.CreateScope();
+        IEventHub eventHub = scope.ServiceProvider.GetRequiredService<IEventHub>();
+
+        eventHub.ListenToContentManagementEvents();
+
+        return app;
+    }
+
+    private static WebApplication UseContentManagementWebEventHandlers(
+        this WebApplication app)
+    {
+        using IServiceScope scope = app.Services.CreateScope();
+        IEventHub eventHub = scope.ServiceProvider.GetRequiredService<IEventHub>();
+
+        eventHub.ListenToContentManagementWebEvents();
+
         return app;
     }
 
