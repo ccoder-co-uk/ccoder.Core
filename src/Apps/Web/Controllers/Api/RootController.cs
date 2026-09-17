@@ -12,7 +12,7 @@ namespace Web.Controllers.Api
 {
     [Route("Api")]
     public class ApiRootController(
-        IApiContextService apiContextManager)
+        IApiContextService apiContextService)
         : Controller
     {
         [HttpGet()]
@@ -23,12 +23,12 @@ namespace Web.Controllers.Api
                 return Ok(
                     value: new
                     {
-                        value = apiContextManager.GetApiInfos()
+                        value = apiContextService.GetApiInfos()
                     });
             }
             catch (Exception exception)
             {
-                apiContextManager.LogError(exception: exception);
+                apiContextService.LogError(exception: exception);
 
                 return StatusCode(
                     statusCode: StatusCodes.Status500InternalServerError,
@@ -42,14 +42,14 @@ namespace Web.Controllers.Api
             try
             {
                 string response =
-                    await apiContextManager.ReadRequestBodyAsync(
+                    await apiContextService.ReadRequestBodyAsync(
                         requestBody: Request.Body);
 
                 return new RawResult(response);
             }
             catch (Exception exception)
             {
-                apiContextManager.LogError(exception: exception);
+                apiContextService.LogError(exception: exception);
 
                 return StatusCode(
                     statusCode: StatusCodes.Status500InternalServerError,
@@ -66,7 +66,7 @@ namespace Web.Controllers.Api
             }
             catch (Exception exception)
             {
-                apiContextManager.LogError(exception: exception);
+                apiContextService.LogError(exception: exception);
 
                 return StatusCode(
                     statusCode: StatusCodes.Status500InternalServerError,
@@ -83,7 +83,7 @@ namespace Web.Controllers.Api
             }
             catch (Exception exception)
             {
-                apiContextManager.LogError(exception: exception);
+                apiContextService.LogError(exception: exception);
 
                 return StatusCode(
                     statusCode: StatusCodes.Status500InternalServerError,

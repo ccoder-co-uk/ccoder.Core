@@ -2,6 +2,8 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using cCoder.Core.Services.Orchestrations;
+using cCoder.Core.Models;
 using CoreApp = cCoder.Data.Models.CMS.App;
 using QueuedEmail = cCoder.Data.Models.Mail.QueuedEmail;
 using TemplatedEmailDetails = cCoder.Mail.Models.TemplatedEmailDetails;
@@ -9,12 +11,11 @@ using TemplatedEmailDetails = cCoder.Mail.Models.TemplatedEmailDetails;
 namespace cCoder.Core.Exposures.Managers;
 
 internal sealed class TemplatedEmailManager(
-    cCoder.Core.Services.Orchestrations.ITemplatedEmailOrchestrationService
+    ITemplatedEmailOperationOrchestrationService
         templatedEmailOperationOrchestrationService
-)
-    : ITemplatedEmailManager
+) : ITemplatedEmailManager
 {
-    public ValueTask<QueuedEmail> QueueAppTemplatedEmailAsync(
+    public async ValueTask<QueuedEmail> QueueAppTemplatedEmailAsync(
         CoreApp app,
         string templateName,
         string culture,
@@ -22,22 +23,41 @@ internal sealed class TemplatedEmailManager(
         string toEmail,
         string subject,
         string sentByUserId,
-        string mailSenderName = "Default") =>
-        templatedEmailOperationOrchestrationService
-            .QueueAppTemplatedEmailAsync(
-                app: app,
-                templateName: templateName,
-                culture: culture,
-                model: model,
-                toEmail: toEmail,
-                subject: subject,
-                sentByUserId: sentByUserId,
-                mailSenderName: mailSenderName);
+        string mailSenderName = "Default")
+    {
+        TemplatedEmailOperation templatedEmailOperation = new()
+        {
+            App = app,
+            TemplateName = templateName,
+            Culture = culture,
+            Model = model,
+            ToEmail = toEmail,
+            Subject = subject,
+            SentByUserId = sentByUserId,
+            MailSenderName = mailSenderName,
+        };
 
-    public ValueTask<QueuedEmail> QueueTemplatedEmailDetailsAsync(
+        TemplatedEmailOperation completedOperation =
+            await templatedEmailOperationOrchestrationService
+                .QueueTemplatedEmailOperationAsync(
+                    templatedEmailOperation: templatedEmailOperation);
+
+        return completedOperation.Email;
+    }
+
+    public async ValueTask<QueuedEmail> QueueTemplatedEmailDetailsAsync(
         TemplatedEmailDetails templatedEmailDetails)
-    =>
-        templatedEmailOperationOrchestrationService
-            .QueueTemplatedEmailDetailsAsync(
-                details: templatedEmailDetails);
+    {
+        TemplatedEmailOperation templatedEmailOperation = new()
+        {
+            Details = templatedEmailDetails,
+        };
+
+        TemplatedEmailOperation completedOperation =
+            await templatedEmailOperationOrchestrationService
+                .QueueTemplatedEmailOperationAsync(
+                    templatedEmailOperation: templatedEmailOperation);
+
+        return completedOperation.Email;
+    }
 }

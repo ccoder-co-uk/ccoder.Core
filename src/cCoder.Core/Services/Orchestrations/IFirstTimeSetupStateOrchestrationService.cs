@@ -4,8 +4,10 @@
 
 namespace cCoder.Core.Services.Orchestrations;
 
-internal interface IFirstTimeSetupStateOrchestrationService
+public interface IFirstTimeSetupStateOrchestrationService
 {
     Task<bool> IsInitializedAsync(
         CancellationToken cancellationToken = default);
+
+    string NormalizeHost(string host);
 }

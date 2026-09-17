@@ -30,4 +30,18 @@ internal sealed partial class FirstTimeSetupStateOrchestrationService(
             return await securitySetupStateService.IsSecurityInitializedAsync(
                 cancellationToken: cancellationToken);
         });
+
+    public string NormalizeHost(string host) =>
+        TryCatch(operation: () =>
+        {
+            ValidateHost(host: host);
+
+            return host
+                .Trim()
+                .Replace(
+                    oldValue: "www.",
+                    newValue: string.Empty,
+                    comparisonType: StringComparison.OrdinalIgnoreCase)
+                .ToLowerInvariant();
+        });
 }

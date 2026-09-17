@@ -4,87 +4,67 @@
 
 using cCoder.Core.Models;
 using cCoder.Core.Services.Foundations.TemplatedEmails;
-using CoreApp = cCoder.Data.Models.CMS.App;
 using QueuedEmail = cCoder.Data.Models.Mail.QueuedEmail;
 using TemplatedEmailDetails = cCoder.Mail.Models.TemplatedEmailDetails;
 
 namespace cCoder.Core.Services.Orchestrations;
 
-internal sealed partial class TemplatedEmailOrchestrationService(
+internal sealed partial class TemplatedEmailOperationOrchestrationService(
     ITemplatedEmailContentService templatedEmailContentService,
     ITemplatedEmailIdentityService templatedEmailIdentityService,
     ITemplatedEmailQueueService templatedEmailQueueService
 ) : ITemplatedEmailOperationOrchestrationService,
     ITemplatedEmailOrchestrationService
 {
-    public ValueTask<TemplatedEmailOperation> QueueTemplatedEmailOperationAsync(
-        TemplatedEmailOperation templatedEmailOperation) =>
+    public ValueTask<QueuedEmail> QueueTemplatedEmailDetailsAsync(
+        TemplatedEmailDetails templatedEmailDetails) =>
+        TryCatch(operation: async () =>
+        {
+            ValidateTemplatedEmailDetailsOnQueue(
+                templatedEmailDetails: templatedEmailDetails);
+
+            TemplatedEmailOperation templatedEmailOperation = new()
+            {
+                Details = templatedEmailDetails,
+            };
+
+            ValidateTemplatedEmailOperationOnQueue(
+                templatedEmailOperation: templatedEmailOperation);
+
+            TemplatedEmailOperation completedOperation =
+                await QueueTemplatedEmailOperationInternalAsync(
+                    templatedEmailOperation: templatedEmailOperation);
+
+            return completedOperation.Email;
+        });
+
+    ValueTask<TemplatedEmailOperation> ITemplatedEmailOperationOrchestrationService
+        .QueueTemplatedEmailOperationAsync(
+            TemplatedEmailOperation templatedEmailOperation) =>
         TryCatch(operation: async () =>
         {
             ValidateTemplatedEmailOperationOnQueue(
                 templatedEmailOperation: templatedEmailOperation);
 
-            templatedEmailContentService.ResolveTemplatedEmailOperationContent(
+            return await QueueTemplatedEmailOperationInternalAsync(
                 templatedEmailOperation: templatedEmailOperation);
-
-            templatedEmailIdentityService.ResolveTemplatedEmailOperationIdentity(
-                templatedEmailOperation: templatedEmailOperation);
-
-            templatedEmailContentService.RenderTemplatedEmailOperationContent(
-                templatedEmailOperation: templatedEmailOperation);
-
-            return await templatedEmailQueueService
-                .QueueTemplatedEmailOperationAsync(
-                    templatedEmailOperation: templatedEmailOperation);
         });
 
-    ValueTask<QueuedEmail>
-        ITemplatedEmailOrchestrationService.QueueAppTemplatedEmailAsync(
-            CoreApp app,
-            string templateName,
-            string culture,
-            object model,
-            string toEmail,
-            string subject,
-            string sentByUserId,
-            string mailSenderName)
+    private async ValueTask<TemplatedEmailOperation>
+        QueueTemplatedEmailOperationInternalAsync(
+            TemplatedEmailOperation templatedEmailOperation)
     {
-        TemplatedEmailOperation templatedEmailOperation = new()
-        {
-            App = app,
-            TemplateName = templateName,
-            Culture = culture,
-            Model = model,
-            ToEmail = toEmail,
-            Subject = subject,
-            SentByUserId = sentByUserId,
-            MailSenderName = mailSenderName,
-        };
-
-        return QueueTemplatedEmailAsync(
+        templatedEmailContentService.ResolveTemplatedEmailOperationContent(
             templatedEmailOperation: templatedEmailOperation);
-    }
 
-    ValueTask<QueuedEmail>
-        ITemplatedEmailOrchestrationService.QueueTemplatedEmailDetailsAsync(
-            TemplatedEmailDetails details)
-    {
-        TemplatedEmailOperation templatedEmailOperation = new()
-        {
-            Details = details,
-        };
-
-        return QueueTemplatedEmailAsync(
+        templatedEmailIdentityService.ResolveTemplatedEmailOperationIdentity(
             templatedEmailOperation: templatedEmailOperation);
-    }
 
-    private async ValueTask<QueuedEmail> QueueTemplatedEmailAsync(
-        TemplatedEmailOperation templatedEmailOperation)
-    {
-        TemplatedEmailOperation completedOperation =
-            await QueueTemplatedEmailOperationAsync(
+        templatedEmailContentService.RenderTemplatedEmailOperationContent(
+            templatedEmailOperation: templatedEmailOperation);
+
+        return await templatedEmailQueueService
+            .QueueTemplatedEmailOperationAsync(
                 templatedEmailOperation: templatedEmailOperation);
-
-        return completedOperation.Email;
     }
 }

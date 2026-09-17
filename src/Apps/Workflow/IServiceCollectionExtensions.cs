@@ -7,7 +7,6 @@ using cCoder.Workflow.Engine;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Workflow.Models;
-using Workflow.Exposures;
 using Workflow.Brokers.WorkflowFunctions;
 using Workflow.Dependencies;
 using Workflow.Services.Foundations.WorkflowFunctions;
@@ -54,8 +53,5 @@ internal static class IServiceCollectionExtensions
             IWorkflowFunctionsProcessingService,
             WorkflowFunctionsProcessingService>();
 
-        services.AddTransient<
-            IWorkflowFunctionsManager,
-            WorkflowFunctionsProcessingService>();
     }
 }

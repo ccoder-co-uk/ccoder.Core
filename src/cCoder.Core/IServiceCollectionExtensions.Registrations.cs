@@ -710,7 +710,11 @@ predicate: (documentName, apiDescription) =>
 
         services.AddTransient<
             ITemplatedEmailOperationOrchestrationService,
-            TemplatedEmailOrchestrationService>();
+            TemplatedEmailOperationOrchestrationService>();
+
+        services.AddTransient<
+            ITemplatedEmailOrchestrationService,
+            TemplatedEmailOperationOrchestrationService>();
 
         services.AddTransient<
             IHostedServicesAppSecurityAppAddOrchestrationService,
@@ -732,13 +736,9 @@ predicate: (documentName, apiDescription) =>
         services.AddScoped<
             IFirstTimeSetupStateOrchestrationService,
             FirstTimeSetupStateOrchestrationService>();
-        services.AddScoped<
-            IFirstTimeSetupOrchestrationService,
-            FirstTimeSetupOrchestrationService>();
 
         services.AddScoped<IFirstTimeSetupStateService, FirstTimeSetupStateManager>();
         services.AddScoped<IFirstTimeSetupManager, FirstTimeSetupStateManager>();
-        services.AddScoped<ISetupRequestHostService, SetupRequestHostService>();
         services.AddScoped<ISetupRequestHostProcessingService, SetupRequestHostProcessingService>();
         services.AddScoped<ISetupRequestHostManager, SetupRequestHostManager>();
         IMvcBuilder mvcBuilder = services.AddMvc();
@@ -790,9 +790,8 @@ predicate: (documentName, apiDescription) =>
         services.AddCoreAspNetExposures();
 
         services.AddTransient<
-            ITemplatedEmailOrchestrationService,
-            TemplatedEmailOrchestrationService>();
-        services.AddTransient<ITemplatedEmailManager, TemplatedEmailManager>();
+            ITemplatedEmailManager,
+            TemplatedEmailManager>();
 
         services.AddTransient<
             IUserRegistrationOrchestrationService,
