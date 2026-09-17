@@ -44,16 +44,32 @@ public sealed partial class AppEventIntegrationTests(IntegrationAcceptanceFixtur
 
     private async Task<int> CreateStandaloneAppAsync(string domain)
     {
-        await using CoreDataContext core = CreateCoreContext();
+        string authToken = await CreateAuthTokenAsync(userId: AdminUserId);
 
-        AppEntity app = await core.AddAppAsync(app: new AppEntity
+        AppEntity app = (AppEntity)await PostAsJsonAsync(
+            relativeUrl: "/Api/ContentManagement/App",
+            payload: new
+            {
+                name = Unique(prefix: "IntegrationApp"),
+                domain,
+                defaultTheme = "Default",
+                defaultCultureId = string.Empty,
+                tenantId = Unique(prefix: "tenant"),
+                configJson = "{}"
+            },
+            responseType: typeof(AppEntity),
+            authToken: authToken);
+
+        await WaitUntilAsync(predicate: async () =>
         {
-            Name = Unique(prefix: "IntegrationApp"),
-            Domain = domain,
-            DefaultTheme = "Default",
-            DefaultCultureId = string.Empty,
-            TenantId = Unique(prefix: "tenant"),
-            ConfigJson = "{}"
+            await using CoreDataContext core = CreateCoreContext();
+
+            return await core.Set<Role>()
+                .IgnoreQueryFilters()
+                .CountAsync(predicate: role => role.AppId == app.Id) >= 3
+                && await core.Set<AppCulture>()
+                    .IgnoreQueryFilters()
+                    .AnyAsync(predicate: culture => culture.AppId == app.Id);
         });
 
         return app.Id;

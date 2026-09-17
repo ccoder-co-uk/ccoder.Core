@@ -36,7 +36,9 @@ public static partial class WebApplicationExtensions
         app.PopulateSecurityMetadataTypeCache();
         app.UseCoreDefaultCors();
         app.UseCoreExceptionHandling(errorHandler: HandleUnhandledException);
+        app.UseWebDomainEventHandlers();
         app.UseCoreEventHandlers();
+        app.UseFinalContentManagementEventHandlers();
         app.UseCoreApiShell();
         return app;
     }
