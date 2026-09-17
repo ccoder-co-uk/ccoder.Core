@@ -4,12 +4,12 @@
 
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
-using Workflow.Exposures;
+using Workflow.Services.Processings.WorkflowFunctions;
 
 namespace Workflow.Exposures;
 
-public sealed class Execute(
-    IWorkflowFunctionsManager workflowFunctionsProcessingService)
+internal sealed class Execute(
+    IWorkflowFunctionsProcessingService workflowFunctionsProcessingService)
 {
     [Function(nameof(Execute))]
     public Task<HttpResponseData> Run(

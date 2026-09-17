@@ -20857,7 +20857,7 @@
     {
       "Name": "cCoder.Core.Services.Orchestrations.ITemplatedEmailOrchestrationService",
       "StandardElementType": "OrchestrationService",
-      "LineNumber": 11,
+      "LineNumber": 10,
       "IsPublic": true,
       "Kind": "Interface",
       "BaseType": null,
@@ -20867,7 +20867,7 @@
         {
           "Id": "cCoder.Core.Services.Orchestrations.ITemplatedEmailOrchestrationService.QueueTemplatedEmailDetailsAsync(cCoder.Mail.Models.TemplatedEmailDetails)",
           "Name": "QueueTemplatedEmailDetailsAsync",
-          "LineNumber": 13,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "templatedEmailDetails",
