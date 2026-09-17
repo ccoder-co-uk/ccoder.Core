@@ -8,7 +8,7 @@ using TemplatedEmailDetails = cCoder.Mail.Models.TemplatedEmailDetails;
 
 namespace cCoder.Core.Services.Orchestrations;
 
-internal sealed partial class TemplatedEmailOrchestrationService
+internal sealed partial class TemplatedEmailOperationOrchestrationService
 {
     private static void ValidateTemplatedEmailOperationOnQueue(
         TemplatedEmailOperation templatedEmailOperation) =>

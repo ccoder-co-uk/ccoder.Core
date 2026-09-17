@@ -487,8 +487,12 @@ public sealed partial class FirstTimeSetupTests
             requestUri: "/Api/Packaging/Package/Import",
             value: package);
 
+        string content = await response.Content.ReadAsStringAsync();
+
         response.StatusCode.Should()
-            .Be(expected: HttpStatusCode.Accepted);
+            .Be(
+                expected: HttpStatusCode.Accepted,
+                because: $"{content}; {response.Headers}");
     }
 
     private static async Task<Package> DownloadPackageAsync(

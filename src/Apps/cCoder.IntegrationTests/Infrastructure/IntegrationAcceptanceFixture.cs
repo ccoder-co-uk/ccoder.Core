@@ -695,7 +695,9 @@ fileName: "dotnet", arguments: $"\"{Path.Combine(path1: hostedServicesOutputDire
         {
             ["ASPNETCORE_ENVIRONMENT"] = "Acceptance",
             ["CoreData__ConnectionString"] = Settings.CoreConnectionString,
+            ["CoreData__AdminConnectionString"] = string.Empty,
             ["SecurityData__ConnectionString"] = Settings.SsoConnectionString,
+            ["SecurityData__AdminConnectionString"] = string.Empty,
             ["Security__DecryptionKey"] = Settings.DecryptionKey,
             ["AppSecurity__AggregateDomains"] = "false",
             ["ContentManagement__WorkflowServiceUrl"] = WorkflowBaseAddress.ToString(),

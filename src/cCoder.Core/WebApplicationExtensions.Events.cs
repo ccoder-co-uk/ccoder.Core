@@ -11,7 +11,6 @@ using cCoder.Eventing.AzureServiceBus.Models;
 using cCoder.Eventing.Models;
 using cCoder.Logging;
 using cCoder.Mail;
-using cCoder.Mail.Exposures.EventHandlers;
 using cCoder.Core.Services.Aggregations;
 using cCoder.Security;
 using cCoder.Security.Models.Events;
@@ -37,38 +36,56 @@ public static partial class WebApplicationExtensions
         app.StartLoggingHostedServices();
         app.StartMailHostedServices();
         app.StartWorkflowHostedServices();
+        app.UseHostedDomainEventHandlers();
         app.UseCoreEventHandlers();
-        app.UseMailHostedServiceEventHandlers();
         app.UseHostedServicesServiceBusEventBridge();
-        app.UseContentManagementHostedEventHandlers();
+        app.UseFinalContentManagementEventHandlers();
         return app;
     }
 
-    private static WebApplication UseContentManagementHostedEventHandlers(
+    private static WebApplication UseHostedDomainEventHandlers(
         this WebApplication app)
     {
         using IServiceScope scope = app.Services.CreateScope();
         IEventHub eventHub = scope.ServiceProvider.GetRequiredService<IEventHub>();
 
         eventHub.ListenToContentManagementEvents();
+        eventHub.ListenToAppSecurityEvents();
+        eventHub.ListenToDocumentManagementEvents();
+        eventHub.ListenToMailEvents();
+        eventHub.ListenToSecurityEvents();
 
         return app;
     }
 
-    private static WebApplication UseContentManagementWebEventHandlers(
+    private static WebApplication UseWebDomainEventHandlers(
         this WebApplication app)
     {
         using IServiceScope scope = app.Services.CreateScope();
         IEventHub eventHub = scope.ServiceProvider.GetRequiredService<IEventHub>();
 
         eventHub.ListenToContentManagementWebEvents();
+        eventHub.ListenToAppSecurityEvents();
+        eventHub.ListenToDocumentManagementEvents();
+        eventHub.ListenToMailEvents();
+        eventHub.ListenToSecurityEvents();
+
+        return app;
+    }
+
+    private static WebApplication UseFinalContentManagementEventHandlers(
+        this WebApplication app)
+    {
+        using IServiceScope scope = app.Services.CreateScope();
+        IEventHub eventHub = scope.ServiceProvider.GetRequiredService<IEventHub>();
+
+        eventHub.ListenToFinalContentManagementEvents();
 
         return app;
     }
 
     private static WebApplication UseCoreEventHandlers(this WebApplication app)
     {
-        app.ListenToSecurityEvents();
         app.UsePackageImportEventHandler();
         app.UseSecurityAccountEmailEventHandlers();
         app.UseServiceBusAppDeleteForwarder();
@@ -128,19 +145,6 @@ name: "app_delete", handler: static (service, entity) => service.ForwardAppDelet
 
         eventHub.ListenToEvent<Folder, ServiceBusFolderDeleteForwardingService>(
 name: "folder_delete", handler: static (service, entity) => service.ForwardFolderDeleteAsync(folder: entity));
-
-        return app;
-    }
-
-    private static WebApplication UseMailHostedServiceEventHandlers(this WebApplication app)
-    {
-        using IServiceScope scope = app.Services.CreateScope();
-        IServiceProvider services = scope.ServiceProvider;
-
-        foreach (IMailEventHandlers handlers in services.GetServices<IMailEventHandlers>())
-        {
-            handlers.ListenToAllEvents();
-        }
 
         return app;
     }

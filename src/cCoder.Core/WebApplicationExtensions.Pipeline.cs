@@ -31,13 +31,14 @@ public static partial class WebApplicationExtensions
         app.UsePackagingExposure(log: log);
         app.StartWorkflowWeb(log: log);
         app.StartContentManagementWeb(log: log);
-        app.UseContentManagementWebEventHandlers();
         app.StartAppSecurityWeb(log: log);
         app.StartLoggingWeb(log: log);
         app.PopulateSecurityMetadataTypeCache();
         app.UseCoreDefaultCors();
         app.UseCoreExceptionHandling(errorHandler: HandleUnhandledException);
+        app.UseWebDomainEventHandlers();
         app.UseCoreEventHandlers();
+        app.UseFinalContentManagementEventHandlers();
         app.UseCoreApiShell();
         return app;
     }

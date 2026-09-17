@@ -40,7 +40,9 @@ internal sealed class AcceptanceTestConfiguration
             values: new Dictionary<string, string>
             {
                 ["CoreData__ConnectionString"] = coreConnectionString,
+                ["CoreData__AdminConnectionString"] = string.Empty,
                 ["SecurityData__ConnectionString"] = securityConnectionString,
+                ["SecurityData__AdminConnectionString"] = string.Empty,
                 ["AppSecurity__AggregateDomains"] =
                     aggregateDomains.ToString(),
                 ["Security__DecryptionKey"] = decryptionKey,
