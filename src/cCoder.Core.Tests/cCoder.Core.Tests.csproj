@@ -22,8 +22,8 @@
   <ItemGroup>
     <ProjectReference Include="..\cCoder.Core\cCoder.Core.csproj" />
     <ProjectReference Include="..\Apps\HostedServices\HostedServices.csproj" />
-    <PackageReference Include="cCoder.AppSecurity" Version="2026.9.12.1256" />
-    <PackageReference Include="cCoder.ContentManagement" Version="2026.9.15.1220" />
+    <PackageReference Include="cCoder.AppSecurity" Version="2026.9.17.952" />
+    <PackageReference Include="cCoder.ContentManagement" Version="2026.9.17.1603" />
     <PackageReference Include="cCoder.Data" Version="2026.9.13.1526" />
   </ItemGroup>
   <ItemGroup>
@@ -35,6 +35,6 @@
     <None Include="..\Apps\Workflow\local.settings.json" Link="Configuration\Workflow.local.settings.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="cCoder.CodeAnalysis" Version="2026.9.16.1056" />
+    <PackageReference Update="cCoder.CodeAnalysis" Version="2026.9.17.1541" />
   </ItemGroup>
 </Project>
