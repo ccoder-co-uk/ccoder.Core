@@ -10,6 +10,7 @@ using cCoder.Core.Services.Foundations.Mail;
 using cCoder.Core.Services.Foundations.Planning;
 using cCoder.Core.Services.Foundations.Workflow;
 using cCoder.Core.Models;
+using cCoder.Core.Exposures;
 using cCoder.Data.Models.CMS;
 
 using cCoder.Core.Services.Orchestrations;
@@ -25,7 +26,7 @@ internal sealed partial class AppAggregationService(
     IMailAppService mailAppService,
     IAppGraphEventService appGraphEventService,
     CoreConfiguration configuration
-) : IAppAggregationService, IAppOrchestrationService
+) : IAppAggregationService, IAppOrchestrationService, ICoreAppManager
 {
     public ValueTask<App> AddAppAsync(App newApp) =>
         TryCatch(operation: async () =>

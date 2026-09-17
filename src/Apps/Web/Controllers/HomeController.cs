@@ -12,7 +12,7 @@ using cCoder.Core.Exposures.Setup;
 using cCoder.Core.Exposures;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using Web.Exposures;
+using Web.Services.Processings;
 using App = cCoder.Data.Models.CMS.App;
 using PageRenderResult = cCoder.ContentManagement.Models.PageRenderResult;
 using System.ComponentModel.DataAnnotations;
@@ -24,12 +24,13 @@ namespace Web.Controllers
         IPageRenderer pageRenderer,
         IFirstTimeSetupManager setupStateService,
         ISetupRequestHostManager setupRequestHostManager,
-        IHomeSessionManager homeSessionManager) : Controller
+        IHomeSessionProcessingService homeSessionProcessingService) : Controller
     {
         private readonly IPageRenderer pageRenderer = pageRenderer;
         private readonly IFirstTimeSetupManager setupStateService = setupStateService;
         private readonly ISetupRequestHostManager setupRequestHostManager = setupRequestHostManager;
-        private readonly IHomeSessionManager homeSessionManager = homeSessionManager;
+        private readonly IHomeSessionProcessingService homeSessionProcessingService =
+            homeSessionProcessingService;
 
         private const string CultureExplicitSessionKey = "cultureexplicit";
 
@@ -46,7 +47,7 @@ namespace Web.Controllers
                 if (path?.ToLower()
                     .EndsWith(value: ".php") ?? false)
                 {
-                    homeSessionManager.AbortRequest(
+                    homeSessionProcessingService.AbortRequest(
                         context: Response.HttpContext);
 
                     return Ok();
@@ -59,7 +60,7 @@ namespace Web.Controllers
 
                 if (!string.IsNullOrWhiteSpace(value: culture))
                 {
-                    homeSessionManager.SetSessionValue(
+                    homeSessionProcessingService.SetSessionValue(
                         context: HttpContext,
                         key: CultureExplicitSessionKey,
                         value: bool.TrueString);
@@ -67,12 +68,12 @@ namespace Web.Controllers
 
                 PageRenderResponse response = await pageRenderer.RenderAsync();
 
-                homeSessionManager.SetSessionValue(
+                homeSessionProcessingService.SetSessionValue(
                     context: HttpContext,
                     key: "theme",
                     value: response.Theme);
 
-                homeSessionManager.SetSessionValue(
+                homeSessionProcessingService.SetSessionValue(
                     context: HttpContext,
                     key: "culture",
                     value: response.Culture);
@@ -97,7 +98,7 @@ namespace Web.Controllers
                 string returnUrl = Request.PathBase + Request.Path
                     + Request.QueryString;
 
-                if (!homeSessionManager.IsLocalUrl(
+                if (!homeSessionProcessingService.IsLocalUrl(
                     urlHelper: Url,
                     url: returnUrl))
                 {
@@ -139,7 +140,7 @@ namespace Web.Controllers
         private void SetupViewBag(bool edit, App app, PageRenderResult page)
         {
             dynamic session =
-                homeSessionManager.CreateExpandoObject(
+                homeSessionProcessingService.CreateExpandoObject(
                     context: HttpContext);
 
             session.app = new

@@ -7,7 +7,7 @@ using System.IO;
 
 namespace Web.Services.Orchestrations.Api;
 
-internal interface IApiScriptOrchestrationService
+public interface IApiScriptOrchestrationService
 {
     ValueTask<string> ExecuteApiScriptRequestAsync(
         ApiScriptRequest apiScriptRequest);

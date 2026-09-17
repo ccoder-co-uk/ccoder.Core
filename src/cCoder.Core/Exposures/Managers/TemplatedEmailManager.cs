@@ -13,7 +13,7 @@ namespace cCoder.Core.Exposures.Managers;
 internal sealed class TemplatedEmailManager(
     ITemplatedEmailOperationOrchestrationService
         templatedEmailOperationOrchestrationService
-) : ITemplatedEmailManager, ITemplatedEmailOrchestrationService
+) : ITemplatedEmailManager
 {
     public async ValueTask<QueuedEmail> QueueAppTemplatedEmailAsync(
         CoreApp app,

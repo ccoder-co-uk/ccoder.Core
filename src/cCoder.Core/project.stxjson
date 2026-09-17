@@ -3761,7 +3761,7 @@
         {
           "Id": "cCoder.Core.Dependencies.Packages.CorePackageDependency.ExportAppConfigurationAsync(System.Int32,System.String)",
           "Name": "ExportAppConfigurationAsync",
-          "LineNumber": 71,
+          "LineNumber": 64,
           "Inputs": [
             {
               "Name": "appId",
@@ -3860,7 +3860,7 @@
         {
           "Id": "cCoder.Core.Dependencies.Packages.CorePackageDependency.ExportFolderRolesAsync(System.Int32,System.String)",
           "Name": "ExportFolderRolesAsync",
-          "LineNumber": 157,
+          "LineNumber": 150,
           "Inputs": [
             {
               "Name": "appId",
@@ -3974,7 +3974,7 @@
         {
           "Id": "cCoder.Core.Dependencies.Packages.CorePackageDependency.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 206,
+          "LineNumber": 199,
           "Inputs": [
             {
               "Name": "appId",
@@ -4013,7 +4013,7 @@
         {
           "Id": "cCoder.Core.Dependencies.Packages.CorePackageDependency.ExportPageRolesAsync(System.Int32,System.String)",
           "Name": "ExportPageRolesAsync",
-          "LineNumber": 108,
+          "LineNumber": 101,
           "Inputs": [
             {
               "Name": "appId",
@@ -4127,7 +4127,7 @@
         {
           "Id": "cCoder.Core.Dependencies.Packages.CorePackageDependency.ImportAppConfigurationAsync(System.Int32,System.String)",
           "Name": "ImportAppConfigurationAsync",
-          "LineNumber": 33,
+          "LineNumber": 26,
           "Inputs": [
             {
               "Name": "appId",
@@ -4761,10 +4761,10 @@
               "IsDependencyBoundary": true
             },
             {
-              "TypeName": "cCoder.Core.Exposures.ICoreAppManager",
+              "TypeName": "cCoder.Core.Services.Aggregations.IAppAggregationService",
               "MethodName": "DeleteAppAsync",
-              "MethodId": "cCoder.Core.Exposures.ICoreAppManager.DeleteAppAsync(System.Int32)",
-              "StandardElementType": "Exposure",
+              "MethodId": "cCoder.Core.Services.Aggregations.IAppAggregationService.DeleteAppAsync(System.Int32)",
+              "StandardElementType": "AggregationService",
               "IsDependencyBoundary": false
             }
           ],
@@ -4955,10 +4955,10 @@
               "IsDependencyBoundary": true
             },
             {
-              "TypeName": "cCoder.Core.Exposures.ICoreAppManager",
+              "TypeName": "cCoder.Core.Services.Aggregations.IAppAggregationService",
               "MethodName": "AddAppAsync",
-              "MethodId": "cCoder.Core.Exposures.ICoreAppManager.AddAppAsync(cCoder.Data.Models.CMS.App)",
-              "StandardElementType": "Exposure",
+              "MethodId": "cCoder.Core.Services.Aggregations.IAppAggregationService.AddAppAsync(cCoder.Data.Models.CMS.App)",
+              "StandardElementType": "AggregationService",
               "IsDependencyBoundary": false
             }
           ],
@@ -5100,10 +5100,10 @@
               "IsDependencyBoundary": true
             },
             {
-              "TypeName": "cCoder.Core.Exposures.ICoreAppManager",
+              "TypeName": "cCoder.Core.Services.Aggregations.IAppAggregationService",
               "MethodName": "UpdateAppAsync",
-              "MethodId": "cCoder.Core.Exposures.ICoreAppManager.UpdateAppAsync(cCoder.Data.Models.CMS.App)",
-              "StandardElementType": "Exposure",
+              "MethodId": "cCoder.Core.Services.Aggregations.IAppAggregationService.UpdateAppAsync(cCoder.Data.Models.CMS.App)",
+              "StandardElementType": "AggregationService",
               "IsDependencyBoundary": false
             }
           ],
@@ -5316,10 +5316,10 @@
               "IsDependencyBoundary": true
             },
             {
-              "TypeName": "cCoder.Core.Exposures.IPackageManager",
+              "TypeName": "cCoder.Core.Services.Aggregations.Packages.IPackageManagerAggregationService",
               "MethodName": "ExportPackagesAsync",
-              "MethodId": "cCoder.Core.Exposures.IPackageManager.ExportPackagesAsync(System.Int32,System.String[],System.String)",
-              "StandardElementType": "Exposure",
+              "MethodId": "cCoder.Core.Services.Aggregations.Packages.IPackageManagerAggregationService.ExportPackagesAsync(System.Int32,System.String[],System.String)",
+              "StandardElementType": "AggregationService",
               "IsDependencyBoundary": false
             }
           ],
@@ -5396,7 +5396,7 @@
     {
       "Name": "cCoder.Core.Exposures.Controllers.SetupController",
       "StandardElementType": "HttpExposure",
-      "LineNumber": 14,
+      "LineNumber": 13,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -5415,7 +5415,7 @@
         {
           "Id": "cCoder.Core.Exposures.Controllers.SetupController.Get(System.Threading.CancellationToken)",
           "Name": "Get",
-          "LineNumber": 22,
+          "LineNumber": 20,
           "Inputs": [
             {
               "Name": "cancellationToken",
@@ -5454,10 +5454,10 @@
               "IsDependencyBoundary": true
             },
             {
-              "TypeName": "cCoder.Core.Exposures.IFirstTimeSetupManager",
+              "TypeName": "cCoder.Core.Services.Orchestrations.IFirstTimeSetupStateOrchestrationService",
               "MethodName": "IsInitializedAsync",
-              "MethodId": "cCoder.Core.Exposures.IFirstTimeSetupManager.IsInitializedAsync(System.Threading.CancellationToken)",
-              "StandardElementType": "Exposure",
+              "MethodId": "cCoder.Core.Services.Orchestrations.IFirstTimeSetupStateOrchestrationService.IsInitializedAsync(System.Threading.CancellationToken)",
+              "StandardElementType": "OrchestrationService",
               "IsDependencyBoundary": false
             }
           ],
@@ -5467,16 +5467,12 @@
             "cCoder.Core.Models.Exceptions.CoreOrchestrationDependencyException",
             "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException",
             "cCoder.Core.Models.Exceptions.CoreOrchestrationValidationException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingValidationException",
             "cCoder.Core.Models.Exceptions.CoreServiceException",
             "cCoder.Core.Models.Exceptions.CoreValidationException"
           ],
           "IncomingExceptionTypes": [
             "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingValidationException"
+            "cCoder.Core.Models.Exceptions.CoreOrchestrationValidationException"
           ],
           "ThrowsExceptionTypes": [],
           "HttpMethods": [
@@ -5526,7 +5522,7 @@
     {
       "Name": "cCoder.Core.Exposures.Controllers.TemplatedEmailController",
       "StandardElementType": "HttpExposure",
-      "LineNumber": 17,
+      "LineNumber": 16,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -5545,7 +5541,7 @@
         {
           "Id": "cCoder.Core.Exposures.Controllers.TemplatedEmailController.Post(cCoder.Mail.Models.TemplatedEmailDetails)",
           "Name": "Post",
-          "LineNumber": 22,
+          "LineNumber": 21,
           "Inputs": [
             {
               "Name": "newTemplatedEmailDetails",
@@ -5584,10 +5580,10 @@
               "IsDependencyBoundary": true
             },
             {
-              "TypeName": "cCoder.Core.Exposures.Managers.ITemplatedEmailManager",
+              "TypeName": "cCoder.Core.Services.Orchestrations.ITemplatedEmailOrchestrationService",
               "MethodName": "QueueTemplatedEmailDetailsAsync",
-              "MethodId": "cCoder.Core.Exposures.Managers.ITemplatedEmailManager.QueueTemplatedEmailDetailsAsync(cCoder.Mail.Models.TemplatedEmailDetails)",
-              "StandardElementType": "Exposure",
+              "MethodId": "cCoder.Core.Services.Orchestrations.ITemplatedEmailOrchestrationService.QueueTemplatedEmailDetailsAsync(cCoder.Mail.Models.TemplatedEmailDetails)",
+              "StandardElementType": "OrchestrationService",
               "IsDependencyBoundary": false
             }
           ],
@@ -6222,16 +6218,6 @@
           "Kind": "Interface",
           "IsInCurrentProject": true,
           "StandardElementType": "Exposure"
-        },
-        {
-          "Id": "cCoder.Core:cCoder.Core.Services.Orchestrations.ITemplatedEmailOrchestrationService",
-          "FullName": "cCoder.Core.Services.Orchestrations.ITemplatedEmailOrchestrationService",
-          "Name": "ITemplatedEmailOrchestrationService",
-          "Namespace": "cCoder.Core.Services.Orchestrations",
-          "AssemblyName": "cCoder.Core",
-          "Kind": "Interface",
-          "IsInCurrentProject": true,
-          "StandardElementType": "OrchestrationService"
         }
       ],
       "Properties": [],
@@ -6287,23 +6273,9 @@
               "IsDependencyBoundary": false
             }
           ],
-          "PossibleExceptionTypes": [
-            "System.InvalidOperationException",
-            "cCoder.Core.Models.Exceptions.CoreDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationValidationException",
-            "cCoder.Core.Models.Exceptions.CoreServiceException",
-            "cCoder.Core.Models.Exceptions.CoreValidationException"
-          ],
-          "IncomingExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException"
-          ],
-          "ThrowsExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException"
-          ],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
           "HttpMethods": [],
           "HttpResponses": [],
           "IsHttpRequestHandler": false,
@@ -6336,23 +6308,9 @@
               "IsDependencyBoundary": false
             }
           ],
-          "PossibleExceptionTypes": [
-            "System.InvalidOperationException",
-            "cCoder.Core.Models.Exceptions.CoreDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationValidationException",
-            "cCoder.Core.Models.Exceptions.CoreServiceException",
-            "cCoder.Core.Models.Exceptions.CoreValidationException"
-          ],
-          "IncomingExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException"
-          ],
-          "ThrowsExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException"
-          ],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
           "HttpMethods": [],
           "HttpResponses": [],
           "IsHttpRequestHandler": false,
@@ -9208,11 +9166,21 @@
     {
       "Name": "cCoder.Core.Services.Aggregations.AppAggregationService",
       "StandardElementType": "AggregationService",
-      "LineNumber": 19,
+      "LineNumber": 20,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
       "Interfaces": [
+        {
+          "Id": "cCoder.Core:cCoder.Core.Exposures.ICoreAppManager",
+          "FullName": "cCoder.Core.Exposures.ICoreAppManager",
+          "Name": "ICoreAppManager",
+          "Namespace": "cCoder.Core.Exposures",
+          "AssemblyName": "cCoder.Core",
+          "Kind": "Interface",
+          "IsInCurrentProject": true,
+          "StandardElementType": "Exposure"
+        },
         {
           "Id": "cCoder.Core:cCoder.Core.Services.Aggregations.IAppAggregationService",
           "FullName": "cCoder.Core.Services.Aggregations.IAppAggregationService",
@@ -9239,7 +9207,7 @@
         {
           "Id": "cCoder.Core.Services.Aggregations.AppAggregationService.AddAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "AddAppAsync",
-          "LineNumber": 30,
+          "LineNumber": 31,
           "Inputs": [
             {
               "Name": "newApp",
@@ -9248,7 +9216,8 @@
           ],
           "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.CMS.App\u003E",
           "Implements": [
-            "cCoder.Core.Exposures.ICoreAppManager.AddAppAsync(cCoder.Data.Models.CMS.App)"
+            "cCoder.Core.Exposures.ICoreAppManager.AddAppAsync(cCoder.Data.Models.CMS.App)",
+            "cCoder.Core.Services.Aggregations.IAppAggregationService.AddAppAsync(cCoder.Data.Models.CMS.App)"
           ],
           "Calls": [
             {
@@ -9330,7 +9299,7 @@
         {
           "Id": "cCoder.Core.Services.Aggregations.AppAggregationService.DeleteAppAsync(System.Int32)",
           "Name": "DeleteAppAsync",
-          "LineNumber": 90,
+          "LineNumber": 91,
           "Inputs": [
             {
               "Name": "appId",
@@ -9339,7 +9308,8 @@
           ],
           "ReturnType": "System.Threading.Tasks.ValueTask\u003CSystem.Boolean\u003E",
           "Implements": [
-            "cCoder.Core.Exposures.ICoreAppManager.DeleteAppAsync(System.Int32)"
+            "cCoder.Core.Exposures.ICoreAppManager.DeleteAppAsync(System.Int32)",
+            "cCoder.Core.Services.Aggregations.IAppAggregationService.DeleteAppAsync(System.Int32)"
           ],
           "Calls": [
             {
@@ -9414,7 +9384,7 @@
         {
           "Id": "cCoder.Core.Services.Aggregations.AppAggregationService.UpdateAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "UpdateAppAsync",
-          "LineNumber": 57,
+          "LineNumber": 58,
           "Inputs": [
             {
               "Name": "updatedApp",
@@ -9423,7 +9393,8 @@
           ],
           "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.CMS.App\u003E",
           "Implements": [
-            "cCoder.Core.Exposures.ICoreAppManager.UpdateAppAsync(cCoder.Data.Models.CMS.App)"
+            "cCoder.Core.Exposures.ICoreAppManager.UpdateAppAsync(cCoder.Data.Models.CMS.App)",
+            "cCoder.Core.Services.Aggregations.IAppAggregationService.UpdateAppAsync(cCoder.Data.Models.CMS.App)"
           ],
           "Calls": [
             {
@@ -9618,11 +9589,21 @@
     {
       "Name": "cCoder.Core.Services.Aggregations.Packages.PackageManagerAggregationService",
       "StandardElementType": "AggregationService",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
       "Interfaces": [
+        {
+          "Id": "cCoder.Core:cCoder.Core.Exposures.IPackageManager",
+          "FullName": "cCoder.Core.Exposures.IPackageManager",
+          "Name": "IPackageManager",
+          "Namespace": "cCoder.Core.Exposures",
+          "AssemblyName": "cCoder.Core",
+          "Kind": "Interface",
+          "IsInCurrentProject": true,
+          "StandardElementType": "Exposure"
+        },
         {
           "Id": "cCoder.Core:cCoder.Core.Services.Aggregations.Packages.IPackageManagerAggregationService",
           "FullName": "cCoder.Core.Services.Aggregations.Packages.IPackageManagerAggregationService",
@@ -9639,7 +9620,7 @@
         {
           "Id": "cCoder.Core.Services.Aggregations.Packages.PackageManagerAggregationService.ExportPackagesAsync(System.Int32,System.String[],System.String)",
           "Name": "ExportPackagesAsync",
-          "LineNumber": 33,
+          "LineNumber": 34,
           "Inputs": [
             {
               "Name": "appId",
@@ -9656,7 +9637,8 @@
           ],
           "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.Packaging.Package[]\u003E",
           "Implements": [
-            "cCoder.Core.Exposures.IPackageManager.ExportPackagesAsync(System.Int32,System.String[],System.String)"
+            "cCoder.Core.Exposures.IPackageManager.ExportPackagesAsync(System.Int32,System.String[],System.String)",
+            "cCoder.Core.Services.Aggregations.Packages.IPackageManagerAggregationService.ExportPackagesAsync(System.Int32,System.String[],System.String)"
           ],
           "Calls": [
             {
@@ -9791,7 +9773,6 @@
           ],
           "Calls": [],
           "PossibleExceptionTypes": [
-            "System.InvalidOperationException",
             "cCoder.Core.Models.Exceptions.CoreDependencyException",
             "cCoder.Core.Models.Exceptions.CoreOrchestrationDependencyException",
             "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException",
@@ -9801,7 +9782,6 @@
           ],
           "IncomingExceptionTypes": [
             "cCoder.Core.Models.Exceptions.CoreDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationDependencyException",
             "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException",
             "cCoder.Core.Models.Exceptions.CoreServiceException",
             "cCoder.Core.Models.Exceptions.CoreValidationException"
@@ -9836,7 +9816,6 @@
           ],
           "Calls": [],
           "PossibleExceptionTypes": [
-            "System.InvalidOperationException",
             "cCoder.Core.Models.Exceptions.CoreDependencyException",
             "cCoder.Core.Models.Exceptions.CoreOrchestrationDependencyException",
             "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException",
@@ -9846,7 +9825,6 @@
           ],
           "IncomingExceptionTypes": [
             "cCoder.Core.Models.Exceptions.CoreDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationDependencyException",
             "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException",
             "cCoder.Core.Models.Exceptions.CoreServiceException",
             "cCoder.Core.Models.Exceptions.CoreValidationException"
@@ -9881,7 +9859,6 @@
           ],
           "Calls": [],
           "PossibleExceptionTypes": [
-            "System.InvalidOperationException",
             "cCoder.Core.Models.Exceptions.CoreDependencyException",
             "cCoder.Core.Models.Exceptions.CoreOrchestrationDependencyException",
             "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException",
@@ -9891,7 +9868,6 @@
           ],
           "IncomingExceptionTypes": [
             "cCoder.Core.Models.Exceptions.CoreDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationDependencyException",
             "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException",
             "cCoder.Core.Models.Exceptions.CoreServiceException",
             "cCoder.Core.Models.Exceptions.CoreValidationException"
@@ -13448,6 +13424,66 @@
           "HasKeyParameter": false,
           "HandlesNullWithNotFound": false,
           "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Services.Orchestrations.FirstTimeSetupStateOrchestrationService.NormalizeHost(System.String)",
+          "Name": "NormalizeHost",
+          "LineNumber": 34,
+          "Inputs": [
+            {
+              "Name": "host",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.String",
+          "Implements": [
+            "cCoder.Core.Services.Orchestrations.IFirstTimeSetupStateOrchestrationService.NormalizeHost(System.String)"
+          ],
+          "Calls": [
+            {
+              "TypeName": "System.String",
+              "MethodName": "Replace",
+              "MethodId": "System.String.Replace(System.String,System.String?,System.StringComparison)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "System.String",
+              "MethodName": "ToLowerInvariant",
+              "MethodId": "System.String.ToLowerInvariant()",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "System.String",
+              "MethodName": "Trim",
+              "MethodId": "System.String.Trim()",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
+          "PossibleExceptionTypes": [
+            "System.ArgumentException",
+            "cCoder.Core.Models.Exceptions.CoreOrchestrationDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException",
+            "cCoder.Core.Models.Exceptions.CoreOrchestrationValidationException"
+          ],
+          "IncomingExceptionTypes": [
+            "System.ArgumentException",
+            "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException"
+          ],
+          "ThrowsExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException",
+            "cCoder.Core.Models.Exceptions.CoreOrchestrationValidationException"
+          ],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
         }
       ]
     },
@@ -13531,7 +13567,7 @@
     {
       "Name": "cCoder.Core.Services.Orchestrations.TemplatedEmailOperationOrchestrationService",
       "StandardElementType": "OrchestrationService",
-      "LineNumber": 10,
+      "LineNumber": 12,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -13545,54 +13581,35 @@
           "Kind": "Interface",
           "IsInCurrentProject": true,
           "StandardElementType": "OrchestrationService"
+        },
+        {
+          "Id": "cCoder.Core:cCoder.Core.Services.Orchestrations.ITemplatedEmailOrchestrationService",
+          "FullName": "cCoder.Core.Services.Orchestrations.ITemplatedEmailOrchestrationService",
+          "Name": "ITemplatedEmailOrchestrationService",
+          "Namespace": "cCoder.Core.Services.Orchestrations",
+          "AssemblyName": "cCoder.Core",
+          "Kind": "Interface",
+          "IsInCurrentProject": true,
+          "StandardElementType": "OrchestrationService"
         }
       ],
       "Properties": [],
       "Methods": [
         {
-          "Id": "cCoder.Core.Services.Orchestrations.TemplatedEmailOperationOrchestrationService.QueueTemplatedEmailOperationAsync(cCoder.Core.Models.TemplatedEmailOperation)",
-          "Name": "QueueTemplatedEmailOperationAsync",
-          "LineNumber": 16,
+          "Id": "cCoder.Core.Services.Orchestrations.TemplatedEmailOperationOrchestrationService.QueueTemplatedEmailDetailsAsync(cCoder.Mail.Models.TemplatedEmailDetails)",
+          "Name": "QueueTemplatedEmailDetailsAsync",
+          "LineNumber": 19,
           "Inputs": [
             {
-              "Name": "templatedEmailOperation",
-              "Type": "cCoder.Core.Models.TemplatedEmailOperation"
+              "Name": "templatedEmailDetails",
+              "Type": "cCoder.Mail.Models.TemplatedEmailDetails"
             }
           ],
-          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Core.Models.TemplatedEmailOperation\u003E",
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.Mail.QueuedEmail\u003E",
           "Implements": [
-            "cCoder.Core.Services.Orchestrations.ITemplatedEmailOperationOrchestrationService.QueueTemplatedEmailOperationAsync(cCoder.Core.Models.TemplatedEmailOperation)"
+            "cCoder.Core.Services.Orchestrations.ITemplatedEmailOrchestrationService.QueueTemplatedEmailDetailsAsync(cCoder.Mail.Models.TemplatedEmailDetails)"
           ],
-          "Calls": [
-            {
-              "TypeName": "cCoder.Core.Services.Foundations.TemplatedEmails.ITemplatedEmailContentService",
-              "MethodName": "RenderTemplatedEmailOperationContent",
-              "MethodId": "cCoder.Core.Services.Foundations.TemplatedEmails.ITemplatedEmailContentService.RenderTemplatedEmailOperationContent(cCoder.Core.Models.TemplatedEmailOperation)",
-              "StandardElementType": "FoundationService",
-              "IsDependencyBoundary": false
-            },
-            {
-              "TypeName": "cCoder.Core.Services.Foundations.TemplatedEmails.ITemplatedEmailContentService",
-              "MethodName": "ResolveTemplatedEmailOperationContent",
-              "MethodId": "cCoder.Core.Services.Foundations.TemplatedEmails.ITemplatedEmailContentService.ResolveTemplatedEmailOperationContent(cCoder.Core.Models.TemplatedEmailOperation)",
-              "StandardElementType": "FoundationService",
-              "IsDependencyBoundary": false
-            },
-            {
-              "TypeName": "cCoder.Core.Services.Foundations.TemplatedEmails.ITemplatedEmailIdentityService",
-              "MethodName": "ResolveTemplatedEmailOperationIdentity",
-              "MethodId": "cCoder.Core.Services.Foundations.TemplatedEmails.ITemplatedEmailIdentityService.ResolveTemplatedEmailOperationIdentity(cCoder.Core.Models.TemplatedEmailOperation)",
-              "StandardElementType": "FoundationService",
-              "IsDependencyBoundary": false
-            },
-            {
-              "TypeName": "cCoder.Core.Services.Foundations.TemplatedEmails.ITemplatedEmailQueueService",
-              "MethodName": "QueueTemplatedEmailOperationAsync",
-              "MethodId": "cCoder.Core.Services.Foundations.TemplatedEmails.ITemplatedEmailQueueService.QueueTemplatedEmailOperationAsync(cCoder.Core.Models.TemplatedEmailOperation)",
-              "StandardElementType": "FoundationService",
-              "IsDependencyBoundary": false
-            }
-          ],
+          "Calls": [],
           "PossibleExceptionTypes": [
             "System.InvalidOperationException",
             "cCoder.Core.Models.Exceptions.CoreDependencyException",
@@ -18498,24 +18515,89 @@
     {
       "Name": "cCoder.Core.Services.Aggregations.IAppAggregationService",
       "StandardElementType": "AggregationService",
-      "LineNumber": 11,
-      "IsPublic": false,
+      "LineNumber": 9,
+      "IsPublic": true,
       "Kind": "Interface",
       "BaseType": null,
-      "Interfaces": [
-        {
-          "Id": "cCoder.Core:cCoder.Core.Exposures.ICoreAppManager",
-          "FullName": "cCoder.Core.Exposures.ICoreAppManager",
-          "Name": "ICoreAppManager",
-          "Namespace": "cCoder.Core.Exposures",
-          "AssemblyName": "cCoder.Core",
-          "Kind": "Interface",
-          "IsInCurrentProject": true,
-          "StandardElementType": "Exposure"
-        }
-      ],
+      "Interfaces": [],
       "Properties": [],
-      "Methods": []
+      "Methods": [
+        {
+          "Id": "cCoder.Core.Services.Aggregations.IAppAggregationService.AddAppAsync(cCoder.Data.Models.CMS.App)",
+          "Name": "AddAppAsync",
+          "LineNumber": 11,
+          "Inputs": [
+            {
+              "Name": "newApp",
+              "Type": "cCoder.Data.Models.CMS.App"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.CMS.App\u003E",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Services.Aggregations.IAppAggregationService.DeleteAppAsync(System.Int32)",
+          "Name": "DeleteAppAsync",
+          "LineNumber": 15,
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CSystem.Boolean\u003E",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Services.Aggregations.IAppAggregationService.UpdateAppAsync(cCoder.Data.Models.CMS.App)",
+          "Name": "UpdateAppAsync",
+          "LineNumber": 13,
+          "Inputs": [
+            {
+              "Name": "updatedApp",
+              "Type": "cCoder.Data.Models.CMS.App"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.CMS.App\u003E",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        }
+      ]
     },
     {
       "Name": "cCoder.Core.Services.Aggregations.ISecurityAccountEmailAggregationService",
@@ -18707,23 +18789,46 @@
       "Name": "cCoder.Core.Services.Aggregations.Packages.IPackageManagerAggregationService",
       "StandardElementType": "AggregationService",
       "LineNumber": 9,
-      "IsPublic": false,
+      "IsPublic": true,
       "Kind": "Interface",
       "BaseType": null,
-      "Interfaces": [
-        {
-          "Id": "cCoder.Core:cCoder.Core.Exposures.IPackageManager",
-          "FullName": "cCoder.Core.Exposures.IPackageManager",
-          "Name": "IPackageManager",
-          "Namespace": "cCoder.Core.Exposures",
-          "AssemblyName": "cCoder.Core",
-          "Kind": "Interface",
-          "IsInCurrentProject": true,
-          "StandardElementType": "Exposure"
-        }
-      ],
+      "Interfaces": [],
       "Properties": [],
-      "Methods": []
+      "Methods": [
+        {
+          "Id": "cCoder.Core.Services.Aggregations.Packages.IPackageManagerAggregationService.ExportPackagesAsync(System.Int32,System.String[],System.String)",
+          "Name": "ExportPackagesAsync",
+          "LineNumber": 11,
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "packageNames",
+              "Type": "System.String[]"
+            },
+            {
+              "Name": "sourceApi",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.Packaging.Package[]\u003E",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        }
+      ]
     },
     {
       "Name": "cCoder.Core.Services.Foundations.AllowedOrigins.IAllowedOriginStoreService",
@@ -20526,10 +20631,10 @@
           "Implements": [],
           "Calls": [
             {
-              "TypeName": "cCoder.Core.Exposures.ICoreAppManager",
+              "TypeName": "cCoder.Core.Services.Aggregations.IAppAggregationService",
               "MethodName": "AddAppAsync",
-              "MethodId": "cCoder.Core.Exposures.ICoreAppManager.AddAppAsync(cCoder.Data.Models.CMS.App)",
-              "StandardElementType": "Exposure",
+              "MethodId": "cCoder.Core.Services.Aggregations.IAppAggregationService.AddAppAsync(cCoder.Data.Models.CMS.App)",
+              "StandardElementType": "AggregationService",
               "IsDependencyBoundary": false
             }
           ],
@@ -20559,10 +20664,10 @@
           "Implements": [],
           "Calls": [
             {
-              "TypeName": "cCoder.Core.Exposures.ICoreAppManager",
+              "TypeName": "cCoder.Core.Services.Aggregations.IAppAggregationService",
               "MethodName": "DeleteAppAsync",
-              "MethodId": "cCoder.Core.Exposures.ICoreAppManager.DeleteAppAsync(System.Int32)",
-              "StandardElementType": "Exposure",
+              "MethodId": "cCoder.Core.Services.Aggregations.IAppAggregationService.DeleteAppAsync(System.Int32)",
+              "StandardElementType": "AggregationService",
               "IsDependencyBoundary": false
             }
           ],
@@ -20592,10 +20697,10 @@
           "Implements": [],
           "Calls": [
             {
-              "TypeName": "cCoder.Core.Exposures.ICoreAppManager",
+              "TypeName": "cCoder.Core.Services.Aggregations.IAppAggregationService",
               "MethodName": "UpdateAppAsync",
-              "MethodId": "cCoder.Core.Exposures.ICoreAppManager.UpdateAppAsync(cCoder.Data.Models.CMS.App)",
-              "StandardElementType": "Exposure",
+              "MethodId": "cCoder.Core.Services.Aggregations.IAppAggregationService.UpdateAppAsync(cCoder.Data.Models.CMS.App)",
+              "StandardElementType": "AggregationService",
               "IsDependencyBoundary": false
             }
           ],
@@ -20617,7 +20722,7 @@
       "Name": "cCoder.Core.Services.Orchestrations.IFirstTimeSetupStateOrchestrationService",
       "StandardElementType": "OrchestrationService",
       "LineNumber": 7,
-      "IsPublic": false,
+      "IsPublic": true,
       "Kind": "Interface",
       "BaseType": null,
       "Interfaces": [],
@@ -20634,6 +20739,31 @@
             }
           ],
           "ReturnType": "System.Threading.Tasks.Task\u003CSystem.Boolean\u003E",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Services.Orchestrations.IFirstTimeSetupStateOrchestrationService.NormalizeHost(System.String)",
+          "Name": "NormalizeHost",
+          "LineNumber": 12,
+          "Inputs": [
+            {
+              "Name": "host",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.String",
           "Implements": [],
           "Calls": [],
           "PossibleExceptionTypes": [],
@@ -20727,24 +20857,39 @@
     {
       "Name": "cCoder.Core.Services.Orchestrations.ITemplatedEmailOrchestrationService",
       "StandardElementType": "OrchestrationService",
-      "LineNumber": 13,
-      "IsPublic": false,
+      "LineNumber": 11,
+      "IsPublic": true,
       "Kind": "Interface",
       "BaseType": null,
-      "Interfaces": [
-        {
-          "Id": "cCoder.Core:cCoder.Core.Exposures.Managers.ITemplatedEmailManager",
-          "FullName": "cCoder.Core.Exposures.Managers.ITemplatedEmailManager",
-          "Name": "ITemplatedEmailManager",
-          "Namespace": "cCoder.Core.Exposures.Managers",
-          "AssemblyName": "cCoder.Core",
-          "Kind": "Interface",
-          "IsInCurrentProject": true,
-          "StandardElementType": "Exposure"
-        }
-      ],
+      "Interfaces": [],
       "Properties": [],
-      "Methods": []
+      "Methods": [
+        {
+          "Id": "cCoder.Core.Services.Orchestrations.ITemplatedEmailOrchestrationService.QueueTemplatedEmailDetailsAsync(cCoder.Mail.Models.TemplatedEmailDetails)",
+          "Name": "QueueTemplatedEmailDetailsAsync",
+          "LineNumber": 13,
+          "Inputs": [
+            {
+              "Name": "templatedEmailDetails",
+              "Type": "cCoder.Mail.Models.TemplatedEmailDetails"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.Mail.QueuedEmail\u003E",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        }
+      ]
     },
     {
       "Name": "cCoder.Core.Services.Orchestrations.IUserRegistrationOrchestrationService",
@@ -21812,19 +21957,15 @@
     },
     {
       "FromType": "cCoder.Core.Exposures.Controllers.SetupController",
-      "ToType": "cCoder.Core.Exposures.Setup.FirstTimeSetupStateManager"
-    },
-    {
-      "FromType": "cCoder.Core.Exposures.Controllers.SetupController",
-      "ToType": "cCoder.Core.Exposures.Setup.SetupRequestHostManager"
-    },
-    {
-      "FromType": "cCoder.Core.Exposures.Controllers.SetupController",
       "ToType": "cCoder.Core.Models.CoreConfiguration"
     },
     {
+      "FromType": "cCoder.Core.Exposures.Controllers.SetupController",
+      "ToType": "cCoder.Core.Services.Orchestrations.FirstTimeSetupStateOrchestrationService"
+    },
+    {
       "FromType": "cCoder.Core.Exposures.Controllers.TemplatedEmailController",
-      "ToType": "cCoder.Core.Exposures.Managers.TemplatedEmailManager"
+      "ToType": "cCoder.Core.Services.Orchestrations.TemplatedEmailOperationOrchestrationService"
     },
     {
       "FromType": "cCoder.Core.Exposures.Cors.CoreAllowedOriginStore",

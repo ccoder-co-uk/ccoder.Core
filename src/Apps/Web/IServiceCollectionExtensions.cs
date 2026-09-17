@@ -6,7 +6,6 @@ using cCoder.Core;
 using cCoder.Core.Models;
 using Web.Models;
 using Web.Services.Processings;
-using Web.Exposures;
 using Web.Services.Aggregations;
 using Web.Brokers.Api;
 using Web.Services.Foundations.Api;
@@ -110,11 +109,6 @@ public static class IServiceCollectionExtensions
     private static void AddExposures(this IServiceCollection services)
     {
         services.AddHealthChecks();
-        services.AddScoped<IHomeSessionManager, HomeSessionManager>();
-        services.AddScoped<IApiCacheManager, ApiCacheManager>();
-        services.AddScoped<IApiScriptManager, ApiScriptManager>();
-        services.AddScoped<IApiContextManager, ApiContextManager>();
-        services.AddScoped<IMetadataManager, MetadataManager>();
     }
 
 }

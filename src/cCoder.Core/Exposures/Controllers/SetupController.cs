@@ -5,16 +5,14 @@
 using cCoder.Core;
 using Microsoft.AspNetCore.Mvc;
 using cCoder.Core.Models;
-using cCoder.Core.Services.Setup;
-using cCoder.Core.Exposures.Setup;
+using cCoder.Core.Services.Orchestrations;
 using cCoder.Core.Models.Exceptions;
 
 namespace cCoder.Core.Exposures.Controllers;
 
 [Route("Setup")]
 public sealed class SetupController(
-    IFirstTimeSetupManager setupStateService,
-    ISetupRequestHostManager setupRequestHostManager,
+    IFirstTimeSetupStateOrchestrationService setupStateService,
     CoreConfiguration configuration)
     : Controller
 {
@@ -67,7 +65,7 @@ public sealed class SetupController(
         new()
         {
             AssetsRoot = configuration.Packaging.AssetsRoot,
-            Domain = setupRequestHostManager.NormalizeHost(
+            Domain = setupStateService.NormalizeHost(
                 host: Request.Host.Host),
             Setup = new FirstTimeSetupRequest(),
         };

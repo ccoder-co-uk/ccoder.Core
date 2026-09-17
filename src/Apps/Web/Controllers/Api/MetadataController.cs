@@ -3,14 +3,14 @@
 // ---------------------------------------------------------------
 
 using Microsoft.AspNetCore.Mvc;
-using Web.Exposures;
+using Web.Services.Aggregations;
 using Web.Models.Exceptions;
 
 namespace Web.Controllers.Api;
 
 [Route("Api")]
 public sealed class MetadataController(
-    IMetadataManager metadataManager)
+    IApiCacheAggregationService apiCacheAggregationService)
     : Controller
 {
     [HttpGet("GetMetadata")]
@@ -20,19 +20,19 @@ public sealed class MetadataController(
         try
         {
             return Content(
-                content: metadataManager.GetAll(
+                content: apiCacheAggregationService.GetMetadata(
                     culture: culture),
                 contentType: "application/json");
         }
         catch (ApiCacheValidationException exception)
         {
-            metadataManager.LogError(exception: exception);
+            apiCacheAggregationService.LogError(exception: exception);
 
             return BadRequest(error: "The metadata request is invalid.");
         }
         catch (Exception exception)
         {
-            metadataManager.LogError(exception: exception);
+            apiCacheAggregationService.LogError(exception: exception);
 
             return StatusCode(
                 statusCode: StatusCodes.Status500InternalServerError,
