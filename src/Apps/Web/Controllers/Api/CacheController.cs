@@ -3,14 +3,14 @@
 // ---------------------------------------------------------------
 
 using Microsoft.AspNetCore.Mvc;
-using Web.Exposures;
+using Web.Services.Aggregations;
 using Web.Models.Exceptions;
 
 namespace Web.Controllers.Api;
 
 [Route("Api")]
 public sealed class CacheController(
-    IApiCacheManager apiCacheManager)
+    IApiCacheAggregationService apiCacheManager)
     : Controller
 {
     [HttpGet("RefreshCache")]

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Services.Processings;
 
-internal interface IHomeSessionProcessingService
+public interface IHomeSessionProcessingService
 {
     bool CanUseSession(
         HttpContext context);

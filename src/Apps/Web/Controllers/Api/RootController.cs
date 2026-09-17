@@ -5,14 +5,14 @@
 using cCoder.Core.Exposures.OData.Responses;
 using cCoder.Data.Models;
 using Microsoft.AspNetCore.Mvc;
-using Web.Exposures;
+using Web.Services.Foundations.Api;
 
 
 namespace Web.Controllers.Api
 {
     [Route("Api")]
     public class ApiRootController(
-        IApiContextManager apiContextManager)
+        IApiContextService apiContextManager)
         : Controller
     {
         [HttpGet()]

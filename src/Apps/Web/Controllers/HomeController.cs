@@ -12,7 +12,7 @@ using cCoder.Core.Exposures.Setup;
 using cCoder.Core.Exposures;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using Web.Exposures;
+using Web.Services.Processings;
 using App = cCoder.Data.Models.CMS.App;
 using PageRenderResult = cCoder.ContentManagement.Models.PageRenderResult;
 using System.ComponentModel.DataAnnotations;
@@ -24,12 +24,12 @@ namespace Web.Controllers
         IPageRenderer pageRenderer,
         IFirstTimeSetupManager setupStateService,
         ISetupRequestHostManager setupRequestHostManager,
-        IHomeSessionManager homeSessionManager) : Controller
+        IHomeSessionProcessingService homeSessionManager) : Controller
     {
         private readonly IPageRenderer pageRenderer = pageRenderer;
         private readonly IFirstTimeSetupManager setupStateService = setupStateService;
         private readonly ISetupRequestHostManager setupRequestHostManager = setupRequestHostManager;
-        private readonly IHomeSessionManager homeSessionManager = homeSessionManager;
+        private readonly IHomeSessionProcessingService homeSessionManager = homeSessionManager;
 
         private const string CultureExplicitSessionKey = "cultureexplicit";
 

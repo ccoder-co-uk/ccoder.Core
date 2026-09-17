@@ -3,14 +3,14 @@
 // ---------------------------------------------------------------
 
 using Microsoft.AspNetCore.Mvc;
-using Web.Exposures;
+using Web.Services.Aggregations;
 using Web.Models.Exceptions;
 
 namespace Web.Controllers.Api;
 
 [Route("Api")]
 public sealed class MetadataController(
-    IMetadataManager metadataManager)
+    IApiCacheAggregationService metadataManager)
     : Controller
 {
     [HttpGet("GetMetadata")]
@@ -20,7 +20,7 @@ public sealed class MetadataController(
         try
         {
             return Content(
-                content: metadataManager.GetAll(
+                content: metadataManager.GetMetadata(
                     culture: culture),
                 contentType: "application/json");
         }

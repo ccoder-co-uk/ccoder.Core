@@ -7,7 +7,7 @@ using System.IO;
 
 namespace Web.Services.Foundations.Api;
 
-internal interface IApiContextService
+public interface IApiContextService
 {
     ApiInfo[] GetApiInfos();
     ValueTask<string> ReadRequestBodyAsync(Stream requestBody);

@@ -3,15 +3,15 @@
 // ---------------------------------------------------------------
 
 using Microsoft.AspNetCore.Mvc;
-using Web.Exposures;
 using Web.Models;
 using Web.Models.Exceptions;
+using Web.Services.Orchestrations.Api;
 
 namespace Web.Controllers.Api;
 
 [Route("Api")]
 public sealed class ScriptController(
-    IApiScriptManager apiScriptManager)
+    IApiScriptOrchestrationService apiScriptManager)
     : Controller
 {
     [HttpPost("ExecuteScript")]
