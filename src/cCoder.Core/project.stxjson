@@ -12913,91 +12913,6 @@
       ]
     },
     {
-      "Name": "cCoder.Core.Services.Foundations.Setup.SetupRequestHostService",
-      "StandardElementType": "FoundationService",
-      "LineNumber": 7,
-      "IsPublic": false,
-      "Kind": "Class",
-      "BaseType": null,
-      "Interfaces": [
-        {
-          "Id": "cCoder.Core:cCoder.Core.Services.Foundations.Setup.ISetupRequestHostService",
-          "FullName": "cCoder.Core.Services.Foundations.Setup.ISetupRequestHostService",
-          "Name": "ISetupRequestHostService",
-          "Namespace": "cCoder.Core.Services.Foundations.Setup",
-          "AssemblyName": "cCoder.Core",
-          "Kind": "Interface",
-          "IsInCurrentProject": true,
-          "StandardElementType": "FoundationService"
-        }
-      ],
-      "Properties": [],
-      "Methods": [
-        {
-          "Id": "cCoder.Core.Services.Foundations.Setup.SetupRequestHostService.NormalizeHost(System.String)",
-          "Name": "NormalizeHost",
-          "LineNumber": 10,
-          "Inputs": [
-            {
-              "Name": "host",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.String",
-          "Implements": [
-            "cCoder.Core.Services.Foundations.Setup.ISetupRequestHostService.NormalizeHost(System.String)"
-          ],
-          "Calls": [
-            {
-              "TypeName": "System.String",
-              "MethodName": "Replace",
-              "MethodId": "System.String.Replace(System.String,System.String?,System.StringComparison)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "System.String",
-              "MethodName": "ToLowerInvariant",
-              "MethodId": "System.String.ToLowerInvariant()",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "System.String",
-              "MethodName": "Trim",
-              "MethodId": "System.String.Trim()",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            }
-          ],
-          "PossibleExceptionTypes": [
-            "System.ArgumentException",
-            "cCoder.Core.Models.Exceptions.CoreDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreServiceException",
-            "cCoder.Core.Models.Exceptions.CoreValidationException"
-          ],
-          "IncomingExceptionTypes": [
-            "System.ArgumentException",
-            "cCoder.Core.Models.Exceptions.CoreDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreServiceException"
-          ],
-          "ThrowsExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreServiceException",
-            "cCoder.Core.Models.Exceptions.CoreValidationException"
-          ],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        }
-      ]
-    },
-    {
       "Name": "cCoder.Core.Services.Foundations.TemplatedEmails.TemplatedEmailContentService",
       "StandardElementType": "FoundationService",
       "LineNumber": 12,
@@ -20442,43 +20357,6 @@
             }
           ],
           "ReturnType": "System.Threading.Tasks.ValueTask\u003CSystem.Boolean\u003E",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        }
-      ]
-    },
-    {
-      "Name": "cCoder.Core.Services.Foundations.Setup.ISetupRequestHostService",
-      "StandardElementType": "FoundationService",
-      "LineNumber": 7,
-      "IsPublic": false,
-      "Kind": "Interface",
-      "BaseType": null,
-      "Interfaces": [],
-      "Properties": [],
-      "Methods": [
-        {
-          "Id": "cCoder.Core.Services.Foundations.Setup.ISetupRequestHostService.NormalizeHost(System.String)",
-          "Name": "NormalizeHost",
-          "LineNumber": 9,
-          "Inputs": [
-            {
-              "Name": "host",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.String",
           "Implements": [],
           "Calls": [],
           "PossibleExceptionTypes": [],
