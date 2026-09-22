@@ -1,4 +1,4 @@
-import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { transform } from "esbuild";
@@ -9,6 +9,12 @@ const projectDirectory = path.resolve(
 
 const assetsDirectory = path.join(projectDirectory, "assets");
 const stageDirectory = path.join(projectDirectory, "stage");
+const monacoDistributionDirectory = path.join(
+    projectDirectory,
+    "node_modules",
+    "monaco-editor",
+    "min",
+    "vs");
 
 const javascriptBundles = {
     "core.js": [
@@ -176,19 +182,10 @@ await write("everything.min.js", everything);
 
 const codeEditor = [
     await readFile(
-        path.join(assetsDirectory, "dependencies/monaco/worker.js"),
-        "utf8"),
-    await readFile(
         path.join(stageDirectory, "monaco.js"),
         "utf8"),
     await readFile(
-        path.join(assetsDirectory, "dependencies/monaco/runtime.js"),
-        "utf8"),
-    await readFile(
         path.join(assetsDirectory, "dependencies/monaco/javascript-validation.js"),
-        "utf8"),
-    await readFile(
-        path.join(assetsDirectory, "dependencies/monaco/web-languages.js"),
         "utf8")
 ].join(";\n");
 
@@ -203,6 +200,11 @@ const codeEditorCss = await readFile(
 
 await write("code-editor.css", codeEditorCss);
 await write("code-editor.min.css", codeEditorCss);
+
+await cp(
+    monacoDistributionDirectory,
+    path.join(stageDirectory, "lib/monaco/min/vs"),
+    { recursive: true });
 
 const bootstrapSiteCss = await readFile(
     path.join(assetsDirectory, "bootstrap/css/site.css"),

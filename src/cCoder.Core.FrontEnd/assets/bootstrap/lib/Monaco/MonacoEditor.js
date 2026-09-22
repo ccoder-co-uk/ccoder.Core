@@ -30,9 +30,25 @@ var monacoEditorLoader = {
         Node.prototype.monacoNonceConfigured = true;
     },
 
+    loadLanguageContributions: function() {
+        if (typeof window.require === 'undefined' || !window.require.config) {
+            return Promise.reject(new Error("Monaco loader did not initialise."));
+        }
+
+        return new Promise((resolve, reject) => {
+            window.require([
+                "vs/basic-languages/monaco.contribution",
+                "vs/language/css/monaco.contribution",
+                "vs/language/html/monaco.contribution",
+                "vs/language/json/monaco.contribution",
+                "vs/language/typescript/monaco.contribution"
+            ], () => resolve(window.monaco), reject);
+        });
+    },
+
     loadMonaco: function() {
         if (window.monaco && window.monaco.editor) {
-            return Promise.resolve(window.monaco);
+            return monacoEditorLoader.loadLanguageContributions();
         }
 
         if (monacoEditorLoader.loadPromise) {
@@ -55,7 +71,14 @@ var monacoEditorLoader = {
                     },
                     cspNonce: document.querySelector("script[nonce]")?.nonce
                 });
-                window.require(["vs/editor/editor.main"], () => resolve(window.monaco), reject);
+                window.require([
+                    "vs/editor/editor.main",
+                    "vs/basic-languages/monaco.contribution",
+                    "vs/language/css/monaco.contribution",
+                    "vs/language/html/monaco.contribution",
+                    "vs/language/json/monaco.contribution",
+                    "vs/language/typescript/monaco.contribution"
+                ], () => resolve(window.monaco), reject);
             };
 
             if (typeof window.require !== 'undefined' && window.require.config) {

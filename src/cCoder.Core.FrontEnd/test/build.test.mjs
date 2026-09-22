@@ -27,7 +27,15 @@ test("build stages the public frontend assets", async () => {
         "widget.js",
         "workflow.js",
         "framework.js",
-        "background.js"
+        "background.js",
+        "lib/monaco/min/vs/loader.js",
+        "lib/monaco/min/vs/editor/editor.main.js",
+        "lib/monaco/min/vs/editor/editor.main.css",
+        "lib/monaco/min/vs/basic-languages/monaco.contribution.js",
+        "lib/monaco/min/vs/language/css/monaco.contribution.js",
+        "lib/monaco/min/vs/language/html/monaco.contribution.js",
+        "lib/monaco/min/vs/language/json/monaco.contribution.js",
+        "lib/monaco/min/vs/language/typescript/monaco.contribution.js"
     ];
 
     for (const expectedAsset of expectedAssets) {
@@ -146,5 +154,34 @@ test("code editor remains an independently cacheable bundle", async () => {
     assert.doesNotMatch(framework, /class MonacoEditor/);
     assert.match(codeEditor, /class MonacoEditor/);
     assert.match(codeEditor, /monaco\.editor/);
-    assert.match(codeEditor, /registerLanguage\("csharp"/);
+    assert.doesNotMatch(codeEditor, /registerLanguage\("(?:json|javascript|html|csharp)"/);
+});
+
+test("bundled Monaco basic languages include C# and XML", async () => {
+    const basicLanguages = await readFile(
+        path.join(
+            stageDirectory,
+            "lib/monaco/min/vs/basic-languages/monaco.contribution.js"),
+        "utf8");
+
+    assert.match(basicLanguages, /id:"csharp"/);
+    assert.match(basicLanguages, /id:"xml"/);
+});
+
+test("Monaco loads full language contributions for web languages and JavaScript", async () => {
+    const editor = await readFile(
+        path.join(
+            projectDirectory,
+            "assets/bootstrap/lib/Monaco/MonacoEditor.js"),
+        "utf8");
+
+    for (const contribution of [
+        "vs/basic-languages/monaco.contribution",
+        "vs/language/css/monaco.contribution",
+        "vs/language/html/monaco.contribution",
+        "vs/language/json/monaco.contribution",
+        "vs/language/typescript/monaco.contribution"
+    ]) {
+        assert.match(editor, new RegExp(contribution.replaceAll(".", "\\.")));
+    }
 });
