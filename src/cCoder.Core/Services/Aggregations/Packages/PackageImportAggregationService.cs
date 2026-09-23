@@ -8,7 +8,7 @@ using cCoder.Packaging.Models;
 namespace cCoder.Core.Services.Aggregations.Packages;
 
 internal sealed partial class PackageImportAggregationService(
-    ICorePackageProcessingService corePackageProcessingService,
+    IContentManagementAppPackageProcessingService contentManagementAppPackageProcessingService,
     IContentManagementPackageProcessingService contentManagementPackageProcessingService,
     IAppSecurityPackageProcessingService appSecurityPackageProcessingService,
     IDocumentManagementPackageProcessingService documentManagementPackageProcessingService,
@@ -35,7 +35,7 @@ internal sealed partial class PackageImportAggregationService(
                 return;
             }
 
-            await corePackageProcessingService.ImportPackageAsync(
+            await contentManagementAppPackageProcessingService.ImportPackageAsync(
                 appId: appId,
                 package: packageImportEvent.Package);
 

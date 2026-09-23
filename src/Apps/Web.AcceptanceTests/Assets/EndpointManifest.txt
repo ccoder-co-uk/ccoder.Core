@@ -116,7 +116,7 @@ GET Api/ContentManagement/Submission/$count
 GET Api/ContentManagement/Template
 GET Api/ContentManagement/Template({key})
 GET Api/ContentManagement/Template/$count
-GET Api/Core/Package/Export
+GET Api/Packaging/Package/Export
 GET Api/DocumentManagement
 GET Api/DocumentManagement/$metadata
 GET Api/DocumentManagement/File

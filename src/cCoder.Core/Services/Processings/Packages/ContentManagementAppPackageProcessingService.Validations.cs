@@ -7,7 +7,7 @@ using cCoder.Data.Models.Packaging;
 
 namespace cCoder.Core.Services.Processings.Packages;
 
-internal sealed partial class CorePackageProcessingService
+internal sealed partial class ContentManagementAppPackageProcessingService
 {
     private static void ValidatePackageOnImport(
         int appId,

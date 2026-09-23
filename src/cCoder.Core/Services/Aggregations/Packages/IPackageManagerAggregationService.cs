@@ -6,7 +6,7 @@ using cCoder.Data.Models.Packaging;
 
 namespace cCoder.Core.Services.Aggregations.Packages;
 
-public interface IPackageManagerAggregationService
+internal interface IPackageManagerAggregationService
 {
     ValueTask<Package[]> ExportPackagesAsync(
         int appId,

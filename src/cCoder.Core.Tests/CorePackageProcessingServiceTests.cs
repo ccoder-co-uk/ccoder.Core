@@ -2,8 +2,11 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.Core.Services.Foundations.Packages;
+using cCoder.Core.Brokers.Json;
+using cCoder.Core.Models.Packaging;
+using cCoder.Core.Services.Foundations.ContentManagement;
 using cCoder.Core.Services.Processings.Packages;
+using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.Packaging;
 using FluentAssertions;
 using Moq;
@@ -11,24 +14,39 @@ using Xunit;
 
 namespace cCoder.Core.Tests;
 
-public sealed partial class CorePackageProcessingServiceTests
+public sealed partial class ContentManagementAppPackageProcessingServiceTests
 {
     [Fact]
-    public async Task ImportPackageAsync_WhenCoreAppItemsExist_ImportsEachInSourceOrder()
+    public async Task ImportPackageAsync_WhenCoreAppItemsExist_UpdatesEachInSourceOrder()
     {
         // Given
-        List<string> importedData = [];
-        Mock<ICorePackageService> corePackageServiceMock = new();
+        List<string> updatedNames = [];
+        Mock<IContentManagementAppService> appServiceMock = new();
+        Mock<ICorePackageJsonBroker> jsonBrokerMock = new();
+        App app = new() { Id = 42, Name = "Original" };
 
-        corePackageServiceMock
-            .Setup(expression: service => service.ImportAppConfigurationAsync(
-                appId: It.IsAny<int>(),
-                data: It.IsAny<string>()))
-            .Callback<int, string>(action: (_, data) => importedData.Add(item: data))
-            .Returns(value: ValueTask.CompletedTask);
+        appServiceMock
+            .Setup(expression: service => service.GetApp(
+                appId: 42,
+                ignoreFilters: true))
+            .Returns(value: app);
 
-        CorePackageProcessingService service = new(
-            corePackageService: corePackageServiceMock.Object);
+        appServiceMock
+            .Setup(expression: service => service.UpdateAppAsync(updatedApp: app))
+            .Callback<App>(action: updatedApp => updatedNames.Add(item: updatedApp.Name))
+            .ReturnsAsync(value: app);
+
+        jsonBrokerMock
+            .Setup(expression: broker => broker.Deserialize(data: "first"))
+            .Returns(value: new AppConfigurationPackageData { Name = "First" });
+
+        jsonBrokerMock
+            .Setup(expression: broker => broker.Deserialize(data: "second"))
+            .Returns(value: new AppConfigurationPackageData { Name = "Second" });
+
+        ContentManagementAppPackageProcessingService service = new(
+            contentManagementAppService: appServiceMock.Object,
+            corePackageJsonBroker: jsonBrokerMock.Object);
 
         Package package = new()
         {
@@ -41,112 +59,109 @@ public sealed partial class CorePackageProcessingServiceTests
         };
 
         // When
-        await service.ImportPackageAsync(
-            appId: 42,
-            package: package);
+        await service.ImportPackageAsync(appId: 42, package: package);
 
         // Then
-        importedData.Count
+        updatedNames.Count
             .Should()
             .Be(expected: 2);
 
-        importedData[0]
+        updatedNames[0]
             .Should()
-            .Be(expected: "first");
+            .Be(expected: "First");
 
-        importedData[1]
+        updatedNames[1]
             .Should()
-            .Be(expected: "second");
+            .Be(expected: "Second");
     }
 
     [Fact]
-    public async Task ImportPackageAsync_WhenNoCoreAppItemsExist_DoesNotCallFoundation()
+    public async Task ImportPackageAsync_WhenNoCoreAppItemsExist_DoesNotLoadApp()
     {
         // Given
-        Mock<ICorePackageService> corePackageServiceMock = new();
+        Mock<IContentManagementAppService> appServiceMock = new();
+        Mock<ICorePackageJsonBroker> jsonBrokerMock = new();
 
-        CorePackageProcessingService service = new(
-            corePackageService: corePackageServiceMock.Object);
+        ContentManagementAppPackageProcessingService service = new(
+            contentManagementAppService: appServiceMock.Object,
+            corePackageJsonBroker: jsonBrokerMock.Object);
 
         Package package = new()
         {
-            Items =
-            [
-                new PackageItem
-                {
-                    Type = "Other/Item",
-                    Data = "ignored",
-                },
-            ],
+            Items = [new PackageItem { Type = "Other/Item", Data = "ignored" }],
         };
 
         // When
-        await service.ImportPackageAsync(
-            appId: 42,
-            package: package);
+        await service.ImportPackageAsync(appId: 42, package: package);
 
         // Then
-        corePackageServiceMock.Verify(
-            expression: service => service.ImportAppConfigurationAsync(
+        appServiceMock.Verify(
+            expression: service => service.GetApp(
                 appId: It.IsAny<int>(),
-                data: It.IsAny<string>()),
+                ignoreFilters: It.IsAny<bool>()),
             times: Times.Never);
     }
 
     [Fact]
-    public async Task ExportMethods_WhenCalled_DelegateToMatchingFoundationOperation()
+    public async Task ExportAppConfigurationAsync_WhenCalled_ReturnsCurrentAppPackage()
     {
         // Given
-        Package appPackage = new() { Name = "AppConfiguration" };
-        Package pageRolesPackage = new() { Name = "PageRoles" };
-        Package folderRolesPackage = new() { Name = "FolderRoles" };
-        Mock<ICorePackageService> corePackageServiceMock = new();
+        Mock<IContentManagementAppService> appServiceMock = new();
+        Mock<ICorePackageJsonBroker> jsonBrokerMock = new();
 
-        corePackageServiceMock
-            .Setup(expression: service => service.ExportAppConfigurationAsync(
+        App app = new()
+        {
+            Id = 42,
+            TenantId = "7",
+            Name = "App",
+            Domain = "app.test",
+            DefaultCultureId = "en-GB",
+            DefaultTheme = "Default",
+            ConfigJson = "{}",
+        };
+
+        appServiceMock
+            .Setup(expression: service => service.GetApp(
                 appId: 42,
-                sourceApi: "source"))
-            .ReturnsAsync(value: appPackage);
+                ignoreFilters: true))
+            .Returns(value: app);
 
-        corePackageServiceMock
-            .Setup(expression: service => service.ExportPageRolesAsync(
-                appId: 42,
-                sourceApi: "source"))
-            .ReturnsAsync(value: pageRolesPackage);
+        jsonBrokerMock
+            .Setup(expression: broker => broker.Serialize(
+                appConfigurationPackageData: It.Is<AppConfigurationPackageData>(
+                    match: data => data.Id == 42 && data.Name == "App")))
+            .Returns(value: "serialized");
 
-        corePackageServiceMock
-            .Setup(expression: service => service.ExportFolderRolesAsync(
-                appId: 42,
-                sourceApi: "source"))
-            .ReturnsAsync(value: folderRolesPackage);
-
-        CorePackageProcessingService service = new(
-            corePackageService: corePackageServiceMock.Object);
+        ContentManagementAppPackageProcessingService service = new(
+            contentManagementAppService: appServiceMock.Object,
+            corePackageJsonBroker: jsonBrokerMock.Object);
 
         // When
-        Package actualApp = await service.ExportAppConfigurationAsync(
-            appId: 42,
-            sourceApi: "source");
-
-        Package actualPageRoles = await service.ExportPageRolesAsync(
-            appId: 42,
-            sourceApi: "source");
-
-        Package actualFolderRoles = await service.ExportFolderRolesAsync(
+        Package actual = await service.ExportAppConfigurationAsync(
             appId: 42,
             sourceApi: "source");
 
         // Then
-        actualApp
+        actual.Name
             .Should()
-            .BeSameAs(expected: appPackage);
+            .Be(expected: "AppConfiguration");
 
-        actualPageRoles
+        actual.SourceApi
             .Should()
-            .BeSameAs(expected: pageRolesPackage);
+            .Be(expected: "source");
 
-        actualFolderRoles
+        actual.Items
             .Should()
-            .BeSameAs(expected: folderRolesPackage);
+            .ContainSingle();
+
+        PackageItem packageItem = actual.Items.Single();
+
+        packageItem.Type
+            .Should()
+            .Be(expected: "Core/App");
+
+        packageItem.Data
+            .Should()
+            .Be(expected: "serialized");
     }
 }

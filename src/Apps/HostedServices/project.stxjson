@@ -680,7 +680,7 @@
     {
       "Name": "HostedServices.IServiceCollectionExtensions",
       "StandardElementType": "App",
-      "LineNumber": 20,
+      "LineNumber": 17,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -690,7 +690,7 @@
         {
           "Id": "HostedServices.IServiceCollectionExtensions.AddHostedServices(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration,System.Action\u003CHostedServices.Models.AppConfiguration\u003E)",
           "Name": "AddHostedServices",
-          "LineNumber": 22,
+          "LineNumber": 19,
           "Inputs": [
             {
               "Name": "services",

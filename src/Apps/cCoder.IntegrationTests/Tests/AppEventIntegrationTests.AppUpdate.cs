@@ -31,6 +31,7 @@ public sealed partial class AppEventIntegrationTests
             appId = await CreateStandaloneAppAsync(domain: appDomain);
             await GrantGuestAdminAsync(appId: appId);
             await SeedAppUpdateScenarioAsync(appId: appId,roleId: roleId,rootFolderId: rootFolderId,childFolderId: childFolderId,fileId: fileId);
+            string authToken = await CreateAuthTokenAsync(userId: AdminUserId);
 
             // When
             await SendAsJsonAsync(
@@ -72,7 +73,8 @@ method:                 HttpMethod.Put,relativeUrl:                 $"/Api/Conte
                             path = "renamed"
                         }
                     }
-                },                host: appDomain);
+                },                host: appDomain,
+                authToken: authToken);
 
             await WaitUntilAsync(
                 predicate: async () =>

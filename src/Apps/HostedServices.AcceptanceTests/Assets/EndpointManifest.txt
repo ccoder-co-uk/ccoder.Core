@@ -190,7 +190,7 @@ GET Api/Core/MailServer/$count
 GET Api/Core/Package
 GET Api/Core/Package({key})
 GET Api/Core/Package/$count
-GET Api/Core/Package/Export
+GET Api/Packaging/Package/Export
 GET Api/Core/PackageItem
 GET Api/Core/PackageItem({key})
 GET Api/Core/PackageItem/$count

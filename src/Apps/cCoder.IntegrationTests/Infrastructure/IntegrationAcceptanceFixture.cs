@@ -61,6 +61,8 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
 
     public HttpClient WebClient { get; private set; }
 
+    public HttpClient AnonymousWebClient { get; private set; }
+
     public HttpClient HostedServicesClient { get; private set; }
 
     public string WebOutput => webApplication?.Output ?? string.Empty;
@@ -241,6 +243,7 @@ fileName: "dotnet", arguments: $"\"{Path.Combine(path1: webOutputDirectory, path
             value: $"Integration fixture: Web started in {phaseTimer.Elapsed}.");
 
         WebClient = CreateClient(baseAddress: WebBaseAddress, useInsecureHandler: true);
+        AnonymousWebClient = CreateAnonymousWebClient(baseAddress: WebBaseAddress);
         HostedServicesClient = CreateClient(baseAddress: HostedServicesBaseAddress, useInsecureHandler: false);
 
         Console.WriteLine(
@@ -260,6 +263,7 @@ fileName: "dotnet", arguments: $"\"{Path.Combine(path1: webOutputDirectory, path
     public async Task DisposeAsync()
     {
         WebClient?.Dispose();
+        AnonymousWebClient?.Dispose();
         HostedServicesClient?.Dispose();
 
         if (webApplication is not null)
@@ -322,6 +326,21 @@ fileName: "dotnet", arguments: $"\"{Path.Combine(path1: webOutputDirectory, path
 
         client.BaseAddress = baseAddress;
         client.Timeout = TimeSpan.FromMinutes(minutes: 2);
+        return client;
+    }
+
+    private static HttpClient CreateAnonymousWebClient(Uri baseAddress)
+    {
+        HttpClient client = new(new HttpClientHandler
+        {
+            ServerCertificateCustomValidationCallback =
+                HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
+            UseCookies = false
+        });
+
+        client.BaseAddress = baseAddress;
+        client.Timeout = TimeSpan.FromMinutes(minutes: 2);
+
         return client;
     }
 

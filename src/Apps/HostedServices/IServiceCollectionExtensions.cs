@@ -6,9 +6,6 @@ using cCoder.Core;
 using cCoder.Core.Models;
 using HostedServices.Models;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using cCoder.Security.Data.EF;
-using cCoder.Security.Data.EF.Dependencies;
-using cCoder.Security.Data.EF.Interfaces;
 using cCoder.Security.Models.Configurations;
 using cCoder.Workflow.Exposures;
 using HostedServices.Brokers.Workflow;
@@ -64,14 +61,10 @@ public static class IServiceCollectionExtensions
         this IServiceCollection services,
         AppConfiguration configuration)
     {
-        services.RemoveAll<ISecurityDbContextFactory>();
+        services.RemoveAll<ISSOAuthInfo>();
 
-        services.AddSingleton<ISecurityDbContextFactory>(
-            implementationInstance: new MSSQLSecurityDbContextFactory(
-                configuration.SecurityData.ConnectionString)
-            {
-                GetAuthInfo = _ => new SSOAuthInfo { SSOUserId = "Guest" },
-            });
+        services.AddSingleton<ISSOAuthInfo>(
+            implementationInstance: new SSOAuthInfo { SSOUserId = "Guest" });
     }
 
     private static void AddOrchestrations(

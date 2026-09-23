@@ -891,11 +891,21 @@
     {
       "Name": "cCoder.Core.Brokers.Http.HttpRequestBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 7,
+      "LineNumber": 9,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
       "Interfaces": [
+        {
+          "Id": "cCoder.CodeAnalysis:cCoder.CodeAnalysis.Exposures.IUtilityBroker",
+          "FullName": "cCoder.CodeAnalysis.Exposures.IUtilityBroker",
+          "Name": "IUtilityBroker",
+          "Namespace": "cCoder.CodeAnalysis.Exposures",
+          "AssemblyName": "cCoder.CodeAnalysis",
+          "Kind": "Interface",
+          "IsInCurrentProject": false,
+          "StandardElementType": "Dependency"
+        },
         {
           "Id": "cCoder.Core:cCoder.Core.Brokers.Http.IHttpRequestBroker",
           "FullName": "cCoder.Core.Brokers.Http.IHttpRequestBroker",
@@ -912,7 +922,7 @@
         {
           "Id": "cCoder.Core.Brokers.Http.HttpRequestBroker.GetCurrentRequest()",
           "Name": "GetCurrentRequest",
-          "LineNumber": 9,
+          "LineNumber": 12,
           "Inputs": [],
           "ReturnType": "Microsoft.AspNetCore.Http.HttpRequest",
           "Implements": [
@@ -969,6 +979,109 @@
             "cCoder.Core.Brokers.Json.IAllowedOriginJsonBroker.ExtractOrigins(System.String)"
           ],
           "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Brokers.Json.CorePackageJsonBroker",
+      "StandardElementType": "Broker",
+      "LineNumber": 11,
+      "IsPublic": false,
+      "Kind": "Class",
+      "BaseType": null,
+      "Interfaces": [
+        {
+          "Id": "cCoder.CodeAnalysis:cCoder.CodeAnalysis.Exposures.IUtilityBroker",
+          "FullName": "cCoder.CodeAnalysis.Exposures.IUtilityBroker",
+          "Name": "IUtilityBroker",
+          "Namespace": "cCoder.CodeAnalysis.Exposures",
+          "AssemblyName": "cCoder.CodeAnalysis",
+          "Kind": "Interface",
+          "IsInCurrentProject": false,
+          "StandardElementType": "Dependency"
+        },
+        {
+          "Id": "cCoder.Core:cCoder.Core.Brokers.Json.ICorePackageJsonBroker",
+          "FullName": "cCoder.Core.Brokers.Json.ICorePackageJsonBroker",
+          "Name": "ICorePackageJsonBroker",
+          "Namespace": "cCoder.Core.Brokers.Json",
+          "AssemblyName": "cCoder.Core",
+          "Kind": "Interface",
+          "IsInCurrentProject": true,
+          "StandardElementType": "Broker"
+        }
+      ],
+      "Properties": [],
+      "Methods": [
+        {
+          "Id": "cCoder.Core.Brokers.Json.CorePackageJsonBroker.Deserialize(System.String)",
+          "Name": "Deserialize",
+          "LineNumber": 16,
+          "Inputs": [
+            {
+              "Name": "data",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "cCoder.Core.Models.Packaging.AppConfigurationPackageData",
+          "Implements": [
+            "cCoder.Core.Brokers.Json.ICorePackageJsonBroker.Deserialize(System.String)"
+          ],
+          "Calls": [
+            {
+              "TypeName": "System.Text.Json.JsonSerializer",
+              "MethodName": "Deserialize",
+              "MethodId": "System.Text.Json.JsonSerializer.Deserialize(System.String,System.Text.Json.JsonSerializerOptions?)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Brokers.Json.CorePackageJsonBroker.Serialize(cCoder.Core.Models.Packaging.AppConfigurationPackageData)",
+          "Name": "Serialize",
+          "LineNumber": 13,
+          "Inputs": [
+            {
+              "Name": "appConfigurationPackageData",
+              "Type": "cCoder.Core.Models.Packaging.AppConfigurationPackageData"
+            }
+          ],
+          "ReturnType": "System.String",
+          "Implements": [
+            "cCoder.Core.Brokers.Json.ICorePackageJsonBroker.Serialize(cCoder.Core.Models.Packaging.AppConfigurationPackageData)"
+          ],
+          "Calls": [
+            {
+              "TypeName": "System.Text.Json.JsonSerializer",
+              "MethodName": "Serialize",
+              "MethodId": "System.Text.Json.JsonSerializer.Serialize(TValue,System.Text.Json.JsonSerializerOptions?)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -1976,239 +2089,6 @@
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        }
-      ]
-    },
-    {
-      "Name": "cCoder.Core.Brokers.Packaging.CorePackageBroker",
-      "StandardElementType": "Broker",
-      "LineNumber": 10,
-      "IsPublic": false,
-      "Kind": "Class",
-      "BaseType": null,
-      "Interfaces": [
-        {
-          "Id": "cCoder.Core:cCoder.Core.Brokers.Packaging.ICorePackageBroker",
-          "FullName": "cCoder.Core.Brokers.Packaging.ICorePackageBroker",
-          "Name": "ICorePackageBroker",
-          "Namespace": "cCoder.Core.Brokers.Packaging",
-          "AssemblyName": "cCoder.Core",
-          "Kind": "Interface",
-          "IsInCurrentProject": true,
-          "StandardElementType": "Broker"
-        }
-      ],
-      "Properties": [],
-      "Methods": [
-        {
-          "Id": "cCoder.Core.Brokers.Packaging.CorePackageBroker.ExportAppConfigurationAsync(System.Int32,System.String)",
-          "Name": "ExportAppConfigurationAsync",
-          "LineNumber": 18,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "sourceApi",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.Packaging.Package\u003E",
-          "Implements": [
-            "cCoder.Core.Brokers.Packaging.ICorePackageBroker.ExportAppConfigurationAsync(System.Int32,System.String)"
-          ],
-          "Calls": [
-            {
-              "TypeName": "cCoder.Core.Dependencies.Packages.CorePackageDependency",
-              "MethodName": "ExportAppConfigurationAsync",
-              "MethodId": "cCoder.Core.Dependencies.Packages.CorePackageDependency.ExportAppConfigurationAsync(System.Int32,System.String)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": false
-            }
-          ],
-          "PossibleExceptionTypes": [
-            "System.InvalidOperationException"
-          ],
-          "IncomingExceptionTypes": [
-            "System.InvalidOperationException"
-          ],
-          "ThrowsExceptionTypes": [
-            "System.InvalidOperationException"
-          ],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Brokers.Packaging.CorePackageBroker.ExportFolderRolesAsync(System.Int32,System.String)",
-          "Name": "ExportFolderRolesAsync",
-          "LineNumber": 28,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "sourceApi",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.Packaging.Package\u003E",
-          "Implements": [
-            "cCoder.Core.Brokers.Packaging.ICorePackageBroker.ExportFolderRolesAsync(System.Int32,System.String)"
-          ],
-          "Calls": [
-            {
-              "TypeName": "cCoder.Core.Dependencies.Packages.CorePackageDependency",
-              "MethodName": "ExportFolderRolesAsync",
-              "MethodId": "cCoder.Core.Dependencies.Packages.CorePackageDependency.ExportFolderRolesAsync(System.Int32,System.String)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": false
-            }
-          ],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Brokers.Packaging.CorePackageBroker.ExportPackage(System.Int32,System.String)",
-          "Name": "ExportPackage",
-          "LineNumber": 33,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "packageName",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "cCoder.Data.Models.Packaging.Package",
-          "Implements": [
-            "cCoder.Core.Brokers.Packaging.ICorePackageBroker.ExportPackage(System.Int32,System.String)"
-          ],
-          "Calls": [
-            {
-              "TypeName": "cCoder.Core.Dependencies.Packages.CorePackageDependency",
-              "MethodName": "ExportPackage",
-              "MethodId": "cCoder.Core.Dependencies.Packages.CorePackageDependency.ExportPackage(System.Int32,System.String)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": false
-            }
-          ],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Brokers.Packaging.CorePackageBroker.ExportPageRolesAsync(System.Int32,System.String)",
-          "Name": "ExportPageRolesAsync",
-          "LineNumber": 23,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "sourceApi",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.Packaging.Package\u003E",
-          "Implements": [
-            "cCoder.Core.Brokers.Packaging.ICorePackageBroker.ExportPageRolesAsync(System.Int32,System.String)"
-          ],
-          "Calls": [
-            {
-              "TypeName": "cCoder.Core.Dependencies.Packages.CorePackageDependency",
-              "MethodName": "ExportPageRolesAsync",
-              "MethodId": "cCoder.Core.Dependencies.Packages.CorePackageDependency.ExportPageRolesAsync(System.Int32,System.String)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": false
-            }
-          ],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Brokers.Packaging.CorePackageBroker.ImportAppConfigurationAsync(System.Int32,System.String)",
-          "Name": "ImportAppConfigurationAsync",
-          "LineNumber": 13,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "data",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask",
-          "Implements": [
-            "cCoder.Core.Brokers.Packaging.ICorePackageBroker.ImportAppConfigurationAsync(System.Int32,System.String)"
-          ],
-          "Calls": [
-            {
-              "TypeName": "cCoder.Core.Dependencies.Packages.CorePackageDependency",
-              "MethodName": "ImportAppConfigurationAsync",
-              "MethodId": "cCoder.Core.Dependencies.Packages.CorePackageDependency.ImportAppConfigurationAsync(System.Int32,System.String)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": false
-            }
-          ],
-          "PossibleExceptionTypes": [
-            "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException",
-            "System.InvalidOperationException"
-          ],
-          "IncomingExceptionTypes": [
-            "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException",
-            "System.InvalidOperationException"
-          ],
-          "ThrowsExceptionTypes": [
-            "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException",
-            "System.InvalidOperationException"
-          ],
           "HttpMethods": [],
           "HttpResponses": [],
           "IsHttpRequestHandler": false,
@@ -3738,476 +3618,6 @@
       ]
     },
     {
-      "Name": "cCoder.Core.Dependencies.Packages.CorePackageDependency",
-      "StandardElementType": "Dependency",
-      "LineNumber": 17,
-      "IsPublic": false,
-      "Kind": "Class",
-      "BaseType": null,
-      "Interfaces": [
-        {
-          "Id": "cCoder.Packaging:cCoder.Packaging.Exposures.IPackageTransferManager",
-          "FullName": "cCoder.Packaging.Exposures.IPackageTransferManager",
-          "Name": "IPackageTransferManager",
-          "Namespace": "cCoder.Packaging.Exposures",
-          "AssemblyName": "cCoder.Packaging",
-          "Kind": "Interface",
-          "IsInCurrentProject": false,
-          "StandardElementType": "Dependency"
-        }
-      ],
-      "Properties": [],
-      "Methods": [
-        {
-          "Id": "cCoder.Core.Dependencies.Packages.CorePackageDependency.ExportAppConfigurationAsync(System.Int32,System.String)",
-          "Name": "ExportAppConfigurationAsync",
-          "LineNumber": 64,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "sourceApi",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.Packaging.Package\u003E",
-          "Implements": [],
-          "Calls": [
-            {
-              "TypeName": "Microsoft.EntityFrameworkCore.DbContext",
-              "MethodName": "Set",
-              "MethodId": "Microsoft.EntityFrameworkCore.DbContext.Set()",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions",
-              "MethodName": "IgnoreQueryFilters",
-              "MethodId": "Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.IgnoreQueryFilters(System.Linq.IQueryable\u003CTEntity\u003E)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions",
-              "MethodName": "SingleOrDefaultAsync",
-              "MethodId": "Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.SingleOrDefaultAsync(System.Linq.IQueryable\u003CTSource\u003E,System.Linq.Expressions.Expression\u003CSystem.Func\u003CTSource, System.Boolean\u003E\u003E,System.Threading.CancellationToken)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "System.InvalidOperationException",
-              "MethodName": ".ctor",
-              "MethodId": "System.InvalidOperationException..ctor(System.String?)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "System.Text.Json.Nodes.JsonNode",
-              "MethodName": "ToJsonString",
-              "MethodId": "System.Text.Json.Nodes.JsonNode.ToJsonString(System.Text.Json.JsonSerializerOptions?)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "System.Text.Json.Nodes.JsonObject",
-              "MethodName": ".ctor",
-              "MethodId": "System.Text.Json.Nodes.JsonObject..ctor(System.Text.Json.Nodes.JsonNodeOptions?)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "cCoder.Data.ICoreContextFactory",
-              "MethodName": "CreateCoreContext",
-              "MethodId": "cCoder.Data.ICoreContextFactory.CreateCoreContext()",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "cCoder.Data.Models.Packaging.Package",
-              "MethodName": ".ctor",
-              "MethodId": "cCoder.Data.Models.Packaging.Package..ctor()",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "cCoder.Data.Models.Packaging.PackageItem",
-              "MethodName": ".ctor",
-              "MethodId": "cCoder.Data.Models.Packaging.PackageItem..ctor()",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            }
-          ],
-          "PossibleExceptionTypes": [
-            "System.InvalidOperationException"
-          ],
-          "IncomingExceptionTypes": [
-            "System.InvalidOperationException"
-          ],
-          "ThrowsExceptionTypes": [
-            "System.InvalidOperationException"
-          ],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Dependencies.Packages.CorePackageDependency.ExportFolderRolesAsync(System.Int32,System.String)",
-          "Name": "ExportFolderRolesAsync",
-          "LineNumber": 150,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "sourceApi",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.Packaging.Package\u003E",
-          "Implements": [],
-          "Calls": [
-            {
-              "TypeName": "Microsoft.EntityFrameworkCore.DbContext",
-              "MethodName": "Set",
-              "MethodId": "Microsoft.EntityFrameworkCore.DbContext.Set()",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions",
-              "MethodName": "IgnoreQueryFilters",
-              "MethodId": "Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.IgnoreQueryFilters(System.Linq.IQueryable\u003CTEntity\u003E)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions",
-              "MethodName": "ToArrayAsync",
-              "MethodId": "Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToArrayAsync(System.Linq.IQueryable\u003CTSource\u003E,System.Threading.CancellationToken)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "System.Linq.Enumerable",
-              "MethodName": "OrderBy",
-              "MethodId": "System.Linq.Enumerable.OrderBy(System.Collections.Generic.IEnumerable\u003CTSource\u003E,System.Func\u003CTSource, TKey\u003E,System.Collections.Generic.IComparer\u003CTKey\u003E?)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "System.Linq.Enumerable",
-              "MethodName": "Select",
-              "MethodId": "System.Linq.Enumerable.Select(System.Collections.Generic.IEnumerable\u003CTSource\u003E,System.Func\u003CTSource, TResult\u003E)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "System.Linq.Enumerable",
-              "MethodName": "ThenBy",
-              "MethodId": "System.Linq.Enumerable.ThenBy(System.Linq.IOrderedEnumerable\u003CTSource\u003E,System.Func\u003CTSource, TKey\u003E,System.Collections.Generic.IComparer\u003CTKey\u003E?)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "System.Linq.Queryable",
-              "MethodName": "Join",
-              "MethodId": "System.Linq.Queryable.Join(System.Linq.IQueryable\u003CTOuter\u003E,System.Collections.Generic.IEnumerable\u003CTInner\u003E,System.Linq.Expressions.Expression\u003CSystem.Func\u003CTOuter, TKey\u003E\u003E,System.Linq.Expressions.Expression\u003CSystem.Func\u003CTInner, TKey\u003E\u003E,System.Linq.Expressions.Expression\u003CSystem.Func\u003CTOuter, TInner, TResult\u003E\u003E)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "System.Linq.Queryable",
-              "MethodName": "Where",
-              "MethodId": "System.Linq.Queryable.Where(System.Linq.IQueryable\u003CTSource\u003E,System.Linq.Expressions.Expression\u003CSystem.Func\u003CTSource, System.Boolean\u003E\u003E)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "System.Text.Json.Nodes.JsonArray",
-              "MethodName": "Add",
-              "MethodId": "System.Text.Json.Nodes.JsonArray.Add(T?)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "System.Text.Json.Nodes.JsonNode",
-              "MethodName": "ToJsonString",
-              "MethodId": "System.Text.Json.Nodes.JsonNode.ToJsonString(System.Text.Json.JsonSerializerOptions?)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "System.Text.Json.Nodes.JsonObject",
-              "MethodName": ".ctor",
-              "MethodId": "System.Text.Json.Nodes.JsonObject..ctor(System.Text.Json.Nodes.JsonNodeOptions?)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "cCoder.Data.ICoreContextFactory",
-              "MethodName": "CreateCoreContext",
-              "MethodId": "cCoder.Data.ICoreContextFactory.CreateCoreContext()",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            }
-          ],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Dependencies.Packages.CorePackageDependency.ExportPackage(System.Int32,System.String)",
-          "Name": "ExportPackage",
-          "LineNumber": 199,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "packageName",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "cCoder.Data.Models.Packaging.Package",
-          "Implements": [
-            "cCoder.Packaging.Exposures.IPackageTransferManager.ExportPackage(System.Int32,System.String)"
-          ],
-          "Calls": [
-            {
-              "TypeName": "cCoder.Packaging.Exposures.IPackageTransferManager",
-              "MethodName": "ExportPackage",
-              "MethodId": "cCoder.Packaging.Exposures.IPackageTransferManager.ExportPackage(System.Int32,System.String)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            }
-          ],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Dependencies.Packages.CorePackageDependency.ExportPageRolesAsync(System.Int32,System.String)",
-          "Name": "ExportPageRolesAsync",
-          "LineNumber": 101,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "sourceApi",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.Packaging.Package\u003E",
-          "Implements": [],
-          "Calls": [
-            {
-              "TypeName": "Microsoft.EntityFrameworkCore.DbContext",
-              "MethodName": "Set",
-              "MethodId": "Microsoft.EntityFrameworkCore.DbContext.Set()",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions",
-              "MethodName": "IgnoreQueryFilters",
-              "MethodId": "Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.IgnoreQueryFilters(System.Linq.IQueryable\u003CTEntity\u003E)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions",
-              "MethodName": "ToArrayAsync",
-              "MethodId": "Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToArrayAsync(System.Linq.IQueryable\u003CTSource\u003E,System.Threading.CancellationToken)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "System.Linq.Enumerable",
-              "MethodName": "OrderBy",
-              "MethodId": "System.Linq.Enumerable.OrderBy(System.Collections.Generic.IEnumerable\u003CTSource\u003E,System.Func\u003CTSource, TKey\u003E,System.Collections.Generic.IComparer\u003CTKey\u003E?)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "System.Linq.Enumerable",
-              "MethodName": "Select",
-              "MethodId": "System.Linq.Enumerable.Select(System.Collections.Generic.IEnumerable\u003CTSource\u003E,System.Func\u003CTSource, TResult\u003E)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "System.Linq.Enumerable",
-              "MethodName": "ThenBy",
-              "MethodId": "System.Linq.Enumerable.ThenBy(System.Linq.IOrderedEnumerable\u003CTSource\u003E,System.Func\u003CTSource, TKey\u003E,System.Collections.Generic.IComparer\u003CTKey\u003E?)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "System.Linq.Queryable",
-              "MethodName": "Join",
-              "MethodId": "System.Linq.Queryable.Join(System.Linq.IQueryable\u003CTOuter\u003E,System.Collections.Generic.IEnumerable\u003CTInner\u003E,System.Linq.Expressions.Expression\u003CSystem.Func\u003CTOuter, TKey\u003E\u003E,System.Linq.Expressions.Expression\u003CSystem.Func\u003CTInner, TKey\u003E\u003E,System.Linq.Expressions.Expression\u003CSystem.Func\u003CTOuter, TInner, TResult\u003E\u003E)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "System.Linq.Queryable",
-              "MethodName": "Where",
-              "MethodId": "System.Linq.Queryable.Where(System.Linq.IQueryable\u003CTSource\u003E,System.Linq.Expressions.Expression\u003CSystem.Func\u003CTSource, System.Boolean\u003E\u003E)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "System.Text.Json.Nodes.JsonArray",
-              "MethodName": "Add",
-              "MethodId": "System.Text.Json.Nodes.JsonArray.Add(T?)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "System.Text.Json.Nodes.JsonNode",
-              "MethodName": "ToJsonString",
-              "MethodId": "System.Text.Json.Nodes.JsonNode.ToJsonString(System.Text.Json.JsonSerializerOptions?)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "System.Text.Json.Nodes.JsonObject",
-              "MethodName": ".ctor",
-              "MethodId": "System.Text.Json.Nodes.JsonObject..ctor(System.Text.Json.Nodes.JsonNodeOptions?)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "cCoder.Data.ICoreContextFactory",
-              "MethodName": "CreateCoreContext",
-              "MethodId": "cCoder.Data.ICoreContextFactory.CreateCoreContext()",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            }
-          ],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Dependencies.Packages.CorePackageDependency.ImportAppConfigurationAsync(System.Int32,System.String)",
-          "Name": "ImportAppConfigurationAsync",
-          "LineNumber": 26,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "data",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask",
-          "Implements": [],
-          "Calls": [
-            {
-              "TypeName": "Microsoft.EntityFrameworkCore.DbContext",
-              "MethodName": "SaveChangesAsync",
-              "MethodId": "Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(System.Threading.CancellationToken)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "Microsoft.EntityFrameworkCore.DbContext",
-              "MethodName": "Set",
-              "MethodId": "Microsoft.EntityFrameworkCore.DbContext.Set()",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions",
-              "MethodName": "IgnoreQueryFilters",
-              "MethodId": "Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.IgnoreQueryFilters(System.Linq.IQueryable\u003CTEntity\u003E)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions",
-              "MethodName": "SingleOrDefaultAsync",
-              "MethodId": "Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.SingleOrDefaultAsync(System.Linq.IQueryable\u003CTSource\u003E,System.Linq.Expressions.Expression\u003CSystem.Func\u003CTSource, System.Boolean\u003E\u003E,System.Threading.CancellationToken)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "System.InvalidOperationException",
-              "MethodName": ".ctor",
-              "MethodId": "System.InvalidOperationException..ctor(System.String?)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "cCoder.Data.ICoreContextFactory",
-              "MethodName": "CreateCoreContext",
-              "MethodId": "cCoder.Data.ICoreContextFactory.CreateCoreContext()",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            }
-          ],
-          "PossibleExceptionTypes": [
-            "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException",
-            "System.InvalidOperationException"
-          ],
-          "IncomingExceptionTypes": [
-            "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException",
-            "System.InvalidOperationException"
-          ],
-          "ThrowsExceptionTypes": [
-            "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException",
-            "System.InvalidOperationException"
-          ],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        }
-      ]
-    },
-    {
       "Name": "cCoder.Core.Dependencies.Sessions.NoOpSessionFeature",
       "StandardElementType": "Dependency",
       "LineNumber": 9,
@@ -5252,141 +4662,6 @@
           "IsHttpRequestHandler": true,
           "IsODataControllerAction": true,
           "HasFromBodyParameter": true,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": true
-        }
-      ]
-    },
-    {
-      "Name": "cCoder.Core.Exposures.Controllers.PackageManagerController",
-      "StandardElementType": "HttpExposure",
-      "LineNumber": 14,
-      "IsPublic": true,
-      "Kind": "Class",
-      "BaseType": {
-        "Id": "Microsoft.AspNetCore.Mvc.Core:Microsoft.AspNetCore.Mvc.ControllerBase",
-        "FullName": "Microsoft.AspNetCore.Mvc.ControllerBase",
-        "Name": "ControllerBase",
-        "Namespace": "Microsoft.AspNetCore.Mvc",
-        "AssemblyName": "Microsoft.AspNetCore.Mvc.Core",
-        "Kind": "Class",
-        "IsInCurrentProject": false,
-        "StandardElementType": "Dependency"
-      },
-      "Interfaces": [],
-      "Properties": [],
-      "Methods": [
-        {
-          "Id": "cCoder.Core.Exposures.Controllers.PackageManagerController.Get(System.Int32,System.String[])",
-          "Name": "Get",
-          "LineNumber": 22,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "packageNames",
-              "Type": "System.String[]"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.Task\u003CMicrosoft.AspNetCore.Mvc.IActionResult\u003E",
-          "Implements": [],
-          "Calls": [
-            {
-              "TypeName": "Microsoft.AspNetCore.Mvc.ControllerBase",
-              "MethodName": "BadRequest",
-              "MethodId": "Microsoft.AspNetCore.Mvc.ControllerBase.BadRequest(System.Object?)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "Microsoft.AspNetCore.Mvc.ControllerBase",
-              "MethodName": "Ok",
-              "MethodId": "Microsoft.AspNetCore.Mvc.ControllerBase.Ok(System.Object?)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "Microsoft.AspNetCore.Mvc.ControllerBase",
-              "MethodName": "StatusCode",
-              "MethodId": "Microsoft.AspNetCore.Mvc.ControllerBase.StatusCode(System.Int32,System.Object?)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "cCoder.Core.Services.Aggregations.Packages.IPackageManagerAggregationService",
-              "MethodName": "ExportPackagesAsync",
-              "MethodId": "cCoder.Core.Services.Aggregations.Packages.IPackageManagerAggregationService.ExportPackagesAsync(System.Int32,System.String[],System.String)",
-              "StandardElementType": "AggregationService",
-              "IsDependencyBoundary": false
-            }
-          ],
-          "PossibleExceptionTypes": [
-            "System.InvalidOperationException",
-            "cCoder.Core.Models.Exceptions.CoreDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException",
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationValidationException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingValidationException",
-            "cCoder.Core.Models.Exceptions.CoreServiceException",
-            "cCoder.Core.Models.Exceptions.CoreValidationException"
-          ],
-          "IncomingExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException"
-          ],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [
-            "GET"
-          ],
-          "HttpResponses": [
-            {
-              "StatusCode": 200,
-              "ResultMethod": "Ok",
-              "ExceptionType": "",
-              "IsExceptionPath": false,
-              "IsNullPath": false,
-              "HasBody": true,
-              "ExposesExceptionDetails": false,
-              "LogsException": false
-            },
-            {
-              "StatusCode": 400,
-              "ResultMethod": "BadRequest",
-              "ExceptionType": "cCoder.Core.Models.Exceptions.CoreOrchestrationValidationException",
-              "IsExceptionPath": true,
-              "IsNullPath": false,
-              "HasBody": true,
-              "ExposesExceptionDetails": false,
-              "LogsException": true
-            },
-            {
-              "StatusCode": 403,
-              "ResultMethod": "StatusCode",
-              "ExceptionType": "System.Security.SecurityException",
-              "IsExceptionPath": true,
-              "IsNullPath": false,
-              "HasBody": true,
-              "ExposesExceptionDetails": false,
-              "LogsException": true
-            },
-            {
-              "StatusCode": 500,
-              "ResultMethod": "StatusCode",
-              "ExceptionType": "System.Exception",
-              "IsExceptionPath": true,
-              "IsNullPath": false,
-              "HasBody": true,
-              "ExposesExceptionDetails": false,
-              "LogsException": true
-            }
-          ],
-          "IsHttpRequestHandler": true,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
           "HasKeyParameter": false,
           "HandlesNullWithNotFound": false,
           "HasTryCatch": true
@@ -6725,74 +6000,6 @@
       "Methods": []
     },
     {
-      "Name": "cCoder.Core.Exposures.PackageManagers.AppDomainManager",
-      "StandardElementType": "Exposure",
-      "LineNumber": 11,
-      "IsPublic": false,
-      "Kind": "Class",
-      "BaseType": null,
-      "Interfaces": [
-        {
-          "Id": "cCoder.Packaging:cCoder.Packaging.Exposures.PackageManagers.IAppDomainManager",
-          "FullName": "cCoder.Packaging.Exposures.PackageManagers.IAppDomainManager",
-          "Name": "IAppDomainManager",
-          "Namespace": "cCoder.Packaging.Exposures.PackageManagers",
-          "AssemblyName": "cCoder.Packaging",
-          "Kind": "Interface",
-          "IsInCurrentProject": false,
-          "StandardElementType": "Dependency"
-        }
-      ],
-      "Properties": [],
-      "Methods": [
-        {
-          "Id": "cCoder.Core.Exposures.PackageManagers.AppDomainManager.GetDomain(System.Int32)",
-          "Name": "GetDomain",
-          "LineNumber": 14,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            }
-          ],
-          "ReturnType": "System.String",
-          "Implements": [
-            "cCoder.Packaging.Exposures.PackageManagers.IAppDomainManager.GetDomain(System.Int32)"
-          ],
-          "Calls": [
-            {
-              "TypeName": "cCoder.Core.Services.Foundations.ContentManagement.IContentManagementAppService",
-              "MethodName": "GetApp",
-              "MethodId": "cCoder.Core.Services.Foundations.ContentManagement.IContentManagementAppService.GetApp(System.Int32,System.Boolean)",
-              "StandardElementType": "FoundationService",
-              "IsDependencyBoundary": false
-            }
-          ],
-          "PossibleExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreServiceException",
-            "cCoder.Core.Models.Exceptions.CoreValidationException"
-          ],
-          "IncomingExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreServiceException"
-          ],
-          "ThrowsExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreServiceException"
-          ],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        }
-      ]
-    },
-    {
       "Name": "cCoder.Core.Exposures.PackageManagers.AppSecurityPackageManager",
       "StandardElementType": "Exposure",
       "LineNumber": 11,
@@ -7161,6 +6368,139 @@
           "ThrowsExceptionTypes": [
             "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
             "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
+          ],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        }
+      ]
+    },
+    {
+      "Name": "cCoder.Core.Exposures.PackageManagers.PackageTransferManager",
+      "StandardElementType": "Exposure",
+      "LineNumber": 13,
+      "IsPublic": false,
+      "Kind": "Class",
+      "BaseType": null,
+      "Interfaces": [
+        {
+          "Id": "cCoder.CodeAnalysis:cCoder.CodeAnalysis.Exposures.ICompositionExposure",
+          "FullName": "cCoder.CodeAnalysis.Exposures.ICompositionExposure",
+          "Name": "ICompositionExposure",
+          "Namespace": "cCoder.CodeAnalysis.Exposures",
+          "AssemblyName": "cCoder.CodeAnalysis",
+          "Kind": "Interface",
+          "IsInCurrentProject": false,
+          "StandardElementType": "Dependency"
+        },
+        {
+          "Id": "cCoder.Packaging:cCoder.Packaging.Brokers.PackageTransfers.IPackageTransferBroker",
+          "FullName": "cCoder.Packaging.Brokers.PackageTransfers.IPackageTransferBroker",
+          "Name": "IPackageTransferBroker",
+          "Namespace": "cCoder.Packaging.Brokers.PackageTransfers",
+          "AssemblyName": "cCoder.Packaging",
+          "Kind": "Interface",
+          "IsInCurrentProject": false,
+          "StandardElementType": "Dependency"
+        }
+      ],
+      "Properties": [],
+      "Methods": [
+        {
+          "Id": "cCoder.Core.Exposures.PackageManagers.PackageTransferManager.ExportPackagesAsync(System.Int32,System.String[],System.String)",
+          "Name": "ExportPackagesAsync",
+          "LineNumber": 23,
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "packageNames",
+              "Type": "System.String[]"
+            },
+            {
+              "Name": "sourceApi",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.Packaging.Package[]\u003E",
+          "Implements": [
+            "cCoder.Packaging.Brokers.PackageTransfers.IPackageTransferBroker.ExportPackagesAsync(System.Int32,System.String[],System.String)"
+          ],
+          "Calls": [
+            {
+              "TypeName": "cCoder.Core.Services.Aggregations.Packages.IPackageManagerAggregationService",
+              "MethodName": "ExportPackagesAsync",
+              "MethodId": "cCoder.Core.Services.Aggregations.Packages.IPackageManagerAggregationService.ExportPackagesAsync(System.Int32,System.String[],System.String)",
+              "StandardElementType": "AggregationService",
+              "IsDependencyBoundary": false
+            }
+          ],
+          "PossibleExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreOrchestrationDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException",
+            "cCoder.Core.Models.Exceptions.CoreOrchestrationValidationException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingValidationException",
+            "cCoder.Core.Models.Exceptions.CoreServiceException",
+            "cCoder.Core.Models.Exceptions.CoreValidationException"
+          ],
+          "IncomingExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException"
+          ],
+          "ThrowsExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException"
+          ],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Exposures.PackageManagers.PackageTransferManager.GetRequestDomain()",
+          "Name": "GetRequestDomain",
+          "LineNumber": 18,
+          "Inputs": [],
+          "ReturnType": "System.String",
+          "Implements": [
+            "cCoder.Packaging.Brokers.PackageTransfers.IPackageTransferBroker.GetRequestDomain()"
+          ],
+          "Calls": [
+            {
+              "TypeName": "System.InvalidOperationException",
+              "MethodName": ".ctor",
+              "MethodId": "System.InvalidOperationException..ctor(System.String?)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "cCoder.Core.Brokers.Http.IHttpRequestBroker",
+              "MethodName": "GetCurrentRequest",
+              "MethodId": "cCoder.Core.Brokers.Http.IHttpRequestBroker.GetCurrentRequest()",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
+            }
+          ],
+          "PossibleExceptionTypes": [
+            "System.InvalidOperationException"
+          ],
+          "IncomingExceptionTypes": [
+            "System.InvalidOperationException"
+          ],
+          "ThrowsExceptionTypes": [
+            "System.InvalidOperationException"
           ],
           "HttpMethods": [],
           "HttpResponses": [],
@@ -7640,7 +6980,7 @@
         {
           "Id": "cCoder.Core.IServiceCollectionExtensions.AddCoreHostedServices(Microsoft.Extensions.DependencyInjection.IServiceCollection,cCoder.Core.Models.CoreConfiguration)",
           "Name": "AddCoreHostedServices",
-          "LineNumber": 236,
+          "LineNumber": 235,
           "Inputs": [
             {
               "Name": "services",
@@ -7805,7 +7145,7 @@
         {
           "Id": "cCoder.Core.IServiceCollectionExtensions.AddCoreWeb(Microsoft.Extensions.DependencyInjection.IServiceCollection,cCoder.Core.Models.CoreConfiguration)",
           "Name": "AddCoreWeb",
-          "LineNumber": 91,
+          "LineNumber": 90,
           "Inputs": [
             {
               "Name": "services",
@@ -8923,6 +8263,46 @@
       "Methods": []
     },
     {
+      "Name": "cCoder.Core.Models.Packaging.AppConfigurationPackageData",
+      "StandardElementType": "Model",
+      "LineNumber": 7,
+      "IsPublic": false,
+      "Kind": "Class",
+      "BaseType": null,
+      "Interfaces": [],
+      "Properties": [
+        {
+          "Name": "ConfigJson",
+          "Type": "System.String"
+        },
+        {
+          "Name": "DefaultCultureId",
+          "Type": "System.String"
+        },
+        {
+          "Name": "DefaultTheme",
+          "Type": "System.String"
+        },
+        {
+          "Name": "Domain",
+          "Type": "System.String"
+        },
+        {
+          "Name": "Id",
+          "Type": "System.Int32"
+        },
+        {
+          "Name": "Name",
+          "Type": "System.String"
+        },
+        {
+          "Name": "TenantId",
+          "Type": "System.String"
+        }
+      ],
+      "Methods": []
+    },
+    {
       "Name": "cCoder.Core.Models.Packaging.AppConfigurationPackageItem",
       "StandardElementType": "Model",
       "LineNumber": 7,
@@ -9519,16 +8899,16 @@
               "IsDependencyBoundary": false
             },
             {
-              "TypeName": "cCoder.Core.Services.Processings.Packages.IContentManagementPackageProcessingService",
+              "TypeName": "cCoder.Core.Services.Processings.Packages.IContentManagementAppPackageProcessingService",
               "MethodName": "ImportPackageAsync",
-              "MethodId": "cCoder.Core.Services.Processings.Packages.IContentManagementPackageProcessingService.ImportPackageAsync(System.Int32?,cCoder.Data.Models.Packaging.Package)",
+              "MethodId": "cCoder.Core.Services.Processings.Packages.IContentManagementAppPackageProcessingService.ImportPackageAsync(System.Int32,cCoder.Data.Models.Packaging.Package)",
               "StandardElementType": "ProcessingService",
               "IsDependencyBoundary": false
             },
             {
-              "TypeName": "cCoder.Core.Services.Processings.Packages.ICorePackageProcessingService",
+              "TypeName": "cCoder.Core.Services.Processings.Packages.IContentManagementPackageProcessingService",
               "MethodName": "ImportPackageAsync",
-              "MethodId": "cCoder.Core.Services.Processings.Packages.ICorePackageProcessingService.ImportPackageAsync(System.Int32,cCoder.Data.Models.Packaging.Package)",
+              "MethodId": "cCoder.Core.Services.Processings.Packages.IContentManagementPackageProcessingService.ImportPackageAsync(System.Int32?,cCoder.Data.Models.Packaging.Package)",
               "StandardElementType": "ProcessingService",
               "IsDependencyBoundary": false
             },
@@ -9555,8 +8935,6 @@
             }
           ],
           "PossibleExceptionTypes": [
-            "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException",
-            "System.InvalidOperationException",
             "cCoder.Core.Models.Exceptions.CoreDependencyException",
             "cCoder.Core.Models.Exceptions.CoreOrchestrationDependencyException",
             "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException",
@@ -9589,21 +8967,11 @@
     {
       "Name": "cCoder.Core.Services.Aggregations.Packages.PackageManagerAggregationService",
       "StandardElementType": "AggregationService",
-      "LineNumber": 11,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
       "Interfaces": [
-        {
-          "Id": "cCoder.Core:cCoder.Core.Exposures.IPackageManager",
-          "FullName": "cCoder.Core.Exposures.IPackageManager",
-          "Name": "IPackageManager",
-          "Namespace": "cCoder.Core.Exposures",
-          "AssemblyName": "cCoder.Core",
-          "Kind": "Interface",
-          "IsInCurrentProject": true,
-          "StandardElementType": "Exposure"
-        },
         {
           "Id": "cCoder.Core:cCoder.Core.Services.Aggregations.Packages.IPackageManagerAggregationService",
           "FullName": "cCoder.Core.Services.Aggregations.Packages.IPackageManagerAggregationService",
@@ -9620,7 +8988,7 @@
         {
           "Id": "cCoder.Core.Services.Aggregations.Packages.PackageManagerAggregationService.ExportPackagesAsync(System.Int32,System.String[],System.String)",
           "Name": "ExportPackagesAsync",
-          "LineNumber": 34,
+          "LineNumber": 38,
           "Inputs": [
             {
               "Name": "appId",
@@ -9637,7 +9005,6 @@
           ],
           "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.Packaging.Package[]\u003E",
           "Implements": [
-            "cCoder.Core.Exposures.IPackageManager.ExportPackagesAsync(System.Int32,System.String[],System.String)",
             "cCoder.Core.Services.Aggregations.Packages.IPackageManagerAggregationService.ExportPackagesAsync(System.Int32,System.String[],System.String)"
           ],
           "Calls": [
@@ -9677,36 +9044,14 @@
               "IsDependencyBoundary": true
             },
             {
-              "TypeName": "cCoder.Core.Services.Processings.Packages.ICorePackageProcessingService",
+              "TypeName": "cCoder.Core.Services.Processings.Packages.IContentManagementAppPackageProcessingService",
               "MethodName": "ExportAppConfigurationAsync",
-              "MethodId": "cCoder.Core.Services.Processings.Packages.ICorePackageProcessingService.ExportAppConfigurationAsync(System.Int32,System.String)",
-              "StandardElementType": "ProcessingService",
-              "IsDependencyBoundary": false
-            },
-            {
-              "TypeName": "cCoder.Core.Services.Processings.Packages.ICorePackageProcessingService",
-              "MethodName": "ExportFolderRolesAsync",
-              "MethodId": "cCoder.Core.Services.Processings.Packages.ICorePackageProcessingService.ExportFolderRolesAsync(System.Int32,System.String)",
-              "StandardElementType": "ProcessingService",
-              "IsDependencyBoundary": false
-            },
-            {
-              "TypeName": "cCoder.Core.Services.Processings.Packages.ICorePackageProcessingService",
-              "MethodName": "ExportPackage",
-              "MethodId": "cCoder.Core.Services.Processings.Packages.ICorePackageProcessingService.ExportPackage(System.Int32,System.String)",
-              "StandardElementType": "ProcessingService",
-              "IsDependencyBoundary": false
-            },
-            {
-              "TypeName": "cCoder.Core.Services.Processings.Packages.ICorePackageProcessingService",
-              "MethodName": "ExportPageRolesAsync",
-              "MethodId": "cCoder.Core.Services.Processings.Packages.ICorePackageProcessingService.ExportPageRolesAsync(System.Int32,System.String)",
+              "MethodId": "cCoder.Core.Services.Processings.Packages.IContentManagementAppPackageProcessingService.ExportAppConfigurationAsync(System.Int32,System.String)",
               "StandardElementType": "ProcessingService",
               "IsDependencyBoundary": false
             }
           ],
           "PossibleExceptionTypes": [
-            "System.InvalidOperationException",
             "cCoder.Core.Models.Exceptions.CoreDependencyException",
             "cCoder.Core.Models.Exceptions.CoreOrchestrationDependencyException",
             "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException",
@@ -9932,30 +9277,30 @@
               "IsDependencyBoundary": true
             },
             {
-              "TypeName": "cCoder.Security.Exposures.IAuthenticationManager",
+              "TypeName": "cCoder.Security.Services.Aggregations.Interfaces.IAuthenticationAggregationService",
               "MethodName": "LoginAsync",
-              "MethodId": "cCoder.Security.Exposures.IAuthenticationManager.LoginAsync(System.String,System.String)",
+              "MethodId": "cCoder.Security.Services.Aggregations.Interfaces.IAuthenticationAggregationService.LoginAsync(System.String,System.String)",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
             },
             {
-              "TypeName": "cCoder.Security.Exposures.IAuthenticationManager",
+              "TypeName": "cCoder.Security.Services.Aggregations.Interfaces.IAuthenticationAggregationService",
               "MethodName": "LogoutAsync",
-              "MethodId": "cCoder.Security.Exposures.IAuthenticationManager.LogoutAsync()",
+              "MethodId": "cCoder.Security.Services.Aggregations.Interfaces.IAuthenticationAggregationService.LogoutAsync()",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
             },
             {
-              "TypeName": "cCoder.Security.Exposures.IRegistrationManager",
+              "TypeName": "cCoder.Security.Services.Aggregations.Interfaces.IRegistrationAggregationService",
               "MethodName": "ConfirmRegistration",
-              "MethodId": "cCoder.Security.Exposures.IRegistrationManager.ConfirmRegistration(System.String)",
+              "MethodId": "cCoder.Security.Services.Aggregations.Interfaces.IRegistrationAggregationService.ConfirmRegistration(System.String)",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
             },
             {
-              "TypeName": "cCoder.Security.Exposures.IRegistrationManager",
+              "TypeName": "cCoder.Security.Services.Aggregations.Interfaces.IRegistrationAggregationService",
               "MethodName": "RegisterUserAsync",
-              "MethodId": "cCoder.Security.Exposures.IRegistrationManager.RegisterUserAsync(cCoder.Security.Models.DTOs.RegisterUser)",
+              "MethodId": "cCoder.Security.Services.Aggregations.Interfaces.IRegistrationAggregationService.RegisterUserAsync(cCoder.Security.Models.DTOs.RegisterUser)",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
             }
@@ -9998,9 +9343,9 @@
           ],
           "Calls": [
             {
-              "TypeName": "cCoder.Security.Exposures.ISecurityCurrentUserManager",
+              "TypeName": "cCoder.Security.Services.Aggregations.Interfaces.ICurrentUserAggregationService",
               "MethodName": "GetCurrentUser",
-              "MethodId": "cCoder.Security.Exposures.ISecurityCurrentUserManager.GetCurrentUser()",
+              "MethodId": "cCoder.Security.Services.Aggregations.Interfaces.ICurrentUserAggregationService.GetCurrentUser()",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
             }
@@ -11975,280 +11320,6 @@
             "cCoder.Core.Models.Exceptions.CoreValidationException"
           ],
           "IncomingExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreServiceException"
-          ],
-          "ThrowsExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreServiceException"
-          ],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        }
-      ]
-    },
-    {
-      "Name": "cCoder.Core.Services.Foundations.Packages.CorePackageService",
-      "StandardElementType": "FoundationService",
-      "LineNumber": 10,
-      "IsPublic": false,
-      "Kind": "Class",
-      "BaseType": null,
-      "Interfaces": [
-        {
-          "Id": "cCoder.Core:cCoder.Core.Services.Foundations.Packages.ICorePackageService",
-          "FullName": "cCoder.Core.Services.Foundations.Packages.ICorePackageService",
-          "Name": "ICorePackageService",
-          "Namespace": "cCoder.Core.Services.Foundations.Packages",
-          "AssemblyName": "cCoder.Core",
-          "Kind": "Interface",
-          "IsInCurrentProject": true,
-          "StandardElementType": "FoundationService"
-        }
-      ],
-      "Properties": [],
-      "Methods": [
-        {
-          "Id": "cCoder.Core.Services.Foundations.Packages.CorePackageService.ExportAppConfigurationAsync(System.Int32,System.String)",
-          "Name": "ExportAppConfigurationAsync",
-          "LineNumber": 21,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "sourceApi",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.Packaging.Package\u003E",
-          "Implements": [
-            "cCoder.Core.Services.Foundations.Packages.ICorePackageService.ExportAppConfigurationAsync(System.Int32,System.String)"
-          ],
-          "Calls": [
-            {
-              "TypeName": "cCoder.Core.Brokers.Packaging.ICorePackageBroker",
-              "MethodName": "ExportAppConfigurationAsync",
-              "MethodId": "cCoder.Core.Brokers.Packaging.ICorePackageBroker.ExportAppConfigurationAsync(System.Int32,System.String)",
-              "StandardElementType": "Broker",
-              "IsDependencyBoundary": false
-            }
-          ],
-          "PossibleExceptionTypes": [
-            "System.InvalidOperationException",
-            "cCoder.Core.Models.Exceptions.CoreDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreServiceException",
-            "cCoder.Core.Models.Exceptions.CoreValidationException"
-          ],
-          "IncomingExceptionTypes": [
-            "System.InvalidOperationException",
-            "cCoder.Core.Models.Exceptions.CoreDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreServiceException"
-          ],
-          "ThrowsExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreServiceException"
-          ],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Services.Foundations.Packages.CorePackageService.ExportFolderRolesAsync(System.Int32,System.String)",
-          "Name": "ExportFolderRolesAsync",
-          "LineNumber": 37,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "sourceApi",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.Packaging.Package\u003E",
-          "Implements": [
-            "cCoder.Core.Services.Foundations.Packages.ICorePackageService.ExportFolderRolesAsync(System.Int32,System.String)"
-          ],
-          "Calls": [
-            {
-              "TypeName": "cCoder.Core.Brokers.Packaging.ICorePackageBroker",
-              "MethodName": "ExportFolderRolesAsync",
-              "MethodId": "cCoder.Core.Brokers.Packaging.ICorePackageBroker.ExportFolderRolesAsync(System.Int32,System.String)",
-              "StandardElementType": "Broker",
-              "IsDependencyBoundary": false
-            }
-          ],
-          "PossibleExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreServiceException",
-            "cCoder.Core.Models.Exceptions.CoreValidationException"
-          ],
-          "IncomingExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreServiceException"
-          ],
-          "ThrowsExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreServiceException"
-          ],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Services.Foundations.Packages.CorePackageService.ExportPackage(System.Int32,System.String)",
-          "Name": "ExportPackage",
-          "LineNumber": 45,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "packageName",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "cCoder.Data.Models.Packaging.Package",
-          "Implements": [
-            "cCoder.Core.Services.Foundations.Packages.ICorePackageService.ExportPackage(System.Int32,System.String)"
-          ],
-          "Calls": [
-            {
-              "TypeName": "cCoder.Core.Brokers.Packaging.ICorePackageBroker",
-              "MethodName": "ExportPackage",
-              "MethodId": "cCoder.Core.Brokers.Packaging.ICorePackageBroker.ExportPackage(System.Int32,System.String)",
-              "StandardElementType": "Broker",
-              "IsDependencyBoundary": false
-            }
-          ],
-          "PossibleExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreServiceException",
-            "cCoder.Core.Models.Exceptions.CoreValidationException"
-          ],
-          "IncomingExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreServiceException"
-          ],
-          "ThrowsExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreServiceException"
-          ],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Services.Foundations.Packages.CorePackageService.ExportPageRolesAsync(System.Int32,System.String)",
-          "Name": "ExportPageRolesAsync",
-          "LineNumber": 29,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "sourceApi",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.Packaging.Package\u003E",
-          "Implements": [
-            "cCoder.Core.Services.Foundations.Packages.ICorePackageService.ExportPageRolesAsync(System.Int32,System.String)"
-          ],
-          "Calls": [
-            {
-              "TypeName": "cCoder.Core.Brokers.Packaging.ICorePackageBroker",
-              "MethodName": "ExportPageRolesAsync",
-              "MethodId": "cCoder.Core.Brokers.Packaging.ICorePackageBroker.ExportPageRolesAsync(System.Int32,System.String)",
-              "StandardElementType": "Broker",
-              "IsDependencyBoundary": false
-            }
-          ],
-          "PossibleExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreServiceException",
-            "cCoder.Core.Models.Exceptions.CoreValidationException"
-          ],
-          "IncomingExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreServiceException"
-          ],
-          "ThrowsExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreServiceException"
-          ],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Services.Foundations.Packages.CorePackageService.ImportAppConfigurationAsync(System.Int32,System.String)",
-          "Name": "ImportAppConfigurationAsync",
-          "LineNumber": 13,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "data",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask",
-          "Implements": [
-            "cCoder.Core.Services.Foundations.Packages.ICorePackageService.ImportAppConfigurationAsync(System.Int32,System.String)"
-          ],
-          "Calls": [
-            {
-              "TypeName": "cCoder.Core.Brokers.Packaging.ICorePackageBroker",
-              "MethodName": "ImportAppConfigurationAsync",
-              "MethodId": "cCoder.Core.Brokers.Packaging.ICorePackageBroker.ImportAppConfigurationAsync(System.Int32,System.String)",
-              "StandardElementType": "Broker",
-              "IsDependencyBoundary": false
-            }
-          ],
-          "PossibleExceptionTypes": [
-            "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException",
-            "System.InvalidOperationException",
-            "cCoder.Core.Models.Exceptions.CoreDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreServiceException",
-            "cCoder.Core.Models.Exceptions.CoreValidationException"
-          ],
-          "IncomingExceptionTypes": [
-            "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException",
-            "System.InvalidOperationException",
             "cCoder.Core.Models.Exceptions.CoreDependencyException",
             "cCoder.Core.Models.Exceptions.CoreServiceException"
           ],
@@ -14508,6 +13579,191 @@
       ]
     },
     {
+      "Name": "cCoder.Core.Services.Processings.Packages.ContentManagementAppPackageProcessingService",
+      "StandardElementType": "ProcessingService",
+      "LineNumber": 13,
+      "IsPublic": false,
+      "Kind": "Class",
+      "BaseType": null,
+      "Interfaces": [
+        {
+          "Id": "cCoder.Core:cCoder.Core.Services.Processings.Packages.IContentManagementAppPackageProcessingService",
+          "FullName": "cCoder.Core.Services.Processings.Packages.IContentManagementAppPackageProcessingService",
+          "Name": "IContentManagementAppPackageProcessingService",
+          "Namespace": "cCoder.Core.Services.Processings.Packages",
+          "AssemblyName": "cCoder.Core",
+          "Kind": "Interface",
+          "IsInCurrentProject": true,
+          "StandardElementType": "ProcessingService"
+        }
+      ],
+      "Properties": [],
+      "Methods": [
+        {
+          "Id": "cCoder.Core.Services.Processings.Packages.ContentManagementAppPackageProcessingService.ExportAppConfigurationAsync(System.Int32,System.String)",
+          "Name": "ExportAppConfigurationAsync",
+          "LineNumber": 51,
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "sourceApi",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.Packaging.Package\u003E",
+          "Implements": [
+            "cCoder.Core.Services.Processings.Packages.IContentManagementAppPackageProcessingService.ExportAppConfigurationAsync(System.Int32,System.String)"
+          ],
+          "Calls": [
+            {
+              "TypeName": "System.Threading.Tasks.ValueTask",
+              "MethodName": "FromResult",
+              "MethodId": "System.Threading.Tasks.ValueTask.FromResult(TResult)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "cCoder.Core.Brokers.Json.ICorePackageJsonBroker",
+              "MethodName": "Serialize",
+              "MethodId": "cCoder.Core.Brokers.Json.ICorePackageJsonBroker.Serialize(cCoder.Core.Models.Packaging.AppConfigurationPackageData)",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
+            },
+            {
+              "TypeName": "cCoder.Core.Services.Foundations.ContentManagement.IContentManagementAppService",
+              "MethodName": "GetApp",
+              "MethodId": "cCoder.Core.Services.Foundations.ContentManagement.IContentManagementAppService.GetApp(System.Int32,System.Boolean)",
+              "StandardElementType": "FoundationService",
+              "IsDependencyBoundary": false
+            },
+            {
+              "TypeName": "cCoder.Data.Models.Packaging.Package",
+              "MethodName": ".ctor",
+              "MethodId": "cCoder.Data.Models.Packaging.Package..ctor()",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "cCoder.Data.Models.Packaging.PackageItem",
+              "MethodName": ".ctor",
+              "MethodId": "cCoder.Data.Models.Packaging.PackageItem..ctor()",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
+          "PossibleExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingValidationException",
+            "cCoder.Core.Models.Exceptions.CoreServiceException",
+            "cCoder.Core.Models.Exceptions.CoreValidationException"
+          ],
+          "IncomingExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
+            "cCoder.Core.Models.Exceptions.CoreServiceException"
+          ],
+          "ThrowsExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
+          ],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Services.Processings.Packages.ContentManagementAppPackageProcessingService.ImportPackageAsync(System.Int32,cCoder.Data.Models.Packaging.Package)",
+          "Name": "ImportPackageAsync",
+          "LineNumber": 20,
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "package",
+              "Type": "cCoder.Data.Models.Packaging.Package"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask",
+          "Implements": [
+            "cCoder.Core.Services.Processings.Packages.IContentManagementAppPackageProcessingService.ImportPackageAsync(System.Int32,cCoder.Data.Models.Packaging.Package)"
+          ],
+          "Calls": [
+            {
+              "TypeName": "System.Linq.Enumerable",
+              "MethodName": "Where",
+              "MethodId": "System.Linq.Enumerable.Where(System.Collections.Generic.IEnumerable\u003CTSource\u003E,System.Func\u003CTSource, System.Boolean\u003E)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "System.String",
+              "MethodName": "Equals",
+              "MethodId": "System.String.Equals(System.String?,System.String?,System.StringComparison)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "cCoder.Core.Brokers.Json.ICorePackageJsonBroker",
+              "MethodName": "Deserialize",
+              "MethodId": "cCoder.Core.Brokers.Json.ICorePackageJsonBroker.Deserialize(System.String)",
+              "StandardElementType": "Broker",
+              "IsDependencyBoundary": false
+            },
+            {
+              "TypeName": "cCoder.Core.Services.Foundations.ContentManagement.IContentManagementAppService",
+              "MethodName": "GetApp",
+              "MethodId": "cCoder.Core.Services.Foundations.ContentManagement.IContentManagementAppService.GetApp(System.Int32,System.Boolean)",
+              "StandardElementType": "FoundationService",
+              "IsDependencyBoundary": false
+            },
+            {
+              "TypeName": "cCoder.Core.Services.Foundations.ContentManagement.IContentManagementAppService",
+              "MethodName": "UpdateAppAsync",
+              "MethodId": "cCoder.Core.Services.Foundations.ContentManagement.IContentManagementAppService.UpdateAppAsync(cCoder.Data.Models.CMS.App)",
+              "StandardElementType": "FoundationService",
+              "IsDependencyBoundary": false
+            }
+          ],
+          "PossibleExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingValidationException",
+            "cCoder.Core.Models.Exceptions.CoreServiceException",
+            "cCoder.Core.Models.Exceptions.CoreValidationException"
+          ],
+          "IncomingExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
+            "cCoder.Core.Models.Exceptions.CoreServiceException"
+          ],
+          "ThrowsExceptionTypes": [
+            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
+            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
+          ],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        }
+      ]
+    },
+    {
       "Name": "cCoder.Core.Services.Processings.Packages.ContentManagementPackageProcessingService",
       "StandardElementType": "ProcessingService",
       "LineNumber": 10,
@@ -14609,311 +13865,6 @@
             }
           ],
           "PossibleExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingValidationException",
-            "cCoder.Core.Models.Exceptions.CoreServiceException",
-            "cCoder.Core.Models.Exceptions.CoreValidationException"
-          ],
-          "IncomingExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
-            "cCoder.Core.Models.Exceptions.CoreServiceException"
-          ],
-          "ThrowsExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
-          ],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        }
-      ]
-    },
-    {
-      "Name": "cCoder.Core.Services.Processings.Packages.CorePackageProcessingService",
-      "StandardElementType": "ProcessingService",
-      "LineNumber": 10,
-      "IsPublic": false,
-      "Kind": "Class",
-      "BaseType": null,
-      "Interfaces": [
-        {
-          "Id": "cCoder.Core:cCoder.Core.Services.Processings.Packages.ICorePackageProcessingService",
-          "FullName": "cCoder.Core.Services.Processings.Packages.ICorePackageProcessingService",
-          "Name": "ICorePackageProcessingService",
-          "Namespace": "cCoder.Core.Services.Processings.Packages",
-          "AssemblyName": "cCoder.Core",
-          "Kind": "Interface",
-          "IsInCurrentProject": true,
-          "StandardElementType": "ProcessingService"
-        }
-      ],
-      "Properties": [],
-      "Methods": [
-        {
-          "Id": "cCoder.Core.Services.Processings.Packages.CorePackageProcessingService.ExportAppConfigurationAsync(System.Int32,System.String)",
-          "Name": "ExportAppConfigurationAsync",
-          "LineNumber": 36,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "sourceApi",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.Packaging.Package\u003E",
-          "Implements": [
-            "cCoder.Core.Services.Processings.Packages.ICorePackageProcessingService.ExportAppConfigurationAsync(System.Int32,System.String)"
-          ],
-          "Calls": [
-            {
-              "TypeName": "cCoder.Core.Services.Foundations.Packages.ICorePackageService",
-              "MethodName": "ExportAppConfigurationAsync",
-              "MethodId": "cCoder.Core.Services.Foundations.Packages.ICorePackageService.ExportAppConfigurationAsync(System.Int32,System.String)",
-              "StandardElementType": "FoundationService",
-              "IsDependencyBoundary": false
-            }
-          ],
-          "PossibleExceptionTypes": [
-            "System.InvalidOperationException",
-            "cCoder.Core.Models.Exceptions.CoreDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingValidationException",
-            "cCoder.Core.Models.Exceptions.CoreServiceException",
-            "cCoder.Core.Models.Exceptions.CoreValidationException"
-          ],
-          "IncomingExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
-            "cCoder.Core.Models.Exceptions.CoreServiceException"
-          ],
-          "ThrowsExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
-          ],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Services.Processings.Packages.CorePackageProcessingService.ExportFolderRolesAsync(System.Int32,System.String)",
-          "Name": "ExportFolderRolesAsync",
-          "LineNumber": 50,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "sourceApi",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.Packaging.Package\u003E",
-          "Implements": [
-            "cCoder.Core.Services.Processings.Packages.ICorePackageProcessingService.ExportFolderRolesAsync(System.Int32,System.String)"
-          ],
-          "Calls": [
-            {
-              "TypeName": "cCoder.Core.Services.Foundations.Packages.ICorePackageService",
-              "MethodName": "ExportFolderRolesAsync",
-              "MethodId": "cCoder.Core.Services.Foundations.Packages.ICorePackageService.ExportFolderRolesAsync(System.Int32,System.String)",
-              "StandardElementType": "FoundationService",
-              "IsDependencyBoundary": false
-            }
-          ],
-          "PossibleExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingValidationException",
-            "cCoder.Core.Models.Exceptions.CoreServiceException",
-            "cCoder.Core.Models.Exceptions.CoreValidationException"
-          ],
-          "IncomingExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
-            "cCoder.Core.Models.Exceptions.CoreServiceException"
-          ],
-          "ThrowsExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
-          ],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Services.Processings.Packages.CorePackageProcessingService.ExportPackage(System.Int32,System.String)",
-          "Name": "ExportPackage",
-          "LineNumber": 57,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "packageName",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "cCoder.Data.Models.Packaging.Package",
-          "Implements": [
-            "cCoder.Core.Services.Processings.Packages.ICorePackageProcessingService.ExportPackage(System.Int32,System.String)"
-          ],
-          "Calls": [
-            {
-              "TypeName": "cCoder.Core.Services.Foundations.Packages.ICorePackageService",
-              "MethodName": "ExportPackage",
-              "MethodId": "cCoder.Core.Services.Foundations.Packages.ICorePackageService.ExportPackage(System.Int32,System.String)",
-              "StandardElementType": "FoundationService",
-              "IsDependencyBoundary": false
-            }
-          ],
-          "PossibleExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingValidationException",
-            "cCoder.Core.Models.Exceptions.CoreServiceException",
-            "cCoder.Core.Models.Exceptions.CoreValidationException"
-          ],
-          "IncomingExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
-            "cCoder.Core.Models.Exceptions.CoreServiceException"
-          ],
-          "ThrowsExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
-          ],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Services.Processings.Packages.CorePackageProcessingService.ExportPageRolesAsync(System.Int32,System.String)",
-          "Name": "ExportPageRolesAsync",
-          "LineNumber": 43,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "sourceApi",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.Packaging.Package\u003E",
-          "Implements": [
-            "cCoder.Core.Services.Processings.Packages.ICorePackageProcessingService.ExportPageRolesAsync(System.Int32,System.String)"
-          ],
-          "Calls": [
-            {
-              "TypeName": "cCoder.Core.Services.Foundations.Packages.ICorePackageService",
-              "MethodName": "ExportPageRolesAsync",
-              "MethodId": "cCoder.Core.Services.Foundations.Packages.ICorePackageService.ExportPageRolesAsync(System.Int32,System.String)",
-              "StandardElementType": "FoundationService",
-              "IsDependencyBoundary": false
-            }
-          ],
-          "PossibleExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingValidationException",
-            "cCoder.Core.Models.Exceptions.CoreServiceException",
-            "cCoder.Core.Models.Exceptions.CoreValidationException"
-          ],
-          "IncomingExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
-            "cCoder.Core.Models.Exceptions.CoreServiceException"
-          ],
-          "ThrowsExceptionTypes": [
-            "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
-            "cCoder.Core.Models.Exceptions.CoreProcessingServiceException"
-          ],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Services.Processings.Packages.CorePackageProcessingService.ImportPackageAsync(System.Int32,cCoder.Data.Models.Packaging.Package)",
-          "Name": "ImportPackageAsync",
-          "LineNumber": 15,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "package",
-              "Type": "cCoder.Data.Models.Packaging.Package"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask",
-          "Implements": [
-            "cCoder.Core.Services.Processings.Packages.ICorePackageProcessingService.ImportPackageAsync(System.Int32,cCoder.Data.Models.Packaging.Package)"
-          ],
-          "Calls": [
-            {
-              "TypeName": "System.Linq.Enumerable",
-              "MethodName": "Where",
-              "MethodId": "System.Linq.Enumerable.Where(System.Collections.Generic.IEnumerable\u003CTSource\u003E,System.Func\u003CTSource, System.Boolean\u003E)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "System.String",
-              "MethodName": "Equals",
-              "MethodId": "System.String.Equals(System.String?,System.String?,System.StringComparison)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "cCoder.Core.Services.Foundations.Packages.ICorePackageService",
-              "MethodName": "ImportAppConfigurationAsync",
-              "MethodId": "cCoder.Core.Services.Foundations.Packages.ICorePackageService.ImportAppConfigurationAsync(System.Int32,System.String)",
-              "StandardElementType": "FoundationService",
-              "IsDependencyBoundary": false
-            }
-          ],
-          "PossibleExceptionTypes": [
-            "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException",
-            "System.InvalidOperationException",
             "cCoder.Core.Models.Exceptions.CoreDependencyException",
             "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
             "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
@@ -15652,8 +14603,6 @@
             }
           ],
           "PossibleExceptionTypes": [
-            "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException",
-            "System.InvalidOperationException",
             "System.TimeoutException",
             "cCoder.Core.Models.Exceptions.CoreDependencyException",
             "cCoder.Core.Models.Exceptions.CoreOrchestrationDependencyException",
@@ -15726,8 +14675,6 @@
             }
           ],
           "PossibleExceptionTypes": [
-            "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException",
-            "System.InvalidOperationException",
             "System.TimeoutException",
             "cCoder.Core.Models.Exceptions.CoreDependencyException",
             "cCoder.Core.Models.Exceptions.CoreOrchestrationDependencyException",
@@ -16516,6 +15463,79 @@
       ]
     },
     {
+      "Name": "cCoder.Core.Brokers.Json.ICorePackageJsonBroker",
+      "StandardElementType": "Broker",
+      "LineNumber": 10,
+      "IsPublic": false,
+      "Kind": "Interface",
+      "BaseType": null,
+      "Interfaces": [
+        {
+          "Id": "cCoder.CodeAnalysis:cCoder.CodeAnalysis.Exposures.IUtilityBroker",
+          "FullName": "cCoder.CodeAnalysis.Exposures.IUtilityBroker",
+          "Name": "IUtilityBroker",
+          "Namespace": "cCoder.CodeAnalysis.Exposures",
+          "AssemblyName": "cCoder.CodeAnalysis",
+          "Kind": "Interface",
+          "IsInCurrentProject": false,
+          "StandardElementType": "Dependency"
+        }
+      ],
+      "Properties": [],
+      "Methods": [
+        {
+          "Id": "cCoder.Core.Brokers.Json.ICorePackageJsonBroker.Deserialize(System.String)",
+          "Name": "Deserialize",
+          "LineNumber": 13,
+          "Inputs": [
+            {
+              "Name": "data",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "cCoder.Core.Models.Packaging.AppConfigurationPackageData",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Brokers.Json.ICorePackageJsonBroker.Serialize(cCoder.Core.Models.Packaging.AppConfigurationPackageData)",
+          "Name": "Serialize",
+          "LineNumber": 12,
+          "Inputs": [
+            {
+              "Name": "appConfigurationPackageData",
+              "Type": "cCoder.Core.Models.Packaging.AppConfigurationPackageData"
+            }
+          ],
+          "ReturnType": "System.String",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        }
+      ]
+    },
+    {
       "Name": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
       "StandardElementType": "Broker",
       "LineNumber": 7,
@@ -17167,163 +16187,6 @@
             {
               "Name": "package",
               "Type": "cCoder.Data.Models.Packaging.Package"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        }
-      ]
-    },
-    {
-      "Name": "cCoder.Core.Brokers.Packaging.ICorePackageBroker",
-      "StandardElementType": "Broker",
-      "LineNumber": 9,
-      "IsPublic": false,
-      "Kind": "Interface",
-      "BaseType": null,
-      "Interfaces": [],
-      "Properties": [],
-      "Methods": [
-        {
-          "Id": "cCoder.Core.Brokers.Packaging.ICorePackageBroker.ExportAppConfigurationAsync(System.Int32,System.String)",
-          "Name": "ExportAppConfigurationAsync",
-          "LineNumber": 12,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "sourceApi",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.Packaging.Package\u003E",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Brokers.Packaging.ICorePackageBroker.ExportFolderRolesAsync(System.Int32,System.String)",
-          "Name": "ExportFolderRolesAsync",
-          "LineNumber": 14,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "sourceApi",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.Packaging.Package\u003E",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Brokers.Packaging.ICorePackageBroker.ExportPackage(System.Int32,System.String)",
-          "Name": "ExportPackage",
-          "LineNumber": 15,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "packageName",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "cCoder.Data.Models.Packaging.Package",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Brokers.Packaging.ICorePackageBroker.ExportPageRolesAsync(System.Int32,System.String)",
-          "Name": "ExportPageRolesAsync",
-          "LineNumber": 13,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "sourceApi",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.Packaging.Package\u003E",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Brokers.Packaging.ICorePackageBroker.ImportAppConfigurationAsync(System.Int32,System.String)",
-          "Name": "ImportAppConfigurationAsync",
-          "LineNumber": 11,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "data",
-              "Type": "System.String"
             }
           ],
           "ReturnType": "System.Threading.Tasks.ValueTask",
@@ -18341,51 +17204,6 @@
       ]
     },
     {
-      "Name": "cCoder.Core.Exposures.IPackageManager",
-      "StandardElementType": "Exposure",
-      "LineNumber": 9,
-      "IsPublic": true,
-      "Kind": "Interface",
-      "BaseType": null,
-      "Interfaces": [],
-      "Properties": [],
-      "Methods": [
-        {
-          "Id": "cCoder.Core.Exposures.IPackageManager.ExportPackagesAsync(System.Int32,System.String[],System.String)",
-          "Name": "ExportPackagesAsync",
-          "LineNumber": 11,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "packageNames",
-              "Type": "System.String[]"
-            },
-            {
-              "Name": "sourceApi",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.Packaging.Package[]\u003E",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        }
-      ]
-    },
-    {
       "Name": "cCoder.Core.Exposures.Managers.ITemplatedEmailManager",
       "StandardElementType": "Exposure",
       "LineNumber": 11,
@@ -18789,7 +17607,7 @@
       "Name": "cCoder.Core.Services.Aggregations.Packages.IPackageManagerAggregationService",
       "StandardElementType": "AggregationService",
       "LineNumber": 9,
-      "IsPublic": true,
+      "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
       "Interfaces": [],
@@ -19826,163 +18644,6 @@
             {
               "Name": "package",
               "Type": "cCoder.Data.Models.Packaging.Package"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        }
-      ]
-    },
-    {
-      "Name": "cCoder.Core.Services.Foundations.Packages.ICorePackageService",
-      "StandardElementType": "FoundationService",
-      "LineNumber": 9,
-      "IsPublic": false,
-      "Kind": "Interface",
-      "BaseType": null,
-      "Interfaces": [],
-      "Properties": [],
-      "Methods": [
-        {
-          "Id": "cCoder.Core.Services.Foundations.Packages.ICorePackageService.ExportAppConfigurationAsync(System.Int32,System.String)",
-          "Name": "ExportAppConfigurationAsync",
-          "LineNumber": 12,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "sourceApi",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.Packaging.Package\u003E",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Services.Foundations.Packages.ICorePackageService.ExportFolderRolesAsync(System.Int32,System.String)",
-          "Name": "ExportFolderRolesAsync",
-          "LineNumber": 14,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "sourceApi",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.Packaging.Package\u003E",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Services.Foundations.Packages.ICorePackageService.ExportPackage(System.Int32,System.String)",
-          "Name": "ExportPackage",
-          "LineNumber": 15,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "packageName",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "cCoder.Data.Models.Packaging.Package",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Services.Foundations.Packages.ICorePackageService.ExportPageRolesAsync(System.Int32,System.String)",
-          "Name": "ExportPageRolesAsync",
-          "LineNumber": 13,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "sourceApi",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.Packaging.Package\u003E",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Services.Foundations.Packages.ICorePackageService.ImportAppConfigurationAsync(System.Int32,System.String)",
-          "Name": "ImportAppConfigurationAsync",
-          "LineNumber": 11,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "data",
-              "Type": "System.String"
             }
           ],
           "ReturnType": "System.Threading.Tasks.ValueTask",
@@ -21249,6 +19910,76 @@
       ]
     },
     {
+      "Name": "cCoder.Core.Services.Processings.Packages.IContentManagementAppPackageProcessingService",
+      "StandardElementType": "ProcessingService",
+      "LineNumber": 9,
+      "IsPublic": false,
+      "Kind": "Interface",
+      "BaseType": null,
+      "Interfaces": [],
+      "Properties": [],
+      "Methods": [
+        {
+          "Id": "cCoder.Core.Services.Processings.Packages.IContentManagementAppPackageProcessingService.ExportAppConfigurationAsync(System.Int32,System.String)",
+          "Name": "ExportAppConfigurationAsync",
+          "LineNumber": 12,
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "sourceApi",
+              "Type": "System.String"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.Packaging.Package\u003E",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        },
+        {
+          "Id": "cCoder.Core.Services.Processings.Packages.IContentManagementAppPackageProcessingService.ImportPackageAsync(System.Int32,cCoder.Data.Models.Packaging.Package)",
+          "Name": "ImportPackageAsync",
+          "LineNumber": 11,
+          "Inputs": [
+            {
+              "Name": "appId",
+              "Type": "System.Int32"
+            },
+            {
+              "Name": "package",
+              "Type": "cCoder.Data.Models.Packaging.Package"
+            }
+          ],
+          "ReturnType": "System.Threading.Tasks.ValueTask",
+          "Implements": [],
+          "Calls": [],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [],
+          "HttpResponses": [],
+          "IsHttpRequestHandler": false,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": false
+        }
+      ]
+    },
+    {
       "Name": "cCoder.Core.Services.Processings.Packages.IContentManagementPackageProcessingService",
       "StandardElementType": "ProcessingService",
       "LineNumber": 9,
@@ -21295,163 +20026,6 @@
             {
               "Name": "appId",
               "Type": "System.Int32?"
-            },
-            {
-              "Name": "package",
-              "Type": "cCoder.Data.Models.Packaging.Package"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        }
-      ]
-    },
-    {
-      "Name": "cCoder.Core.Services.Processings.Packages.ICorePackageProcessingService",
-      "StandardElementType": "ProcessingService",
-      "LineNumber": 9,
-      "IsPublic": false,
-      "Kind": "Interface",
-      "BaseType": null,
-      "Interfaces": [],
-      "Properties": [],
-      "Methods": [
-        {
-          "Id": "cCoder.Core.Services.Processings.Packages.ICorePackageProcessingService.ExportAppConfigurationAsync(System.Int32,System.String)",
-          "Name": "ExportAppConfigurationAsync",
-          "LineNumber": 12,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "sourceApi",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.Packaging.Package\u003E",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Services.Processings.Packages.ICorePackageProcessingService.ExportFolderRolesAsync(System.Int32,System.String)",
-          "Name": "ExportFolderRolesAsync",
-          "LineNumber": 14,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "sourceApi",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.Packaging.Package\u003E",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Services.Processings.Packages.ICorePackageProcessingService.ExportPackage(System.Int32,System.String)",
-          "Name": "ExportPackage",
-          "LineNumber": 15,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "packageName",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "cCoder.Data.Models.Packaging.Package",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Services.Processings.Packages.ICorePackageProcessingService.ExportPageRolesAsync(System.Int32,System.String)",
-          "Name": "ExportPageRolesAsync",
-          "LineNumber": 13,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
-            },
-            {
-              "Name": "sourceApi",
-              "Type": "System.String"
-            }
-          ],
-          "ReturnType": "System.Threading.Tasks.ValueTask\u003CcCoder.Data.Models.Packaging.Package\u003E",
-          "Implements": [],
-          "Calls": [],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [],
-          "HttpResponses": [],
-          "IsHttpRequestHandler": false,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": false
-        },
-        {
-          "Id": "cCoder.Core.Services.Processings.Packages.ICorePackageProcessingService.ImportPackageAsync(System.Int32,cCoder.Data.Models.Packaging.Package)",
-          "Name": "ImportPackageAsync",
-          "LineNumber": 11,
-          "Inputs": [
-            {
-              "Name": "appId",
-              "Type": "System.Int32"
             },
             {
               "Name": "package",
@@ -21848,10 +20422,6 @@
       "ToType": "cCoder.ContentManagement.Exposures.IContentManagementPackageManager"
     },
     {
-      "FromType": "cCoder.Core.Brokers.Packaging.CorePackageBroker",
-      "ToType": "cCoder.Core.Dependencies.Packages.CorePackageDependency"
-    },
-    {
       "FromType": "cCoder.Core.Brokers.Packaging.DocumentManagementPackageBroker",
       "ToType": "cCoder.DocumentManagement.Exposures.IDocumentManagementPackageManager"
     },
@@ -21920,14 +20490,6 @@
       "ToType": "cCoder.Data.Models.CMS.Resource"
     },
     {
-      "FromType": "cCoder.Core.Dependencies.Packages.CorePackageDependency",
-      "ToType": "cCoder.Data.ICoreContextFactory"
-    },
-    {
-      "FromType": "cCoder.Core.Dependencies.Packages.CorePackageDependency",
-      "ToType": "cCoder.Packaging.Exposures.IPackageTransferManager"
-    },
-    {
       "FromType": "cCoder.Core.Dependencies.TemplatedEmails.TemplatedEmailContentDependency",
       "ToType": "cCoder.ContentManagement.Exposures.IAppManager"
     },
@@ -21950,10 +20512,6 @@
     {
       "FromType": "cCoder.Core.Exposures.Controllers.AppController",
       "ToType": "cCoder.Core.Services.Aggregations.AppAggregationService"
-    },
-    {
-      "FromType": "cCoder.Core.Exposures.Controllers.PackageManagerController",
-      "ToType": "cCoder.Core.Services.Aggregations.Packages.PackageManagerAggregationService"
     },
     {
       "FromType": "cCoder.Core.Exposures.Controllers.SetupController",
@@ -21988,10 +20546,6 @@
       "ToType": "System.String"
     },
     {
-      "FromType": "cCoder.Core.Exposures.PackageManagers.AppDomainManager",
-      "ToType": "cCoder.Core.Services.Foundations.ContentManagement.ContentManagementAppService"
-    },
-    {
       "FromType": "cCoder.Core.Exposures.PackageManagers.AppSecurityPackageManager",
       "ToType": "cCoder.Core.Services.Processings.Packages.AppSecurityPackageProcessingService"
     },
@@ -22002,6 +20556,14 @@
     {
       "FromType": "cCoder.Core.Exposures.PackageManagers.DocumentManagementPackageManager",
       "ToType": "cCoder.Core.Services.Processings.Packages.DocumentManagementPackageProcessingService"
+    },
+    {
+      "FromType": "cCoder.Core.Exposures.PackageManagers.PackageTransferManager",
+      "ToType": "cCoder.Core.Brokers.Http.HttpRequestBroker"
+    },
+    {
+      "FromType": "cCoder.Core.Exposures.PackageManagers.PackageTransferManager",
+      "ToType": "cCoder.Core.Services.Aggregations.Packages.PackageManagerAggregationService"
     },
     {
       "FromType": "cCoder.Core.Exposures.PackageManagers.SchedulingPackageManager",
@@ -22093,11 +20655,11 @@
     },
     {
       "FromType": "cCoder.Core.Services.Aggregations.Packages.PackageImportAggregationService",
-      "ToType": "cCoder.Core.Services.Processings.Packages.ContentManagementPackageProcessingService"
+      "ToType": "cCoder.Core.Services.Processings.Packages.ContentManagementAppPackageProcessingService"
     },
     {
       "FromType": "cCoder.Core.Services.Aggregations.Packages.PackageImportAggregationService",
-      "ToType": "cCoder.Core.Services.Processings.Packages.CorePackageProcessingService"
+      "ToType": "cCoder.Core.Services.Processings.Packages.ContentManagementPackageProcessingService"
     },
     {
       "FromType": "cCoder.Core.Services.Aggregations.Packages.PackageImportAggregationService",
@@ -22113,7 +20675,27 @@
     },
     {
       "FromType": "cCoder.Core.Services.Aggregations.Packages.PackageManagerAggregationService",
-      "ToType": "cCoder.Core.Services.Processings.Packages.CorePackageProcessingService"
+      "ToType": "cCoder.Core.Services.Processings.Packages.AppSecurityPackageProcessingService"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Aggregations.Packages.PackageManagerAggregationService",
+      "ToType": "cCoder.Core.Services.Processings.Packages.ContentManagementAppPackageProcessingService"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Aggregations.Packages.PackageManagerAggregationService",
+      "ToType": "cCoder.Core.Services.Processings.Packages.ContentManagementPackageProcessingService"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Aggregations.Packages.PackageManagerAggregationService",
+      "ToType": "cCoder.Core.Services.Processings.Packages.DocumentManagementPackageProcessingService"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Aggregations.Packages.PackageManagerAggregationService",
+      "ToType": "cCoder.Core.Services.Processings.Packages.SchedulingPackageProcessingService"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Aggregations.Packages.PackageManagerAggregationService",
+      "ToType": "cCoder.Core.Services.Processings.Packages.WorkflowPackageProcessingService"
     },
     {
       "FromType": "cCoder.Core.Services.Aggregations.SecurityAccountEmailAggregationService",
@@ -22198,10 +20780,6 @@
     {
       "FromType": "cCoder.Core.Services.Foundations.Packages.ContentManagementPackageService",
       "ToType": "cCoder.Core.Brokers.Packaging.ContentManagementPackageBroker"
-    },
-    {
-      "FromType": "cCoder.Core.Services.Foundations.Packages.CorePackageService",
-      "ToType": "cCoder.Core.Brokers.Packaging.CorePackageBroker"
     },
     {
       "FromType": "cCoder.Core.Services.Foundations.Packages.DocumentManagementPackageService",
@@ -22292,12 +20870,16 @@
       "ToType": "cCoder.Core.Services.Foundations.Packages.AppSecurityPackageService"
     },
     {
-      "FromType": "cCoder.Core.Services.Processings.Packages.ContentManagementPackageProcessingService",
-      "ToType": "cCoder.Core.Services.Foundations.Packages.ContentManagementPackageService"
+      "FromType": "cCoder.Core.Services.Processings.Packages.ContentManagementAppPackageProcessingService",
+      "ToType": "cCoder.Core.Brokers.Json.CorePackageJsonBroker"
     },
     {
-      "FromType": "cCoder.Core.Services.Processings.Packages.CorePackageProcessingService",
-      "ToType": "cCoder.Core.Services.Foundations.Packages.CorePackageService"
+      "FromType": "cCoder.Core.Services.Processings.Packages.ContentManagementAppPackageProcessingService",
+      "ToType": "cCoder.Core.Services.Foundations.ContentManagement.ContentManagementAppService"
+    },
+    {
+      "FromType": "cCoder.Core.Services.Processings.Packages.ContentManagementPackageProcessingService",
+      "ToType": "cCoder.Core.Services.Foundations.Packages.ContentManagementPackageService"
     },
     {
       "FromType": "cCoder.Core.Services.Processings.Packages.DocumentManagementPackageProcessingService",

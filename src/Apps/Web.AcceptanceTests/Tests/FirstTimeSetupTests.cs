@@ -403,20 +403,23 @@ public sealed partial class FirstTimeSetupTests
         SetupHarness harness,
         int appId)
     {
+        bool commonCacheReady = false;
+        bool appReady = false;
+
         for (int attempt = 0; attempt < 100; attempt++)
         {
             await using DbContext core = harness.Factory.Services
                 .GetRequiredService<ICoreContextFactory>()
                 .CreateCoreContext();
 
-            bool commonCacheReady = await core.Set<CommonObject>()
+            commonCacheReady = await core.Set<CommonObject>()
                 .IgnoreQueryFilters()
                 .AnyAsync(predicate: commonObject =>
                     commonObject.Key == "Security"
                     && commonObject.Type == "ContentManagement/Script"
                     && commonObject.Name == "CoreDailyUsageApiDetailsGrid");
 
-            bool appReady = await core.Set<Component>()
+            appReady = await core.Set<Component>()
                 .IgnoreQueryFilters()
                 .AnyAsync(predicate: component =>
                     component.AppId == appId
@@ -432,7 +435,9 @@ public sealed partial class FirstTimeSetupTests
         }
 
         throw new TimeoutException(
-            message: "The first-time setup baseline packages did not finish importing.");
+            message:
+                "The first-time setup baseline packages did not finish importing. " +
+                $"CommonCacheReady={commonCacheReady}; AppReady={appReady}.");
     }
 
     private static async Task RegisterReusablePackagesAsync(

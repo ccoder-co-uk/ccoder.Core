@@ -9,6 +9,7 @@ using System.Text.Json;
 using cCoder.Data;
 using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.Packaging;
+using cCoder.Data.Models.Security;
 using cCoder.IntegrationTests.Infrastructure;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
@@ -217,8 +218,11 @@ public sealed partial class AppEventIntegrationTests
                 path: pages[0].Path,
                 expectedContent: "Initial content 1");
 
+            Console.WriteLine(
+                value: $"Package import first uncached render: {firstDuration}.");
+
             firstDuration.Should()
-                .BeLessThan(expected: TimeSpan.FromSeconds(seconds: 5));
+                .BeLessThan(expected: TimeSpan.FromSeconds(seconds: 2));
 
             await WaitForPageCacheAsync(
                 appId: appId,
@@ -235,7 +239,7 @@ public sealed partial class AppEventIntegrationTests
             TimeSpan[] concurrentDurations = await Task.WhenAll(tasks: concurrentRequests);
 
             concurrentDurations.Should()
-                .OnlyContain(predicate: duration => duration < TimeSpan.FromSeconds(seconds: 5));
+                .OnlyContain(predicate: duration => duration < TimeSpan.FromSeconds(seconds: 2));
 
             await WaitForPageCacheAsync(
                 appId: appId,
@@ -279,6 +283,12 @@ public sealed partial class AppEventIntegrationTests
     {
         await using CoreDataContext core = CreateCoreContext();
 
+        Role renderRole = await core.Set<Role>()
+            .IgnoreQueryFilters()
+            .SingleAsync(predicate: role =>
+                role.AppId == appId
+                && role.Name == "Acceptance Administrators");
+
         await core.AddLayoutAsync(layout: new Layout
         {
             AppId = appId,
@@ -312,6 +322,12 @@ public sealed partial class AppEventIntegrationTests
             });
 
             pages.Add(item: page);
+
+            await core.AddPageRoleAsync(pageRole: new PageRole
+            {
+                PageId = page.Id,
+                RoleId = renderRole.Id
+            });
 
             await core.AddPageInfoAsync(pageInfo: new PageInfo
             {
@@ -378,7 +394,10 @@ public sealed partial class AppEventIntegrationTests
 
         request.Headers.Host = appDomain;
         Stopwatch timer = Stopwatch.StartNew();
-        using HttpResponseMessage response = await fixture.WebClient.SendAsync(request: request);
+
+        using HttpResponseMessage response = await fixture.AnonymousWebClient.SendAsync(
+            request: request);
+
         timer.Stop();
         string content = await response.Content.ReadAsStringAsync();
 

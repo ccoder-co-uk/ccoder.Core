@@ -59,7 +59,7 @@ public sealed partial class PackageImportAggregationServiceTests
                     packageImportEvent: packageImportEvent),
             times: Times.Once);
 
-        corePackageProcessingServiceMock.VerifyNoOtherCalls();
+        contentManagementAppPackageProcessingServiceMock.VerifyNoOtherCalls();
         appSecurityPackageProcessingServiceMock.VerifyNoOtherCalls();
         documentManagementPackageProcessingServiceMock.VerifyNoOtherCalls();
         workflowPackageProcessingServiceMock.VerifyNoOtherCalls();
@@ -85,7 +85,7 @@ public sealed partial class PackageImportAggregationServiceTests
             Package = package,
         };
 
-        corePackageProcessingServiceMock
+        contentManagementAppPackageProcessingServiceMock
             .InSequence(sequence: sequence)
             .Setup(expression: service => service.ImportPackageAsync(
                 appId: appId,
@@ -138,7 +138,7 @@ public sealed partial class PackageImportAggregationServiceTests
         contentManagementPackageProcessingServiceMock.VerifyAll();
         documentManagementPackageProcessingServiceMock.VerifyAll();
         workflowPackageProcessingServiceMock.VerifyAll();
-        corePackageProcessingServiceMock.VerifyAll();
+        contentManagementAppPackageProcessingServiceMock.VerifyAll();
         packageImportCompletionEventProcessingServiceMock.VerifyAll();
     }
 }
