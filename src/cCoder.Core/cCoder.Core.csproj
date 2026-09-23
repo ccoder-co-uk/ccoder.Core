@@ -110,21 +110,21 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="cCoder.AI" Version="2026.9.23.1758" Condition="'$(UseLocalAI)' != 'true'" />
-    <PackageReference Include="cCoder.AppSecurity" Version="2026.9.23.1800" Condition="'$(UseLocalAppSecurity)' != 'true'" />
-    <PackageReference Include="cCoder.ContentManagement" Version="2026.9.23.1754" Condition="'$(UseLocalContentManagement)' != 'true'" />
-    <PackageReference Include="cCoder.Data" Version="2026.9.23.1706" Condition="'$(UseLocalData)' != 'true'" />
+    <PackageReference Include="cCoder.AppSecurity" Version="2026.9.23.2326" Condition="'$(UseLocalAppSecurity)' != 'true'" />
+    <PackageReference Include="cCoder.ContentManagement" Version="2026.9.23.2346" Condition="'$(UseLocalContentManagement)' != 'true'" />
+    <PackageReference Include="cCoder.Data" Version="2026.9.23.2308" Condition="'$(UseLocalData)' != 'true'" />
     <PackageReference Include="cCoder.DocumentManagement" Version="2026.9.23.1747" Condition="'$(UseLocalDocumentManagement)' != 'true'" />
     <PackageReference Include="cCoder.Eventing" Version="2026.9.23.1651" Condition="'$(UseLocalEventing)' != 'true'" />
     <PackageReference Include="cCoder.Eventing.AzureServiceBus" Version="2026.9.23.1651" Condition="'$(UseLocalEventing)' != 'true'" />
     <PackageReference Include="cCoder.Eventing.Http" Version="2026.9.23.1651" Condition="'$(UseLocalEventing)' != 'true'" />
-    <PackageReference Include="cCoder.Logging" Version="2026.9.23.1704" Condition="'$(UseLocalLogging)' != 'true'" />
+    <PackageReference Include="cCoder.Logging" Version="2026.9.23.2324" Condition="'$(UseLocalLogging)' != 'true'" />
     <PackageReference Include="cCoder.Mail" Version="2026.9.23.1741" Condition="'$(UseLocalMail)' != 'true'" />
     <PackageReference Include="cCoder.Packaging" Version="2026.9.23.1737" Condition="'$(UseLocalPackaging)' != 'true'" />
-    <PackageReference Include="cCoder.Security" Version="2026.9.23.1720" Condition="'$(UseLocalSecurity)' != 'true'" />
-    <PackageReference Include="cCoder.Security.Data" Version="2026.9.23.1720" Condition="'$(UseLocalSecurity)' != 'true'" />
-    <PackageReference Include="cCoder.Workflow" Version="2026.9.23.1750" Condition="'$(UseLocalWorkflow)' != 'true'" />
-    <PackageReference Include="cCoder.Workflow.Activities" Version="2026.9.23.1750" Condition="'$(UseLocalWorkflow)' != 'true'" />
-    <PackageReference Include="cCoder.Workflow.Engine" Version="2026.9.23.1750" Condition="'$(UseLocalWorkflow)' != 'true'" />
+    <PackageReference Include="cCoder.Security" Version="2026.9.23.2254" Condition="'$(UseLocalSecurity)' != 'true'" />
+    <PackageReference Include="cCoder.Security.Data" Version="2026.9.23.2254" Condition="'$(UseLocalSecurity)' != 'true'" />
+    <PackageReference Include="cCoder.Workflow" Version="2026.9.23.2346" Condition="'$(UseLocalWorkflow)' != 'true'" />
+    <PackageReference Include="cCoder.Workflow.Activities" Version="2026.9.23.2346" Condition="'$(UseLocalWorkflow)' != 'true'" />
+    <PackageReference Include="cCoder.Workflow.Engine" Version="2026.9.23.2346" Condition="'$(UseLocalWorkflow)' != 'true'" />
     <PackageReference Include="Microsoft.AspNetCore.OData" Version="9.5.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.12" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
