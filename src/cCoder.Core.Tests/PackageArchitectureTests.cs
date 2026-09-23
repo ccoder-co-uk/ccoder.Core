@@ -12,6 +12,28 @@ namespace cCoder.Core.Tests;
 public sealed partial class PackageArchitectureTests
 {
     [Fact]
+    public void CoreAssembly_WhenRuntimeDependenciesAreInspected_ReferencesContractsAndNotAnalyzer()
+    {
+        // Given
+        Assembly coreAssembly = typeof(cCoder.Core.IServiceCollectionExtensions).Assembly;
+
+        // When
+        string[] referencedAssemblies = coreAssembly
+            .GetReferencedAssemblies()
+            .Select(selector: assemblyName => assemblyName.Name)
+            .ToArray();
+
+        // Then
+        referencedAssemblies
+            .Should()
+            .Contain(expected: "cCoder.CodeAnalysis.Contracts");
+
+        referencedAssemblies
+            .Should()
+            .NotContain(unexpected: "cCoder.CodeAnalysis");
+    }
+
+    [Fact]
     public void PackageProcessingServices_WhenConstructed_UseOneMatchingFoundation()
     {
         // Given
