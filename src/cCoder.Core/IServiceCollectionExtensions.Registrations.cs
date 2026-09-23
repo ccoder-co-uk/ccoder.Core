@@ -32,7 +32,6 @@ using cCoder.Core.Dependencies.Formatters;
 using cCoder.Core.Dependencies.OData;
 using cCoder.Core.Dependencies.OpenApi;
 using cCoder.Core.Dependencies.Sessions;
-using cCoder.Core.Dependencies.Packages;
 using cCoder.Core.Exposures;
 using cCoder.Core.Exposures.Hubs;
 using cCoder.Core.Services.Aggregations;
@@ -510,7 +509,6 @@ predicate: (documentName, apiDescription) =>
     private static void AddBrokers(
         this IServiceCollection services)
     {
-        services.AddTransient<CorePackageDependency>();
         services.AddTransient<Brokers.Loggings.ILoggingBroker, Brokers.Loggings.LoggingBroker>();
         services.AddTransient<IContentManagementAppBroker, ContentManagementAppBroker>();
         services.AddTransient<Dependencies.Eventing.EventingDependency>();
@@ -542,14 +540,16 @@ predicate: (documentName, apiDescription) =>
         services.AddTransient<IWorkflowAppBroker, WorkflowAppBroker>();
         services.AddTransient<IMailAppBroker, MailAppBroker>();
         services.AddTransient<IMailManagerBroker, MailManagerBroker>();
-        services.AddTransient<ICorePackageBroker, CorePackageBroker>();
+        services.AddTransient<ICorePackageJsonBroker, CorePackageJsonBroker>();
         services.AddTransient<IAppSecurityPackageBroker, AppSecurityPackageBroker>();
         services.AddTransient<IContentManagementPackageBroker, ContentManagementPackageBroker>();
         services.AddTransient<IDocumentManagementPackageBroker, DocumentManagementPackageBroker>();
         services.AddTransient<ISchedulingPackageBroker, SchedulingPackageBroker>();
         services.AddTransient<IWorkflowPackageBroker, WorkflowPackageBroker>();
 
-        services.TryAddTransient<cCoder.Packaging.Exposures.PackageManagers.IAppDomainManager, AppDomainManager>();
+        services.AddTransient<
+            cCoder.Packaging.Brokers.PackageTransfers.IPackageTransferBroker,
+            PackageTransferManager>();
         services.TryAddTransient<cCoder.Packaging.Exposures.PackageManagers.IAppSecurityPackageManager, AppSecurityPackageManager>();
 
         services.TryAddTransient<
@@ -587,7 +587,6 @@ predicate: (documentName, apiDescription) =>
         services.AddTransient<IWorkflowAppService, WorkflowAppService>();
         services.AddTransient<IMailAppService, MailAppService>();
         services.AddTransient<IMailManagerService, MailManagerService>();
-        services.AddTransient<ICorePackageService, CorePackageService>();
         services.AddTransient<IAppSecurityPackageService, AppSecurityPackageService>();
         services.AddTransient<IContentManagementPackageService, ContentManagementPackageService>();
         services.AddTransient<IDocumentManagementPackageService, DocumentManagementPackageService>();
@@ -669,8 +668,8 @@ predicate: (documentName, apiDescription) =>
             WorkflowPackageProcessingService>();
 
         services.AddTransient<
-            ICorePackageProcessingService,
-            CorePackageProcessingService>();
+            IContentManagementAppPackageProcessingService,
+            ContentManagementAppPackageProcessingService>();
 
         services.AddTransient<
             IPackageImportCompletionEventProcessingService,
@@ -691,10 +690,6 @@ predicate: (documentName, apiDescription) =>
         services.AddTransient<
             IPackageImportAggregationService,
             PackageImportAggregationService>();
-
-        services.AddTransient<
-            IPackageManager,
-            PackageManagerAggregationService>();
 
         services.AddTransient<
             ISecurityAccountEmailAggregationService,

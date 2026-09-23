@@ -4,13 +4,17 @@
 
 using cCoder.Core.Services.Processings.Packages;
 using cCoder.Data.Models.Packaging;
-using cCoder.Core.Exposures;
 
 namespace cCoder.Core.Services.Aggregations.Packages;
 
 internal sealed partial class PackageManagerAggregationService(
-    ICorePackageProcessingService corePackageProcessingService)
-    : IPackageManagerAggregationService, IPackageManager
+    IContentManagementAppPackageProcessingService contentManagementAppPackageProcessingService,
+    IAppSecurityPackageProcessingService appSecurityPackageProcessingService,
+    IContentManagementPackageProcessingService contentManagementPackageProcessingService,
+    IDocumentManagementPackageProcessingService documentManagementPackageProcessingService,
+    ISchedulingPackageProcessingService schedulingPackageProcessingService,
+    IWorkflowPackageProcessingService workflowPackageProcessingService)
+    : IPackageManagerAggregationService
 {
     private const string AppConfigurationPackageName = "AppConfiguration";
 
@@ -60,39 +64,37 @@ internal sealed partial class PackageManagerAggregationService(
                     b: AppConfigurationPackageName,
                     comparisonType: StringComparison.OrdinalIgnoreCase))
                 {
-                    exportedPackages.Add(item: await corePackageProcessingService
+                    exportedPackages.Add(item: await contentManagementAppPackageProcessingService
                         .ExportAppConfigurationAsync(appId: appId, sourceApi: sourceApi));
 
                     continue;
                 }
 
-                if (string.Equals(
-                    a: packageName,
-                    b: "PageRoles",
-                    comparisonType: StringComparison.OrdinalIgnoreCase))
-                {
-                    exportedPackages.Add(item: await corePackageProcessingService
-                        .ExportPageRolesAsync(appId: appId, sourceApi: sourceApi));
-
-                    continue;
-                }
-
-                if (string.Equals(
-                    a: packageName,
-                    b: "FolderRoles",
-                    comparisonType: StringComparison.OrdinalIgnoreCase))
-                {
-                    exportedPackages.Add(item: await corePackageProcessingService
-                        .ExportFolderRolesAsync(appId: appId, sourceApi: sourceApi));
-
-                    continue;
-                }
-
-                exportedPackages.Add(item: corePackageProcessingService.ExportPackage(
+                exportedPackages.Add(item: ExportDomainPackage(
                     appId: appId,
                     packageName: packageName));
             }
 
             return [.. exportedPackages];
         });
+
+    private Package ExportDomainPackage(int appId, string packageName) =>
+        packageName.ToUpperInvariant() switch
+        {
+            "ROLES" => appSecurityPackageProcessingService.ExportPackage(
+                appId: appId,
+                packageName: packageName),
+            "FOLDERROLES" => documentManagementPackageProcessingService.ExportPackage(
+                appId: appId,
+                packageName: packageName),
+            "CALENDARS" or "CALENDAREVENTS" => schedulingPackageProcessingService.ExportPackage(
+                appId: appId,
+                packageName: packageName),
+            "WORKFLOWS" => workflowPackageProcessingService.ExportPackage(
+                appId: appId,
+                packageName: packageName),
+            _ => contentManagementPackageProcessingService.ExportPackage(
+                appId: appId,
+                packageName: packageName),
+        };
 }

@@ -54,6 +54,7 @@ public static partial class WebApplicationExtensions
         eventHub.ListenToDocumentManagementEvents();
         eventHub.ListenToMailEvents();
         eventHub.ListenToSecurityEvents();
+        eventHub.ListenToWorkflowEvents();
 
         return app;
     }
@@ -69,6 +70,7 @@ public static partial class WebApplicationExtensions
         eventHub.ListenToDocumentManagementEvents();
         eventHub.ListenToMailEvents();
         eventHub.ListenToSecurityEvents();
+        eventHub.ListenToWorkflowEvents();
 
         return app;
     }

@@ -10,8 +10,8 @@ namespace cCoder.Core.Tests;
 
 public sealed partial class PackageImportAggregationServiceTests
 {
-    private readonly Mock<ICorePackageProcessingService>
-        corePackageProcessingServiceMock = new(MockBehavior.Strict);
+    private readonly Mock<IContentManagementAppPackageProcessingService>
+        contentManagementAppPackageProcessingServiceMock = new(MockBehavior.Strict);
 
     private readonly Mock<IContentManagementPackageProcessingService>
         contentManagementPackageProcessingServiceMock =
@@ -35,8 +35,8 @@ public sealed partial class PackageImportAggregationServiceTests
 
     private PackageImportAggregationService CreateService() =>
         new(
-            corePackageProcessingService:
-                corePackageProcessingServiceMock.Object,
+            contentManagementAppPackageProcessingService:
+                contentManagementAppPackageProcessingServiceMock.Object,
             contentManagementPackageProcessingService:
                 contentManagementPackageProcessingServiceMock.Object,
             appSecurityPackageProcessingService:

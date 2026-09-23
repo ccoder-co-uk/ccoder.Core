@@ -428,6 +428,7 @@ roles: [.. core.Set<Role>()
         string relativeUrl,
         object payload,
         string host = null,
+        string authToken = null,
         HttpStatusCode expectedStatusCode = HttpStatusCode.OK)
     {
         using HttpRequestMessage request = new(method, relativeUrl)
@@ -438,6 +439,14 @@ roles: [.. core.Set<Role>()
         if (!string.IsNullOrWhiteSpace(value: host))
         {
             request.Headers.Host = host;
+        }
+
+        if (!string.IsNullOrWhiteSpace(value: authToken))
+        {
+            request.Headers.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue(
+                    scheme: "bearer",
+                    parameter: authToken);
         }
 
         using HttpResponseMessage response = await fixture.WebClient.SendAsync(request: request);

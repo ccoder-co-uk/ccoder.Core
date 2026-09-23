@@ -17,34 +17,45 @@ public sealed partial class PackageManagerAggregationServiceTests
     public async Task ExportPackagesAsync_WhenSpecialAndDomainNamesRequested_PreservesRequestOrder()
     {
         // Given
-        Mock<ICorePackageProcessingService> corePackageProcessingServiceMock = new();
+        Mock<IContentManagementAppPackageProcessingService> contentManagementAppPackageProcessingServiceMock = new();
+        Mock<IAppSecurityPackageProcessingService> appSecurityPackageProcessingServiceMock = new();
+        Mock<IContentManagementPackageProcessingService> contentManagementPackageProcessingServiceMock = new();
+        Mock<IDocumentManagementPackageProcessingService> documentManagementPackageProcessingServiceMock = new();
+        Mock<ISchedulingPackageProcessingService> schedulingPackageProcessingServiceMock = new();
+        Mock<IWorkflowPackageProcessingService> workflowPackageProcessingServiceMock = new();
 
-        corePackageProcessingServiceMock
+        contentManagementAppPackageProcessingServiceMock
             .Setup(expression: service => service.ExportAppConfigurationAsync(
                 appId: 42,
                 sourceApi: "source"))
             .ReturnsAsync(value: new Package { Name = "AppConfiguration" });
 
-        corePackageProcessingServiceMock
-            .Setup(expression: service => service.ExportPageRolesAsync(
+        documentManagementPackageProcessingServiceMock
+            .Setup(expression: service => service.ExportPackage(
                 appId: 42,
-                sourceApi: "source"))
-            .ReturnsAsync(value: new Package { Name = "PageRoles" });
+                packageName: "FolderRoles"))
+            .Returns(value: new Package { Name = "FolderRoles" });
 
-        corePackageProcessingServiceMock
-            .Setup(expression: service => service.ExportFolderRolesAsync(
-                appId: 42,
-                sourceApi: "source"))
-            .ReturnsAsync(value: new Package { Name = "FolderRoles" });
-
-        corePackageProcessingServiceMock
+        contentManagementPackageProcessingServiceMock
             .Setup(expression: service => service.ExportPackage(
                 appId: 42,
                 packageName: "Pages"))
             .Returns(value: new Package { Name = "Pages" });
 
+        contentManagementPackageProcessingServiceMock
+            .Setup(expression: service => service.ExportPackage(
+                appId: 42,
+                packageName: "PAGEROLES"))
+            .Returns(value: new Package { Name = "PageRoles" });
+
         PackageManagerAggregationService service = new(
-            corePackageProcessingService: corePackageProcessingServiceMock.Object);
+            contentManagementAppPackageProcessingService:
+                contentManagementAppPackageProcessingServiceMock.Object,
+            appSecurityPackageProcessingService: appSecurityPackageProcessingServiceMock.Object,
+            contentManagementPackageProcessingService: contentManagementPackageProcessingServiceMock.Object,
+            documentManagementPackageProcessingService: documentManagementPackageProcessingServiceMock.Object,
+            schedulingPackageProcessingService: schedulingPackageProcessingServiceMock.Object,
+            workflowPackageProcessingService: workflowPackageProcessingServiceMock.Object);
 
         // When
         Package[] packages = await service.ExportPackagesAsync(

@@ -26,7 +26,7 @@ public sealed partial class PackageManagerControllerTests(WebAcceptanceFixture f
 {
     private const string AcceptanceAdminRoleName = "Acceptance Administrators";
     private HttpClient Client { get; } = fixture.Client;
-    private string BaseUrl { get; } = "/Api/Core/Package";
+    private string BaseUrl { get; } = "/Api/Packaging/Package";
     private static JsonSerializerOptions JsonOptions { get; } = new() { PropertyNameCaseInsensitive = true };
 
     private static string Unique(string prefix) =>
@@ -103,7 +103,7 @@ requestUri:             $"/Api/Packaging/Package/Import?appId={appId}",value:   
         return (int)response.StatusCode;
     }
 
-    private async Task<IReadOnlyList<Package>> ExportPackagesAsync(int appId)
+    private async Task<IReadOnlyList<Package>> ExportCanonicalPackagesAsync(int appId)
     {
         using HttpResponseMessage response = await Client.GetAsync(requestUri: $"{BaseUrl}/Export?appId={appId}");
         string content = await response.Content.ReadAsStringAsync();

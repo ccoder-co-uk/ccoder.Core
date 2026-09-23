@@ -6,7 +6,7 @@ using cCoder.Core.Models.Exceptions;
 
 namespace cCoder.Core.Services.Processings.Packages;
 
-internal sealed partial class CorePackageProcessingService
+internal sealed partial class ContentManagementAppPackageProcessingService
 {
     private static async ValueTask TryCatch(Func<ValueTask> operation)
     {

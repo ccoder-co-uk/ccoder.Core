@@ -34,7 +34,7 @@ public sealed partial class PackageManagerControllerTests
 
         // When
         using HttpResponseMessage response = await Client.PostAsJsonAsync(
-            requestUri: $"{BaseUrl}/Import?appId=1",
+            requestUri: "/Api/Core/Package/Import?appId=1",
             value: package);
 
         // Then

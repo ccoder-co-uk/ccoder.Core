@@ -8,11 +8,27 @@ using FluentAssertions.Execution;
 using Web.AcceptanceTests.Infrastructure;
 using Xunit;
 using System.Text.Json;
+using System.Net;
 
 namespace Web.AcceptanceTests.Tests.Api;
 
 public sealed partial class PackageManagerControllerTests
 {
+    [Fact]
+    public async Task LegacyCorePackageExportRoute_WhenRequested_IsNotFound()
+    {
+        // Given
+        string requestUri = "/Api/Core/Package/Export?appId=1";
+
+        // When
+        using HttpResponseMessage response = await Client.GetAsync(
+            requestUri: requestUri);
+
+        // Then
+        response.StatusCode.Should()
+            .Be(expected: HttpStatusCode.NotFound);
+    }
+
     [Fact]
     public async Task ShouldReturnSeededPackagesWhenExport()
     {
@@ -20,7 +36,7 @@ public sealed partial class PackageManagerControllerTests
         Package[] expectedPackages = AcceptanceSeedData.LoadExportPackages();
 
         // When
-        IReadOnlyList<Package> actualPackages = await ExportPackagesAsync(appId: 1);
+        IReadOnlyList<Package> actualPackages = await ExportCanonicalPackagesAsync(appId: 1);
 
         // Then
         actualPackages.Should()
@@ -41,7 +57,7 @@ public sealed partial class PackageManagerControllerTests
         var expectedApp = await GetStoredAppAsync(appId: 1);
 
         // When
-        IReadOnlyList<Package> packages = await ExportPackagesAsync(appId: 1);
+        IReadOnlyList<Package> packages = await ExportCanonicalPackagesAsync(appId: 1);
 
         Package appConfiguration = packages.Single(predicate: found =>
             string.Equals(a: found.Name,b: "AppConfiguration",comparisonType: StringComparison.OrdinalIgnoreCase));
