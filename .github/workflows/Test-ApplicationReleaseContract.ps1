@@ -19,6 +19,19 @@ if ($publishWorkflow -notmatch [regex]::Escape('path: ${{ env.APPLICATION_DIRECT
     throw "The applications artifact must continue to upload the contents of publish/latest."
 }
 
+$requiredRunnerCleanup = @(
+    '- name: Clean runner artifacts',
+    'if: always()',
+    '$target = [IO.Path]::GetFullPath((Join-Path $workspace "artifacts"))',
+    '[IO.Directory]::Delete($target, $true)'
+)
+
+foreach ($requiredCleanupFragment in $requiredRunnerCleanup) {
+    if (-not $publishWorkflow.Contains($requiredCleanupFragment)) {
+        throw "publish.yml does not safely clean the persistent runner artifact directory: $requiredCleanupFragment"
+    }
+}
+
 $requiredReleasePaths = @(
     '${{ env.APPLICATION_DIRECTORY }}/Web/release-manifest.json',
     'context="${APPLICATION_DIRECTORY}"',
