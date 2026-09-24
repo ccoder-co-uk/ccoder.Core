@@ -187,6 +187,23 @@ jobs:
           retention-days: 14
           path: ${{ env.TEST_RESULTS_DIRECTORY }}
 
+      - name: Clean runner artifacts
+        if: always()
+        run: |
+          $workspace = [IO.Path]::GetFullPath("${{ github.workspace }}").TrimEnd('\', '/')
+          $target = [IO.Path]::GetFullPath((Join-Path $workspace "artifacts"))
+          $parent = [IO.Directory]::GetParent($target).FullName.TrimEnd('\', '/')
+          $leaf = [IO.Path]::GetFileName($target)
+
+          if (-not $parent.Equals($workspace, [StringComparison]::OrdinalIgnoreCase) -or
+              -not $leaf.Equals("artifacts", [StringComparison]::OrdinalIgnoreCase)) {
+            throw "Refusing unexpected runner cleanup target '$target'."
+          }
+
+          if ([IO.Directory]::Exists($target)) {
+            [IO.Directory]::Delete($target, $true)
+          }
+
   publish-nuget:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
