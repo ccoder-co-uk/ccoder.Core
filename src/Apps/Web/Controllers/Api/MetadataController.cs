@@ -2,6 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using cCoder.CodeAnalysis.Exposures;
 using Microsoft.AspNetCore.Mvc;
 using Web.Services.Aggregations;
 using Web.Models.Exceptions;
@@ -11,7 +12,7 @@ namespace Web.Controllers.Api;
 [Route("Api")]
 public sealed class MetadataController(
     IApiCacheAggregationService apiCacheAggregationService)
-    : Controller
+    : Controller, ICompositionExposure
 {
     [HttpGet("GetMetadata")]
     public IActionResult GetMetadata(

@@ -242,7 +242,6 @@ POST Api/AppSecurity/Role
 POST Api/AppSecurity/User
 POST Api/AppSecurity/UserRole
 POST Api/ContentManagement/App
-POST Api/ContentManagement/App({key})/UpdatePageOrder
 POST Api/ContentManagement/AppCulture
 POST Api/ContentManagement/CommonObject
 POST Api/ContentManagement/Component
