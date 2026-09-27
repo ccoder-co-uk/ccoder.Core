@@ -2,6 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using cCoder.CodeAnalysis.Exposures;
 using cCoder.Core;
 using cCoder.Core.Services.Aggregations;
 using cCoder.Core.Models.Exceptions;
@@ -14,7 +15,8 @@ using Microsoft.AspNetCore.OData.Routing.Controllers;
 namespace cCoder.Core.Exposures.Controllers;
 
 public class AppController(
-    IAppAggregationService service) : ODataController
+    IAppAggregationService service)
+    : ODataController, ICompositionExposure
 {
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] App newApp)

@@ -2,6 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using cCoder.CodeAnalysis.Exposures;
 using cCoder.Core.Models;
 using cCoder.Core.Services.Aggregations;
 using cCoder.Core.Services.Orchestrations;
@@ -13,7 +14,7 @@ namespace cCoder.Core.Exposures.Managers;
 internal sealed class UserRegistrationManager(
     IUserRegistrationAggregationService
         userRegistrationAggregationService
-) : IUserRegistrationOrchestrationService
+) : IUserRegistrationOrchestrationService, ICompositionExposure
 {
     public async ValueTask ConfirmRegistrationAsync(string token)
     {
