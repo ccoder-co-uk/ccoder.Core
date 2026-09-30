@@ -2,6 +2,9 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
 using cCoder.Data.Models.Workflow;
 using FluentAssertions;
 using Xunit;
@@ -24,7 +27,7 @@ public sealed partial class FolderEventIntegrationTests
             flowId = await CreateFlowDefinitionAsync(appId: BaselineAppId,name: Unique(prefix: "Folder Delete Flow"),authToken: authToken);
             string folderName = Unique(prefix: "flow-folder");
             folderId = await CreateFolderAsync(appId: BaselineAppId,name: folderName);
-            workflowEventId = await CreateWorkflowEventAsync(flowId: flowId,eventContext: $"folder_delete{folderName}",authToken: authToken);
+            workflowEventId = await CreateWorkflowEventAsync(flowId: flowId,eventContext: $"folder_delete|{folderName}",authToken: authToken);
 
             // When
             await SendWithOptionalHostAsync(method: HttpMethod.Delete,relativeUrl: $"/Api/DocumentManagement/Folder({folderId})",authToken: authToken);
