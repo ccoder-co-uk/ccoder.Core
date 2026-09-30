@@ -2,6 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System.Threading.Tasks;
 using CoreApp = cCoder.Data.Models.CMS.App;
 using QueuedEmail = cCoder.Data.Models.Mail.QueuedEmail;
 using TemplatedEmailDetails = cCoder.Mail.Models.TemplatedEmailDetails;

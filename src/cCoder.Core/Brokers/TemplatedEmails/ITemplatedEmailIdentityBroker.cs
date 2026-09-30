@@ -2,6 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System.Linq;
 using cCoder.Data.Models.Mail;
 using cCoder.Data.Models.Security;
 
@@ -11,5 +12,5 @@ internal interface ITemplatedEmailIdentityBroker
 {
     User GetCurrentUser();
 
-    IQueryable<MailSender> GetAllMailSender(bool ignoreFilters);
+    IQueryable<MailSender> GetAllMailSenders(bool ignoreFilters);
 }

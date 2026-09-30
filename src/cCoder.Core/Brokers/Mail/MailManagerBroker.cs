@@ -2,8 +2,8 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System.Threading.Tasks;
 using cCoder.Mail.Exposures;
-using cCoder.Mail.Models;
 using cCoder.Data.Models.Mail;
 
 namespace cCoder.Core.Brokers.Mail;

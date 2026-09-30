@@ -2,6 +2,9 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System.Linq;
+using System;
+using System.Threading.Tasks;
 using cCoder.Data.Models;
 using System.IO;
 using Web.Brokers.Api;

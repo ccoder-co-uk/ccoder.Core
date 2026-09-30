@@ -2,6 +2,9 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using cCoder.Core.Brokers.Json;
 using cCoder.Core.Models.Packaging;
 using cCoder.Core.Services.Foundations.ContentManagement;

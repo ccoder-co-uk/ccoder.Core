@@ -2,6 +2,9 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using Microsoft.AspNetCore.Http;
+using System;
+using System.Threading.Tasks;
 using cCoder.Core.Exposures.OData.Responses;
 using cCoder.Data.Models;
 using Microsoft.AspNetCore.Mvc;

@@ -2,6 +2,12 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System;
+using System.Linq;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
 using cCoder.Core.Models;
 using cCoder.AI;
 using cCoder.AppSecurity;
@@ -71,16 +77,12 @@ using cCoder.Security.Models.Events;
 using cCoder.Security;
 using cCoder.Security.Data.EF;
 using cCoder.Security.Exposures;
-using cCoder.Security.Services.Orchestrations.Interfaces;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Batch;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
-using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
 
 namespace cCoder.Core;

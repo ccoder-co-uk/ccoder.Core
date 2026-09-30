@@ -2,6 +2,8 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System;
+using System.Linq;
 namespace Web.Services.Aggregations;
 
 internal sealed partial class ApiCacheAggregationService

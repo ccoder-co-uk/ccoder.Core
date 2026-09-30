@@ -2,6 +2,10 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System;
+using System.Linq;
+using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
 using cCoder.ContentManagement.Exposures;

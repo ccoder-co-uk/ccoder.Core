@@ -2,6 +2,9 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using Microsoft.AspNetCore.Http;
+using System;
+using System.Threading.Tasks;
 using HostedServices.Exposures;
 using Microsoft.AspNetCore.Mvc;
 

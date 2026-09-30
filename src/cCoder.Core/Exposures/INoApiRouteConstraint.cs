@@ -2,6 +2,9 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 namespace cCoder.Core.Exposures;
 
 public class NoApiRouteConstraint : IRouteConstraint

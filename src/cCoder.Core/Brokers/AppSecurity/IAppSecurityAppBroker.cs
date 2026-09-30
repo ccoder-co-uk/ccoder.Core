@@ -2,9 +2,8 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.AppSecurity.Models;
+using System.Threading.Tasks;
 using cCoder.Data.Models.CMS;
-using cCoder.Data.Models.Security;
 
 namespace cCoder.Core.Brokers.AppSecurity;
 

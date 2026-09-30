@@ -2,6 +2,8 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System;
+using System.Threading.Tasks;
 using cCoder.Workflow.Activities.Models;
 using Microsoft.Azure.Functions.Worker.Http;
 using Workflow.Services.Foundations.WorkflowFunctions;

@@ -2,7 +2,9 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.Data.Extensions;
+using System.Linq;
+using System;
+using System.Collections.Generic;
 using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
 

@@ -2,6 +2,8 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Builder;
 using cCoder.AppSecurity;
 using cCoder.ContentManagement;
 using cCoder.DocumentManagement;
@@ -16,7 +18,6 @@ using cCoder.Security;
 using cCoder.Security.Models.Events;
 using cCoder.Workflow;
 using cCoder.Core.Services.Foundations.Eventing;
-using cCoder.Core.Services.Orchestrations;
 using cCoder.Data.Models.DMS;
 using cCoder.Data.Models.Planning;
 using cCoder.Data.Models.Workflow;

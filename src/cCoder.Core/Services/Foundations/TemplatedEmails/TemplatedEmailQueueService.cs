@@ -2,10 +2,10 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System.Threading.Tasks;
 using cCoder.Core.Models;
 using cCoder.Core.Brokers.Mail;
 using cCoder.Data.Models.Mail;
-using cCoder.Mail.Services.Processings;
 
 namespace cCoder.Core.Services.Foundations.TemplatedEmails;
 

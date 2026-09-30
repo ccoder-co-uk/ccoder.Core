@@ -2,6 +2,8 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System;
+using System.Threading.Tasks;
 using cCoder.Core.Services.Foundations.AppSecurity;
 using cCoder.Core.Services.Foundations.ContentManagement;
 using cCoder.Core.Services.Foundations.DocumentManagement;

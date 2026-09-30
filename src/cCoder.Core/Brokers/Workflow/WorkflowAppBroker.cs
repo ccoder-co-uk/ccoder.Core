@@ -2,11 +2,9 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System.Threading.Tasks;
 using cCoder.Workflow.Exposures;
-using cCoder.Workflow.Models;
 using cCoder.Data.Models.CMS;
-using cCoder.Data.Models.Security;
-using cCoder.Data.Models.Workflow;
 
 namespace cCoder.Core.Brokers.Workflow;
 

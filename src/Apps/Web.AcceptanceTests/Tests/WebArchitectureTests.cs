@@ -2,6 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System.IO;
 using System.Runtime.CompilerServices;
 using FluentAssertions;
 using Xunit;

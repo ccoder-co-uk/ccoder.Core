@@ -2,6 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System.Threading.Tasks;
 namespace cCoder.Core.Exposures.Cors;
 
 public interface ICoreAllowedOriginStore

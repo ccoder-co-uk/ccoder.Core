@@ -2,6 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System.Threading.Tasks;
 using cCoder.Core.Services.Foundations.Eventing;
 using cCoder.Packaging.Models;
 using ContentManagementPackageImportEvent = cCoder.ContentManagement.Models.PackageImportEvent;

@@ -2,6 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System.Linq;
 using cCoder.Core.Services.Foundations.ContentManagement;
 using cCoder.Core.Services.Aggregations;
 using cCoder.Core.Exposures.Managers;

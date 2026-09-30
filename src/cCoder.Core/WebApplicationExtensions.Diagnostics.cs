@@ -2,6 +2,11 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http;
+using System;
+using System.Threading.Tasks;
 using System.Security;
 using Microsoft.AspNetCore.Diagnostics;
 

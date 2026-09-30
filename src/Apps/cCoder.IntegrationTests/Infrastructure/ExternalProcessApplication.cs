@@ -2,6 +2,10 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System.Threading;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Headers;
