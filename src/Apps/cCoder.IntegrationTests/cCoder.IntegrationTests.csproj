@@ -45,6 +45,6 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="cCoder.CodeAnalysis" Version="2026.9.30.1047" />
+    <PackageReference Update="cCoder.CodeAnalysis" Version="2026.9.30.1759" />
   </ItemGroup>
 </Project>

@@ -4,7 +4,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup Condition="'$(MSBuildProjectExtension)' == '.csproj'">
-    <PackageReference Include="cCoder.CodeAnalysis" Version="2026.9.30.1047" IncludeAssets="analyzers;build;buildTransitive" PrivateAssets="all" />
-    <PackageReference Include="cCoder.CodeAnalysis.Contracts" Version="2026.9.30.1047" />
+    <PackageReference Include="cCoder.CodeAnalysis" Version="2026.9.30.1759" IncludeAssets="analyzers;build;buildTransitive" PrivateAssets="all" />
+    <PackageReference Include="cCoder.CodeAnalysis.Contracts" Version="2026.9.30.1759" />
   </ItemGroup>
 </Project>
