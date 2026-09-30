@@ -2,6 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System.Threading.Tasks;
 using cCoder.Core.Brokers.DocumentManagement;
 using cCoder.Data.Models.CMS;
 

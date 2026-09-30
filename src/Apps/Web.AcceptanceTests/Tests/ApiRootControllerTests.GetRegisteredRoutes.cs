@@ -2,6 +2,9 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System;
+using System.IO;
+using System.Linq;
 using FluentAssertions;
 using System.Text.Json;
 using Web.AcceptanceTests.Infrastructure;

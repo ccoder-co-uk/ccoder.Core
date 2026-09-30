@@ -2,6 +2,8 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System.Linq;
+using System.Threading.Tasks;
 using cCoder.Core.Brokers.Packaging;
 using cCoder.Workflow.Models;
 using cCoder.Data.Models.Packaging;

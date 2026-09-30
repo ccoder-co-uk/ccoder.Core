@@ -2,6 +2,8 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System;
+using System.Linq;
 using cCoder.Core.Brokers.TemplatedEmails;
 using cCoder.Core.Models;
 using cCoder.Data.Models.Mail;
@@ -52,12 +54,12 @@ internal sealed partial class TemplatedEmailIdentityService(
         int appId,
         string mailSenderName) =>
         templatedEmailIdentityBroker
-            .GetAllMailSender(ignoreFilters: true)
+            .GetAllMailSenders(ignoreFilters: true)
             .Where(predicate: sender => sender.AppId == appId)
             .FirstOrDefault(predicate: sender =>
                 sender.Name == mailSenderName)
         ?? templatedEmailIdentityBroker
-            .GetAllMailSender(ignoreFilters: true)
+            .GetAllMailSenders(ignoreFilters: true)
             .FirstOrDefault(predicate: sender =>
                 sender.AppId == appId)
         ?? throw new InvalidOperationException(

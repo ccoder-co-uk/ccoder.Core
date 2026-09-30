@@ -2,6 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System.Linq;
 using cCoder.Data.Extensions;
 using cCoder.Core.Models;
 using Microsoft.AspNetCore.Mvc;

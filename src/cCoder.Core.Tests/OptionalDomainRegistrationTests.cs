@@ -2,6 +2,9 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using cCoder.Core.Models;
 using cCoder.AI.Models.Configurations;
 using cCoder.AppSecurity.Models;

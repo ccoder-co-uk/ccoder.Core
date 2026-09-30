@@ -2,6 +2,8 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System;
+using System.Threading.Tasks;
 using cCoder.Core.Exposures.PackageManagers;
 using cCoder.Core.Brokers.Http;
 using cCoder.Core.Services.Aggregations.Packages;

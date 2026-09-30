@@ -2,6 +2,8 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Threading.Tasks;
 namespace cCoder.Core.Brokers.Middleware;
 
 internal interface ICoreFormatterMiddlewareBroker

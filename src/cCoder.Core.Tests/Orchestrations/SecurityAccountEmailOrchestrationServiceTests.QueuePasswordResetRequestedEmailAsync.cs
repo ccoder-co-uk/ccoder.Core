@@ -2,6 +2,8 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System.Threading.Tasks;
+using cCoder.Data.Models.CMS;
 using cCoder.Security.Models.Events;
 using Xunit;
 
