@@ -33,7 +33,9 @@ function Quote-Argument([string] $Value) {
     return '"' + $Value.Replace('"', '\"') + '"'
 }
 
-$executions = foreach ($testProject in $testProjects) {
+$failed = $false
+
+foreach ($testProject in $testProjects) {
     $projectResults = Join-Path $runRoot $testProject.Name
     New-Item -ItemType Directory -Path $projectResults -Force | Out-Null
 
@@ -72,32 +74,23 @@ $executions = foreach ($testProject in $testProjects) {
         throw "Could not start $($testProject.Name) tests."
     }
 
-    [pscustomobject]@{
-        Name = $testProject.Name
-        Process = $process
-        StandardOutput = $process.StandardOutput.ReadToEndAsync()
-        StandardError = $process.StandardError.ReadToEndAsync()
-        ResultsDirectory = $projectResults
-    }
-}
+    $standardOutputTask = $process.StandardOutput.ReadToEndAsync()
+    $standardErrorTask = $process.StandardError.ReadToEndAsync()
 
-$failed = $false
-
-foreach ($execution in $executions) {
-    $execution.Process.WaitForExit()
-    $exitCode = $execution.Process.ExitCode
-    $standardOutput = $execution.StandardOutput.GetAwaiter().GetResult()
-    $standardError = $execution.StandardError.GetAwaiter().GetResult()
+    $process.WaitForExit()
+    $exitCode = $process.ExitCode
+    $standardOutput = $standardOutputTask.GetAwaiter().GetResult()
+    $standardError = $standardErrorTask.GetAwaiter().GetResult()
 
     [System.IO.File]::WriteAllText(
-        (Join-Path $execution.ResultsDirectory "stdout.log"),
+        (Join-Path $projectResults "stdout.log"),
         $standardOutput)
 
     [System.IO.File]::WriteAllText(
-        (Join-Path $execution.ResultsDirectory "stderr.log"),
+        (Join-Path $projectResults "stderr.log"),
         $standardError)
 
-    Write-Host "`n===== $($execution.Name) tests ====="
+    Write-Host "`n===== $($testProject.Name) tests ====="
     Write-Host $standardOutput
 
     if (-not [string]::IsNullOrWhiteSpace($standardError)) {
@@ -105,7 +98,7 @@ foreach ($execution in $executions) {
     }
 
     if ($exitCode -ne 0) {
-        Write-Error "$($execution.Name) tests exited with code $exitCode." -ErrorAction Continue
+        Write-Error "$($testProject.Name) tests exited with code $exitCode." -ErrorAction Continue
         $failed = $true
     }
 }
