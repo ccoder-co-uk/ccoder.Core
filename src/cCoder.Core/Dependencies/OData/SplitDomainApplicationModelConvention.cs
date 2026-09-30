@@ -2,6 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
 namespace cCoder.Core.Dependencies.OData;

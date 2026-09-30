@@ -2,6 +2,8 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using Microsoft.Extensions.Logging;
+using System;
 namespace cCoder.Core.Brokers.Loggings;
 
 internal sealed class LoggingBroker(ILogger<LoggingBroker> logger) : ILoggingBroker

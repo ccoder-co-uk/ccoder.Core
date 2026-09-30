@@ -2,6 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System.Linq;
 using cCoder.Core.Dependencies.TemplatedEmails;
 using cCoder.Data.Models.Mail;
 using cCoder.Data.Models.Security;
@@ -15,7 +16,7 @@ internal sealed class TemplatedEmailIdentityBroker(
     public User GetCurrentUser() =>
         templatedEmailIdentityDependency.GetCurrentUser();
 
-    public IQueryable<MailSender> GetAllMailSender(bool ignoreFilters) =>
-        templatedEmailIdentityDependency.GetAllMailSender(
+    public IQueryable<MailSender> GetAllMailSenders(bool ignoreFilters) =>
+        templatedEmailIdentityDependency.GetAllMailSenders(
             ignoreFilters: ignoreFilters);
 }

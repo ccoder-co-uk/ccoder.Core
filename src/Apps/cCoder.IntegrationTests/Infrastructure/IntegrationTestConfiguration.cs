@@ -2,106 +2,95 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.Core.Testing;
+using Microsoft.Data.SqlClient;
+using System;
 
 namespace cCoder.IntegrationTests.Infrastructure;
 
 internal sealed class IntegrationTestConfiguration
 {
-    private IntegrationTestConfiguration(
-        AcceptanceTestConfiguration acceptanceConfiguration)
+    private IntegrationTestConfiguration()
     {
-        Acceptance = acceptanceConfiguration;
+        string suffix = $"-acceptance-{Guid.NewGuid():N}";
+
+        CoreConnectionString = AddDatabaseSuffix(
+            connectionString: ReadRequiredValue(
+                variableName: "CoreData__ConnectionString"),
+            suffix: suffix);
+        SecurityConnectionString = AddDatabaseSuffix(
+            connectionString: ReadRequiredValue(
+                variableName: "SecurityData__ConnectionString"),
+            suffix: suffix);
+        DecryptionKey = ReadRequiredValue(
+            variableName: "Security__DecryptionKey");
         EventProviderType =
-            AcceptanceTestConfiguration.ReadOptionalValue(
-                variableName: "Eventing__ProviderType")
+            ReadOptionalValue(variableName: "Eventing__ProviderType")
             ?? "Http";
         ServiceBusConnectionString =
-            AcceptanceTestConfiguration.ReadOptionalValue(
-                variableName:
-                    "Eventing__ServiceBus__ConnectionString")
+            ReadOptionalValue(
+                variableName: "Eventing__ServiceBus__ConnectionString")
             ?? string.Empty;
         ServiceBusMaxConcurrency =
-            AcceptanceTestConfiguration.ReadOptionalInt(
-                variableName:
-                    "Eventing__ServiceBus__MaxConcurrency",
+            ReadOptionalInt(
+                variableName: "Eventing__ServiceBus__MaxConcurrency",
                 fallback: 1);
         MailTenantId =
-            AcceptanceTestConfiguration.ReadOptionalValue(
-                variableName:
-                    "Mail__Providers__MicrosoftGraph__TenantId")
+            ReadOptionalValue(
+                variableName: "Mail__Providers__MicrosoftGraph__TenantId")
             ?? string.Empty;
         MailClientId =
-            AcceptanceTestConfiguration.ReadOptionalValue(
-                variableName:
-                    "Mail__Providers__MicrosoftGraph__ClientId")
+            ReadOptionalValue(
+                variableName: "Mail__Providers__MicrosoftGraph__ClientId")
             ?? string.Empty;
         MailClientSecret =
-            AcceptanceTestConfiguration.ReadOptionalValue(
-                variableName:
-                    "Mail__Providers__MicrosoftGraph__ClientSecret")
+            ReadOptionalValue(
+                variableName: "Mail__Providers__MicrosoftGraph__ClientSecret")
             ?? string.Empty;
         MailSendUser =
-            AcceptanceTestConfiguration.ReadOptionalValue(
-                variableName: "CoreIntegrationTests__MailSendUser")
+            ReadOptionalValue(variableName: "CoreIntegrationTests__MailSendUser")
             ?? string.Empty;
         MailReceiveUser =
-            AcceptanceTestConfiguration.ReadOptionalValue(
-                variableName:
-                    "CoreIntegrationTests__MailReceiveUser")
+            ReadOptionalValue(variableName: "CoreIntegrationTests__MailReceiveUser")
             ?? string.Empty;
         KeepArtifacts =
-            AcceptanceTestConfiguration.ReadOptionalBool(
-                variableName:
-                    "CoreIntegrationTests__KeepArtifacts");
+            ReadOptionalBool(variableName: "CoreIntegrationTests__KeepArtifacts");
         UseLocalWorkflow =
-            AcceptanceTestConfiguration.ReadOptionalBool(
-                variableName:
-                    "CoreIntegrationTests__UseLocalWorkflow");
+            ReadOptionalBool(variableName: "CoreIntegrationTests__UseLocalWorkflow");
         LocalWorkflowProject =
-            AcceptanceTestConfiguration.ReadOptionalValue(
-                variableName:
-                    "CoreIntegrationTests__LocalWorkflowProject")
+            ReadOptionalValue(variableName: "CoreIntegrationTests__LocalWorkflowProject")
             ?? string.Empty;
         LocalWorkflowActivitiesProject =
-            AcceptanceTestConfiguration.ReadOptionalValue(
-                variableName:
-                    "CoreIntegrationTests__LocalWorkflowActivitiesProject")
+            ReadOptionalValue(
+                variableName: "CoreIntegrationTests__LocalWorkflowActivitiesProject")
             ?? string.Empty;
         LocalWorkflowEngineProject =
-            AcceptanceTestConfiguration.ReadOptionalValue(
-                variableName:
-                    "CoreIntegrationTests__LocalWorkflowEngineProject")
+            ReadOptionalValue(
+                variableName: "CoreIntegrationTests__LocalWorkflowEngineProject")
             ?? string.Empty;
         UseLocalSecurity =
-            AcceptanceTestConfiguration.ReadOptionalBool(
-                variableName:
-                    "CoreIntegrationTests__UseLocalSecurity");
+            ReadOptionalBool(variableName: "CoreIntegrationTests__UseLocalSecurity");
         UseLocalAppSecurity =
-            AcceptanceTestConfiguration.ReadOptionalBool(
-                variableName:
-                    "CoreIntegrationTests__UseLocalAppSecurity");
+            ReadOptionalBool(variableName: "CoreIntegrationTests__UseLocalAppSecurity");
         UseLocalData =
-            AcceptanceTestConfiguration.ReadOptionalBool(
-                variableName:
-                    "CoreIntegrationTests__UseLocalData");
+            ReadOptionalBool(variableName: "CoreIntegrationTests__UseLocalData");
         UseLocalContentManagement =
-            AcceptanceTestConfiguration.ReadOptionalBool(
-                variableName:
-                    "CoreIntegrationTests__UseLocalContentManagement");
+            ReadOptionalBool(
+                variableName: "CoreIntegrationTests__UseLocalContentManagement");
         LocalContentManagementProject =
-            AcceptanceTestConfiguration.ReadOptionalValue(
-                variableName:
-                    "CoreIntegrationTests__LocalContentManagementProject")
+            ReadOptionalValue(
+                variableName: "CoreIntegrationTests__LocalContentManagementProject")
             ?? string.Empty;
         LocalSecurityAssemblyVersion =
-            AcceptanceTestConfiguration.ReadOptionalValue(
-                variableName:
-                    "CoreIntegrationTests__LocalSecurityAssemblyVersion")
+            ReadOptionalValue(
+                variableName: "CoreIntegrationTests__LocalSecurityAssemblyVersion")
             ?? string.Empty;
     }
 
-    internal AcceptanceTestConfiguration Acceptance { get; }
+    internal string CoreConnectionString { get; }
+
+    internal string SecurityConnectionString { get; }
+
+    internal string DecryptionKey { get; }
 
     internal string EventProviderType { get; }
 
@@ -142,7 +131,58 @@ internal sealed class IntegrationTestConfiguration
     internal string LocalSecurityAssemblyVersion { get; }
 
     internal static IntegrationTestConfiguration Load() =>
-        new(
-            acceptanceConfiguration:
-                AcceptanceTestConfiguration.Load());
+        new();
+
+    private static bool ReadOptionalBool(string variableName) =>
+        bool.TryParse(
+            value: ReadOptionalValue(variableName: variableName),
+            result: out bool value)
+        && value;
+
+    private static int ReadOptionalInt(
+        string variableName,
+        int fallback) =>
+        int.TryParse(
+            s: ReadOptionalValue(variableName: variableName),
+            result: out int value)
+            ? value
+            : fallback;
+
+    private static string ReadOptionalValue(string variableName) =>
+        Environment.GetEnvironmentVariable(variable: variableName)
+        ?? Environment.GetEnvironmentVariable(
+            variable: variableName,
+            target: EnvironmentVariableTarget.User)
+        ?? Environment.GetEnvironmentVariable(
+            variable: variableName,
+            target: EnvironmentVariableTarget.Machine);
+
+    private static string ReadRequiredValue(string variableName)
+    {
+        string value = ReadOptionalValue(variableName: variableName);
+
+        if (!string.IsNullOrWhiteSpace(value: value))
+        {
+            return value;
+        }
+
+        throw new InvalidOperationException(
+            $"Required configuration environment variable '{variableName}' was not found.");
+    }
+
+    private static string AddDatabaseSuffix(
+        string connectionString,
+        string suffix)
+    {
+        SqlConnectionStringBuilder builder = new(connectionString);
+
+        if (string.IsNullOrWhiteSpace(value: builder.InitialCatalog))
+        {
+            throw new InvalidOperationException(
+                "Integration test connection strings must name a database.");
+        }
+
+        builder.InitialCatalog = $"{builder.InitialCatalog}{suffix}";
+        return builder.ConnectionString;
+    }
 }

@@ -2,6 +2,8 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using Microsoft.AspNetCore.Http;
+using System;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Services.Foundations.HomeSessions;

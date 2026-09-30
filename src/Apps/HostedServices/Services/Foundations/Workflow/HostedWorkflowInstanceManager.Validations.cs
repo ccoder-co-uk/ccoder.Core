@@ -2,6 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System;
 namespace HostedServices.Services.Foundations.Workflow;
 
 internal sealed partial class HostedWorkflowInstanceManager

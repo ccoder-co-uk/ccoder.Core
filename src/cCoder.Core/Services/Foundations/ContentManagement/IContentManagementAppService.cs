@@ -2,6 +2,8 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System.Linq;
+using System.Threading.Tasks;
 using cCoder.Data.Models.CMS;
 
 namespace cCoder.Core.Services.Foundations.ContentManagement;

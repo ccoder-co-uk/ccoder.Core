@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -12,8 +12,7 @@
     <UseLocalSecurity Condition="'$(UseLocalSecurity)' == 'true' and !(Exists('$(LocalSecurityProject)') and Exists('$(LocalSecurityDataProject)'))">false</UseLocalSecurity>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\Shared\Testing\AcceptanceTestConfiguration.cs" Link="Shared\Testing\AcceptanceTestConfiguration.cs" />
-    <PackageReference Include="cCoder.Security.Data" Version="2026.9.27.1325" Condition="'$(UseLocalSecurity)' != 'true'" />
+    <PackageReference Include="cCoder.Security.Data" Version="2026.9.30.1202" Condition="'$(UseLocalSecurity)' != 'true'" />
     <PackageReference Include="FluentAssertions" Version="8.11.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.12" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="7.1.0" />
@@ -40,6 +39,6 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="cCoder.CodeAnalysis" Version="2026.9.27.1258" />
+    <PackageReference Update="cCoder.CodeAnalysis" Version="2026.9.30.1047" />
   </ItemGroup>
 </Project>

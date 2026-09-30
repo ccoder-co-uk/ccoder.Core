@@ -2,6 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System;
 using cCoder.Core.Models;
 using cCoder.Eventing.Models;
 using Microsoft.Extensions.Configuration;

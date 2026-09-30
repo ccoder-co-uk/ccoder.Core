@@ -2,10 +2,10 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System;
 using cCoder.Data;
 using cCoder.Data.Models;
 using cCoder.Security.Data.EF;
-using cCoder.Security.Models.Configurations;
 using HostedServices.AcceptanceTests.Models;
 using Microsoft.Extensions.DependencyInjection;
 

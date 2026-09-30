@@ -2,9 +2,9 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System.Threading.Tasks;
 using cCoder.Data.Models.CMS;
 using cCoder.Eventing.AzureServiceBus.Models;
-using cCoder.Eventing.Models;
 using cCoder.Core.Brokers.Eventing;
 
 namespace cCoder.Core.Services.Foundations.Eventing;

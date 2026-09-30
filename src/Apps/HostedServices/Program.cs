@@ -2,6 +2,13 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.IO;
+using System.Net.Http;
+using System.Net.Http.Json;
 using cCoder.Core;
 using cCoder.Core.Models;
 using cCoder.Data.Models.CMS;

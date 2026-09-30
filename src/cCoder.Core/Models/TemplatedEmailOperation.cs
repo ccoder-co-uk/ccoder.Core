@@ -3,7 +3,6 @@
 // ---------------------------------------------------------------
 
 using cCoder.Data.Models.Mail;
-using cCoder.Mail.Models;
 using CoreUser = cCoder.Data.Models.Security.User;
 using CoreApp = cCoder.Data.Models.CMS.App;
 using ContentTemplate = cCoder.Data.Models.CMS.Template;

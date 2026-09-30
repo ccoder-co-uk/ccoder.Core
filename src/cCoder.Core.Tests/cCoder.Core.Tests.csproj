@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -22,9 +22,9 @@
   <ItemGroup>
     <ProjectReference Include="..\cCoder.Core\cCoder.Core.csproj" />
     <ProjectReference Include="..\Apps\HostedServices\HostedServices.csproj" />
-    <PackageReference Include="cCoder.AppSecurity" Version="2026.9.27.1403" />
-    <PackageReference Include="cCoder.ContentManagement" Version="2026.9.27.1419" />
-    <PackageReference Include="cCoder.Data" Version="2026.9.27.1341" />
+    <PackageReference Include="cCoder.AppSecurity" Version="2026.9.30.1231" />
+    <PackageReference Include="cCoder.ContentManagement" Version="2026.9.30.1253" />
+    <PackageReference Include="cCoder.Data" Version="2026.9.30.1214" />
   </ItemGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
@@ -35,6 +35,6 @@
     <None Include="..\Apps\Workflow\local.settings.json" Link="Configuration\Workflow.local.settings.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="cCoder.CodeAnalysis" Version="2026.9.27.1258" />
+    <PackageReference Update="cCoder.CodeAnalysis" Version="2026.9.30.1047" />
   </ItemGroup>
 </Project>

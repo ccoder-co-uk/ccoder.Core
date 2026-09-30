@@ -2,7 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.Mail.Models;
+using System.Threading.Tasks;
 using cCoder.Data.Models.Mail;
 
 namespace cCoder.Core.Brokers.Mail;

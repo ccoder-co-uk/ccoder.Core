@@ -3,6 +3,9 @@
 // ---------------------------------------------------------------
 
 using Microsoft.Data.SqlClient;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace cCoder.Core.Testing;
 
@@ -153,5 +156,4 @@ internal sealed class AcceptanceTestConfiguration
             }
         }
     }
-
 }

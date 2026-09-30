@@ -2,6 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System;
 namespace cCoder.IntegrationTests.Models;
 
 internal sealed class AcceptanceSettings

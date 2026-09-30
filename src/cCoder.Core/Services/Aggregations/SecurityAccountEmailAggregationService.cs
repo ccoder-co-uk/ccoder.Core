@@ -2,7 +2,10 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using System.ComponentModel.DataAnnotations;
+using Microsoft.Extensions.Configuration;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using cCoder.Core.Services.Foundations.ContentManagement;
 using cCoder.Core.Exposures.Managers;

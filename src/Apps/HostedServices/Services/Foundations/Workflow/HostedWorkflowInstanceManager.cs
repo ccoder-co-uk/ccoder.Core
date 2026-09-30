@@ -2,6 +2,8 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System;
+using System.Threading.Tasks;
 using HostedServices.Brokers.Workflow;
 using HostedServices.Exposures;
 

@@ -2,6 +2,8 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System;
+using System.Threading;
 namespace cCoder.Core.Services.Orchestrations;
 
 internal sealed partial class FirstTimeSetupStateOrchestrationService

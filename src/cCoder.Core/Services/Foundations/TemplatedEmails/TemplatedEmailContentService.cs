@@ -2,6 +2,8 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System;
+using System.Linq;
 using cCoder.Core.Brokers.TemplatedEmails;
 using cCoder.Core.Models;
 using CoreUser = cCoder.Data.Models.Security.User;
