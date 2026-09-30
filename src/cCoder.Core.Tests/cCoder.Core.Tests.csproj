@@ -8,13 +8,13 @@
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="8.11.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.10.1" />
-    <PackageReference Include="Moq" Version="4.20.72" />
+    <PackageReference Include="Moq" Version="4.21.0" />
     <PackageReference Include="xunit" Version="2.9.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="4.0.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="coverlet.collector" Version="10.0.1">
+    <PackageReference Include="coverlet.collector" Version="10.1.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -22,9 +22,9 @@
   <ItemGroup>
     <ProjectReference Include="..\cCoder.Core\cCoder.Core.csproj" />
     <ProjectReference Include="..\Apps\HostedServices\HostedServices.csproj" />
-    <PackageReference Include="cCoder.AppSecurity" Version="2026.9.27.1403" />
-    <PackageReference Include="cCoder.ContentManagement" Version="2026.9.27.1419" />
-    <PackageReference Include="cCoder.Data" Version="2026.9.27.1341" />
+    <PackageReference Include="cCoder.AppSecurity" Version="2026.9.30.1231" />
+    <PackageReference Include="cCoder.ContentManagement" Version="2026.9.30.1253" />
+    <PackageReference Include="cCoder.Data" Version="2026.9.30.1214" />
   </ItemGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
@@ -35,6 +35,6 @@
     <None Include="..\Apps\Workflow\local.settings.json" Link="Configuration\Workflow.local.settings.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="cCoder.CodeAnalysis" Version="2026.9.27.1258" />
+    <PackageReference Update="cCoder.CodeAnalysis" Version="2026.9.30.1047" />
   </ItemGroup>
 </Project>
