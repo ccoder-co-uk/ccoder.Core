@@ -2,6 +2,8 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using Microsoft.AspNetCore.Http;
+using System;
 using cCoder.CodeAnalysis.Exposures;
 using Microsoft.AspNetCore.Mvc;
 using Web.Services.Aggregations;
