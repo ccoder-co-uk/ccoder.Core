@@ -2,9 +2,9 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Linq;
-using Microsoft.AspNetCore.Http;
 namespace Web.Services.Processings;
 
 internal sealed partial class HomeSessionProcessingService

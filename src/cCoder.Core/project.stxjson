@@ -3237,7 +3237,7 @@
     {
       "Name": "cCoder.Core.Dependencies.Formatters.CsvFormatter",
       "StandardElementType": "Dependency",
-      "LineNumber": 24,
+      "LineNumber": 25,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -3256,7 +3256,7 @@
         {
           "Id": "cCoder.Core.Dependencies.Formatters.CsvFormatter.WriteResponseBodyAsync(Microsoft.AspNetCore.Mvc.Formatters.OutputFormatterWriteContext,System.Text.Encoding)",
           "Name": "WriteResponseBodyAsync",
-          "LineNumber": 58,
+          "LineNumber": 59,
           "Inputs": [
             {
               "Name": "context",
@@ -3400,7 +3400,7 @@
     {
       "Name": "cCoder.Core.Dependencies.Formatters.XmlFormatter",
       "StandardElementType": "Dependency",
-      "LineNumber": 21,
+      "LineNumber": 22,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -3419,7 +3419,7 @@
         {
           "Id": "cCoder.Core.Dependencies.Formatters.XmlFormatter.WriteResponseBodyAsync(Microsoft.AspNetCore.Mvc.Formatters.OutputFormatterWriteContext,System.Text.Encoding)",
           "Name": "WriteResponseBodyAsync",
-          "LineNumber": 35,
+          "LineNumber": 36,
           "Inputs": [
             {
               "Name": "context",
@@ -4682,7 +4682,7 @@
     {
       "Name": "cCoder.Core.Exposures.Controllers.SetupController",
       "StandardElementType": "HttpExposure",
-      "LineNumber": 16,
+      "LineNumber": 17,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -4701,7 +4701,7 @@
         {
           "Id": "cCoder.Core.Exposures.Controllers.SetupController.Get(System.Threading.CancellationToken)",
           "Name": "Get",
-          "LineNumber": 23,
+          "LineNumber": 24,
           "Inputs": [
             {
               "Name": "cancellationToken",
@@ -7001,7 +7001,7 @@
         {
           "Id": "cCoder.Core.IServiceCollectionExtensions.AddCoreHostedServices(Microsoft.Extensions.DependencyInjection.IServiceCollection,cCoder.Core.Models.CoreConfiguration)",
           "Name": "AddCoreHostedServices",
-          "LineNumber": 237,
+          "LineNumber": 238,
           "Inputs": [
             {
               "Name": "services",
@@ -7166,7 +7166,7 @@
         {
           "Id": "cCoder.Core.IServiceCollectionExtensions.AddCoreWeb(Microsoft.Extensions.DependencyInjection.IServiceCollection,cCoder.Core.Models.CoreConfiguration)",
           "Name": "AddCoreWeb",
-          "LineNumber": 92,
+          "LineNumber": 93,
           "Inputs": [
             {
               "Name": "services",
@@ -9105,7 +9105,7 @@
     {
       "Name": "cCoder.Core.Services.Aggregations.SecurityAccountEmailAggregationService",
       "StandardElementType": "AggregationService",
-      "LineNumber": 17,
+      "LineNumber": 18,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -9126,7 +9126,7 @@
         {
           "Id": "cCoder.Core.Services.Aggregations.SecurityAccountEmailAggregationService.QueueInvitationCreatedSecurityAccountEventEmailAsync(cCoder.Security.Models.Events.SecurityAccountEvent)",
           "Name": "QueueInvitationCreatedSecurityAccountEventEmailAsync",
-          "LineNumber": 34,
+          "LineNumber": 35,
           "Inputs": [
             {
               "Name": "securityAccountEvent",
@@ -9169,7 +9169,7 @@
         {
           "Id": "cCoder.Core.Services.Aggregations.SecurityAccountEmailAggregationService.QueuePasswordResetRequestedSecurityAccountEventEmailAsync(cCoder.Security.Models.Events.SecurityAccountEvent)",
           "Name": "QueuePasswordResetRequestedSecurityAccountEventEmailAsync",
-          "LineNumber": 46,
+          "LineNumber": 47,
           "Inputs": [
             {
               "Name": "securityAccountEvent",
@@ -9212,7 +9212,7 @@
         {
           "Id": "cCoder.Core.Services.Aggregations.SecurityAccountEmailAggregationService.QueueRegistrationCreatedSecurityAccountEventEmailAsync(cCoder.Security.Models.Events.SecurityAccountEvent)",
           "Name": "QueueRegistrationCreatedSecurityAccountEventEmailAsync",
-          "LineNumber": 22,
+          "LineNumber": 23,
           "Inputs": [
             {
               "Name": "securityAccountEvent",
@@ -9396,7 +9396,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.AllowedOrigins.AllowedOriginStoreService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 12,
+      "LineNumber": 13,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -9417,7 +9417,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.AllowedOrigins.AllowedOriginStoreService.GetAllowedOriginsAsync()",
           "Name": "GetAllowedOriginsAsync",
-          "LineNumber": 16,
+          "LineNumber": 17,
           "Inputs": [],
           "ReturnType": "System.Threading.Tasks.ValueTask\u003CSystem.String[]\u003E",
           "Implements": [
@@ -14465,7 +14465,7 @@
     {
       "Name": "cCoder.Core.SetupDatabase",
       "StandardElementType": "Unknown",
-      "LineNumber": 13,
+      "LineNumber": 15,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -14476,7 +14476,7 @@
     {
       "Name": "cCoder.Core.WebApplicationExtensions",
       "StandardElementType": "App",
-      "LineNumber": 27,
+      "LineNumber": 28,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -14486,7 +14486,7 @@
         {
           "Id": "cCoder.Core.WebApplicationExtensions.StartCoreHostedServices(Microsoft.AspNetCore.Builder.WebApplication)",
           "Name": "StartCoreHostedServices",
-          "LineNumber": 66,
+          "LineNumber": 67,
           "Inputs": [
             {
               "Name": "app",
@@ -14663,7 +14663,7 @@
         {
           "Id": "cCoder.Core.WebApplicationExtensions.StartCoreWeb(Microsoft.AspNetCore.Builder.WebApplication)",
           "Name": "StartCoreWeb",
-          "LineNumber": 32,
+          "LineNumber": 33,
           "Inputs": [
             {
               "Name": "app",
@@ -14741,7 +14741,7 @@
     {
       "Name": "cCoder.Core.WebApplicationExtensions.StartupMigrationLock",
       "StandardElementType": "Dependency",
-      "LineNumber": 254,
+      "LineNumber": 255,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -14762,7 +14762,7 @@
         {
           "Id": "cCoder.Core.WebApplicationExtensions.StartupMigrationLock.Dispose()",
           "Name": "Dispose",
-          "LineNumber": 256,
+          "LineNumber": 257,
           "Inputs": [],
           "ReturnType": "System.Void",
           "Implements": [
@@ -18448,7 +18448,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.Middleware.ICoreFormatterMiddlewareService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 11,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -18458,7 +18458,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Middleware.ICoreFormatterMiddlewareService.InvokeCoreFormatterMiddlewareInvocationNextAsync(cCoder.Core.Models.Middleware.CoreFormatterMiddlewareInvocation)",
           "Name": "InvokeCoreFormatterMiddlewareInvocationNextAsync",
-          "LineNumber": 14,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "coreFormatterMiddlewareInvocation",
@@ -18483,7 +18483,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Middleware.ICoreFormatterMiddlewareService.ParseQuery(System.String)",
           "Name": "ParseQuery",
-          "LineNumber": 13,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "queryString",
@@ -20943,7 +20943,7 @@
       "Description": "The type is not a valid Standard element type.",
       "Severity": "Warning",
       "Type": "cCoder.Core.SetupDatabase",
-      "LineNumber": 13
+      "LineNumber": 15
     }
   ]
 }

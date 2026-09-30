@@ -2,8 +2,8 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using cCoder.Core.Dependencies.OpenApi;
 using FluentAssertions;
 using Microsoft.AspNetCore.Authorization;

@@ -1037,7 +1037,7 @@
     {
       "Name": "Web.Controllers.Api.CacheController",
       "StandardElementType": "HttpExposure",
-      "LineNumber": 14,
+      "LineNumber": 15,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -1067,7 +1067,7 @@
         {
           "Id": "Web.Controllers.Api.CacheController.GetRefreshCache()",
           "Name": "GetRefreshCache",
-          "LineNumber": 20,
+          "LineNumber": 21,
           "Inputs": [],
           "ReturnType": "Microsoft.AspNetCore.Mvc.IActionResult",
           "Implements": [],
@@ -1166,7 +1166,7 @@
     {
       "Name": "Web.Controllers.Api.MetadataController",
       "StandardElementType": "HttpExposure",
-      "LineNumber": 14,
+      "LineNumber": 15,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -1196,7 +1196,7 @@
         {
           "Id": "Web.Controllers.Api.MetadataController.GetMetadata(System.String)",
           "Name": "GetMetadata",
-          "LineNumber": 20,
+          "LineNumber": 21,
           "Inputs": [
             {
               "Name": "culture",
@@ -1291,7 +1291,7 @@
     {
       "Name": "Web.Controllers.Api.ScriptController",
       "StandardElementType": "HttpExposure",
-      "LineNumber": 15,
+      "LineNumber": 16,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -1310,7 +1310,7 @@
         {
           "Id": "Web.Controllers.Api.ScriptController.PostExecuteScript()",
           "Name": "PostExecuteScript",
-          "LineNumber": 21,
+          "LineNumber": 22,
           "Inputs": [],
           "ReturnType": "System.Threading.Tasks.Task\u003CMicrosoft.AspNetCore.Mvc.IActionResult\u003E",
           "Implements": [],
@@ -1419,7 +1419,7 @@
     {
       "Name": "Web.Controllers.HomeController",
       "StandardElementType": "HttpExposure",
-      "LineNumber": 27,
+      "LineNumber": 24,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -1438,7 +1438,7 @@
         {
           "Id": "Web.Controllers.HomeController.Index(System.String,System.String,System.String,System.Boolean,System.Threading.CancellationToken)",
           "Name": "Index",
-          "LineNumber": 42,
+          "LineNumber": 39,
           "Inputs": [
             {
               "Name": "path",
@@ -2220,7 +2220,7 @@
     {
       "Name": "Web.IServiceCollectionExtensions",
       "StandardElementType": "App",
-      "LineNumber": 23,
+      "LineNumber": 22,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -2230,7 +2230,7 @@
         {
           "Id": "Web.IServiceCollectionExtensions.AddWeb(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration,System.Action\u003CWeb.Models.AppConfiguration\u003E)",
           "Name": "AddWeb",
-          "LineNumber": 25,
+          "LineNumber": 24,
           "Inputs": [
             {
               "Name": "services",
@@ -2619,7 +2619,7 @@
     {
       "Name": "Web.Program",
       "StandardElementType": "App",
-      "LineNumber": 23,
+      "LineNumber": 25,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -2629,7 +2629,7 @@
         {
           "Id": "Web.Program.Main(System.String[])",
           "Name": "Main",
-          "LineNumber": 25,
+          "LineNumber": 27,
           "Inputs": [
             {
               "Name": "args",

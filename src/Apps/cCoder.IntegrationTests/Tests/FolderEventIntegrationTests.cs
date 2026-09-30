@@ -2,8 +2,8 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using System.Linq;
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Net;
@@ -14,13 +14,10 @@ using cCoder.Data;
 using cCoder.Data.Models.DMS;
 using cCoder.Data.Models.Workflow;
 using cCoder.IntegrationTests.Infrastructure;
-using cCoder.Security.Data.EF.Interfaces;
-using cCoder.Security.Models.Entities;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
-using SsoToken = cCoder.Security.Models.Entities.Token;
 
 namespace cCoder.IntegrationTests.Tests;
 
@@ -45,16 +42,16 @@ public sealed partial class FolderEventIntegrationTests(IntegrationAcceptanceFix
         FlowDefinition flow = (FlowDefinition)await PostAsJsonAsync(
             relativeUrl: "/Api/Workflow/FlowDefinition",
             payload: new
-        {
-            appId,
-            name,
-            description = "Integration flow",
-            definitionJson = SimpleFlowDefinitionJson,
-            configJson = "{}",
-            createdBy = "Guest",
-            createdOn = DateTimeOffset.UtcNow,
-            lastUpdatedBy = "Guest",
-            lastUpdated = DateTimeOffset.UtcNow
+            {
+                appId,
+                name,
+                description = "Integration flow",
+                definitionJson = SimpleFlowDefinitionJson,
+                configJson = "{}",
+                createdBy = "Guest",
+                createdOn = DateTimeOffset.UtcNow,
+                lastUpdatedBy = "Guest",
+                lastUpdated = DateTimeOffset.UtcNow
             },
             responseType: typeof(FlowDefinition),
             authToken: authToken);
@@ -67,13 +64,13 @@ public sealed partial class FolderEventIntegrationTests(IntegrationAcceptanceFix
         WorkflowEvent workflowEvent = (WorkflowEvent)await PostAsJsonAsync(
             relativeUrl: "/Api/Workflow/WorkflowEvent",
             payload: new
-        {
-            flowId,
-            type = "Acceptance",
-            eventContext,
-            executeAs = AdminUserId,
-            createdBy = "Guest",
-            createdOn = DateTimeOffset.UtcNow
+            {
+                flowId,
+                type = "Acceptance",
+                eventContext,
+                executeAs = AdminUserId,
+                createdBy = "Guest",
+                createdOn = DateTimeOffset.UtcNow
             },
             responseType: typeof(WorkflowEvent),
             authToken: authToken);
@@ -182,9 +179,9 @@ workflowEvents: [.. core.Set<WorkflowEvent>()
         Type responseType,
         string authToken = null)
     {
-        using HttpRequestMessage request = new(HttpMethod.Post, WithAuthToken(relativeUrl: relativeUrl,authToken: authToken))
+        using HttpRequestMessage request = new(HttpMethod.Post, WithAuthToken(relativeUrl: relativeUrl, authToken: authToken))
         {
-            Content = JsonContent.Create(inputValue: payload,options: RequestJsonOptions)
+            Content = JsonContent.Create(inputValue: payload, options: RequestJsonOptions)
         };
 
         if (!string.IsNullOrWhiteSpace(value: authToken))
@@ -197,7 +194,7 @@ workflowEvents: [.. core.Set<WorkflowEvent>()
         string content = await response.Content.ReadAsStringAsync();
 
         response.StatusCode.Should()
-            .Be(expected: HttpStatusCode.Created,because: content);
+            .Be(expected: HttpStatusCode.Created, because: content);
 
         return JsonSerializer.Deserialize(json: content, returnType: responseType, options: JsonOptions)
             ?? throw new InvalidOperationException($"Expected payload for {relativeUrl}.");
@@ -209,7 +206,7 @@ workflowEvents: [.. core.Set<WorkflowEvent>()
         string host = null,
         string authToken = null)
     {
-        using HttpRequestMessage request = new(method, WithAuthToken(relativeUrl: relativeUrl,authToken: authToken));
+        using HttpRequestMessage request = new(method, WithAuthToken(relativeUrl: relativeUrl, authToken: authToken));
 
         if (!string.IsNullOrWhiteSpace(value: host))
         {
@@ -226,7 +223,7 @@ workflowEvents: [.. core.Set<WorkflowEvent>()
         string content = await response.Content.ReadAsStringAsync();
 
         response.StatusCode.Should()
-            .Be(expected: HttpStatusCode.NoContent,because: content);
+            .Be(expected: HttpStatusCode.NoContent, because: content);
     }
 
     private Task<string> CreateAuthTokenAsync(string userId) =>
@@ -259,11 +256,11 @@ workflowEvents: [.. core.Set<WorkflowEvent>()
         string instanceSummary = instances.Length == 0
             ? "No flow instances were found."
             : string.Join(
-separator:                 Environment.NewLine,values:                 instances.Select(selector: instance =>
+separator: Environment.NewLine, values: instances.Select(selector: instance =>
                     $"Instance {instance.Id} | State={instance.State} | Start={instance.Start:u} | End={(instance.End.HasValue ? instance.End.Value.ToString(format: "u") : "<null>")} | Context={instance.ContextString ?? "<null>"}"));
 
         return string.Join(
-separator:             Environment.NewLine + Environment.NewLine,value:             [
+separator: Environment.NewLine + Environment.NewLine, value: [
                 "Flow instances:",
                 instanceSummary,
                 "HostedServices output:",
@@ -283,9 +280,9 @@ separator:             Environment.NewLine + Environment.NewLine,value:         
         }
 
         string[] lines = content
-            .Split(separator: Environment.NewLine,options: StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            .Split(separator: Environment.NewLine, options: StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
-        return string.Join(separator: Environment.NewLine,values: lines.TakeLast(count: maxLines));
+        return string.Join(separator: Environment.NewLine, values: lines.TakeLast(count: maxLines));
     }
 
     private static async Task WaitUntilAsync(

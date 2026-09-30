@@ -2,6 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System;
 using cCoder.Core.Models;
 using FluentAssertions;
 using Microsoft.AspNetCore.Hosting;

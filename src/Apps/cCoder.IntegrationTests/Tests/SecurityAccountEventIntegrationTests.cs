@@ -2,10 +2,10 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Http.Headers;
@@ -16,7 +16,6 @@ using System.Text.Json.Serialization;
 using cCoder.Data;
 using cCoder.Data.Models.Mail;
 using cCoder.Data.Models.Security;
-using cCoder.Mail.Models;
 using cCoder.Mail.Providers.Models;
 using cCoder.IntegrationTests.Infrastructure;
 using cCoder.Security.Data.EF.Interfaces;

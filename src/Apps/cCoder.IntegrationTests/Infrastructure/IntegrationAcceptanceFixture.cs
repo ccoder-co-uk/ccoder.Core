@@ -2,10 +2,10 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using System.IO;
-using System.Linq;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Diagnostics;
@@ -20,7 +20,6 @@ using cCoder.Security.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.WebUtilities;
-using cCoder.Core.Testing;
 using cCoder.IntegrationTests.Models;
 using Xunit;
 
@@ -115,11 +114,11 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
         Settings = new AcceptanceSettings
         {
             CoreConnectionString =
-                configuration.Acceptance.CoreConnectionString,
+                configuration.CoreConnectionString,
             SsoConnectionString =
-                configuration.Acceptance.SecurityConnectionString,
+                configuration.SecurityConnectionString,
             DecryptionKey =
-                configuration.Acceptance.DecryptionKey,
+                configuration.DecryptionKey,
             EventProviderType = configuration.EventProviderType,
             ServiceBusConnectionString =
                 configuration.ServiceBusConnectionString,

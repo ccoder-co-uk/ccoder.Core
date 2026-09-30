@@ -2,12 +2,11 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 using cCoder.Core.Brokers.AllowedOrigins;
 using cCoder.Core.Services.Foundations.AllowedOrigins;
-using cCoder.Data.Models.CMS;
 using FluentAssertions;
-using Microsoft.AspNetCore.Http;
 using Moq;
 using Xunit;
 

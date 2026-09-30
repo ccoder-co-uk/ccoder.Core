@@ -2,6 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
+using System;
 using System.Linq;
 using cCoder.Core.Services.Foundations.ContentManagement;
 using cCoder.Core.Services.Aggregations;
@@ -10,7 +11,6 @@ using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.Mail;
 using cCoder.Security.Models.Entities;
 using cCoder.Security.Models.Events;
-using FluentAssertions;
 using Moq;
 
 namespace cCoder.Core.Tests.Orchestrations;

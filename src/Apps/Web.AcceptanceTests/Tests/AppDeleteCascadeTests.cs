@@ -2,19 +2,17 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using System.Net.Http;
 using System;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Net;
-using System.Net.Http.Json;
 using cCoder.Data;
 using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.DMS;
 using cCoder.Data.Models.Mail;
 using cCoder.Data.Models.Planning;
 using cCoder.Data.Models.Security;
-using cCoder.Data.Models.Workflow;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Web.AcceptanceTests.Infrastructure;

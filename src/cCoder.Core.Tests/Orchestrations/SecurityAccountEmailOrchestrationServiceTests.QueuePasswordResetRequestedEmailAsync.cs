@@ -2,8 +2,8 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using App = cCoder.Data.Models.CMS.App;
 using System.Threading.Tasks;
+using cCoder.Data.Models.CMS;
 using cCoder.Security.Models.Events;
 using Xunit;
 

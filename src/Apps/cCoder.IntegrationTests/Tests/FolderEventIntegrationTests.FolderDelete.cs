@@ -32,7 +32,9 @@ public sealed partial class FolderEventIntegrationTests
             // When
             await SendWithOptionalHostAsync(method: HttpMethod.Delete,relativeUrl: $"/Api/DocumentManagement/Folder({folderId})",authToken: authToken);
 
-            await WaitUntilAsync(predicate: async () => await HasAnyFlowInstanceAsync(flowId: flowId));
+            await WaitUntilAsync(
+                predicate: async () => await HasAnyFlowInstanceAsync(flowId: flowId),
+                diagnosticsFactory: () => BuildFlowDiagnosticsAsync(flowId: flowId));
 
             await WaitUntilAsync(
 predicate:                 async () => await HasFlowInstanceStateAsync(flowId: flowId,state: "Complete"),                diagnosticsFactory: () => BuildFlowDiagnosticsAsync(flowId: flowId));

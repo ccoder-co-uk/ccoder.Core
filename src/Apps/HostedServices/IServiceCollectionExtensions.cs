@@ -2,12 +2,11 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using cCoder.Core;
-using cCoder.Core.Models;
 using HostedServices.Models;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using cCoder.Security.Models.Configurations;

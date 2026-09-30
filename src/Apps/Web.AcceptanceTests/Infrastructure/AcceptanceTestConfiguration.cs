@@ -2,10 +2,10 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using System.Linq;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
-using Microsoft.Data.SqlClient;
+using System.Linq;
 
 namespace cCoder.Core.Testing;
 
@@ -156,5 +156,4 @@ internal sealed class AcceptanceTestConfiguration
             }
         }
     }
-
 }

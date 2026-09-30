@@ -97,7 +97,7 @@
     {
       "Name": "HostedServices.Controllers.HomeController",
       "StandardElementType": "HttpExposure",
-      "LineNumber": 11,
+      "LineNumber": 12,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -116,7 +116,7 @@
         {
           "Id": "HostedServices.Controllers.HomeController.Get()",
           "Name": "Get",
-          "LineNumber": 15,
+          "LineNumber": 16,
           "Inputs": [],
           "ReturnType": "Microsoft.AspNetCore.Mvc.IActionResult",
           "Implements": [],
@@ -166,7 +166,7 @@
     {
       "Name": "HostedServices.Controllers.WorkflowController",
       "StandardElementType": "HttpExposure",
-      "LineNumber": 13,
+      "LineNumber": 14,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -185,7 +185,7 @@
         {
           "Id": "HostedServices.Controllers.WorkflowController.Get()",
           "Name": "Get",
-          "LineNumber": 19,
+          "LineNumber": 20,
           "Inputs": [],
           "ReturnType": "Microsoft.AspNetCore.Mvc.IActionResult",
           "Implements": [],
@@ -215,7 +215,7 @@
         {
           "Id": "HostedServices.Controllers.WorkflowController.GetStats()",
           "Name": "GetStats",
-          "LineNumber": 36,
+          "LineNumber": 37,
           "Inputs": [],
           "ReturnType": "Microsoft.AspNetCore.Mvc.IActionResult",
           "Implements": [],
@@ -262,7 +262,7 @@
         {
           "Id": "HostedServices.Controllers.WorkflowController.Post(System.Guid)",
           "Name": "Post",
-          "LineNumber": 27,
+          "LineNumber": 28,
           "Inputs": [
             {
               "Name": "flowId",
@@ -680,7 +680,7 @@
     {
       "Name": "HostedServices.IServiceCollectionExtensions",
       "StandardElementType": "App",
-      "LineNumber": 21,
+      "LineNumber": 20,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -690,7 +690,7 @@
         {
           "Id": "HostedServices.IServiceCollectionExtensions.AddHostedServices(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration,System.Action\u003CHostedServices.Models.AppConfiguration\u003E)",
           "Name": "AddHostedServices",
-          "LineNumber": 23,
+          "LineNumber": 22,
           "Inputs": [
             {
               "Name": "services",
@@ -767,7 +767,7 @@
     {
       "Name": "HostedServices.Program",
       "StandardElementType": "App",
-      "LineNumber": 26,
+      "LineNumber": 27,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -777,7 +777,7 @@
         {
           "Id": "HostedServices.Program.Main(System.String[])",
           "Name": "Main",
-          "LineNumber": 28,
+          "LineNumber": 29,
           "Inputs": [
             {
               "Name": "args",

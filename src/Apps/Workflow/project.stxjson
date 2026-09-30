@@ -9,7 +9,7 @@
     {
       "Name": "Workflow.Brokers.WorkflowFunctions.WorkflowFunctionsBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 12,
+      "LineNumber": 18,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -30,7 +30,7 @@
         {
           "Id": "Workflow.Brokers.WorkflowFunctions.WorkflowFunctionsBroker.CreateResponseAsync(Microsoft.Azure.Functions.Worker.Http.HttpRequestData,System.String)",
           "Name": "CreateResponseAsync",
-          "LineNumber": 31,
+          "LineNumber": 37,
           "Inputs": [
             {
               "Name": "request",
@@ -69,7 +69,7 @@
         {
           "Id": "Workflow.Brokers.WorkflowFunctions.WorkflowFunctionsBroker.DeserializeWorkflowRequest(System.String)",
           "Name": "DeserializeWorkflowRequest",
-          "LineNumber": 19,
+          "LineNumber": 25,
           "Inputs": [
             {
               "Name": "json",
@@ -104,7 +104,7 @@
         {
           "Id": "Workflow.Brokers.WorkflowFunctions.WorkflowFunctionsBroker.ExecuteScriptAsync(System.String,System.Boolean)",
           "Name": "ExecuteScriptAsync",
-          "LineNumber": 26,
+          "LineNumber": 32,
           "Inputs": [
             {
               "Name": "payload",
@@ -143,7 +143,7 @@
         {
           "Id": "Workflow.Brokers.WorkflowFunctions.WorkflowFunctionsBroker.LogInformation(System.String)",
           "Name": "LogInformation",
-          "LineNumber": 38,
+          "LineNumber": 44,
           "Inputs": [
             {
               "Name": "message",
@@ -178,7 +178,7 @@
         {
           "Id": "Workflow.Brokers.WorkflowFunctions.WorkflowFunctionsBroker.ReadBodyAsync(Microsoft.Azure.Functions.Worker.Http.HttpRequestData)",
           "Name": "ReadBodyAsync",
-          "LineNumber": 16,
+          "LineNumber": 22,
           "Inputs": [
             {
               "Name": "request",
@@ -213,7 +213,7 @@
         {
           "Id": "Workflow.Brokers.WorkflowFunctions.WorkflowFunctionsBroker.RunWorkflowRequestAsync(cCoder.Workflow.Activities.Models.WorkflowRequest)",
           "Name": "RunWorkflowRequestAsync",
-          "LineNumber": 22,
+          "LineNumber": 28,
           "Inputs": [
             {
               "Name": "workflowRequest",
@@ -250,7 +250,7 @@
     {
       "Name": "Workflow.Dependencies.WorkflowFunctionsDependency",
       "StandardElementType": "Dependency",
-      "LineNumber": 18,
+      "LineNumber": 23,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -271,7 +271,7 @@
         {
           "Id": "Workflow.Dependencies.WorkflowFunctionsDependency.CreateResponseAsync(Microsoft.Azure.Functions.Worker.Http.HttpRequestData,System.String)",
           "Name": "CreateResponseAsync",
-          "LineNumber": 73,
+          "LineNumber": 78,
           "Inputs": [
             {
               "Name": "request",
@@ -315,7 +315,7 @@
         {
           "Id": "Workflow.Dependencies.WorkflowFunctionsDependency.DeserializeWorkflowRequest(System.String)",
           "Name": "DeserializeWorkflowRequest",
-          "LineNumber": 57,
+          "LineNumber": 62,
           "Inputs": [
             {
               "Name": "json",
@@ -348,7 +348,7 @@
         {
           "Id": "Workflow.Dependencies.WorkflowFunctionsDependency.ExecuteAsync(System.String,System.Boolean)",
           "Name": "ExecuteAsync",
-          "LineNumber": 70,
+          "LineNumber": 75,
           "Inputs": [
             {
               "Name": "payload",
@@ -387,7 +387,7 @@
         {
           "Id": "Workflow.Dependencies.WorkflowFunctionsDependency.ExecuteScriptAsync(System.String,System.Boolean)",
           "Name": "ExecuteScriptAsync",
-          "LineNumber": 65,
+          "LineNumber": 70,
           "Inputs": [
             {
               "Name": "payload",
@@ -424,7 +424,7 @@
         {
           "Id": "Workflow.Dependencies.WorkflowFunctionsDependency.LogInformation(System.String)",
           "Name": "LogInformation",
-          "LineNumber": 85,
+          "LineNumber": 90,
           "Inputs": [
             {
               "Name": "message",
@@ -457,7 +457,7 @@
         {
           "Id": "Workflow.Dependencies.WorkflowFunctionsDependency.ReadBodyAsync(Microsoft.Azure.Functions.Worker.Http.HttpRequestData)",
           "Name": "ReadBodyAsync",
-          "LineNumber": 49,
+          "LineNumber": 54,
           "Inputs": [
             {
               "Name": "request",
@@ -511,7 +511,7 @@
         {
           "Id": "Workflow.Dependencies.WorkflowFunctionsDependency.RunWorkflowRequestAsync(cCoder.Workflow.Activities.Models.WorkflowRequest)",
           "Name": "RunWorkflowRequestAsync",
-          "LineNumber": 62,
+          "LineNumber": 67,
           "Inputs": [
             {
               "Name": "workflowRequest",
@@ -546,7 +546,7 @@
     {
       "Name": "Workflow.Exposures.Execute",
       "StandardElementType": "Exposure",
-      "LineNumber": 12,
+      "LineNumber": 18,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -556,7 +556,7 @@
         {
           "Id": "Workflow.Exposures.Execute.Run(Microsoft.Azure.Functions.Worker.Http.HttpRequestData)",
           "Name": "Run",
-          "LineNumber": 16,
+          "LineNumber": 22,
           "Inputs": [
             {
               "Name": "request",
@@ -605,7 +605,7 @@
     {
       "Name": "Workflow.Exposures.ExecuteScript",
       "StandardElementType": "Exposure",
-      "LineNumber": 13,
+      "LineNumber": 19,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -615,7 +615,7 @@
         {
           "Id": "Workflow.Exposures.ExecuteScript.Run(Microsoft.Azure.Functions.Worker.Http.HttpRequestData,System.Boolean)",
           "Name": "Run",
-          "LineNumber": 17,
+          "LineNumber": 23,
           "Inputs": [
             {
               "Name": "request",
@@ -667,7 +667,7 @@
     {
       "Name": "Workflow.Exposures.Health",
       "StandardElementType": "Exposure",
-      "LineNumber": 12,
+      "LineNumber": 18,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -677,7 +677,7 @@
         {
           "Id": "Workflow.Exposures.Health.Run(Microsoft.Azure.Functions.Worker.Http.HttpRequestData)",
           "Name": "Run",
-          "LineNumber": 16,
+          "LineNumber": 22,
           "Inputs": [
             {
               "Name": "request",
@@ -725,7 +725,7 @@
     {
       "Name": "Workflow.IServiceCollectionExtensions",
       "StandardElementType": "App",
-      "LineNumber": 18,
+      "LineNumber": 24,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -735,7 +735,7 @@
         {
           "Id": "Workflow.IServiceCollectionExtensions.AddWorkflow(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration,System.Action\u003CWorkflow.Models.AppConfiguration\u003E)",
           "Name": "AddWorkflow",
-          "LineNumber": 20,
+          "LineNumber": 26,
           "Inputs": [
             {
               "Name": "services",
@@ -799,7 +799,7 @@
     {
       "Name": "Workflow.Models.AppConfiguration",
       "StandardElementType": "Model",
-      "LineNumber": 9,
+      "LineNumber": 16,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -815,7 +815,7 @@
     {
       "Name": "Workflow.Program",
       "StandardElementType": "App",
-      "LineNumber": 13,
+      "LineNumber": 19,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -826,7 +826,7 @@
     {
       "Name": "Workflow.Services.Foundations.WorkflowFunctions.WorkflowFunctionsService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 12,
+      "LineNumber": 18,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -847,7 +847,7 @@
         {
           "Id": "Workflow.Services.Foundations.WorkflowFunctions.WorkflowFunctionsService.CreateHttpResponseDataAsync(Microsoft.Azure.Functions.Worker.Http.HttpRequestData,System.String)",
           "Name": "CreateHttpResponseDataAsync",
-          "LineNumber": 52,
+          "LineNumber": 58,
           "Inputs": [
             {
               "Name": "request",
@@ -899,7 +899,7 @@
         {
           "Id": "Workflow.Services.Foundations.WorkflowFunctions.WorkflowFunctionsService.DeserializeWorkflowRequest(System.String)",
           "Name": "DeserializeWorkflowRequest",
-          "LineNumber": 25,
+          "LineNumber": 31,
           "Inputs": [
             {
               "Name": "json",
@@ -947,7 +947,7 @@
         {
           "Id": "Workflow.Services.Foundations.WorkflowFunctions.WorkflowFunctionsService.ExecuteScriptAsync(System.String,System.Boolean)",
           "Name": "ExecuteScriptAsync",
-          "LineNumber": 42,
+          "LineNumber": 48,
           "Inputs": [
             {
               "Name": "payload",
@@ -999,7 +999,7 @@
         {
           "Id": "Workflow.Services.Foundations.WorkflowFunctions.WorkflowFunctionsService.LogInformation(System.String)",
           "Name": "LogInformation",
-          "LineNumber": 64,
+          "LineNumber": 70,
           "Inputs": [
             {
               "Name": "message",
@@ -1047,7 +1047,7 @@
         {
           "Id": "Workflow.Services.Foundations.WorkflowFunctions.WorkflowFunctionsService.ReadBodyAsync(Microsoft.Azure.Functions.Worker.Http.HttpRequestData)",
           "Name": "ReadBodyAsync",
-          "LineNumber": 16,
+          "LineNumber": 22,
           "Inputs": [
             {
               "Name": "request",
@@ -1095,7 +1095,7 @@
         {
           "Id": "Workflow.Services.Foundations.WorkflowFunctions.WorkflowFunctionsService.RunWorkflowRequestAsync(cCoder.Workflow.Activities.Models.WorkflowRequest)",
           "Name": "RunWorkflowRequestAsync",
-          "LineNumber": 33,
+          "LineNumber": 39,
           "Inputs": [
             {
               "Name": "workflowRequest",
@@ -1145,7 +1145,7 @@
     {
       "Name": "Workflow.Services.Processings.WorkflowFunctions.WorkflowFunctionsProcessingService",
       "StandardElementType": "ProcessingService",
-      "LineNumber": 13,
+      "LineNumber": 18,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -1166,7 +1166,7 @@
         {
           "Id": "Workflow.Services.Processings.WorkflowFunctions.WorkflowFunctionsProcessingService.ProcessExecuteAsync(Microsoft.Azure.Functions.Worker.Http.HttpRequestData)",
           "Name": "ProcessExecuteAsync",
-          "LineNumber": 17,
+          "LineNumber": 22,
           "Inputs": [
             {
               "Name": "request",
@@ -1245,7 +1245,7 @@
         {
           "Id": "Workflow.Services.Processings.WorkflowFunctions.WorkflowFunctionsProcessingService.ProcessExecuteScriptAsync(Microsoft.Azure.Functions.Worker.Http.HttpRequestData,System.Boolean)",
           "Name": "ProcessExecuteScriptAsync",
-          "LineNumber": 40,
+          "LineNumber": 45,
           "Inputs": [
             {
               "Name": "request",
@@ -1312,7 +1312,7 @@
         {
           "Id": "Workflow.Services.Processings.WorkflowFunctions.WorkflowFunctionsProcessingService.ProcessHealthAsync(Microsoft.Azure.Functions.Worker.Http.HttpRequestData)",
           "Name": "ProcessHealthAsync",
-          "LineNumber": 59,
+          "LineNumber": 64,
           "Inputs": [
             {
               "Name": "request",
@@ -1365,7 +1365,7 @@
     {
       "Name": "Workflow.Brokers.WorkflowFunctions.IWorkflowFunctionsBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 11,
+      "LineNumber": 17,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -1375,7 +1375,7 @@
         {
           "Id": "Workflow.Brokers.WorkflowFunctions.IWorkflowFunctionsBroker.CreateResponseAsync(Microsoft.Azure.Functions.Worker.Http.HttpRequestData,System.String)",
           "Name": "CreateResponseAsync",
-          "LineNumber": 17,
+          "LineNumber": 23,
           "Inputs": [
             {
               "Name": "request",
@@ -1404,7 +1404,7 @@
         {
           "Id": "Workflow.Brokers.WorkflowFunctions.IWorkflowFunctionsBroker.DeserializeWorkflowRequest(System.String)",
           "Name": "DeserializeWorkflowRequest",
-          "LineNumber": 14,
+          "LineNumber": 20,
           "Inputs": [
             {
               "Name": "json",
@@ -1429,7 +1429,7 @@
         {
           "Id": "Workflow.Brokers.WorkflowFunctions.IWorkflowFunctionsBroker.ExecuteScriptAsync(System.String,System.Boolean)",
           "Name": "ExecuteScriptAsync",
-          "LineNumber": 16,
+          "LineNumber": 22,
           "Inputs": [
             {
               "Name": "payload",
@@ -1458,7 +1458,7 @@
         {
           "Id": "Workflow.Brokers.WorkflowFunctions.IWorkflowFunctionsBroker.LogInformation(System.String)",
           "Name": "LogInformation",
-          "LineNumber": 20,
+          "LineNumber": 26,
           "Inputs": [
             {
               "Name": "message",
@@ -1483,7 +1483,7 @@
         {
           "Id": "Workflow.Brokers.WorkflowFunctions.IWorkflowFunctionsBroker.ReadBodyAsync(Microsoft.Azure.Functions.Worker.Http.HttpRequestData)",
           "Name": "ReadBodyAsync",
-          "LineNumber": 13,
+          "LineNumber": 19,
           "Inputs": [
             {
               "Name": "request",
@@ -1508,7 +1508,7 @@
         {
           "Id": "Workflow.Brokers.WorkflowFunctions.IWorkflowFunctionsBroker.RunWorkflowRequestAsync(cCoder.Workflow.Activities.Models.WorkflowRequest)",
           "Name": "RunWorkflowRequestAsync",
-          "LineNumber": 15,
+          "LineNumber": 21,
           "Inputs": [
             {
               "Name": "workflowRequest",
@@ -1535,7 +1535,7 @@
     {
       "Name": "Workflow.Services.Foundations.WorkflowFunctions.IWorkflowFunctionsService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 11,
+      "LineNumber": 17,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -1545,7 +1545,7 @@
         {
           "Id": "Workflow.Services.Foundations.WorkflowFunctions.IWorkflowFunctionsService.CreateHttpResponseDataAsync(Microsoft.Azure.Functions.Worker.Http.HttpRequestData,System.String)",
           "Name": "CreateHttpResponseDataAsync",
-          "LineNumber": 17,
+          "LineNumber": 23,
           "Inputs": [
             {
               "Name": "request",
@@ -1574,7 +1574,7 @@
         {
           "Id": "Workflow.Services.Foundations.WorkflowFunctions.IWorkflowFunctionsService.DeserializeWorkflowRequest(System.String)",
           "Name": "DeserializeWorkflowRequest",
-          "LineNumber": 14,
+          "LineNumber": 20,
           "Inputs": [
             {
               "Name": "json",
@@ -1599,7 +1599,7 @@
         {
           "Id": "Workflow.Services.Foundations.WorkflowFunctions.IWorkflowFunctionsService.ExecuteScriptAsync(System.String,System.Boolean)",
           "Name": "ExecuteScriptAsync",
-          "LineNumber": 16,
+          "LineNumber": 22,
           "Inputs": [
             {
               "Name": "payload",
@@ -1628,7 +1628,7 @@
         {
           "Id": "Workflow.Services.Foundations.WorkflowFunctions.IWorkflowFunctionsService.LogInformation(System.String)",
           "Name": "LogInformation",
-          "LineNumber": 20,
+          "LineNumber": 26,
           "Inputs": [
             {
               "Name": "message",
@@ -1653,7 +1653,7 @@
         {
           "Id": "Workflow.Services.Foundations.WorkflowFunctions.IWorkflowFunctionsService.ReadBodyAsync(Microsoft.Azure.Functions.Worker.Http.HttpRequestData)",
           "Name": "ReadBodyAsync",
-          "LineNumber": 13,
+          "LineNumber": 19,
           "Inputs": [
             {
               "Name": "request",
@@ -1678,7 +1678,7 @@
         {
           "Id": "Workflow.Services.Foundations.WorkflowFunctions.IWorkflowFunctionsService.RunWorkflowRequestAsync(cCoder.Workflow.Activities.Models.WorkflowRequest)",
           "Name": "RunWorkflowRequestAsync",
-          "LineNumber": 15,
+          "LineNumber": 21,
           "Inputs": [
             {
               "Name": "workflowRequest",
@@ -1705,7 +1705,7 @@
     {
       "Name": "Workflow.Services.Processings.WorkflowFunctions.IWorkflowFunctionsProcessingService",
       "StandardElementType": "ProcessingService",
-      "LineNumber": 10,
+      "LineNumber": 16,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -1715,7 +1715,7 @@
         {
           "Id": "Workflow.Services.Processings.WorkflowFunctions.IWorkflowFunctionsProcessingService.ProcessExecuteAsync(Microsoft.Azure.Functions.Worker.Http.HttpRequestData)",
           "Name": "ProcessExecuteAsync",
-          "LineNumber": 12,
+          "LineNumber": 18,
           "Inputs": [
             {
               "Name": "request",
@@ -1740,7 +1740,7 @@
         {
           "Id": "Workflow.Services.Processings.WorkflowFunctions.IWorkflowFunctionsProcessingService.ProcessExecuteScriptAsync(Microsoft.Azure.Functions.Worker.Http.HttpRequestData,System.Boolean)",
           "Name": "ProcessExecuteScriptAsync",
-          "LineNumber": 14,
+          "LineNumber": 20,
           "Inputs": [
             {
               "Name": "request",
@@ -1769,7 +1769,7 @@
         {
           "Id": "Workflow.Services.Processings.WorkflowFunctions.IWorkflowFunctionsProcessingService.ProcessHealthAsync(Microsoft.Azure.Functions.Worker.Http.HttpRequestData)",
           "Name": "ProcessHealthAsync",
-          "LineNumber": 18,
+          "LineNumber": 24,
           "Inputs": [
             {
               "Name": "request",

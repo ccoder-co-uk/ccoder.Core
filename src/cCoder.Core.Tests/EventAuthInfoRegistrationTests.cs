@@ -2,7 +2,7 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-using cCoder.Core.Models;
+using System;
 using cCoder.Eventing.Models;
 using cCoder.Security.Models.Configurations;
 using FluentAssertions;
