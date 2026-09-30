@@ -9,7 +9,7 @@
     {
       "Name": "Web.Brokers.Api.ApiContextBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 12,
+      "LineNumber": 14,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -30,7 +30,7 @@
         {
           "Id": "Web.Brokers.Api.ApiContextBroker.LogError(System.Exception)",
           "Name": "LogError",
-          "LineNumber": 26,
+          "LineNumber": 28,
           "Inputs": [
             {
               "Name": "exception",
@@ -72,7 +72,7 @@
         {
           "Id": "Web.Brokers.Api.ApiContextBroker.ReadRequestBodyAsync(System.IO.Stream)",
           "Name": "ReadRequestBodyAsync",
-          "LineNumber": 19,
+          "LineNumber": 21,
           "Inputs": [
             {
               "Name": "requestBody",
@@ -114,7 +114,7 @@
         {
           "Id": "Web.Brokers.Api.ApiContextBroker.SelectAllApiInfos()",
           "Name": "SelectAllApiInfos",
-          "LineNumber": 16,
+          "LineNumber": 18,
           "Inputs": [],
           "ReturnType": "cCoder.Data.Models.ApiInfo[]",
           "Implements": [
@@ -146,7 +146,7 @@
     {
       "Name": "Web.Brokers.Api.ApiScriptExecutionBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -167,7 +167,7 @@
         {
           "Id": "Web.Brokers.Api.ApiScriptExecutionBroker.ExecuteScriptAsync(System.String)",
           "Name": "ExecuteScriptAsync",
-          "LineNumber": 14,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "script",
@@ -202,7 +202,7 @@
         {
           "Id": "Web.Brokers.Api.ApiScriptExecutionBroker.ReadRequestBodyAsync(System.IO.Stream)",
           "Name": "ReadRequestBodyAsync",
-          "LineNumber": 17,
+          "LineNumber": 18,
           "Inputs": [
             {
               "Name": "requestBody",
@@ -387,7 +387,7 @@
     {
       "Name": "Web.Brokers.HomeSessions.HomeSessionBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 11,
+      "LineNumber": 12,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -408,7 +408,7 @@
         {
           "Id": "Web.Brokers.HomeSessions.HomeSessionBroker.AbortRequest(Microsoft.AspNetCore.Http.HttpContext)",
           "Name": "AbortRequest",
-          "LineNumber": 53,
+          "LineNumber": 54,
           "Inputs": [
             {
               "Name": "context",
@@ -443,7 +443,7 @@
         {
           "Id": "Web.Brokers.HomeSessions.HomeSessionBroker.ContainsSessionKey(Microsoft.AspNetCore.Http.HttpContext,System.String)",
           "Name": "ContainsSessionKey",
-          "LineNumber": 35,
+          "LineNumber": 36,
           "Inputs": [
             {
               "Name": "context",
@@ -482,7 +482,7 @@
         {
           "Id": "Web.Brokers.HomeSessions.HomeSessionBroker.CreateHomeSessionContext(Microsoft.AspNetCore.Http.HttpContext)",
           "Name": "CreateHomeSessionContext",
-          "LineNumber": 15,
+          "LineNumber": 16,
           "Inputs": [
             {
               "Name": "context",
@@ -552,7 +552,7 @@
         {
           "Id": "Web.Brokers.HomeSessions.HomeSessionBroker.IsLocalUrl(Microsoft.AspNetCore.Mvc.IUrlHelper,System.String)",
           "Name": "IsLocalUrl",
-          "LineNumber": 56,
+          "LineNumber": 57,
           "Inputs": [
             {
               "Name": "urlHelper",
@@ -591,7 +591,7 @@
         {
           "Id": "Web.Brokers.HomeSessions.HomeSessionBroker.IsSessionAvailable(Microsoft.AspNetCore.Http.HttpContext)",
           "Name": "IsSessionAvailable",
-          "LineNumber": 32,
+          "LineNumber": 33,
           "Inputs": [
             {
               "Name": "context",
@@ -626,7 +626,7 @@
         {
           "Id": "Web.Brokers.HomeSessions.HomeSessionBroker.RemoveSessionValue(Microsoft.AspNetCore.Http.HttpContext,System.String)",
           "Name": "RemoveSessionValue",
-          "LineNumber": 50,
+          "LineNumber": 51,
           "Inputs": [
             {
               "Name": "context",
@@ -665,7 +665,7 @@
         {
           "Id": "Web.Brokers.HomeSessions.HomeSessionBroker.SelectSessionValue(Microsoft.AspNetCore.Http.HttpContext,System.String)",
           "Name": "SelectSessionValue",
-          "LineNumber": 38,
+          "LineNumber": 39,
           "Inputs": [
             {
               "Name": "context",
@@ -704,7 +704,7 @@
         {
           "Id": "Web.Brokers.HomeSessions.HomeSessionBroker.SetSessionValue(Microsoft.AspNetCore.Http.HttpContext,System.String,System.String)",
           "Name": "SetSessionValue",
-          "LineNumber": 41,
+          "LineNumber": 42,
           "Inputs": [
             {
               "Name": "context",
@@ -749,7 +749,7 @@
     {
       "Name": "Web.Controllers.Api.ApiRootController",
       "StandardElementType": "HttpExposure",
-      "LineNumber": 13,
+      "LineNumber": 16,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -768,7 +768,7 @@
         {
           "Id": "Web.Controllers.Api.ApiRootController.Get()",
           "Name": "Get",
-          "LineNumber": 19,
+          "LineNumber": 22,
           "Inputs": [],
           "ReturnType": "Microsoft.AspNetCore.Mvc.IActionResult",
           "Implements": [],
@@ -845,7 +845,7 @@
         {
           "Id": "Web.Controllers.Api.ApiRootController.GetTime()",
           "Name": "GetTime",
-          "LineNumber": 78,
+          "LineNumber": 81,
           "Inputs": [],
           "ReturnType": "Microsoft.AspNetCore.Mvc.IActionResult",
           "Implements": [],
@@ -910,7 +910,7 @@
         {
           "Id": "Web.Controllers.Api.ApiRootController.Post()",
           "Name": "Post",
-          "LineNumber": 40,
+          "LineNumber": 43,
           "Inputs": [],
           "ReturnType": "System.Threading.Tasks.Task\u003CMicrosoft.AspNetCore.Mvc.IActionResult\u003E",
           "Implements": [],
@@ -977,7 +977,7 @@
         {
           "Id": "Web.Controllers.Api.ApiRootController.Put()",
           "Name": "Put",
-          "LineNumber": 61,
+          "LineNumber": 64,
           "Inputs": [],
           "ReturnType": "System.Threading.Tasks.Task\u003CMicrosoft.AspNetCore.Mvc.IActionResult\u003E",
           "Implements": [],
@@ -1037,7 +1037,7 @@
     {
       "Name": "Web.Controllers.Api.CacheController",
       "StandardElementType": "HttpExposure",
-      "LineNumber": 11,
+      "LineNumber": 15,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -1050,13 +1050,24 @@
         "IsInCurrentProject": false,
         "StandardElementType": "Dependency"
       },
-      "Interfaces": [],
+      "Interfaces": [
+        {
+          "Id": "cCoder.CodeAnalysis.Contracts:cCoder.CodeAnalysis.Exposures.ICompositionExposure",
+          "FullName": "cCoder.CodeAnalysis.Exposures.ICompositionExposure",
+          "Name": "ICompositionExposure",
+          "Namespace": "cCoder.CodeAnalysis.Exposures",
+          "AssemblyName": "cCoder.CodeAnalysis.Contracts",
+          "Kind": "Interface",
+          "IsInCurrentProject": false,
+          "StandardElementType": "Dependency"
+        }
+      ],
       "Properties": [],
       "Methods": [
         {
           "Id": "Web.Controllers.Api.CacheController.GetRefreshCache()",
           "Name": "GetRefreshCache",
-          "LineNumber": 17,
+          "LineNumber": 21,
           "Inputs": [],
           "ReturnType": "Microsoft.AspNetCore.Mvc.IActionResult",
           "Implements": [],
@@ -1155,7 +1166,7 @@
     {
       "Name": "Web.Controllers.Api.MetadataController",
       "StandardElementType": "HttpExposure",
-      "LineNumber": 11,
+      "LineNumber": 15,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -1168,13 +1179,24 @@
         "IsInCurrentProject": false,
         "StandardElementType": "Dependency"
       },
-      "Interfaces": [],
+      "Interfaces": [
+        {
+          "Id": "cCoder.CodeAnalysis.Contracts:cCoder.CodeAnalysis.Exposures.ICompositionExposure",
+          "FullName": "cCoder.CodeAnalysis.Exposures.ICompositionExposure",
+          "Name": "ICompositionExposure",
+          "Namespace": "cCoder.CodeAnalysis.Exposures",
+          "AssemblyName": "cCoder.CodeAnalysis.Contracts",
+          "Kind": "Interface",
+          "IsInCurrentProject": false,
+          "StandardElementType": "Dependency"
+        }
+      ],
       "Properties": [],
       "Methods": [
         {
           "Id": "Web.Controllers.Api.MetadataController.GetMetadata(System.String)",
           "Name": "GetMetadata",
-          "LineNumber": 17,
+          "LineNumber": 21,
           "Inputs": [
             {
               "Name": "culture",
@@ -1269,7 +1291,7 @@
     {
       "Name": "Web.Controllers.Api.ScriptController",
       "StandardElementType": "HttpExposure",
-      "LineNumber": 12,
+      "LineNumber": 16,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -1288,7 +1310,7 @@
         {
           "Id": "Web.Controllers.Api.ScriptController.PostExecuteScript()",
           "Name": "PostExecuteScript",
-          "LineNumber": 18,
+          "LineNumber": 22,
           "Inputs": [],
           "ReturnType": "System.Threading.Tasks.Task\u003CMicrosoft.AspNetCore.Mvc.IActionResult\u003E",
           "Implements": [],
@@ -1397,7 +1419,7 @@
     {
       "Name": "Web.Controllers.HomeController",
       "StandardElementType": "HttpExposure",
-      "LineNumber": 23,
+      "LineNumber": 24,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -1416,7 +1438,7 @@
         {
           "Id": "Web.Controllers.HomeController.Index(System.String,System.String,System.String,System.Boolean,System.Threading.CancellationToken)",
           "Name": "Index",
-          "LineNumber": 38,
+          "LineNumber": 39,
           "Inputs": [
             {
               "Name": "path",
@@ -1665,7 +1687,7 @@
     {
       "Name": "Web.Dependencies.Api.ApiScriptExecutionDependency",
       "StandardElementType": "Dependency",
-      "LineNumber": 11,
+      "LineNumber": 14,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -1684,7 +1706,7 @@
         {
           "Id": "Web.Dependencies.Api.ApiScriptExecutionDependency.ExecuteScriptAsync(System.String)",
           "Name": "ExecuteScriptAsync",
-          "LineNumber": 27,
+          "LineNumber": 30,
           "Inputs": [
             {
               "Name": "script",
@@ -1733,7 +1755,7 @@
     {
       "Name": "Web.Dependencies.HomeSessionDependency",
       "StandardElementType": "Dependency",
-      "LineNumber": 11,
+      "LineNumber": 14,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -1754,7 +1776,7 @@
         {
           "Id": "Web.Dependencies.HomeSessionDependency.AbortRequest(Microsoft.AspNetCore.Http.HttpContext)",
           "Name": "AbortRequest",
-          "LineNumber": 78,
+          "LineNumber": 81,
           "Inputs": [
             {
               "Name": "context",
@@ -1787,7 +1809,7 @@
         {
           "Id": "Web.Dependencies.HomeSessionDependency.ContainsSessionKey(Microsoft.AspNetCore.Http.HttpContext,System.String)",
           "Name": "ContainsSessionKey",
-          "LineNumber": 61,
+          "LineNumber": 64,
           "Inputs": [
             {
               "Name": "context",
@@ -1831,7 +1853,7 @@
         {
           "Id": "Web.Dependencies.HomeSessionDependency.IsLocalUrl(Microsoft.AspNetCore.Mvc.IUrlHelper,System.String)",
           "Name": "IsLocalUrl",
-          "LineNumber": 81,
+          "LineNumber": 84,
           "Inputs": [
             {
               "Name": "urlHelper",
@@ -1868,7 +1890,7 @@
         {
           "Id": "Web.Dependencies.HomeSessionDependency.IsSessionAvailable(Microsoft.AspNetCore.Http.HttpContext)",
           "Name": "IsSessionAvailable",
-          "LineNumber": 49,
+          "LineNumber": 52,
           "Inputs": [
             {
               "Name": "context",
@@ -1893,7 +1915,7 @@
         {
           "Id": "Web.Dependencies.HomeSessionDependency.RemoveSessionValue(Microsoft.AspNetCore.Http.HttpContext,System.String)",
           "Name": "RemoveSessionValue",
-          "LineNumber": 75,
+          "LineNumber": 78,
           "Inputs": [
             {
               "Name": "context",
@@ -1937,7 +1959,7 @@
         {
           "Id": "Web.Dependencies.HomeSessionDependency.SelectRequestHost(Microsoft.AspNetCore.Http.HttpContext)",
           "Name": "SelectRequestHost",
-          "LineNumber": 21,
+          "LineNumber": 24,
           "Inputs": [
             {
               "Name": "context",
@@ -1962,7 +1984,7 @@
         {
           "Id": "Web.Dependencies.HomeSessionDependency.SelectRequestPort(Microsoft.AspNetCore.Http.HttpContext)",
           "Name": "SelectRequestPort",
-          "LineNumber": 24,
+          "LineNumber": 27,
           "Inputs": [
             {
               "Name": "context",
@@ -1987,7 +2009,7 @@
         {
           "Id": "Web.Dependencies.HomeSessionDependency.SelectRequestScheme(Microsoft.AspNetCore.Http.HttpContext)",
           "Name": "SelectRequestScheme",
-          "LineNumber": 27,
+          "LineNumber": 30,
           "Inputs": [
             {
               "Name": "context",
@@ -2012,7 +2034,7 @@
         {
           "Id": "Web.Dependencies.HomeSessionDependency.SelectRequestToken(Microsoft.AspNetCore.Http.HttpContext)",
           "Name": "SelectRequestToken",
-          "LineNumber": 41,
+          "LineNumber": 44,
           "Inputs": [
             {
               "Name": "context",
@@ -2045,7 +2067,7 @@
         {
           "Id": "Web.Dependencies.HomeSessionDependency.SelectSessionKeys(Microsoft.AspNetCore.Http.HttpContext)",
           "Name": "SelectSessionKeys",
-          "LineNumber": 44,
+          "LineNumber": 47,
           "Inputs": [
             {
               "Name": "context",
@@ -2078,7 +2100,7 @@
         {
           "Id": "Web.Dependencies.HomeSessionDependency.SelectSessionValue(Microsoft.AspNetCore.Http.HttpContext,System.String)",
           "Name": "SelectSessionValue",
-          "LineNumber": 64,
+          "LineNumber": 67,
           "Inputs": [
             {
               "Name": "context",
@@ -2115,7 +2137,7 @@
         {
           "Id": "Web.Dependencies.HomeSessionDependency.SelectSsoUserId(Microsoft.AspNetCore.Http.HttpContext)",
           "Name": "SelectSsoUserId",
-          "LineNumber": 30,
+          "LineNumber": 33,
           "Inputs": [
             {
               "Name": "context",
@@ -2148,7 +2170,7 @@
         {
           "Id": "Web.Dependencies.HomeSessionDependency.SetSessionValue(Microsoft.AspNetCore.Http.HttpContext,System.String,System.String)",
           "Name": "SetSessionValue",
-          "LineNumber": 67,
+          "LineNumber": 70,
           "Inputs": [
             {
               "Name": "context",
@@ -2198,7 +2220,7 @@
     {
       "Name": "Web.IServiceCollectionExtensions",
       "StandardElementType": "App",
-      "LineNumber": 19,
+      "LineNumber": 22,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -2208,7 +2230,7 @@
         {
           "Id": "Web.IServiceCollectionExtensions.AddWeb(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration,System.Action\u003CWeb.Models.AppConfiguration\u003E)",
           "Name": "AddWeb",
-          "LineNumber": 21,
+          "LineNumber": 24,
           "Inputs": [
             {
               "Name": "services",
@@ -2321,7 +2343,7 @@
     {
       "Name": "Web.Models.Exceptions.ApiCacheDependencyException",
       "StandardElementType": "Model",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -2341,7 +2363,7 @@
     {
       "Name": "Web.Models.Exceptions.ApiCacheServiceException",
       "StandardElementType": "Model",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -2361,7 +2383,7 @@
     {
       "Name": "Web.Models.Exceptions.ApiCacheValidationException",
       "StandardElementType": "Model",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -2381,7 +2403,7 @@
     {
       "Name": "Web.Models.Exceptions.ApiScriptDependencyException",
       "StandardElementType": "Model",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -2401,7 +2423,7 @@
     {
       "Name": "Web.Models.Exceptions.ApiScriptOrchestrationDependencyException",
       "StandardElementType": "Model",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -2421,7 +2443,7 @@
     {
       "Name": "Web.Models.Exceptions.ApiScriptOrchestrationServiceException",
       "StandardElementType": "Model",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -2441,7 +2463,7 @@
     {
       "Name": "Web.Models.Exceptions.ApiScriptOrchestrationValidationException",
       "StandardElementType": "Model",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -2461,7 +2483,7 @@
     {
       "Name": "Web.Models.Exceptions.ApiScriptServiceException",
       "StandardElementType": "Model",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -2481,7 +2503,7 @@
     {
       "Name": "Web.Models.Exceptions.ApiScriptValidationException",
       "StandardElementType": "Model",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -2501,7 +2523,7 @@
     {
       "Name": "Web.Models.Exceptions.HomeSessionProcessingDependencyException",
       "StandardElementType": "Model",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -2521,7 +2543,7 @@
     {
       "Name": "Web.Models.Exceptions.HomeSessionProcessingServiceException",
       "StandardElementType": "Model",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -2541,7 +2563,7 @@
     {
       "Name": "Web.Models.Exceptions.HomeSessionProcessingValidationException",
       "StandardElementType": "Model",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -2597,7 +2619,7 @@
     {
       "Name": "Web.Program",
       "StandardElementType": "App",
-      "LineNumber": 20,
+      "LineNumber": 25,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -2607,7 +2629,7 @@
         {
           "Id": "Web.Program.Main(System.String[])",
           "Name": "Main",
-          "LineNumber": 22,
+          "LineNumber": 27,
           "Inputs": [
             {
               "Name": "args",
@@ -2691,7 +2713,7 @@
     {
       "Name": "Web.Services.Aggregations.ApiCacheAggregationService",
       "StandardElementType": "AggregationService",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -2712,7 +2734,7 @@
         {
           "Id": "Web.Services.Aggregations.ApiCacheAggregationService.GetMetadata(System.String)",
           "Name": "GetMetadata",
-          "LineNumber": 25,
+          "LineNumber": 26,
           "Inputs": [
             {
               "Name": "culture",
@@ -2761,7 +2783,7 @@
         {
           "Id": "Web.Services.Aggregations.ApiCacheAggregationService.RefreshCaches()",
           "Name": "RefreshCaches",
-          "LineNumber": 16,
+          "LineNumber": 17,
           "Inputs": [],
           "ReturnType": "System.Void",
           "Implements": [
@@ -2812,7 +2834,7 @@
     {
       "Name": "Web.Services.Foundations.Api.ApiContextService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 11,
+      "LineNumber": 14,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -2833,7 +2855,7 @@
         {
           "Id": "Web.Services.Foundations.Api.ApiContextService.GetApiInfos()",
           "Name": "GetApiInfos",
-          "LineNumber": 15,
+          "LineNumber": 18,
           "Inputs": [],
           "ReturnType": "cCoder.Data.Models.ApiInfo[]",
           "Implements": [
@@ -2898,7 +2920,7 @@
         {
           "Id": "Web.Services.Foundations.Api.ApiContextService.ReadRequestBodyAsync(System.IO.Stream)",
           "Name": "ReadRequestBodyAsync",
-          "LineNumber": 34,
+          "LineNumber": 37,
           "Inputs": [
             {
               "Name": "requestBody",
@@ -3002,7 +3024,7 @@
     {
       "Name": "Web.Services.Foundations.Api.ApiScriptExecutionService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -3023,7 +3045,7 @@
         {
           "Id": "Web.Services.Foundations.Api.ApiScriptExecutionService.ExecuteScriptAsync(System.String)",
           "Name": "ExecuteScriptAsync",
-          "LineNumber": 14,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "script",
@@ -3068,7 +3090,7 @@
         {
           "Id": "Web.Services.Foundations.Api.ApiScriptExecutionService.ReadRequestBodyAsync(System.IO.Stream)",
           "Name": "ReadRequestBodyAsync",
-          "LineNumber": 24,
+          "LineNumber": 25,
           "Inputs": [
             {
               "Name": "requestBody",
@@ -3112,7 +3134,7 @@
     {
       "Name": "Web.Services.Foundations.HomeSessions.HomeSessionService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 11,
+      "LineNumber": 12,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -3133,7 +3155,7 @@
         {
           "Id": "Web.Services.Foundations.HomeSessions.HomeSessionService.AbortRequest(Microsoft.AspNetCore.Http.HttpContext)",
           "Name": "AbortRequest",
-          "LineNumber": 79,
+          "LineNumber": 80,
           "Inputs": [
             {
               "Name": "context",
@@ -3178,7 +3200,7 @@
         {
           "Id": "Web.Services.Foundations.HomeSessions.HomeSessionService.CanUseSession(Microsoft.AspNetCore.Http.HttpContext)",
           "Name": "CanUseSession",
-          "LineNumber": 24,
+          "LineNumber": 25,
           "Inputs": [
             {
               "Name": "context",
@@ -3223,7 +3245,7 @@
         {
           "Id": "Web.Services.Foundations.HomeSessions.HomeSessionService.ContainsSessionKey(Microsoft.AspNetCore.Http.HttpContext,System.String)",
           "Name": "ContainsSessionKey",
-          "LineNumber": 32,
+          "LineNumber": 33,
           "Inputs": [
             {
               "Name": "context",
@@ -3275,7 +3297,7 @@
         {
           "Id": "Web.Services.Foundations.HomeSessions.HomeSessionService.CreateHomeSessionContext(Microsoft.AspNetCore.Http.HttpContext)",
           "Name": "CreateHomeSessionContext",
-          "LineNumber": 15,
+          "LineNumber": 16,
           "Inputs": [
             {
               "Name": "context",
@@ -3320,7 +3342,7 @@
         {
           "Id": "Web.Services.Foundations.HomeSessions.HomeSessionService.IsLocalUrl(Microsoft.AspNetCore.Mvc.IUrlHelper,System.String)",
           "Name": "IsLocalUrl",
-          "LineNumber": 87,
+          "LineNumber": 88,
           "Inputs": [
             {
               "Name": "urlHelper",
@@ -3371,7 +3393,7 @@
         {
           "Id": "Web.Services.Foundations.HomeSessions.HomeSessionService.ReadSessionValue(Microsoft.AspNetCore.Http.HttpContext,System.String)",
           "Name": "ReadSessionValue",
-          "LineNumber": 42,
+          "LineNumber": 43,
           "Inputs": [
             {
               "Name": "context",
@@ -3423,7 +3445,7 @@
         {
           "Id": "Web.Services.Foundations.HomeSessions.HomeSessionService.RemoveSessionValue(Microsoft.AspNetCore.Http.HttpContext,System.String)",
           "Name": "RemoveSessionValue",
-          "LineNumber": 69,
+          "LineNumber": 70,
           "Inputs": [
             {
               "Name": "context",
@@ -3475,7 +3497,7 @@
         {
           "Id": "Web.Services.Foundations.HomeSessions.HomeSessionService.SetSessionValue(Microsoft.AspNetCore.Http.HttpContext,System.String,System.String)",
           "Name": "SetSessionValue",
-          "LineNumber": 52,
+          "LineNumber": 53,
           "Inputs": [
             {
               "Name": "context",
@@ -3533,7 +3555,7 @@
     {
       "Name": "Web.Services.Orchestrations.Api.ApiScriptOrchestrationService",
       "StandardElementType": "OrchestrationService",
-      "LineNumber": 11,
+      "LineNumber": 13,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -3554,7 +3576,7 @@
         {
           "Id": "Web.Services.Orchestrations.Api.ApiScriptOrchestrationService.ExecuteApiScriptRequestAsync(Web.Models.ApiScriptRequest)",
           "Name": "ExecuteApiScriptRequestAsync",
-          "LineNumber": 17,
+          "LineNumber": 19,
           "Inputs": [
             {
               "Name": "apiScriptRequest",
@@ -3611,7 +3633,7 @@
         {
           "Id": "Web.Services.Orchestrations.Api.ApiScriptOrchestrationService.ReadRequestBodyAsync(System.IO.Stream)",
           "Name": "ReadRequestBodyAsync",
-          "LineNumber": 32,
+          "LineNumber": 34,
           "Inputs": [
             {
               "Name": "requestBody",
@@ -3660,7 +3682,7 @@
     {
       "Name": "Web.Services.Processings.HomeSessionProcessingService",
       "StandardElementType": "ProcessingService",
-      "LineNumber": 12,
+      "LineNumber": 15,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -3681,7 +3703,7 @@
         {
           "Id": "Web.Services.Processings.HomeSessionProcessingService.AbortRequest(Microsoft.AspNetCore.Http.HttpContext)",
           "Name": "AbortRequest",
-          "LineNumber": 129,
+          "LineNumber": 132,
           "Inputs": [
             {
               "Name": "context",
@@ -3728,7 +3750,7 @@
         {
           "Id": "Web.Services.Processings.HomeSessionProcessingService.CanUseSession(Microsoft.AspNetCore.Http.HttpContext)",
           "Name": "CanUseSession",
-          "LineNumber": 16,
+          "LineNumber": 19,
           "Inputs": [
             {
               "Name": "context",
@@ -3775,7 +3797,7 @@
         {
           "Id": "Web.Services.Processings.HomeSessionProcessingService.CreateExpandoObject(Microsoft.AspNetCore.Http.HttpContext)",
           "Name": "CreateExpandoObject",
-          "LineNumber": 24,
+          "LineNumber": 27,
           "Inputs": [
             {
               "Name": "context",
@@ -3866,7 +3888,7 @@
         {
           "Id": "Web.Services.Processings.HomeSessionProcessingService.GetSessionValue(Microsoft.AspNetCore.Http.HttpContext,System.String)",
           "Name": "GetSessionValue",
-          "LineNumber": 86,
+          "LineNumber": 89,
           "Inputs": [
             {
               "Name": "context",
@@ -3913,7 +3935,7 @@
         {
           "Id": "Web.Services.Processings.HomeSessionProcessingService.IsLocalUrl(Microsoft.AspNetCore.Mvc.IUrlHelper,System.String)",
           "Name": "IsLocalUrl",
-          "LineNumber": 137,
+          "LineNumber": 140,
           "Inputs": [
             {
               "Name": "urlHelper",
@@ -3964,7 +3986,7 @@
         {
           "Id": "Web.Services.Processings.HomeSessionProcessingService.SetSessionValue(Microsoft.AspNetCore.Http.HttpContext,System.String,System.String)",
           "Name": "SetSessionValue",
-          "LineNumber": 96,
+          "LineNumber": 99,
           "Inputs": [
             {
               "Name": "context",
@@ -4046,7 +4068,7 @@
     {
       "Name": "Web.Brokers.Api.IApiContextBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 10,
+      "LineNumber": 12,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -4056,7 +4078,7 @@
         {
           "Id": "Web.Brokers.Api.IApiContextBroker.LogError(System.Exception)",
           "Name": "LogError",
-          "LineNumber": 14,
+          "LineNumber": 16,
           "Inputs": [
             {
               "Name": "exception",
@@ -4081,7 +4103,7 @@
         {
           "Id": "Web.Brokers.Api.IApiContextBroker.ReadRequestBodyAsync(System.IO.Stream)",
           "Name": "ReadRequestBodyAsync",
-          "LineNumber": 13,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "requestBody",
@@ -4106,7 +4128,7 @@
         {
           "Id": "Web.Brokers.Api.IApiContextBroker.SelectAllApiInfos()",
           "Name": "SelectAllApiInfos",
-          "LineNumber": 12,
+          "LineNumber": 14,
           "Inputs": [],
           "ReturnType": "cCoder.Data.Models.ApiInfo[]",
           "Implements": [],
@@ -4128,7 +4150,7 @@
     {
       "Name": "Web.Brokers.Api.IApiScriptExecutionBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -4138,7 +4160,7 @@
         {
           "Id": "Web.Brokers.Api.IApiScriptExecutionBroker.ExecuteScriptAsync(System.String)",
           "Name": "ExecuteScriptAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "script",
@@ -4163,7 +4185,7 @@
         {
           "Id": "Web.Brokers.Api.IApiScriptExecutionBroker.ReadRequestBodyAsync(System.IO.Stream)",
           "Name": "ReadRequestBodyAsync",
-          "LineNumber": 14,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "requestBody",
@@ -4279,7 +4301,7 @@
     {
       "Name": "Web.Brokers.HomeSessions.IHomeSessionBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -4289,7 +4311,7 @@
         {
           "Id": "Web.Brokers.HomeSessions.IHomeSessionBroker.AbortRequest(Microsoft.AspNetCore.Http.HttpContext)",
           "Name": "AbortRequest",
-          "LineNumber": 18,
+          "LineNumber": 19,
           "Inputs": [
             {
               "Name": "context",
@@ -4314,7 +4336,7 @@
         {
           "Id": "Web.Brokers.HomeSessions.IHomeSessionBroker.ContainsSessionKey(Microsoft.AspNetCore.Http.HttpContext,System.String)",
           "Name": "ContainsSessionKey",
-          "LineNumber": 14,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "context",
@@ -4343,7 +4365,7 @@
         {
           "Id": "Web.Brokers.HomeSessions.IHomeSessionBroker.CreateHomeSessionContext(Microsoft.AspNetCore.Http.HttpContext)",
           "Name": "CreateHomeSessionContext",
-          "LineNumber": 12,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "context",
@@ -4368,7 +4390,7 @@
         {
           "Id": "Web.Brokers.HomeSessions.IHomeSessionBroker.IsLocalUrl(Microsoft.AspNetCore.Mvc.IUrlHelper,System.String)",
           "Name": "IsLocalUrl",
-          "LineNumber": 19,
+          "LineNumber": 20,
           "Inputs": [
             {
               "Name": "urlHelper",
@@ -4397,7 +4419,7 @@
         {
           "Id": "Web.Brokers.HomeSessions.IHomeSessionBroker.IsSessionAvailable(Microsoft.AspNetCore.Http.HttpContext)",
           "Name": "IsSessionAvailable",
-          "LineNumber": 13,
+          "LineNumber": 14,
           "Inputs": [
             {
               "Name": "context",
@@ -4422,7 +4444,7 @@
         {
           "Id": "Web.Brokers.HomeSessions.IHomeSessionBroker.RemoveSessionValue(Microsoft.AspNetCore.Http.HttpContext,System.String)",
           "Name": "RemoveSessionValue",
-          "LineNumber": 17,
+          "LineNumber": 18,
           "Inputs": [
             {
               "Name": "context",
@@ -4451,7 +4473,7 @@
         {
           "Id": "Web.Brokers.HomeSessions.IHomeSessionBroker.SelectSessionValue(Microsoft.AspNetCore.Http.HttpContext,System.String)",
           "Name": "SelectSessionValue",
-          "LineNumber": 15,
+          "LineNumber": 16,
           "Inputs": [
             {
               "Name": "context",
@@ -4480,7 +4502,7 @@
         {
           "Id": "Web.Brokers.HomeSessions.IHomeSessionBroker.SetSessionValue(Microsoft.AspNetCore.Http.HttpContext,System.String,System.String)",
           "Name": "SetSessionValue",
-          "LineNumber": 16,
+          "LineNumber": 17,
           "Inputs": [
             {
               "Name": "context",
@@ -4515,7 +4537,7 @@
     {
       "Name": "Web.Services.Aggregations.IApiCacheAggregationService",
       "StandardElementType": "AggregationService",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": true,
       "Kind": "Interface",
       "BaseType": null,
@@ -4525,7 +4547,7 @@
         {
           "Id": "Web.Services.Aggregations.IApiCacheAggregationService.GetMetadata(System.String)",
           "Name": "GetMetadata",
-          "LineNumber": 10,
+          "LineNumber": 11,
           "Inputs": [
             {
               "Name": "culture",
@@ -4550,7 +4572,7 @@
         {
           "Id": "Web.Services.Aggregations.IApiCacheAggregationService.LogError(System.Exception)",
           "Name": "LogError",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "exception",
@@ -4575,7 +4597,7 @@
         {
           "Id": "Web.Services.Aggregations.IApiCacheAggregationService.RefreshCaches()",
           "Name": "RefreshCaches",
-          "LineNumber": 9,
+          "LineNumber": 10,
           "Inputs": [],
           "ReturnType": "System.Void",
           "Implements": [],
@@ -4597,7 +4619,7 @@
     {
       "Name": "Web.Services.Foundations.Api.IApiContextService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 10,
+      "LineNumber": 12,
       "IsPublic": true,
       "Kind": "Interface",
       "BaseType": null,
@@ -4607,7 +4629,7 @@
         {
           "Id": "Web.Services.Foundations.Api.IApiContextService.GetApiInfos()",
           "Name": "GetApiInfos",
-          "LineNumber": 12,
+          "LineNumber": 14,
           "Inputs": [],
           "ReturnType": "cCoder.Data.Models.ApiInfo[]",
           "Implements": [],
@@ -4627,7 +4649,7 @@
         {
           "Id": "Web.Services.Foundations.Api.IApiContextService.LogError(System.Exception)",
           "Name": "LogError",
-          "LineNumber": 14,
+          "LineNumber": 16,
           "Inputs": [
             {
               "Name": "exception",
@@ -4652,7 +4674,7 @@
         {
           "Id": "Web.Services.Foundations.Api.IApiContextService.ReadRequestBodyAsync(System.IO.Stream)",
           "Name": "ReadRequestBodyAsync",
-          "LineNumber": 13,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "requestBody",
@@ -4711,7 +4733,7 @@
     {
       "Name": "Web.Services.Foundations.Api.IApiScriptExecutionService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -4721,7 +4743,7 @@
         {
           "Id": "Web.Services.Foundations.Api.IApiScriptExecutionService.ExecuteScriptAsync(System.String)",
           "Name": "ExecuteScriptAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "script",
@@ -4746,7 +4768,7 @@
         {
           "Id": "Web.Services.Foundations.Api.IApiScriptExecutionService.ReadRequestBodyAsync(System.IO.Stream)",
           "Name": "ReadRequestBodyAsync",
-          "LineNumber": 14,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "requestBody",
@@ -4773,7 +4795,7 @@
     {
       "Name": "Web.Services.Foundations.HomeSessions.IHomeSessionService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -4783,7 +4805,7 @@
         {
           "Id": "Web.Services.Foundations.HomeSessions.IHomeSessionService.AbortRequest(Microsoft.AspNetCore.Http.HttpContext)",
           "Name": "AbortRequest",
-          "LineNumber": 18,
+          "LineNumber": 19,
           "Inputs": [
             {
               "Name": "context",
@@ -4808,7 +4830,7 @@
         {
           "Id": "Web.Services.Foundations.HomeSessions.IHomeSessionService.CanUseSession(Microsoft.AspNetCore.Http.HttpContext)",
           "Name": "CanUseSession",
-          "LineNumber": 13,
+          "LineNumber": 14,
           "Inputs": [
             {
               "Name": "context",
@@ -4833,7 +4855,7 @@
         {
           "Id": "Web.Services.Foundations.HomeSessions.IHomeSessionService.ContainsSessionKey(Microsoft.AspNetCore.Http.HttpContext,System.String)",
           "Name": "ContainsSessionKey",
-          "LineNumber": 14,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "context",
@@ -4862,7 +4884,7 @@
         {
           "Id": "Web.Services.Foundations.HomeSessions.IHomeSessionService.CreateHomeSessionContext(Microsoft.AspNetCore.Http.HttpContext)",
           "Name": "CreateHomeSessionContext",
-          "LineNumber": 12,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "context",
@@ -4887,7 +4909,7 @@
         {
           "Id": "Web.Services.Foundations.HomeSessions.IHomeSessionService.IsLocalUrl(Microsoft.AspNetCore.Mvc.IUrlHelper,System.String)",
           "Name": "IsLocalUrl",
-          "LineNumber": 19,
+          "LineNumber": 20,
           "Inputs": [
             {
               "Name": "urlHelper",
@@ -4916,7 +4938,7 @@
         {
           "Id": "Web.Services.Foundations.HomeSessions.IHomeSessionService.ReadSessionValue(Microsoft.AspNetCore.Http.HttpContext,System.String)",
           "Name": "ReadSessionValue",
-          "LineNumber": 15,
+          "LineNumber": 16,
           "Inputs": [
             {
               "Name": "context",
@@ -4945,7 +4967,7 @@
         {
           "Id": "Web.Services.Foundations.HomeSessions.IHomeSessionService.RemoveSessionValue(Microsoft.AspNetCore.Http.HttpContext,System.String)",
           "Name": "RemoveSessionValue",
-          "LineNumber": 17,
+          "LineNumber": 18,
           "Inputs": [
             {
               "Name": "context",
@@ -4974,7 +4996,7 @@
         {
           "Id": "Web.Services.Foundations.HomeSessions.IHomeSessionService.SetSessionValue(Microsoft.AspNetCore.Http.HttpContext,System.String,System.String)",
           "Name": "SetSessionValue",
-          "LineNumber": 16,
+          "LineNumber": 17,
           "Inputs": [
             {
               "Name": "context",
@@ -5009,7 +5031,7 @@
     {
       "Name": "Web.Services.Orchestrations.Api.IApiScriptOrchestrationService",
       "StandardElementType": "OrchestrationService",
-      "LineNumber": 10,
+      "LineNumber": 12,
       "IsPublic": true,
       "Kind": "Interface",
       "BaseType": null,
@@ -5019,7 +5041,7 @@
         {
           "Id": "Web.Services.Orchestrations.Api.IApiScriptOrchestrationService.ExecuteApiScriptRequestAsync(Web.Models.ApiScriptRequest)",
           "Name": "ExecuteApiScriptRequestAsync",
-          "LineNumber": 12,
+          "LineNumber": 14,
           "Inputs": [
             {
               "Name": "apiScriptRequest",
@@ -5044,7 +5066,7 @@
         {
           "Id": "Web.Services.Orchestrations.Api.IApiScriptOrchestrationService.LogError(System.Exception)",
           "Name": "LogError",
-          "LineNumber": 16,
+          "LineNumber": 18,
           "Inputs": [
             {
               "Name": "exception",
@@ -5069,7 +5091,7 @@
         {
           "Id": "Web.Services.Orchestrations.Api.IApiScriptOrchestrationService.ReadRequestBodyAsync(System.IO.Stream)",
           "Name": "ReadRequestBodyAsync",
-          "LineNumber": 15,
+          "LineNumber": 17,
           "Inputs": [
             {
               "Name": "requestBody",
@@ -5096,7 +5118,7 @@
     {
       "Name": "Web.Services.Processings.IHomeSessionProcessingService",
       "StandardElementType": "ProcessingService",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": true,
       "Kind": "Interface",
       "BaseType": null,
@@ -5106,7 +5128,7 @@
         {
           "Id": "Web.Services.Processings.IHomeSessionProcessingService.AbortRequest(Microsoft.AspNetCore.Http.HttpContext)",
           "Name": "AbortRequest",
-          "LineNumber": 27,
+          "LineNumber": 28,
           "Inputs": [
             {
               "Name": "context",
@@ -5131,7 +5153,7 @@
         {
           "Id": "Web.Services.Processings.IHomeSessionProcessingService.CanUseSession(Microsoft.AspNetCore.Http.HttpContext)",
           "Name": "CanUseSession",
-          "LineNumber": 12,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "context",
@@ -5156,7 +5178,7 @@
         {
           "Id": "Web.Services.Processings.IHomeSessionProcessingService.CreateExpandoObject(Microsoft.AspNetCore.Http.HttpContext)",
           "Name": "CreateExpandoObject",
-          "LineNumber": 15,
+          "LineNumber": 16,
           "Inputs": [
             {
               "Name": "context",
@@ -5181,7 +5203,7 @@
         {
           "Id": "Web.Services.Processings.IHomeSessionProcessingService.GetSessionValue(Microsoft.AspNetCore.Http.HttpContext,System.String)",
           "Name": "GetSessionValue",
-          "LineNumber": 18,
+          "LineNumber": 19,
           "Inputs": [
             {
               "Name": "context",
@@ -5210,7 +5232,7 @@
         {
           "Id": "Web.Services.Processings.IHomeSessionProcessingService.IsLocalUrl(Microsoft.AspNetCore.Mvc.IUrlHelper,System.String)",
           "Name": "IsLocalUrl",
-          "LineNumber": 29,
+          "LineNumber": 30,
           "Inputs": [
             {
               "Name": "urlHelper",
@@ -5239,7 +5261,7 @@
         {
           "Id": "Web.Services.Processings.IHomeSessionProcessingService.SetSessionValue(Microsoft.AspNetCore.Http.HttpContext,System.String,System.String)",
           "Name": "SetSessionValue",
-          "LineNumber": 22,
+          "LineNumber": 23,
           "Inputs": [
             {
               "Name": "context",

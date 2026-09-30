@@ -2,10 +2,9 @@
 // Copyright (c) Paul.Ward@ccoder.co.uk
 // ---------------------------------------------------------------
 
-namespace cCoder.Core.Services.Foundations.Middleware;
-
 using System.Collections.Generic;
 using System.Threading.Tasks;
+namespace cCoder.Core.Services.Foundations.Middleware;
 using cCoder.Core.Models.Middleware;
 
 internal interface ICoreFormatterMiddlewareService

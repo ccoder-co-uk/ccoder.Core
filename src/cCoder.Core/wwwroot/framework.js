@@ -3577,18 +3577,20 @@ class CMS extends Tree {
 			tree.remove(item);
 		}
 
-		let pages = await api.get("Core/Page?$filter=AppId eq " + app.Id + " and ParentId eq " + page.Id + "&$expand=PageInfo,Roles&$orderby=Order");
+		let pages = await api.get("Core/Page?$filter=AppId eq " + app.Id + " and ParentId eq " + page.Id + "&$expand=PageInfo,Roles,Pages($select=Id;$top=1)&$orderby=Order");
 		let newNodes = pages.value.map(function (p) {
 			let pageName = "Unknown";
 			if (p.PageInfo && p.PageInfo.length > 0) {
 				pageName = p.PageInfo[0].Title;
 			}
+			let hasChildren = Array.isArray(p.Pages) && p.Pages.length > 0;
+			delete p.Pages;
 			return {
 				text: pageName,
 				type: "Page",
 				spriteCssClass: "page",
 				expanded: false,
-				hasChildren: true,
+				hasChildren: hasChildren,
 				data: p,
 				draggable: true,
 				droppable: ["Page"]
@@ -3596,11 +3598,10 @@ class CMS extends Tree {
 
 		});
 
-		for (let node in newNodes) {
-			nodeData.items.push(node);
-		}
+		nodeData.items.push(...newNodes);
 	}
-};
+}
+;
 ﻿class DataTreeViewWidget extends Widget {
     constructor(element, treeViewConfig) {
         super(element, null);

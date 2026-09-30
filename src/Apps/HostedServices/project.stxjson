@@ -9,7 +9,7 @@
     {
       "Name": "HostedServices.Brokers.Workflow.HostedWorkflowInstanceBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 9,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -30,7 +30,7 @@
         {
           "Id": "HostedServices.Brokers.Workflow.HostedWorkflowInstanceBroker.ExecuteWaitingQueuedInstanceByIdAsync(System.Guid)",
           "Name": "ExecuteWaitingQueuedInstanceByIdAsync",
-          "LineNumber": 13,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "flowInstanceDataId",
@@ -65,7 +65,7 @@
         {
           "Id": "HostedServices.Brokers.Workflow.HostedWorkflowInstanceBroker.GetStats()",
           "Name": "GetStats",
-          "LineNumber": 17,
+          "LineNumber": 19,
           "Inputs": [],
           "ReturnType": "System.Object[]",
           "Implements": [
@@ -97,7 +97,7 @@
     {
       "Name": "HostedServices.Controllers.HomeController",
       "StandardElementType": "HttpExposure",
-      "LineNumber": 9,
+      "LineNumber": 12,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -116,7 +116,7 @@
         {
           "Id": "HostedServices.Controllers.HomeController.Get()",
           "Name": "Get",
-          "LineNumber": 13,
+          "LineNumber": 16,
           "Inputs": [],
           "ReturnType": "Microsoft.AspNetCore.Mvc.IActionResult",
           "Implements": [],
@@ -166,7 +166,7 @@
     {
       "Name": "HostedServices.Controllers.WorkflowController",
       "StandardElementType": "HttpExposure",
-      "LineNumber": 10,
+      "LineNumber": 14,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -185,7 +185,7 @@
         {
           "Id": "HostedServices.Controllers.WorkflowController.Get()",
           "Name": "Get",
-          "LineNumber": 16,
+          "LineNumber": 20,
           "Inputs": [],
           "ReturnType": "Microsoft.AspNetCore.Mvc.IActionResult",
           "Implements": [],
@@ -215,7 +215,7 @@
         {
           "Id": "HostedServices.Controllers.WorkflowController.GetStats()",
           "Name": "GetStats",
-          "LineNumber": 33,
+          "LineNumber": 37,
           "Inputs": [],
           "ReturnType": "Microsoft.AspNetCore.Mvc.IActionResult",
           "Implements": [],
@@ -262,7 +262,7 @@
         {
           "Id": "HostedServices.Controllers.WorkflowController.Post(System.Guid)",
           "Name": "Post",
-          "LineNumber": 24,
+          "LineNumber": 28,
           "Inputs": [
             {
               "Name": "flowId",
@@ -327,7 +327,7 @@
     {
       "Name": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService",
       "StandardElementType": "Dependency",
-      "LineNumber": 21,
+      "LineNumber": 28,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -348,7 +348,7 @@
         {
           "Id": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService.ExecuteWaitingQueuedInstanceByIdAsync(System.Guid)",
           "Name": "ExecuteWaitingQueuedInstanceByIdAsync",
-          "LineNumber": 63,
+          "LineNumber": 70,
           "Inputs": [
             {
               "Name": "id",
@@ -381,7 +381,7 @@
         {
           "Id": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService.GetAll(System.Boolean)",
           "Name": "GetAll",
-          "LineNumber": 30,
+          "LineNumber": 37,
           "Inputs": [
             {
               "Name": "ignoreFilters",
@@ -416,7 +416,7 @@
         {
           "Id": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService.GetStats()",
           "Name": "GetStats",
-          "LineNumber": 60,
+          "LineNumber": 67,
           "Inputs": [],
           "ReturnType": "System.Object[]",
           "Implements": [
@@ -446,7 +446,7 @@
         {
           "Id": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService.RunAsync(System.Threading.CancellationToken)",
           "Name": "RunAsync",
-          "LineNumber": 33,
+          "LineNumber": 40,
           "Inputs": [
             {
               "Name": "cancellationToken",
@@ -497,7 +497,7 @@
         {
           "Id": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService.RunInstanceMaintenanceAsync(System.Threading.CancellationToken)",
           "Name": "RunInstanceMaintenanceAsync",
-          "LineNumber": 81,
+          "LineNumber": 88,
           "Inputs": [
             {
               "Name": "cancellationToken",
@@ -532,7 +532,7 @@
         {
           "Id": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService.RunInstanceMaintenanceContinuouslyAsync(System.Threading.CancellationToken)",
           "Name": "RunInstanceMaintenanceContinuouslyAsync",
-          "LineNumber": 68,
+          "LineNumber": 75,
           "Inputs": [
             {
               "Name": "cancellationToken",
@@ -588,7 +588,7 @@
         {
           "Id": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService.RunQueueInstanceBackgroundServiceDependencyAsync(System.Threading.CancellationToken)",
           "Name": "RunQueueInstanceBackgroundServiceDependencyAsync",
-          "LineNumber": 121,
+          "LineNumber": 128,
           "Inputs": [
             {
               "Name": "cancellationToken",
@@ -627,7 +627,7 @@
         {
           "Id": "HostedServices.HostedServicesWorkflowInstanceManagementOrchestrationService.RunQueueInstanceBackgroundServiceDependencyContinuouslyAsync(System.Threading.CancellationToken)",
           "Name": "RunQueueInstanceBackgroundServiceDependencyContinuouslyAsync",
-          "LineNumber": 107,
+          "LineNumber": 114,
           "Inputs": [
             {
               "Name": "cancellationToken",
@@ -680,7 +680,7 @@
     {
       "Name": "HostedServices.IServiceCollectionExtensions",
       "StandardElementType": "App",
-      "LineNumber": 17,
+      "LineNumber": 20,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -690,7 +690,7 @@
         {
           "Id": "HostedServices.IServiceCollectionExtensions.AddHostedServices(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration,System.Action\u003CHostedServices.Models.AppConfiguration\u003E)",
           "Name": "AddHostedServices",
-          "LineNumber": 19,
+          "LineNumber": 22,
           "Inputs": [
             {
               "Name": "services",
@@ -767,7 +767,7 @@
     {
       "Name": "HostedServices.Program",
       "StandardElementType": "App",
-      "LineNumber": 20,
+      "LineNumber": 27,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -777,7 +777,7 @@
         {
           "Id": "HostedServices.Program.Main(System.String[])",
           "Name": "Main",
-          "LineNumber": 22,
+          "LineNumber": 29,
           "Inputs": [
             {
               "Name": "args",
@@ -867,7 +867,7 @@
     {
       "Name": "HostedServices.Services.Foundations.Workflow.HostedWorkflowInstanceManager",
       "StandardElementType": "FoundationService",
-      "LineNumber": 10,
+      "LineNumber": 12,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -888,7 +888,7 @@
         {
           "Id": "HostedServices.Services.Foundations.Workflow.HostedWorkflowInstanceManager.ExecuteWaitingQueuedInstanceByIdAsync(System.Guid)",
           "Name": "ExecuteWaitingQueuedInstanceByIdAsync",
-          "LineNumber": 14,
+          "LineNumber": 16,
           "Inputs": [
             {
               "Name": "flowInstanceDataId",
@@ -933,7 +933,7 @@
         {
           "Id": "HostedServices.Services.Foundations.Workflow.HostedWorkflowInstanceManager.GetStats()",
           "Name": "GetStats",
-          "LineNumber": 25,
+          "LineNumber": 27,
           "Inputs": [],
           "ReturnType": "System.Object[]",
           "Implements": [
@@ -977,7 +977,7 @@
     {
       "Name": "HostedServices.Brokers.Workflow.IHostedWorkflowInstanceBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 7,
+      "LineNumber": 9,
       "IsPublic": true,
       "Kind": "Interface",
       "BaseType": null,
@@ -987,7 +987,7 @@
         {
           "Id": "HostedServices.Brokers.Workflow.IHostedWorkflowInstanceBroker.ExecuteWaitingQueuedInstanceByIdAsync(System.Guid)",
           "Name": "ExecuteWaitingQueuedInstanceByIdAsync",
-          "LineNumber": 9,
+          "LineNumber": 11,
           "Inputs": [
             {
               "Name": "flowInstanceDataId",
@@ -1012,7 +1012,7 @@
         {
           "Id": "HostedServices.Brokers.Workflow.IHostedWorkflowInstanceBroker.GetStats()",
           "Name": "GetStats",
-          "LineNumber": 10,
+          "LineNumber": 12,
           "Inputs": [],
           "ReturnType": "System.Object[]",
           "Implements": [],
@@ -1034,7 +1034,7 @@
     {
       "Name": "HostedServices.Exposures.IHostedWorkflowInstanceManager",
       "StandardElementType": "Exposure",
-      "LineNumber": 7,
+      "LineNumber": 9,
       "IsPublic": true,
       "Kind": "Interface",
       "BaseType": null,
@@ -1044,7 +1044,7 @@
         {
           "Id": "HostedServices.Exposures.IHostedWorkflowInstanceManager.ExecuteWaitingQueuedInstanceByIdAsync(System.Guid)",
           "Name": "ExecuteWaitingQueuedInstanceByIdAsync",
-          "LineNumber": 9,
+          "LineNumber": 11,
           "Inputs": [
             {
               "Name": "flowInstanceDataId",
@@ -1069,7 +1069,7 @@
         {
           "Id": "HostedServices.Exposures.IHostedWorkflowInstanceManager.GetStats()",
           "Name": "GetStats",
-          "LineNumber": 10,
+          "LineNumber": 12,
           "Inputs": [],
           "ReturnType": "System.Object[]",
           "Implements": [],

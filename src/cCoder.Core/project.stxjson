@@ -9,7 +9,7 @@
     {
       "Name": "cCoder.Core.AllowedOriginJsonParser",
       "StandardElementType": "Unknown",
-      "LineNumber": 10,
+      "LineNumber": 13,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -20,7 +20,7 @@
     {
       "Name": "cCoder.Core.Brokers.AllowedOrigins.AllowedOriginStoreBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -41,7 +41,7 @@
         {
           "Id": "cCoder.Core.Brokers.AllowedOrigins.AllowedOriginStoreBroker.GetAllowedOrigins()",
           "Name": "GetAllowedOrigins",
-          "LineNumber": 13,
+          "LineNumber": 14,
           "Inputs": [],
           "ReturnType": "System.Collections.Generic.IEnumerable\u003CSystem.String\u003E",
           "Implements": [
@@ -65,7 +65,7 @@
     {
       "Name": "cCoder.Core.Brokers.AppSecurity.AppSecurityAppBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 12,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -86,7 +86,7 @@
         {
           "Id": "cCoder.Core.Brokers.AppSecurity.AppSecurityAppBroker.AddAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "AddAppAsync",
-          "LineNumber": 15,
+          "LineNumber": 14,
           "Inputs": [
             {
               "Name": "newApp",
@@ -121,7 +121,7 @@
         {
           "Id": "cCoder.Core.Brokers.AppSecurity.AppSecurityAppBroker.DeleteAppAsync(System.Int32)",
           "Name": "DeleteAppAsync",
-          "LineNumber": 21,
+          "LineNumber": 20,
           "Inputs": [
             {
               "Name": "appId",
@@ -156,7 +156,7 @@
         {
           "Id": "cCoder.Core.Brokers.AppSecurity.AppSecurityAppBroker.UpdateAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "UpdateAppAsync",
-          "LineNumber": 18,
+          "LineNumber": 17,
           "Inputs": [
             {
               "Name": "updatedApp",
@@ -193,7 +193,7 @@
     {
       "Name": "cCoder.Core.Brokers.ContentManagement.ContentManagementAppBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 11,
+      "LineNumber": 13,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -214,7 +214,7 @@
         {
           "Id": "cCoder.Core.Brokers.ContentManagement.ContentManagementAppBroker.AddAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "AddAppAsync",
-          "LineNumber": 27,
+          "LineNumber": 29,
           "Inputs": [
             {
               "Name": "newApp",
@@ -249,7 +249,7 @@
         {
           "Id": "cCoder.Core.Brokers.ContentManagement.ContentManagementAppBroker.DeleteAppAsync(System.Int32)",
           "Name": "DeleteAppAsync",
-          "LineNumber": 33,
+          "LineNumber": 35,
           "Inputs": [
             {
               "Name": "appId",
@@ -284,7 +284,7 @@
         {
           "Id": "cCoder.Core.Brokers.ContentManagement.ContentManagementAppBroker.GetAllApps(System.Boolean)",
           "Name": "GetAllApps",
-          "LineNumber": 20,
+          "LineNumber": 22,
           "Inputs": [
             {
               "Name": "ignoreFilters",
@@ -319,7 +319,7 @@
         {
           "Id": "cCoder.Core.Brokers.ContentManagement.ContentManagementAppBroker.GetAllAppsWithTemplates(System.Boolean)",
           "Name": "GetAllAppsWithTemplates",
-          "LineNumber": 23,
+          "LineNumber": 25,
           "Inputs": [
             {
               "Name": "ignoreFilters",
@@ -361,7 +361,7 @@
         {
           "Id": "cCoder.Core.Brokers.ContentManagement.ContentManagementAppBroker.GetApp(System.Int32,System.Boolean)",
           "Name": "GetApp",
-          "LineNumber": 14,
+          "LineNumber": 16,
           "Inputs": [
             {
               "Name": "appId",
@@ -400,7 +400,7 @@
         {
           "Id": "cCoder.Core.Brokers.ContentManagement.ContentManagementAppBroker.GetAppByDomain(System.String,System.Boolean)",
           "Name": "GetAppByDomain",
-          "LineNumber": 17,
+          "LineNumber": 19,
           "Inputs": [
             {
               "Name": "domain",
@@ -439,7 +439,7 @@
         {
           "Id": "cCoder.Core.Brokers.ContentManagement.ContentManagementAppBroker.UpdateAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "UpdateAppAsync",
-          "LineNumber": 30,
+          "LineNumber": 32,
           "Inputs": [
             {
               "Name": "updatedApp",
@@ -476,7 +476,7 @@
     {
       "Name": "cCoder.Core.Brokers.DocumentManagement.DocumentManagementAppBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 13,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -497,7 +497,7 @@
         {
           "Id": "cCoder.Core.Brokers.DocumentManagement.DocumentManagementAppBroker.AddAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "AddAppAsync",
-          "LineNumber": 16,
+          "LineNumber": 14,
           "Inputs": [
             {
               "Name": "newApp",
@@ -532,7 +532,7 @@
         {
           "Id": "cCoder.Core.Brokers.DocumentManagement.DocumentManagementAppBroker.DeleteAppAsync(System.Int32)",
           "Name": "DeleteAppAsync",
-          "LineNumber": 22,
+          "LineNumber": 20,
           "Inputs": [
             {
               "Name": "appId",
@@ -567,7 +567,7 @@
         {
           "Id": "cCoder.Core.Brokers.DocumentManagement.DocumentManagementAppBroker.UpdateAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "UpdateAppAsync",
-          "LineNumber": 19,
+          "LineNumber": 17,
           "Inputs": [
             {
               "Name": "updatedApp",
@@ -604,7 +604,7 @@
     {
       "Name": "cCoder.Core.Brokers.Eventing.AppGraphEventBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -625,7 +625,7 @@
         {
           "Id": "cCoder.Core.Brokers.Eventing.AppGraphEventBroker.RaiseAppAddEventAsync(cCoder.Data.Models.CMS.App)",
           "Name": "RaiseAppAddEventAsync",
-          "LineNumber": 14,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "app",
@@ -652,7 +652,7 @@
         {
           "Id": "cCoder.Core.Brokers.Eventing.AppGraphEventBroker.RaiseAppUpdateEventAsync(cCoder.Data.Models.CMS.App)",
           "Name": "RaiseAppUpdateEventAsync",
-          "LineNumber": 19,
+          "LineNumber": 20,
           "Inputs": [
             {
               "Name": "app",
@@ -681,7 +681,7 @@
     {
       "Name": "cCoder.Core.Brokers.Eventing.PackageImportCompletionEventBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -702,7 +702,7 @@
         {
           "Id": "cCoder.Core.Brokers.Eventing.PackageImportCompletionEventBroker.RaisePackageImportEventCompleteAsync(cCoder.ContentManagement.Models.PackageImportEvent)",
           "Name": "RaisePackageImportEventCompleteAsync",
-          "LineNumber": 14,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "packageImportEvent",
@@ -731,7 +731,7 @@
     {
       "Name": "cCoder.Core.Brokers.Eventing.ServiceBusAppDeleteForwardingBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 12,
+      "LineNumber": 13,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -752,7 +752,7 @@
         {
           "Id": "cCoder.Core.Brokers.Eventing.ServiceBusAppDeleteForwardingBroker.GetCurrentSsoUserId()",
           "Name": "GetCurrentSsoUserId",
-          "LineNumber": 17,
+          "LineNumber": 18,
           "Inputs": [],
           "ReturnType": "System.String",
           "Implements": [
@@ -774,7 +774,7 @@
         {
           "Id": "cCoder.Core.Brokers.Eventing.ServiceBusAppDeleteForwardingBroker.RaiseAppDeleteEventAsync(cCoder.Eventing.AzureServiceBus.Models.ServiceBusEventMessage\u003CcCoder.Data.Models.CMS.App\u003E)",
           "Name": "RaiseAppDeleteEventAsync",
-          "LineNumber": 20,
+          "LineNumber": 21,
           "Inputs": [
             {
               "Name": "message",
@@ -811,7 +811,7 @@
     {
       "Name": "cCoder.Core.Brokers.Eventing.ServiceBusFolderDeleteForwardingBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 12,
+      "LineNumber": 13,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -832,7 +832,7 @@
         {
           "Id": "cCoder.Core.Brokers.Eventing.ServiceBusFolderDeleteForwardingBroker.GetCurrentSsoUserId()",
           "Name": "GetCurrentSsoUserId",
-          "LineNumber": 17,
+          "LineNumber": 18,
           "Inputs": [],
           "ReturnType": "System.String",
           "Implements": [
@@ -854,7 +854,7 @@
         {
           "Id": "cCoder.Core.Brokers.Eventing.ServiceBusFolderDeleteForwardingBroker.RaiseFolderDeleteEventAsync(cCoder.Eventing.AzureServiceBus.Models.ServiceBusEventMessage\u003CcCoder.Data.Models.DMS.Folder\u003E)",
           "Name": "RaiseFolderDeleteEventAsync",
-          "LineNumber": 20,
+          "LineNumber": 21,
           "Inputs": [
             {
               "Name": "message",
@@ -891,7 +891,7 @@
     {
       "Name": "cCoder.Core.Brokers.Http.HttpRequestBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -922,7 +922,7 @@
         {
           "Id": "cCoder.Core.Brokers.Http.HttpRequestBroker.GetCurrentRequest()",
           "Name": "GetCurrentRequest",
-          "LineNumber": 12,
+          "LineNumber": 13,
           "Inputs": [],
           "ReturnType": "Microsoft.AspNetCore.Http.HttpRequest",
           "Implements": [
@@ -946,7 +946,7 @@
     {
       "Name": "cCoder.Core.Brokers.Json.AllowedOriginJsonBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -967,7 +967,7 @@
         {
           "Id": "cCoder.Core.Brokers.Json.AllowedOriginJsonBroker.ExtractOrigins(System.String)",
           "Name": "ExtractOrigins",
-          "LineNumber": 9,
+          "LineNumber": 10,
           "Inputs": [
             {
               "Name": "configJson",
@@ -1099,7 +1099,7 @@
     {
       "Name": "cCoder.Core.Brokers.Loggings.LoggingBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 7,
+      "LineNumber": 9,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -1120,7 +1120,7 @@
         {
           "Id": "cCoder.Core.Brokers.Loggings.LoggingBroker.IsDebugEnabled()",
           "Name": "IsDebugEnabled",
-          "LineNumber": 9,
+          "LineNumber": 11,
           "Inputs": [],
           "ReturnType": "System.Boolean",
           "Implements": [
@@ -1150,7 +1150,7 @@
         {
           "Id": "cCoder.Core.Brokers.Loggings.LoggingBroker.IsInformationEnabled()",
           "Name": "IsInformationEnabled",
-          "LineNumber": 12,
+          "LineNumber": 14,
           "Inputs": [],
           "ReturnType": "System.Boolean",
           "Implements": [
@@ -1180,7 +1180,7 @@
         {
           "Id": "cCoder.Core.Brokers.Loggings.LoggingBroker.LogDebug(System.String,System.Object[])",
           "Name": "LogDebug",
-          "LineNumber": 15,
+          "LineNumber": 17,
           "Inputs": [
             {
               "Name": "message",
@@ -1219,7 +1219,7 @@
         {
           "Id": "cCoder.Core.Brokers.Loggings.LoggingBroker.LogError(System.Exception,System.String,System.Object[])",
           "Name": "LogError",
-          "LineNumber": 30,
+          "LineNumber": 32,
           "Inputs": [
             {
               "Name": "exception",
@@ -1262,7 +1262,7 @@
         {
           "Id": "cCoder.Core.Brokers.Loggings.LoggingBroker.LogError(System.String,System.Object[])",
           "Name": "LogError",
-          "LineNumber": 27,
+          "LineNumber": 29,
           "Inputs": [
             {
               "Name": "message",
@@ -1301,7 +1301,7 @@
         {
           "Id": "cCoder.Core.Brokers.Loggings.LoggingBroker.LogInformation(System.String,System.Object[])",
           "Name": "LogInformation",
-          "LineNumber": 18,
+          "LineNumber": 20,
           "Inputs": [
             {
               "Name": "message",
@@ -1340,7 +1340,7 @@
         {
           "Id": "cCoder.Core.Brokers.Loggings.LoggingBroker.LogWarning(System.Exception,System.String,System.Object[])",
           "Name": "LogWarning",
-          "LineNumber": 24,
+          "LineNumber": 26,
           "Inputs": [
             {
               "Name": "exception",
@@ -1383,7 +1383,7 @@
         {
           "Id": "cCoder.Core.Brokers.Loggings.LoggingBroker.LogWarning(System.String,System.Object[])",
           "Name": "LogWarning",
-          "LineNumber": 21,
+          "LineNumber": 23,
           "Inputs": [
             {
               "Name": "message",
@@ -1424,7 +1424,7 @@
     {
       "Name": "cCoder.Core.Brokers.Mail.MailAppBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 13,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -1445,7 +1445,7 @@
         {
           "Id": "cCoder.Core.Brokers.Mail.MailAppBroker.AddAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "AddAppAsync",
-          "LineNumber": 15,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "newApp",
@@ -1480,7 +1480,7 @@
         {
           "Id": "cCoder.Core.Brokers.Mail.MailAppBroker.DeleteAppAsync(System.Int32)",
           "Name": "DeleteAppAsync",
-          "LineNumber": 21,
+          "LineNumber": 19,
           "Inputs": [
             {
               "Name": "appId",
@@ -1515,7 +1515,7 @@
         {
           "Id": "cCoder.Core.Brokers.Mail.MailAppBroker.UpdateAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "UpdateAppAsync",
-          "LineNumber": 18,
+          "LineNumber": 16,
           "Inputs": [
             {
               "Name": "updatedApp",
@@ -1614,7 +1614,7 @@
     {
       "Name": "cCoder.Core.Brokers.Metadata.EdmModelBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 10,
+      "LineNumber": 13,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -1635,7 +1635,7 @@
         {
           "Id": "cCoder.Core.Brokers.Metadata.EdmModelBroker.RetrieveOperations(Microsoft.OData.Edm.IEdmModel,System.Type)",
           "Name": "RetrieveOperations",
-          "LineNumber": 22,
+          "LineNumber": 25,
           "Inputs": [
             {
               "Name": "model",
@@ -1674,7 +1674,7 @@
         {
           "Id": "cCoder.Core.Brokers.Metadata.EdmModelBroker.RetrieveTypes(Microsoft.OData.Edm.IEdmModel)",
           "Name": "RetrieveTypes",
-          "LineNumber": 12,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "model",
@@ -1711,7 +1711,7 @@
     {
       "Name": "cCoder.Core.Brokers.Middleware.CoreFormatterMiddlewareBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 10,
+      "LineNumber": 13,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -1732,7 +1732,7 @@
         {
           "Id": "cCoder.Core.Brokers.Middleware.CoreFormatterMiddlewareBroker.InvokeNextAsync(System.Object,System.Object)",
           "Name": "InvokeNextAsync",
-          "LineNumber": 19,
+          "LineNumber": 22,
           "Inputs": [
             {
               "Name": "next",
@@ -1771,7 +1771,7 @@
         {
           "Id": "cCoder.Core.Brokers.Middleware.CoreFormatterMiddlewareBroker.ParseQuery(System.String)",
           "Name": "ParseQuery",
-          "LineNumber": 13,
+          "LineNumber": 16,
           "Inputs": [
             {
               "Name": "queryString",
@@ -1822,7 +1822,7 @@
     {
       "Name": "cCoder.Core.Brokers.Notifications.NotificationHubBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -1843,7 +1843,7 @@
         {
           "Id": "cCoder.Core.Brokers.Notifications.NotificationHubBroker.ExecuteNotificationHubOperationAsync(cCoder.Core.Models.Notifications.NotificationHubOperation)",
           "Name": "ExecuteNotificationHubOperationAsync",
-          "LineNumber": 12,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "notificationHubOperation",
@@ -1901,7 +1901,7 @@
     {
       "Name": "cCoder.Core.Brokers.Packaging.AppSecurityPackageBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -1922,7 +1922,7 @@
         {
           "Id": "cCoder.Core.Brokers.Packaging.AppSecurityPackageBroker.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 19,
+          "LineNumber": 20,
           "Inputs": [
             {
               "Name": "appId",
@@ -1961,7 +1961,7 @@
         {
           "Id": "cCoder.Core.Brokers.Packaging.AppSecurityPackageBroker.ImportPackageAsync(System.Int32,cCoder.AppSecurity.Models.AppSecurityPackage)",
           "Name": "ImportPackageAsync",
-          "LineNumber": 14,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "appId",
@@ -2002,7 +2002,7 @@
     {
       "Name": "cCoder.Core.Brokers.Packaging.ContentManagementPackageBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -2023,7 +2023,7 @@
         {
           "Id": "cCoder.Core.Brokers.Packaging.ContentManagementPackageBroker.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 17,
+          "LineNumber": 18,
           "Inputs": [
             {
               "Name": "appId",
@@ -2062,7 +2062,7 @@
         {
           "Id": "cCoder.Core.Brokers.Packaging.ContentManagementPackageBroker.ImportPackageAsync(System.Int32?,cCoder.Data.Models.Packaging.Package)",
           "Name": "ImportPackageAsync",
-          "LineNumber": 14,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "appId",
@@ -2103,7 +2103,7 @@
     {
       "Name": "cCoder.Core.Brokers.Packaging.DocumentManagementPackageBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -2124,7 +2124,7 @@
         {
           "Id": "cCoder.Core.Brokers.Packaging.DocumentManagementPackageBroker.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 19,
+          "LineNumber": 20,
           "Inputs": [
             {
               "Name": "appId",
@@ -2163,7 +2163,7 @@
         {
           "Id": "cCoder.Core.Brokers.Packaging.DocumentManagementPackageBroker.ImportPackageAsync(System.Int32,cCoder.DocumentManagement.Models.DocumentManagementPackage)",
           "Name": "ImportPackageAsync",
-          "LineNumber": 14,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "appId",
@@ -2204,7 +2204,7 @@
     {
       "Name": "cCoder.Core.Brokers.Packaging.SchedulingPackageBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -2225,7 +2225,7 @@
         {
           "Id": "cCoder.Core.Brokers.Packaging.SchedulingPackageBroker.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 19,
+          "LineNumber": 20,
           "Inputs": [
             {
               "Name": "appId",
@@ -2264,7 +2264,7 @@
         {
           "Id": "cCoder.Core.Brokers.Packaging.SchedulingPackageBroker.ImportPackageAsync(System.Int32,cCoder.Workflow.Models.WorkflowPackage)",
           "Name": "ImportPackageAsync",
-          "LineNumber": 14,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "appId",
@@ -2305,7 +2305,7 @@
     {
       "Name": "cCoder.Core.Brokers.Packaging.WorkflowPackageBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -2326,7 +2326,7 @@
         {
           "Id": "cCoder.Core.Brokers.Packaging.WorkflowPackageBroker.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 19,
+          "LineNumber": 20,
           "Inputs": [
             {
               "Name": "appId",
@@ -2365,7 +2365,7 @@
         {
           "Id": "cCoder.Core.Brokers.Packaging.WorkflowPackageBroker.ImportPackageAsync(System.Int32,cCoder.Workflow.Models.WorkflowPackage)",
           "Name": "ImportPackageAsync",
-          "LineNumber": 14,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "appId",
@@ -2406,7 +2406,7 @@
     {
       "Name": "cCoder.Core.Brokers.Planning.PlanningAppBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -2427,7 +2427,7 @@
         {
           "Id": "cCoder.Core.Brokers.Planning.PlanningAppBroker.AddAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "AddAppAsync",
-          "LineNumber": 12,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "newApp",
@@ -2462,7 +2462,7 @@
         {
           "Id": "cCoder.Core.Brokers.Planning.PlanningAppBroker.DeleteAppAsync(System.Int32)",
           "Name": "DeleteAppAsync",
-          "LineNumber": 18,
+          "LineNumber": 19,
           "Inputs": [
             {
               "Name": "appId",
@@ -2497,7 +2497,7 @@
         {
           "Id": "cCoder.Core.Brokers.Planning.PlanningAppBroker.UpdateAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "UpdateAppAsync",
-          "LineNumber": 15,
+          "LineNumber": 16,
           "Inputs": [
             {
               "Name": "updatedApp",
@@ -2534,7 +2534,7 @@
     {
       "Name": "cCoder.Core.Brokers.Setup.CoreSetupContextBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 12,
+      "LineNumber": 13,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -2555,7 +2555,7 @@
         {
           "Id": "cCoder.Core.Brokers.Setup.CoreSetupContextBroker.IsInitializedAsync(System.Threading.CancellationToken)",
           "Name": "IsInitializedAsync",
-          "LineNumber": 16,
+          "LineNumber": 17,
           "Inputs": [
             {
               "Name": "cancellationToken",
@@ -2592,7 +2592,7 @@
     {
       "Name": "cCoder.Core.Brokers.Setup.SecuritySetupContextBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 12,
+      "LineNumber": 13,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -2613,7 +2613,7 @@
         {
           "Id": "cCoder.Core.Brokers.Setup.SecuritySetupContextBroker.IsInitializedAsync(System.Threading.CancellationToken)",
           "Name": "IsInitializedAsync",
-          "LineNumber": 16,
+          "LineNumber": 17,
           "Inputs": [
             {
               "Name": "cancellationToken",
@@ -2747,7 +2747,7 @@
     {
       "Name": "cCoder.Core.Brokers.TemplatedEmails.TemplatedEmailIdentityBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 11,
+      "LineNumber": 12,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -2766,9 +2766,9 @@
       "Properties": [],
       "Methods": [
         {
-          "Id": "cCoder.Core.Brokers.TemplatedEmails.TemplatedEmailIdentityBroker.GetAllMailSender(System.Boolean)",
-          "Name": "GetAllMailSender",
-          "LineNumber": 18,
+          "Id": "cCoder.Core.Brokers.TemplatedEmails.TemplatedEmailIdentityBroker.GetAllMailSenders(System.Boolean)",
+          "Name": "GetAllMailSenders",
+          "LineNumber": 19,
           "Inputs": [
             {
               "Name": "ignoreFilters",
@@ -2777,7 +2777,7 @@
           ],
           "ReturnType": "System.Linq.IQueryable\u003CcCoder.Data.Models.Mail.MailSender\u003E",
           "Implements": [
-            "cCoder.Core.Brokers.TemplatedEmails.ITemplatedEmailIdentityBroker.GetAllMailSender(System.Boolean)"
+            "cCoder.Core.Brokers.TemplatedEmails.ITemplatedEmailIdentityBroker.GetAllMailSenders(System.Boolean)"
           ],
           "Calls": [],
           "PossibleExceptionTypes": [],
@@ -2795,7 +2795,7 @@
         {
           "Id": "cCoder.Core.Brokers.TemplatedEmails.TemplatedEmailIdentityBroker.GetCurrentUser()",
           "Name": "GetCurrentUser",
-          "LineNumber": 15,
+          "LineNumber": 16,
           "Inputs": [],
           "ReturnType": "cCoder.Data.Models.Security.User",
           "Implements": [
@@ -2827,7 +2827,7 @@
     {
       "Name": "cCoder.Core.Brokers.Workflow.WorkflowAppBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 13,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -2848,7 +2848,7 @@
         {
           "Id": "cCoder.Core.Brokers.Workflow.WorkflowAppBroker.AddAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "AddAppAsync",
-          "LineNumber": 15,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "newApp",
@@ -2883,7 +2883,7 @@
         {
           "Id": "cCoder.Core.Brokers.Workflow.WorkflowAppBroker.DeleteAppAsync(System.Int32)",
           "Name": "DeleteAppAsync",
-          "LineNumber": 21,
+          "LineNumber": 19,
           "Inputs": [
             {
               "Name": "appId",
@@ -2918,7 +2918,7 @@
         {
           "Id": "cCoder.Core.Brokers.Workflow.WorkflowAppBroker.UpdateAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "UpdateAppAsync",
-          "LineNumber": 18,
+          "LineNumber": 16,
           "Inputs": [
             {
               "Name": "updatedApp",
@@ -2955,7 +2955,7 @@
     {
       "Name": "cCoder.Core.CoreConfigurationFactory",
       "StandardElementType": "App",
-      "LineNumber": 11,
+      "LineNumber": 12,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -2965,7 +2965,7 @@
         {
           "Id": "cCoder.Core.CoreConfigurationFactory.Create()",
           "Name": "Create",
-          "LineNumber": 13,
+          "LineNumber": 14,
           "Inputs": [],
           "ReturnType": "cCoder.Core.Models.CoreConfiguration",
           "Implements": [],
@@ -2993,7 +2993,7 @@
         {
           "Id": "cCoder.Core.CoreConfigurationFactory.Create(Microsoft.Extensions.Configuration.IConfiguration)",
           "Name": "Create",
-          "LineNumber": 20,
+          "LineNumber": 21,
           "Inputs": [
             {
               "Name": "configuration",
@@ -3026,7 +3026,7 @@
         {
           "Id": "cCoder.Core.CoreConfigurationFactory.Create(Microsoft.Extensions.Configuration.IConfiguration)",
           "Name": "Create",
-          "LineNumber": 23,
+          "LineNumber": 24,
           "Inputs": [
             {
               "Name": "configuration",
@@ -3075,7 +3075,7 @@
     {
       "Name": "cCoder.Core.Dependencies.AllowedOrigins.AllowedOriginStoreDependency",
       "StandardElementType": "Dependency",
-      "LineNumber": 12,
+      "LineNumber": 16,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -3097,7 +3097,7 @@
     {
       "Name": "cCoder.Core.Dependencies.Eventing.EventingDependency",
       "StandardElementType": "Dependency",
-      "LineNumber": 11,
+      "LineNumber": 13,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -3118,7 +3118,7 @@
         {
           "Id": "cCoder.Core.Dependencies.Eventing.EventingDependency.ListenToEvent(System.String,System.Func\u003CTService, T, System.Threading.Tasks.ValueTask\u003E)",
           "Name": "ListenToEvent",
-          "LineNumber": 16,
+          "LineNumber": 18,
           "Inputs": [
             {
               "Name": "name",
@@ -3157,7 +3157,7 @@
         {
           "Id": "cCoder.Core.Dependencies.Eventing.EventingDependency.RaiseEventAsync(System.String,cCoder.Eventing.Models.EventMessage\u003CT\u003E)",
           "Name": "RaiseEventAsync",
-          "LineNumber": 23,
+          "LineNumber": 25,
           "Inputs": [
             {
               "Name": "name",
@@ -3196,7 +3196,7 @@
         {
           "Id": "cCoder.Core.Dependencies.Eventing.EventingDependency.RaiseEventsAsync(System.String,cCoder.Eventing.Models.EventMessage\u003CT\u003E[])",
           "Name": "RaiseEventsAsync",
-          "LineNumber": 30,
+          "LineNumber": 32,
           "Inputs": [
             {
               "Name": "name",
@@ -3237,7 +3237,7 @@
     {
       "Name": "cCoder.Core.Dependencies.Formatters.CsvFormatter",
       "StandardElementType": "Dependency",
-      "LineNumber": 18,
+      "LineNumber": 25,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -3256,7 +3256,7 @@
         {
           "Id": "cCoder.Core.Dependencies.Formatters.CsvFormatter.WriteResponseBodyAsync(Microsoft.AspNetCore.Mvc.Formatters.OutputFormatterWriteContext,System.Text.Encoding)",
           "Name": "WriteResponseBodyAsync",
-          "LineNumber": 52,
+          "LineNumber": 59,
           "Inputs": [
             {
               "Name": "context",
@@ -3295,7 +3295,7 @@
     {
       "Name": "cCoder.Core.Dependencies.Formatters.ExcelFormatter",
       "StandardElementType": "Dependency",
-      "LineNumber": 18,
+      "LineNumber": 24,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -3314,7 +3314,7 @@
         {
           "Id": "cCoder.Core.Dependencies.Formatters.ExcelFormatter.WriteResponseBodyAsync(Microsoft.AspNetCore.Mvc.Formatters.OutputFormatterWriteContext,System.Text.Encoding)",
           "Name": "WriteResponseBodyAsync",
-          "LineNumber": 46,
+          "LineNumber": 52,
           "Inputs": [
             {
               "Name": "context",
@@ -3365,7 +3365,7 @@
         {
           "Id": "cCoder.Core.Dependencies.Formatters.ExcelFormatter.WriteResponseHeaders(Microsoft.AspNetCore.Mvc.Formatters.OutputFormatterWriteContext)",
           "Name": "WriteResponseHeaders",
-          "LineNumber": 147,
+          "LineNumber": 153,
           "Inputs": [
             {
               "Name": "context",
@@ -3400,7 +3400,7 @@
     {
       "Name": "cCoder.Core.Dependencies.Formatters.XmlFormatter",
       "StandardElementType": "Dependency",
-      "LineNumber": 16,
+      "LineNumber": 22,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -3419,7 +3419,7 @@
         {
           "Id": "cCoder.Core.Dependencies.Formatters.XmlFormatter.WriteResponseBodyAsync(Microsoft.AspNetCore.Mvc.Formatters.OutputFormatterWriteContext,System.Text.Encoding)",
           "Name": "WriteResponseBodyAsync",
-          "LineNumber": 30,
+          "LineNumber": 36,
           "Inputs": [
             {
               "Name": "context",
@@ -3465,7 +3465,7 @@
     {
       "Name": "cCoder.Core.Dependencies.OData.SplitDomainApplicationModelConvention",
       "StandardElementType": "Dependency",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -3486,7 +3486,7 @@
         {
           "Id": "cCoder.Core.Dependencies.OData.SplitDomainApplicationModelConvention.Apply(Microsoft.AspNetCore.Mvc.ApplicationModels.ActionModel)",
           "Name": "Apply",
-          "LineNumber": 12,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "action",
@@ -3537,7 +3537,7 @@
     {
       "Name": "cCoder.Core.Dependencies.OpenApi.HttpResponseContractOperationFilter",
       "StandardElementType": "Dependency",
-      "LineNumber": 12,
+      "LineNumber": 15,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -3558,7 +3558,7 @@
         {
           "Id": "cCoder.Core.Dependencies.OpenApi.HttpResponseContractOperationFilter.Apply(Microsoft.OpenApi.OpenApiOperation,Swashbuckle.AspNetCore.SwaggerGen.OperationFilterContext)",
           "Name": "Apply",
-          "LineNumber": 14,
+          "LineNumber": 17,
           "Inputs": [
             {
               "Name": "operation",
@@ -3620,7 +3620,7 @@
     {
       "Name": "cCoder.Core.Dependencies.Sessions.NoOpSessionFeature",
       "StandardElementType": "Dependency",
-      "LineNumber": 9,
+      "LineNumber": 13,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -3672,7 +3672,7 @@
         {
           "Id": "cCoder.Core.Dependencies.Sessions.NoOpSessionFeature.Clear()",
           "Name": "Clear",
-          "LineNumber": 46,
+          "LineNumber": 50,
           "Inputs": [],
           "ReturnType": "System.Void",
           "Implements": [
@@ -3694,7 +3694,7 @@
         {
           "Id": "cCoder.Core.Dependencies.Sessions.NoOpSessionFeature.CommitAsync(System.Threading.CancellationToken)",
           "Name": "CommitAsync",
-          "LineNumber": 29,
+          "LineNumber": 33,
           "Inputs": [
             {
               "Name": "cancellationToken",
@@ -3721,7 +3721,7 @@
         {
           "Id": "cCoder.Core.Dependencies.Sessions.NoOpSessionFeature.LoadAsync(System.Threading.CancellationToken)",
           "Name": "LoadAsync",
-          "LineNumber": 26,
+          "LineNumber": 30,
           "Inputs": [
             {
               "Name": "cancellationToken",
@@ -3748,7 +3748,7 @@
         {
           "Id": "cCoder.Core.Dependencies.Sessions.NoOpSessionFeature.Remove(System.String)",
           "Name": "Remove",
-          "LineNumber": 42,
+          "LineNumber": 46,
           "Inputs": [
             {
               "Name": "key",
@@ -3775,7 +3775,7 @@
         {
           "Id": "cCoder.Core.Dependencies.Sessions.NoOpSessionFeature.Set(System.String,System.Byte[])",
           "Name": "Set",
-          "LineNumber": 38,
+          "LineNumber": 42,
           "Inputs": [
             {
               "Name": "key",
@@ -3806,7 +3806,7 @@
         {
           "Id": "cCoder.Core.Dependencies.Sessions.NoOpSessionFeature.TryGetValue(System.String,System.Byte[])",
           "Name": "TryGetValue",
-          "LineNumber": 32,
+          "LineNumber": 36,
           "Inputs": [
             {
               "Name": "key",
@@ -3909,7 +3909,7 @@
     {
       "Name": "cCoder.Core.Dependencies.TemplatedEmails.TemplatedEmailIdentityDependency",
       "StandardElementType": "Dependency",
-      "LineNumber": 12,
+      "LineNumber": 13,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -3930,7 +3930,7 @@
         {
           "Id": "cCoder.Core.Dependencies.TemplatedEmails.TemplatedEmailIdentityDependency.Authorize(System.Int32?,System.String)",
           "Name": "Authorize",
-          "LineNumber": 28,
+          "LineNumber": 29,
           "Inputs": [
             {
               "Name": "appId",
@@ -3969,7 +3969,7 @@
         {
           "Id": "cCoder.Core.Dependencies.TemplatedEmails.TemplatedEmailIdentityDependency.GetCurrentUser()",
           "Name": "GetCurrentUser",
-          "LineNumber": 17,
+          "LineNumber": 18,
           "Inputs": [],
           "ReturnType": "cCoder.Data.Models.Security.User",
           "Implements": [
@@ -3999,7 +3999,7 @@
         {
           "Id": "cCoder.Core.Dependencies.TemplatedEmails.TemplatedEmailIdentityDependency.IsAdmin(System.Int32,System.String)",
           "Name": "IsAdmin",
-          "LineNumber": 23,
+          "LineNumber": 24,
           "Inputs": [
             {
               "Name": "appId",
@@ -4038,7 +4038,7 @@
         {
           "Id": "cCoder.Core.Dependencies.TemplatedEmails.TemplatedEmailIdentityDependency.IsAdminOfApp(System.Int32?)",
           "Name": "IsAdminOfApp",
-          "LineNumber": 20,
+          "LineNumber": 21,
           "Inputs": [
             {
               "Name": "appId",
@@ -4075,7 +4075,7 @@
     {
       "Name": "cCoder.Core.EdmModelReader",
       "StandardElementType": "Unknown",
-      "LineNumber": 11,
+      "LineNumber": 13,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -4086,7 +4086,7 @@
     {
       "Name": "cCoder.Core.Exposures.BadRequestResult",
       "StandardElementType": "HttpExposure",
-      "LineNumber": 13,
+      "LineNumber": 14,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -4106,7 +4106,7 @@
     {
       "Name": "cCoder.Core.Exposures.Controllers.AppController",
       "StandardElementType": "HttpExposure",
-      "LineNumber": 16,
+      "LineNumber": 19,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -4119,13 +4119,24 @@
         "IsInCurrentProject": false,
         "StandardElementType": "Dependency"
       },
-      "Interfaces": [],
+      "Interfaces": [
+        {
+          "Id": "cCoder.CodeAnalysis.Contracts:cCoder.CodeAnalysis.Exposures.ICompositionExposure",
+          "FullName": "cCoder.CodeAnalysis.Exposures.ICompositionExposure",
+          "Name": "ICompositionExposure",
+          "Namespace": "cCoder.CodeAnalysis.Exposures",
+          "AssemblyName": "cCoder.CodeAnalysis.Contracts",
+          "Kind": "Interface",
+          "IsInCurrentProject": false,
+          "StandardElementType": "Dependency"
+        }
+      ],
       "Properties": [],
       "Methods": [
         {
           "Id": "cCoder.Core.Exposures.Controllers.AppController.Delete(System.Int32)",
           "Name": "Delete",
-          "LineNumber": 171,
+          "LineNumber": 175,
           "Inputs": [
             {
               "Name": "key",
@@ -4266,7 +4277,7 @@
         {
           "Id": "cCoder.Core.Exposures.Controllers.AppController.DeleteAggregateRoute(System.Int32)",
           "Name": "DeleteAggregateRoute",
-          "LineNumber": 151,
+          "LineNumber": 155,
           "Inputs": [
             {
               "Name": "key",
@@ -4326,7 +4337,7 @@
         {
           "Id": "cCoder.Core.Exposures.Controllers.AppController.Post(cCoder.Data.Models.CMS.App)",
           "Name": "Post",
-          "LineNumber": 20,
+          "LineNumber": 24,
           "Inputs": [
             {
               "Name": "newApp",
@@ -4460,7 +4471,7 @@
         {
           "Id": "cCoder.Core.Exposures.Controllers.AppController.Put(System.Int32,cCoder.Data.Models.CMS.App)",
           "Name": "Put",
-          "LineNumber": 72,
+          "LineNumber": 76,
           "Inputs": [
             {
               "Name": "key",
@@ -4605,7 +4616,7 @@
         {
           "Id": "cCoder.Core.Exposures.Controllers.AppController.PutAggregateRoute(System.Int32,cCoder.Data.Models.CMS.App)",
           "Name": "PutAggregateRoute",
-          "LineNumber": 129,
+          "LineNumber": 133,
           "Inputs": [
             {
               "Name": "key",
@@ -4671,7 +4682,7 @@
     {
       "Name": "cCoder.Core.Exposures.Controllers.SetupController",
       "StandardElementType": "HttpExposure",
-      "LineNumber": 13,
+      "LineNumber": 17,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -4690,7 +4701,7 @@
         {
           "Id": "cCoder.Core.Exposures.Controllers.SetupController.Get(System.Threading.CancellationToken)",
           "Name": "Get",
-          "LineNumber": 20,
+          "LineNumber": 24,
           "Inputs": [
             {
               "Name": "cancellationToken",
@@ -4797,7 +4808,7 @@
     {
       "Name": "cCoder.Core.Exposures.Controllers.TemplatedEmailController",
       "StandardElementType": "HttpExposure",
-      "LineNumber": 16,
+      "LineNumber": 15,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -4816,7 +4827,7 @@
         {
           "Id": "cCoder.Core.Exposures.Controllers.TemplatedEmailController.Post(cCoder.Mail.Models.TemplatedEmailDetails)",
           "Name": "Post",
-          "LineNumber": 21,
+          "LineNumber": 20,
           "Inputs": [
             {
               "Name": "newTemplatedEmailDetails",
@@ -4943,7 +4954,7 @@
     {
       "Name": "cCoder.Core.Exposures.Cors.CoreAllowedOriginStore",
       "StandardElementType": "Exposure",
-      "LineNumber": 9,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -4964,7 +4975,7 @@
         {
           "Id": "cCoder.Core.Exposures.Cors.CoreAllowedOriginStore.IsAllowedAsync(System.String)",
           "Name": "IsAllowedAsync",
-          "LineNumber": 13,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "origin",
@@ -5011,7 +5022,7 @@
     {
       "Name": "cCoder.Core.Exposures.Hubs.NotificationHub",
       "StandardElementType": "Exposure",
-      "LineNumber": 9,
+      "LineNumber": 11,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -5030,7 +5041,7 @@
         {
           "Id": "cCoder.Core.Exposures.Hubs.NotificationHub.ConsoleSend(System.String,System.String,System.String)",
           "Name": "ConsoleSend",
-          "LineNumber": 43,
+          "LineNumber": 45,
           "Inputs": [
             {
               "Name": "level",
@@ -5084,7 +5095,7 @@
         {
           "Id": "cCoder.Core.Exposures.Hubs.NotificationHub.Join(System.String)",
           "Name": "Join",
-          "LineNumber": 22,
+          "LineNumber": 24,
           "Inputs": [
             {
               "Name": "thread",
@@ -5130,7 +5141,7 @@
         {
           "Id": "cCoder.Core.Exposures.Hubs.NotificationHub.Leave(System.String)",
           "Name": "Leave",
-          "LineNumber": 29,
+          "LineNumber": 31,
           "Inputs": [
             {
               "Name": "thread",
@@ -5176,7 +5187,7 @@
         {
           "Id": "cCoder.Core.Exposures.Hubs.NotificationHub.OnConnectedAsync()",
           "Name": "OnConnectedAsync",
-          "LineNumber": 13,
+          "LineNumber": 15,
           "Inputs": [],
           "ReturnType": "System.Threading.Tasks.Task",
           "Implements": [],
@@ -5212,7 +5223,7 @@
         {
           "Id": "cCoder.Core.Exposures.Hubs.NotificationHub.OnDisconnectedAsync(System.Exception)",
           "Name": "OnDisconnectedAsync",
-          "LineNumber": 17,
+          "LineNumber": 19,
           "Inputs": [
             {
               "Name": "exception",
@@ -5253,7 +5264,7 @@
         {
           "Id": "cCoder.Core.Exposures.Hubs.NotificationHub.Send(System.String,System.String,System.String)",
           "Name": "Send",
-          "LineNumber": 36,
+          "LineNumber": 38,
           "Inputs": [
             {
               "Name": "level",
@@ -5307,7 +5318,7 @@
         {
           "Id": "cCoder.Core.Exposures.Hubs.NotificationHub.SendTest(System.String,System.String)",
           "Name": "SendTest",
-          "LineNumber": 50,
+          "LineNumber": 52,
           "Inputs": [
             {
               "Name": "message",
@@ -5359,7 +5370,7 @@
     {
       "Name": "cCoder.Core.Exposures.IEdmModelExtensions",
       "StandardElementType": "Exposure",
-      "LineNumber": 10,
+      "LineNumber": 12,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -5369,7 +5380,7 @@
         {
           "Id": "cCoder.Core.Exposures.IEdmModelExtensions.GetExtendedMetadataForType(Microsoft.OData.Edm.IEdmModel,System.String,System.Type,System.Boolean)",
           "Name": "GetExtendedMetadataForType",
-          "LineNumber": 20,
+          "LineNumber": 22,
           "Inputs": [
             {
               "Name": "model",
@@ -5427,7 +5438,7 @@
         {
           "Id": "cCoder.Core.Exposures.IEdmModelExtensions.GetMetadata(Microsoft.OData.Edm.IEdmModel,System.String)",
           "Name": "GetMetadata",
-          "LineNumber": 12,
+          "LineNumber": 14,
           "Inputs": [
             {
               "Name": "model",
@@ -5479,7 +5490,7 @@
     {
       "Name": "cCoder.Core.Exposures.Managers.TemplatedEmailManager",
       "StandardElementType": "Exposure",
-      "LineNumber": 13,
+      "LineNumber": 14,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -5500,7 +5511,7 @@
         {
           "Id": "cCoder.Core.Exposures.Managers.TemplatedEmailManager.QueueAppTemplatedEmailAsync(cCoder.Data.Models.CMS.App,System.String,System.String,System.Object,System.String,System.String,System.String,System.String)",
           "Name": "QueueAppTemplatedEmailAsync",
-          "LineNumber": 18,
+          "LineNumber": 19,
           "Inputs": [
             {
               "Name": "app",
@@ -5563,7 +5574,7 @@
         {
           "Id": "cCoder.Core.Exposures.Managers.TemplatedEmailManager.QueueTemplatedEmailDetailsAsync(cCoder.Mail.Models.TemplatedEmailDetails)",
           "Name": "QueueTemplatedEmailDetailsAsync",
-          "LineNumber": 48,
+          "LineNumber": 49,
           "Inputs": [
             {
               "Name": "templatedEmailDetails",
@@ -5600,11 +5611,21 @@
     {
       "Name": "cCoder.Core.Exposures.Managers.UserRegistrationManager",
       "StandardElementType": "Exposure",
-      "LineNumber": 13,
+      "LineNumber": 15,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
       "Interfaces": [
+        {
+          "Id": "cCoder.CodeAnalysis.Contracts:cCoder.CodeAnalysis.Exposures.ICompositionExposure",
+          "FullName": "cCoder.CodeAnalysis.Exposures.ICompositionExposure",
+          "Name": "ICompositionExposure",
+          "Namespace": "cCoder.CodeAnalysis.Exposures",
+          "AssemblyName": "cCoder.CodeAnalysis.Contracts",
+          "Kind": "Interface",
+          "IsInCurrentProject": false,
+          "StandardElementType": "Dependency"
+        },
         {
           "Id": "cCoder.Core:cCoder.Core.Services.Orchestrations.IUserRegistrationOrchestrationService",
           "FullName": "cCoder.Core.Services.Orchestrations.IUserRegistrationOrchestrationService",
@@ -5621,7 +5642,7 @@
         {
           "Id": "cCoder.Core.Exposures.Managers.UserRegistrationManager.ConfirmRegistrationAsync(System.String)",
           "Name": "ConfirmRegistrationAsync",
-          "LineNumber": 18,
+          "LineNumber": 20,
           "Inputs": [
             {
               "Name": "token",
@@ -5665,7 +5686,7 @@
         {
           "Id": "cCoder.Core.Exposures.Managers.UserRegistrationManager.LoginAsync(System.String,System.String)",
           "Name": "LoginAsync",
-          "LineNumber": 33,
+          "LineNumber": 35,
           "Inputs": [
             {
               "Name": "username",
@@ -5713,7 +5734,7 @@
         {
           "Id": "cCoder.Core.Exposures.Managers.UserRegistrationManager.LogoutAsync()",
           "Name": "LogoutAsync",
-          "LineNumber": 53,
+          "LineNumber": 55,
           "Inputs": [],
           "ReturnType": "System.Threading.Tasks.ValueTask",
           "Implements": [
@@ -5752,7 +5773,7 @@
         {
           "Id": "cCoder.Core.Exposures.Managers.UserRegistrationManager.Me()",
           "Name": "Me",
-          "LineNumber": 66,
+          "LineNumber": 68,
           "Inputs": [],
           "ReturnType": "cCoder.Security.Models.Entities.SSOUser",
           "Implements": [
@@ -5790,7 +5811,7 @@
         {
           "Id": "cCoder.Core.Exposures.Managers.UserRegistrationManager.RegisterAsync(cCoder.Security.Models.DTOs.RegisterUser)",
           "Name": "RegisterAsync",
-          "LineNumber": 82,
+          "LineNumber": 84,
           "Inputs": [
             {
               "Name": "registerUser",
@@ -5856,7 +5877,7 @@
     {
       "Name": "cCoder.Core.Exposures.NoApiRouteConstraint",
       "StandardElementType": "Exposure",
-      "LineNumber": 7,
+      "LineNumber": 10,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -5877,7 +5898,7 @@
         {
           "Id": "cCoder.Core.Exposures.NoApiRouteConstraint.Match(Microsoft.AspNetCore.Http.HttpContext,Microsoft.AspNetCore.Routing.IRouter,System.String,Microsoft.AspNetCore.Routing.RouteValueDictionary,Microsoft.AspNetCore.Routing.RouteDirection)",
           "Name": "Match",
-          "LineNumber": 9,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "httpContext",
@@ -5982,7 +6003,7 @@
     {
       "Name": "cCoder.Core.Exposures.OData.Responses.RawResult",
       "StandardElementType": "HttpExposure",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -6002,7 +6023,7 @@
     {
       "Name": "cCoder.Core.Exposures.PackageManagers.AppSecurityPackageManager",
       "StandardElementType": "Exposure",
-      "LineNumber": 11,
+      "LineNumber": 12,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -6023,7 +6044,7 @@
         {
           "Id": "cCoder.Core.Exposures.PackageManagers.AppSecurityPackageManager.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 20,
+          "LineNumber": 21,
           "Inputs": [
             {
               "Name": "appId",
@@ -6075,7 +6096,7 @@
         {
           "Id": "cCoder.Core.Exposures.PackageManagers.AppSecurityPackageManager.ImportPackageAsync(System.Int32,cCoder.Data.Models.Packaging.Package)",
           "Name": "ImportPackageAsync",
-          "LineNumber": 15,
+          "LineNumber": 16,
           "Inputs": [
             {
               "Name": "appId",
@@ -6129,7 +6150,7 @@
     {
       "Name": "cCoder.Core.Exposures.PackageManagers.ContentManagementPackageManager",
       "StandardElementType": "Exposure",
-      "LineNumber": 11,
+      "LineNumber": 12,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -6150,7 +6171,7 @@
         {
           "Id": "cCoder.Core.Exposures.PackageManagers.ContentManagementPackageManager.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 18,
+          "LineNumber": 19,
           "Inputs": [
             {
               "Name": "appId",
@@ -6202,7 +6223,7 @@
         {
           "Id": "cCoder.Core.Exposures.PackageManagers.ContentManagementPackageManager.ImportPackageAsync(System.Int32,cCoder.Data.Models.Packaging.Package)",
           "Name": "ImportPackageAsync",
-          "LineNumber": 15,
+          "LineNumber": 16,
           "Inputs": [
             {
               "Name": "appId",
@@ -6256,7 +6277,7 @@
     {
       "Name": "cCoder.Core.Exposures.PackageManagers.DocumentManagementPackageManager",
       "StandardElementType": "Exposure",
-      "LineNumber": 11,
+      "LineNumber": 12,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -6277,7 +6298,7 @@
         {
           "Id": "cCoder.Core.Exposures.PackageManagers.DocumentManagementPackageManager.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 18,
+          "LineNumber": 19,
           "Inputs": [
             {
               "Name": "appId",
@@ -6329,7 +6350,7 @@
         {
           "Id": "cCoder.Core.Exposures.PackageManagers.DocumentManagementPackageManager.ImportPackageAsync(System.Int32,cCoder.Data.Models.Packaging.Package)",
           "Name": "ImportPackageAsync",
-          "LineNumber": 15,
+          "LineNumber": 16,
           "Inputs": [
             {
               "Name": "appId",
@@ -6383,7 +6404,7 @@
     {
       "Name": "cCoder.Core.Exposures.PackageManagers.PackageTransferManager",
       "StandardElementType": "Exposure",
-      "LineNumber": 13,
+      "LineNumber": 15,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -6414,7 +6435,7 @@
         {
           "Id": "cCoder.Core.Exposures.PackageManagers.PackageTransferManager.ExportPackagesAsync(System.Int32,System.String[],System.String)",
           "Name": "ExportPackagesAsync",
-          "LineNumber": 23,
+          "LineNumber": 25,
           "Inputs": [
             {
               "Name": "appId",
@@ -6471,7 +6492,7 @@
         {
           "Id": "cCoder.Core.Exposures.PackageManagers.PackageTransferManager.GetRequestDomain()",
           "Name": "GetRequestDomain",
-          "LineNumber": 18,
+          "LineNumber": 20,
           "Inputs": [],
           "ReturnType": "System.String",
           "Implements": [
@@ -6516,7 +6537,7 @@
     {
       "Name": "cCoder.Core.Exposures.PackageManagers.SchedulingPackageManager",
       "StandardElementType": "Exposure",
-      "LineNumber": 11,
+      "LineNumber": 12,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -6537,7 +6558,7 @@
         {
           "Id": "cCoder.Core.Exposures.PackageManagers.SchedulingPackageManager.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 18,
+          "LineNumber": 19,
           "Inputs": [
             {
               "Name": "appId",
@@ -6589,7 +6610,7 @@
         {
           "Id": "cCoder.Core.Exposures.PackageManagers.SchedulingPackageManager.ImportPackageAsync(System.Int32,cCoder.Data.Models.Packaging.Package)",
           "Name": "ImportPackageAsync",
-          "LineNumber": 15,
+          "LineNumber": 16,
           "Inputs": [
             {
               "Name": "appId",
@@ -6643,7 +6664,7 @@
     {
       "Name": "cCoder.Core.Exposures.PackageManagers.WorkflowPackageManager",
       "StandardElementType": "Exposure",
-      "LineNumber": 11,
+      "LineNumber": 12,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -6664,7 +6685,7 @@
         {
           "Id": "cCoder.Core.Exposures.PackageManagers.WorkflowPackageManager.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 18,
+          "LineNumber": 19,
           "Inputs": [
             {
               "Name": "appId",
@@ -6716,7 +6737,7 @@
         {
           "Id": "cCoder.Core.Exposures.PackageManagers.WorkflowPackageManager.ImportPackageAsync(System.Int32,cCoder.Data.Models.Packaging.Package)",
           "Name": "ImportPackageAsync",
-          "LineNumber": 15,
+          "LineNumber": 16,
           "Inputs": [
             {
               "Name": "appId",
@@ -6770,7 +6791,7 @@
     {
       "Name": "cCoder.Core.Exposures.Setup.FirstTimeSetupStateManager",
       "StandardElementType": "Exposure",
-      "LineNumber": 10,
+      "LineNumber": 12,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -6791,7 +6812,7 @@
         {
           "Id": "cCoder.Core.Exposures.Setup.FirstTimeSetupStateManager.IsInitializedAsync(System.Threading.CancellationToken)",
           "Name": "IsInitializedAsync",
-          "LineNumber": 15,
+          "LineNumber": 17,
           "Inputs": [
             {
               "Name": "cancellationToken",
@@ -6908,7 +6929,7 @@
     {
       "Name": "cCoder.Core.IApplicationBuilderExtensions",
       "StandardElementType": "Exposure",
-      "LineNumber": 9,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -6919,7 +6940,7 @@
     {
       "Name": "cCoder.Core.IServiceCollectionExtensions",
       "StandardElementType": "App",
-      "LineNumber": 9,
+      "LineNumber": 11,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -6929,7 +6950,7 @@
         {
           "Id": "cCoder.Core.IServiceCollectionExtensions.AddCoreHostedServices(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action\u003CcCoder.Core.Models.CoreConfiguration\u003E)",
           "Name": "AddCoreHostedServices",
-          "LineNumber": 22,
+          "LineNumber": 24,
           "Inputs": [
             {
               "Name": "services",
@@ -6980,7 +7001,7 @@
         {
           "Id": "cCoder.Core.IServiceCollectionExtensions.AddCoreHostedServices(Microsoft.Extensions.DependencyInjection.IServiceCollection,cCoder.Core.Models.CoreConfiguration)",
           "Name": "AddCoreHostedServices",
-          "LineNumber": 235,
+          "LineNumber": 238,
           "Inputs": [
             {
               "Name": "services",
@@ -7094,7 +7115,7 @@
         {
           "Id": "cCoder.Core.IServiceCollectionExtensions.AddCoreWeb(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action\u003CcCoder.Core.Models.CoreConfiguration\u003E)",
           "Name": "AddCoreWeb",
-          "LineNumber": 11,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "services",
@@ -7145,7 +7166,7 @@
         {
           "Id": "cCoder.Core.IServiceCollectionExtensions.AddCoreWeb(Microsoft.Extensions.DependencyInjection.IServiceCollection,cCoder.Core.Models.CoreConfiguration)",
           "Name": "AddCoreWeb",
-          "LineNumber": 90,
+          "LineNumber": 93,
           "Inputs": [
             {
               "Name": "services",
@@ -7445,7 +7466,7 @@
     {
       "Name": "cCoder.Core.Models.CoreAllowedOriginSnapshot",
       "StandardElementType": "Model",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -7589,7 +7610,7 @@
     {
       "Name": "cCoder.Core.Models.Exceptions.CoreDependencyException",
       "StandardElementType": "Model",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -7609,7 +7630,7 @@
     {
       "Name": "cCoder.Core.Models.Exceptions.CoreOrchestrationDependencyException",
       "StandardElementType": "Model",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -7629,7 +7650,7 @@
     {
       "Name": "cCoder.Core.Models.Exceptions.CoreOrchestrationServiceException",
       "StandardElementType": "Model",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -7649,7 +7670,7 @@
     {
       "Name": "cCoder.Core.Models.Exceptions.CoreOrchestrationValidationException",
       "StandardElementType": "Model",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -7669,7 +7690,7 @@
     {
       "Name": "cCoder.Core.Models.Exceptions.CoreProcessingDependencyException",
       "StandardElementType": "Model",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -7689,7 +7710,7 @@
     {
       "Name": "cCoder.Core.Models.Exceptions.CoreProcessingServiceException",
       "StandardElementType": "Model",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -7709,7 +7730,7 @@
     {
       "Name": "cCoder.Core.Models.Exceptions.CoreProcessingValidationException",
       "StandardElementType": "Model",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -7729,7 +7750,7 @@
     {
       "Name": "cCoder.Core.Models.Exceptions.CoreServiceException",
       "StandardElementType": "Model",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -7749,7 +7770,7 @@
     {
       "Name": "cCoder.Core.Models.Exceptions.CoreValidationException",
       "StandardElementType": "Model",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": {
@@ -7829,7 +7850,7 @@
     {
       "Name": "cCoder.Core.Models.Metadata.EdmModelDetails",
       "StandardElementType": "Model",
-      "LineNumber": 7,
+      "LineNumber": 9,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -7857,7 +7878,7 @@
     {
       "Name": "cCoder.Core.Models.Metadata.EdmModelOperation",
       "StandardElementType": "Model",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -7889,7 +7910,7 @@
     {
       "Name": "cCoder.Core.Models.Metadata.EdmModelOperations",
       "StandardElementType": "Model",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -7909,7 +7930,7 @@
     {
       "Name": "cCoder.Core.Models.Metadata.EdmModelType",
       "StandardElementType": "Model",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -7929,7 +7950,7 @@
     {
       "Name": "cCoder.Core.Models.Metadata.ExtendedMetadataContainer",
       "StandardElementType": "Model",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -7954,7 +7975,7 @@
     {
       "Name": "cCoder.Core.Models.Metadata.MetadataContainer",
       "StandardElementType": "Model",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -8042,7 +8063,7 @@
     {
       "Name": "cCoder.Core.Models.Metadata.OperationContainer",
       "StandardElementType": "Model",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -8438,7 +8459,7 @@
     {
       "Name": "cCoder.Core.Models.TemplatedEmailOperation",
       "StandardElementType": "Model",
-      "LineNumber": 14,
+      "LineNumber": 13,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -8546,7 +8567,7 @@
     {
       "Name": "cCoder.Core.Services.Aggregations.AppAggregationService",
       "StandardElementType": "AggregationService",
-      "LineNumber": 20,
+      "LineNumber": 22,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -8587,7 +8608,7 @@
         {
           "Id": "cCoder.Core.Services.Aggregations.AppAggregationService.AddAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "AddAppAsync",
-          "LineNumber": 31,
+          "LineNumber": 33,
           "Inputs": [
             {
               "Name": "newApp",
@@ -8679,7 +8700,7 @@
         {
           "Id": "cCoder.Core.Services.Aggregations.AppAggregationService.DeleteAppAsync(System.Int32)",
           "Name": "DeleteAppAsync",
-          "LineNumber": 91,
+          "LineNumber": 93,
           "Inputs": [
             {
               "Name": "appId",
@@ -8764,7 +8785,7 @@
         {
           "Id": "cCoder.Core.Services.Aggregations.AppAggregationService.UpdateAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "UpdateAppAsync",
-          "LineNumber": 58,
+          "LineNumber": 60,
           "Inputs": [
             {
               "Name": "updatedApp",
@@ -8858,7 +8879,7 @@
     {
       "Name": "cCoder.Core.Services.Aggregations.Packages.PackageImportAggregationService",
       "StandardElementType": "AggregationService",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -8879,7 +8900,7 @@
         {
           "Id": "cCoder.Core.Services.Aggregations.Packages.PackageImportAggregationService.ProcessPackageImportEventAsync(cCoder.Packaging.Models.PackageImportEvent)",
           "Name": "ProcessPackageImportEventAsync",
-          "LineNumber": 19,
+          "LineNumber": 20,
           "Inputs": [
             {
               "Name": "packageImportEvent",
@@ -8967,7 +8988,7 @@
     {
       "Name": "cCoder.Core.Services.Aggregations.Packages.PackageManagerAggregationService",
       "StandardElementType": "AggregationService",
-      "LineNumber": 10,
+      "LineNumber": 14,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -8988,7 +9009,7 @@
         {
           "Id": "cCoder.Core.Services.Aggregations.Packages.PackageManagerAggregationService.ExportPackagesAsync(System.Int32,System.String[],System.String)",
           "Name": "ExportPackagesAsync",
-          "LineNumber": 38,
+          "LineNumber": 42,
           "Inputs": [
             {
               "Name": "appId",
@@ -9084,7 +9105,7 @@
     {
       "Name": "cCoder.Core.Services.Aggregations.SecurityAccountEmailAggregationService",
       "StandardElementType": "AggregationService",
-      "LineNumber": 15,
+      "LineNumber": 18,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -9105,7 +9126,7 @@
         {
           "Id": "cCoder.Core.Services.Aggregations.SecurityAccountEmailAggregationService.QueueInvitationCreatedSecurityAccountEventEmailAsync(cCoder.Security.Models.Events.SecurityAccountEvent)",
           "Name": "QueueInvitationCreatedSecurityAccountEventEmailAsync",
-          "LineNumber": 32,
+          "LineNumber": 35,
           "Inputs": [
             {
               "Name": "securityAccountEvent",
@@ -9148,7 +9169,7 @@
         {
           "Id": "cCoder.Core.Services.Aggregations.SecurityAccountEmailAggregationService.QueuePasswordResetRequestedSecurityAccountEventEmailAsync(cCoder.Security.Models.Events.SecurityAccountEvent)",
           "Name": "QueuePasswordResetRequestedSecurityAccountEventEmailAsync",
-          "LineNumber": 44,
+          "LineNumber": 47,
           "Inputs": [
             {
               "Name": "securityAccountEvent",
@@ -9191,7 +9212,7 @@
         {
           "Id": "cCoder.Core.Services.Aggregations.SecurityAccountEmailAggregationService.QueueRegistrationCreatedSecurityAccountEventEmailAsync(cCoder.Security.Models.Events.SecurityAccountEvent)",
           "Name": "QueueRegistrationCreatedSecurityAccountEventEmailAsync",
-          "LineNumber": 20,
+          "LineNumber": 23,
           "Inputs": [
             {
               "Name": "securityAccountEvent",
@@ -9236,7 +9257,7 @@
     {
       "Name": "cCoder.Core.Services.Aggregations.UserRegistrationAggregationService",
       "StandardElementType": "AggregationService",
-      "LineNumber": 10,
+      "LineNumber": 12,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -9257,7 +9278,7 @@
         {
           "Id": "cCoder.Core.Services.Aggregations.UserRegistrationAggregationService.ExecuteUserRegistrationOperationAsync(cCoder.Core.Models.UserRegistrationOperation)",
           "Name": "ExecuteUserRegistrationOperationAsync",
-          "LineNumber": 17,
+          "LineNumber": 19,
           "Inputs": [
             {
               "Name": "userRegistrationOperation",
@@ -9330,7 +9351,7 @@
         {
           "Id": "cCoder.Core.Services.Aggregations.UserRegistrationAggregationService.GetUserRegistrationOperation(cCoder.Core.Models.UserRegistrationOperation)",
           "Name": "GetUserRegistrationOperation",
-          "LineNumber": 65,
+          "LineNumber": 67,
           "Inputs": [
             {
               "Name": "userRegistrationOperation",
@@ -9343,9 +9364,9 @@
           ],
           "Calls": [
             {
-              "TypeName": "cCoder.Security.Services.Aggregations.Interfaces.ICurrentUserAggregationService",
+              "TypeName": "cCoder.Security.Exposures.ISecurityCurrentUserManager",
               "MethodName": "GetCurrentUser",
-              "MethodId": "cCoder.Security.Services.Aggregations.Interfaces.ICurrentUserAggregationService.GetCurrentUser()",
+              "MethodId": "cCoder.Security.Exposures.ISecurityCurrentUserManager.GetCurrentUser()",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
             }
@@ -9375,7 +9396,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.AllowedOrigins.AllowedOriginStoreService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 9,
+      "LineNumber": 13,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -9396,7 +9417,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.AllowedOrigins.AllowedOriginStoreService.GetAllowedOriginsAsync()",
           "Name": "GetAllowedOriginsAsync",
-          "LineNumber": 13,
+          "LineNumber": 17,
           "Inputs": [],
           "ReturnType": "System.Threading.Tasks.ValueTask\u003CSystem.String[]\u003E",
           "Implements": [
@@ -9466,7 +9487,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.AppSecurity.AppSecurityAppService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -9487,7 +9508,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.AppSecurity.AppSecurityAppService.AddAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "AddAppAsync",
-          "LineNumber": 14,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "newApp",
@@ -9529,7 +9550,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.AppSecurity.AppSecurityAppService.DeleteAppAsync(System.Int32)",
           "Name": "DeleteAppAsync",
-          "LineNumber": 38,
+          "LineNumber": 39,
           "Inputs": [
             {
               "Name": "appId",
@@ -9571,7 +9592,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.AppSecurity.AppSecurityAppService.UpdateAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "UpdateAppAsync",
-          "LineNumber": 26,
+          "LineNumber": 27,
           "Inputs": [
             {
               "Name": "updatedApp",
@@ -9615,7 +9636,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.AppSecurity.AppSecurityUserRoleService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 11,
+      "LineNumber": 14,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -9636,7 +9657,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.AppSecurity.AppSecurityUserRoleService.SaveAppUserRolesAsync(cCoder.Data.Models.CMS.App)",
           "Name": "SaveAppUserRolesAsync",
-          "LineNumber": 15,
+          "LineNumber": 18,
           "Inputs": [
             {
               "Name": "app",
@@ -9743,7 +9764,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.ContentManagement.ContentManagementAppService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 10,
+      "LineNumber": 12,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -9764,7 +9785,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.ContentManagement.ContentManagementAppService.AddAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "AddAppAsync",
-          "LineNumber": 54,
+          "LineNumber": 56,
           "Inputs": [
             {
               "Name": "newApp",
@@ -9809,7 +9830,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.ContentManagement.ContentManagementAppService.DeleteAppAsync(System.Int32)",
           "Name": "DeleteAppAsync",
-          "LineNumber": 86,
+          "LineNumber": 88,
           "Inputs": [
             {
               "Name": "appId",
@@ -9854,7 +9875,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.ContentManagement.ContentManagementAppService.GetAllApps(System.Boolean)",
           "Name": "GetAllApps",
-          "LineNumber": 36,
+          "LineNumber": 38,
           "Inputs": [
             {
               "Name": "ignoreFilters",
@@ -9899,7 +9920,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.ContentManagement.ContentManagementAppService.GetAllAppsWithTemplates(System.Boolean)",
           "Name": "GetAllAppsWithTemplates",
-          "LineNumber": 45,
+          "LineNumber": 47,
           "Inputs": [
             {
               "Name": "ignoreFilters",
@@ -9944,7 +9965,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.ContentManagement.ContentManagementAppService.GetApp(System.Int32,System.Boolean)",
           "Name": "GetApp",
-          "LineNumber": 14,
+          "LineNumber": 16,
           "Inputs": [
             {
               "Name": "appId",
@@ -9993,7 +10014,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.ContentManagement.ContentManagementAppService.GetAppByDomain(System.String,System.Boolean)",
           "Name": "GetAppByDomain",
-          "LineNumber": 24,
+          "LineNumber": 26,
           "Inputs": [
             {
               "Name": "domain",
@@ -10042,7 +10063,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.ContentManagement.ContentManagementAppService.UpdateAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "UpdateAppAsync",
-          "LineNumber": 69,
+          "LineNumber": 71,
           "Inputs": [
             {
               "Name": "updatedApp",
@@ -10089,7 +10110,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.DocumentManagement.DocumentManagementAppService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -10110,7 +10131,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.DocumentManagement.DocumentManagementAppService.AddAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "AddAppAsync",
-          "LineNumber": 14,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "newApp",
@@ -10155,7 +10176,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.DocumentManagement.DocumentManagementAppService.DeleteAppAsync(System.Int32)",
           "Name": "DeleteAppAsync",
-          "LineNumber": 34,
+          "LineNumber": 35,
           "Inputs": [
             {
               "Name": "appId",
@@ -10200,7 +10221,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.DocumentManagement.DocumentManagementAppService.UpdateAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "UpdateAppAsync",
-          "LineNumber": 24,
+          "LineNumber": 25,
           "Inputs": [
             {
               "Name": "updatedApp",
@@ -10247,7 +10268,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.Eventing.AppGraphEventService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -10268,7 +10289,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Eventing.AppGraphEventService.RaiseAppAddEventAsync(cCoder.Data.Models.CMS.App)",
           "Name": "RaiseAppAddEventAsync",
-          "LineNumber": 14,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "app",
@@ -10313,7 +10334,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Eventing.AppGraphEventService.RaiseAppUpdateEventAsync(cCoder.Data.Models.CMS.App)",
           "Name": "RaiseAppUpdateEventAsync",
-          "LineNumber": 23,
+          "LineNumber": 24,
           "Inputs": [
             {
               "Name": "app",
@@ -10360,7 +10381,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.Eventing.PackageImportCompletionEventService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -10381,7 +10402,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Eventing.PackageImportCompletionEventService.RaisePackageImportEventCompleteAsync(cCoder.ContentManagement.Models.PackageImportEvent)",
           "Name": "RaisePackageImportEventCompleteAsync",
-          "LineNumber": 14,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "packageImportEvent",
@@ -10613,7 +10634,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.Mail.MailAppService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -10634,7 +10655,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Mail.MailAppService.AddAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "AddAppAsync",
-          "LineNumber": 13,
+          "LineNumber": 14,
           "Inputs": [
             {
               "Name": "newApp",
@@ -10679,7 +10700,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Mail.MailAppService.DeleteAppAsync(System.Int32)",
           "Name": "DeleteAppAsync",
-          "LineNumber": 33,
+          "LineNumber": 34,
           "Inputs": [
             {
               "Name": "appId",
@@ -10724,7 +10745,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Mail.MailAppService.UpdateAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "UpdateAppAsync",
-          "LineNumber": 23,
+          "LineNumber": 24,
           "Inputs": [
             {
               "Name": "updatedApp",
@@ -10771,7 +10792,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.Mail.MailManagerService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -10792,7 +10813,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Mail.MailManagerService.AddQueuedEmailAsync(cCoder.Data.Models.Mail.QueuedEmail,System.Boolean)",
           "Name": "AddQueuedEmailAsync",
-          "LineNumber": 14,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "newQueuedEmail",
@@ -10918,7 +10939,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.Middleware.CoreFormatterMiddlewareService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 10,
+      "LineNumber": 12,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -10939,7 +10960,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Middleware.CoreFormatterMiddlewareService.InvokeCoreFormatterMiddlewareInvocationNextAsync(cCoder.Core.Models.Middleware.CoreFormatterMiddlewareInvocation)",
           "Name": "InvokeCoreFormatterMiddlewareInvocationNextAsync",
-          "LineNumber": 23,
+          "LineNumber": 25,
           "Inputs": [
             {
               "Name": "coreFormatterMiddlewareInvocation",
@@ -10984,7 +11005,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Middleware.CoreFormatterMiddlewareService.ParseQuery(System.String)",
           "Name": "ParseQuery",
-          "LineNumber": 14,
+          "LineNumber": 16,
           "Inputs": [
             {
               "Name": "queryString",
@@ -11031,7 +11052,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.Notifications.NotificationHubService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -11052,7 +11073,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Notifications.NotificationHubService.ExecuteNotificationHubOperationAsync(cCoder.Core.Models.Notifications.NotificationHubOperation)",
           "Name": "ExecuteNotificationHubOperationAsync",
-          "LineNumber": 14,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "notificationHubOperation",
@@ -11099,7 +11120,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.Packages.AppSecurityPackageService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 11,
+      "LineNumber": 13,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -11120,7 +11141,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Packages.AppSecurityPackageService.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 24,
+          "LineNumber": 26,
           "Inputs": [
             {
               "Name": "appId",
@@ -11169,7 +11190,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Packages.AppSecurityPackageService.ImportPackageAsync(System.Int32,cCoder.Data.Models.Packaging.Package)",
           "Name": "ImportPackageAsync",
-          "LineNumber": 14,
+          "LineNumber": 16,
           "Inputs": [
             {
               "Name": "appId",
@@ -11220,7 +11241,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.Packages.ContentManagementPackageService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -11241,7 +11262,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Packages.ContentManagementPackageService.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 22,
+          "LineNumber": 23,
           "Inputs": [
             {
               "Name": "appId",
@@ -11290,7 +11311,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Packages.ContentManagementPackageService.ImportPackageAsync(System.Int32?,cCoder.Data.Models.Packaging.Package)",
           "Name": "ImportPackageAsync",
-          "LineNumber": 14,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "appId",
@@ -11341,7 +11362,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.Packages.DocumentManagementPackageService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 11,
+      "LineNumber": 13,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -11362,7 +11383,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Packages.DocumentManagementPackageService.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 25,
+          "LineNumber": 27,
           "Inputs": [
             {
               "Name": "appId",
@@ -11411,7 +11432,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Packages.DocumentManagementPackageService.ImportPackageAsync(System.Int32,cCoder.Data.Models.Packaging.Package)",
           "Name": "ImportPackageAsync",
-          "LineNumber": 15,
+          "LineNumber": 17,
           "Inputs": [
             {
               "Name": "appId",
@@ -11462,7 +11483,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.Packages.SchedulingPackageService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 11,
+      "LineNumber": 13,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -11483,7 +11504,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Packages.SchedulingPackageService.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 24,
+          "LineNumber": 26,
           "Inputs": [
             {
               "Name": "appId",
@@ -11532,7 +11553,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Packages.SchedulingPackageService.ImportPackageAsync(System.Int32,cCoder.Data.Models.Packaging.Package)",
           "Name": "ImportPackageAsync",
-          "LineNumber": 14,
+          "LineNumber": 16,
           "Inputs": [
             {
               "Name": "appId",
@@ -11583,7 +11604,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.Packages.WorkflowPackageService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 11,
+      "LineNumber": 13,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -11604,7 +11625,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Packages.WorkflowPackageService.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 24,
+          "LineNumber": 26,
           "Inputs": [
             {
               "Name": "appId",
@@ -11653,7 +11674,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Packages.WorkflowPackageService.ImportPackageAsync(System.Int32,cCoder.Data.Models.Packaging.Package)",
           "Name": "ImportPackageAsync",
-          "LineNumber": 14,
+          "LineNumber": 16,
           "Inputs": [
             {
               "Name": "appId",
@@ -11704,7 +11725,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.Planning.PlanningAppService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -11725,7 +11746,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Planning.PlanningAppService.AddAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "AddAppAsync",
-          "LineNumber": 13,
+          "LineNumber": 14,
           "Inputs": [
             {
               "Name": "newApp",
@@ -11770,7 +11791,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Planning.PlanningAppService.DeleteAppAsync(System.Int32)",
           "Name": "DeleteAppAsync",
-          "LineNumber": 33,
+          "LineNumber": 34,
           "Inputs": [
             {
               "Name": "appId",
@@ -11815,7 +11836,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Planning.PlanningAppService.UpdateAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "UpdateAppAsync",
-          "LineNumber": 23,
+          "LineNumber": 24,
           "Inputs": [
             {
               "Name": "updatedApp",
@@ -11862,7 +11883,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.Setup.CoreSetupStateService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 9,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -11883,7 +11904,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Setup.CoreSetupStateService.IsCoreInitializedAsync(System.Threading.CancellationToken)",
           "Name": "IsCoreInitializedAsync",
-          "LineNumber": 13,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "cancellationToken",
@@ -11924,7 +11945,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.Setup.SecuritySetupStateService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 9,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -11945,7 +11966,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Setup.SecuritySetupStateService.IsSecurityInitializedAsync(System.Threading.CancellationToken)",
           "Name": "IsSecurityInitializedAsync",
-          "LineNumber": 13,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "cancellationToken",
@@ -11986,7 +12007,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.TemplatedEmails.TemplatedEmailContentService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 12,
+      "LineNumber": 14,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -12007,7 +12028,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.TemplatedEmails.TemplatedEmailContentService.RenderTemplatedEmailOperationContent(cCoder.Core.Models.TemplatedEmailOperation)",
           "Name": "RenderTemplatedEmailOperationContent",
-          "LineNumber": 49,
+          "LineNumber": 51,
           "Inputs": [
             {
               "Name": "templatedEmailOperation",
@@ -12052,7 +12073,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.TemplatedEmails.TemplatedEmailContentService.ResolveTemplatedEmailOperationContent(cCoder.Core.Models.TemplatedEmailOperation)",
           "Name": "ResolveTemplatedEmailOperationContent",
-          "LineNumber": 16,
+          "LineNumber": 18,
           "Inputs": [
             {
               "Name": "templatedEmailOperation",
@@ -12115,7 +12136,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.TemplatedEmails.TemplatedEmailIdentityService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 11,
+      "LineNumber": 13,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -12136,7 +12157,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.TemplatedEmails.TemplatedEmailIdentityService.ResolveTemplatedEmailOperationIdentity(cCoder.Core.Models.TemplatedEmailOperation)",
           "Name": "ResolveTemplatedEmailOperationIdentity",
-          "LineNumber": 15,
+          "LineNumber": 17,
           "Inputs": [
             {
               "Name": "templatedEmailOperation",
@@ -12267,7 +12288,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.Workflow.WorkflowAppService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -12288,7 +12309,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Workflow.WorkflowAppService.AddAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "AddAppAsync",
-          "LineNumber": 13,
+          "LineNumber": 14,
           "Inputs": [
             {
               "Name": "newApp",
@@ -12333,7 +12354,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Workflow.WorkflowAppService.DeleteAppAsync(System.Int32)",
           "Name": "DeleteAppAsync",
-          "LineNumber": 33,
+          "LineNumber": 34,
           "Inputs": [
             {
               "Name": "appId",
@@ -12378,7 +12399,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Workflow.WorkflowAppService.UpdateAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "UpdateAppAsync",
-          "LineNumber": 23,
+          "LineNumber": 24,
           "Inputs": [
             {
               "Name": "updatedApp",
@@ -12425,7 +12446,7 @@
     {
       "Name": "cCoder.Core.Services.Orchestrations.FirstTimeSetupStateOrchestrationService",
       "StandardElementType": "OrchestrationService",
-      "LineNumber": 9,
+      "LineNumber": 12,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -12446,7 +12467,7 @@
         {
           "Id": "cCoder.Core.Services.Orchestrations.FirstTimeSetupStateOrchestrationService.IsInitializedAsync(System.Threading.CancellationToken)",
           "Name": "IsInitializedAsync",
-          "LineNumber": 14,
+          "LineNumber": 17,
           "Inputs": [
             {
               "Name": "cancellationToken",
@@ -12499,7 +12520,7 @@
         {
           "Id": "cCoder.Core.Services.Orchestrations.FirstTimeSetupStateOrchestrationService.NormalizeHost(System.String)",
           "Name": "NormalizeHost",
-          "LineNumber": 34,
+          "LineNumber": 37,
           "Inputs": [
             {
               "Name": "host",
@@ -12561,7 +12582,7 @@
     {
       "Name": "cCoder.Core.Services.Orchestrations.HostedServicesAppSecurityAppAddOrchestrationService",
       "StandardElementType": "OrchestrationService",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -12582,7 +12603,7 @@
         {
           "Id": "cCoder.Core.Services.Orchestrations.HostedServicesAppSecurityAppAddOrchestrationService.HandleAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "HandleAppAsync",
-          "LineNumber": 15,
+          "LineNumber": 16,
           "Inputs": [
             {
               "Name": "app",
@@ -12638,7 +12659,7 @@
     {
       "Name": "cCoder.Core.Services.Orchestrations.TemplatedEmailOperationOrchestrationService",
       "StandardElementType": "OrchestrationService",
-      "LineNumber": 12,
+      "LineNumber": 13,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -12669,7 +12690,7 @@
         {
           "Id": "cCoder.Core.Services.Orchestrations.TemplatedEmailOperationOrchestrationService.QueueTemplatedEmailDetailsAsync(cCoder.Mail.Models.TemplatedEmailDetails)",
           "Name": "QueueTemplatedEmailDetailsAsync",
-          "LineNumber": 19,
+          "LineNumber": 20,
           "Inputs": [
             {
               "Name": "templatedEmailDetails",
@@ -12713,7 +12734,7 @@
     {
       "Name": "cCoder.Core.Services.Processings.AllowedOrigins.AllowedOriginStoreProcessingService",
       "StandardElementType": "ProcessingService",
-      "LineNumber": 10,
+      "LineNumber": 13,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -12734,7 +12755,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.AllowedOrigins.AllowedOriginStoreProcessingService.IsCoreAllowedOriginAllowedAsync(System.String)",
           "Name": "IsCoreAllowedOriginAllowedAsync",
-          "LineNumber": 16,
+          "LineNumber": 19,
           "Inputs": [
             {
               "Name": "origin",
@@ -12785,7 +12806,7 @@
     {
       "Name": "cCoder.Core.Services.Processings.Metadata.EdmModelProcessingService",
       "StandardElementType": "ProcessingService",
-      "LineNumber": 14,
+      "LineNumber": 17,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -12806,7 +12827,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Metadata.EdmModelProcessingService.GetEdmModelMetadata(Microsoft.OData.Edm.IEdmModel,System.String)",
           "Name": "GetEdmModelMetadata",
-          "LineNumber": 53,
+          "LineNumber": 56,
           "Inputs": [
             {
               "Name": "model",
@@ -12851,7 +12872,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Metadata.EdmModelProcessingService.GetExtendedMetadataContainer(Microsoft.OData.Edm.IEdmModel,System.String,System.Type,System.Boolean)",
           "Name": "GetExtendedMetadataContainer",
-          "LineNumber": 67,
+          "LineNumber": 70,
           "Inputs": [
             {
               "Name": "model",
@@ -12906,7 +12927,7 @@
     {
       "Name": "cCoder.Core.Services.Processings.Middleware.CoreFormatterMiddlewareProcessingService",
       "StandardElementType": "ProcessingService",
-      "LineNumber": 10,
+      "LineNumber": 13,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -12927,7 +12948,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Middleware.CoreFormatterMiddlewareProcessingService.ProcessAsync(Microsoft.AspNetCore.Http.HttpContext,Microsoft.AspNetCore.Http.RequestDelegate)",
           "Name": "ProcessAsync",
-          "LineNumber": 14,
+          "LineNumber": 17,
           "Inputs": [
             {
               "Name": "context",
@@ -12996,7 +13017,7 @@
     {
       "Name": "cCoder.Core.Services.Processings.Notifications.NotificationHubProcessingService",
       "StandardElementType": "ProcessingService",
-      "LineNumber": 12,
+      "LineNumber": 15,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -13017,7 +13038,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Notifications.NotificationHubProcessingService.ConsoleSendAsync(System.String,System.String,System.String,Microsoft.AspNetCore.SignalR.IHubCallerClients)",
           "Name": "ConsoleSendAsync",
-          "LineNumber": 186,
+          "LineNumber": 189,
           "Inputs": [
             {
               "Name": "level",
@@ -13099,7 +13120,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Notifications.NotificationHubProcessingService.JoinAsync(System.String,System.String,Microsoft.AspNetCore.SignalR.IGroupManager,Microsoft.AspNetCore.SignalR.IHubCallerClients)",
           "Name": "JoinAsync",
-          "LineNumber": 42,
+          "LineNumber": 45,
           "Inputs": [
             {
               "Name": "thread",
@@ -13174,7 +13195,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Notifications.NotificationHubProcessingService.LeaveAsync(System.String,System.String,Microsoft.AspNetCore.SignalR.IGroupManager,Microsoft.AspNetCore.SignalR.IHubCallerClients)",
           "Name": "LeaveAsync",
-          "LineNumber": 113,
+          "LineNumber": 116,
           "Inputs": [
             {
               "Name": "thread",
@@ -13242,7 +13263,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Notifications.NotificationHubProcessingService.OnConnectedAsync(System.Func\u003CSystem.Threading.Tasks.Task\u003E)",
           "Name": "OnConnectedAsync",
-          "LineNumber": 22,
+          "LineNumber": 25,
           "Inputs": [
             {
               "Name": "onConnectedAsync",
@@ -13285,7 +13306,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Notifications.NotificationHubProcessingService.OnDisconnectedAsync(System.Exception,System.Func\u003CSystem.Exception, System.Threading.Tasks.Task\u003E)",
           "Name": "OnDisconnectedAsync",
-          "LineNumber": 30,
+          "LineNumber": 33,
           "Inputs": [
             {
               "Name": "exception",
@@ -13332,7 +13353,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Notifications.NotificationHubProcessingService.Send(System.String,System.String,System.String,Microsoft.AspNetCore.SignalR.IHubCallerClients)",
           "Name": "Send",
-          "LineNumber": 162,
+          "LineNumber": 165,
           "Inputs": [
             {
               "Name": "level",
@@ -13393,7 +13414,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Notifications.NotificationHubProcessingService.SendTestAsync(System.String,System.String,Microsoft.AspNetCore.SignalR.IHubCallerClients)",
           "Name": "SendTestAsync",
-          "LineNumber": 225,
+          "LineNumber": 228,
           "Inputs": [
             {
               "Name": "message",
@@ -13452,7 +13473,7 @@
     {
       "Name": "cCoder.Core.Services.Processings.Packages.AppSecurityPackageProcessingService",
       "StandardElementType": "ProcessingService",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -13473,7 +13494,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Packages.AppSecurityPackageProcessingService.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 21,
+          "LineNumber": 22,
           "Inputs": [
             {
               "Name": "appId",
@@ -13526,7 +13547,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Packages.AppSecurityPackageProcessingService.ImportPackageAsync(System.Int32,cCoder.Data.Models.Packaging.Package)",
           "Name": "ImportPackageAsync",
-          "LineNumber": 14,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "appId",
@@ -13581,7 +13602,7 @@
     {
       "Name": "cCoder.Core.Services.Processings.Packages.ContentManagementAppPackageProcessingService",
       "StandardElementType": "ProcessingService",
-      "LineNumber": 13,
+      "LineNumber": 16,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -13602,7 +13623,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Packages.ContentManagementAppPackageProcessingService.ExportAppConfigurationAsync(System.Int32,System.String)",
           "Name": "ExportAppConfigurationAsync",
-          "LineNumber": 51,
+          "LineNumber": 54,
           "Inputs": [
             {
               "Name": "appId",
@@ -13683,7 +13704,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Packages.ContentManagementAppPackageProcessingService.ImportPackageAsync(System.Int32,cCoder.Data.Models.Packaging.Package)",
           "Name": "ImportPackageAsync",
-          "LineNumber": 20,
+          "LineNumber": 23,
           "Inputs": [
             {
               "Name": "appId",
@@ -13766,7 +13787,7 @@
     {
       "Name": "cCoder.Core.Services.Processings.Packages.ContentManagementPackageProcessingService",
       "StandardElementType": "ProcessingService",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -13787,7 +13808,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Packages.ContentManagementPackageProcessingService.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 21,
+          "LineNumber": 22,
           "Inputs": [
             {
               "Name": "appId",
@@ -13840,7 +13861,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Packages.ContentManagementPackageProcessingService.ImportPackageAsync(System.Int32?,cCoder.Data.Models.Packaging.Package)",
           "Name": "ImportPackageAsync",
-          "LineNumber": 14,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "appId",
@@ -13895,7 +13916,7 @@
     {
       "Name": "cCoder.Core.Services.Processings.Packages.DocumentManagementPackageProcessingService",
       "StandardElementType": "ProcessingService",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -13916,7 +13937,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Packages.DocumentManagementPackageProcessingService.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 21,
+          "LineNumber": 22,
           "Inputs": [
             {
               "Name": "appId",
@@ -13969,7 +13990,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Packages.DocumentManagementPackageProcessingService.ImportPackageAsync(System.Int32,cCoder.Data.Models.Packaging.Package)",
           "Name": "ImportPackageAsync",
-          "LineNumber": 14,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "appId",
@@ -14024,7 +14045,7 @@
     {
       "Name": "cCoder.Core.Services.Processings.Packages.PackageImportCompletionEventProcessingService",
       "StandardElementType": "ProcessingService",
-      "LineNumber": 11,
+      "LineNumber": 12,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -14045,7 +14066,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Packages.PackageImportCompletionEventProcessingService.ProcessPackageImportEventAsync(cCoder.Packaging.Models.PackageImportEvent)",
           "Name": "ProcessPackageImportEventAsync",
-          "LineNumber": 15,
+          "LineNumber": 16,
           "Inputs": [
             {
               "Name": "packageImportEvent",
@@ -14103,7 +14124,7 @@
     {
       "Name": "cCoder.Core.Services.Processings.Packages.SchedulingPackageProcessingService",
       "StandardElementType": "ProcessingService",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -14124,7 +14145,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Packages.SchedulingPackageProcessingService.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 21,
+          "LineNumber": 22,
           "Inputs": [
             {
               "Name": "appId",
@@ -14177,7 +14198,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Packages.SchedulingPackageProcessingService.ImportPackageAsync(System.Int32,cCoder.Data.Models.Packaging.Package)",
           "Name": "ImportPackageAsync",
-          "LineNumber": 14,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "appId",
@@ -14232,7 +14253,7 @@
     {
       "Name": "cCoder.Core.Services.Processings.Packages.WorkflowPackageProcessingService",
       "StandardElementType": "ProcessingService",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -14253,7 +14274,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Packages.WorkflowPackageProcessingService.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 21,
+          "LineNumber": 22,
           "Inputs": [
             {
               "Name": "appId",
@@ -14306,7 +14327,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Packages.WorkflowPackageProcessingService.ImportPackageAsync(System.Int32,cCoder.Data.Models.Packaging.Package)",
           "Name": "ImportPackageAsync",
-          "LineNumber": 14,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "appId",
@@ -14361,7 +14382,7 @@
     {
       "Name": "cCoder.Core.Services.Processings.Setup.SetupRequestHostProcessingService",
       "StandardElementType": "ProcessingService",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -14382,7 +14403,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Setup.SetupRequestHostProcessingService.NormalizeHost(System.String)",
           "Name": "NormalizeHost",
-          "LineNumber": 10,
+          "LineNumber": 11,
           "Inputs": [
             {
               "Name": "host",
@@ -14444,7 +14465,7 @@
     {
       "Name": "cCoder.Core.SetupDatabase",
       "StandardElementType": "Unknown",
-      "LineNumber": 10,
+      "LineNumber": 15,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -14455,7 +14476,7 @@
     {
       "Name": "cCoder.Core.WebApplicationExtensions",
       "StandardElementType": "App",
-      "LineNumber": 20,
+      "LineNumber": 28,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -14465,7 +14486,7 @@
         {
           "Id": "cCoder.Core.WebApplicationExtensions.StartCoreHostedServices(Microsoft.AspNetCore.Builder.WebApplication)",
           "Name": "StartCoreHostedServices",
-          "LineNumber": 59,
+          "LineNumber": 67,
           "Inputs": [
             {
               "Name": "app",
@@ -14642,7 +14663,7 @@
         {
           "Id": "cCoder.Core.WebApplicationExtensions.StartCoreWeb(Microsoft.AspNetCore.Builder.WebApplication)",
           "Name": "StartCoreWeb",
-          "LineNumber": 25,
+          "LineNumber": 33,
           "Inputs": [
             {
               "Name": "app",
@@ -14720,7 +14741,7 @@
     {
       "Name": "cCoder.Core.WebApplicationExtensions.StartupMigrationLock",
       "StandardElementType": "Dependency",
-      "LineNumber": 247,
+      "LineNumber": 255,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -14741,7 +14762,7 @@
         {
           "Id": "cCoder.Core.WebApplicationExtensions.StartupMigrationLock.Dispose()",
           "Name": "Dispose",
-          "LineNumber": 249,
+          "LineNumber": 257,
           "Inputs": [],
           "ReturnType": "System.Void",
           "Implements": [
@@ -14782,7 +14803,7 @@
     {
       "Name": "cCoder.Core.Brokers.AllowedOrigins.IAllowedOriginStoreBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -14792,7 +14813,7 @@
         {
           "Id": "cCoder.Core.Brokers.AllowedOrigins.IAllowedOriginStoreBroker.GetAllowedOrigins()",
           "Name": "GetAllowedOrigins",
-          "LineNumber": 9,
+          "LineNumber": 10,
           "Inputs": [],
           "ReturnType": "System.Collections.Generic.IEnumerable\u003CSystem.String\u003E",
           "Implements": [],
@@ -14814,7 +14835,7 @@
     {
       "Name": "cCoder.Core.Brokers.AppSecurity.IAppSecurityAppBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 11,
+      "LineNumber": 10,
       "IsPublic": true,
       "Kind": "Interface",
       "BaseType": null,
@@ -14824,7 +14845,7 @@
         {
           "Id": "cCoder.Core.Brokers.AppSecurity.IAppSecurityAppBroker.AddAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "AddAppAsync",
-          "LineNumber": 13,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "newApp",
@@ -14849,7 +14870,7 @@
         {
           "Id": "cCoder.Core.Brokers.AppSecurity.IAppSecurityAppBroker.DeleteAppAsync(System.Int32)",
           "Name": "DeleteAppAsync",
-          "LineNumber": 15,
+          "LineNumber": 14,
           "Inputs": [
             {
               "Name": "appId",
@@ -14874,7 +14895,7 @@
         {
           "Id": "cCoder.Core.Brokers.AppSecurity.IAppSecurityAppBroker.UpdateAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "UpdateAppAsync",
-          "LineNumber": 14,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "updatedApp",
@@ -14901,7 +14922,7 @@
     {
       "Name": "cCoder.Core.Brokers.ContentManagement.IContentManagementAppBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 9,
+      "LineNumber": 11,
       "IsPublic": true,
       "Kind": "Interface",
       "BaseType": null,
@@ -14911,7 +14932,7 @@
         {
           "Id": "cCoder.Core.Brokers.ContentManagement.IContentManagementAppBroker.AddAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "AddAppAsync",
-          "LineNumber": 15,
+          "LineNumber": 17,
           "Inputs": [
             {
               "Name": "newApp",
@@ -14936,7 +14957,7 @@
         {
           "Id": "cCoder.Core.Brokers.ContentManagement.IContentManagementAppBroker.DeleteAppAsync(System.Int32)",
           "Name": "DeleteAppAsync",
-          "LineNumber": 17,
+          "LineNumber": 19,
           "Inputs": [
             {
               "Name": "appId",
@@ -14961,7 +14982,7 @@
         {
           "Id": "cCoder.Core.Brokers.ContentManagement.IContentManagementAppBroker.GetAllApps(System.Boolean)",
           "Name": "GetAllApps",
-          "LineNumber": 13,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "ignoreFilters",
@@ -14986,7 +15007,7 @@
         {
           "Id": "cCoder.Core.Brokers.ContentManagement.IContentManagementAppBroker.GetAllAppsWithTemplates(System.Boolean)",
           "Name": "GetAllAppsWithTemplates",
-          "LineNumber": 14,
+          "LineNumber": 16,
           "Inputs": [
             {
               "Name": "ignoreFilters",
@@ -15011,7 +15032,7 @@
         {
           "Id": "cCoder.Core.Brokers.ContentManagement.IContentManagementAppBroker.GetApp(System.Int32,System.Boolean)",
           "Name": "GetApp",
-          "LineNumber": 11,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "appId",
@@ -15040,7 +15061,7 @@
         {
           "Id": "cCoder.Core.Brokers.ContentManagement.IContentManagementAppBroker.GetAppByDomain(System.String,System.Boolean)",
           "Name": "GetAppByDomain",
-          "LineNumber": 12,
+          "LineNumber": 14,
           "Inputs": [
             {
               "Name": "domain",
@@ -15069,7 +15090,7 @@
         {
           "Id": "cCoder.Core.Brokers.ContentManagement.IContentManagementAppBroker.UpdateAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "UpdateAppAsync",
-          "LineNumber": 16,
+          "LineNumber": 18,
           "Inputs": [
             {
               "Name": "updatedApp",
@@ -15096,7 +15117,7 @@
     {
       "Name": "cCoder.Core.Brokers.DocumentManagement.IDocumentManagementAppBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 12,
+      "LineNumber": 10,
       "IsPublic": true,
       "Kind": "Interface",
       "BaseType": null,
@@ -15106,7 +15127,7 @@
         {
           "Id": "cCoder.Core.Brokers.DocumentManagement.IDocumentManagementAppBroker.AddAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "AddAppAsync",
-          "LineNumber": 14,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "newApp",
@@ -15131,7 +15152,7 @@
         {
           "Id": "cCoder.Core.Brokers.DocumentManagement.IDocumentManagementAppBroker.DeleteAppAsync(System.Int32)",
           "Name": "DeleteAppAsync",
-          "LineNumber": 16,
+          "LineNumber": 14,
           "Inputs": [
             {
               "Name": "appId",
@@ -15156,7 +15177,7 @@
         {
           "Id": "cCoder.Core.Brokers.DocumentManagement.IDocumentManagementAppBroker.UpdateAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "UpdateAppAsync",
-          "LineNumber": 15,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "updatedApp",
@@ -15183,7 +15204,7 @@
     {
       "Name": "cCoder.Core.Brokers.Eventing.IAppGraphEventBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -15193,7 +15214,7 @@
         {
           "Id": "cCoder.Core.Brokers.Eventing.IAppGraphEventBroker.RaiseAppAddEventAsync(cCoder.Data.Models.CMS.App)",
           "Name": "RaiseAppAddEventAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "app",
@@ -15218,7 +15239,7 @@
         {
           "Id": "cCoder.Core.Brokers.Eventing.IAppGraphEventBroker.RaiseAppUpdateEventAsync(cCoder.Data.Models.CMS.App)",
           "Name": "RaiseAppUpdateEventAsync",
-          "LineNumber": 13,
+          "LineNumber": 14,
           "Inputs": [
             {
               "Name": "app",
@@ -15245,7 +15266,7 @@
     {
       "Name": "cCoder.Core.Brokers.Eventing.IPackageImportCompletionEventBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -15255,7 +15276,7 @@
         {
           "Id": "cCoder.Core.Brokers.Eventing.IPackageImportCompletionEventBroker.RaisePackageImportEventCompleteAsync(cCoder.ContentManagement.Models.PackageImportEvent)",
           "Name": "RaisePackageImportEventCompleteAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "packageImportEvent",
@@ -15282,7 +15303,7 @@
     {
       "Name": "cCoder.Core.Brokers.Eventing.IServiceBusAppDeleteForwardingBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -15292,7 +15313,7 @@
         {
           "Id": "cCoder.Core.Brokers.Eventing.IServiceBusAppDeleteForwardingBroker.GetCurrentSsoUserId()",
           "Name": "GetCurrentSsoUserId",
-          "LineNumber": 12,
+          "LineNumber": 13,
           "Inputs": [],
           "ReturnType": "System.String",
           "Implements": [],
@@ -15312,7 +15333,7 @@
         {
           "Id": "cCoder.Core.Brokers.Eventing.IServiceBusAppDeleteForwardingBroker.RaiseAppDeleteEventAsync(cCoder.Eventing.AzureServiceBus.Models.ServiceBusEventMessage\u003CcCoder.Data.Models.CMS.App\u003E)",
           "Name": "RaiseAppDeleteEventAsync",
-          "LineNumber": 14,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "message",
@@ -15339,7 +15360,7 @@
     {
       "Name": "cCoder.Core.Brokers.Eventing.IServiceBusFolderDeleteForwardingBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -15349,7 +15370,7 @@
         {
           "Id": "cCoder.Core.Brokers.Eventing.IServiceBusFolderDeleteForwardingBroker.GetCurrentSsoUserId()",
           "Name": "GetCurrentSsoUserId",
-          "LineNumber": 12,
+          "LineNumber": 13,
           "Inputs": [],
           "ReturnType": "System.String",
           "Implements": [],
@@ -15369,7 +15390,7 @@
         {
           "Id": "cCoder.Core.Brokers.Eventing.IServiceBusFolderDeleteForwardingBroker.RaiseFolderDeleteEventAsync(cCoder.Eventing.AzureServiceBus.Models.ServiceBusEventMessage\u003CcCoder.Data.Models.DMS.Folder\u003E)",
           "Name": "RaiseFolderDeleteEventAsync",
-          "LineNumber": 14,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "message",
@@ -15396,7 +15417,7 @@
     {
       "Name": "cCoder.Core.Brokers.Http.IHttpRequestBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -15406,7 +15427,7 @@
         {
           "Id": "cCoder.Core.Brokers.Http.IHttpRequestBroker.GetCurrentRequest()",
           "Name": "GetCurrentRequest",
-          "LineNumber": 9,
+          "LineNumber": 10,
           "Inputs": [],
           "ReturnType": "Microsoft.AspNetCore.Http.HttpRequest",
           "Implements": [],
@@ -15428,7 +15449,7 @@
     {
       "Name": "cCoder.Core.Brokers.Json.IAllowedOriginJsonBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -15438,7 +15459,7 @@
         {
           "Id": "cCoder.Core.Brokers.Json.IAllowedOriginJsonBroker.ExtractOrigins(System.String)",
           "Name": "ExtractOrigins",
-          "LineNumber": 9,
+          "LineNumber": 10,
           "Inputs": [
             {
               "Name": "configJson",
@@ -15538,7 +15559,7 @@
     {
       "Name": "cCoder.Core.Brokers.Loggings.ILoggingBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": true,
       "Kind": "Interface",
       "BaseType": null,
@@ -15548,7 +15569,7 @@
         {
           "Id": "cCoder.Core.Brokers.Loggings.ILoggingBroker.IsDebugEnabled()",
           "Name": "IsDebugEnabled",
-          "LineNumber": 9,
+          "LineNumber": 10,
           "Inputs": [],
           "ReturnType": "System.Boolean",
           "Implements": [],
@@ -15568,7 +15589,7 @@
         {
           "Id": "cCoder.Core.Brokers.Loggings.ILoggingBroker.IsInformationEnabled()",
           "Name": "IsInformationEnabled",
-          "LineNumber": 10,
+          "LineNumber": 11,
           "Inputs": [],
           "ReturnType": "System.Boolean",
           "Implements": [],
@@ -15588,7 +15609,7 @@
         {
           "Id": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogDebug(System.String,System.Object[])",
           "Name": "LogDebug",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "message",
@@ -15617,7 +15638,7 @@
         {
           "Id": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])",
           "Name": "LogError",
-          "LineNumber": 16,
+          "LineNumber": 17,
           "Inputs": [
             {
               "Name": "exception",
@@ -15650,7 +15671,7 @@
         {
           "Id": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogError(System.String,System.Object[])",
           "Name": "LogError",
-          "LineNumber": 15,
+          "LineNumber": 16,
           "Inputs": [
             {
               "Name": "message",
@@ -15679,7 +15700,7 @@
         {
           "Id": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogInformation(System.String,System.Object[])",
           "Name": "LogInformation",
-          "LineNumber": 12,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "message",
@@ -15708,7 +15729,7 @@
         {
           "Id": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogWarning(System.Exception,System.String,System.Object[])",
           "Name": "LogWarning",
-          "LineNumber": 14,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "exception",
@@ -15741,7 +15762,7 @@
         {
           "Id": "cCoder.Core.Brokers.Loggings.ILoggingBroker.LogWarning(System.String,System.Object[])",
           "Name": "LogWarning",
-          "LineNumber": 13,
+          "LineNumber": 14,
           "Inputs": [
             {
               "Name": "message",
@@ -15772,7 +15793,7 @@
     {
       "Name": "cCoder.Core.Brokers.Mail.IMailAppBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 12,
+      "LineNumber": 10,
       "IsPublic": true,
       "Kind": "Interface",
       "BaseType": null,
@@ -15782,7 +15803,7 @@
         {
           "Id": "cCoder.Core.Brokers.Mail.IMailAppBroker.AddAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "AddAppAsync",
-          "LineNumber": 14,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "newApp",
@@ -15807,7 +15828,7 @@
         {
           "Id": "cCoder.Core.Brokers.Mail.IMailAppBroker.DeleteAppAsync(System.Int32)",
           "Name": "DeleteAppAsync",
-          "LineNumber": 16,
+          "LineNumber": 14,
           "Inputs": [
             {
               "Name": "appId",
@@ -15832,7 +15853,7 @@
         {
           "Id": "cCoder.Core.Brokers.Mail.IMailAppBroker.UpdateAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "UpdateAppAsync",
-          "LineNumber": 15,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "updatedApp",
@@ -15900,7 +15921,7 @@
     {
       "Name": "cCoder.Core.Brokers.Metadata.IEdmModelBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 10,
+      "LineNumber": 12,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -15910,7 +15931,7 @@
         {
           "Id": "cCoder.Core.Brokers.Metadata.IEdmModelBroker.RetrieveOperations(Microsoft.OData.Edm.IEdmModel,System.Type)",
           "Name": "RetrieveOperations",
-          "LineNumber": 13,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "model",
@@ -15939,7 +15960,7 @@
         {
           "Id": "cCoder.Core.Brokers.Metadata.IEdmModelBroker.RetrieveTypes(Microsoft.OData.Edm.IEdmModel)",
           "Name": "RetrieveTypes",
-          "LineNumber": 12,
+          "LineNumber": 14,
           "Inputs": [
             {
               "Name": "model",
@@ -15966,7 +15987,7 @@
     {
       "Name": "cCoder.Core.Brokers.Middleware.ICoreFormatterMiddlewareBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 7,
+      "LineNumber": 9,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -15976,7 +15997,7 @@
         {
           "Id": "cCoder.Core.Brokers.Middleware.ICoreFormatterMiddlewareBroker.InvokeNextAsync(System.Object,System.Object)",
           "Name": "InvokeNextAsync",
-          "LineNumber": 10,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "next",
@@ -16005,7 +16026,7 @@
         {
           "Id": "cCoder.Core.Brokers.Middleware.ICoreFormatterMiddlewareBroker.ParseQuery(System.String)",
           "Name": "ParseQuery",
-          "LineNumber": 9,
+          "LineNumber": 11,
           "Inputs": [
             {
               "Name": "queryString",
@@ -16032,7 +16053,7 @@
     {
       "Name": "cCoder.Core.Brokers.Notifications.INotificationHubBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -16042,7 +16063,7 @@
         {
           "Id": "cCoder.Core.Brokers.Notifications.INotificationHubBroker.ExecuteNotificationHubOperationAsync(cCoder.Core.Models.Notifications.NotificationHubOperation)",
           "Name": "ExecuteNotificationHubOperationAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "notificationHubOperation",
@@ -16069,7 +16090,7 @@
     {
       "Name": "cCoder.Core.Brokers.Packaging.IAppSecurityPackageBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -16079,7 +16100,7 @@
         {
           "Id": "cCoder.Core.Brokers.Packaging.IAppSecurityPackageBroker.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 12,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "appId",
@@ -16108,7 +16129,7 @@
         {
           "Id": "cCoder.Core.Brokers.Packaging.IAppSecurityPackageBroker.ImportPackageAsync(System.Int32,cCoder.AppSecurity.Models.AppSecurityPackage)",
           "Name": "ImportPackageAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "appId",
@@ -16139,7 +16160,7 @@
     {
       "Name": "cCoder.Core.Brokers.Packaging.IContentManagementPackageBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -16149,7 +16170,7 @@
         {
           "Id": "cCoder.Core.Brokers.Packaging.IContentManagementPackageBroker.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 12,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "appId",
@@ -16178,7 +16199,7 @@
         {
           "Id": "cCoder.Core.Brokers.Packaging.IContentManagementPackageBroker.ImportPackageAsync(System.Int32?,cCoder.Data.Models.Packaging.Package)",
           "Name": "ImportPackageAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "appId",
@@ -16209,7 +16230,7 @@
     {
       "Name": "cCoder.Core.Brokers.Packaging.IDocumentManagementPackageBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -16219,7 +16240,7 @@
         {
           "Id": "cCoder.Core.Brokers.Packaging.IDocumentManagementPackageBroker.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 12,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "appId",
@@ -16248,7 +16269,7 @@
         {
           "Id": "cCoder.Core.Brokers.Packaging.IDocumentManagementPackageBroker.ImportPackageAsync(System.Int32,cCoder.DocumentManagement.Models.DocumentManagementPackage)",
           "Name": "ImportPackageAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "appId",
@@ -16279,7 +16300,7 @@
     {
       "Name": "cCoder.Core.Brokers.Packaging.ISchedulingPackageBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -16289,7 +16310,7 @@
         {
           "Id": "cCoder.Core.Brokers.Packaging.ISchedulingPackageBroker.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 12,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "appId",
@@ -16318,7 +16339,7 @@
         {
           "Id": "cCoder.Core.Brokers.Packaging.ISchedulingPackageBroker.ImportPackageAsync(System.Int32,cCoder.Workflow.Models.WorkflowPackage)",
           "Name": "ImportPackageAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "appId",
@@ -16349,7 +16370,7 @@
     {
       "Name": "cCoder.Core.Brokers.Packaging.IWorkflowPackageBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -16359,7 +16380,7 @@
         {
           "Id": "cCoder.Core.Brokers.Packaging.IWorkflowPackageBroker.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 12,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "appId",
@@ -16388,7 +16409,7 @@
         {
           "Id": "cCoder.Core.Brokers.Packaging.IWorkflowPackageBroker.ImportPackageAsync(System.Int32,cCoder.Workflow.Models.WorkflowPackage)",
           "Name": "ImportPackageAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "appId",
@@ -16419,7 +16440,7 @@
     {
       "Name": "cCoder.Core.Brokers.Planning.IPlanningAppBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": true,
       "Kind": "Interface",
       "BaseType": null,
@@ -16429,7 +16450,7 @@
         {
           "Id": "cCoder.Core.Brokers.Planning.IPlanningAppBroker.AddAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "AddAppAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "newApp",
@@ -16454,7 +16475,7 @@
         {
           "Id": "cCoder.Core.Brokers.Planning.IPlanningAppBroker.DeleteAppAsync(System.Int32)",
           "Name": "DeleteAppAsync",
-          "LineNumber": 13,
+          "LineNumber": 14,
           "Inputs": [
             {
               "Name": "appId",
@@ -16479,7 +16500,7 @@
         {
           "Id": "cCoder.Core.Brokers.Planning.IPlanningAppBroker.UpdateAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "UpdateAppAsync",
-          "LineNumber": 12,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "updatedApp",
@@ -16506,7 +16527,7 @@
     {
       "Name": "cCoder.Core.Brokers.Setup.ICoreSetupContextBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 7,
+      "LineNumber": 9,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -16516,7 +16537,7 @@
         {
           "Id": "cCoder.Core.Brokers.Setup.ICoreSetupContextBroker.IsInitializedAsync(System.Threading.CancellationToken)",
           "Name": "IsInitializedAsync",
-          "LineNumber": 9,
+          "LineNumber": 11,
           "Inputs": [
             {
               "Name": "cancellationToken",
@@ -16543,7 +16564,7 @@
     {
       "Name": "cCoder.Core.Brokers.Setup.ISecuritySetupContextBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 7,
+      "LineNumber": 9,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -16553,7 +16574,7 @@
         {
           "Id": "cCoder.Core.Brokers.Setup.ISecuritySetupContextBroker.IsInitializedAsync(System.Threading.CancellationToken)",
           "Name": "IsInitializedAsync",
-          "LineNumber": 9,
+          "LineNumber": 11,
           "Inputs": [
             {
               "Name": "cancellationToken",
@@ -16654,7 +16675,7 @@
     {
       "Name": "cCoder.Core.Brokers.TemplatedEmails.ITemplatedEmailIdentityBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -16662,9 +16683,9 @@
       "Properties": [],
       "Methods": [
         {
-          "Id": "cCoder.Core.Brokers.TemplatedEmails.ITemplatedEmailIdentityBroker.GetAllMailSender(System.Boolean)",
-          "Name": "GetAllMailSender",
-          "LineNumber": 14,
+          "Id": "cCoder.Core.Brokers.TemplatedEmails.ITemplatedEmailIdentityBroker.GetAllMailSenders(System.Boolean)",
+          "Name": "GetAllMailSenders",
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "ignoreFilters",
@@ -16689,7 +16710,7 @@
         {
           "Id": "cCoder.Core.Brokers.TemplatedEmails.ITemplatedEmailIdentityBroker.GetCurrentUser()",
           "Name": "GetCurrentUser",
-          "LineNumber": 12,
+          "LineNumber": 13,
           "Inputs": [],
           "ReturnType": "cCoder.Data.Models.Security.User",
           "Implements": [],
@@ -16711,7 +16732,7 @@
     {
       "Name": "cCoder.Core.Brokers.Workflow.IWorkflowAppBroker",
       "StandardElementType": "Broker",
-      "LineNumber": 12,
+      "LineNumber": 10,
       "IsPublic": true,
       "Kind": "Interface",
       "BaseType": null,
@@ -16721,7 +16742,7 @@
         {
           "Id": "cCoder.Core.Brokers.Workflow.IWorkflowAppBroker.AddAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "AddAppAsync",
-          "LineNumber": 14,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "newApp",
@@ -16746,7 +16767,7 @@
         {
           "Id": "cCoder.Core.Brokers.Workflow.IWorkflowAppBroker.DeleteAppAsync(System.Int32)",
           "Name": "DeleteAppAsync",
-          "LineNumber": 16,
+          "LineNumber": 14,
           "Inputs": [
             {
               "Name": "appId",
@@ -16771,7 +16792,7 @@
         {
           "Id": "cCoder.Core.Brokers.Workflow.IWorkflowAppBroker.UpdateAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "UpdateAppAsync",
-          "LineNumber": 15,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "updatedApp",
@@ -16798,7 +16819,7 @@
     {
       "Name": "cCoder.Core.Exposures.Cors.ICoreAllowedOriginStore",
       "StandardElementType": "Exposure",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": true,
       "Kind": "Interface",
       "BaseType": null,
@@ -16808,7 +16829,7 @@
         {
           "Id": "cCoder.Core.Exposures.Cors.ICoreAllowedOriginStore.IsAllowedAsync(System.String)",
           "Name": "IsAllowedAsync",
-          "LineNumber": 9,
+          "LineNumber": 10,
           "Inputs": [
             {
               "Name": "origin",
@@ -16835,7 +16856,7 @@
     {
       "Name": "cCoder.Core.Exposures.Hubs.INotificationHubProcessingService",
       "StandardElementType": "Exposure",
-      "LineNumber": 9,
+      "LineNumber": 11,
       "IsPublic": true,
       "Kind": "Interface",
       "BaseType": null,
@@ -16845,7 +16866,7 @@
         {
           "Id": "cCoder.Core.Exposures.Hubs.INotificationHubProcessingService.ConsoleSendAsync(System.String,System.String,System.String,Microsoft.AspNetCore.SignalR.IHubCallerClients)",
           "Name": "ConsoleSendAsync",
-          "LineNumber": 35,
+          "LineNumber": 37,
           "Inputs": [
             {
               "Name": "level",
@@ -16882,7 +16903,7 @@
         {
           "Id": "cCoder.Core.Exposures.Hubs.INotificationHubProcessingService.JoinAsync(System.String,System.String,Microsoft.AspNetCore.SignalR.IGroupManager,Microsoft.AspNetCore.SignalR.IHubCallerClients)",
           "Name": "JoinAsync",
-          "LineNumber": 17,
+          "LineNumber": 19,
           "Inputs": [
             {
               "Name": "thread",
@@ -16919,7 +16940,7 @@
         {
           "Id": "cCoder.Core.Exposures.Hubs.INotificationHubProcessingService.LeaveAsync(System.String,System.String,Microsoft.AspNetCore.SignalR.IGroupManager,Microsoft.AspNetCore.SignalR.IHubCallerClients)",
           "Name": "LeaveAsync",
-          "LineNumber": 23,
+          "LineNumber": 25,
           "Inputs": [
             {
               "Name": "thread",
@@ -16956,7 +16977,7 @@
         {
           "Id": "cCoder.Core.Exposures.Hubs.INotificationHubProcessingService.OnConnectedAsync(System.Func\u003CSystem.Threading.Tasks.Task\u003E)",
           "Name": "OnConnectedAsync",
-          "LineNumber": 11,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "onConnectedAsync",
@@ -16981,7 +17002,7 @@
         {
           "Id": "cCoder.Core.Exposures.Hubs.INotificationHubProcessingService.OnDisconnectedAsync(System.Exception,System.Func\u003CSystem.Exception, System.Threading.Tasks.Task\u003E)",
           "Name": "OnDisconnectedAsync",
-          "LineNumber": 13,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "exception",
@@ -17010,7 +17031,7 @@
         {
           "Id": "cCoder.Core.Exposures.Hubs.INotificationHubProcessingService.Send(System.String,System.String,System.String,Microsoft.AspNetCore.SignalR.IHubCallerClients)",
           "Name": "Send",
-          "LineNumber": 29,
+          "LineNumber": 31,
           "Inputs": [
             {
               "Name": "level",
@@ -17047,7 +17068,7 @@
         {
           "Id": "cCoder.Core.Exposures.Hubs.INotificationHubProcessingService.SendTestAsync(System.String,System.String,Microsoft.AspNetCore.SignalR.IHubCallerClients)",
           "Name": "SendTestAsync",
-          "LineNumber": 41,
+          "LineNumber": 43,
           "Inputs": [
             {
               "Name": "message",
@@ -17082,7 +17103,7 @@
     {
       "Name": "cCoder.Core.Exposures.ICoreAppManager",
       "StandardElementType": "Exposure",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": true,
       "Kind": "Interface",
       "BaseType": null,
@@ -17092,7 +17113,7 @@
         {
           "Id": "cCoder.Core.Exposures.ICoreAppManager.AddAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "AddAppAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "newApp",
@@ -17117,7 +17138,7 @@
         {
           "Id": "cCoder.Core.Exposures.ICoreAppManager.DeleteAppAsync(System.Int32)",
           "Name": "DeleteAppAsync",
-          "LineNumber": 15,
+          "LineNumber": 16,
           "Inputs": [
             {
               "Name": "appId",
@@ -17142,7 +17163,7 @@
         {
           "Id": "cCoder.Core.Exposures.ICoreAppManager.UpdateAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "UpdateAppAsync",
-          "LineNumber": 13,
+          "LineNumber": 14,
           "Inputs": [
             {
               "Name": "updatedApp",
@@ -17169,7 +17190,7 @@
     {
       "Name": "cCoder.Core.Exposures.IFirstTimeSetupManager",
       "StandardElementType": "Exposure",
-      "LineNumber": 7,
+      "LineNumber": 9,
       "IsPublic": true,
       "Kind": "Interface",
       "BaseType": null,
@@ -17179,7 +17200,7 @@
         {
           "Id": "cCoder.Core.Exposures.IFirstTimeSetupManager.IsInitializedAsync(System.Threading.CancellationToken)",
           "Name": "IsInitializedAsync",
-          "LineNumber": 9,
+          "LineNumber": 11,
           "Inputs": [
             {
               "Name": "cancellationToken",
@@ -17206,7 +17227,7 @@
     {
       "Name": "cCoder.Core.Exposures.Managers.ITemplatedEmailManager",
       "StandardElementType": "Exposure",
-      "LineNumber": 11,
+      "LineNumber": 12,
       "IsPublic": true,
       "Kind": "Interface",
       "BaseType": null,
@@ -17216,7 +17237,7 @@
         {
           "Id": "cCoder.Core.Exposures.Managers.ITemplatedEmailManager.QueueAppTemplatedEmailAsync(cCoder.Data.Models.CMS.App,System.String,System.String,System.Object,System.String,System.String,System.String,System.String)",
           "Name": "QueueAppTemplatedEmailAsync",
-          "LineNumber": 13,
+          "LineNumber": 14,
           "Inputs": [
             {
               "Name": "app",
@@ -17269,7 +17290,7 @@
         {
           "Id": "cCoder.Core.Exposures.Managers.ITemplatedEmailManager.QueueTemplatedEmailDetailsAsync(cCoder.Mail.Models.TemplatedEmailDetails)",
           "Name": "QueueTemplatedEmailDetailsAsync",
-          "LineNumber": 23,
+          "LineNumber": 24,
           "Inputs": [
             {
               "Name": "details",
@@ -17333,7 +17354,7 @@
     {
       "Name": "cCoder.Core.Services.Aggregations.IAppAggregationService",
       "StandardElementType": "AggregationService",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": true,
       "Kind": "Interface",
       "BaseType": null,
@@ -17343,7 +17364,7 @@
         {
           "Id": "cCoder.Core.Services.Aggregations.IAppAggregationService.AddAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "AddAppAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "newApp",
@@ -17368,7 +17389,7 @@
         {
           "Id": "cCoder.Core.Services.Aggregations.IAppAggregationService.DeleteAppAsync(System.Int32)",
           "Name": "DeleteAppAsync",
-          "LineNumber": 15,
+          "LineNumber": 16,
           "Inputs": [
             {
               "Name": "appId",
@@ -17393,7 +17414,7 @@
         {
           "Id": "cCoder.Core.Services.Aggregations.IAppAggregationService.UpdateAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "UpdateAppAsync",
-          "LineNumber": 13,
+          "LineNumber": 14,
           "Inputs": [
             {
               "Name": "updatedApp",
@@ -17420,7 +17441,7 @@
     {
       "Name": "cCoder.Core.Services.Aggregations.ISecurityAccountEmailAggregationService",
       "StandardElementType": "AggregationService",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -17430,7 +17451,7 @@
         {
           "Id": "cCoder.Core.Services.Aggregations.ISecurityAccountEmailAggregationService.QueueInvitationCreatedSecurityAccountEventEmailAsync(cCoder.Security.Models.Events.SecurityAccountEvent)",
           "Name": "QueueInvitationCreatedSecurityAccountEventEmailAsync",
-          "LineNumber": 14,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "accountEvent",
@@ -17455,7 +17476,7 @@
         {
           "Id": "cCoder.Core.Services.Aggregations.ISecurityAccountEmailAggregationService.QueuePasswordResetRequestedSecurityAccountEventEmailAsync(cCoder.Security.Models.Events.SecurityAccountEvent)",
           "Name": "QueuePasswordResetRequestedSecurityAccountEventEmailAsync",
-          "LineNumber": 17,
+          "LineNumber": 18,
           "Inputs": [
             {
               "Name": "accountEvent",
@@ -17480,7 +17501,7 @@
         {
           "Id": "cCoder.Core.Services.Aggregations.ISecurityAccountEmailAggregationService.QueueRegistrationCreatedSecurityAccountEventEmailAsync(cCoder.Security.Models.Events.SecurityAccountEvent)",
           "Name": "QueueRegistrationCreatedSecurityAccountEventEmailAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "accountEvent",
@@ -17507,7 +17528,7 @@
     {
       "Name": "cCoder.Core.Services.Aggregations.IUserRegistrationAggregationService",
       "StandardElementType": "AggregationService",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -17517,7 +17538,7 @@
         {
           "Id": "cCoder.Core.Services.Aggregations.IUserRegistrationAggregationService.ExecuteUserRegistrationOperationAsync(cCoder.Core.Models.UserRegistrationOperation)",
           "Name": "ExecuteUserRegistrationOperationAsync",
-          "LineNumber": 12,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "userRegistrationOperation",
@@ -17542,7 +17563,7 @@
         {
           "Id": "cCoder.Core.Services.Aggregations.IUserRegistrationAggregationService.GetUserRegistrationOperation(cCoder.Core.Models.UserRegistrationOperation)",
           "Name": "GetUserRegistrationOperation",
-          "LineNumber": 15,
+          "LineNumber": 16,
           "Inputs": [
             {
               "Name": "userRegistrationOperation",
@@ -17569,7 +17590,7 @@
     {
       "Name": "cCoder.Core.Services.Aggregations.Packages.IPackageImportAggregationService",
       "StandardElementType": "AggregationService",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -17579,7 +17600,7 @@
         {
           "Id": "cCoder.Core.Services.Aggregations.Packages.IPackageImportAggregationService.ProcessPackageImportEventAsync(cCoder.Packaging.Models.PackageImportEvent)",
           "Name": "ProcessPackageImportEventAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "packageImportEvent",
@@ -17606,7 +17627,7 @@
     {
       "Name": "cCoder.Core.Services.Aggregations.Packages.IPackageManagerAggregationService",
       "StandardElementType": "AggregationService",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -17616,7 +17637,7 @@
         {
           "Id": "cCoder.Core.Services.Aggregations.Packages.IPackageManagerAggregationService.ExportPackagesAsync(System.Int32,System.String[],System.String)",
           "Name": "ExportPackagesAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "appId",
@@ -17651,7 +17672,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.AllowedOrigins.IAllowedOriginStoreService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -17661,7 +17682,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.AllowedOrigins.IAllowedOriginStoreService.GetAllowedOriginsAsync()",
           "Name": "GetAllowedOriginsAsync",
-          "LineNumber": 9,
+          "LineNumber": 10,
           "Inputs": [],
           "ReturnType": "System.Threading.Tasks.ValueTask\u003CSystem.String[]\u003E",
           "Implements": [],
@@ -17683,7 +17704,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.AppSecurity.IAppSecurityAppService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -17693,7 +17714,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.AppSecurity.IAppSecurityAppService.AddAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "AddAppAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "newApp",
@@ -17718,7 +17739,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.AppSecurity.IAppSecurityAppService.DeleteAppAsync(System.Int32)",
           "Name": "DeleteAppAsync",
-          "LineNumber": 15,
+          "LineNumber": 16,
           "Inputs": [
             {
               "Name": "appId",
@@ -17743,7 +17764,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.AppSecurity.IAppSecurityAppService.UpdateAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "UpdateAppAsync",
-          "LineNumber": 13,
+          "LineNumber": 14,
           "Inputs": [
             {
               "Name": "updatedApp",
@@ -17770,7 +17791,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.AppSecurity.IAppSecurityUserRoleService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -17780,7 +17801,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.AppSecurity.IAppSecurityUserRoleService.SaveAppUserRolesAsync(cCoder.Data.Models.CMS.App)",
           "Name": "SaveAppUserRolesAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "app",
@@ -17807,7 +17828,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.ContentManagement.IContentManagementAppService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 9,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -17817,7 +17838,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.ContentManagement.IContentManagementAppService.AddAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "AddAppAsync",
-          "LineNumber": 15,
+          "LineNumber": 17,
           "Inputs": [
             {
               "Name": "newApp",
@@ -17842,7 +17863,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.ContentManagement.IContentManagementAppService.DeleteAppAsync(System.Int32)",
           "Name": "DeleteAppAsync",
-          "LineNumber": 17,
+          "LineNumber": 19,
           "Inputs": [
             {
               "Name": "appId",
@@ -17867,7 +17888,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.ContentManagement.IContentManagementAppService.GetAllApps(System.Boolean)",
           "Name": "GetAllApps",
-          "LineNumber": 13,
+          "LineNumber": 15,
           "Inputs": [
             {
               "Name": "ignoreFilters",
@@ -17892,7 +17913,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.ContentManagement.IContentManagementAppService.GetAllAppsWithTemplates(System.Boolean)",
           "Name": "GetAllAppsWithTemplates",
-          "LineNumber": 14,
+          "LineNumber": 16,
           "Inputs": [
             {
               "Name": "ignoreFilters",
@@ -17917,7 +17938,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.ContentManagement.IContentManagementAppService.GetApp(System.Int32,System.Boolean)",
           "Name": "GetApp",
-          "LineNumber": 11,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "appId",
@@ -17946,7 +17967,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.ContentManagement.IContentManagementAppService.GetAppByDomain(System.String,System.Boolean)",
           "Name": "GetAppByDomain",
-          "LineNumber": 12,
+          "LineNumber": 14,
           "Inputs": [
             {
               "Name": "domain",
@@ -17975,7 +17996,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.ContentManagement.IContentManagementAppService.UpdateAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "UpdateAppAsync",
-          "LineNumber": 16,
+          "LineNumber": 18,
           "Inputs": [
             {
               "Name": "updatedApp",
@@ -18002,7 +18023,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.DocumentManagement.IDocumentManagementAppService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -18012,7 +18033,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.DocumentManagement.IDocumentManagementAppService.AddAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "AddAppAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "newApp",
@@ -18037,7 +18058,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.DocumentManagement.IDocumentManagementAppService.DeleteAppAsync(System.Int32)",
           "Name": "DeleteAppAsync",
-          "LineNumber": 13,
+          "LineNumber": 14,
           "Inputs": [
             {
               "Name": "appId",
@@ -18062,7 +18083,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.DocumentManagement.IDocumentManagementAppService.UpdateAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "UpdateAppAsync",
-          "LineNumber": 12,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "updatedApp",
@@ -18089,7 +18110,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.Eventing.IAppGraphEventService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -18099,7 +18120,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Eventing.IAppGraphEventService.RaiseAppAddEventAsync(cCoder.Data.Models.CMS.App)",
           "Name": "RaiseAppAddEventAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "app",
@@ -18124,7 +18145,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Eventing.IAppGraphEventService.RaiseAppUpdateEventAsync(cCoder.Data.Models.CMS.App)",
           "Name": "RaiseAppUpdateEventAsync",
-          "LineNumber": 13,
+          "LineNumber": 14,
           "Inputs": [
             {
               "Name": "app",
@@ -18151,7 +18172,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.Eventing.IPackageImportCompletionEventService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -18161,7 +18182,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Eventing.IPackageImportCompletionEventService.RaisePackageImportEventCompleteAsync(cCoder.ContentManagement.Models.PackageImportEvent)",
           "Name": "RaisePackageImportEventCompleteAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "packageImportEvent",
@@ -18188,7 +18209,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.Eventing.IServiceBusAppDeleteForwardingService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -18198,7 +18219,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Eventing.IServiceBusAppDeleteForwardingService.ForwardAppDeleteAsync(cCoder.Data.Models.CMS.App)",
           "Name": "ForwardAppDeleteAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "app",
@@ -18225,7 +18246,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.Eventing.IServiceBusFolderDeleteForwardingService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -18235,7 +18256,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Eventing.IServiceBusFolderDeleteForwardingService.ForwardFolderDeleteAsync(cCoder.Data.Models.DMS.Folder)",
           "Name": "ForwardFolderDeleteAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "folder",
@@ -18262,7 +18283,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.Mail.IMailAppService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -18272,7 +18293,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Mail.IMailAppService.AddAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "AddAppAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "newApp",
@@ -18297,7 +18318,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Mail.IMailAppService.DeleteAppAsync(System.Int32)",
           "Name": "DeleteAppAsync",
-          "LineNumber": 13,
+          "LineNumber": 14,
           "Inputs": [
             {
               "Name": "appId",
@@ -18322,7 +18343,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Mail.IMailAppService.UpdateAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "UpdateAppAsync",
-          "LineNumber": 12,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "updatedApp",
@@ -18427,7 +18448,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.Middleware.ICoreFormatterMiddlewareService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -18437,7 +18458,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Middleware.ICoreFormatterMiddlewareService.InvokeCoreFormatterMiddlewareInvocationNextAsync(cCoder.Core.Models.Middleware.CoreFormatterMiddlewareInvocation)",
           "Name": "InvokeCoreFormatterMiddlewareInvocationNextAsync",
-          "LineNumber": 12,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "coreFormatterMiddlewareInvocation",
@@ -18462,7 +18483,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Middleware.ICoreFormatterMiddlewareService.ParseQuery(System.String)",
           "Name": "ParseQuery",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "queryString",
@@ -18489,7 +18510,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.Notifications.INotificationHubService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -18499,7 +18520,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Notifications.INotificationHubService.ExecuteNotificationHubOperationAsync(cCoder.Core.Models.Notifications.NotificationHubOperation)",
           "Name": "ExecuteNotificationHubOperationAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "notificationHubOperation",
@@ -18526,7 +18547,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.Packages.IAppSecurityPackageService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -18536,7 +18557,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Packages.IAppSecurityPackageService.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 12,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "appId",
@@ -18565,7 +18586,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Packages.IAppSecurityPackageService.ImportPackageAsync(System.Int32,cCoder.Data.Models.Packaging.Package)",
           "Name": "ImportPackageAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "appId",
@@ -18596,7 +18617,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.Packages.IContentManagementPackageService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -18606,7 +18627,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Packages.IContentManagementPackageService.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 12,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "appId",
@@ -18635,7 +18656,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Packages.IContentManagementPackageService.ImportPackageAsync(System.Int32?,cCoder.Data.Models.Packaging.Package)",
           "Name": "ImportPackageAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "appId",
@@ -18666,7 +18687,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.Packages.IDocumentManagementPackageService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -18676,7 +18697,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Packages.IDocumentManagementPackageService.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 12,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "appId",
@@ -18705,7 +18726,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Packages.IDocumentManagementPackageService.ImportPackageAsync(System.Int32,cCoder.Data.Models.Packaging.Package)",
           "Name": "ImportPackageAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "appId",
@@ -18736,7 +18757,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.Packages.ISchedulingPackageService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -18746,7 +18767,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Packages.ISchedulingPackageService.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 12,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "appId",
@@ -18775,7 +18796,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Packages.ISchedulingPackageService.ImportPackageAsync(System.Int32,cCoder.Data.Models.Packaging.Package)",
           "Name": "ImportPackageAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "appId",
@@ -18806,7 +18827,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.Packages.IWorkflowPackageService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -18816,7 +18837,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Packages.IWorkflowPackageService.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 12,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "appId",
@@ -18845,7 +18866,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Packages.IWorkflowPackageService.ImportPackageAsync(System.Int32,cCoder.Data.Models.Packaging.Package)",
           "Name": "ImportPackageAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "appId",
@@ -18876,7 +18897,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.Planning.IPlanningAppService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -18886,7 +18907,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Planning.IPlanningAppService.AddAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "AddAppAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "newApp",
@@ -18911,7 +18932,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Planning.IPlanningAppService.DeleteAppAsync(System.Int32)",
           "Name": "DeleteAppAsync",
-          "LineNumber": 13,
+          "LineNumber": 14,
           "Inputs": [
             {
               "Name": "appId",
@@ -18936,7 +18957,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Planning.IPlanningAppService.UpdateAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "UpdateAppAsync",
-          "LineNumber": 12,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "updatedApp",
@@ -18963,7 +18984,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.Setup.ICoreSetupStateService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 7,
+      "LineNumber": 9,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -18973,7 +18994,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Setup.ICoreSetupStateService.IsCoreInitializedAsync(System.Threading.CancellationToken)",
           "Name": "IsCoreInitializedAsync",
-          "LineNumber": 9,
+          "LineNumber": 11,
           "Inputs": [
             {
               "Name": "cancellationToken",
@@ -19000,7 +19021,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.Setup.ISecuritySetupStateService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 7,
+      "LineNumber": 9,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -19010,7 +19031,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Setup.ISecuritySetupStateService.IsSecurityInitializedAsync(System.Threading.CancellationToken)",
           "Name": "IsSecurityInitializedAsync",
-          "LineNumber": 9,
+          "LineNumber": 11,
           "Inputs": [
             {
               "Name": "cancellationToken",
@@ -19136,7 +19157,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.TemplatedEmails.ITemplatedEmailQueueService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -19146,7 +19167,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.TemplatedEmails.ITemplatedEmailQueueService.QueueTemplatedEmailOperationAsync(cCoder.Core.Models.TemplatedEmailOperation)",
           "Name": "QueueTemplatedEmailOperationAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "templatedEmailOperation",
@@ -19173,7 +19194,7 @@
     {
       "Name": "cCoder.Core.Services.Foundations.Workflow.IWorkflowAppService",
       "StandardElementType": "FoundationService",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -19183,7 +19204,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Workflow.IWorkflowAppService.AddAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "AddAppAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "newApp",
@@ -19208,7 +19229,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Workflow.IWorkflowAppService.DeleteAppAsync(System.Int32)",
           "Name": "DeleteAppAsync",
-          "LineNumber": 13,
+          "LineNumber": 14,
           "Inputs": [
             {
               "Name": "appId",
@@ -19233,7 +19254,7 @@
         {
           "Id": "cCoder.Core.Services.Foundations.Workflow.IWorkflowAppService.UpdateAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "UpdateAppAsync",
-          "LineNumber": 12,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "updatedApp",
@@ -19260,7 +19281,7 @@
     {
       "Name": "cCoder.Core.Services.Orchestrations.IAppOrchestrationService",
       "StandardElementType": "OrchestrationService",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -19281,7 +19302,7 @@
         {
           "Id": "cCoder.Core.Services.Orchestrations.IAppOrchestrationService.AddAsync(cCoder.Data.Models.CMS.App)",
           "Name": "AddAsync",
-          "LineNumber": 12,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "app",
@@ -19314,7 +19335,7 @@
         {
           "Id": "cCoder.Core.Services.Orchestrations.IAppOrchestrationService.DeleteAsync(System.Int32)",
           "Name": "DeleteAsync",
-          "LineNumber": 18,
+          "LineNumber": 19,
           "Inputs": [
             {
               "Name": "appId",
@@ -19347,7 +19368,7 @@
         {
           "Id": "cCoder.Core.Services.Orchestrations.IAppOrchestrationService.UpdateAsync(cCoder.Data.Models.CMS.App)",
           "Name": "UpdateAsync",
-          "LineNumber": 15,
+          "LineNumber": 16,
           "Inputs": [
             {
               "Name": "app",
@@ -19382,7 +19403,7 @@
     {
       "Name": "cCoder.Core.Services.Orchestrations.IFirstTimeSetupStateOrchestrationService",
       "StandardElementType": "OrchestrationService",
-      "LineNumber": 7,
+      "LineNumber": 9,
       "IsPublic": true,
       "Kind": "Interface",
       "BaseType": null,
@@ -19392,7 +19413,7 @@
         {
           "Id": "cCoder.Core.Services.Orchestrations.IFirstTimeSetupStateOrchestrationService.IsInitializedAsync(System.Threading.CancellationToken)",
           "Name": "IsInitializedAsync",
-          "LineNumber": 9,
+          "LineNumber": 11,
           "Inputs": [
             {
               "Name": "cancellationToken",
@@ -19417,7 +19438,7 @@
         {
           "Id": "cCoder.Core.Services.Orchestrations.IFirstTimeSetupStateOrchestrationService.NormalizeHost(System.String)",
           "Name": "NormalizeHost",
-          "LineNumber": 12,
+          "LineNumber": 14,
           "Inputs": [
             {
               "Name": "host",
@@ -19444,7 +19465,7 @@
     {
       "Name": "cCoder.Core.Services.Orchestrations.IHostedServicesAppSecurityAppAddOrchestrationService",
       "StandardElementType": "OrchestrationService",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -19454,7 +19475,7 @@
         {
           "Id": "cCoder.Core.Services.Orchestrations.IHostedServicesAppSecurityAppAddOrchestrationService.HandleAppAsync(cCoder.Data.Models.CMS.App)",
           "Name": "HandleAppAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "app",
@@ -19481,7 +19502,7 @@
     {
       "Name": "cCoder.Core.Services.Orchestrations.ITemplatedEmailOperationOrchestrationService",
       "StandardElementType": "OrchestrationService",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -19491,7 +19512,7 @@
         {
           "Id": "cCoder.Core.Services.Orchestrations.ITemplatedEmailOperationOrchestrationService.QueueTemplatedEmailOperationAsync(cCoder.Core.Models.TemplatedEmailOperation)",
           "Name": "QueueTemplatedEmailOperationAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "templatedEmailOperation",
@@ -19518,7 +19539,7 @@
     {
       "Name": "cCoder.Core.Services.Orchestrations.ITemplatedEmailOrchestrationService",
       "StandardElementType": "OrchestrationService",
-      "LineNumber": 10,
+      "LineNumber": 11,
       "IsPublic": true,
       "Kind": "Interface",
       "BaseType": null,
@@ -19528,7 +19549,7 @@
         {
           "Id": "cCoder.Core.Services.Orchestrations.ITemplatedEmailOrchestrationService.QueueTemplatedEmailDetailsAsync(cCoder.Mail.Models.TemplatedEmailDetails)",
           "Name": "QueueTemplatedEmailDetailsAsync",
-          "LineNumber": 12,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "templatedEmailDetails",
@@ -19686,7 +19707,7 @@
     {
       "Name": "cCoder.Core.Services.Processings.AllowedOrigins.IAllowedOriginStoreProcessingService",
       "StandardElementType": "ProcessingService",
-      "LineNumber": 7,
+      "LineNumber": 8,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -19696,7 +19717,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.AllowedOrigins.IAllowedOriginStoreProcessingService.IsCoreAllowedOriginAllowedAsync(System.String)",
           "Name": "IsCoreAllowedOriginAllowedAsync",
-          "LineNumber": 9,
+          "LineNumber": 10,
           "Inputs": [
             {
               "Name": "origin",
@@ -19723,7 +19744,7 @@
     {
       "Name": "cCoder.Core.Services.Processings.Metadata.IEdmModelProcessingService",
       "StandardElementType": "ProcessingService",
-      "LineNumber": 10,
+      "LineNumber": 12,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -19733,7 +19754,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Metadata.IEdmModelProcessingService.GetEdmModelMetadata(Microsoft.OData.Edm.IEdmModel,System.String)",
           "Name": "GetEdmModelMetadata",
-          "LineNumber": 12,
+          "LineNumber": 14,
           "Inputs": [
             {
               "Name": "model",
@@ -19762,7 +19783,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Metadata.IEdmModelProcessingService.GetExtendedMetadataContainer(Microsoft.OData.Edm.IEdmModel,System.String,System.Type,System.Boolean)",
           "Name": "GetExtendedMetadataContainer",
-          "LineNumber": 16,
+          "LineNumber": 18,
           "Inputs": [
             {
               "Name": "model",
@@ -19801,7 +19822,7 @@
     {
       "Name": "cCoder.Core.Services.Processings.Middleware.ICoreFormatterMiddlewareProcessingService",
       "StandardElementType": "ProcessingService",
-      "LineNumber": 7,
+      "LineNumber": 9,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -19811,7 +19832,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Middleware.ICoreFormatterMiddlewareProcessingService.ProcessAsync(Microsoft.AspNetCore.Http.HttpContext,Microsoft.AspNetCore.Http.RequestDelegate)",
           "Name": "ProcessAsync",
-          "LineNumber": 9,
+          "LineNumber": 11,
           "Inputs": [
             {
               "Name": "context",
@@ -19842,7 +19863,7 @@
     {
       "Name": "cCoder.Core.Services.Processings.Packages.IAppSecurityPackageProcessingService",
       "StandardElementType": "ProcessingService",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -19852,7 +19873,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Packages.IAppSecurityPackageProcessingService.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 12,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "appId",
@@ -19881,7 +19902,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Packages.IAppSecurityPackageProcessingService.ImportPackageAsync(System.Int32,cCoder.Data.Models.Packaging.Package)",
           "Name": "ImportPackageAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "appId",
@@ -19912,7 +19933,7 @@
     {
       "Name": "cCoder.Core.Services.Processings.Packages.IContentManagementAppPackageProcessingService",
       "StandardElementType": "ProcessingService",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -19922,7 +19943,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Packages.IContentManagementAppPackageProcessingService.ExportAppConfigurationAsync(System.Int32,System.String)",
           "Name": "ExportAppConfigurationAsync",
-          "LineNumber": 12,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "appId",
@@ -19951,7 +19972,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Packages.IContentManagementAppPackageProcessingService.ImportPackageAsync(System.Int32,cCoder.Data.Models.Packaging.Package)",
           "Name": "ImportPackageAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "appId",
@@ -19982,7 +20003,7 @@
     {
       "Name": "cCoder.Core.Services.Processings.Packages.IContentManagementPackageProcessingService",
       "StandardElementType": "ProcessingService",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -19992,7 +20013,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Packages.IContentManagementPackageProcessingService.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 12,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "appId",
@@ -20021,7 +20042,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Packages.IContentManagementPackageProcessingService.ImportPackageAsync(System.Int32?,cCoder.Data.Models.Packaging.Package)",
           "Name": "ImportPackageAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "appId",
@@ -20052,7 +20073,7 @@
     {
       "Name": "cCoder.Core.Services.Processings.Packages.IDocumentManagementPackageProcessingService",
       "StandardElementType": "ProcessingService",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -20062,7 +20083,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Packages.IDocumentManagementPackageProcessingService.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 12,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "appId",
@@ -20091,7 +20112,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Packages.IDocumentManagementPackageProcessingService.ImportPackageAsync(System.Int32,cCoder.Data.Models.Packaging.Package)",
           "Name": "ImportPackageAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "appId",
@@ -20122,7 +20143,7 @@
     {
       "Name": "cCoder.Core.Services.Processings.Packages.IPackageImportCompletionEventProcessingService",
       "StandardElementType": "ProcessingService",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -20132,7 +20153,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Packages.IPackageImportCompletionEventProcessingService.ProcessPackageImportEventAsync(cCoder.Packaging.Models.PackageImportEvent)",
           "Name": "ProcessPackageImportEventAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "packageImportEvent",
@@ -20159,7 +20180,7 @@
     {
       "Name": "cCoder.Core.Services.Processings.Packages.ISchedulingPackageProcessingService",
       "StandardElementType": "ProcessingService",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -20169,7 +20190,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Packages.ISchedulingPackageProcessingService.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 12,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "appId",
@@ -20198,7 +20219,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Packages.ISchedulingPackageProcessingService.ImportPackageAsync(System.Int32,cCoder.Data.Models.Packaging.Package)",
           "Name": "ImportPackageAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "appId",
@@ -20229,7 +20250,7 @@
     {
       "Name": "cCoder.Core.Services.Processings.Packages.IWorkflowPackageProcessingService",
       "StandardElementType": "ProcessingService",
-      "LineNumber": 9,
+      "LineNumber": 10,
       "IsPublic": false,
       "Kind": "Interface",
       "BaseType": null,
@@ -20239,7 +20260,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Packages.IWorkflowPackageProcessingService.ExportPackage(System.Int32,System.String)",
           "Name": "ExportPackage",
-          "LineNumber": 12,
+          "LineNumber": 13,
           "Inputs": [
             {
               "Name": "appId",
@@ -20268,7 +20289,7 @@
         {
           "Id": "cCoder.Core.Services.Processings.Packages.IWorkflowPackageProcessingService.ImportPackageAsync(System.Int32,cCoder.Data.Models.Packaging.Package)",
           "Name": "ImportPackageAsync",
-          "LineNumber": 11,
+          "LineNumber": 12,
           "Inputs": [
             {
               "Name": "appId",
@@ -20908,21 +20929,21 @@
       "Description": "The type is not a valid Standard element type.",
       "Severity": "Warning",
       "Type": "cCoder.Core.AllowedOriginJsonParser",
-      "LineNumber": 10
+      "LineNumber": 13
     },
     {
       "Code": "STX0001",
       "Description": "The type is not a valid Standard element type.",
       "Severity": "Warning",
       "Type": "cCoder.Core.EdmModelReader",
-      "LineNumber": 11
+      "LineNumber": 13
     },
     {
       "Code": "STX0001",
       "Description": "The type is not a valid Standard element type.",
       "Severity": "Warning",
       "Type": "cCoder.Core.SetupDatabase",
-      "LineNumber": 10
+      "LineNumber": 15
     }
   ]
 }
