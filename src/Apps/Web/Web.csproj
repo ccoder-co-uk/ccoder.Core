@@ -7,7 +7,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OData" Version="9.5.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="10.0.12" />
-    <!-- Keep the OpenAPI assembly aligned with the Swashbuckle 10.2.3 ABI. -->
+    <!-- Keep the OpenAPI assembly aligned with Swashbuckle 10.2.3. -->
     <PackageReference Include="Microsoft.OpenApi" Version="2.7.5" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="10.2.3" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.2.3" />

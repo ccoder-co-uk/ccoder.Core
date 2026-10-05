@@ -149,25 +149,11 @@ internal sealed class IntegrationTestConfiguration
             : fallback;
 
     private static string ReadOptionalValue(string variableName) =>
-        Environment.GetEnvironmentVariable(variable: variableName)
-        ?? Environment.GetEnvironmentVariable(
-            variable: variableName,
-            target: EnvironmentVariableTarget.User)
-        ?? Environment.GetEnvironmentVariable(
-            variable: variableName,
-            target: EnvironmentVariableTarget.Machine);
+        TestConfiguration.ReadOptionalValue(variableName: variableName);
 
     private static string ReadRequiredValue(string variableName)
     {
-        string value = ReadOptionalValue(variableName: variableName);
-
-        if (!string.IsNullOrWhiteSpace(value: value))
-        {
-            return value;
-        }
-
-        throw new InvalidOperationException(
-            $"Required configuration environment variable '{variableName}' was not found.");
+        return TestConfiguration.ReadRequiredValue(variableName: variableName);
     }
 
     private static string AddDatabaseSuffix(
