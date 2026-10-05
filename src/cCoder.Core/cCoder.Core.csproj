@@ -122,17 +122,17 @@
     <PackageReference Include="cCoder.Packaging" Version="2026.9.30.1234" Condition="'$(UseLocalPackaging)' != 'true'" />
     <PackageReference Include="cCoder.Security" Version="2026.9.30.1202" Condition="'$(UseLocalSecurity)' != 'true'" />
     <PackageReference Include="cCoder.Security.Data" Version="2026.9.30.1202" Condition="'$(UseLocalSecurity)' != 'true'" />
-    <PackageReference Include="cCoder.Workflow" Version="2026.9.30.1854" Condition="'$(UseLocalWorkflow)' != 'true'" />
-    <PackageReference Include="cCoder.Workflow.Activities" Version="2026.9.30.1854" Condition="'$(UseLocalWorkflow)' != 'true'" />
-    <PackageReference Include="cCoder.Workflow.Engine" Version="2026.9.30.1854" Condition="'$(UseLocalWorkflow)' != 'true'" />
+    <PackageReference Include="cCoder.Workflow" Version="2026.10.5.1213" Condition="'$(UseLocalWorkflow)' != 'true'" />
+    <PackageReference Include="cCoder.Workflow.Activities" Version="2026.10.5.1213" Condition="'$(UseLocalWorkflow)' != 'true'" />
+    <PackageReference Include="cCoder.Workflow.Engine" Version="2026.10.5.1213" Condition="'$(UseLocalWorkflow)' != 'true'" />
     <PackageReference Include="Microsoft.AspNetCore.OData" Version="9.5.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.12" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.7.4" />
-    <PackageReference Include="itext" Version="9.7.0" />
-    <PackageReference Include="itext.pdfhtml" Version="6.3.3" />
-    <PackageReference Include="itext.bouncy-castle-adapter" Version="9.7.0" />
-    <!-- Swashbuckle 10.2.3 requires the 2.x OpenAPI ABI. -->
+    <PackageReference Include="itext" Version="9.8.0" />
+    <PackageReference Include="itext.pdfhtml" Version="6.3.4" />
+    <PackageReference Include="itext.bouncy-castle-adapter" Version="9.8.0" />
+    <!-- Keep the OpenAPI assembly aligned with Swashbuckle 10.2.3. -->
     <PackageReference Include="Microsoft.OpenApi" Version="2.7.5" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="10.2.3" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.2.3" />
