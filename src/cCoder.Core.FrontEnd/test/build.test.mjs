@@ -13,21 +13,17 @@ const stageDirectory = path.join(projectDirectory, "stage");
 
 test("build stages the public frontend assets", async () => {
     const expectedAssets = [
-        "everything.js",
         "everything.min.js",
-        "everything.css",
         "everything.min.css",
-        "core.js",
-        "code-editor.js",
+        "core.min.js",
         "code-editor.min.js",
-        "code-editor.css",
         "code-editor.min.css",
-        "editor.js",
-        "monaco.js",
-        "widget.js",
-        "workflow.js",
-        "framework.js",
-        "background.js",
+        "editor.min.js",
+        "monaco.min.js",
+        "widget.min.js",
+        "workflow.min.js",
+        "framework.min.js",
+        "background.min.js",
         "lib/monaco/min/vs/loader.js",
         "lib/monaco/min/vs/editor/editor.main.js",
         "lib/monaco/min/vs/editor/editor.main.css",
@@ -48,13 +44,28 @@ test("build stages the public frontend assets", async () => {
 
 test("build does not stage frontend source or dependency inputs", async () => {
     const excludedAssets = [
+        "everything.js",
+        "everything.css",
+        "core.js",
+        "code-editor.js",
+        "code-editor.css",
+        "editor.js",
+        "monaco.js",
+        "widget.js",
+        "workflow.js",
+        "framework.js",
+        "background.js",
         "bootstrap/css/site.min.css",
         "bootstrap/lib/Core/api.js",
         "bootstrap/lib/core.js",
         "bootstrap/lib/widgets/widget.js",
         "css/site.min.css",
         "dependencies/dependencies.min.js",
-        "dependencies/kendo/kendo-ui-license.js"
+        "dependencies/kendo/kendo-ui-license.js",
+        "lib/monaco/min/vs/language/css/css.worker.js",
+        "lib/monaco/min/vs/language/html/html.worker.js",
+        "lib/monaco/min/vs/language/json/json.worker.js",
+        "lib/monaco/min/vs/language/typescript/ts.worker.js"
     ];
 
     for (const excludedAsset of excludedAssets) {
@@ -66,7 +77,7 @@ test("build does not stage frontend source or dependency inputs", async () => {
 
 test("everything JavaScript is syntactically valid", async () => {
     const everything = await readFile(
-        path.join(stageDirectory, "everything.js"),
+        path.join(stageDirectory, "everything.min.js"),
         "utf8");
 
     assert.doesNotThrow(() => new vm.Script(everything));
@@ -74,11 +85,11 @@ test("everything JavaScript is syntactically valid", async () => {
 
 test("build does not depend on the legacy Kendo icon font", async () => {
     const everythingCss = await readFile(
-        path.join(stageDirectory, "everything.css"),
+        path.join(stageDirectory, "everything.min.css"),
         "utf8");
 
     const workflow = await readFile(
-        path.join(stageDirectory, "workflow.js"),
+        path.join(stageDirectory, "workflow.min.js"),
         "utf8");
 
     assert.doesNotMatch(everythingCss, /kendo-font-icons\.ttf/i);
@@ -88,7 +99,7 @@ test("build does not depend on the legacy Kendo icon font", async () => {
 
 test("framework preserves the configured bundle order", async () => {
     const framework = await readFile(
-        path.join(stageDirectory, "framework.js"),
+        path.join(stageDirectory, "framework.min.js"),
         "utf8");
 
     const drawingPosition = framework.indexOf("class Drawable");
@@ -97,7 +108,7 @@ test("framework preserves the configured bundle order", async () => {
     const workflowPosition = framework.indexOf("class WorkflowDesigner");
     const jqueryPosition = framework.indexOf("jQuery v3.7.0");
     const bootstrapPosition = framework.indexOf("Bootstrap v5");
-    const kendoPosition = framework.indexOf("Kendo UI v2024");
+    const kendoPosition = framework.indexOf("@progress/kendo-ui");
 
     assert.ok(jqueryPosition >= 0);
     assert.ok(bootstrapPosition > jqueryPosition);
@@ -120,11 +131,11 @@ test("framework keeps concatenated scripts as separate statements", async () => 
 
 test("workflow remains an independently cacheable bundle", async () => {
     const framework = await readFile(
-        path.join(stageDirectory, "framework.js"),
+        path.join(stageDirectory, "framework.min.js"),
         "utf8");
 
     const workflow = await readFile(
-        path.join(stageDirectory, "workflow.js"),
+        path.join(stageDirectory, "workflow.min.js"),
         "utf8");
 
     assert.doesNotMatch(framework, /class WorkflowDesigner/);
@@ -133,7 +144,7 @@ test("workflow remains an independently cacheable bundle", async () => {
 
 test("workflow editor uses Workflow domain API routes", async () => {
     const workflow = await readFile(
-        path.join(stageDirectory, "workflow.js"),
+        path.join(stageDirectory, "workflow.min.js"),
         "utf8");
 
     assert.match(workflow, /Workflow\/FlowDefinition\(/);
@@ -144,11 +155,11 @@ test("workflow editor uses Workflow domain API routes", async () => {
 
 test("code editor remains an independently cacheable bundle", async () => {
     const framework = await readFile(
-        path.join(stageDirectory, "framework.js"),
+        path.join(stageDirectory, "framework.min.js"),
         "utf8");
 
     const codeEditor = await readFile(
-        path.join(stageDirectory, "code-editor.js"),
+        path.join(stageDirectory, "code-editor.min.js"),
         "utf8");
 
     assert.doesNotMatch(framework, /class MonacoEditor/);

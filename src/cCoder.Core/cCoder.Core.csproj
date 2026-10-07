@@ -67,6 +67,20 @@
     <ProjectReference Include="..\cCoder.Core.FrontEnd\cCoder.Core.FrontEnd.esproj" ReferenceOutputAssembly="false" />
   </ItemGroup>
   <ItemGroup>
+    <Content Remove="wwwroot\background.js" />
+    <Content Remove="wwwroot\code-editor.css" />
+    <Content Remove="wwwroot\code-editor.js" />
+    <Content Remove="wwwroot\core.js" />
+    <Content Remove="wwwroot\editor.js" />
+    <Content Remove="wwwroot\everything.css" />
+    <Content Remove="wwwroot\everything.js" />
+    <Content Remove="wwwroot\framework.js" />
+    <Content Remove="wwwroot\monaco.js" />
+    <Content Remove="wwwroot\widget.js" />
+    <Content Remove="wwwroot\workflow.js" />
+    <Content Remove="wwwroot\lib\monaco\min\vs\language\**\*.worker.js" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="..\..\LICENSE.txt" Pack="true" PackagePath="\" />
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
