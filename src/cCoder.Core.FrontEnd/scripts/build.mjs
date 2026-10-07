@@ -124,10 +124,12 @@ await rm(stageDirectory, {
     recursive: true
 });
 
+const javascriptBundleContents = {};
+
 for (const [outputPath, inputPaths] of Object.entries(javascriptBundles)) {
     const contents = await readJavaScriptFiles(inputPaths);
+    javascriptBundleContents[outputPath] = contents;
 
-    await write(outputPath, contents);
     await write(
         outputPath.replace(/\.js$/, ".min.js"),
         await minify(contents, "js"));
@@ -147,11 +149,10 @@ const dependencies = [
 const framework = [
     dependencies,
     drawing,
-    await readFile(path.join(stageDirectory, "widget.js"), "utf8"),
-    await readFile(path.join(stageDirectory, "core.js"), "utf8")
+    javascriptBundleContents["widget.js"],
+    javascriptBundleContents["core.js"]
 ].join(";\n");
 
-await write("framework.js", framework);
 await write(
     "framework.min.js",
     await minify(framework, "js"));
@@ -160,7 +161,6 @@ const background = await readJavaScriptFiles([
     "bootstrap/lib/background.js"
 ]);
 
-await write("background.js", background);
 await write(
     "background.min.js",
     await minify(background, "js"));
@@ -177,19 +177,15 @@ const everything = [
         "utf8")
 ].join(";\n");
 
-await write("everything.js", everything);
 await write("everything.min.js", everything);
 
 const codeEditor = [
-    await readFile(
-        path.join(stageDirectory, "monaco.js"),
-        "utf8"),
+    javascriptBundleContents["monaco.js"],
     await readFile(
         path.join(assetsDirectory, "dependencies/monaco/javascript-validation.js"),
         "utf8")
 ].join(";\n");
 
-await write("code-editor.js", codeEditor);
 await write(
     "code-editor.min.js",
     await minify(codeEditor, "js"));
@@ -198,13 +194,22 @@ const codeEditorCss = await readFile(
     path.join(assetsDirectory, "dependencies/monaco/runtime.css"),
     "utf8");
 
-await write("code-editor.css", codeEditorCss);
 await write("code-editor.min.css", codeEditorCss);
 
 await cp(
     monacoDistributionDirectory,
     path.join(stageDirectory, "lib/monaco/min/vs"),
-    { recursive: true });
+    {
+        filter: sourcePath => {
+            const relativePath = path
+                .relative(monacoDistributionDirectory, sourcePath)
+                .replaceAll("\\", "/");
+
+            return !/^language\/[^/]+\/[^/]+\.worker\.js$/.test(
+                relativePath);
+        },
+        recursive: true
+    });
 
 const bootstrapSiteCss = await readFile(
     path.join(assetsDirectory, "bootstrap/css/site.css"),
@@ -220,5 +225,4 @@ const everythingCss = [
     await minify(bootstrapSiteCss, "css")
 ].join("\n");
 
-await write("everything.css", everythingCss);
 await write("everything.min.css", everythingCss);
