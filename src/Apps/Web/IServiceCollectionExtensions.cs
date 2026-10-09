@@ -14,6 +14,7 @@ using Web.Brokers.Api;
 using Web.Services.Foundations.Api;
 using Web.Services.Orchestrations.Api;
 using Web.Dependencies;
+using Web.Dependencies.Api;
 using Web.Brokers.HomeSessions;
 using Web.Services.Foundations.HomeSessions;
 
@@ -77,6 +78,7 @@ public static class IServiceCollectionExtensions
 
     private static void AddDependencies(this IServiceCollection services)
     {
+        services.AddScoped<ApiScriptExecutionDependency>();
         services.AddScoped<HomeSessionDependency>();
     }
 

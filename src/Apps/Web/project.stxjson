@@ -2220,7 +2220,7 @@
     {
       "Name": "Web.IServiceCollectionExtensions",
       "StandardElementType": "App",
-      "LineNumber": 22,
+      "LineNumber": 23,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": null,
@@ -2230,7 +2230,7 @@
         {
           "Id": "Web.IServiceCollectionExtensions.AddWeb(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration,System.Action\u003CWeb.Models.AppConfiguration\u003E)",
           "Name": "AddWeb",
-          "LineNumber": 24,
+          "LineNumber": 25,
           "Inputs": [
             {
               "Name": "services",
