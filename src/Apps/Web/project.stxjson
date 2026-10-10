@@ -1776,7 +1776,7 @@
         {
           "Id": "Web.Dependencies.HomeSessionDependency.AbortRequest(Microsoft.AspNetCore.Http.HttpContext)",
           "Name": "AbortRequest",
-          "LineNumber": 81,
+          "LineNumber": 93,
           "Inputs": [
             {
               "Name": "context",
@@ -1853,7 +1853,7 @@
         {
           "Id": "Web.Dependencies.HomeSessionDependency.IsLocalUrl(Microsoft.AspNetCore.Mvc.IUrlHelper,System.String)",
           "Name": "IsLocalUrl",
-          "LineNumber": 84,
+          "LineNumber": 96,
           "Inputs": [
             {
               "Name": "urlHelper",
@@ -1915,7 +1915,7 @@
         {
           "Id": "Web.Dependencies.HomeSessionDependency.RemoveSessionValue(Microsoft.AspNetCore.Http.HttpContext,System.String)",
           "Name": "RemoveSessionValue",
-          "LineNumber": 78,
+          "LineNumber": 90,
           "Inputs": [
             {
               "Name": "context",
@@ -2190,8 +2190,22 @@
           "Calls": [
             {
               "TypeName": "Microsoft.AspNetCore.Http.SessionExtensions",
+              "MethodName": "GetString",
+              "MethodId": "Microsoft.AspNetCore.Http.SessionExtensions.GetString(Microsoft.AspNetCore.Http.ISession,System.String)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "Microsoft.AspNetCore.Http.SessionExtensions",
               "MethodName": "SetString",
               "MethodId": "Microsoft.AspNetCore.Http.SessionExtensions.SetString(Microsoft.AspNetCore.Http.ISession,System.String,System.String)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "System.String",
+              "MethodName": "Equals",
+              "MethodId": "System.String.Equals(System.String?,System.String?,System.StringComparison)",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
             },

@@ -70,10 +70,22 @@ internal sealed class HomeSessionDependency(
     public void SetSessionValue(
         HttpContext context,
         string key,
-        string value) =>
+        string value)
+    {
+        string normalizedKey = key.ToLowerInvariant();
+
+        if (string.Equals(
+            a: context.Session.GetString(key: normalizedKey),
+            b: value,
+            comparisonType: StringComparison.Ordinal))
+        {
+            return;
+        }
+
         context.Session.SetString(
-            key: key.ToLowerInvariant(),
+            key: normalizedKey,
             value: value);
+    }
 
     public void RemoveSessionValue(HttpContext context, string key) =>
         context.Session.Remove(key: key.ToLowerInvariant());
