@@ -19,6 +19,7 @@ public sealed partial class ResponseCompressionTests(WebAcceptanceFixture fixtur
     {
         // Given
         using HttpClient client = fixture.CreateMetadataClient();
+        client.BaseAddress = new(uriString: "https://localhost");
 
         using HttpRequestMessage request = new(
             method: HttpMethod.Get,
