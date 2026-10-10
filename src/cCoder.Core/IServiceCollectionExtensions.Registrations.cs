@@ -813,7 +813,8 @@ predicate: (documentName, apiDescription) =>
             services.GetRegisteredCoreConfiguration();
 
         services.AddRouting();
-        services.AddResponseCompression();
+        services.AddResponseCompression(options =>
+            options.EnableForHttps = true);
         services.AddHttpClient();
         services.AddHttpContextAccessor();
 
