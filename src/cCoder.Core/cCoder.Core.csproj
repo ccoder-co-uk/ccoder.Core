@@ -134,8 +134,8 @@
     <PackageReference Include="cCoder.Logging" Version="2026.10.8.1332" Condition="'$(UseLocalLogging)' != 'true'" />
     <PackageReference Include="cCoder.Mail" Version="2026.10.8.1334" Condition="'$(UseLocalMail)' != 'true'" />
     <PackageReference Include="cCoder.Packaging" Version="2026.10.8.1315" Condition="'$(UseLocalPackaging)' != 'true'" />
-    <PackageReference Include="cCoder.Security" Version="2026.10.10.900" Condition="'$(UseLocalSecurity)' != 'true'" />
-    <PackageReference Include="cCoder.Security.Data" Version="2026.10.10.900" Condition="'$(UseLocalSecurity)' != 'true'" />
+    <PackageReference Include="cCoder.Security" Version="2026.10.10.924" Condition="'$(UseLocalSecurity)' != 'true'" />
+    <PackageReference Include="cCoder.Security.Data" Version="2026.10.10.924" Condition="'$(UseLocalSecurity)' != 'true'" />
     <PackageReference Include="cCoder.Workflow" Version="2026.10.8.1336" Condition="'$(UseLocalWorkflow)' != 'true'" />
     <PackageReference Include="cCoder.Workflow.Activities" Version="2026.10.8.1336" Condition="'$(UseLocalWorkflow)' != 'true'" />
     <PackageReference Include="cCoder.Workflow.Engine" Version="2026.10.8.1336" Condition="'$(UseLocalWorkflow)' != 'true'" />
