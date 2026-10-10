@@ -44,6 +44,7 @@ public static partial class WebApplicationExtensions
 
         app.EnsureCoreDatabasesMigrated(log: log);
         app.UseHttpsRedirection();
+        app.UseResponseCompression();
         app.UseCoreSecurityHeaders();
         app.UseCoreApi(log: log);
 

@@ -14486,7 +14486,7 @@
         {
           "Id": "cCoder.Core.WebApplicationExtensions.StartCoreHostedServices(Microsoft.AspNetCore.Builder.WebApplication)",
           "Name": "StartCoreHostedServices",
-          "LineNumber": 67,
+          "LineNumber": 68,
           "Inputs": [
             {
               "Name": "app",
@@ -14681,6 +14681,13 @@
               "IsDependencyBoundary": true
             },
             {
+              "TypeName": "Microsoft.AspNetCore.Builder.ResponseCompressionBuilderExtensions",
+              "MethodName": "UseResponseCompression",
+              "MethodId": "Microsoft.AspNetCore.Builder.ResponseCompressionBuilderExtensions.UseResponseCompression(Microsoft.AspNetCore.Builder.IApplicationBuilder)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
               "TypeName": "Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions",
               "MethodName": "GetService",
               "MethodId": "Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetService(System.IServiceProvider)",
@@ -14741,7 +14748,7 @@
     {
       "Name": "cCoder.Core.WebApplicationExtensions.StartupMigrationLock",
       "StandardElementType": "Dependency",
-      "LineNumber": 255,
+      "LineNumber": 256,
       "IsPublic": false,
       "Kind": "Class",
       "BaseType": null,
@@ -14762,7 +14769,7 @@
         {
           "Id": "cCoder.Core.WebApplicationExtensions.StartupMigrationLock.Dispose()",
           "Name": "Dispose",
-          "LineNumber": 257,
+          "LineNumber": 258,
           "Inputs": [],
           "ReturnType": "System.Void",
           "Implements": [
