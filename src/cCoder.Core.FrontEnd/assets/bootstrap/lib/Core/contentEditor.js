@@ -83,6 +83,9 @@
 
     setupToolbars() {
         this.kendoEditor = $(this.element).kendoEditor({
+            serialization: {
+                scripts: true
+            },
 
             tools: [
                 "bold",
