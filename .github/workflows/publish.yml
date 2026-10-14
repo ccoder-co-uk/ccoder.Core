@@ -62,11 +62,23 @@ jobs:
           $securityDatabase = "ccoder-security-ci-${{ github.run_id }}-${{ github.run_attempt }}"
           $coreConnection = "Server=(localdb)\MSSQLLocalDB;Database=$coreDatabase;Integrated Security=True;TrustServerCertificate=True;"
           $securityConnection = "Server=(localdb)\MSSQLLocalDB;Database=$securityDatabase;Integrated Security=True;TrustServerCertificate=True;"
+          $keyBytes = New-Object byte[] 32
+          $random = [Security.Cryptography.RandomNumberGenerator]::Create()
+
+          try {
+            $random.GetBytes($keyBytes)
+          }
+          finally {
+            $random.Dispose()
+          }
+
+          $decryptionKey = [Convert]::ToBase64String($keyBytes)
 
           "CoreData__ConnectionString=$coreConnection" >> $env:GITHUB_ENV
           "AppSecurity__ConnectionString=$coreConnection" >> $env:GITHUB_ENV
           "SecurityData__ConnectionString=$securityConnection" >> $env:GITHUB_ENV
           "Security__ConnectionString=$securityConnection" >> $env:GITHUB_ENV
+          "Security__DecryptionKey=$decryptionKey" >> $env:GITHUB_ENV
 
       - name: Create version number
         id: version

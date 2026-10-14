@@ -20,7 +20,8 @@ $requiredHostedBuildRunner = @(
     'uses: actions/setup-dotnet@v6',
     'sqllocaldb start MSSQLLocalDB',
     'CoreData__ConnectionString=',
-    'SecurityData__ConnectionString='
+    'SecurityData__ConnectionString=',
+    'Security__DecryptionKey='
 )
 
 foreach ($requiredHostedBuildFragment in $requiredHostedBuildRunner) {
