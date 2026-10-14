@@ -15,6 +15,24 @@ $composeFiles = @(
     "Docker/ci/compose.yml"
 )
 
+$requiredHostedBuildRunner = @(
+    'runs-on: windows-2025',
+    'uses: actions/setup-dotnet@v6',
+    'sqllocaldb start MSSQLLocalDB',
+    'CoreData__ConnectionString=',
+    'SecurityData__ConnectionString='
+)
+
+foreach ($requiredHostedBuildFragment in $requiredHostedBuildRunner) {
+    if (-not $publishWorkflow.Contains($requiredHostedBuildFragment)) {
+        throw "publish.yml does not provide the required hosted Windows build environment: $requiredHostedBuildFragment"
+    }
+}
+
+if ($publishWorkflow.Contains('runs-on: [self-hosted, Windows, X64, test]')) {
+    throw "publish.yml still blocks the build on the on-premises test runner."
+}
+
 if ($publishWorkflow -notmatch [regex]::Escape('path: ${{ env.APPLICATION_DIRECTORY }}/publish/latest')) {
     throw "The applications artifact must continue to upload the contents of publish/latest."
 }

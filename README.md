@@ -131,7 +131,7 @@ dotnet test src\Apps\cCoder.IntegrationTests\cCoder.IntegrationTests.csproj /p:U
 
 The local assembly version override is only needed while downstream packages still reference the currently published Security assembly version. Once the package chain has been republished, consume the published package versions and run without the override.
 
-The publish workflow runs on a self-hosted runner and always restores, builds, and tests `src/cCoder.Core.slnx` before packing.
+The publish workflow runs its restore, build, test, and package stages on a pinned GitHub-hosted Windows runner with disposable LocalDB databases. The application-release workflow then builds and smoke-tests the containerised release assets on a GitHub-hosted Linux runner. On-premises deployment remains a separate concern and does not block package or container publication.
 
 ## Platform Functionality
 
