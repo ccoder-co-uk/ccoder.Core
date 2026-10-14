@@ -160,10 +160,8 @@ public static partial class WebApplicationExtensions
                         ?? string.Empty);
 
             bool isDocumentationRequest =
-                context.Request.Path.StartsWithSegments(
-                    other: "/swagger",
-                    comparisonType:
-                        StringComparison.OrdinalIgnoreCase);
+                IsApiDocumentationRequest(
+                    path: context.Request.Path);
 
             if (((isMetadataRequest
                     || isODataServiceDocumentRequest)
@@ -202,6 +200,18 @@ public static partial class WebApplicationExtensions
 
         return app;
     }
+
+    internal static bool IsApiDocumentationRequest(
+        PathString path) =>
+        path.StartsWithSegments(
+            other: "/swagger",
+            comparisonType:
+                StringComparison.OrdinalIgnoreCase)
+        || string.Equals(
+            a: path.Value?.TrimEnd('/'),
+            b: "/$odata",
+            comparisonType:
+                StringComparison.OrdinalIgnoreCase);
 
     internal static bool AuthorizeApiMetadataRequest(
         HttpContext context)
