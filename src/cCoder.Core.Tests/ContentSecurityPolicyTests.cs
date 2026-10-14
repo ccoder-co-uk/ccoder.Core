@@ -36,6 +36,12 @@ public sealed partial class ContentSecurityPolicyTests
             .Contain(expected: "style-src-attr 'unsafe-inline'");
 
         policy.Should()
+            .Contain(expected: "style-src-elem 'self' 'unsafe-inline'");
+
+        policy.Should()
+            .Contain(expected: "worker-src 'self' blob:");
+
+        policy.Should()
             .Contain(expected: "frame-ancestors 'none'");
 
         policy.Should()
