@@ -102,8 +102,10 @@ public static partial class WebApplicationExtensions
             "font-src 'self' data:; " +
             $"style-src 'self' 'nonce-{nonce}'; " +
             "style-src-attr 'unsafe-inline'; " +
+            "style-src-elem 'self' 'unsafe-inline'; " +
             $"script-src 'self' 'nonce-{nonce}'; " +
             "script-src-attr 'none'; " +
+            "worker-src 'self' blob:; " +
             "connect-src 'self'; " +
             "frame-src 'self';";
 
