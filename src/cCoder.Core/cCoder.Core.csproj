@@ -125,7 +125,7 @@
   <ItemGroup>
     <PackageReference Include="cCoder.AI" Version="2026.10.8.1224" Condition="'$(UseLocalAI)' != 'true'" />
     <PackageReference Include="cCoder.AppSecurity" Version="2026.10.8.1310" Condition="'$(UseLocalAppSecurity)' != 'true'" />
-    <PackageReference Include="cCoder.ContentManagement" Version="2026.10.11.104" Condition="'$(UseLocalContentManagement)' != 'true'" />
+    <PackageReference Include="cCoder.ContentManagement" Version="2026.10.19.1816" Condition="'$(UseLocalContentManagement)' != 'true'" />
     <PackageReference Include="cCoder.Data" Version="2026.10.14.1440" Condition="'$(UseLocalData)' != 'true'" />
     <PackageReference Include="cCoder.DocumentManagement" Version="2026.10.8.1330" Condition="'$(UseLocalDocumentManagement)' != 'true'" />
     <PackageReference Include="cCoder.Eventing" Version="2026.10.8.1222" Condition="'$(UseLocalEventing)' != 'true'" />
@@ -140,17 +140,17 @@
     <PackageReference Include="cCoder.Workflow.Activities" Version="2026.10.8.1336" Condition="'$(UseLocalWorkflow)' != 'true'" />
     <PackageReference Include="cCoder.Workflow.Engine" Version="2026.10.8.1336" Condition="'$(UseLocalWorkflow)' != 'true'" />
     <PackageReference Include="Microsoft.AspNetCore.OData" Version="9.5.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.12" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.13" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.7.4" />
     <PackageReference Include="itext" Version="9.8.0" />
     <PackageReference Include="itext.pdfhtml" Version="6.3.4" />
     <PackageReference Include="itext.bouncy-castle-adapter" Version="9.8.0" />
     <!-- Keep the OpenAPI assembly aligned with Swashbuckle 10.2.3. -->
-    <PackageReference Include="Microsoft.OpenApi" Version="2.7.5" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="10.2.3" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.2.3" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.2.3" />
+    <PackageReference Include="Microsoft.OpenApi" Version="3.11.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="10.3.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.3.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.3.1" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="cCoder.CodeAnalysis" Version="2026.10.8.1211" />
