@@ -16,7 +16,7 @@
     <PackageReference Include="cCoder.Security.Data" Version="2026.10.14.1427" Condition="'$(UseLocalSecurity)' != 'true'" />
     <PackageReference Include="cCoder.Mail.Providers" Version="2026.10.8.1334" />
     <PackageReference Include="FluentAssertions" Version="8.11.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.12" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.13" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="7.1.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.10.1" />
     <PackageReference Include="xunit" Version="2.9.3" />
