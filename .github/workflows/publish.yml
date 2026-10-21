@@ -29,7 +29,7 @@ defaults:
 
 jobs:
   build-test-pack:
-    runs-on: [self-hosted, Windows, X64, test]
+    runs-on: windows-2025
     timeout-minutes: 60
     outputs:
       version: ${{ steps.version.outputs.value }}
@@ -42,6 +42,43 @@ jobs:
         uses: actions/checkout@v7
         with:
           path: ccoder.Core
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.x
+
+      - name: Prepare isolated test databases
+        run: |
+          $localDbInstances = @(sqllocaldb info)
+
+          if ($localDbInstances -notcontains "MSSQLLocalDB") {
+            sqllocaldb create MSSQLLocalDB
+          }
+
+          sqllocaldb start MSSQLLocalDB
+
+          $coreDatabase = "ccoder-core-ci-${{ github.run_id }}-${{ github.run_attempt }}"
+          $securityDatabase = "ccoder-security-ci-${{ github.run_id }}-${{ github.run_attempt }}"
+          $coreConnection = "Server=(localdb)\MSSQLLocalDB;Database=$coreDatabase;Integrated Security=True;TrustServerCertificate=True;"
+          $securityConnection = "Server=(localdb)\MSSQLLocalDB;Database=$securityDatabase;Integrated Security=True;TrustServerCertificate=True;"
+          $keyBytes = New-Object byte[] 32
+          $random = [Security.Cryptography.RandomNumberGenerator]::Create()
+
+          try {
+            $random.GetBytes($keyBytes)
+          }
+          finally {
+            $random.Dispose()
+          }
+
+          $decryptionKey = [Convert]::ToBase64String($keyBytes)
+
+          "CoreData__ConnectionString=$coreConnection" >> $env:GITHUB_ENV
+          "AppSecurity__ConnectionString=$coreConnection" >> $env:GITHUB_ENV
+          "SecurityData__ConnectionString=$securityConnection" >> $env:GITHUB_ENV
+          "Security__ConnectionString=$securityConnection" >> $env:GITHUB_ENV
+          "Security__DecryptionKey=$decryptionKey" >> $env:GITHUB_ENV
 
       - name: Create version number
         id: version
@@ -59,6 +96,21 @@ jobs:
           node-version: 24
           cache: npm
           cache-dependency-path: ccoder.Core/src/cCoder.Core.FrontEnd/package-lock.json
+
+      - name: Install Azure Functions Core Tools
+        run: |
+          npm install --global azure-functions-core-tools@4 --allow-scripts=azure-functions-core-tools
+          $npmPrefix = npm prefix --global
+          $npmPrefix | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          $funcExecutable = @(
+            (Join-Path $npmPrefix 'node_modules/azure-functions-core-tools/bin/func.exe')
+            (Join-Path $npmPrefix 'node_modules/azure-functions-core-tools/bin/in-proc6/func.exe')
+          ) | Where-Object { Test-Path $_ } | Select-Object -First 1
+          if ([string]::IsNullOrWhiteSpace($funcExecutable)) {
+            throw 'Azure Functions Core Tools did not install func.exe in the expected package location.'
+          }
+          & $funcExecutable --version
+          "FUNCTIONS_CORE_TOOLS_PATH=$funcExecutable" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Restore
         run: dotnet restore ccoder.Core/src/cCoder.Core.slnx --source https://api.nuget.org/v3/index.json --no-http-cache
