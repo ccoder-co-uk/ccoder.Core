@@ -16,6 +16,48 @@ namespace cCoder.Core.Tests;
 
 public sealed partial class ApiMetadataAuthorizationTests
 {
+    [Theory]
+    [InlineData("/swagger")]
+    [InlineData("/swagger/index.html")]
+    [InlineData("/$odata")]
+    [InlineData("/$ODATA/")]
+    public void ShouldIdentifyGeneratedApiDocumentationPaths(
+        string path)
+    {
+        // Given
+        PathString requestPath = new(value: path);
+
+        // When
+        bool result =
+            WebApplicationExtensions.IsApiDocumentationRequest(
+                path: requestPath);
+
+        // Then
+        result.Should()
+            .BeTrue();
+    }
+
+    [Theory]
+    [InlineData("/")]
+    [InlineData("/Api")]
+    [InlineData("/Api/B2B/$metadata")]
+    [InlineData("/Documentation/Metadata")]
+    public void ShouldNotIdentifyOrdinaryApplicationPathsAsApiDocumentation(
+        string path)
+    {
+        // Given
+        PathString requestPath = new(value: path);
+
+        // When
+        bool result =
+            WebApplicationExtensions.IsApiDocumentationRequest(
+                path: requestPath);
+
+        // Then
+        result.Should()
+            .BeFalse();
+    }
+
     [Fact]
     public void ShouldAuthorizeAuthenticatedMetadataReader()
     {
