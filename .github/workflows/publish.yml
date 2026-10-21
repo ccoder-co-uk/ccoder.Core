@@ -100,9 +100,17 @@ jobs:
       - name: Install Azure Functions Core Tools
         run: |
           npm install --global azure-functions-core-tools@4 --allow-scripts=azure-functions-core-tools
-          npm prefix --global | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-          func --version
-          "FUNCTIONS_CORE_TOOLS_PATH=$((Get-Command func.cmd).Source)" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          $npmPrefix = npm prefix --global
+          $npmPrefix | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          $funcExecutable = @(
+            (Join-Path $npmPrefix 'node_modules/azure-functions-core-tools/bin/func.exe')
+            (Join-Path $npmPrefix 'node_modules/azure-functions-core-tools/bin/in-proc6/func.exe')
+          ) | Where-Object { Test-Path $_ } | Select-Object -First 1
+          if ([string]::IsNullOrWhiteSpace($funcExecutable)) {
+            throw 'Azure Functions Core Tools did not install func.exe in the expected package location.'
+          }
+          & $funcExecutable --version
+          "FUNCTIONS_CORE_TOOLS_PATH=$funcExecutable" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Restore
         run: dotnet restore ccoder.Core/src/cCoder.Core.slnx --source https://api.nuget.org/v3/index.json --no-http-cache
