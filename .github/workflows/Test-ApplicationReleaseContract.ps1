@@ -18,7 +18,8 @@ $composeFiles = @(
 $requiredHostedBuildRunner = @(
     'runs-on: windows-2025',
     'uses: actions/setup-dotnet@v6',
-    'npm install --global azure-functions-core-tools@4',
+    'npm install --global azure-functions-core-tools@4 --allow-scripts=azure-functions-core-tools',
+    'func --version',
     'sqllocaldb start MSSQLLocalDB',
     'CoreData__ConnectionString=',
     'SecurityData__ConnectionString=',
