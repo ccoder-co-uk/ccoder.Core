@@ -864,6 +864,13 @@ notBefore: DateTimeOffset.UtcNow.AddMinutes(minutes: -5), notAfter: DateTimeOffs
 
     private static string ResolveFuncExecutablePath()
     {
+        string configuredFuncPath = Environment.GetEnvironmentVariable(variable: "FUNCTIONS_CORE_TOOLS_PATH");
+
+        if (!string.IsNullOrWhiteSpace(value: configuredFuncPath) && File.Exists(path: configuredFuncPath))
+        {
+            return configuredFuncPath;
+        }
+
         string bundledFuncExe = Path.Combine(
             paths:
             [

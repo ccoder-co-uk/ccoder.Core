@@ -21,6 +21,7 @@ $requiredHostedBuildRunner = @(
     'npm install --global azure-functions-core-tools@4 --allow-scripts=azure-functions-core-tools',
     'npm prefix --global | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append',
     'func --version',
+    'FUNCTIONS_CORE_TOOLS_PATH=$((Get-Command func).Source)',
     'sqllocaldb start MSSQLLocalDB',
     'CoreData__ConnectionString=',
     'SecurityData__ConnectionString=',
