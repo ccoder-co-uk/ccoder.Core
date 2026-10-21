@@ -97,6 +97,9 @@ jobs:
           cache: npm
           cache-dependency-path: ccoder.Core/src/cCoder.Core.FrontEnd/package-lock.json
 
+      - name: Install Azure Functions Core Tools
+        run: npm install --global azure-functions-core-tools@4 --unsafe-perm true
+
       - name: Restore
         run: dotnet restore ccoder.Core/src/cCoder.Core.slnx --source https://api.nuget.org/v3/index.json --no-http-cache
 
