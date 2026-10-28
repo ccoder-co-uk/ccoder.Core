@@ -11,10 +11,12 @@ using System.Threading.Tasks;
 using System.Collections;
 using System.Dynamic;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Xml.Linq;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.OData.Query.Wrapper;
 using Microsoft.Net.Http.Headers;
-using Newtonsoft.Json;
 
 
 namespace cCoder.Core.Dependencies.Formatters;
@@ -49,12 +51,60 @@ public class XmlFormatter : TextOutputFormatter
     {
         ArgumentNullException.ThrowIfNull(argument: selectedEncoding);
 
-        string json = JsonConvert.SerializeObject(
-value: new { item = HandleOData(contextObject: context.Object) }
-        );
+        JsonNode json = JsonSerializer.SerializeToNode(
+            value: new { item = HandleOData(contextObject: context.Object) });
 
-        System.Xml.Linq.XDocument xml = JsonConvert.DeserializeXNode(value: json, deserializeRootElementName: "root");
+        XElement root = new(name: "root");
+        AppendJsonNode(parent: root, node: json);
+        XDocument xml = new(content: root);
+
         return new StringBuilder(xml.ToString());
+    }
+
+    private static void AppendJsonNode(XElement parent, JsonNode node)
+    {
+        if (node is JsonObject jsonObject)
+        {
+            foreach ((string name, JsonNode value) in jsonObject)
+            {
+                if (value is JsonArray jsonArray)
+                {
+                    foreach (JsonNode item in jsonArray)
+                    {
+                        XElement child = new(name: name);
+                        AppendJsonNode(parent: child, node: item);
+                        parent.Add(content: child);
+                    }
+
+                    continue;
+                }
+
+                XElement property = new(name: name);
+                AppendJsonNode(parent: property, node: value);
+                parent.Add(content: property);
+            }
+
+            return;
+        }
+
+        if (node is JsonArray array)
+        {
+            foreach (JsonNode item in array)
+            {
+                XElement child = new(name: "item");
+                AppendJsonNode(parent: child, node: item);
+                parent.Add(content: child);
+            }
+
+            return;
+        }
+
+        if (node is JsonValue jsonValue)
+        {
+            parent.Value = jsonValue.TryGetValue(out string stringValue)
+                ? stringValue
+                : jsonValue.ToJsonString();
+        }
     }
 
     private static object HandleOData(object contextObject)

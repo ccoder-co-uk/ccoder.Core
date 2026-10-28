@@ -3400,7 +3400,7 @@
     {
       "Name": "cCoder.Core.Dependencies.Formatters.XmlFormatter",
       "StandardElementType": "Dependency",
-      "LineNumber": 22,
+      "LineNumber": 24,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -3419,7 +3419,7 @@
         {
           "Id": "cCoder.Core.Dependencies.Formatters.XmlFormatter.WriteResponseBodyAsync(Microsoft.AspNetCore.Mvc.Formatters.OutputFormatterWriteContext,System.Text.Encoding)",
           "Name": "WriteResponseBodyAsync",
-          "LineNumber": 36,
+          "LineNumber": 38,
           "Inputs": [
             {
               "Name": "context",

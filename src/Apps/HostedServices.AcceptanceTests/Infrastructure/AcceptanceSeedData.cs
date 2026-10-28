@@ -10,7 +10,6 @@ using cCoder.Data.Models;
 using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.Packaging;
 using cCoder.Data.Models.Security;
-using Newtonsoft.Json;
 
 namespace HostedServices.AcceptanceTests.Infrastructure;
 
@@ -21,8 +20,8 @@ internal static class AcceptanceSeedData
         using JsonDocument json = AcceptanceAssetLoader.LoadJson(fileName: "App.1.Export.json");
         JsonElement value = json.RootElement.GetProperty(propertyName: "value");
 
-        return JsonConvert.DeserializeObject<Package[]>(
-            value: value.GetRawText());
+        return JsonSerializer.Deserialize<Package[]>(
+            json: value.GetRawText());
     }
 
     public static Role[] LoadRoles() =>
@@ -87,8 +86,8 @@ internal static class AcceptanceSeedData
                 ? json.RootElement.GetProperty(propertyName: "value")
                 : json.RootElement;
 
-        return JsonConvert.DeserializeObject<CommonObject[]>(
-            value: value.GetRawText());
+        return JsonSerializer.Deserialize<CommonObject[]>(
+            json: value.GetRawText());
     }
 
     private static object[] LoadPackageItems(
@@ -125,9 +124,9 @@ internal static class AcceptanceSeedData
                 ? itemType.MakeArrayType()
                 : itemType;
 
-        object deserialized = JsonConvert.DeserializeObject(
-            value: trimmed,
-            type: deserializationType);
+        object deserialized = JsonSerializer.Deserialize(
+            json: trimmed,
+            returnType: deserializationType);
 
         return deserialized is Array items
             ? items.Cast<object>()
