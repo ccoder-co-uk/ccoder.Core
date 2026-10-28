@@ -15,7 +15,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="theme-color" content="#193855">
-        <script nonce="@contentSecurityPolicyNonce" type="text/javascript">session = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewData["Session"]));</script>
+        <script nonce="@contentSecurityPolicyNonce" type="text/javascript">session = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewData["Session"]));</script>
         @Html.Raw(Model.HeaderHtml)
     </head>
     <body class="@Model.Layout">

@@ -93,7 +93,7 @@ public sealed partial class DocumentManagementAppServiceTests
         Mock<IDocumentManagementAppBroker> brokerMock = new(behavior: MockBehavior.Strict);
 
         brokerMock.Setup(expression: broker => broker.DeleteAppAsync(appId: app.Id))
-            .ThrowsAsync(exception: brokerException);
+            .Returns(value: ValueTask.FromException(exception: brokerException));
 
         DocumentManagementAppService service = new(
             documentManagementAppBroker: brokerMock.Object);

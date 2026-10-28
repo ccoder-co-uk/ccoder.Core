@@ -11,5 +11,8 @@
   "devDependencies": {
     "esbuild": "0.28.1",
     "monaco-editor": "0.56.0"
+  },
+  "overrides": {
+    "dompurify": "3.4.17"
   }
 }

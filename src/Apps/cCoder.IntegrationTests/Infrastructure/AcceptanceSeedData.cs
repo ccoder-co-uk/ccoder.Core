@@ -10,7 +10,6 @@ using cCoder.Data.Models;
 using cCoder.Data.Models.CMS;
 using cCoder.Data.Models.Packaging;
 using cCoder.Data.Models.Security;
-using Newtonsoft.Json;
 
 namespace cCoder.IntegrationTests.Infrastructure;
 
@@ -21,8 +20,8 @@ internal static class AcceptanceSeedData
         using JsonDocument json = AcceptanceAssetLoader.LoadJson(fileName: "App.1.Export.json");
         JsonElement value = json.RootElement.GetProperty(propertyName: "value");
 
-        return JsonConvert.DeserializeObject<Package[]>(
-            value: value.GetRawText());
+        return JsonSerializer.Deserialize<Package[]>(
+            json: value.GetRawText());
     }
 
     public static Role[] LoadRoles(string packageName, string itemType) =>
@@ -92,8 +91,8 @@ internal static class AcceptanceSeedData
                 ? json.RootElement.GetProperty(propertyName: "value")
                 : json.RootElement;
 
-        return JsonConvert.DeserializeObject<CommonObject[]>(
-            value: value.GetRawText());
+        return JsonSerializer.Deserialize<CommonObject[]>(
+            json: value.GetRawText());
     }
 
     private static IEnumerable<object> UnpackItems(string data, Type modelType)
@@ -102,16 +101,16 @@ internal static class AcceptanceSeedData
 
         if (trimmed.StartsWith(value: '['))
         {
-            Array values = (Array)JsonConvert.DeserializeObject(
-                value: trimmed,
-                type: modelType.MakeArrayType());
+            Array values = (Array)JsonSerializer.Deserialize(
+                json: trimmed,
+                returnType: modelType.MakeArrayType());
 
             return values.Cast<object>();
         }
 
-        object value = JsonConvert.DeserializeObject(
-            value: trimmed,
-            type: modelType);
+        object value = JsonSerializer.Deserialize(
+            json: trimmed,
+            returnType: modelType);
 
         return [value];
     }

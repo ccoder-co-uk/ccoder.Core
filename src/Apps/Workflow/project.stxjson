@@ -271,7 +271,7 @@
         {
           "Id": "Workflow.Dependencies.WorkflowFunctionsDependency.CreateResponseAsync(Microsoft.Azure.Functions.Worker.Http.HttpRequestData,System.String)",
           "Name": "CreateResponseAsync",
-          "LineNumber": 78,
+          "LineNumber": 71,
           "Inputs": [
             {
               "Name": "request",
@@ -315,7 +315,7 @@
         {
           "Id": "Workflow.Dependencies.WorkflowFunctionsDependency.DeserializeWorkflowRequest(System.String)",
           "Name": "DeserializeWorkflowRequest",
-          "LineNumber": 62,
+          "LineNumber": 55,
           "Inputs": [
             {
               "Name": "json",
@@ -326,9 +326,9 @@
           "Implements": [],
           "Calls": [
             {
-              "TypeName": "Newtonsoft.Json.JsonConvert",
-              "MethodName": "DeserializeObject",
-              "MethodId": "Newtonsoft.Json.JsonConvert.DeserializeObject(System.String,Newtonsoft.Json.JsonSerializerSettings?)",
+              "TypeName": "System.Text.Json.JsonSerializer",
+              "MethodName": "Deserialize",
+              "MethodId": "System.Text.Json.JsonSerializer.Deserialize(System.String,System.Text.Json.JsonSerializerOptions?)",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
             }
@@ -348,7 +348,7 @@
         {
           "Id": "Workflow.Dependencies.WorkflowFunctionsDependency.ExecuteAsync(System.String,System.Boolean)",
           "Name": "ExecuteAsync",
-          "LineNumber": 75,
+          "LineNumber": 68,
           "Inputs": [
             {
               "Name": "payload",
@@ -387,7 +387,7 @@
         {
           "Id": "Workflow.Dependencies.WorkflowFunctionsDependency.ExecuteScriptAsync(System.String,System.Boolean)",
           "Name": "ExecuteScriptAsync",
-          "LineNumber": 70,
+          "LineNumber": 63,
           "Inputs": [
             {
               "Name": "payload",
@@ -424,7 +424,7 @@
         {
           "Id": "Workflow.Dependencies.WorkflowFunctionsDependency.LogInformation(System.String)",
           "Name": "LogInformation",
-          "LineNumber": 90,
+          "LineNumber": 83,
           "Inputs": [
             {
               "Name": "message",
@@ -457,7 +457,7 @@
         {
           "Id": "Workflow.Dependencies.WorkflowFunctionsDependency.ReadBodyAsync(Microsoft.Azure.Functions.Worker.Http.HttpRequestData)",
           "Name": "ReadBodyAsync",
-          "LineNumber": 54,
+          "LineNumber": 47,
           "Inputs": [
             {
               "Name": "request",
@@ -511,7 +511,7 @@
         {
           "Id": "Workflow.Dependencies.WorkflowFunctionsDependency.RunWorkflowRequestAsync(cCoder.Workflow.Activities.Models.WorkflowRequest)",
           "Name": "RunWorkflowRequestAsync",
-          "LineNumber": 67,
+          "LineNumber": 60,
           "Inputs": [
             {
               "Name": "workflowRequest",

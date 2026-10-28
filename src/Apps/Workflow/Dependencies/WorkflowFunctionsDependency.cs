@@ -13,10 +13,10 @@ using cCoder.Workflow.Activities.Models;
 using cCoder.Workflow.Engine.Exposures;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using System.Net;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Workflow.Dependencies;
 
@@ -26,19 +26,12 @@ internal sealed class WorkflowFunctionsDependency : IWorkflowScriptExecutionServ
     private readonly IWorkflowScriptExecutionService scriptExecutionService;
     private readonly ILogger<WorkflowFunctionsDependency> logger;
     private readonly Encoding encoding = Encoding.UTF8;
-    private readonly JsonSerializerSettings jsonSerializerSettings =
+    private readonly JsonSerializerOptions jsonSerializerOptions =
         new()
         {
-            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-            TypeNameHandling = TypeNameHandling.Objects,
-            Formatting = Formatting.None,
-            DateFormatHandling = DateFormatHandling.IsoDateFormat,
-            NullValueHandling = NullValueHandling.Ignore,
-            DateTimeZoneHandling = DateTimeZoneHandling.Utc,
-            ContractResolver = new DefaultContractResolver
-            {
-                IgnoreSerializableAttribute = true
-            }
+            ReferenceHandler = ReferenceHandler.IgnoreCycles,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+            PropertyNameCaseInsensitive = true
         };
 
     public WorkflowFunctionsDependency(
@@ -60,9 +53,9 @@ internal sealed class WorkflowFunctionsDependency : IWorkflowScriptExecutionServ
     }
 
     public WorkflowRequest DeserializeWorkflowRequest(string json) =>
-        JsonConvert.DeserializeObject<WorkflowRequest>(
-            value: json,
-            settings: jsonSerializerSettings);
+        JsonSerializer.Deserialize<WorkflowRequest>(
+            json: json,
+            options: jsonSerializerOptions);
 
     public Task RunWorkflowRequestAsync(WorkflowRequest workflowRequest) =>
         workflowRunner.RunAsync(workflowRequest: workflowRequest);
