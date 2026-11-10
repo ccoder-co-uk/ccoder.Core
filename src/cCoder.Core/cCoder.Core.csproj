@@ -131,7 +131,7 @@
     <PackageReference Include="cCoder.Eventing" Version="2026.10.8.1222" Condition="'$(UseLocalEventing)' != 'true'" />
     <PackageReference Include="cCoder.Eventing.AzureServiceBus" Version="2026.10.8.1222" Condition="'$(UseLocalEventing)' != 'true'" />
     <PackageReference Include="cCoder.Eventing.Http" Version="2026.10.8.1222" Condition="'$(UseLocalEventing)' != 'true'" />
-    <PackageReference Include="cCoder.Logging" Version="2026.10.21.1317" Condition="'$(UseLocalLogging)' != 'true'" />
+    <PackageReference Include="cCoder.Logging" Version="2026.11.10.1537" Condition="'$(UseLocalLogging)' != 'true'" />
     <PackageReference Include="cCoder.Mail" Version="2026.10.21.1323" Condition="'$(UseLocalMail)' != 'true'" />
     <PackageReference Include="cCoder.Packaging" Version="2026.10.8.1315" Condition="'$(UseLocalPackaging)' != 'true'" />
     <PackageReference Include="cCoder.Security" Version="2026.10.14.1427" Condition="'$(UseLocalSecurity)' != 'true'" />
