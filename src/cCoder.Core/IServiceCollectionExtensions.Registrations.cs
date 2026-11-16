@@ -303,7 +303,8 @@ public static partial class IServiceCollectionExtensions
             eventProviders: configuration.Eventing.EventProviders);
 
         services.AddConfiguredHostedServicesEventing(
-            configuration: configuration.Eventing);
+            configuration: configuration.Eventing,
+            applicationConfiguration: configuration.ApplicationConfiguration);
 
         services.AddBrokers();
         services.AddFoundations();
@@ -482,7 +483,8 @@ predicate: (documentName, apiDescription) =>
 
     private static IServiceCollection AddConfiguredHostedServicesEventing(
         this IServiceCollection services,
-        EventingConfiguration configuration)
+        EventingConfiguration configuration,
+        IConfiguration applicationConfiguration)
     {
         if (string.Equals(
                 a: configuration.ProviderType,
@@ -500,7 +502,8 @@ predicate: (documentName, apiDescription) =>
                 b: "Sql",
                 comparisonType: StringComparison.OrdinalIgnoreCase))
         {
-            services.AddSqlEventingHostedServices();
+            services.AddSqlEventingHostedServices(configure: options =>
+                applicationConfiguration?.GetSection(key: "Eventing:Sql").Bind(instance: options));
         }
         else if (string.Equals(
                 a: configuration.ProviderType,
