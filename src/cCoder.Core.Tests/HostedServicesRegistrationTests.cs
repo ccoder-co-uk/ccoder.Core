@@ -10,6 +10,7 @@ using cCoder.Core.Models;
 using cCoder.Core.Services.Foundations.Eventing;
 using cCoder.Eventing.AzureServiceBus;
 using cCoder.Eventing.AzureServiceBus.Models;
+using cCoder.Eventing.Sql;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,6 +21,36 @@ namespace cCoder.Core.Tests;
 
 public sealed partial class HostedServicesRegistrationTests
 {
+    [Fact]
+    public void AddCoreHostedServices_GivenSqlEventing_RegistersSqlWorkerAndHub()
+    {
+        // Given
+        CoreConfiguration configuration = CoreConfigurationFactory.Create();
+        configuration.Eventing.ProviderType = "Sql";
+        IServiceCollection services = new ServiceCollection();
+
+        // When
+        services.AddCoreHostedServices(configuration: configuration);
+
+        // Then
+        services
+            .Should()
+            .Contain(predicate: descriptor =>
+                descriptor.ServiceType == typeof(ISqlEventHub));
+
+        services
+            .Should()
+            .Contain(predicate: descriptor =>
+                descriptor.ServiceType == typeof(ISqlEventFailureHub));
+
+        services
+            .Should()
+            .Contain(predicate: descriptor =>
+            descriptor.ServiceType == typeof(IHostedService)
+            && descriptor.ImplementationType != null
+            && descriptor.ImplementationType.Name == "SqlEventBackgroundService");
+    }
+
     [Fact]
     public void AddCoreHostedServices_ShouldRegisterWorkflowHostedServices()
     {

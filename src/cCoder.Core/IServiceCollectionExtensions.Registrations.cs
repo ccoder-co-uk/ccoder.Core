@@ -71,6 +71,7 @@ using cCoder.Data.Models.Packaging;
 using cCoder.Eventing;
 using cCoder.Eventing.AzureServiceBus;
 using cCoder.Eventing.Http;
+using cCoder.Eventing.Sql;
 using cCoder.Eventing.Models;
 using cCoder.Packaging;
 using cCoder.Security.Models.Configurations;
@@ -453,6 +454,13 @@ predicate: (documentName, apiDescription) =>
         }
         else if (string.Equals(
                 a: configuration.ProviderType,
+                b: "Sql",
+                comparisonType: StringComparison.OrdinalIgnoreCase))
+        {
+            services.AddSqlEventingWeb();
+        }
+        else if (string.Equals(
+                a: configuration.ProviderType,
                 b: "ServiceBus",
                 comparisonType: StringComparison.OrdinalIgnoreCase)
             && !string.IsNullOrWhiteSpace(
@@ -486,6 +494,13 @@ predicate: (documentName, apiDescription) =>
                 options.HubUrl = configuration.Http.HubUrl;
                 options.MaxConcurrency = configuration.Http.MaxConcurrency;
             });
+        }
+        else if (string.Equals(
+                a: configuration.ProviderType,
+                b: "Sql",
+                comparisonType: StringComparison.OrdinalIgnoreCase))
+        {
+            services.AddSqlEventingHostedServices();
         }
         else if (string.Equals(
                 a: configuration.ProviderType,
