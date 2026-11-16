@@ -123,6 +123,10 @@ internal sealed partial class AppAggregationService(
             value: configuration.Eventing.Http.HubUrl)
         || string.Equals(
             a: configuration.Eventing.ProviderType,
+            b: "Sql",
+            comparisonType: StringComparison.OrdinalIgnoreCase)
+        || string.Equals(
+            a: configuration.Eventing.ProviderType,
             b: "ServiceBus",
             comparisonType: StringComparison.OrdinalIgnoreCase)
         && !string.IsNullOrWhiteSpace(
