@@ -11,6 +11,7 @@ using cCoder.Core.Services.Foundations.Eventing;
 using cCoder.Eventing.AzureServiceBus;
 using cCoder.Eventing.AzureServiceBus.Models;
 using cCoder.Eventing.Sql;
+using cCoder.Eventing.Sql.Models;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -49,6 +50,45 @@ public sealed partial class HostedServicesRegistrationTests
             descriptor.ServiceType == typeof(IHostedService)
             && descriptor.ImplementationType != null
             && descriptor.ImplementationType.Name == "SqlEventBackgroundService");
+    }
+
+    [Fact]
+    public void AddCoreHostedServices_GivenSqlEventing_BindsWorkerConcurrency()
+    {
+        // Given
+        IConfiguration settings = new ConfigurationBuilder()
+            .AddInMemoryCollection(initialData: new Dictionary<string, string>
+            {
+                ["Eventing:Sql:MaxConcurrency"] = "7",
+                ["Eventing:Sql:PollInterval"] = "00:01:00",
+                ["Eventing:Sql:LeaseDuration"] = "00:15:00"
+            })
+            .Build();
+
+        CoreConfiguration configuration = CoreConfigurationFactory.Create(
+            configuration: settings);
+
+        configuration.Eventing.ProviderType = "Sql";
+        IServiceCollection services = new ServiceCollection();
+
+        // When
+        services.AddCoreHostedServices(configuration: configuration);
+
+        // Then
+        using ServiceProvider provider = services.BuildServiceProvider();
+        SqlEventingOptions options = provider.GetRequiredService<SqlEventingOptions>();
+
+        options.MaxConcurrency
+            .Should()
+            .Be(expected: 7);
+
+        options.PollInterval
+            .Should()
+            .Be(expected: TimeSpan.FromMinutes(value: 1));
+
+        options.LeaseDuration
+            .Should()
+            .Be(expected: TimeSpan.FromMinutes(value: 15));
     }
 
     [Fact]
