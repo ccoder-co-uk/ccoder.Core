@@ -7001,7 +7001,7 @@
         {
           "Id": "cCoder.Core.IServiceCollectionExtensions.AddCoreHostedServices(Microsoft.Extensions.DependencyInjection.IServiceCollection,cCoder.Core.Models.CoreConfiguration)",
           "Name": "AddCoreHostedServices",
-          "LineNumber": 238,
+          "LineNumber": 239,
           "Inputs": [
             {
               "Name": "services",
@@ -7166,7 +7166,7 @@
         {
           "Id": "cCoder.Core.IServiceCollectionExtensions.AddCoreWeb(Microsoft.Extensions.DependencyInjection.IServiceCollection,cCoder.Core.Models.CoreConfiguration)",
           "Name": "AddCoreWeb",
-          "LineNumber": 93,
+          "LineNumber": 94,
           "Inputs": [
             {
               "Name": "services",
