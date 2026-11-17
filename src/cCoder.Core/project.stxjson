@@ -7317,10 +7317,6 @@
       "Interfaces": [],
       "Properties": [
         {
-          "Name": "ExposeDocumentation",
-          "Type": "System.Boolean?"
-        },
-        {
           "Name": "ExposeMetadata",
           "Type": "System.Boolean?"
         }

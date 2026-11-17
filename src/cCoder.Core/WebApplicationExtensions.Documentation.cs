@@ -25,7 +25,7 @@ public static partial class WebApplicationExtensions
         bool exposeApiDocumentation =
             ShouldExposeApiSurface(
                 configuredValue:
-                    configuration?.Api?.ExposeDocumentation,
+                    configuration?.Api?.ExposeMetadata,
                 isProduction: app.Environment.IsProduction());
 
         if (!exposeApiDocumentation)

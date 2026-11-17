@@ -126,12 +126,6 @@ public static partial class WebApplicationExtensions
                     configuration?.Api?.ExposeMetadata,
                 isProduction: app.Environment.IsProduction());
 
-        bool exposeApiDocumentation =
-            ShouldExposeApiSurface(
-                configuredValue:
-                    configuration?.Api?.ExposeDocumentation,
-                isProduction: app.Environment.IsProduction());
-
         HashSet<string> oDataServiceDocumentPaths =
             new(
                 collection: app.Services
@@ -167,7 +161,7 @@ public static partial class WebApplicationExtensions
                     || isODataServiceDocumentRequest)
                     && !exposeApiMetadata)
                 || (isDocumentationRequest
-                    && !exposeApiDocumentation))
+                    && !exposeApiMetadata))
             {
                 context.Response.StatusCode =
                     StatusCodes.Status404NotFound;
@@ -179,7 +173,7 @@ public static partial class WebApplicationExtensions
                     || isODataServiceDocumentRequest)
                     && exposeApiMetadata)
                 || (isDocumentationRequest
-                    && exposeApiDocumentation))
+                    && exposeApiMetadata))
             {
                 bool isAuthorized =
                     AuthorizeApiMetadataRequest(
