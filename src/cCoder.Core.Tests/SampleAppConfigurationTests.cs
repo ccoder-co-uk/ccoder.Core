@@ -85,7 +85,6 @@ public sealed partial class SampleAppConfigurationTests
         "Eventing:Http:MaxConcurrency",
         "Eventing:ServiceBus:ConnectionString",
         "Eventing:ServiceBus:MaxConcurrency",
-        "Api:ExposeDocumentation",
         "Api:ExposeMetadata"
     ];
 

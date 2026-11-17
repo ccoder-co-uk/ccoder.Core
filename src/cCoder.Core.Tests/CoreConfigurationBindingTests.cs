@@ -157,8 +157,7 @@ public sealed partial class CoreConfigurationBindingTests
             ["Eventing:ProviderType"] = "ServiceBus",
             ["Eventing:ServiceBus:ConnectionString"] = "events",
             ["Eventing:ServiceBus:MaxConcurrency"] = "8",
-            ["Api:ExposeDocumentation"] = "true",
-            ["Api:ExposeMetadata"] = "false",
+            ["Api:ExposeMetadata"] = "true",
         };
 
         IConfiguration configuration = new ConfigurationBuilder()
@@ -215,13 +214,9 @@ public sealed partial class CoreConfigurationBindingTests
             .Should()
             .BeEmpty();
 
-        result.Api.ExposeDocumentation
-            .Should()
-            .BeTrue();
-
         result.Api.ExposeMetadata
             .Should()
-            .BeFalse();
+            .BeTrue();
     }
 
     [Fact]
@@ -257,7 +252,7 @@ public sealed partial class CoreConfigurationBindingTests
         IConfiguration configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(initialData: new Dictionary<string, string>
             {
-                ["Api:ExposeDocumentation"] = "true"
+                ["Api:ExposeMetadata"] = "true"
             })
             .Build();
 
@@ -286,7 +281,7 @@ public sealed partial class CoreConfigurationBindingTests
             .Should()
             .OnlyContain(predicate: domain => domain == null);
 
-        result.Api.ExposeDocumentation
+        result.Api.ExposeMetadata
             .Should()
             .BeTrue();
     }
