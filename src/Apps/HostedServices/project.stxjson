@@ -725,7 +725,7 @@
             {
               "TypeName": "cCoder.Core.IServiceCollectionExtensions",
               "MethodName": "AddCoreHostedServices",
-              "MethodId": "cCoder.Core.IServiceCollectionExtensions.AddCoreHostedServices(Microsoft.Extensions.DependencyInjection.IServiceCollection,cCoder.Core.Models.CoreConfiguration)",
+              "MethodId": "cCoder.Core.IServiceCollectionExtensions.AddCoreHostedServices(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action\u003CcCoder.Core.Models.CoreConfiguration\u003E)",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
             }
@@ -787,13 +787,6 @@
           "ReturnType": "System.Void",
           "Implements": [],
           "Calls": [
-            {
-              "TypeName": "HostedServices.IServiceCollectionExtensions",
-              "MethodName": "AddHostedServices",
-              "MethodId": "HostedServices.IServiceCollectionExtensions.AddHostedServices(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration,System.Action\u003CHostedServices.Models.AppConfiguration\u003E)",
-              "StandardElementType": "App",
-              "IsDependencyBoundary": false
-            },
             {
               "TypeName": "Microsoft.AspNetCore.Builder.HealthCheckEndpointRouteBuilderExtensions",
               "MethodName": "MapHealthChecks",
