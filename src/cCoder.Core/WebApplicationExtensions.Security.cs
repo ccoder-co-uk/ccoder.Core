@@ -260,6 +260,15 @@ public static partial class WebApplicationExtensions
 
             return false;
         }
+        catch (SecurityValidationException exception)
+            when (exception.GetBaseException()
+                is SecurityException)
+        {
+            context.Response.StatusCode =
+                StatusCodes.Status403Forbidden;
+
+            return false;
+        }
     }
 
     internal static bool ShouldExposeApiSurface(
