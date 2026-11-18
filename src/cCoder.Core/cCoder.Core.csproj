@@ -138,14 +138,14 @@
     <PackageReference Include="cCoder.Eventing.AzureServiceBus" Version="2026.11.16.1754" Condition="'$(UseLocalEventing)' != 'true'" />
     <PackageReference Include="cCoder.Eventing.Http" Version="2026.11.16.1754" Condition="'$(UseLocalEventing)' != 'true'" />
     <PackageReference Include="cCoder.Eventing.Sql" Version="2026.11.16.1754" Condition="'$(UseLocalSqlEventing)' != 'true'" />
-    <PackageReference Include="cCoder.Logging" Version="2026.11.17.1511" Condition="'$(UseLocalLogging)' != 'true'" />
+    <PackageReference Include="cCoder.Logging" Version="2026.11.18.1152" Condition="'$(UseLocalLogging)' != 'true'" />
     <PackageReference Include="cCoder.Mail" Version="2026.10.21.1323" Condition="'$(UseLocalMail)' != 'true'" />
     <PackageReference Include="cCoder.Packaging" Version="2026.10.8.1315" Condition="'$(UseLocalPackaging)' != 'true'" />
-    <PackageReference Include="cCoder.Security" Version="2026.10.14.1427" Condition="'$(UseLocalSecurity)' != 'true'" />
-    <PackageReference Include="cCoder.Security.Data" Version="2026.10.14.1427" Condition="'$(UseLocalSecurity)' != 'true'" />
-    <PackageReference Include="cCoder.Workflow" Version="2026.11.16.1549" Condition="'$(UseLocalWorkflow)' != 'true'" />
-    <PackageReference Include="cCoder.Workflow.Activities" Version="2026.11.16.1549" Condition="'$(UseLocalWorkflow)' != 'true'" />
-    <PackageReference Include="cCoder.Workflow.Engine" Version="2026.11.16.1549" Condition="'$(UseLocalWorkflow)' != 'true'" />
+    <PackageReference Include="cCoder.Security" Version="2026.11.18.1214" Condition="'$(UseLocalSecurity)' != 'true'" />
+    <PackageReference Include="cCoder.Security.Data" Version="2026.11.18.1214" Condition="'$(UseLocalSecurity)' != 'true'" />
+    <PackageReference Include="cCoder.Workflow" Version="2026.10.20.1821" Condition="'$(UseLocalWorkflow)' != 'true'" />
+    <PackageReference Include="cCoder.Workflow.Activities" Version="2026.10.20.1821" Condition="'$(UseLocalWorkflow)' != 'true'" />
+    <PackageReference Include="cCoder.Workflow.Engine" Version="2026.10.20.1821" Condition="'$(UseLocalWorkflow)' != 'true'" />
     <PackageReference Include="Microsoft.AspNetCore.OData" Version="9.5.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.15" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
