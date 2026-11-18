@@ -2279,7 +2279,7 @@
             {
               "TypeName": "cCoder.Core.IServiceCollectionExtensions",
               "MethodName": "AddCoreWeb",
-              "MethodId": "cCoder.Core.IServiceCollectionExtensions.AddCoreWeb(Microsoft.Extensions.DependencyInjection.IServiceCollection,cCoder.Core.Models.CoreConfiguration)",
+              "MethodId": "cCoder.Core.IServiceCollectionExtensions.AddCoreWeb(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action\u003CcCoder.Core.Models.CoreConfiguration\u003E)",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
             }
@@ -2694,13 +2694,6 @@
               "MethodId": "Microsoft.AspNetCore.Http.HttpResponseWritingExtensions.WriteAsync(Microsoft.AspNetCore.Http.HttpResponse,System.String,System.Threading.CancellationToken)",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "Web.IServiceCollectionExtensions",
-              "MethodName": "AddWeb",
-              "MethodId": "Web.IServiceCollectionExtensions.AddWeb(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration,System.Action\u003CWeb.Models.AppConfiguration\u003E)",
-              "StandardElementType": "App",
-              "IsDependencyBoundary": false
             },
             {
               "TypeName": "cCoder.Core.WebApplicationExtensions",

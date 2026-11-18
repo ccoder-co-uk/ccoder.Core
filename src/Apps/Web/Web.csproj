@@ -6,20 +6,23 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OData" Version="9.5.0" />
-    <PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="10.0.13" />
+    <PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="11.0.0" />
     <!-- Keep the OpenAPI assembly aligned with Swashbuckle 10.2.3. -->
-    <PackageReference Include="Microsoft.OpenApi" Version="2.7.5" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="10.2.3" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.2.3" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.2.3" />
+    <PackageReference Include="Microsoft.OpenApi" Version="3.11.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="11.0.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="11.0.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="11.0.1" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Testcontainers.MsSql" Version="4.15.0" />
+    <PackageReference Include="Testcontainers.MsSql" Version="4.17.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\cCoder.Core\cCoder.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="cCoder.CodeAnalysis" Version="2026.10.8.1211" />
+    <PackageReference Update="cCoder.CodeAnalysis" Version="2026.10.28.1133">
+      <IncludeAssets>build; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Update="cCoder.CodeAnalysis.Contracts" Version="2026.10.28.1133" />
   </ItemGroup>
 </Project>

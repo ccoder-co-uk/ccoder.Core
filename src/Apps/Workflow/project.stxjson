@@ -433,15 +433,7 @@
           ],
           "ReturnType": "System.Void",
           "Implements": [],
-          "Calls": [
-            {
-              "TypeName": "Microsoft.Extensions.Logging.LoggerExtensions",
-              "MethodName": "LogInformation",
-              "MethodId": "Microsoft.Extensions.Logging.LoggerExtensions.LogInformation(Microsoft.Extensions.Logging.ILogger,System.String?,System.Object?[])",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            }
-          ],
+          "Calls": [],
           "PossibleExceptionTypes": [],
           "IncomingExceptionTypes": [],
           "ThrowsExceptionTypes": [],
@@ -764,20 +756,6 @@
               "TypeName": "System.Action\u003CT\u003E",
               "MethodName": "Invoke",
               "MethodId": "System.Action\u003CT\u003E.Invoke(T)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "cCoder.Data.IServiceCollectionExtensions",
-              "MethodName": "AddData",
-              "MethodId": "cCoder.Data.IServiceCollectionExtensions.AddData(Microsoft.Extensions.DependencyInjection.IServiceCollection,cCoder.Data.Models.DataConfiguration)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "cCoder.Workflow.Engine.IServiceCollectionExtensions",
-              "MethodName": "AddWorkflowEngineHostedServices",
-              "MethodId": "cCoder.Workflow.Engine.IServiceCollectionExtensions.AddWorkflowEngineHostedServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
             }

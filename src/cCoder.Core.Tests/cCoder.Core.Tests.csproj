@@ -7,15 +7,15 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="8.11.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.10.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.13" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.12.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.15" />
     <PackageReference Include="Moq" Version="4.21.0" />
     <PackageReference Include="xunit" Version="2.9.3" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="4.0.0">
+    <PackageReference Include="xunit.runner.visualstudio" Version="4.0.1">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="coverlet.collector" Version="10.1.0">
+    <PackageReference Include="coverlet.collector" Version="10.1.1">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -24,7 +24,7 @@
     <ProjectReference Include="..\cCoder.Core\cCoder.Core.csproj" />
     <ProjectReference Include="..\Apps\HostedServices\HostedServices.csproj" />
     <PackageReference Include="cCoder.AppSecurity" Version="2026.10.8.1310" />
-    <PackageReference Include="cCoder.ContentManagement" Version="2026.10.19.1816" />
+    <PackageReference Include="cCoder.ContentManagement" Version="2026.11.15.1423" />
     <PackageReference Include="cCoder.Data" Version="2026.11.16.1737" />
   </ItemGroup>
   <ItemGroup>
@@ -36,6 +36,9 @@
     <None Include="..\Apps\Workflow\local.settings.json" Link="Configuration\Workflow.local.settings.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="cCoder.CodeAnalysis" Version="2026.10.8.1211" />
+    <PackageReference Update="cCoder.CodeAnalysis" Version="2026.10.28.1133">
+      <IncludeAssets>build; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Update="cCoder.CodeAnalysis.Contracts" Version="2026.10.28.1133" />
   </ItemGroup>
 </Project>
