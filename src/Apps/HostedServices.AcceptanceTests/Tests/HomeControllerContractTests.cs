@@ -122,6 +122,12 @@ public sealed partial class HomeControllerContractTests
         public void LogWarning(string message, params object[] args) =>
             WarningCount++;
 
+        public void LogWarning(
+            Exception exception,
+            string message,
+            params object[] args) =>
+            WarningCount++;
+
         public void LogError(string message, params object[] args) =>
             ErrorCount++;
 
