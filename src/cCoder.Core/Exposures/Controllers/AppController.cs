@@ -4,7 +4,9 @@
 
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Security.Authentication;
 using System.Threading.Tasks;
+using cCoder.Core.Brokers.Loggings;
 using cCoder.CodeAnalysis.Exposures;
 using cCoder.Core.Services.Aggregations;
 using cCoder.Core.Models.Exceptions;
@@ -17,7 +19,8 @@ using Microsoft.AspNetCore.OData.Routing.Controllers;
 namespace cCoder.Core.Exposures.Controllers;
 
 public class AppController(
-    IAppAggregationService service)
+    IAppAggregationService service,
+    ILoggingBroker loggingBroker)
     : ODataController, ICompositionExposure
 {
     [HttpPost]
@@ -27,34 +30,50 @@ public class AppController(
         {
             if (!ModelState.IsValid)
             {
+                loggingBroker.LogWarning(
+                    message: "The app request is invalid.");
+
                 return BadRequest(modelState: ModelState);
             }
 
+            App savedApp = await service.AddAppAsync(newApp: newApp);
+
+            loggingBroker.LogInformation(
+                message: "The app was created successfully.");
+
             return StatusCode(
                 statusCode: StatusCodes.Status201Created,
-                value: await service.AddAppAsync(newApp: newApp));
+                value: savedApp);
         }
         catch (CoreOrchestrationValidationException exception)
         {
-            WebApplicationExtensions.LogCoreControllerException(
-                context: HttpContext,
-                exception: exception);
+            loggingBroker.LogWarning(
+                exception: exception,
+                message: "The app request is invalid.");
 
             return BadRequest(error: "The app request is invalid.");
         }
         catch (DbUpdateConcurrencyException exception)
         {
-            WebApplicationExtensions.LogCoreControllerException(
-                context: HttpContext,
-                exception: exception);
+            loggingBroker.LogWarning(
+                exception: exception,
+                message: "The app changed before completion.");
 
             return Conflict(error: "The app changed before the request completed.");
         }
+        catch (AuthenticationException exception)
+        {
+            loggingBroker.LogWarning(
+                exception: exception,
+                message: "The app request was not authenticated.");
+
+            return Unauthorized(value: "Authentication failed.");
+        }
         catch (System.Security.SecurityException exception)
         {
-            WebApplicationExtensions.LogCoreControllerException(
-                context: HttpContext,
-                exception: exception);
+            loggingBroker.LogWarning(
+                exception: exception,
+                message: "The app operation is forbidden.");
 
             return StatusCode(
                 statusCode: StatusCodes.Status403Forbidden,
@@ -62,9 +81,9 @@ public class AppController(
         }
         catch (Exception exception)
         {
-            WebApplicationExtensions.LogCoreControllerException(
-                context: HttpContext,
-                exception: exception);
+            loggingBroker.LogError(
+                exception: exception,
+                message: "The app operation failed.");
 
             return StatusCode(
                 statusCode: StatusCodes.Status500InternalServerError,
@@ -81,36 +100,47 @@ public class AppController(
         {
             if (!ModelState.IsValid)
             {
+                loggingBroker.LogWarning(message: "The app request is invalid.");
                 return BadRequest(modelState: ModelState);
             }
 
             updatedApp.Id = key;
 
-            return Ok(
-                value: await service.UpdateAppAsync(
-                    updatedApp: updatedApp));
+            App savedApp = await service.UpdateAppAsync(updatedApp: updatedApp);
+
+            loggingBroker.LogInformation(message: "The app was updated successfully.");
+
+            return Ok(value: savedApp);
         }
         catch (CoreOrchestrationValidationException exception)
         {
-            WebApplicationExtensions.LogCoreControllerException(
-                context: HttpContext,
-                exception: exception);
+            loggingBroker.LogWarning(
+                exception: exception,
+                message: "The app request is invalid.");
 
             return BadRequest(error: "The app request is invalid.");
         }
         catch (DbUpdateConcurrencyException exception)
         {
-            WebApplicationExtensions.LogCoreControllerException(
-                context: HttpContext,
-                exception: exception);
+            loggingBroker.LogWarning(
+                exception: exception,
+                message: "The app changed before completion.");
 
             return Conflict(error: "The app changed before the request completed.");
         }
+        catch (AuthenticationException exception)
+        {
+            loggingBroker.LogWarning(
+                exception: exception,
+                message: "The app request was not authenticated.");
+
+            return Unauthorized(value: "Authentication failed.");
+        }
         catch (System.Security.SecurityException exception)
         {
-            WebApplicationExtensions.LogCoreControllerException(
-                context: HttpContext,
-                exception: exception);
+            loggingBroker.LogWarning(
+                exception: exception,
+                message: "The app operation is forbidden.");
 
             return StatusCode(
                 statusCode: StatusCodes.Status403Forbidden,
@@ -118,9 +148,9 @@ public class AppController(
         }
         catch (Exception exception)
         {
-            WebApplicationExtensions.LogCoreControllerException(
-                context: HttpContext,
-                exception: exception);
+            loggingBroker.LogError(
+                exception: exception,
+                message: "The app operation failed.");
 
             return StatusCode(
                 statusCode: StatusCodes.Status500InternalServerError,
@@ -138,11 +168,29 @@ public class AppController(
         {
             return await Put(key: key, updatedApp: updatedApp);
         }
+        catch (AuthenticationException exception)
+        {
+            loggingBroker.LogWarning(
+                exception: exception,
+                message: "The app request was not authenticated.");
+
+            return Unauthorized(value: "Authentication failed.");
+        }
+        catch (System.Security.SecurityException exception)
+        {
+            loggingBroker.LogWarning(
+                exception: exception,
+                message: "The app operation is forbidden.");
+
+            return StatusCode(
+                statusCode: StatusCodes.Status403Forbidden,
+                value: "The app operation is forbidden.");
+        }
         catch (Exception exception)
         {
-            WebApplicationExtensions.LogCoreControllerException(
-                context: HttpContext,
-                exception: exception);
+            loggingBroker.LogError(
+                exception: exception,
+                message: "The app operation failed.");
 
             return StatusCode(
                 statusCode: StatusCodes.Status500InternalServerError,
@@ -159,11 +207,29 @@ public class AppController(
         {
             return await Delete(key: key);
         }
+        catch (AuthenticationException exception)
+        {
+            loggingBroker.LogWarning(
+                exception: exception,
+                message: "The app request was not authenticated.");
+
+            return Unauthorized(value: "Authentication failed.");
+        }
+        catch (System.Security.SecurityException exception)
+        {
+            loggingBroker.LogWarning(
+                exception: exception,
+                message: "The app operation is forbidden.");
+
+            return StatusCode(
+                statusCode: StatusCodes.Status403Forbidden,
+                value: "The app operation is forbidden.");
+        }
         catch (Exception exception)
         {
-            WebApplicationExtensions.LogCoreControllerException(
-                context: HttpContext,
-                exception: exception);
+            loggingBroker.LogError(
+                exception: exception,
+                message: "The app operation failed.");
 
             return StatusCode(
                 statusCode: StatusCodes.Status500InternalServerError,
@@ -178,31 +244,41 @@ public class AppController(
         {
             bool accepted = await service.DeleteAppAsync(appId: key);
 
+            loggingBroker.LogInformation(message: "The app was deleted successfully.");
+
             return accepted
                 ? Accepted()
                 : NoContent();
         }
         catch (CoreOrchestrationValidationException exception)
         {
-            WebApplicationExtensions.LogCoreControllerException(
-                context: HttpContext,
-                exception: exception);
+            loggingBroker.LogWarning(
+                exception: exception,
+                message: "The app request is invalid.");
 
             return BadRequest(error: "The app request is invalid.");
         }
         catch (DbUpdateConcurrencyException exception)
         {
-            WebApplicationExtensions.LogCoreControllerException(
-                context: HttpContext,
-                exception: exception);
+            loggingBroker.LogWarning(
+                exception: exception,
+                message: "The app changed before completion.");
 
             return Conflict(error: "The app changed before the request completed.");
         }
+        catch (AuthenticationException exception)
+        {
+            loggingBroker.LogWarning(
+                exception: exception,
+                message: "The app request was not authenticated.");
+
+            return Unauthorized(value: "Authentication failed.");
+        }
         catch (System.Security.SecurityException exception)
         {
-            WebApplicationExtensions.LogCoreControllerException(
-                context: HttpContext,
-                exception: exception);
+            loggingBroker.LogWarning(
+                exception: exception,
+                message: "The app operation is forbidden.");
 
             return StatusCode(
                 statusCode: StatusCodes.Status403Forbidden,
@@ -210,9 +286,9 @@ public class AppController(
         }
         catch (Exception exception)
         {
-            WebApplicationExtensions.LogCoreControllerException(
-                context: HttpContext,
-                exception: exception);
+            loggingBroker.LogError(
+                exception: exception,
+                message: "The app operation failed.");
 
             return StatusCode(
                 statusCode: StatusCodes.Status500InternalServerError,

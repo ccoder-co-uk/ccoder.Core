@@ -17,6 +17,9 @@ using Web.Services.Processings;
 using App = cCoder.Data.Models.CMS.App;
 using PageRenderResult = cCoder.ContentManagement.Models.PageRenderResult;
 using System.ComponentModel.DataAnnotations;
+using System.Security;
+using System.Security.Authentication;
+using cCoder.Core.Brokers.Loggings;
 
 
 namespace Web.Controllers
@@ -25,7 +28,8 @@ namespace Web.Controllers
         IPageRenderer pageRenderer,
         IFirstTimeSetupManager setupStateService,
         ISetupRequestHostManager setupRequestHostManager,
-        IHomeSessionProcessingService homeSessionProcessingService) : Controller
+        IHomeSessionProcessingService homeSessionProcessingService,
+        ILoggingBroker loggingBroker) : Controller
     {
         private readonly IPageRenderer pageRenderer = pageRenderer;
         private readonly IFirstTimeSetupManager setupStateService = setupStateService;
@@ -51,11 +55,19 @@ namespace Web.Controllers
                     homeSessionProcessingService.AbortRequest(
                         context: Response.HttpContext);
 
+                    loggingBroker.LogInformation(
+                        message: "The scanner request was handled successfully.");
+
+
                     return Ok();
                 }
 
                 if (path?.ToLower() == "robots.txt")
                 {
+                    loggingBroker.LogInformation(
+                        message: "The robots request was handled successfully.");
+
+
                     return Content(content: "User-agent: * Allow: *", contentType: "text/plain");
                 }
 
@@ -88,14 +100,35 @@ namespace Web.Controllers
 
                 ViewResult viewResult = View(model: page);
                 viewResult.StatusCode = page.StatusCode;
+
+                loggingBroker.LogInformation(
+                    message: "The page was rendered successfully.");
+
+
                 return viewResult;
             }
-            catch (ValidationException)
+            catch (ValidationException exception)
             {
+                loggingBroker.LogWarning(
+                    exception: exception,
+                    message: "The page request is invalid.");
+
                 return BadRequest(error: "The page request is invalid.");
             }
-            catch (PageAccessSecurityException)
+            catch (AuthenticationException exception)
             {
+                loggingBroker.LogWarning(
+                    exception: exception,
+                    message: "The page request was not authenticated.");
+
+                return Unauthorized(value: "Authentication failed.");
+            }
+            catch (PageAccessSecurityException exception)
+            {
+                loggingBroker.LogWarning(
+                    exception: exception,
+                    message: "The page request requires authentication.");
+
                 string returnUrl = Request.PathBase + Request.Path
                     + Request.QueryString;
 
@@ -114,11 +147,25 @@ namespace Web.Controllers
                         returnUrl
                     });
             }
-            catch (PageNotFoundException)
+            catch (SecurityException exception)
+            {
+                loggingBroker.LogWarning(
+                    exception: exception,
+                    message: "The page request was forbidden.");
+
+                return StatusCode(
+                    statusCode: StatusCodes.Status403Forbidden,
+                    value: "The page request is forbidden.");
+            }
+            catch (PageNotFoundException exception)
             {
                 if (!await setupStateService.IsInitializedAsync(
                     cancellationToken: cancellationToken))
                 {
+                    loggingBroker.LogInformation(
+                        message: "The setup page was rendered successfully.");
+
+
                     return View(
                         viewName: "~/Views/Setup/Index.cshtml",
                         model: new FirstTimeSetupViewModel
@@ -128,10 +175,19 @@ namespace Web.Controllers
                         });
                 }
 
+                loggingBroker.LogWarning(
+                    exception: exception,
+                    message: "The requested page was not found.");
+
+
                 return NotFound(value: "The requested page was not found.");
             }
-            catch (Exception)
+            catch (Exception exception)
             {
+                loggingBroker.LogError(
+                    exception: exception,
+                    message: "The page could not be rendered.");
+
                 return StatusCode(
                     statusCode: StatusCodes.Status500InternalServerError,
                     value: "The page could not be rendered.");
