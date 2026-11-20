@@ -97,7 +97,7 @@
     {
       "Name": "HostedServices.Controllers.HomeController",
       "StandardElementType": "HttpExposure",
-      "LineNumber": 12,
+      "LineNumber": 14,
       "IsPublic": true,
       "Kind": "Class",
       "BaseType": {
@@ -116,76 +116,7 @@
         {
           "Id": "HostedServices.Controllers.HomeController.Get()",
           "Name": "Get",
-          "LineNumber": 16,
-          "Inputs": [],
-          "ReturnType": "Microsoft.AspNetCore.Mvc.IActionResult",
-          "Implements": [],
-          "Calls": [
-            {
-              "TypeName": "Microsoft.AspNetCore.Mvc.Controller",
-              "MethodName": "View",
-              "MethodId": "Microsoft.AspNetCore.Mvc.Controller.View(System.String?)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            },
-            {
-              "TypeName": "Microsoft.AspNetCore.Mvc.ControllerBase",
-              "MethodName": "StatusCode",
-              "MethodId": "Microsoft.AspNetCore.Mvc.ControllerBase.StatusCode(System.Int32,System.Object?)",
-              "StandardElementType": "Dependency",
-              "IsDependencyBoundary": true
-            }
-          ],
-          "PossibleExceptionTypes": [],
-          "IncomingExceptionTypes": [],
-          "ThrowsExceptionTypes": [],
-          "HttpMethods": [
-            "GET"
-          ],
-          "HttpResponses": [
-            {
-              "StatusCode": 500,
-              "ResultMethod": "StatusCode",
-              "ExceptionType": "System.Exception",
-              "IsExceptionPath": true,
-              "IsNullPath": false,
-              "HasBody": true,
-              "ExposesExceptionDetails": false,
-              "LogsException": false
-            }
-          ],
-          "IsHttpRequestHandler": true,
-          "IsODataControllerAction": false,
-          "HasFromBodyParameter": false,
-          "HasKeyParameter": false,
-          "HandlesNullWithNotFound": false,
-          "HasTryCatch": true
-        }
-      ]
-    },
-    {
-      "Name": "HostedServices.Controllers.WorkflowController",
-      "StandardElementType": "HttpExposure",
-      "LineNumber": 15,
-      "IsPublic": true,
-      "Kind": "Class",
-      "BaseType": {
-        "Id": "Microsoft.AspNetCore.Mvc.ViewFeatures:Microsoft.AspNetCore.Mvc.Controller",
-        "FullName": "Microsoft.AspNetCore.Mvc.Controller",
-        "Name": "Controller",
-        "Namespace": "Microsoft.AspNetCore.Mvc",
-        "AssemblyName": "Microsoft.AspNetCore.Mvc.ViewFeatures",
-        "Kind": "Class",
-        "IsInCurrentProject": false,
-        "StandardElementType": "Dependency"
-      },
-      "Interfaces": [],
-      "Properties": [],
-      "Methods": [
-        {
-          "Id": "HostedServices.Controllers.WorkflowController.Get()",
-          "Name": "Get",
-          "LineNumber": 22,
+          "LineNumber": 18,
           "Inputs": [],
           "ReturnType": "Microsoft.AspNetCore.Mvc.IActionResult",
           "Implements": [],
@@ -205,9 +136,30 @@
               "IsDependencyBoundary": true
             },
             {
+              "TypeName": "Microsoft.AspNetCore.Mvc.ControllerBase",
+              "MethodName": "StatusCode",
+              "MethodId": "Microsoft.AspNetCore.Mvc.ControllerBase.StatusCode(System.Int32,System.Object?)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "Microsoft.AspNetCore.Mvc.ControllerBase",
+              "MethodName": "Unauthorized",
+              "MethodId": "Microsoft.AspNetCore.Mvc.ControllerBase.Unauthorized(System.Object?)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
               "TypeName": "cCoder.Logging.Brokers.Loggings.ILoggingBroker",
               "MethodName": "LogError",
               "MethodId": "cCoder.Logging.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "cCoder.Logging.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "LogInformation",
+              "MethodId": "cCoder.Logging.Brokers.Loggings.ILoggingBroker.LogInformation(System.String,System.Object[])",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
             },
@@ -226,6 +178,143 @@
             "GET"
           ],
           "HttpResponses": [
+            {
+              "StatusCode": 401,
+              "ResultMethod": "Unauthorized",
+              "ExceptionType": "System.Security.Authentication.AuthenticationException",
+              "IsExceptionPath": true,
+              "IsNullPath": false,
+              "HasBody": true,
+              "ExposesExceptionDetails": false,
+              "LogsException": true
+            },
+            {
+              "StatusCode": 403,
+              "ResultMethod": "StatusCode",
+              "ExceptionType": "System.UnauthorizedAccessException",
+              "IsExceptionPath": true,
+              "IsNullPath": false,
+              "HasBody": false,
+              "ExposesExceptionDetails": false,
+              "LogsException": true
+            },
+            {
+              "StatusCode": 403,
+              "ResultMethod": "StatusCode",
+              "ExceptionType": "System.Security.SecurityException",
+              "IsExceptionPath": true,
+              "IsNullPath": false,
+              "HasBody": false,
+              "ExposesExceptionDetails": false,
+              "LogsException": true
+            },
+            {
+              "StatusCode": 500,
+              "ResultMethod": "StatusCode",
+              "ExceptionType": "System.Exception",
+              "IsExceptionPath": true,
+              "IsNullPath": false,
+              "HasBody": true,
+              "ExposesExceptionDetails": false,
+              "LogsException": true
+            }
+          ],
+          "IsHttpRequestHandler": true,
+          "IsODataControllerAction": false,
+          "HasFromBodyParameter": false,
+          "HasKeyParameter": false,
+          "HandlesNullWithNotFound": false,
+          "HasTryCatch": true
+        }
+      ]
+    },
+    {
+      "Name": "HostedServices.Controllers.WorkflowController",
+      "StandardElementType": "HttpExposure",
+      "LineNumber": 16,
+      "IsPublic": true,
+      "Kind": "Class",
+      "BaseType": {
+        "Id": "Microsoft.AspNetCore.Mvc.ViewFeatures:Microsoft.AspNetCore.Mvc.Controller",
+        "FullName": "Microsoft.AspNetCore.Mvc.Controller",
+        "Name": "Controller",
+        "Namespace": "Microsoft.AspNetCore.Mvc",
+        "AssemblyName": "Microsoft.AspNetCore.Mvc.ViewFeatures",
+        "Kind": "Class",
+        "IsInCurrentProject": false,
+        "StandardElementType": "Dependency"
+      },
+      "Interfaces": [],
+      "Properties": [],
+      "Methods": [
+        {
+          "Id": "HostedServices.Controllers.WorkflowController.Get()",
+          "Name": "Get",
+          "LineNumber": 23,
+          "Inputs": [],
+          "ReturnType": "Microsoft.AspNetCore.Mvc.IActionResult",
+          "Implements": [],
+          "Calls": [
+            {
+              "TypeName": "Microsoft.AspNetCore.Mvc.Controller",
+              "MethodName": "View",
+              "MethodId": "Microsoft.AspNetCore.Mvc.Controller.View(System.String?)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "Microsoft.AspNetCore.Mvc.ControllerBase",
+              "MethodName": "StatusCode",
+              "MethodId": "Microsoft.AspNetCore.Mvc.ControllerBase.StatusCode(System.Int32)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "Microsoft.AspNetCore.Mvc.ControllerBase",
+              "MethodName": "Unauthorized",
+              "MethodId": "Microsoft.AspNetCore.Mvc.ControllerBase.Unauthorized(System.Object?)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "cCoder.Logging.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "LogError",
+              "MethodId": "cCoder.Logging.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "cCoder.Logging.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "LogInformation",
+              "MethodId": "cCoder.Logging.Brokers.Loggings.ILoggingBroker.LogInformation(System.String,System.Object[])",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "cCoder.Logging.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "LogWarning",
+              "MethodId": "cCoder.Logging.Brokers.Loggings.ILoggingBroker.LogWarning(System.String,System.Object[])",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            }
+          ],
+          "PossibleExceptionTypes": [],
+          "IncomingExceptionTypes": [],
+          "ThrowsExceptionTypes": [],
+          "HttpMethods": [
+            "GET"
+          ],
+          "HttpResponses": [
+            {
+              "StatusCode": 401,
+              "ResultMethod": "Unauthorized",
+              "ExceptionType": "System.Security.Authentication.AuthenticationException",
+              "IsExceptionPath": true,
+              "IsNullPath": false,
+              "HasBody": true,
+              "ExposesExceptionDetails": false,
+              "LogsException": true
+            },
             {
               "StatusCode": 403,
               "ResultMethod": "StatusCode",
@@ -267,7 +356,7 @@
         {
           "Id": "HostedServices.Controllers.WorkflowController.GetStats()",
           "Name": "GetStats",
-          "LineNumber": 91,
+          "LineNumber": 106,
           "Inputs": [],
           "ReturnType": "Microsoft.AspNetCore.Mvc.IActionResult",
           "Implements": [],
@@ -294,9 +383,23 @@
               "IsDependencyBoundary": true
             },
             {
+              "TypeName": "Microsoft.AspNetCore.Mvc.ControllerBase",
+              "MethodName": "Unauthorized",
+              "MethodId": "Microsoft.AspNetCore.Mvc.ControllerBase.Unauthorized(System.Object?)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
               "TypeName": "cCoder.Logging.Brokers.Loggings.ILoggingBroker",
               "MethodName": "LogError",
               "MethodId": "cCoder.Logging.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "cCoder.Logging.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "LogInformation",
+              "MethodId": "cCoder.Logging.Brokers.Loggings.ILoggingBroker.LogInformation(System.String,System.Object[])",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
             },
@@ -322,6 +425,16 @@
             "GET"
           ],
           "HttpResponses": [
+            {
+              "StatusCode": 401,
+              "ResultMethod": "Unauthorized",
+              "ExceptionType": "System.Security.Authentication.AuthenticationException",
+              "IsExceptionPath": true,
+              "IsNullPath": false,
+              "HasBody": true,
+              "ExposesExceptionDetails": false,
+              "LogsException": true
+            },
             {
               "StatusCode": 403,
               "ResultMethod": "StatusCode",
@@ -363,7 +476,7 @@
         {
           "Id": "HostedServices.Controllers.WorkflowController.Post(System.Guid)",
           "Name": "Post",
-          "LineNumber": 53,
+          "LineNumber": 61,
           "Inputs": [
             {
               "Name": "flowId",
@@ -402,9 +515,23 @@
               "IsDependencyBoundary": true
             },
             {
+              "TypeName": "Microsoft.AspNetCore.Mvc.ControllerBase",
+              "MethodName": "Unauthorized",
+              "MethodId": "Microsoft.AspNetCore.Mvc.ControllerBase.Unauthorized(System.Object?)",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
               "TypeName": "cCoder.Logging.Brokers.Loggings.ILoggingBroker",
               "MethodName": "LogError",
               "MethodId": "cCoder.Logging.Brokers.Loggings.ILoggingBroker.LogError(System.Exception,System.String,System.Object[])",
+              "StandardElementType": "Dependency",
+              "IsDependencyBoundary": true
+            },
+            {
+              "TypeName": "cCoder.Logging.Brokers.Loggings.ILoggingBroker",
+              "MethodName": "LogInformation",
+              "MethodId": "cCoder.Logging.Brokers.Loggings.ILoggingBroker.LogInformation(System.String,System.Object[])",
               "StandardElementType": "Dependency",
               "IsDependencyBoundary": true
             },
@@ -444,6 +571,16 @@
               "StatusCode": 400,
               "ResultMethod": "BadRequest",
               "ExceptionType": "System.ArgumentException",
+              "IsExceptionPath": true,
+              "IsNullPath": false,
+              "HasBody": true,
+              "ExposesExceptionDetails": false,
+              "LogsException": true
+            },
+            {
+              "StatusCode": 401,
+              "ResultMethod": "Unauthorized",
+              "ExceptionType": "System.Security.Authentication.AuthenticationException",
               "IsExceptionPath": true,
               "IsNullPath": false,
               "HasBody": true,
@@ -1259,6 +1396,10 @@
     {
       "FromType": "HostedServices.Brokers.Workflow.HostedWorkflowInstanceBroker",
       "ToType": "cCoder.Workflow.Exposures.IWorkflowInstanceManager"
+    },
+    {
+      "FromType": "HostedServices.Controllers.HomeController",
+      "ToType": "cCoder.Logging.Brokers.Loggings.ILoggingBroker"
     },
     {
       "FromType": "HostedServices.Controllers.WorkflowController",

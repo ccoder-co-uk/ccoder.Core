@@ -13,10 +13,10 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.21.0" />
-    <PackageReference Include="cCoder.Security.Data" Version="2026.11.18.1214" Condition="'$(UseLocalSecurity)' != 'true'" />
-    <PackageReference Include="cCoder.Mail.Providers" Version="2026.10.21.1323" />
+    <PackageReference Include="cCoder.Security.Data" Version="2026.11.20.1640" Condition="'$(UseLocalSecurity)' != 'true'" />
+    <PackageReference Include="cCoder.Mail.Providers" Version="2026.11.20.1752" />
     <PackageReference Include="FluentAssertions" Version="8.11.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.13" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.14" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="7.1.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.10.1" />
     <PackageReference Include="xunit" Version="2.9.3" />
@@ -45,6 +45,6 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="cCoder.CodeAnalysis" Version="2026.10.8.1211" />
+    <PackageReference Update="cCoder.CodeAnalysis" Version="2026.11.20.1604" />
   </ItemGroup>
 </Project>
