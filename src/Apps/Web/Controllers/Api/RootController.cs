@@ -5,7 +5,9 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using System;
+using System.Security.Authentication;
 using System.Threading.Tasks;
+using cCoder.Core.Brokers.Loggings;
 using cCoder.Core.Exposures.OData.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Web.Services.Foundations.Api;
@@ -15,7 +17,8 @@ namespace Web.Controllers.Api
 {
     [Route("Api")]
     public class ApiRootController(
-        IApiContextService apiContextService)
+        IApiContextService apiContextService,
+        ILoggingBroker loggingBroker)
         : Controller
     {
         [HttpGet()]
@@ -23,15 +26,39 @@ namespace Web.Controllers.Api
         {
             try
             {
-                return Ok(
-                    value: new
-                    {
-                        value = apiContextService.GetApiInfos()
-                    });
+                object value = new
+                {
+                    value = apiContextService.GetApiInfos()
+                };
+
+                loggingBroker.LogInformation(message: "The API contexts were loaded successfully.");
+
+                return Ok(value: value);
+            }
+            catch (AuthenticationException exception)
+            {
+                loggingBroker.LogWarning(
+                    exception: exception,
+                    message: "The API request was not authenticated.");
+
+                return Unauthorized(value: "Authentication failed.");
+            }
+            catch (System.Security.SecurityException exception)
+            {
+                loggingBroker.LogWarning(
+                    exception: exception,
+                    message: "The API request was forbidden.");
+
+                return StatusCode(
+                    statusCode: StatusCodes.Status403Forbidden,
+                    value: "The API request is forbidden.");
             }
             catch (Exception exception)
             {
-                apiContextService.LogError(exception: exception);
+                loggingBroker.LogError(
+                    exception: exception,
+                    message: "The API contexts could not be loaded.");
+
 
                 return StatusCode(
                     statusCode: StatusCodes.Status500InternalServerError,
@@ -48,11 +75,34 @@ namespace Web.Controllers.Api
                     await apiContextService.ReadRequestBodyAsync(
                         requestBody: Request.Body);
 
+                loggingBroker.LogInformation(message: "The API request completed successfully.");
+
                 return new RawResult(response);
+            }
+            catch (AuthenticationException exception)
+            {
+                loggingBroker.LogWarning(
+                    exception: exception,
+                    message: "The API request was not authenticated.");
+
+                return Unauthorized(value: "Authentication failed.");
+            }
+            catch (System.Security.SecurityException exception)
+            {
+                loggingBroker.LogWarning(
+                    exception: exception,
+                    message: "The API request was forbidden.");
+
+                return StatusCode(
+                    statusCode: StatusCodes.Status403Forbidden,
+                    value: "The API request is forbidden.");
             }
             catch (Exception exception)
             {
-                apiContextService.LogError(exception: exception);
+                loggingBroker.LogError(
+                    exception: exception,
+                    message: "The API request could not be processed.");
+
 
                 return StatusCode(
                     statusCode: StatusCodes.Status500InternalServerError,
@@ -67,9 +117,30 @@ namespace Web.Controllers.Api
             {
                 return await Post();
             }
+            catch (AuthenticationException exception)
+            {
+                loggingBroker.LogWarning(
+                    exception: exception,
+                    message: "The API request was not authenticated.");
+
+                return Unauthorized(value: "Authentication failed.");
+            }
+            catch (System.Security.SecurityException exception)
+            {
+                loggingBroker.LogWarning(
+                    exception: exception,
+                    message: "The API request was forbidden.");
+
+                return StatusCode(
+                    statusCode: StatusCodes.Status403Forbidden,
+                    value: "The API request is forbidden.");
+            }
             catch (Exception exception)
             {
-                apiContextService.LogError(exception: exception);
+                loggingBroker.LogError(
+                    exception: exception,
+                    message: "The API request could not be processed.");
+
 
                 return StatusCode(
                     statusCode: StatusCodes.Status500InternalServerError,
@@ -82,11 +153,36 @@ namespace Web.Controllers.Api
         {
             try
             {
-                return Ok(value: new { DateTimeOffset.UtcNow });
+                object value = new { DateTimeOffset.UtcNow };
+
+                loggingBroker.LogInformation(message: "The server time was loaded successfully.");
+
+                return Ok(value: value);
+            }
+            catch (AuthenticationException exception)
+            {
+                loggingBroker.LogWarning(
+                    exception: exception,
+                    message: "The API request was not authenticated.");
+
+                return Unauthorized(value: "Authentication failed.");
+            }
+            catch (System.Security.SecurityException exception)
+            {
+                loggingBroker.LogWarning(
+                    exception: exception,
+                    message: "The API request was forbidden.");
+
+                return StatusCode(
+                    statusCode: StatusCodes.Status403Forbidden,
+                    value: "The API request is forbidden.");
             }
             catch (Exception exception)
             {
-                apiContextService.LogError(exception: exception);
+                loggingBroker.LogError(
+                    exception: exception,
+                    message: "The server time could not be loaded.");
+
 
                 return StatusCode(
                     statusCode: StatusCodes.Status500InternalServerError,

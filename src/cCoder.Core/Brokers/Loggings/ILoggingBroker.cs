@@ -3,9 +3,10 @@
 // ---------------------------------------------------------------
 
 using System;
+using cCoder.CodeAnalysis.Exposures;
 namespace cCoder.Core.Brokers.Loggings;
 
-public interface ILoggingBroker
+public interface ILoggingBroker : IUtilityBroker
 {
     bool IsDebugEnabled();
     bool IsInformationEnabled();

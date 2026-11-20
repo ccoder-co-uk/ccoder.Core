@@ -5,6 +5,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using System;
+using System.Security.Authentication;
 using System.Threading.Tasks;
 using cCoder.Logging.Brokers.Loggings;
 using HostedServices.Exposures;
@@ -25,7 +26,14 @@ public sealed class WorkflowController(
         {
             Response.StatusCode = StatusCodes.Status200OK;
 
+            loggingBroker.LogInformation(message: "The workflow page was loaded successfully.");
+
             return View(viewName: "Index");
+        }
+        catch (AuthenticationException exception)
+        {
+            loggingBroker.LogWarning(message: exception.Message);
+            return Unauthorized(value: "Authentication failed.");
         }
         catch (UnauthorizedAccessException exception)
         {
@@ -57,6 +65,8 @@ public sealed class WorkflowController(
             await workflowInstanceProcessingService.ExecuteWaitingQueuedInstanceByIdAsync(
                 flowInstanceDataId: flowId);
 
+            loggingBroker.LogInformation(message: "The workflow instance executed successfully.");
+
             return Ok();
         }
         catch (ArgumentException exception)
@@ -64,6 +74,11 @@ public sealed class WorkflowController(
             loggingBroker.LogWarning(message: exception.Message);
 
             return BadRequest(error: "The workflow request is invalid.");
+        }
+        catch (AuthenticationException exception)
+        {
+            loggingBroker.LogWarning(message: exception.Message);
+            return Unauthorized(value: "Authentication failed.");
         }
         catch (UnauthorizedAccessException exception)
         {
@@ -92,7 +107,16 @@ public sealed class WorkflowController(
     {
         try
         {
-            return Json(data: workflowInstanceProcessingService.GetStats());
+            object[] stats = workflowInstanceProcessingService.GetStats();
+
+            loggingBroker.LogInformation(message: "The workflow statistics loaded successfully.");
+
+            return Json(data: stats);
+        }
+        catch (AuthenticationException exception)
+        {
+            loggingBroker.LogWarning(message: exception.Message);
+            return Unauthorized(value: "Authentication failed.");
         }
         catch (UnauthorizedAccessException exception)
         {
