@@ -7,7 +7,7 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="cCoder.Data" Version="2026.11.20.1700" />
+    <PackageReference Include="cCoder.Data" Version="2026.11.23.1635" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="10.0.14" />
     <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.14" />
     <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.14" />
