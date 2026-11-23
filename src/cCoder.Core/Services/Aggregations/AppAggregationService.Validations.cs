@@ -20,4 +20,7 @@ internal sealed partial class AppAggregationService
 
     private static void ValidateAppOnDelete(int appId) =>
         Validate(inputs: [appId]);
+
+    private static void ValidateAppsForTenantOnDelete(string tenantId) =>
+        Validate(inputs: [tenantId]);
 }

@@ -14,6 +14,7 @@ using cCoder.Eventing.Models;
 using cCoder.Logging;
 using cCoder.Mail;
 using cCoder.Core.Services.Aggregations;
+using cCoder.Core.Services.Orchestrations;
 using cCoder.Security;
 using cCoder.Security.Models.Events;
 using cCoder.Workflow;
@@ -91,7 +92,23 @@ public static partial class WebApplicationExtensions
     {
         app.UsePackageImportEventHandler();
         app.UseSecurityAccountEmailEventHandlers();
+        app.UseTenantDeletedEventHandler();
         app.UseServiceBusAppDeleteForwarder();
+        return app;
+    }
+
+    private static WebApplication UseTenantDeletedEventHandler(
+        this WebApplication app)
+    {
+        using IServiceScope scope = app.Services.CreateScope();
+        IEventHub eventHub = scope.ServiceProvider.GetRequiredService<IEventHub>();
+
+        eventHub.ListenToEvent<SecurityAccountEvent, IAppOrchestrationService>(
+            name: "tenant_deleted",
+            handler: static (service, tenantDeletedEvent) =>
+                service.DeleteAppsForTenantAsync(
+                    tenantId: tenantDeletedEvent.Tenant.Id));
+
         return app;
     }
 

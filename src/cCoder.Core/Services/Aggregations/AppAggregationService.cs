@@ -3,6 +3,7 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using cCoder.Core.Services.Foundations.AppSecurity;
 using cCoder.Core.Services.Foundations.ContentManagement;
@@ -95,23 +96,47 @@ internal sealed partial class AppAggregationService(
         {
             ValidateAppOnDelete(appId: appId);
 
-            if (HasExternalEventProvider(configuration: configuration))
-            {
-                await contentManagementAppService.DeleteAppAsync(
-                    appId: appId);
-
-                return true;
-            }
-
-            await planningAppService.DeleteAppAsync(appId: appId);
-            await documentManagementAppService.DeleteAppAsync(appId: appId);
-            await workflowAppService.DeleteAppAsync(appId: appId);
-            await mailAppService.DeleteAppAsync(appId: appId);
-            await contentManagementAppService.DeleteAppAsync(appId: appId);
-            await appSecurityAppService.DeleteAppAsync(appId: appId);
-
-            return false;
+            return await DeleteAppCoreAsync(appId: appId);
         });
+
+    public ValueTask DeleteAppsForTenantAsync(string tenantId) =>
+        TryCatch(operation: async () =>
+        {
+            ValidateAppsForTenantOnDelete(tenantId: tenantId);
+
+            int[] appIds = contentManagementAppService
+                .GetAllApps(ignoreFilters: true)
+                .Where(predicate: app => app.TenantId == tenantId)
+                .Select(selector: app => app.Id)
+                .ToArray();
+
+            foreach (int appId in appIds)
+            {
+                await DeleteAppCoreAsync(appId: appId);
+            }
+        });
+
+    private async ValueTask<bool> DeleteAppCoreAsync(int appId)
+    {
+        ValidateAppOnDelete(appId: appId);
+
+        if (HasExternalEventProvider(configuration: configuration))
+        {
+            await contentManagementAppService.DeleteAppAsync(
+                appId: appId);
+
+            return true;
+        }
+
+        await planningAppService.DeleteAppAsync(appId: appId);
+        await documentManagementAppService.DeleteAppAsync(appId: appId);
+        await workflowAppService.DeleteAppAsync(appId: appId);
+        await mailAppService.DeleteAppAsync(appId: appId);
+        await contentManagementAppService.DeleteAppAsync(appId: appId);
+        await appSecurityAppService.DeleteAppAsync(appId: appId);
+
+        return false;
+    }
 
     private static bool HasExternalEventProvider(
         CoreConfiguration configuration) =>

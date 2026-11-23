@@ -14,4 +14,6 @@ public interface IAppAggregationService
     ValueTask<App> UpdateAppAsync(App updatedApp);
 
     ValueTask<bool> DeleteAppAsync(int appId);
+
+    ValueTask DeleteAppsForTenantAsync(string tenantId);
 }
