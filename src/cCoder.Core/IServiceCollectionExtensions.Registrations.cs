@@ -43,6 +43,7 @@ using cCoder.Core.Exposures;
 using cCoder.Core.Exposures.Hubs;
 using cCoder.Core.Services.Aggregations;
 using cCoder.Core.Services.Aggregations.Packages;
+using cCoder.Core.Services.Aggregations.Security;
 using cCoder.Core.Services.Foundations.AllowedOrigins;
 using cCoder.Core.Services.Foundations.AppSecurity;
 using cCoder.Core.Services.Foundations.ContentManagement;
@@ -181,6 +182,7 @@ public static partial class IServiceCollectionExtensions
         services.AddAggregations();
         services.AddOrchestrations();
         services.AddExposures();
+        services.AddTenantAdministrationOverride(configuration: configuration);
 
         services.AddServiceBusEventForwarding(
             configuration: configuration.Eventing);
@@ -312,11 +314,31 @@ public static partial class IServiceCollectionExtensions
         services.AddAggregations();
         services.AddOrchestrations();
         services.AddExposures();
+        services.AddTenantAdministrationOverride(configuration: configuration);
 
         services.AddServiceBusEventForwarding(
             configuration: configuration.Eventing);
 
         services.AddCoreEventAuthInfo();
+
+        return services;
+    }
+
+    private static IServiceCollection AddTenantAdministrationOverride(
+        this IServiceCollection services,
+        CoreConfiguration configuration)
+    {
+        if (configuration.Security is not null
+            && configuration.ContentManagement is not null)
+        {
+            services.AddTransient<
+                ITenantAdministrationAggregationService,
+                TenantAdministrationAggregationService>();
+            services.Replace(
+                ServiceDescriptor.Transient<
+                    ITenantAdministrationManager,
+                    CoreTenantAdministrationManager>());
+        }
 
         return services;
     }
