@@ -158,6 +158,7 @@ public sealed partial class CoreConfigurationBindingTests
             ["Eventing:ServiceBus:ConnectionString"] = "events",
             ["Eventing:ServiceBus:MaxConcurrency"] = "8",
             ["Api:ExposeMetadata"] = "true",
+            ["ContentSecurityPolicy:StyleSources:0"] = "https://cdn.example.test",
         };
 
         IConfiguration configuration = new ConfigurationBuilder()
@@ -217,6 +218,13 @@ public sealed partial class CoreConfigurationBindingTests
         result.Api.ExposeMetadata
             .Should()
             .BeTrue();
+
+        result.ContentSecurityPolicy.StyleSources
+            .Should()
+            .ContainSingle()
+            .Which
+            .Should()
+            .Be(expected: "https://cdn.example.test");
     }
 
     [Fact]
