@@ -3,6 +3,7 @@
 // ---------------------------------------------------------------
 
 using System;
+using cCoder.Core.Models;
 using FluentAssertions;
 using Xunit;
 
@@ -68,5 +69,66 @@ public sealed partial class ContentSecurityPolicyTests
         // Then
         policy.Should()
             .NotContain(unexpected: "frame-ancestors");
+    }
+
+    [Fact]
+    public void CreateContentSecurityPolicy_ShouldAppendConfiguredSourcesToTheirDirectives()
+    {
+        // Given
+        ContentSecurityPolicyConfiguration configuration = new()
+        {
+            ConnectSources = ["wss://stream.example.test"],
+            FontSources = ["https://cdn.example.test"],
+            StyleSources = ["https://cdn.example.test"]
+        };
+
+        // When
+        string policy =
+            WebApplicationExtensions.CreateContentSecurityPolicy(
+                allowEditorFraming: false,
+                nonce: "test-nonce",
+                configuration: configuration);
+
+        // Then
+        policy.Should()
+            .Contain(expected: "style-src-elem 'self' 'unsafe-inline' https://cdn.example.test");
+
+        policy.Should()
+            .Contain(expected: "font-src 'self' data: https://cdn.example.test");
+
+        policy.Should()
+            .Contain(expected: "connect-src 'self' wss://stream.example.test");
+    }
+
+    [Fact]
+    public void CreateContentSecurityPolicy_ShouldIgnoreConfiguredDirectiveInjection()
+    {
+        // Given
+        ContentSecurityPolicyConfiguration configuration = new()
+        {
+            ScriptSources =
+            [
+                "https://valid.example.test",
+                "https://bad.example.test; object-src *",
+                "javascript:alert(1)"
+            ]
+        };
+
+        // When
+        string policy =
+            WebApplicationExtensions.CreateContentSecurityPolicy(
+                allowEditorFraming: false,
+                nonce: "test-nonce",
+                configuration: configuration);
+
+        // Then
+        policy.Should()
+            .Contain(expected: "script-src 'self' 'nonce-test-nonce' https://valid.example.test");
+
+        policy.Should()
+            .NotContain(unexpected: "bad.example.test");
+
+        policy.Should()
+            .NotContain(unexpected: "javascript:");
     }
 }

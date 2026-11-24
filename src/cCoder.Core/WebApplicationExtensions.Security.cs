@@ -36,6 +36,11 @@ public static partial class WebApplicationExtensions
     private static WebApplication UseCoreSecurityHeaders(
         this WebApplication app)
     {
+        Models.ContentSecurityPolicyConfiguration configuration =
+            app.Services
+                .GetService<Models.CoreConfiguration>()?
+                .ContentSecurityPolicy;
+
         if (!app.Environment.IsDevelopment())
         {
             app.UseHsts();
@@ -63,7 +68,8 @@ public static partial class WebApplicationExtensions
                 context.Response.Headers["Content-Security-Policy"] =
                     CreateContentSecurityPolicy(
                         allowEditorFraming: allowEditorFraming,
-                        nonce: contentSecurityPolicyNonce);
+                        nonce: contentSecurityPolicyNonce,
+                        configuration: configuration);
 
                 if (allowEditorFraming)
                 {
@@ -91,27 +97,75 @@ public static partial class WebApplicationExtensions
 
     internal static string CreateContentSecurityPolicy(
         bool allowEditorFraming,
-        string nonce)
+        string nonce,
+        Models.ContentSecurityPolicyConfiguration configuration = null)
     {
+        string connectSources = CreateAdditionalSources(
+            sources: configuration?.ConnectSources,
+            allowedSchemes: ["http", "https", "ws", "wss"]);
+        string fontSources = CreateAdditionalSources(
+            sources: configuration?.FontSources,
+            allowedSchemes: ["http", "https"]);
+        string frameSources = CreateAdditionalSources(
+            sources: configuration?.FrameSources,
+            allowedSchemes: ["http", "https"]);
+        string imageSources = CreateAdditionalSources(
+            sources: configuration?.ImageSources,
+            allowedSchemes: ["http", "https"]);
+        string scriptSources = CreateAdditionalSources(
+            sources: configuration?.ScriptSources,
+            allowedSchemes: ["http", "https"]);
+        string styleSources = CreateAdditionalSources(
+            sources: configuration?.StyleSources,
+            allowedSchemes: ["http", "https"]);
+
         string policy =
             "default-src 'self'; " +
             "base-uri 'self'; " +
             "object-src 'none'; " +
             "form-action 'self'; " +
-            "img-src 'self' data: blob:; " +
-            "font-src 'self' data:; " +
-            $"style-src 'self' 'nonce-{nonce}'; " +
+            $"img-src 'self' data: blob:{imageSources}; " +
+            $"font-src 'self' data:{fontSources}; " +
+            $"style-src 'self' 'nonce-{nonce}'{styleSources}; " +
             "style-src-attr 'unsafe-inline'; " +
-            "style-src-elem 'self' 'unsafe-inline'; " +
-            $"script-src 'self' 'nonce-{nonce}'; " +
+            $"style-src-elem 'self' 'unsafe-inline'{styleSources}; " +
+            $"script-src 'self' 'nonce-{nonce}'{scriptSources}; " +
             "script-src-attr 'none'; " +
             "worker-src 'self' blob:; " +
-            "connect-src 'self'; " +
-            "frame-src 'self';";
+            $"connect-src 'self'{connectSources}; " +
+            $"frame-src 'self'{frameSources};";
 
         return allowEditorFraming
             ? policy
             : policy + " frame-ancestors 'none';";
+    }
+
+    private static string CreateAdditionalSources(
+        IEnumerable<string> sources,
+        string[] allowedSchemes)
+    {
+        IEnumerable<string> safeSources = (sources ?? [])
+            .Where(predicate: source =>
+                Uri.TryCreate(
+                    uriString: source,
+                    uriKind: UriKind.Absolute,
+                    result: out Uri uri)
+                && allowedSchemes.Contains(
+                    value: uri.Scheme,
+                    comparer: StringComparer.OrdinalIgnoreCase)
+                && string.Equals(
+                    a: uri.AbsoluteUri.TrimEnd('/'),
+                    b: source.TrimEnd('/'),
+                    comparisonType: StringComparison.Ordinal))
+            .Select(selector: source => source.TrimEnd('/'))
+            .Distinct(comparer: StringComparer.Ordinal)
+            .OrderBy(keySelector: source => source, comparer: StringComparer.Ordinal);
+
+        string value = string.Join(separator: " ", values: safeSources);
+
+        return string.IsNullOrEmpty(value)
+            ? string.Empty
+            : $" {value}";
     }
 
     private static WebApplication UseCoreMetadataAuthorization(

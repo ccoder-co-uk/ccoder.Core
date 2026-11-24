@@ -32,6 +32,7 @@ public class CoreConfiguration
     public WorkflowConfiguration Workflow { get; set; }
     public EventingConfiguration Eventing { get; set; }
     public ApiConfiguration Api { get; set; }
+    public ContentSecurityPolicyConfiguration ContentSecurityPolicy { get; set; }
 
     [JsonIgnore]
     public Microsoft.Extensions.Configuration.IConfiguration ApplicationConfiguration { get; set; }
