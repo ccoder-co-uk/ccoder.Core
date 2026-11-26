@@ -18,10 +18,6 @@ $composeFiles = @(
 $requiredHostedBuildRunner = @(
     'runs-on: windows-2025',
     'uses: actions/setup-dotnet@v6',
-    'npm install --global azure-functions-core-tools@4 --allow-scripts=azure-functions-core-tools',
-    '$npmPrefix = npm prefix --global',
-    'node_modules/azure-functions-core-tools/bin/func.exe',
-    'FUNCTIONS_CORE_TOOLS_PATH=$funcExecutable',
     'sqllocaldb start MSSQLLocalDB',
     'CoreData__ConnectionString=',
     'SecurityData__ConnectionString=',
@@ -113,8 +109,8 @@ foreach ($composeFile in $composeFiles) {
             $compose,
             '(?m)^\s+CoreData__ConnectionString:').Count
 
-    if ($coreDataSettingCount -lt 2) {
-        throw "$composeFile must provide CoreData to the application and workflow images."
+    if ($coreDataSettingCount -ne 1) {
+        throw "$composeFile must provide CoreData only to the application image."
     }
 
     foreach ($retiredPersistenceOwner in $retiredPersistenceOwners) {

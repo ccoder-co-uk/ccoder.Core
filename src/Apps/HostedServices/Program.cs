@@ -9,6 +9,8 @@ using System;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Net.Http.Headers;
+using Microsoft.Extensions.Configuration;
 using cCoder.Core;
 using cCoder.Core.Models;
 using cCoder.Data.Models.CMS;
@@ -68,12 +70,20 @@ public class Program
         new()
         {
             Events = ["workflow_execute"],
-            SendHandler = async (_, _, message) =>
+            SendHandler = async (serviceProvider, _, message) =>
             {
-                using HttpClient client = new()
+                string executionToken = serviceProvider
+                    .GetRequiredService<IConfiguration>()["Workflow:ExecutionToken"];
+
+                ArgumentException.ThrowIfNullOrWhiteSpace(argument: executionToken);
+
+                using HttpClient client = new(handler: new HttpClientHandler { AllowAutoRedirect = false })
                 {
                     BaseAddress = new Uri(configuration.Workflow.ServiceUrl)
                 };
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                    scheme: "Bearer", parameter: executionToken);
 
                 using HttpResponseMessage response =
                     await client.PostAsJsonAsync(

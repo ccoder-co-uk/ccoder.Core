@@ -82,6 +82,7 @@ finally {
     $rsa.Dispose()
 }
 
+$workflowExecutionToken = New-HexSecret -ByteCount 32
 $content = @"
 CCODER_SQL_PASSWORD=$sqlPassword
 CCODER_DECRYPTION_KEY=$decryptionKey
@@ -90,7 +91,9 @@ CCODER_SQL_PORT=1433
 CCODER_WEB_HTTP_PORT=80
 CCODER_WEB_HTTPS_PORT=443
 CCODER_WORKFLOW_HTTP_PORT=800
-CCODER_WORKFLOW_HTTPS_PORT=4433
+CCODER_WORKFLOW_EXECUTION_TOKEN=$workflowExecutionToken
+# Set to the HTTPS Web origin(s) approved for Workflow callbacks.
+CCODER_WORKFLOW_TRUSTED_WEB_ORIGINS=
 "@
 
 Set-Content -LiteralPath $environmentPath -Value $content -Encoding utf8NoBOM

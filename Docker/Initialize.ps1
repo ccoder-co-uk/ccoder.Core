@@ -29,6 +29,7 @@ function New-HexSecret {
 
 $decryptionKey = New-HexSecret -ByteCount 24
 
+$workflowExecutionToken = New-HexSecret -ByteCount 32
 $content = @"
 # Supply endpoints reachable from inside Docker containers.
 # SQL on the host is normally Server=host.docker.internal,1433.
@@ -38,7 +39,9 @@ CCODER_DECRYPTION_KEY=$decryptionKey
 CCODER_WEB_HTTP_PORT=80
 CCODER_WEB_HTTPS_PORT=443
 CCODER_WORKFLOW_HTTP_PORT=800
-CCODER_WORKFLOW_HTTPS_PORT=4433
+CCODER_WORKFLOW_EXECUTION_TOKEN=$workflowExecutionToken
+# Set to the HTTPS Web origin(s) approved for Workflow callbacks.
+CCODER_WORKFLOW_TRUSTED_WEB_ORIGINS=
 "@
 
 [IO.File]::WriteAllText(
