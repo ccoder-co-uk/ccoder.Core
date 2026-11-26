@@ -10,50 +10,50 @@ using Xunit;
 
 namespace cCoder.IntegrationTests.Tests;
 
-public sealed partial class WorkflowFunctionsArchitectureTests
+public sealed partial class StandaloneWorkflowArchitectureTests
 {
     [Fact]
-    public void WorkflowFunctionsProcessing_WhenComposed_UsesOnlyMatchingFoundation()
+    public void StandaloneHost_WhenComposed_DelegatesToWorkflowEngineWithoutDataRegistration()
     {
         // Given
 
         // When
-        string source = ReadWorkflowFunctionsProcessingSource();
+        string source = ReadStandaloneWorkflowSource();
 
         // Then
         source.Should()
-            .Contain(expected: "IWorkflowFunctionsService workflowFunctionsService");
+            .Contain(expected: "AddWorkflowEngineHostedServices");
 
         source.Should()
-            .NotContain(unexpected: "IFlowRunner flowRunner");
+            .Contain(expected: "IFlowRunner flowRunner");
 
         source.Should()
-            .NotContain(unexpected: "IWorkflowScriptExecutionService scriptExecutionService");
+            .Contain(expected: "IWorkflowScriptExecutionService scriptExecutionService");
 
         source.Should()
-            .NotContain(unexpected: "ILoggingBroker loggingBroker");
+            .NotContain(unexpected: "AddData(");
     }
 
     [Fact]
-    public void WorkflowFunctionsProcessing_WhenCallingExternalApis_DoesNotCallThemDirectly()
+    public void StandaloneHost_WhenHandlingRequests_DoesNotCallTheWebApiDirectly()
     {
         // Given
 
         // When
-        string source = ReadWorkflowFunctionsProcessingSource();
+        string source = ReadStandaloneWorkflowSource();
 
         // Then
         source.Should()
-            .NotContain(unexpected: "JsonConvert.");
+            .NotContain(unexpected: "new HttpClient(");
 
         source.Should()
-            .NotContain(unexpected: ".CreateResponse(");
+            .NotContain(unexpected: ".GetAsync(");
 
         source.Should()
-            .NotContain(unexpected: ".WriteStringAsync(");
+            .NotContain(unexpected: ".SendAsync(");
     }
 
-    private static string ReadWorkflowFunctionsProcessingSource(
+    private static string ReadStandaloneWorkflowSource(
         [CallerFilePath] string callerFilePath = "")
     {
         string appsDirectory = Path.GetFullPath(
@@ -67,10 +67,7 @@ public sealed partial class WorkflowFunctionsArchitectureTests
             [
                 appsDirectory,
                 "Workflow",
-                "Services",
-                "Processings",
-                "WorkflowFunctions",
-                "WorkflowFunctionsProcessingService.cs"
+                "Program.cs"
             ]);
 
         return File.ReadAllText(path: sourcePath);
