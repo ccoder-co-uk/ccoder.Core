@@ -13,7 +13,7 @@ namespace cCoder.IntegrationTests.Tests;
 public sealed partial class WorkflowLaunchSettingsTests
 {
     [Fact]
-    public void WorkflowProfile_ShouldUseFunctionsHostArguments()
+    public void WorkflowProfile_ShouldUseStandaloneWebBinding()
     {
         // Given
         string repositoryRoot = FindRepositoryRoot();
@@ -42,10 +42,10 @@ public sealed partial class WorkflowLaunchSettingsTests
             .Should()
             .Be(expected: "Project");
 
-        profile.GetProperty(propertyName: "commandLineArgs")
+        profile.GetProperty(propertyName: "applicationUrl")
             .GetString()
             .Should()
-            .Be(expected: "--port 7071");
+            .Be(expected: "http://localhost:7071");
     }
 
     private static string FindRepositoryRoot()

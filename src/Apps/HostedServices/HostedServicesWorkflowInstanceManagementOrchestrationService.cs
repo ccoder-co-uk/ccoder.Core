@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Net;
@@ -22,6 +23,7 @@ using cCoder.Workflow.Exposures;
 using cCoder.Core.Models;
 using cCoder.Core.Brokers.Loggings;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace HostedServices;
 
@@ -232,6 +234,12 @@ message:                 "Requeued {Count} Workflow instances that were still ex
 
         try
         {
+            if (string.IsNullOrWhiteSpace(value: dbInstance.Caller)
+                || string.Equals(a: dbInstance.Caller, b: "Guest", comparisonType: StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException(message: "Workflow execution requires an authenticated caller.");
+            }
+
             ITokenManager tokenManager = serviceProvider.GetRequiredService<ITokenManager>();
             Token token = await tokenManager.IssueTokenAsync(userId: dbInstance.Caller,tokenUse: TokenUse.WorkflowExecution);
 
@@ -278,13 +286,22 @@ instanceId:                 dbInstance.Id,context:                 $"Workflow ex
         WorkflowRequest request,
         CancellationToken cancellationToken)
     {
+        string executionToken = serviceProvider
+            .GetRequiredService<IConfiguration>()["Workflow:ExecutionToken"];
+
+        ArgumentException.ThrowIfNullOrWhiteSpace(argument: executionToken);
+
         using HttpClient api = new(new HttpClientHandler
         {
-            AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+            AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
+            AllowAutoRedirect = false
         })
         {
             BaseAddress = new Uri(configuration.Workflow.ServiceUrl)
         };
+
+        api.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+            scheme: "Bearer", parameter: executionToken);
 
         return await api.PostAsync(
 requestUri:             "Execute",content:             new StringContent(

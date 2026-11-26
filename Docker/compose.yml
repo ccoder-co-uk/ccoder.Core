@@ -7,34 +7,26 @@ x-core-environment: &core-environment
   Security__DecryptionKey: ${CCODER_DECRYPTION_KEY:?Run Docker/Initialize.ps1}
   Eventing__ProviderType: Http
   Eventing__Http__HubUrl: http://localhost:5100
-  ContentManagement__WorkflowServiceUrl: http://localhost:5100/api/
-  Workflow__ServiceUrl: http://workflow:800/
+  ContentManagement__WorkflowServiceUrl: http://workflow:800/api/
+  Workflow__ServiceUrl: http://workflow:800/api/
+  Workflow__ExecutionToken: ${CCODER_WORKFLOW_EXECUTION_TOKEN:?Set a shared worker execution token}
 
 services:
   workflow:
     image: ghcr.io/ccoder-co-uk/ccoder-core-workflow:latest
     pull_policy: always
+    networks: [workflow-transport]
     environment:
-      FUNCTIONS_WORKER_RUNTIME: dotnet-isolated
-      CoreData__ConnectionString: ${CCODER_CORE_CONNECTION_STRING}
-      Security__DecryptionKey: ${CCODER_DECRYPTION_KEY}
-      ASPNETCORE_URLS: http://+:800;https://+:4433
-      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/ccoder-localhost.crt
-      ASPNETCORE_Kestrel__Certificates__Default__KeyPath: /https/ccoder-localhost.key
-    depends_on:
-      application:
-        condition: service_healthy
+      ASPNETCORE_URLS: http://+:800
+      Workflow__ExecutionToken: ${CCODER_WORKFLOW_EXECUTION_TOKEN:?Set a shared worker execution token}
+      Workflow__TrustedWebOrigins: ${CCODER_WORKFLOW_TRUSTED_WEB_ORIGINS:?Set the approved HTTPS Web origins}
     ports:
-      - "${CCODER_WORKFLOW_HTTP_PORT:-800}:800"
-      - "${CCODER_WORKFLOW_HTTPS_PORT:-4433}:4433"
-    volumes:
-      - local-https:/https:ro
-    extra_hosts:
-      - host.docker.internal:host-gateway
+      - "127.0.0.1:${CCODER_WORKFLOW_HTTP_PORT:-800}:800"
 
   application:
     image: ghcr.io/ccoder-co-uk/ccoder-core-application:latest
     pull_policy: always
+    networks: [default, workflow-transport]
     environment:
       <<: *core-environment
       CCODER_WEB_URLS: http://+:80;https://+:443
@@ -50,6 +42,9 @@ services:
       - local-https:/https
     extra_hosts:
       - host.docker.internal:host-gateway
+
+networks:
+  workflow-transport:
 
 volumes:
   local-https:

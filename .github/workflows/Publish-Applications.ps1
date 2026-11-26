@@ -83,6 +83,12 @@ foreach ($application in $applications.GetEnumerator()) {
     if ($LASTEXITCODE -ne 0) {
         throw "Publishing $($application.Key) failed with exit code $LASTEXITCODE."
     }
+
+    if ($application.Key -eq 'Workflow') {
+        & (Join-Path $PSScriptRoot "Test-StandaloneWorkflowContract.ps1") `
+            -RepositoryRoot $repositoryRoot `
+            -WorkflowPublishPath $applicationOutput
+    }
 }
 
 if ([string]::IsNullOrWhiteSpace($Commit)) {

@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Diagnostics;
@@ -28,7 +29,8 @@ internal sealed class ExternalProcessApplication(string name) : IAsyncDisposable
         IReadOnlyDictionary<string, string> environmentVariables,
         Func<Task<bool>> readinessProbe,
         TimeSpan timeout,
-        Func<string> readinessDiagnostics = null)
+        Func<string> readinessDiagnostics = null,
+        bool inheritApplicationConfiguration = true)
     {
         process = new Process
         {
@@ -44,6 +46,19 @@ internal sealed class ExternalProcessApplication(string name) : IAsyncDisposable
             },
             EnableRaisingEvents = true
         };
+
+        if (!inheritApplicationConfiguration)
+        {
+            string[] inheritedKeys = process.StartInfo.Environment.Keys.ToArray();
+
+            foreach (string key in inheritedKeys)
+            {
+                if (key.Contains(value: "__", comparisonType: StringComparison.Ordinal))
+                {
+                    process.StartInfo.Environment.Remove(key: key);
+                }
+            }
+        }
 
         foreach ((string key, string value) in environmentVariables)
         {

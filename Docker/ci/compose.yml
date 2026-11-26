@@ -7,8 +7,9 @@ x-ccoder-environment: &ccoder-environment
   Security__DecryptionKey: ${CCODER_DECRYPTION_KEY:?Run Docker/ci/Initialize.ps1}
   Eventing__ProviderType: Http
   Eventing__Http__HubUrl: http://localhost:5100
-  ContentManagement__WorkflowServiceUrl: http://localhost:5100/api/
-  Workflow__ServiceUrl: http://workflow:800/
+  ContentManagement__WorkflowServiceUrl: http://workflow:800/api/
+  Workflow__ServiceUrl: http://workflow:800/api/
+  Workflow__ExecutionToken: ${CCODER_WORKFLOW_EXECUTION_TOKEN:?Set a shared worker execution token}
 
 services:
   sqlserver:
@@ -30,35 +31,19 @@ services:
       retries: 20
       start_period: 30s
 
-  azurite:
-    image: mcr.microsoft.com/azure-storage/azurite:3.35.0
-    command: azurite --blobHost 0.0.0.0 --queueHost 0.0.0.0 --tableHost 0.0.0.0
-    volumes:
-      - azurite-data:/data
-
   workflow:
     image: ghcr.io/ccoder-co-uk/ccoder-core-workflow:latest
+    networks: [workflow-transport]
     environment:
-      AzureWebJobsStorage: DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://azurite:10000/devstoreaccount1;QueueEndpoint=http://azurite:10001/devstoreaccount1;TableEndpoint=http://azurite:10002/devstoreaccount1
-      FUNCTIONS_WORKER_RUNTIME: dotnet-isolated
-      CoreData__ConnectionString: *core-connection-string
-      Security__DecryptionKey: ${CCODER_DECRYPTION_KEY:?Run Docker/ci/Initialize.ps1}
-      ASPNETCORE_URLS: http://+:800;https://+:4433
-      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/ccoder-localhost.pfx
-      ASPNETCORE_Kestrel__Certificates__Default__Password: ${CCODER_HTTPS_PASSWORD:?Run Docker/ci/Initialize.ps1}
-    depends_on:
-      azurite:
-        condition: service_started
-      sqlserver:
-        condition: service_healthy
+      ASPNETCORE_URLS: http://+:800
+      Workflow__ExecutionToken: ${CCODER_WORKFLOW_EXECUTION_TOKEN:?Set a shared worker execution token}
+      Workflow__TrustedWebOrigins: ${CCODER_WORKFLOW_TRUSTED_WEB_ORIGINS:?Set the approved HTTPS Web origins}
     ports:
-      - "${CCODER_WORKFLOW_HTTP_PORT:-800}:800"
-      - "${CCODER_WORKFLOW_HTTPS_PORT:-4433}:4433"
-    volumes:
-      - ./.https/ccoder-localhost.pfx:/https/ccoder-localhost.pfx:ro
+      - "127.0.0.1:${CCODER_WORKFLOW_HTTP_PORT:-800}:800"
 
   application:
     image: ghcr.io/ccoder-co-uk/ccoder-core-application:latest
+    networks: [default, workflow-transport]
     environment:
       <<: *ccoder-environment
       CCODER_WEB_URLS: http://+:80;https://+:443
@@ -75,6 +60,8 @@ services:
     volumes:
       - ./.https/ccoder-localhost.pfx:/https/ccoder-localhost.pfx:ro
 
+networks:
+  workflow-transport:
+
 volumes:
-  azurite-data:
   sql-data:

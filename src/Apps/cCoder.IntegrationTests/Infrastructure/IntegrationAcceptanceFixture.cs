@@ -48,6 +48,8 @@ public sealed class IntegrationAcceptanceFixture : IAsyncLifetime
     private ExternalProcessApplication hostedServicesApplication;
     private ExternalProcessApplication workflowApplication;
     private readonly string repositoryRoot = FindRepositoryRoot();
+    private readonly string workflowExecutionToken = Convert.ToHexString(
+        inArray: RandomNumberGenerator.GetBytes(count: 32));
     private string acceptanceArtifactsRoot;
     private string workflowOutputDirectory;
     private string hostedServicesOutputDirectory;
@@ -208,15 +210,28 @@ projectPath: "src\\Apps\\Web\\Web.csproj", msbuildProperties: string.Empty, outp
 
         Console.WriteLine(value: "Integration fixture: Web built.");
 
+        Dictionary<string, string> webEnvironment = CreateCommonApplicationEnvironment();
+        string trustedCertificatePath = AddHttpsCertificateEnvironment(environment: webEnvironment);
         workflowApplication = new ExternalProcessApplication("Workflow");
 
         phaseTimer.Restart();
 
         await workflowApplication.StartAsync(
-fileName: ResolveFuncExecutablePath(), arguments: $"start --port {workflowHttpPort} --csharp --no-build", workingDirectory: workflowOutputDirectory, environmentVariables: new Dictionary<string, string>
-{
-    ["FUNCTIONS_WORKER_RUNTIME"] = "dotnet-isolated"
-}, readinessProbe: () => ProbeHealthAsync(baseAddress: WorkflowBaseAddress), timeout: TimeSpan.FromMinutes(minutes: 2), readinessDiagnostics: GetHealthProbeDiagnostics);
+            fileName: "dotnet",
+            arguments: $"\"{Path.Combine(path1: workflowOutputDirectory, path2: "Workflow.dll")}\"",
+            workingDirectory: workflowOutputDirectory,
+            environmentVariables: new Dictionary<string, string>
+            {
+                ["ASPNETCORE_ENVIRONMENT"] = "Acceptance",
+                ["ASPNETCORE_URLS"] = $"http://localhost:{workflowHttpPort}",
+                ["Workflow__ExecutionToken"] = workflowExecutionToken,
+                ["Workflow__TrustedWebCertificatePath"] = trustedCertificatePath,
+                ["Workflow__TrustedWebOrigins"] = WebBaseAddress.GetLeftPart(part: UriPartial.Authority)
+            },
+            readinessProbe: () => ProbeHealthAsync(baseAddress: WorkflowBaseAddress),
+            timeout: TimeSpan.FromMinutes(minutes: 2),
+            readinessDiagnostics: GetHealthProbeDiagnostics,
+            inheritApplicationConfiguration: false);
 
         Console.WriteLine(
             value: $"Integration fixture: Workflow started in {phaseTimer.Elapsed}.");
@@ -227,8 +242,6 @@ fileName: ResolveFuncExecutablePath(), arguments: $"start --port {workflowHttpPo
         Console.WriteLine(
             value: $"Integration fixture: HostedServices started in {phaseTimer.Elapsed}.");
 
-        Dictionary<string, string> webEnvironment = CreateCommonApplicationEnvironment();
-        AddHttpsCertificateEnvironment(environment: webEnvironment);
         webEnvironment["ASPNETCORE_URLS"] = WebBaseAddress.ToString();
 
         webEnvironment["Eventing__Http__HubUrl"] =
@@ -726,6 +739,7 @@ fileName: "dotnet", arguments: $"\"{Path.Combine(path1: hostedServicesOutputDire
             ["AppSecurity__AggregateDomains"] = "false",
             ["ContentManagement__WorkflowServiceUrl"] = WorkflowBaseAddress.ToString(),
             ["Workflow__ServiceUrl"] = WorkflowBaseAddress.ToString(),
+            ["Workflow__ExecutionToken"] = workflowExecutionToken,
             ["Workflow__SslPort"] = WebBaseAddress.Port.ToString(),
             ["Workflow__ScheduledTaskPollingIntervalMilliseconds"] = "5000",
             ["Workflow__QueueInstanceManagement__PollingIntervalMilliseconds"] = "250",
@@ -760,7 +774,7 @@ fileName: "dotnet", arguments: $"\"{Path.Combine(path1: hostedServicesOutputDire
         return environment;
     }
 
-    private void AddHttpsCertificateEnvironment(Dictionary<string, string> environment)
+    private string AddHttpsCertificateEnvironment(Dictionary<string, string> environment)
     {
         string certificatePath = Path.Combine(path1: acceptanceArtifactsRoot, path2: "localhost-https.pfx");
 
@@ -799,13 +813,45 @@ item: new X509EnhancedKeyUsageExtension(
                 [new Oid("1.3.6.1.5.5.7.3.1")],
                 critical: false));
 
-        using X509Certificate2 certificate = request.CreateSelfSigned(
-notBefore: DateTimeOffset.UtcNow.AddMinutes(minutes: -5), notAfter: DateTimeOffset.UtcNow.AddDays(days: 1));
+        using RSA authorityKey = RSA.Create(keySizeInBits: 2048);
+
+        CertificateRequest authorityRequest = new(
+            "CN=Workflow Integration Test CA",
+            authorityKey,
+            HashAlgorithmName.SHA256,
+            RSASignaturePadding.Pkcs1);
+
+        authorityRequest.CertificateExtensions.Add(
+            item: new X509BasicConstraintsExtension(
+                certificateAuthority: true,
+                hasPathLengthConstraint: true,
+                pathLengthConstraint: 0,
+                critical: true));
+
+        authorityRequest.CertificateExtensions.Add(
+            item: new X509KeyUsageExtension(X509KeyUsageFlags.KeyCertSign | X509KeyUsageFlags.CrlSign, critical: true));
+
+
+        DateTimeOffset notBefore = DateTimeOffset.UtcNow.AddMinutes(minutes: -5);
+        DateTimeOffset notAfter = DateTimeOffset.UtcNow.AddDays(days: 1);
+        using X509Certificate2 authority = authorityRequest.CreateSelfSigned(notBefore: notBefore, notAfter: notAfter);
+
+        using X509Certificate2 leaf = request.Create(
+            issuerCertificate: authority,
+            notBefore: notBefore,
+            notAfter: notAfter,
+            serialNumber: RandomNumberGenerator.GetBytes(count: 16));
+
+        using X509Certificate2 certificate = leaf.CopyWithPrivateKey(privateKey: rsa);
+        string trustedCertificatePath = Path.Combine(path1: acceptanceArtifactsRoot, path2: "localhost-ca.cer");
+        File.WriteAllBytes(path: trustedCertificatePath, bytes: authority.Export(contentType: X509ContentType.Cert));
 
         File.WriteAllBytes(path: certificatePath, bytes: certificate.Export(contentType: X509ContentType.Pkcs12, password: certificatePassword));
 
         environment["ASPNETCORE_Kestrel__Certificates__Default__Path"] = certificatePath;
         environment["ASPNETCORE_Kestrel__Certificates__Default__Password"] = certificatePassword;
+
+        return trustedCertificatePath;
     }
 
     private async Task EnsureServiceBusQueuesAreCleanAsync()
@@ -862,56 +908,4 @@ notBefore: DateTimeOffset.UtcNow.AddMinutes(minutes: -5), notAfter: DateTimeOffs
         }
     }
 
-    private static string ResolveFuncExecutablePath()
-    {
-        string configuredFuncPath = Environment.GetEnvironmentVariable(variable: "FUNCTIONS_CORE_TOOLS_PATH");
-
-        if (!string.IsNullOrWhiteSpace(value: configuredFuncPath) && File.Exists(path: configuredFuncPath))
-        {
-            return configuredFuncPath;
-        }
-
-        string bundledFuncExe = Path.Combine(
-            paths:
-            [
-                Environment.GetFolderPath(folder: Environment.SpecialFolder.ApplicationData),
-                "npm",
-                "node_modules",
-                "azure-functions-core-tools",
-                "bin",
-                "in-proc6",
-                "func.exe"
-            ]);
-
-        if (File.Exists(path: bundledFuncExe))
-        {
-            return bundledFuncExe;
-        }
-
-        string fallbackFuncExe = Path.Combine(
-            paths:
-            [
-                Environment.GetFolderPath(folder: Environment.SpecialFolder.ApplicationData),
-                "npm",
-                "node_modules",
-                "azure-functions-core-tools",
-                "bin",
-                "func.exe"
-            ]);
-
-        if (File.Exists(path: fallbackFuncExe))
-        {
-            return fallbackFuncExe;
-        }
-
-        string roamingNpmFunc = Path.Combine(
-path1: Environment.GetFolderPath(folder: Environment.SpecialFolder.ApplicationData), path2: "npm", path3: "func.cmd");
-
-        if (File.Exists(path: roamingNpmFunc))
-        {
-            return roamingNpmFunc;
-        }
-
-        return "func";
-    }
 }
