@@ -24,6 +24,10 @@ $dockerfile = Read-RepositoryFile 'Docker/build/Dockerfile.workflow'
 Require ($dockerfile -notmatch '(?i)azure-functions') 'Workflow container still uses an Azure Functions base image.'
 Require ($dockerfile -match 'ENTRYPOINT\s*\[\s*"dotnet"\s*,\s*"Workflow\.dll"\s*\]') 'Workflow container must start Workflow.dll directly.'
 
+$scriptGateway = Read-RepositoryFile 'src/Apps/Web/Dependencies/Api/ApiScriptExecutionDependency.cs'
+Require ($scriptGateway -match 'Workflow:ExecutionToken' -and $scriptGateway -match 'AuthenticationHeaderValue') 'Web script gateway does not authenticate to standalone Workflow.'
+Require ($scriptGateway -match 'EnsureSuccessStatusCode') 'Web script gateway can treat worker errors as successful execution.'
+
 foreach ($path in 'Docker/compose.yml', 'Docker/ci/compose.yml') {
     $compose = Read-RepositoryFile $path
     $worker = [regex]::Match($compose, '(?ms)^  workflow:\s*\r?\n(?<service>.*?)(?=^  \S|^\S|\z)')
