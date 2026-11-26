@@ -201,9 +201,9 @@ public class Program
 
     private static async Task<IResult> ExecuteScriptAsync(
         HttpRequest request,
-        bool useDetails,
         IWorkflowScriptExecutionService scriptExecutionService,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        bool useDetails = false)
     {
         RequireContentType(
             request: request,

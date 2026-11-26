@@ -31,7 +31,7 @@ internal sealed class IntegrationAcceptanceSeeder(IServiceProvider services)
     private const string AcceptanceAdminPrivileges =
         "app_admin,"
         + "app_create,app_read,app_update,app_delete,"
-        + "appculture_read,"
+        + "appculture_read,script_execute,"
         + "calendar_create,calendar_read,calendar_update,calendar_delete,"
         + "commonobject_create,commonobject_update,commonobject_delete,"
         + "culture_create,culture_read,culture_update,culture_delete,"
