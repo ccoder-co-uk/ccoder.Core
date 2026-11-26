@@ -33,7 +33,7 @@
   <ItemGroup>
     <None Include="..\Apps\Web\appsettings.json" Link="Configuration\Web.appsettings.json" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\Apps\HostedServices\appsettings.json" Link="Configuration\HostedServices.appsettings.json" CopyToOutputDirectory="PreserveNewest" />
-    <None Include="..\Apps\Workflow\local.settings.json" Link="Configuration\Workflow.local.settings.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\Apps\Workflow\Properties\launchSettings.json" Link="Configuration\Workflow.launchSettings.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="cCoder.CodeAnalysis" Version="2026.11.20.1604" />

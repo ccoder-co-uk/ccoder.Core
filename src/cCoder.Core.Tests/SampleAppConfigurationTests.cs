@@ -152,7 +152,7 @@ public sealed partial class SampleAppConfigurationTests
     }
 
     [Fact]
-    public void SuppliedWorkflowApp_ShouldDeclareRequiredConfiguration()
+    public void SuppliedWorkflowApp_ShouldDeclareStandaloneConfigurationWithoutDatabaseAccess()
     {
         // Given
         IConfiguration configuration = new ConfigurationBuilder()
@@ -160,24 +160,21 @@ public sealed partial class SampleAppConfigurationTests
             .AddJsonFile(
                 path: Path.Combine(
                     path1: "Configuration",
-                    path2: "Workflow.local.settings.json"),
+                    path2: "Workflow.launchSettings.json"),
                 optional: false)
             .Build();
 
         // When
-        string[] missingKeys =
-        [
-            "Values:CoreData__ConnectionString",
-            "Values:CoreData__AdminConnectionString"
-        ];
-
-        missingKeys = missingKeys
-            .Where(predicate: key => configuration[key] is null)
-            .ToArray();
+        IConfigurationSection profiles = configuration.GetSection(key: "profiles");
 
         // Then
-        missingKeys
+        profiles.GetChildren()
             .Should()
-            .BeEmpty();
+            .NotBeEmpty()
+            .And.OnlyContain(predicate: profile => profile["commandName"] == "Project");
+
+        configuration.AsEnumerable()
+            .Should()
+            .NotContain(predicate: setting => setting.Key.Contains(value: "ConnectionString"));
     }
 }
